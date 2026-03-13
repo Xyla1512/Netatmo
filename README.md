@@ -1,3 +1,6 @@
+Demo: https://www.frank-neumann.de/netatmo-wetter-plugin/
+
+
 === Netatmo Weather Station ===
 Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
