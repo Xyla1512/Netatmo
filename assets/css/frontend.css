@@ -1,0 +1,1009 @@
+/* Netatmo Weather Station Pro - Frontend Styles */
+
+/* ============================================================
+   CSS Custom Properties
+   ============================================================ */
+:root {
+  --naws-primary:    #00d4ff;
+  --naws-accent:     #7c3aed;
+  --naws-success:    #10b981;
+  --naws-warning:    #f59e0b;
+  --naws-danger:     #ef4444;
+  --naws-font:       -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --naws-radius:     16px;
+  --naws-radius-sm:  10px;
+  --naws-shadow:     0 8px 32px rgba(0,0,0,0.4);
+  --naws-transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ============================================================
+   Theme: Dark
+   ============================================================ */
+.naws-theme-dark {
+  --naws-bg:           #0a0e1a;
+  --naws-surface:      #111827;
+  --naws-surface-2:    #1f2937;
+  --naws-surface-3:    #374151;
+  --naws-border:       rgba(255,255,255,0.07);
+  --naws-text:         #f1f5f9;
+  --naws-text-muted:   #64748b;
+  --naws-text-subtle:  #94a3b8;
+  --naws-glow:         rgba(0,212,255,0.15);
+}
+
+/* ============================================================
+   Theme: Light
+   ============================================================ */
+.naws-theme-light {
+  --naws-bg:           #f0f4f8;
+  --naws-surface:      #ffffff;
+  --naws-surface-2:    #f8fafc;
+  --naws-surface-3:    #e2e8f0;
+  --naws-border:       rgba(0,0,0,0.08);
+  --naws-text:         #1e293b;
+  --naws-text-muted:   #64748b;
+  --naws-text-subtle:  #94a3b8;
+  --naws-glow:         rgba(0,212,255,0.08);
+}
+
+/* ============================================================
+   Base Wrapper
+   ============================================================ */
+.naws-wrap {
+  font-family: var(--naws-font);
+  background:  var(--naws-bg);
+  color:        var(--naws-text);
+  border-radius: var(--naws-radius);
+  overflow: hidden;
+  padding: 1.5rem;
+  position: relative;
+}
+
+/* ============================================================
+   Header
+   ============================================================ */
+.naws-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.naws-header-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--naws-primary), var(--naws-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+.naws-last-updated {
+  font-size: 0.75rem;
+  color: var(--naws-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.naws-status-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--naws-success);
+  animation: naws-pulse 2s infinite;
+  flex-shrink: 0;
+}
+
+@keyframes naws-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(1.3); }
+}
+
+/* ============================================================
+   Grid Layout
+   ============================================================ */
+.naws-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.naws-grid-2 { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+.naws-grid-3 { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+
+/* ============================================================
+   Metric Cards
+   ============================================================ */
+.naws-card {
+  background: var(--naws-surface);
+  border: 1px solid var(--naws-border);
+  border-radius: var(--naws-radius);
+  padding: 1.25rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--naws-transition), box-shadow var(--naws-transition);
+  cursor: default;
+}
+
+.naws-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--naws-gradient, linear-gradient(90deg, var(--naws-primary), var(--naws-accent)));
+  opacity: 0;
+  transition: opacity var(--naws-transition);
+}
+
+.naws-card:hover { transform: translateY(-3px); box-shadow: var(--naws-shadow); }
+.naws-card:hover::before { opacity: 1; }
+
+/* Card color variants */
+.naws-card.naws-temp      { --naws-gradient: linear-gradient(90deg, #f59e0b, #ef4444); }
+.naws-card.naws-co2       { --naws-gradient: linear-gradient(90deg, #10b981, #06b6d4); }
+.naws-card.naws-humidity  { --naws-gradient: linear-gradient(90deg, #3b82f6, #7c3aed); }
+.naws-card.naws-noise     { --naws-gradient: linear-gradient(90deg, #8b5cf6, #ec4899); }
+.naws-card.naws-pressure  { --naws-gradient: linear-gradient(90deg, #06b6d4, #3b82f6); }
+.naws-card.naws-rain      { --naws-gradient: linear-gradient(90deg, #0ea5e9, #6366f1); }
+.naws-card.naws-wind      { --naws-gradient: linear-gradient(90deg, #14b8a6, #22d3ee); }
+.naws-card.naws-health    { --naws-gradient: linear-gradient(90deg, #10b981, #84cc16); }
+
+.naws-card-icon {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.naws-card-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--naws-text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.naws-card-value {
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--naws-text);
+  margin-bottom: 0.25rem;
+}
+
+.naws-card-unit {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--naws-text-subtle);
+  margin-left: 0.2rem;
+}
+
+.naws-card-meta {
+  font-size: 0.7rem;
+  color: var(--naws-text-muted);
+  margin-top: 0.5rem;
+}
+
+/* Animated number counter */
+.naws-count-up {
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+/* ============================================================
+   Module Section Headers
+   ============================================================ */
+.naws-module-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--naws-border);
+}
+
+.naws-module-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--naws-surface-2);
+  border: 1px solid var(--naws-border);
+  border-radius: 100px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--naws-primary);
+}
+
+.naws-module-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--naws-text);
+  margin: 0;
+}
+
+/* Battery indicator */
+.naws-battery {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.7rem;
+  color: var(--naws-text-muted);
+  margin-left: auto;
+}
+
+.naws-battery-bar {
+  width: 24px; height: 10px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  position: relative;
+  display: inline-block;
+}
+
+.naws-battery-bar::after {
+  content: '';
+  position: absolute;
+  right: -4px; top: 50%;
+  transform: translateY(-50%);
+  width: 3px; height: 5px;
+  background: currentColor;
+  border-radius: 0 1px 1px 0;
+}
+
+.naws-battery-fill {
+  height: 100%;
+  border-radius: 1px;
+  background: var(--naws-success);
+  transition: width 0.5s ease;
+}
+
+/* ============================================================
+   Chart Container
+   ============================================================ */
+.naws-chart-wrap {
+  background: var(--naws-surface);
+  border: 1px solid var(--naws-border);
+  border-radius: var(--naws-radius);
+  padding: 1.5rem;
+  position: relative;
+}
+
+.naws-chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.naws-chart-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--naws-text);
+  margin: 0;
+}
+
+.naws-range-picker {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.naws-range-btn {
+  padding: 0.3rem 0.75rem;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid var(--naws-border);
+  background: var(--naws-surface-2);
+  color: var(--naws-text-muted);
+  cursor: pointer;
+  transition: all var(--naws-transition);
+}
+
+.naws-range-btn:hover,
+.naws-range-btn.active {
+  background: var(--naws-primary);
+  border-color: var(--naws-primary);
+  color: #000;
+}
+
+.naws-chart-canvas-wrap {
+  position: relative;
+}
+
+.naws-chart-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--naws-surface);
+  border-radius: var(--naws-radius-sm);
+  z-index: 10;
+}
+
+.naws-spinner {
+  width: 40px; height: 40px;
+  border: 3px solid var(--naws-border);
+  border-top-color: var(--naws-primary);
+  border-radius: 50%;
+  animation: naws-spin 0.8s linear infinite;
+}
+
+@keyframes naws-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   Gauge Container
+   ============================================================ */
+.naws-gauge-wrap {
+  background: var(--naws-surface);
+  border: 1px solid var(--naws-border);
+  border-radius: var(--naws-radius);
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.naws-gauge-canvas { max-width: 100%; }
+
+.naws-gauge-value-display {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--naws-text);
+  margin-top: -1rem;
+}
+
+.naws-gauge-label {
+  font-size: 0.8rem;
+  color: var(--naws-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 0.25rem;
+}
+
+/* ============================================================
+   Table
+   ============================================================ */
+.naws-table-wrap {
+  background: var(--naws-surface);
+  border: 1px solid var(--naws-border);
+  border-radius: var(--naws-radius);
+  overflow: hidden;
+}
+
+.naws-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.naws-table th {
+  background: var(--naws-surface-2);
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--naws-text-muted);
+  border-bottom: 1px solid var(--naws-border);
+}
+
+.naws-table td {
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--naws-border);
+  color: var(--naws-text);
+}
+
+.naws-table tr:last-child td { border-bottom: none; }
+
+.naws-table tr:hover td {
+  background: var(--naws-surface-2);
+}
+
+/* ============================================================
+   CO2 Color Indicator
+   ============================================================ */
+.naws-co2-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.naws-co2-excellent { background: rgba(16,185,129,0.15); color: #10b981; }
+.naws-co2-good      { background: rgba(132,204,22,0.15);  color: #84cc16; }
+.naws-co2-fair      { background: rgba(245,158,11,0.15);  color: #f59e0b; }
+.naws-co2-poor      { background: rgba(249,115,22,0.15);  color: #f97316; }
+.naws-co2-unhealthy { background: rgba(239,68,68,0.15);   color: #ef4444; }
+
+/* ============================================================
+   Wind Compass
+   ============================================================ */
+.naws-compass {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  border: 2px solid var(--naws-border);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.5rem auto;
+}
+
+.naws-compass-needle {
+  width: 4px; height: 36px;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform-origin: bottom center;
+  transform: translate(-50%, -100%) rotate(var(--naws-wind-angle, 0deg));
+  transition: transform 1s cubic-bezier(0.4,0,0.2,1);
+}
+
+.naws-compass-needle::before { content: ''; display: block; width: 100%; height: 50%; background: #ef4444; border-radius: 2px 2px 0 0; }
+.naws-compass-needle::after  { content: ''; display: block; width: 100%; height: 50%; background: var(--naws-text-muted); border-radius: 0 0 2px 2px; }
+
+/* ============================================================
+   Hero Strip
+   ============================================================ */
+.naws-hero-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.naws-hero-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--naws-radius);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--naws-border);
+  transition: transform var(--naws-transition), box-shadow var(--naws-transition);
+}
+
+.naws-hero-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.07;
+  transition: opacity var(--naws-transition);
+}
+
+.naws-hero-card:hover { transform: translateY(-2px); box-shadow: var(--naws-shadow); }
+.naws-hero-card:hover::after { opacity: 0.12; }
+
+/* Gradient fills per card type */
+.naws-hero-temp     { background: linear-gradient(135deg, rgba(245,158,11,0.18), rgba(239,68,68,0.12)); border-color: rgba(245,158,11,0.25); }
+.naws-hero-humidity { background: linear-gradient(135deg, rgba(59,130,246,0.18), rgba(124,58,237,0.12)); border-color: rgba(59,130,246,0.25); }
+.naws-hero-pressure { background: linear-gradient(135deg, rgba(6,182,212,0.18), rgba(59,130,246,0.12)); border-color: rgba(6,182,212,0.25); }
+.naws-hero-rain     { background: linear-gradient(135deg, rgba(14,165,233,0.18), rgba(99,102,241,0.12)); border-color: rgba(14,165,233,0.25); }
+
+.naws-hero-temp::after     { background: linear-gradient(135deg, #f59e0b, #ef4444); }
+.naws-hero-humidity::after { background: linear-gradient(135deg, #3b82f6, #7c3aed); }
+.naws-hero-pressure::after { background: linear-gradient(135deg, #06b6d4, #3b82f6); }
+.naws-hero-rain::after     { background: linear-gradient(135deg, #0ea5e9, #6366f1); }
+
+.naws-hero-icon {
+  font-size: 2.25rem;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+}
+
+.naws-hero-body { min-width: 0; }
+
+.naws-hero-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--naws-text-muted);
+  margin-bottom: 0.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.naws-hero-value {
+  font-size: 2.4rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--naws-text);
+  white-space: nowrap;
+}
+
+.naws-hero-unit {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--naws-text-subtle);
+  margin-left: 0.15rem;
+}
+
+/* ============================================================
+   Accordion
+   ============================================================ */
+.naws-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.naws-accordion-item {
+  background: var(--naws-surface);
+  border: 1px solid var(--naws-border);
+  border-radius: var(--naws-radius);
+  overflow: hidden;
+  transition: border-color var(--naws-transition), box-shadow var(--naws-transition);
+}
+
+.naws-accordion-item.is-open {
+  border-color: rgba(0,212,255,0.3);
+  box-shadow: 0 0 0 1px rgba(0,212,255,0.1), 0 4px 24px rgba(0,0,0,0.2);
+}
+
+.naws-accordion-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--naws-text);
+  text-align: left;
+  transition: background var(--naws-transition);
+}
+
+.naws-accordion-header:hover {
+  background: var(--naws-surface-2);
+}
+
+.naws-accordion-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.naws-accordion-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.naws-accordion-badge {
+  display: inline-flex;
+  align-items: center;
+  background: var(--naws-surface-2);
+  border: 1px solid var(--naws-border);
+  border-radius: 100px;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--naws-primary);
+  flex-shrink: 0;
+}
+
+.naws-accordion-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.naws-accordion-peek {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--naws-text);
+}
+.naws-accordion-peek small {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: var(--naws-text-muted);
+}
+
+/* Battery mini */
+.naws-battery-mini-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.naws-battery-mini {
+  width: 26px;
+  height: 11px;
+  border: 1.5px solid var(--naws-text-muted);
+  border-radius: 2px;
+  position: relative;
+  flex-shrink: 0;
+}
+.naws-battery-mini::after {
+  content: '';
+  position: absolute;
+  right: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 5px;
+  background: var(--naws-text-muted);
+  border-radius: 0 1px 1px 0;
+}
+.naws-battery-mini-fill {
+  height: 100%;
+  border-radius: 1px;
+  transition: width 0.4s ease;
+}
+.naws-battery-mini-label {
+  font-size: 0.65rem;
+  color: var(--naws-text-muted);
+}
+
+/* Arrow */
+.naws-accordion-arrow {
+  flex-shrink: 0;
+  color: var(--naws-text-muted);
+  transition: transform var(--naws-transition);
+  display: flex;
+  align-items: center;
+}
+.naws-accordion-item.is-open .naws-accordion-arrow {
+  transform: rotate(180deg);
+  color: var(--naws-primary);
+}
+
+/* Body */
+.naws-accordion-body {
+  display: none;
+  padding: 0 1.25rem 1.25rem;
+}
+.naws-accordion-item.is-open .naws-accordion-body {
+  display: block;
+  animation: naws-slide-down 0.28s cubic-bezier(0.4,0,0.2,1);
+}
+
+@keyframes naws-slide-down {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   Sensor Grid (inside accordion body)
+   ============================================================ */
+.naws-sensor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.naws-sensor-card {
+  background: var(--naws-surface-2);
+  border: 1px solid var(--naws-border);
+  border-radius: var(--naws-radius-sm);
+  padding: 0.9rem 1rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--naws-transition), box-shadow var(--naws-transition);
+}
+
+.naws-sensor-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--naws-gradient, linear-gradient(90deg, var(--naws-primary), var(--naws-accent)));
+  opacity: 0;
+  transition: opacity var(--naws-transition);
+}
+.naws-sensor-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
+.naws-sensor-card:hover::before { opacity: 1; }
+
+/* Re-use existing color variants */
+.naws-sensor-card.naws-temp      { --naws-gradient: linear-gradient(90deg, #f59e0b, #ef4444); }
+.naws-sensor-card.naws-co2       { --naws-gradient: linear-gradient(90deg, #10b981, #06b6d4); }
+.naws-sensor-card.naws-humidity  { --naws-gradient: linear-gradient(90deg, #3b82f6, #7c3aed); }
+.naws-sensor-card.naws-noise     { --naws-gradient: linear-gradient(90deg, #8b5cf6, #ec4899); }
+.naws-sensor-card.naws-pressure  { --naws-gradient: linear-gradient(90deg, #06b6d4, #3b82f6); }
+.naws-sensor-card.naws-rain      { --naws-gradient: linear-gradient(90deg, #0ea5e9, #6366f1); }
+.naws-sensor-card.naws-wind      { --naws-gradient: linear-gradient(90deg, #14b8a6, #22d3ee); }
+.naws-sensor-card.naws-health    { --naws-gradient: linear-gradient(90deg, #10b981, #84cc16); }
+
+.naws-sensor-top {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+.naws-sensor-icon  { font-size: 1.1rem; }
+.naws-sensor-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--naws-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.naws-sensor-value {
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--naws-text);
+  margin-bottom: 0.4rem;
+}
+.naws-sensor-unit {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--naws-text-subtle);
+  margin-left: 0.1rem;
+}
+
+.naws-sensor-age {
+  font-size: 0.65rem;
+  color: var(--naws-text-muted);
+  margin-top: 0.35rem;
+}
+.naws-sensor-dir {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--naws-text-subtle);
+  text-align: center;
+}
+
+.naws-module-chart {
+  margin-top: 0;
+  border-color: var(--naws-border);
+}
+
+/* Compass (smaller variant) */
+.naws-compass-sm {
+  width: 60px; height: 60px;
+  margin: 0.3rem auto 0;
+}
+
+/* ============================================================
+   Dashboard Tabs (kept for backwards compat / other templates)
+   ============================================================ */
+.naws-dashboard-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--naws-border);
+  padding-bottom: 0;
+  flex-wrap: wrap;
+}
+
+.naws-tab-btn {
+  padding: 0.6rem 1.25rem;
+  border: none;
+  background: none;
+  color: var(--naws-text-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all var(--naws-transition);
+}
+
+.naws-tab-btn:hover { color: var(--naws-primary); }
+.naws-tab-btn.active { color: var(--naws-primary); border-bottom-color: var(--naws-primary); }
+
+.naws-tab-content { display: none; }
+.naws-tab-content.active { display: block; }
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 640px) {
+  .naws-grid  { grid-template-columns: repeat(2, 1fr); }
+  .naws-card-value { font-size: 1.75rem; }
+  .naws-header { flex-direction: column; align-items: flex-start; }
+  .naws-hero-strip { grid-template-columns: repeat(2, 1fr); }
+  .naws-hero-value { font-size: 1.9rem; }
+  .naws-sensor-grid { grid-template-columns: repeat(2, 1fr); }
+  .naws-accordion-badge { display: none; }
+}
+
+@media (max-width: 400px) {
+  .naws-grid { grid-template-columns: 1fr; }
+  .naws-hero-strip { grid-template-columns: 1fr 1fr; }
+  .naws-sensor-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ============================================================
+   Animations
+   ============================================================ */
+@keyframes naws-fade-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.naws-card { animation: naws-fade-in 0.5s ease both; }
+
+.naws-card:nth-child(1)  { animation-delay: 0.05s; }
+.naws-card:nth-child(2)  { animation-delay: 0.10s; }
+.naws-card:nth-child(3)  { animation-delay: 0.15s; }
+.naws-card:nth-child(4)  { animation-delay: 0.20s; }
+.naws-card:nth-child(5)  { animation-delay: 0.25s; }
+.naws-card:nth-child(6)  { animation-delay: 0.30s; }
+.naws-card:nth-child(7)  { animation-delay: 0.35s; }
+.naws-card:nth-child(8)  { animation-delay: 0.40s; }
+.naws-card:nth-child(9)  { animation-delay: 0.45s; }
+.naws-card:nth-child(10) { animation-delay: 0.50s; }
+.naws-card:nth-child(11) { animation-delay: 0.55s; }
+.naws-card:nth-child(12) { animation-delay: 0.60s; }
+
+/* Reduce motion if requested */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── No-data message ──────────────────────────────────────── */
+.naws-no-data-msg {
+    padding: 2rem 1rem;
+    text-align: center;
+    color: var(--naws-text-muted, #64748b);
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+/* ── History chart ────────────────────────────────────────── */
+.naws-history-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.naws-history-meta {
+    font-size: 0.75rem;
+    color: var(--naws-text-muted, #64748b);
+    text-align: right;
+    padding: 0 0.25rem;
+}
+.naws-hist-range-btn {
+    background: transparent;
+    border: 1px solid var(--naws-border, rgba(255,255,255,0.1));
+    color: var(--naws-text-muted, #64748b);
+    padding: 0.25rem 0.65rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.naws-hist-range-btn:hover,
+.naws-hist-range-btn.active {
+    background: var(--naws-primary, #00d4ff);
+    border-color: var(--naws-primary, #00d4ff);
+    color: #0a0e1a;
+}
+
+/* ============================================================
+   Infobar
+   ============================================================ */
+.naws-infobar {
+  font-family: inherit;
+  margin: 0;
+}
+
+.naws-infobar-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid rgba(0,0,0,0.10);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.naws-infobar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-right: 1px solid rgba(0,0,0,0.08);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  min-width: 0;
+}
+
+/* Remove right border on every 4th item */
+.naws-infobar-item:nth-child(4n) {
+  border-right: none;
+}
+
+.naws-ib-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+}
+
+.naws-ib-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke: #2d8f7b;
+  opacity: 0.85;
+}
+
+.naws-ib-emoji {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.naws-ib-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.naws-ib-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.naws-ib-value {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Astro group: amber icon */
+.naws-ib-astro .naws-ib-icon svg {
+  stroke: #d97706;
+}
+
+@media (max-width: 768px) {
+  .naws-infobar-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .naws-infobar-item:nth-child(4n) {
+    border-right: 1px solid rgba(0,0,0,0.08);
+  }
+  .naws-infobar-item:nth-child(2n) {
+    border-right: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .naws-infobar-grid {
+    grid-template-columns: 1fr;
+  }
+  .naws-infobar-item {
+    border-right: none !important;
+  }
+  .naws-infobar-item:last-child {
+    border-bottom: none;
+  }
+}
+
