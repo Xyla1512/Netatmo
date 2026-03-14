@@ -1041,7 +1041,7 @@
 .naws-wx {
   --ink:#427272; --ink2:#2d5252; --ink3:#1a3535;
   --muted:#7aa0a0; --light:#a0b8b8;
-  --line:#e0eeee; --bg:#ffffff; --card:#f4fafa; --sh:rgba(40,72,72,.08);
+  --line:#e0eeee; --bg:#ffffff; --card:#ffffff; --sh:rgba(40,72,72,.08);
   font-family:inherit; color:var(--ink);
 }
 .naws-wx .naws-hdr { background:var(--ink2); border-radius:16px 16px 0 0; padding:12px 16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
@@ -1272,7 +1272,7 @@
 .naws-hist-modal {
   --ink:#427272; --ink2:#2d5252; --ink3:#1a3535;
   --muted:#7aa0a0; --light:#a0b8b8;
-  --line:#e0eeee; --bg:#ffffff; --card:#f4fafa; --sh:rgba(40,72,72,.08);
+  --line:#e0eeee; --bg:#ffffff; --card:#ffffff; --sh:rgba(40,72,72,.08);
   font-family:inherit; color:var(--ink);
 }
 .naws-hist-hdr {

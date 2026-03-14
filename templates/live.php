@@ -219,6 +219,81 @@ $pressure_diff  = $_pt['diff'];
       </div>
     </div>
     <?php endif; ?>
+
+    <?php
+    // ── 5-Day Forecast Section (server-rendered, cached) ────────────────
+    $forecast = NAWS_Forecast::get_forecast( max( 1, min( 7, intval( get_option( 'naws_settings', [] )['forecast_days'] ?? 5 ) ) ) );
+    if ( ! isset( $forecast['error'] ) && ! empty( $forecast['days'] ) ) :
+        $fc_options    = get_option( 'naws_settings', [] );
+        $fc_temp_unit  = ( $fc_options['temperature_unit'] ?? 'C' ) === 'F' ? '°F' : '°C';
+        $fc_wind_u     = $fc_options['wind_unit'] ?? 'kmh';
+        $fc_wind_label = NAWS_Helpers::wind_unit_label_public( $fc_wind_u );
+        $fc_rain_unit  = ( $fc_options['rain_unit'] ?? 'mm' ) === 'in' ? 'in' : 'mm';
+        $fc_loc_name   = $forecast['location_name'] ?? '';
+        $fc_day_count  = count( $forecast['days'] );
+        $fc_title      = sprintf( naws__( 'forecast_title' ), $fc_day_count );
+    ?>
+    <div style="margin-top:16px;">
+      <!-- Forecast Header -->
+      <div class="naws-fc-header">
+        <div class="naws-fc-header-title"><?php echo esc_html( $fc_title ); ?></div>
+        <div class="naws-fc-header-meta">
+          <?php if ( $fc_loc_name ) : ?>
+            <span>📍 <?php echo esc_html( $fc_loc_name ); ?></span>
+          <?php endif; ?>
+          <?php if ( ! empty( $forecast['fetched_at'] ) ) : ?>
+            <span><?php printf( esc_html( naws__( 'forecast_updated' ) ), esc_html( wp_date( 'H:i', $forecast['fetched_at'] ) ) ); ?></span>
+          <?php endif; ?>
+        </div>
+      </div>
+      <!-- Forecast Body -->
+      <div class="naws-fc-body-wrap">
+        <div class="naws-live-forecast-grid" style="--naws-fc-cols:<?php echo intval( $fc_day_count ); ?>">
+          <?php foreach ( $forecast['days'] as $fc_day ) :
+              $fc_wmo    = NAWS_Forecast::wmo_description( $fc_day['weathercode'] );
+              $fc_today  = NAWS_Forecast::is_today( $fc_day['date'] );
+              $fc_wd     = $fc_today ? naws__( 'forecast_today' ) : NAWS_Forecast::weekday_short( $fc_day['date'] );
+              $fc_dt     = NAWS_Forecast::date_short( $fc_day['date'] );
+              $fc_tmax   = $fc_day['temp_max'];
+              $fc_tmin   = $fc_day['temp_min'];
+              if ( $fc_temp_unit === '°F' ) {
+                  $fc_tmax = $fc_tmax !== null ? round( $fc_tmax * 9 / 5 + 32, 1 ) : null;
+                  $fc_tmin = $fc_tmin !== null ? round( $fc_tmin * 9 / 5 + 32, 1 ) : null;
+              }
+              $fc_wmax = $fc_day['wind_max'];
+              if ( $fc_wind_u === 'ms' )  $fc_wmax = $fc_wmax !== null ? round( $fc_wmax / 3.6, 1 ) : null;
+              if ( $fc_wind_u === 'mph' ) $fc_wmax = $fc_wmax !== null ? round( $fc_wmax * 0.62137, 1 ) : null;
+              if ( $fc_wind_u === 'kn' )  $fc_wmax = $fc_wmax !== null ? round( $fc_wmax * 0.53996, 1 ) : null;
+              $fc_precip = $fc_day['precip_sum'];
+              if ( $fc_rain_unit === 'in' && $fc_precip !== null ) $fc_precip = round( $fc_precip / 25.4, 2 );
+              $fc_compass = NAWS_Helpers::degrees_to_compass( $fc_day['wind_dir'] );
+          ?>
+          <div class="naws-fcc<?php echo $fc_today ? ' naws-fcc-today' : ''; ?>">
+            <div class="naws-fcc-day"><?php echo esc_html( $fc_wd ); ?></div>
+            <div class="naws-fcc-date"><?php echo esc_html( $fc_dt ); ?></div>
+            <div class="naws-fcc-svg"><?php echo NAWS_Forecast::get_weather_svg( $fc_wmo['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG from trusted internal method ?></div>
+            <div class="naws-fcc-cond"><?php echo esc_html( $fc_wmo['label'] ); ?></div>
+            <div class="naws-fcc-temps">
+              <span class="naws-fcc-tmax"><?php echo $fc_tmax !== null ? esc_html( $fc_tmax ) : '--'; ?></span>
+              <span class="naws-fcc-sep">/ <?php echo $fc_tmin !== null ? esc_html( $fc_tmin ) : '--'; ?></span>
+              <span class="naws-fcc-tunit"><?php echo esc_html( $fc_temp_unit ); ?></span>
+            </div>
+            <div class="naws-fcc-meta">
+              <span title="<?php echo esc_attr( naws__( 'forecast_precip' ) ); ?>">🌧️ <?php echo $fc_precip !== null ? esc_html( $fc_precip . ' ' . $fc_rain_unit ) : '0'; ?></span>
+              <span title="<?php echo esc_attr( naws__( 'forecast_precip_prob' ) ); ?>">💧 <?php echo esc_html( $fc_day['precip_prob'] . '%' ); ?></span>
+              <span title="<?php echo esc_attr( naws__( 'forecast_wind' ) ); ?>">🌬️ <?php echo $fc_wmax !== null ? esc_html( $fc_wmax . ' ' . $fc_wind_label ) : '--'; ?></span>
+              <span title="<?php echo esc_attr( naws__( 'forecast_wind_dir' ) ); ?>">🧭 <?php echo esc_html( $fc_compass ); ?></span>
+            </div>
+          </div>
+          <?php endforeach; ?>
+        </div>
+        <div class="naws-fcc-gust" style="text-align:center;margin-top:8px">
+          <?php echo esc_html( naws__( 'forecast_source' ) ); ?>: Open-Meteo.com
+        </div>
+      </div>
+    </div>
+    <?php endif; ?>
+
   </div>
 </div>
 
@@ -239,80 +314,6 @@ $pressure_diff  = $_pt['diff'];
 </div>
 
 <!-- Styles moved to assets/css/frontend.css (.naws-wx scope) -->
-
-<?php
-// ── 5-Day Forecast Section (server-rendered, cached) ────────────────
-$forecast = NAWS_Forecast::get_forecast( max( 1, min( 7, intval( get_option( 'naws_settings', [] )['forecast_days'] ?? 5 ) ) ) );
-if ( ! isset( $forecast['error'] ) && ! empty( $forecast['days'] ) ) :
-    $fc_options    = get_option( 'naws_settings', [] );
-    $fc_temp_unit  = ( $fc_options['temperature_unit'] ?? 'C' ) === 'F' ? '°F' : '°C';
-    $fc_wind_u     = $fc_options['wind_unit'] ?? 'kmh';
-    $fc_wind_label = NAWS_Helpers::wind_unit_label_public( $fc_wind_u );
-    $fc_rain_unit  = ( $fc_options['rain_unit'] ?? 'mm' ) === 'in' ? 'in' : 'mm';
-    $fc_loc_name   = $forecast['location_name'] ?? '';
-    $fc_day_count  = count( $forecast['days'] );
-    $fc_title      = sprintf( naws__( 'forecast_title' ), $fc_day_count );
-?>
-<div style="margin-top:16px;">
-  <!-- Forecast Header -->
-  <div class="naws-fc-header">
-    <div class="naws-fc-header-title"><?php echo esc_html( $fc_title ); ?></div>
-    <div class="naws-fc-header-meta">
-      <?php if ( $fc_loc_name ) : ?>
-        <span>📍 <?php echo esc_html( $fc_loc_name ); ?></span>
-      <?php endif; ?>
-      <?php if ( ! empty( $forecast['fetched_at'] ) ) : ?>
-        <span><?php printf( esc_html( naws__( 'forecast_updated' ) ), esc_html( wp_date( 'H:i', $forecast['fetched_at'] ) ) ); ?></span>
-      <?php endif; ?>
-    </div>
-  </div>
-  <!-- Forecast Body -->
-  <div class="naws-fc-body-wrap">
-    <div class="naws-live-forecast-grid" style="--naws-fc-cols:<?php echo intval( $fc_day_count ); ?>">
-      <?php foreach ( $forecast['days'] as $fc_day ) :
-          $fc_wmo    = NAWS_Forecast::wmo_description( $fc_day['weathercode'] );
-          $fc_today  = NAWS_Forecast::is_today( $fc_day['date'] );
-          $fc_wd     = $fc_today ? naws__( 'forecast_today' ) : NAWS_Forecast::weekday_short( $fc_day['date'] );
-          $fc_dt     = NAWS_Forecast::date_short( $fc_day['date'] );
-          $fc_tmax   = $fc_day['temp_max'];
-          $fc_tmin   = $fc_day['temp_min'];
-          if ( $fc_temp_unit === '°F' ) {
-              $fc_tmax = $fc_tmax !== null ? round( $fc_tmax * 9 / 5 + 32, 1 ) : null;
-              $fc_tmin = $fc_tmin !== null ? round( $fc_tmin * 9 / 5 + 32, 1 ) : null;
-          }
-          $fc_wmax = $fc_day['wind_max'];
-          if ( $fc_wind_u === 'ms' )  $fc_wmax = $fc_wmax !== null ? round( $fc_wmax / 3.6, 1 ) : null;
-          if ( $fc_wind_u === 'mph' ) $fc_wmax = $fc_wmax !== null ? round( $fc_wmax * 0.62137, 1 ) : null;
-          if ( $fc_wind_u === 'kn' )  $fc_wmax = $fc_wmax !== null ? round( $fc_wmax * 0.53996, 1 ) : null;
-          $fc_precip = $fc_day['precip_sum'];
-          if ( $fc_rain_unit === 'in' && $fc_precip !== null ) $fc_precip = round( $fc_precip / 25.4, 2 );
-          $fc_compass = NAWS_Helpers::degrees_to_compass( $fc_day['wind_dir'] );
-      ?>
-      <div class="naws-fcc<?php echo $fc_today ? ' naws-fcc-today' : ''; ?>">
-        <div class="naws-fcc-day"><?php echo esc_html( $fc_wd ); ?></div>
-        <div class="naws-fcc-date"><?php echo esc_html( $fc_dt ); ?></div>
-        <div class="naws-fcc-svg"><?php echo NAWS_Forecast::get_weather_svg( $fc_wmo['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG from trusted internal method ?></div>
-        <div class="naws-fcc-cond"><?php echo esc_html( $fc_wmo['label'] ); ?></div>
-        <div class="naws-fcc-temps">
-          <span class="naws-fcc-tmax"><?php echo $fc_tmax !== null ? esc_html( $fc_tmax ) : '--'; ?></span>
-          <span class="naws-fcc-sep">/ <?php echo $fc_tmin !== null ? esc_html( $fc_tmin ) : '--'; ?></span>
-          <span class="naws-fcc-tunit"><?php echo esc_html( $fc_temp_unit ); ?></span>
-        </div>
-        <div class="naws-fcc-meta">
-          <span title="<?php echo esc_attr( naws__( 'forecast_precip' ) ); ?>">🌧️ <?php echo $fc_precip !== null ? esc_html( $fc_precip . ' ' . $fc_rain_unit ) : '0'; ?></span>
-          <span title="<?php echo esc_attr( naws__( 'forecast_precip_prob' ) ); ?>">💧 <?php echo esc_html( $fc_day['precip_prob'] . '%' ); ?></span>
-          <span title="<?php echo esc_attr( naws__( 'forecast_wind' ) ); ?>">🌬️ <?php echo $fc_wmax !== null ? esc_html( $fc_wmax . ' ' . $fc_wind_label ) : '--'; ?></span>
-          <span title="<?php echo esc_attr( naws__( 'forecast_wind_dir' ) ); ?>">🧭 <?php echo esc_html( $fc_compass ); ?></span>
-        </div>
-      </div>
-      <?php endforeach; ?>
-    </div>
-    <div class="naws-fcc-gust" style="text-align:center;margin-top:8px">
-      <?php echo esc_html( naws__( 'forecast_source' ) ); ?>: Open-Meteo.com
-    </div>
-  </div>
-</div>
-<?php endif; ?>
 
 <script>
 (function(){
