@@ -477,4 +477,14 @@ return [
     'forecast_provider_open_meteo' => 'Open-Meteo (weltweit, Open-Source)',
     'forecast_provider_yr_no'   => 'Yr.no / MET Norway (genau für Nordeuropa)',
 
+    // ── Smartes Polling & Health ────────────────────────────────────
+    'night_mode'               => 'Nachtmodus',
+    'night_mode_label'         => 'Reduziertes Polling zwischen 23:00–06:00 Uhr aktivieren',
+    'night_mode_desc'          => 'In den Nachtstunden wird das Abfrage-Intervall verdoppelt, um die Serverlast zu reduzieren. Error-Backoff wird automatisch behandelt: nach 3 aufeinanderfolgenden Fehlern wird das Intervall verdoppelt und erholt sich sofort bei Erfolg.',
+    'health_ok'                => 'Sync OK (vor %d Min.)',
+    'health_night_mode'        => 'Nachtmodus aktiv (reduziertes Polling)',
+    'health_stale_sync'        => 'Warnung: Letzter Sync vor %d Minuten',
+    'health_error_backoff'     => 'Error-Backoff: %d Fehler in Folge, letzter Sync vor %d Min.',
+    'health_no_sync_yet'       => 'Noch kein erfolgreicher Sync',
+    'errors_last_hour'         => '%d Fehler in der letzten Stunde',
 ];

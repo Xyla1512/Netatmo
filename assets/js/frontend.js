@@ -11,6 +11,40 @@
     }
 
     /* ============================================================
+       Utility: AJAX with retry logic for transient network errors
+       ============================================================ */
+    function nawsAjaxPost(data, onSuccess, onFail, retries) {
+        retries = (typeof retries === 'number') ? retries : 2;
+        $.post(nawsFrontend.ajax_url, data, function(resp) {
+            onSuccess(resp);
+        }).fail(function(xhr) {
+            if (retries > 0 && (xhr.status === 0 || xhr.status >= 500)) {
+                // Retry with exponential backoff (500ms, 1500ms)
+                var delay = (3 - retries) * 1000 + 500;
+                setTimeout(function() {
+                    nawsAjaxPost(data, onSuccess, onFail, retries - 1);
+                }, delay);
+            } else if (onFail) {
+                onFail(xhr);
+            }
+        });
+    }
+
+    /**
+     * Show a user-facing error message inside a chart wrapper.
+     */
+    function nawsShowError(wrapEl, message) {
+        if (!wrapEl) return;
+        // Remove any previous error/no-data message
+        var old = wrapEl.querySelector('.naws-no-data-msg');
+        if (old) old.remove();
+        var msg = document.createElement('div');
+        msg.className = 'naws-no-data-msg naws-error-msg';
+        msg.textContent = message;
+        wrapEl.appendChild(msg);
+    }
+
+    /* ============================================================
        Utility: Animated Number Counter
        ============================================================ */
     function animateNumber(el, end, duration) {
@@ -107,9 +141,16 @@
             const self = this;
             if (this.loadingEl) this.loadingEl.style.display = 'flex';
 
+            // Remove previous error/no-data messages
+            const wrap = this.el?.closest('.naws-chart-canvas-wrap');
+            if (wrap) {
+                var oldMsg = wrap.querySelector('.naws-no-data-msg');
+                if (oldMsg) oldMsg.remove();
+            }
+
             const range = this.getDateRange();
 
-            $.post(nawsFrontend.ajax_url, {
+            nawsAjaxPost({
                 action:    'naws_get_chart_data',
                 nonce:     nawsFrontend.nonce,
                 module_id: this.moduleId,
@@ -120,29 +161,24 @@
             }, function(resp) {
                 if (self.loadingEl) self.loadingEl.style.display = 'none';
                 if (resp && resp.success && resp.data.datasets && resp.data.datasets.length > 0) {
-                    self.render(resp.data.datasets);
+                    try {
+                        self.render(resp.data.datasets);
+                    } catch (e) {
+                        console.error('NAWS Chart render error:', e);
+                        nawsShowError(wrap, 'Chart konnte nicht gerendert werden.');
+                    }
                 } else {
-                    // Show no-data message inside the canvas wrapper
-                    const wrap = self.el?.closest('.naws-chart-canvas-wrap');
-                    if (wrap) {
-                        const msg = document.createElement('div');
-                        msg.className = 'naws-no-data-msg';
-                        msg.textContent = (resp && resp.data && resp.data.debug)
-                            ? '📭 Keine Daten für diesen Zeitraum. (' + resp.data.debug.date_from + ' – ' + resp.data.debug.date_to + ')'
-                            : '📭 Keine Daten für diesen Zeitraum.';
-                        wrap.appendChild(msg);
+                    // Server returned an error response
+                    if (resp && !resp.success && resp.data && resp.data.message) {
+                        nawsShowError(wrap, resp.data.message);
+                    } else {
+                        nawsShowError(wrap, 'Keine Daten für diesen Zeitraum.');
                     }
                 }
-            }).fail(function(xhr) {
+            }, function(xhr) {
                 if (self.loadingEl) self.loadingEl.style.display = 'none';
                 console.error('NAWS AJAX error:', xhr.status, xhr.responseText);
-                const wrap = self.el?.closest('.naws-chart-canvas-wrap');
-                if (wrap) {
-                    const msg = document.createElement('div');
-                    msg.className = 'naws-no-data-msg';
-                    msg.textContent = '⚠️ Fehler beim Laden der Daten (HTTP ' + xhr.status + ')';
-                    wrap.appendChild(msg);
-                }
+                nawsShowError(wrap, 'Daten konnten nicht geladen werden (HTTP ' + xhr.status + ')');
             });
         },
 
@@ -217,11 +253,19 @@
                 }
             };
 
-            if (this.chart) {
-                this.chart.data.datasets = datasets;
-                this.chart.update('active');
-            } else {
-                this.chart = new Chart(this.el, config);
+            try {
+                if (this.chart) {
+                    this.chart.data.datasets = datasets;
+                    this.chart.update('active');
+                } else {
+                    this.chart = new Chart(this.el, config);
+                }
+            } catch (e) {
+                console.error('NAWS Chart.js error:', e);
+                nawsShowError(
+                    this.el?.closest('.naws-chart-canvas-wrap'),
+                    'Chart konnte nicht gerendert werden.'
+                );
             }
         }
     };
@@ -494,11 +538,22 @@ window.NAWS_YearCompare.prototype = {
             }
         };
 
-        if (this.chart) {
-            this.chart.data.datasets = datasets;
-            this.chart.update('active');
-        } else {
-            this.chart = new Chart(this.el, config);
+        try {
+            if (this.chart) {
+                this.chart.data.datasets = datasets;
+                this.chart.update('active');
+            } else {
+                this.chart = new Chart(this.el, config);
+            }
+        } catch (e) {
+            console.error('NAWS YearCompare Chart.js error:', e);
+            var wrap = this.el?.closest('.naws-chart-canvas-wrap');
+            if (wrap) {
+                var msg = document.createElement('div');
+                msg.className = 'naws-no-data-msg naws-error-msg';
+                msg.textContent = 'Chart konnte nicht gerendert werden.';
+                wrap.appendChild(msg);
+            }
         }
     }
 };

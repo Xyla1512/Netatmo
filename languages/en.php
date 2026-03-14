@@ -476,4 +476,15 @@ return [
     'forecast_provider_desc'    => 'Select the weather API for the forecast. All providers are free and do not require an API key.',
     'forecast_provider_open_meteo' => 'Open-Meteo (global, open-source)',
     'forecast_provider_yr_no'   => 'Yr.no / MET Norway (accurate for Northern Europe)',
+
+    // ── Smart Polling & Health ──────────────────────────────────────
+    'night_mode'               => 'Night Mode',
+    'night_mode_label'         => 'Enable reduced polling between 23:00–06:00',
+    'night_mode_desc'          => 'During night hours the polling interval is doubled to reduce server load. Error backoff is handled automatically: after 3 consecutive errors the interval doubles, and recovers immediately on success.',
+    'health_ok'                => 'Sync OK (%d min ago)',
+    'health_night_mode'        => 'Night mode active (reduced polling)',
+    'health_stale_sync'        => 'Warning: last sync %d minutes ago',
+    'health_error_backoff'     => 'Error backoff: %d consecutive errors, last sync %d min ago',
+    'health_no_sync_yet'       => 'No successful sync yet',
+    'errors_last_hour'         => '%d error(s) in the last hour',
 ];

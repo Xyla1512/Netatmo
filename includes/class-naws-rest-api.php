@@ -158,6 +158,14 @@ class NAWS_Rest_API {
         $opts    = get_option( 'naws_settings', [] );
         $modules = NAWS_Database::get_modules( true );
 
+        if ( empty( $modules ) ) {
+            return new WP_Error(
+                'naws_no_modules',
+                'No active modules found. Ensure the station has been synced at least once.',
+                [ 'status' => 404 ]
+            );
+        }
+
         // Count module types
         $types = [];
         foreach ( $modules as $m ) {

@@ -68,6 +68,7 @@ class NAWS_Admin {
         $clean['rain_unit']       = in_array( $input['rain_unit'] ?? 'mm', ['mm','in'], true ) ? $input['rain_unit'] : 'mm';
         $clean['chart_theme']     = sanitize_text_field( $input['chart_theme'] ?? 'light' );
         $clean['station_name']    = sanitize_text_field( $input['station_name'] ?? '' );
+        $clean['night_mode']      = ! empty( $input['night_mode'] ) ? 1 : 0;
 
         // ── Forecast settings ─────────────────────────────────────────
         $clean['forecast_provider'] = in_array( $input['forecast_provider'] ?? 'open_meteo', ['open_meteo','yr_no'], true )

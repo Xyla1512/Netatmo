@@ -3,7 +3,7 @@
  * Plugin Name: Netatmo Weather Station
  * Plugin URI: https://frank-neumann.de/netatmo-weather-station
  * Description: Connects to the Netatmo API, stores all sensor data locally and displays live dashboards, charts, history and forecasts via shortcodes.
- * Version: 1.0.2
+ * Version: 1.1.0
  * Author: Frank Neumann
  * Author URI: https://frank-neumann.de
  * License: GPL v2 or later
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'NAWS_VERSION',        '1.0.2' );
+define( 'NAWS_VERSION',        '1.1.0' );
 define( 'NAWS_PLUGIN_FILE',    __FILE__ );
 define( 'NAWS_PLUGIN_DIR',     plugin_dir_path( __FILE__ ) );
 define( 'NAWS_PLUGIN_URL',     plugin_dir_url( __FILE__ ) );
@@ -40,6 +40,7 @@ function naws_require( $file ) {
 }
 
 // ── Core classes (always needed) ──────────────────────────────────────────
+naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-logger.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-lang.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-crypto.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-helpers.php' );

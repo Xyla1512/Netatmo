@@ -476,4 +476,15 @@ return [
     'forecast_provider_desc'  => 'Velg vær-API for varselet. Alle leverandører er gratis og krever ingen API-nøkkel.',
     'forecast_provider_open_meteo' => 'Open-Meteo (global, åpen kildekode)',
     'forecast_provider_yr_no' => 'Yr.no / MET Norge (nøyaktig for Nord-Europa)',
+
+    // ── Smart Polling & Health ──────────────────────────────────────
+    'night_mode'               => 'Nattmodus',
+    'night_mode_label'         => 'Aktiver redusert polling mellom 23:00–06:00',
+    'night_mode_desc'          => 'I nattetimene dobles intervallet for å redusere serverbelastningen. Feilhåndtering skjer automatisk: etter 3 påfølgende feil dobles intervallet, og gjenopprettes umiddelbart ved suksess.',
+    'health_ok'                => 'Sync OK (%d min. siden)',
+    'health_night_mode'        => 'Nattmodus aktiv (redusert polling)',
+    'health_stale_sync'        => 'Advarsel: Siste sync %d minutter siden',
+    'health_error_backoff'     => 'Feil-backoff: %d feil på rad, siste sync %d min. siden',
+    'health_no_sync_yet'       => 'Ingen vellykket sync ennå',
+    'errors_last_hour'         => '%d feil den siste timen',
 ];

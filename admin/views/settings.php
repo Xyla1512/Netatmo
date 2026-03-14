@@ -192,6 +192,17 @@
                         </td>
                     </tr>
                     <tr>
+                        <th><?php naws_e( 'night_mode' ); ?></th>
+                        <td>
+                            <label>
+                                <input type="checkbox" name="naws_settings[night_mode]" value="1"
+                                    <?php checked( ! empty( $options['night_mode'] ) ); ?>>
+                                <?php naws_e( 'night_mode_label' ); ?>
+                            </label>
+                            <p class="description"><?php naws_e( 'night_mode_desc' ); ?></p>
+                        </td>
+                    </tr>
+                    <tr>
                         <th><?php naws_e( 'data_retention' ); ?></th>
                         <td>
                             <p><span style="color:#10b981; font-weight:600;"><?php naws_e( 'data_kept' ); ?></span><br>

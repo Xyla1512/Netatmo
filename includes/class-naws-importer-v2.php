@@ -369,12 +369,19 @@ class NAWS_Importer {
             array_values( $cols )
         );
 
-        $wpdb->query( $wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        $result = $wpdb->query( $wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
             "INSERT INTO {$table} (module_id, station_id, day_date, created_at, {$col_list})
              VALUES (%s, %s, %s, %s, {$val_ph})
              ON DUPLICATE KEY UPDATE {$on_dup}",
             $params
         ) );
+
+        if ( $result === false ) {
+            NAWS_Logger::error( 'importer', 'upsert_by_station failed: ' . $wpdb->last_error, [
+                'station_id' => $station_id,
+                'day_date'   => $day_date,
+            ] );
+        }
     }
 
     private static function get_station_id( $module_id ) {
@@ -383,6 +390,13 @@ class NAWS_Importer {
             "SELECT station_id FROM {$wpdb->prefix}naws_modules WHERE module_id = %s",
             $module_id
         ) );
+
+        if ( ! $sid ) {
+            NAWS_Logger::warning( 'importer', 'get_station_id: no station found for module, using fallback', [
+                'module_id' => $module_id,
+            ] );
+        }
+
         return $sid ?: $module_id;
     }
 }

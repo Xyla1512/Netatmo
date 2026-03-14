@@ -216,25 +216,50 @@ class NAWS_Ajax {
         check_ajax_referer( 'naws_admin_nonce', 'nonce' );
         if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
 
+        $errors = [];
+
         // Hidden individual params
         $hidden = isset( $_POST['hidden'] ) ? (array) $_POST['hidden'] : []; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         $hidden = array_map( 'sanitize_text_field', $hidden );
-        update_option( 'naws_live_hidden_params', $hidden ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        if ( ! update_option( 'naws_live_hidden_params', $hidden ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+            // update_option returns false both for unchanged value and actual failure — check if value matches
+            if ( get_option( 'naws_live_hidden_params' ) !== $hidden ) {
+                $errors[] = 'hidden_params';
+            }
+        }
 
         // Hidden modules (master toggle)
         $hidden_modules = isset( $_POST['hidden_modules'] ) ? (array) $_POST['hidden_modules'] : []; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         $hidden_modules = array_map( 'sanitize_text_field', $hidden_modules );
-        update_option( 'naws_live_hidden_modules', $hidden_modules );
+        if ( ! update_option( 'naws_live_hidden_modules', $hidden_modules ) ) {
+            if ( get_option( 'naws_live_hidden_modules' ) !== $hidden_modules ) {
+                $errors[] = 'hidden_modules';
+            }
+        }
 
         // Hidden charts (per-sensor 24h chart toggle) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         $hidden_charts = isset( $_POST['hidden_charts'] ) ? (array) $_POST['hidden_charts'] : [];
         $hidden_charts = array_map( 'sanitize_text_field', $hidden_charts );
-        update_option( 'naws_live_hidden_charts', $hidden_charts );
+        if ( ! update_option( 'naws_live_hidden_charts', $hidden_charts ) ) {
+            if ( get_option( 'naws_live_hidden_charts' ) !== $hidden_charts ) {
+                $errors[] = 'hidden_charts';
+            }
+        }
 
         // Hidden history (yearly comparison) charts
         $hidden_history_charts = isset( $_POST['hidden_history_charts'] ) ? (array) $_POST['hidden_history_charts'] : [];
         $hidden_history_charts = array_map( 'sanitize_text_field', $hidden_history_charts );
-        update_option( 'naws_history_hidden_charts', $hidden_history_charts );
+        if ( ! update_option( 'naws_history_hidden_charts', $hidden_history_charts ) ) {
+            if ( get_option( 'naws_history_hidden_charts' ) !== $hidden_history_charts ) {
+                $errors[] = 'hidden_history_charts';
+            }
+        }
+
+        if ( ! empty( $errors ) ) {
+            NAWS_Logger::error( 'ajax', 'save_live_settings: failed to save options', [ 'keys' => $errors ] );
+            wp_send_json_error( [ 'message' => 'Failed to save: ' . implode( ', ', $errors ) ] );
+            return;
+        }
 
         wp_send_json_success( [ 'saved_params' => count( $hidden ), 'saved_modules' => count( $hidden_modules ), 'saved_charts' => count( $hidden_charts ) ] );
     }
@@ -249,7 +274,7 @@ class NAWS_Ajax {
         if ( ! $date_from ) $date_from = gmdate(  'Y-m-d', strtotime( '-7 days' ) );
         if ( ! $date_to   ) $date_to   = gmdate(  'Y-m-d' );
         $rows = $wpdb->get_results( $wpdb->prepare(
-            "SELECT day_date, 
+            "SELECT day_date,
                     ROUND(temp_min,1)     AS temp_min,
                     ROUND(temp_max,1)     AS temp_max,
                     ROUND(pressure_avg,1) AS pressure_avg,
@@ -259,7 +284,14 @@ class NAWS_Ajax {
              ORDER BY day_date ASC",
             $date_from, $date_to
         ), ARRAY_A );
-        wp_send_json_success( [ 'rows' => $rows ] );
+
+        if ( $wpdb->last_error ) {
+            NAWS_Logger::error( 'ajax', 'db_check query failed: ' . $wpdb->last_error );
+            wp_send_json_error( [ 'message' => 'Database query failed: ' . $wpdb->last_error ] );
+            return;
+        }
+
+        wp_send_json_success( [ 'rows' => $rows ?: [] ] );
     }
 
     public function clear_daily_summary() {
@@ -268,7 +300,15 @@ class NAWS_Ajax {
         global $wpdb;
         $table   = $wpdb->prefix . NAWS_TABLE_DAILY;
         $deleted = $wpdb->query( "TRUNCATE TABLE {$table}" );
-        wp_send_json_success( [ 'deleted' => $deleted === false ? 0 : 'alle' ] );
+
+        if ( $deleted === false ) {
+            NAWS_Logger::error( 'ajax', 'clear_daily_summary TRUNCATE failed: ' . $wpdb->last_error );
+            wp_send_json_error( [ 'message' => 'Failed to clear daily summary table: ' . $wpdb->last_error ] );
+            return;
+        }
+
+        NAWS_Logger::info( 'ajax', 'Daily summary table cleared by admin' );
+        wp_send_json_success( [ 'deleted' => 'alle' ] );
     }
 
     /**
@@ -441,36 +481,51 @@ class NAWS_Ajax {
         $year_from = intval( $_POST['year_from'] ?? gmdate( 'Y') );
         $year_to   = intval( $_POST['year_to']   ?? gmdate( 'Y') );
 
-        // Build fixed x-axis: 365 labels Jan 01 … Dec 31 (non-leap)
-        // We use "MM-DD" as x key so every year maps to the same axis
+        // ── Single query for all years (replaces N+1 per-year loop) ──────
         $field_sql = implode( ', ', array_map( function($f){ return "d.{$f}"; }, $raw_fields ) );
+
+        $rows = $wpdb->get_results( $wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+            "SELECT d.day_date, {$field_sql}
+             FROM {$table} d
+             WHERE d.day_date BETWEEN %s AND %s
+             ORDER BY d.day_date ASC",
+            "{$year_from}-01-01", "{$year_to}-12-31"
+        ), ARRAY_A );
+
+        if ( $wpdb->last_error ) {
+            NAWS_Logger::error( 'ajax', 'get_history_data query failed: ' . $wpdb->last_error );
+            wp_send_json_error( [ 'message' => 'Database query failed.' ] );
+            return;
+        }
+
+        if ( empty( $rows ) ) {
+            wp_send_json_success( [ 'series' => [] ] );
+            return;
+        }
+
+        // Group rows by year in PHP
+        $by_year = [];
+        foreach ( $rows as $row ) {
+            $year = intval( substr( $row['day_date'], 0, 4 ) );
+            $by_year[ $year ][] = $row;
+        }
+
+        // Field → parameter mapping for unit conversion
+        $field_param_map = [
+            'temp_min'     => 'Temperature',
+            'temp_max'     => 'Temperature',
+            'temp_avg'     => 'Temperature',
+            'pressure_avg' => 'Pressure',
+            'rain_sum'     => 'Rain',
+        ];
 
         $result = [];
 
-        for ( $year = $year_from; $year <= $year_to; $year++ ) {
-            $rows = $wpdb->get_results( $wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
-                "SELECT day_date, {$field_sql}
-                 FROM {$table} d
-                 WHERE day_date BETWEEN %s AND %s
-                 ORDER BY day_date ASC",
-                "{$year}-01-01", "{$year}-12-31"
-            ), ARRAY_A );
-
-            if ( empty( $rows ) ) continue;
-
-            // Field → parameter mapping for unit conversion
-            $field_param_map = [
-                'temp_min'     => 'Temperature',
-                'temp_max'     => 'Temperature',
-                'temp_avg'     => 'Temperature',
-                'pressure_avg' => 'Pressure',
-                'rain_sum'     => 'Rain',
-            ];
-
+        foreach ( $by_year as $year => $year_rows ) {
             foreach ( $raw_fields as $field ) {
                 $data  = [];
                 $param = $field_param_map[ $field ] ?? null;
-                foreach ( $rows as $row ) {
+                foreach ( $year_rows as $row ) {
                     $val = $row[ $field ] ?? null;
                     if ( $val === null ) continue;
                     $converted = $param
@@ -548,9 +603,20 @@ class NAWS_Ajax {
 
         if ( empty( $module_id ) ) {
             wp_send_json_error( [ 'message' => 'Missing module_id.' ] );
+            return; // Early return – wp_send_json_error does die(), but be explicit
         }
 
         $result = NAWS_Database::set_module_active( $module_id, $is_active );
+
+        if ( is_wp_error( $result ) ) {
+            NAWS_Logger::error( 'ajax', 'toggle_module failed: ' . $result->get_error_message(), [ 'module_id' => $module_id ] );
+            wp_send_json_error( [ 'message' => $result->get_error_message() ] );
+            return;
+        }
+
+        // Flush module caches so the change is reflected immediately
+        NAWS_Database::flush_module_caches();
+
         wp_send_json_success( [ 'module_id' => $module_id, 'is_active' => $is_active ] );
     }
 

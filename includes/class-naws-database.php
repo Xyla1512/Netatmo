@@ -16,6 +16,20 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class NAWS_Database {
 
     // ================================================================
+    // Cache constants
+    // ================================================================
+
+    /** Transient prefix for all NAWS caches. */
+    const CACHE_PREFIX = 'naws_cache_';
+
+    /** Cache TTLs in seconds. */
+    const TTL_MODULES  = HOUR_IN_SECONDS;         // Modules change rarely
+    const TTL_LATEST   = 5 * MINUTE_IN_SECONDS;   // Refreshed on every sync
+    const TTL_RAIN24   = 5 * MINUTE_IN_SECONDS;   // Rolling rain window
+    const TTL_READINGS = 10 * MINUTE_IN_SECONDS;   // Grouped time-series
+    const TTL_DAILY    = HOUR_IN_SECONDS;          // Historical daily data
+
+    // ================================================================
     // Install / Migrations
     // ================================================================
 
@@ -157,6 +171,8 @@ class NAWS_Database {
      * Upsert module metadata.
      * IMPORTANT: uses INSERT ... ON DUPLICATE KEY UPDATE so that
      * is_active is NOT overwritten on subsequent syncs.
+     *
+     * @return true|WP_Error
      */
     public static function save_module( $data ) {
         global $wpdb;
@@ -170,14 +186,14 @@ class NAWS_Database {
         $station_id  = sanitize_text_field( $data['station_id'] );
         $module_name = sanitize_text_field( $data['module_name'] ?? $data['station_name'] ?? 'Unknown' );
         $module_type = sanitize_text_field( $data['type'] ?? 'NAMain' );
-        $data_types  = json_encode( $data['data_type'] ?? [] );
+        $data_types  = wp_json_encode( $data['data_type'] ?? [] );
         $last_seen   = isset( $data['last_seen'] )  ? intval( $data['last_seen'] )  : null;
         $firmware    = isset( $data['firmware'] )   ? intval( $data['firmware'] )   : null;
         $battery_vp  = isset( $data['battery_vp'] ) ? intval( $data['battery_vp'] ) : null;
         $rf_status   = isset( $data['rf_status'] )  ? intval( $data['rf_status'] )  : null;
 
         // INSERT … ON DUPLICATE KEY: never touches is_active on update
-        $wpdb->query( $wpdb->prepare(
+        $result = $wpdb->query( $wpdb->prepare(
             "INSERT INTO {$table}
                 (module_id, station_id, module_name, module_type, data_types, last_seen, firmware, battery_vp, rf_status, latitude, longitude, is_active)
              VALUES (%s, %s, %s, %s, %s, %d, %d, %d, %d, %f, %f, 1)
@@ -195,12 +211,28 @@ class NAWS_Database {
             $module_id, $station_id, $module_name, $module_type,
             $data_types, $last_seen, $firmware, $battery_vp, $rf_status, $latitude, $longitude
         ) );
+
+        if ( $result === false ) {
+            NAWS_Logger::error( 'database', 'save_module failed: ' . $wpdb->last_error, [
+                'module_id' => $module_id,
+            ] );
+            return new WP_Error( 'db_error', 'Failed to save module: ' . $wpdb->last_error );
+        }
+
+        return true;
     }
 
     /**
      * @param bool $active_only  false = all (for admin UI), true = active only (for frontend)
      */
     public static function get_modules( $active_only = false ) {
+        // Check transient cache first
+        $cache_key = self::CACHE_PREFIX . 'modules_' . ( $active_only ? '1' : '0' );
+        $cached    = get_transient( $cache_key );
+        if ( $cached !== false && is_array( $cached ) ) {
+            return $cached;
+        }
+
         global $wpdb;
         $table = $wpdb->prefix . NAWS_TABLE_MODULES;
         $where = $active_only ? 'WHERE is_active = 1' : '';
@@ -208,9 +240,22 @@ class NAWS_Database {
             "SELECT * FROM {$table} {$where} ORDER BY is_active DESC, module_type, module_name",
             ARRAY_A
         );
+
+        if ( $wpdb->last_error ) {
+            NAWS_Logger::error( 'database', 'get_modules query failed: ' . $wpdb->last_error );
+            return [];
+        }
+
+        if ( ! is_array( $rows ) ) {
+            $rows = [];
+        }
+
         foreach ( $rows as &$row ) {
             $row['data_types'] = json_decode( $row['data_types'], true ) ?: [];
         }
+
+        set_transient( $cache_key, $rows, self::TTL_MODULES );
+
         return $rows;
     }
 
@@ -246,6 +291,12 @@ class NAWS_Database {
      * Netatmo's sum_rain_24 resets at midnight, so this gives the true rolling 24h value.
      */
     public static function get_rain_rolling_24h( $module_id ) {
+        $cache_key = self::CACHE_PREFIX . 'rain24h_' . md5( $module_id );
+        $cached    = get_transient( $cache_key );
+        if ( $cached !== false ) {
+            return $cached === 'null' ? null : floatval( $cached );
+        }
+
         global $wpdb;
         $table    = $wpdb->prefix . NAWS_TABLE_READINGS;
         $since    = time() - DAY_IN_SECONDS;
@@ -255,7 +306,11 @@ class NAWS_Database {
             $module_id,
             $since
         ) );
-        return $result !== null ? round( floatval( $result ), 1 ) : null;
+
+        $value = $result !== null ? round( floatval( $result ), 1 ) : null;
+        set_transient( $cache_key, $value === null ? 'null' : $value, self::TTL_RAIN24 );
+
+        return $value;
     }
 
     public static function bulk_insert_readings( $rows ) {
@@ -279,7 +334,16 @@ class NAWS_Database {
                     (module_id, station_id, recorded_at, parameter, value)
                 VALUES " . implode( ',', $placeholders );
 
-        return $wpdb->query( $wpdb->prepare( $sql, $values ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        $result = $wpdb->query( $wpdb->prepare( $sql, $values ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+
+        if ( $result === false ) {
+            NAWS_Logger::error( 'database', 'bulk_insert_readings failed: ' . $wpdb->last_error, [
+                'row_count' => count( $rows ),
+            ] );
+            return 0;
+        }
+
+        return $result;
     }
 
     /**
@@ -300,6 +364,13 @@ class NAWS_Database {
             'limit'      => 5000,
             'group_by'   => 'raw',
         ] );
+
+        // ── Transient cache ──────────────────────────────────────────
+        $cache_key = self::CACHE_PREFIX . 'readings_' . md5( wp_json_encode( $args ) );
+        $cached    = get_transient( $cache_key );
+        if ( $cached !== false && is_array( $cached ) ) {
+            return $cached;
+        }
 
         // WHERE
         $where  = [
@@ -349,8 +420,20 @@ class NAWS_Database {
             $order  = "ORDER BY r.recorded_at ASC";
         }
 
-        $sql = "SELECT {$select} FROM {$r} r {$where_sql} {$group} {$order} {$limit_sql}";
-        return $wpdb->get_results( $wpdb->prepare( $sql, $params ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        $sql     = "SELECT {$select} FROM {$r} r {$where_sql} {$group} {$order} {$limit_sql}";
+        $results = $wpdb->get_results( $wpdb->prepare( $sql, $params ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+
+        if ( $wpdb->last_error ) {
+            NAWS_Logger::error( 'database', 'get_readings query failed: ' . $wpdb->last_error, [
+                'group_by' => $args['group_by'],
+            ] );
+            return [];
+        }
+
+        $results = $results ?: [];
+        set_transient( $cache_key, $results, self::TTL_READINGS );
+
+        return $results;
     }
 
     /**
@@ -358,6 +441,12 @@ class NAWS_Database {
      * Only active modules.
      */
     public static function get_latest_readings( $module_id = null ) {
+        $cache_key = self::CACHE_PREFIX . 'latest_' . ( $module_id ? md5( $module_id ) : 'all' );
+        $cached    = get_transient( $cache_key );
+        if ( $cached !== false && is_array( $cached ) ) {
+            return $cached;
+        }
+
         global $wpdb;
         $r = $wpdb->prefix . NAWS_TABLE_READINGS;
         $m = $wpdb->prefix . NAWS_TABLE_MODULES;
@@ -389,10 +478,14 @@ class NAWS_Database {
         $results = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- query built from constants
 
         if ( $wpdb->last_error ) {
-            error_log( '[NAWS] get_latest_readings DB error: ' . $wpdb->last_error ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+            NAWS_Logger::error( 'database', 'get_latest_readings query failed: ' . $wpdb->last_error );
+            return [];
         }
 
-        return $results ?: [];
+        $results = $results ?: [];
+        set_transient( $cache_key, $results, self::TTL_LATEST );
+
+        return $results;
     }
 
     // ================================================================
@@ -434,6 +527,11 @@ class NAWS_Database {
             ARRAY_A
         );
 
+        if ( $wpdb->last_error ) {
+            NAWS_Logger::error( 'database', 'compute_daily_summary: failed to load modules: ' . $wpdb->last_error );
+            return 0;
+        }
+
         $stations = [];
         foreach ( $all_modules as $m ) {
             $stations[ $m['station_id'] ][] = $m;
@@ -456,6 +554,11 @@ class NAWS_Database {
                        AND recorded_at BETWEEN %d AND %d",
                     $mid, $day_start, $day_end
                 ), ARRAY_A );
+
+                if ( $wpdb->last_error ) {
+                    NAWS_Logger::warning( 'database', 'compute_daily_summary: query failed for module ' . $mid . ': ' . $wpdb->last_error );
+                    continue;
+                }
 
                 if ( empty( $readings ) ) continue;
 
@@ -631,13 +734,20 @@ class NAWS_Database {
             array_values( $cols )
         );
 
-        $wpdb->query( $wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        $result = $wpdb->query( $wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
             "INSERT INTO {$table}
                 (module_id, station_id, day_date, created_at, {$col_list})
              VALUES (%s, %s, %s, %s, {$val_ph})
              ON DUPLICATE KEY UPDATE {$on_dup}, updated_at = NOW()",
             $params
         ) );
+
+        if ( $result === false ) {
+            NAWS_Logger::error( 'database', 'upsert_daily_summary failed: ' . $wpdb->last_error, [
+                'station_id' => $station_id,
+                'day_date'   => $day_date,
+            ] );
+        }
     }
 
 
@@ -654,6 +764,13 @@ class NAWS_Database {
             'group_by'   => 'day',
             'limit'      => 0,
         ] );
+
+        // ── Transient cache ──────────────────────────────────────────
+        $cache_key = self::CACHE_PREFIX . 'daily_' . md5( wp_json_encode( $args ) );
+        $cached    = get_transient( $cache_key );
+        if ( $cached !== false && is_array( $cached ) ) {
+            return $cached;
+        }
 
         // Only select requested fields + join with active modules
         $allowed_fields = [ 'temp_min', 'temp_max', 'temp_avg', 'pressure_avg', 'rain_sum' ];
@@ -692,9 +809,18 @@ class NAWS_Database {
             $date_sel  = "DATE_FORMAT(MIN(d.day_date), '%%Y-01-01') AS day_date";
         } else {
             // day (default – no grouping)
-            $sql = "SELECT d.module_id, d.station_id, d.day_date, {$field_sql}
-                    FROM {$t} d {$where_sql} ORDER BY d.day_date ASC {$limit_sql}";
-            return $wpdb->get_results( $wpdb->prepare( $sql, $params ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+            $sql     = "SELECT d.module_id, d.station_id, d.day_date, {$field_sql}
+                        FROM {$t} d {$where_sql} ORDER BY d.day_date ASC {$limit_sql}";
+            $results = $wpdb->get_results( $wpdb->prepare( $sql, $params ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+
+            if ( $wpdb->last_error ) {
+                NAWS_Logger::error( 'database', 'get_daily_summaries query failed: ' . $wpdb->last_error );
+                return [];
+            }
+
+            $results = $results ?: [];
+            set_transient( $cache_key, $results, self::TTL_DAILY );
+            return $results;
         }
 
         // Aggregated fields
@@ -712,7 +838,19 @@ class NAWS_Database {
                 GROUP BY d.module_id, {$date_expr}
                 ORDER BY day_date ASC {$limit_sql}";
 
-        return $wpdb->get_results( $wpdb->prepare( $sql, $params ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        $results = $wpdb->get_results( $wpdb->prepare( $sql, $params ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+
+        if ( $wpdb->last_error ) {
+            NAWS_Logger::error( 'database', 'get_daily_summaries aggregated query failed: ' . $wpdb->last_error, [
+                'group_by' => $group_by,
+            ] );
+            return [];
+        }
+
+        $results = $results ?: [];
+        set_transient( $cache_key, $results, self::TTL_DAILY );
+
+        return $results;
     }
 
     /**
@@ -833,5 +971,39 @@ class NAWS_Database {
             ) );
         }
         return $sizes;
+    }
+
+    // ================================================================
+    // Cache Management
+    // ================================================================
+
+    /**
+     * Flush all NAWS transient caches.
+     *
+     * Called after successful data sync and module toggle to ensure
+     * fresh data is served on the next request.
+     */
+    public static function flush_caches() {
+        global $wpdb;
+
+        // Delete all transients with our prefix (pattern-based)
+        $wpdb->query( $wpdb->prepare(
+            "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s",
+            '_transient_' . self::CACHE_PREFIX . '%',
+            '_transient_timeout_' . self::CACHE_PREFIX . '%'
+        ) );
+
+        // Also clear the WordPress object cache group
+        wp_cache_flush_group( 'naws' );
+
+        NAWS_Logger::info( 'cache', 'All NAWS caches flushed.' );
+    }
+
+    /**
+     * Flush only module-related caches.
+     */
+    public static function flush_module_caches() {
+        delete_transient( self::CACHE_PREFIX . 'modules_0' );
+        delete_transient( self::CACHE_PREFIX . 'modules_1' );
     }
 }
