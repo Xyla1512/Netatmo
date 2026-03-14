@@ -2,6 +2,25 @@
 
 All notable changes to the Netatmo Weather Station (NAWS) plugin are documented here.
 
+## [1.2.0] – 2026-03-14
+
+### Added
+- **Mobile-first responsive redesign**: Complete rewrite of all CSS from desktop-first (`max-width`) to mobile-first (`min-width`) media queries
+- **Standardized breakpoints**: 480px (sm), 600px (md), 768px (lg), 1024px (xl)
+- **Responsive grids**: All grid layouts start at 1 column on mobile and progressively enhance (1→2→auto-fill)
+- **Touch-friendly targets**: All buttons and interactive elements now meet WCAG minimum of 44×44px
+- **Responsive compass**: Wind rose uses `clamp(120px, 35vw, 160px)` instead of fixed 160px, SVGs use percentage-based sizing
+- **Responsive chart fonts**: Dynamic font sizing based on viewport width (9px/10px/11px) with debounced resize handlers
+- **CSS custom properties for grids**: Forecast grids use `--naws-fc-cols` and `--naws-fc-days` variables for dynamic column counts
+
+### Improved
+- **Inline styles extracted**: ~400 lines of `<style>` blocks removed from `live.php`, `forecast.php`, and `history.php` into centralized `frontend.css`
+- **ID selectors replaced**: Template-scoped `#widget_id` selectors replaced with reusable class selectors (`.naws-wx`, `.naws-fc-wrap`, `.naws-hist`)
+- **Forecast cards**: Inline `style=` attributes replaced with semantic CSS classes (`.naws-fcc-day`, `.naws-fcc-temps`, `.naws-fcc-meta`, etc.)
+- **History modal**: Canvas height changed from fixed `420px` to `clamp(200px, 50vh, 420px)` for mobile usability
+- **Admin tables**: Added `overflow-x: auto` for horizontal scrolling on small screens
+- **Version bump to 1.2.0**
+
 ## [1.1.0] – 2026-03-14
 
 ### Added

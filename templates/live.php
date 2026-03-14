@@ -238,158 +238,7 @@ $pressure_diff  = $_pt['diff'];
   </div>
 </div>
 
-<style>
-/* ── BASE ──────────────────────────────── */
-#<?php echo esc_attr( $widget_id ); ?> {
-  --ink:#427272; --ink2:#2d5252; --ink3:#1a3535;
-  --muted:#7aa0a0; --light:#a0b8b8;
-  --line:#e0eeee; --bg:#ffffff; --card:#f4fafa; --sh:rgba(40,72,72,.08);
-  font-family:inherit; color:var(--ink);
-}
-/* HEADER */
-.naws-hdr { background:var(--ink2); border-radius:16px 16px 0 0; padding:15px 24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
-.naws-hdr-name { font-size:18px; font-weight:800; font-style:italic; color:#fff; }
-.naws-hdr-meta { display:flex; align-items:center; gap:9px; color:rgba(255,255,255,.75); font-size:12.5px; font-weight:600; }
-.naws-pulse { width:8px; height:8px; border-radius:50%; background:#7ee8cc; flex-shrink:0; animation:npulse 2.5s ease-in-out infinite; }
-@keyframes npulse{0%,100%{box-shadow:0 0 0 0 rgba(126,232,204,.5)}50%{box-shadow:0 0 0 6px rgba(126,232,204,0)}}
-/* BODY */
-.naws-body { background:var(--bg); border:1.5px solid var(--line); border-top:none; border-radius:0 0 16px 16px; padding:16px; }
-/* LOADER */
-.naws-loading { display:flex; justify-content:center; padding:60px 20px; }
-.naws-spin { width:32px; height:32px; border-radius:50%; border:2px solid var(--line); border-top-color:var(--ink); animation:nspin .75s linear infinite; }
-@keyframes nspin{to{transform:rotate(360deg)}}
-/* GRID */
-.naws-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(165px,1fr)); gap:13px; }
-/* CARD */
-.naws-card {
-  background:var(--card); border:1.5px solid var(--line); border-radius:14px;
-  padding:22px 14px 16px; display:flex; flex-direction:column; align-items:center; text-align:center; justify-content:flex-start;
-  box-shadow:0 2px 10px rgba(40,72,72,.10); transition:transform .2s ease;
-  position:relative; overflow:hidden;
-}
-#<?php echo esc_attr( $widget_id ); ?> .naws-card:hover{transform:translateY(-4px) !important;box-shadow:0 2px 10px rgba(40,72,72,.10) !important;}
-.naws-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3.5px;background:var(--ca,var(--ink));border-radius:14px 14px 0 0;}
-.c-temp{--ca:#3d9e74}.c-humid{--ca:#3d82bf}.c-press{--ca:#7055c0}
-.naws-press-trend{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:4px;font-size:11px;font-weight:700;color:var(--muted);}
-.naws-press-trend svg{flex-shrink:0;}
-.naws-trend-up   {color:#3d9e74;}
-.naws-trend-down {color:#c0392b;}
-.naws-trend-stable{color:#7aa0a0;}
-.c-wind{--ca:var(--ink)}.c-rain{--ca:#3585b0}.c-co2{--ca:#4a9848}.c-noise{--ca:#b88030}
-.naws-ico { width:46px;height:46px;border-radius:50%;background:color-mix(in srgb,var(--ca,var(--ink)) 13%,white);display:flex;align-items:center;justify-content:center;margin-bottom:11px;flex-shrink:0; }
-.naws-ico svg{width:23px;height:23px;stroke:var(--ca,var(--ink));fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
-.naws-lbl-badge{display:block;font-size:8px;font-weight:600;letter-spacing:.08em;color:var(--accent);opacity:.8;text-transform:uppercase;line-height:1;}
-.naws-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px;line-height:1.3;min-height:2.6em;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;}
-.naws-val{font-size:44px;font-weight:800;font-style:italic;color:var(--ink2);line-height:1;letter-spacing:-.03em;margin-bottom:1px;transition:color .35s;}
-.naws-val.naws-flash{animation:nflash .5s ease}
-@keyframes nflash{0%{color:var(--muted)}100%{color:var(--ink2)}}
-.naws-unit{font-size:14px;font-weight:400;color:var(--muted);margin-bottom:6px;}
-.naws-time{font-size:9px;font-style:italic;color:var(--light);margin-top:auto;padding-top:7px;}
-.naws-subs{width:100%;margin-top:11px;padding-top:9px;border-top:1px solid var(--line);display:flex;justify-content:center;gap:18px;flex-wrap:wrap;}
-.naws-sub{display:flex;flex-direction:column;align-items:center;gap:1px;}
-.naws-sub-lbl{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
-.naws-sub-val{font-size:14px;font-weight:800;font-style:italic;color:var(--ink);}
-.naws-sub-u{font-size:9.5px;font-weight:400;color:var(--muted);}
-.naws-sub-time{font-size:8.5px;font-style:italic;color:var(--light);}
-/* WIND gauge card */
-.naws-gauge-svg{display:block;width:100%;max-width:200px;overflow:visible;}
-.naws-wvrow{display:flex;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);width:100%;max-width:200px;}
-.naws-wvblk{flex:1;display:flex;flex-direction:column;align-items:center;padding:0 8px;}
-.naws-wvblk+.naws-wvblk{border-left:1px solid var(--line)}
-.naws-wv-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:3px;}
-.naws-wv-num{font-size:30px;font-weight:800;font-style:italic;line-height:1;letter-spacing:-.02em;}
-.naws-wv-unit{font-size:11px;font-weight:400;color:var(--muted);}
-/* COMPASS card */
-.naws-rose-wrap{position:relative;width:160px;height:160px;}
-.naws-rose-dir{font-size:12.5px;font-weight:700;font-style:italic;color:var(--ink);text-align:center;margin-top:8px;letter-spacing:.04em;}
-/* CHARTS SECTION */
-.naws-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:20px 0 12px;padding-top:16px;border-top:1px solid var(--line);}
-.naws-charts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:13px;}
-.naws-chart-card{
-  background:#ffffff;border:1.5px solid var(--line);border-radius:14px;
-  padding:14px 14px 12px;
-  cursor:pointer;transition:transform .2s ease;
-}
-.naws-chart-card canvas{ background:#ffffff; border-radius:6px; }
-.naws-chart-card:hover{transform:translateY(-4px);}
-.naws-chart-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
-.naws-chart-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);}
-.naws-chart-expand{
-  background:none;border:1px solid var(--line);border-radius:6px;
-  padding:4px 6px;cursor:pointer;color:var(--muted);
-  display:flex;align-items:center;transition:background .15s,color .15s;
-}
-.naws-chart-expand:hover{background:var(--ink);color:#fff;border-color:var(--ink);}
-/* ERROR */
-.naws-error{text-align:center;padding:50px 20px;color:var(--muted);font-style:italic;font-size:14px;}
-/* ── MODAL ─────────────────────────────── */
-.naws-modal{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;}
-.naws-modal-backdrop{position:absolute;inset:0;background:rgba(10,26,26,.65);backdrop-filter:blur(3px);cursor:pointer;}
-.naws-modal-box{
-  position:relative;z-index:1;
-  background:#fff;border-radius:18px;
-  width:min(92vw,860px);max-height:90vh;
-  box-shadow:0 24px 80px rgba(10,26,26,.3);
-  display:flex;flex-direction:column;
-  animation:nmodal-in .22s ease;
-}
-@keyframes nmodal-in{from{opacity:0;transform:scale(.93)}to{opacity:1;transform:scale(1)}}
-.naws-modal-hdr{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:16px 20px 12px;border-bottom:1px solid var(--line,#e0eeee);
-}
-.naws-modal-title{font-family:inherit;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:#7aa0a0;}
-.naws-modal-close{
-  background:none;border:1px solid #e0eeee;border-radius:8px;padding:5px 8px;
-  cursor:pointer;color:#7aa0a0;display:flex;align-items:center;transition:background .15s,color .15s;
-}
-.naws-modal-close:hover{background:#2d5252;color:#fff;border-color:#2d5252;}
-.naws-modal-body{padding:16px 20px 20px;flex:1;overflow:hidden;}
-.naws-modal-body canvas{width:100%!important;}
-
-/* Forecast cards – match live card styling */
-.naws-fcc {
-  background:#ffffff;
-  border:1.5px solid var(--line,#e0eeee);
-  border-radius:14px;
-  padding:18px 10px 14px;
-  text-align:center;
-  transition:transform .2s ease;
-  box-shadow:0 2px 10px rgba(40,72,72,.10);
-  position:relative;
-  overflow:hidden;
-}
-.naws-fcc::before {
-  content:'';
-  position:absolute;top:0;left:0;right:0;
-  height:3.5px;
-  background:var(--ink,#427272);
-  border-radius:14px 14px 0 0;
-}
-.naws-fcc:hover {
-  transform:translateY(-4px);
-  box-shadow:0 4px 16px rgba(40,72,72,.15);
-}
-.naws-fcc-today {
-  border-color:var(--ink2,#2d5252);
-  box-shadow:0 2px 12px rgba(45,82,82,.18);
-}
-.naws-fcc-today::before {
-  height:4px;
-  background:#3d9e74;
-}
-/* Forecast in Live: responsive grid */
-@media (max-width: 700px) {
-  .naws-live-forecast-grid {
-    grid-template-columns: repeat(3, 1fr) !important;
-  }
-}
-@media (max-width: 450px) {
-  .naws-live-forecast-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-}
-</style>
+<!-- Styles moved to assets/css/frontend.css (.naws-wx scope) -->
 
 <?php
 // ── 5-Day Forecast Section (server-rendered, cached) ────────────────
@@ -406,9 +255,9 @@ if ( ! isset( $forecast['error'] ) && ! empty( $forecast['days'] ) ) :
 ?>
 <div style="margin-top:16px;">
   <!-- Forecast Header -->
-  <div style="background:#2d5252;border-radius:16px 16px 0 0;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
-    <div style="font-size:15px;font-weight:800;font-style:italic;color:#fff;"><?php echo esc_html( $fc_title ); ?></div>
-    <div style="display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.75);font-size:11.5px;font-weight:600;">
+  <div class="naws-fc-header">
+    <div class="naws-fc-header-title"><?php echo esc_html( $fc_title ); ?></div>
+    <div class="naws-fc-header-meta">
       <?php if ( $fc_loc_name ) : ?>
         <span>📍 <?php echo esc_html( $fc_loc_name ); ?></span>
       <?php endif; ?>
@@ -418,8 +267,8 @@ if ( ! isset( $forecast['error'] ) && ! empty( $forecast['days'] ) ) :
     </div>
   </div>
   <!-- Forecast Body -->
-  <div style="background:var(--bg,#fff);border:1.5px solid var(--line,#e0eeee);border-top:none;border-radius:0 0 16px 16px;padding:14px;">
-    <div class="naws-live-forecast-grid" style="display:grid;grid-template-columns:repeat(<?php echo intval( $fc_day_count ); ?>,1fr);gap:10px;">
+  <div class="naws-fc-body-wrap">
+    <div class="naws-live-forecast-grid" style="--naws-fc-cols:<?php echo intval( $fc_day_count ); ?>">
       <?php foreach ( $forecast['days'] as $fc_day ) :
           $fc_wmo    = NAWS_Forecast::wmo_description( $fc_day['weathercode'] );
           $fc_today  = NAWS_Forecast::is_today( $fc_day['date'] );
@@ -440,16 +289,16 @@ if ( ! isset( $forecast['error'] ) && ! empty( $forecast['days'] ) ) :
           $fc_compass = NAWS_Helpers::degrees_to_compass( $fc_day['wind_dir'] );
       ?>
       <div class="naws-fcc<?php echo $fc_today ? ' naws-fcc-today' : ''; ?>">
-        <div style="font-weight:800;font-size:12px;color:<?php echo $fc_today ? '#3d9e74' : 'var(--ink,#427272)'; ?>"><?php echo esc_html( $fc_wd ); ?></div>
-        <div style="font-size:10px;color:var(--muted,#7aa0a0);margin-bottom:6px"><?php echo esc_html( $fc_dt ); ?></div>
-        <div style="width:40px;height:40px;margin:0 auto 4px"><?php echo NAWS_Forecast::get_weather_svg( $fc_wmo['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG from trusted internal method ?></div>
-        <div style="font-size:10px;color:var(--muted,#7aa0a0);font-weight:600;min-height:2em;line-height:1.2"><?php echo esc_html( $fc_wmo['label'] ); ?></div>
-        <div style="margin:4px 0">
-          <span style="font-size:20px;font-weight:800;font-style:italic;color:var(--ink2,#2d5252)"><?php echo $fc_tmax !== null ? esc_html( $fc_tmax ) : '--'; ?></span>
-          <span style="font-size:12px;color:var(--muted,#7aa0a0)">/ <?php echo $fc_tmin !== null ? esc_html( $fc_tmin ) : '--'; ?></span>
-          <span style="font-size:10px;color:var(--muted,#7aa0a0)"><?php echo esc_html( $fc_temp_unit ); ?></span>
+        <div class="naws-fcc-day"><?php echo esc_html( $fc_wd ); ?></div>
+        <div class="naws-fcc-date"><?php echo esc_html( $fc_dt ); ?></div>
+        <div class="naws-fcc-svg"><?php echo NAWS_Forecast::get_weather_svg( $fc_wmo['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG from trusted internal method ?></div>
+        <div class="naws-fcc-cond"><?php echo esc_html( $fc_wmo['label'] ); ?></div>
+        <div class="naws-fcc-temps">
+          <span class="naws-fcc-tmax"><?php echo $fc_tmax !== null ? esc_html( $fc_tmax ) : '--'; ?></span>
+          <span class="naws-fcc-sep">/ <?php echo $fc_tmin !== null ? esc_html( $fc_tmin ) : '--'; ?></span>
+          <span class="naws-fcc-tunit"><?php echo esc_html( $fc_temp_unit ); ?></span>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px 6px;font-size:10px;color:var(--muted,#7aa0a0);padding-top:6px;border-top:1px solid var(--line,#e0eeee)">
+        <div class="naws-fcc-meta">
           <span title="<?php echo esc_attr( naws__( 'forecast_precip' ) ); ?>">🌧️ <?php echo $fc_precip !== null ? esc_html( $fc_precip . ' ' . $fc_rain_unit ) : '0'; ?></span>
           <span title="<?php echo esc_attr( naws__( 'forecast_precip_prob' ) ); ?>">💧 <?php echo esc_html( $fc_day['precip_prob'] . '%' ); ?></span>
           <span title="<?php echo esc_attr( naws__( 'forecast_wind' ) ); ?>">🌬️ <?php echo $fc_wmax !== null ? esc_html( $fc_wmax . ' ' . $fc_wind_label ) : '--'; ?></span>
@@ -458,7 +307,7 @@ if ( ! isset( $forecast['error'] ) && ! empty( $forecast['days'] ) ) :
       </div>
       <?php endforeach; ?>
     </div>
-    <div style="text-align:center;margin-top:8px;font-size:10px;color:var(--light,#a0b8b8)">
+    <div class="naws-fcc-gust" style="text-align:center;margin-top:8px">
       <?php echo esc_html( naws__( 'forecast_source' ) ); ?>: Open-Meteo.com
     </div>
   </div>
@@ -575,7 +424,7 @@ var ICO={
 };
 
 /* ── COMPASS ─────────────────────────── */
-var ROSE='<svg style="position:absolute;top:0;left:0;width:160px;height:160px" viewBox="-4 -4 168 168" xmlns="http://www.w3.org/2000/svg">'
+var ROSE='<svg style="position:absolute;top:0;left:0;width:100%;height:100%" viewBox="-4 -4 168 168" xmlns="http://www.w3.org/2000/svg">'
   +'<circle cx="80" cy="80" r="72" fill="#f4fafa" stroke="#c0d4d4" stroke-width="1.5"/>'
   +'<circle cx="80" cy="80" r="54" fill="none" stroke="#daeaea" stroke-width="1"/>'
   +'<circle cx="80" cy="80" r="34" fill="none" stroke="#e5f0f0" stroke-width="1" stroke-dasharray="3 4"/>'
@@ -606,7 +455,7 @@ var ROSE='<svg style="position:absolute;top:0;left:0;width:160px;height:160px" v
   +'<text x="27" y="27" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="600" fill="#7aa0a0">NW</text>'
   +'</svg>';
 function arrowSVG(deg){
-  return '<svg id="'+WID+'-arr" style="position:absolute;top:0;left:0;width:160px;height:160px;transform:rotate('+deg+'deg);transform-origin:80px 80px;transition:transform 1.2s ease" viewBox="-4 -4 168 168" xmlns="http://www.w3.org/2000/svg">'
+  return '<svg id="'+WID+'-arr" style="position:absolute;top:0;left:0;width:100%;height:100%;transform:rotate('+deg+'deg);transform-origin:50% 50%;transition:transform 1.2s ease" viewBox="-4 -4 168 168" xmlns="http://www.w3.org/2000/svg">'
     +'<polygon points="80,18 87,38 80,32 73,38" fill="#c0392b"/>'
     +'<line x1="80" y1="32" x2="80" y2="88" stroke="#c0392b" stroke-width="5" stroke-linecap="round"/>'
     +'<line x1="80" y1="88" x2="80" y2="106" stroke="#7aa0a0" stroke-width="3" stroke-linecap="round" opacity=".4"/>'
@@ -840,7 +689,10 @@ var canvasBgPlugin={
 Chart.register(canvasBgPlugin);
 
 /* ── CHART.JS CONFIG ─────────────────── */
+function nawsLiveFontSize(){ var w=window.innerWidth; return w<480?9:w<768?10:11; }
+
 function chartOpts(unit, type){
+  var fs = nawsLiveFontSize();
   return {
     responsive:true, maintainAspectRatio:true,
     animation:{duration:900,easing:'easeInOutQuart'},
@@ -849,8 +701,8 @@ function chartOpts(unit, type){
       tooltip:{
         backgroundColor:'rgba(45,82,82,.92)',
         titleColor:'#a0c8c8',bodyColor:'#fff',
-        titleFont:{family:NAWS_FONT,size:11},
-        bodyFont:{family:NAWS_FONT,size:13,weight:'bold'},
+        titleFont:{family:NAWS_FONT,size:fs+1},
+        bodyFont:{family:NAWS_FONT,size:fs+3,weight:'bold'},
         padding:10,cornerRadius:8,displayColors:false,
         callbacks:{label:function(c){return (Math.round(c.parsed.y*10)/10)+' '+unit;}}
       }
@@ -858,15 +710,15 @@ function chartOpts(unit, type){
     scales:{
       x:{
         grid:{color:'rgba(218,240,240,.5)'},
-        ticks:{color:'#7aa0a0',font:{family:NAWS_FONT,size:10},maxRotation:0,maxTicksLimit:12}
+        ticks:{color:'#7aa0a0',font:{family:NAWS_FONT,size:fs},maxRotation:0,maxTicksLimit:12}
       },
       y:{
         grid:{color:'rgba(218,240,240,.5)'},
         ticks:{
-          color:'#7aa0a0',font:{family:NAWS_FONT,size:10},
+          color:'#7aa0a0',font:{family:NAWS_FONT,size:fs},
           callback:function(v){return Math.round(v*10)/10;}
         },
-        title:{display:true,text:unit,color:'#a0b8b8',font:{family:NAWS_FONT,size:10,weight:'600'}}
+        title:{display:true,text:unit,color:'#a0b8b8',font:{family:NAWS_FONT,size:fs,weight:'600'}}
       }
     }
   };
@@ -1030,5 +882,22 @@ function loadLive(){
   });
 }
 loadLive();
+
+/* ── RESPONSIVE: update chart fonts on resize ── */
+var _nawsLiveResizeTimer;
+window.addEventListener('resize', function(){
+  clearTimeout(_nawsLiveResizeTimer);
+  _nawsLiveResizeTimer = setTimeout(function(){
+    var fs = nawsLiveFontSize();
+    Object.keys(charts).forEach(function(id){
+      var ch = charts[id];
+      if(!ch) return;
+      if(ch.options.scales && ch.options.scales.x && ch.options.scales.x.ticks) ch.options.scales.x.ticks.font.size = fs;
+      if(ch.options.scales && ch.options.scales.y && ch.options.scales.y.ticks) ch.options.scales.y.ticks.font.size = fs;
+      if(ch.options.scales && ch.options.scales.y && ch.options.scales.y.title) ch.options.scales.y.title.font.size = fs;
+      ch.update('none');
+    });
+  }, 250);
+});
 })();
 </script>

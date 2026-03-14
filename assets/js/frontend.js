@@ -11,6 +11,14 @@
     }
 
     /* ============================================================
+       Responsive chart font size helper
+       ============================================================ */
+    function nawsChartFontSize() {
+        var w = window.innerWidth;
+        return w < 480 ? 9 : w < 768 ? 10 : 11;
+    }
+
+    /* ============================================================
        Utility: AJAX with retry logic for transient network errors
        ============================================================ */
     function nawsAjaxPost(data, onSuccess, onFail, retries) {
@@ -212,7 +220,7 @@
                                 color: tickColor,
                                 usePointStyle: true,
                                 pointStyleWidth: 10,
-                                font: { size: 11 }
+                                font: { size: nawsChartFontSize() }
                             }
                         },
                         tooltip: {
@@ -242,11 +250,11 @@
                                 }
                             },
                             grid:  { color: gridColor },
-                            ticks: { color: tickColor, maxRotation: 0, font: { size: 11 } }
+                            ticks: { color: tickColor, maxRotation: 0, font: { size: nawsChartFontSize() } }
                         },
                         y: {
                             grid:  { color: gridColor },
-                            ticks: { color: tickColor, font: { size: 11 } },
+                            ticks: { color: tickColor, font: { size: nawsChartFontSize() } },
                             beginAtZero: false
                         }
                     }
@@ -500,7 +508,7 @@ window.NAWS_YearCompare.prototype = {
                 plugins: {
                     legend: {
                         display: true,
-                        labels: { color: tickClr, usePointStyle: true, font: { size: 11 } }
+                        labels: { color: tickClr, usePointStyle: true, font: { size: nawsChartFontSize() } }
                     },
                     tooltip: {
                         backgroundColor: isDark ? '#1f2937' : '#fff',

@@ -126,127 +126,7 @@ $hidden_history_charts = (array) get_option( 'naws_history_hidden_charts', [] );
   </div>
 </div>
 
-<style>
-#<?php echo esc_attr( $widget_id ); ?>,
-#<?php echo esc_attr( $widget_id ); ?>-modal {
-  --ink:#427272; --ink2:#2d5252; --ink3:#1a3535;
-  --muted:#7aa0a0; --light:#a0b8b8;
-  --line:#e0eeee; --bg:#ffffff; --card:#f4fafa; --sh:rgba(40,72,72,.08);
-  font-family:inherit; color:var(--ink);
-}
-/* HEADER */
-.naws-hist-hdr {
-  background:var(--ink2); border-radius:16px 16px 0 0;
-  padding:15px 24px; display:flex; justify-content:space-between; align-items:center;
-}
-.naws-hist-title { font-size:18px; font-weight:800; font-style:italic; color:#fff; }
-.naws-hist-range { font-size:12px; font-weight:600; color:rgba(255,255,255,.6); }
-
-/* BODY */
-.naws-hist-body {
-  background:var(--bg); border:1.5px solid var(--line);
-  border-top:none; border-radius:0 0 16px 16px; padding:20px;
-}
-/* LOADER */
-.naws-hist-loading { display:flex; justify-content:center; padding:60px; }
-.naws-hist-all-hidden{
-  display:flex;align-items:center;gap:.6rem;justify-content:center;
-  padding:48px 20px;color:#6b7280;font-size:.85rem;
-}
-.naws-hist-spin {
-  width:32px; height:32px; border-radius:50%;
-  border:2px solid var(--line); border-top-color:var(--ink);
-  animation:nhspin .75s linear infinite;
-}
-@keyframes nhspin{to{transform:rotate(360deg)}}
-
-/* CHART WRAPPER */
-.naws-hc-wrap {
-  background:#ffffff; border:1.5px solid var(--line); border-radius:14px;
-  padding:16px 18px 14px; margin-bottom:16px;
-  box-shadow:0 2px 10px var(--sh);
-  transition:transform .2s ease;
-  cursor:pointer;
-}
-.naws-hc-wrap:hover { transform:translateY(-3px); }
-.naws-hc-wrap:last-child { margin-bottom:0; }
-
-/* CHART TOP BAR */
-.naws-hc-bar {
-  display:flex; align-items:center; gap:12px;
-  margin-bottom:12px; flex-wrap:wrap;
-}
-.naws-hc-title {
-  font-size:10px; font-weight:700; text-transform:uppercase;
-  letter-spacing:.1em; color:var(--muted); flex-shrink:0;
-}
-.naws-hc-legend {
-  display:flex; flex-wrap:wrap; gap:6px; flex:1;
-}
-.naws-hc-expand {
-  background:none; border:1px solid var(--line); border-radius:6px;
-  padding:4px 7px; cursor:pointer; color:var(--muted); flex-shrink:0;
-  display:flex; align-items:center; transition:background .15s,color .15s;
-  margin-left:auto;
-}
-.naws-hc-expand:hover { background:var(--ink2); color:#fff; border-color:var(--ink2); }
-
-/* LEGEND PILLS */
-.naws-leg-rain-total {
-  display: inline-block;
-  margin-left: 5px;
-  font-size: 10px;
-  font-weight: 700;
-  opacity: .75;
-  letter-spacing: .03em;
-}
-.naws-leg-pill {
-  display:inline-flex; align-items:center; gap:5px;
-  padding:3px 10px 3px 7px; border-radius:20px; cursor:pointer;
-  border:1.5px solid transparent; font-size:10px; font-weight:700;
-  transition:opacity .2s, border-color .2s;
-  user-select:none;
-}
-.naws-leg-pill.hidden { opacity:.35; }
-.naws-leg-pill-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
-
-/* MODAL */
-.naws-hist-modal {
-  position:fixed; inset:0; z-index:99999;
-  display:flex; align-items:center; justify-content:center;
-}
-.naws-hist-modal-bg {
-  position:absolute; inset:0;
-  background:rgba(10,26,26,.65); backdrop-filter:blur(3px); cursor:pointer;
-}
-.naws-hist-modal-box {
-  position:relative; z-index:1;
-  background:#fff; border-radius:18px;
-  width:min(96vw,1920px); max-height:92vh;
-  box-shadow:0 24px 80px rgba(10,26,26,.3);
-  display:flex; flex-direction:column;
-  animation:nhmodal-in .22s ease;
-}
-@keyframes nhmodal-in{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
-.naws-hist-modal-hdr {
-  display:flex; align-items:center; gap:12px; flex-wrap:wrap;
-  padding:16px 22px 12px; border-bottom:1px solid var(--line,#e0eeee);
-}
-.naws-hist-modal-title {
-  font-size:12px; font-weight:700; text-transform:uppercase;
-  letter-spacing:.09em; color:#7aa0a0; flex-shrink:0;
-}
-.naws-hist-modal-leg { display:flex; flex-wrap:wrap; gap:6px; flex:1; }
-.naws-hist-modal-close {
-  background:none; border:1px solid #e0eeee; border-radius:8px;
-  padding:5px 8px; cursor:pointer; color:#7aa0a0;
-  display:flex; align-items:center; transition:background .15s,color .15s;
-  margin-left:auto;
-}
-.naws-hist-modal-close:hover { background:#2d5252; color:#fff; border-color:#2d5252; }
-.naws-hist-modal-body { padding:16px 22px 22px; flex:1; overflow:hidden; min-height:0; }
-.naws-hist-modal-body canvas { width:100%!important; height:420px!important; }
-</style>
+<!-- Styles moved to assets/css/frontend.css (.naws-hist scope) -->
 
 <script>
 (function(){
@@ -316,7 +196,10 @@ function aggregateMonthly(dailyData){
   return out;
 }
 
+function nawsHistFontSize(){ var w=window.innerWidth; return w<480?8:w<768?9:10; }
+
 function baseOpts(unit, type, isModal, isMonthly){
+  var fs = nawsHistFontSize();
   var xConfig;
   if(isMonthly){
     xConfig = {
@@ -324,7 +207,7 @@ function baseOpts(unit, type, isModal, isMonthly){
       labels: MONTH_LABELS,
       grid:{color:'rgba(218,240,240,.4)'},
       ticks:{
-        color:'#7aa0a0', font:{family:NAWS_FONT,size:10},
+        color:'#7aa0a0', font:{family:NAWS_FONT,size:fs},
         maxRotation:0, autoSkip:false
       }
     };
@@ -343,7 +226,7 @@ function baseOpts(unit, type, isModal, isMonthly){
       })(),
       grid:{color:'rgba(218,240,240,.4)'},
       ticks:{
-        color:'#7aa0a0', font:{family:NAWS_FONT,size:10},
+        color:'#7aa0a0', font:{family:NAWS_FONT,size:fs},
         maxRotation:0, autoSkip:false,
         callback:function(val,idx){
           var lbl = this.getLabelForValue(idx);
@@ -360,8 +243,8 @@ function baseOpts(unit, type, isModal, isMonthly){
       tooltip:{
         backgroundColor:'rgba(45,82,82,.92)',
         titleColor:'#a0c8c8', bodyColor:'#fff',
-        titleFont:{family:NAWS_FONT,size:11},
-        bodyFont:{family:NAWS_FONT,size:12,weight:'bold'},
+        titleFont:{family:NAWS_FONT,size:fs+1},
+        bodyFont:{family:NAWS_FONT,size:fs+2,weight:'bold'},
         padding:10, cornerRadius:8, displayColors:true, boxWidth:10, boxHeight:10,
         callbacks:{
           title:function(items){
@@ -383,10 +266,10 @@ function baseOpts(unit, type, isModal, isMonthly){
       y:{
         grid:{color:'rgba(218,240,240,.5)'},
         ticks:{
-          color:'#7aa0a0',font:{family:NAWS_FONT,size:10},
+          color:'#7aa0a0',font:{family:NAWS_FONT,size:fs},
           callback:function(v){return v;}
         },
-        title:{display:true,text:unit,color:'#a0b8b8',font:{family:NAWS_FONT,size:10,weight:'600'}}
+        title:{display:true,text:unit,color:'#a0b8b8',font:{family:NAWS_FONT,size:fs,weight:'600'}}
       }
     }
   };
@@ -672,6 +555,23 @@ CHART_DEFS.forEach(function(def){
   };
   xhr.onerror=function(){ checkDone(); };
   xhr.send(body);
+});
+
+/* ── RESPONSIVE: update chart fonts on resize ── */
+var _nawsHistResizeTimer;
+window.addEventListener('resize', function(){
+  clearTimeout(_nawsHistResizeTimer);
+  _nawsHistResizeTimer = setTimeout(function(){
+    var fs = nawsHistFontSize();
+    Object.keys(CHARTS).forEach(function(id){
+      var ch = CHARTS[id].chartObj;
+      if(!ch) return;
+      if(ch.options.scales && ch.options.scales.x && ch.options.scales.x.ticks) ch.options.scales.x.ticks.font.size = fs;
+      if(ch.options.scales && ch.options.scales.y && ch.options.scales.y.ticks) ch.options.scales.y.ticks.font.size = fs;
+      if(ch.options.scales && ch.options.scales.y && ch.options.scales.y.title) ch.options.scales.y.title.font.size = fs;
+      ch.update('none');
+    });
+  }, 250);
 });
 
 })();
