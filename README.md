@@ -90,28 +90,26 @@ All sensitive data (OAuth tokens, client secret, API keys) is encrypted with AES
 
 == Changelog ==
 
-[1.1.0] – 2026-03-14
+= 1.1.2 = – 2026-03-14
 Added
-Central error logging (NAWS_Logger): Unified logging with severity levels (error, warning, info), stored in naws_error_log option with rolling window (max 200 entries) and automatic sensitive data redaction
-Transient caching layer: Database queries for modules (1h), latest readings (5min), rain 24h (5min), readings (10min) and daily summaries (1h) are now cached via WordPress Transient API
-Cache invalidation: All caches are automatically flushed after each successful data sync
-Adaptive polling with error backoff: After 3 consecutive sync failures the polling interval doubles (max 60 min), resets immediately on first success
-Night mode: Reduced polling between 23:00–06:00 (Europe/Berlin) – configurable in Settings
-Health status indicator: Admin dashboard shows sync health (green/yellow/red) with status message and recent error count
-Frontend error UI: AJAX requests show user-facing error messages in the DOM instead of silent console errors
-AJAX retry logic: Transient network errors (status 0 or 500+) are retried up to 2 times with exponential backoff
-WordPress action hook: naws_data_synced fires after each successful sync for extensibility
-Fixed
-N+1 query in history data: Replaced per-year database loop with single query + PHP-side grouping by year
-Silent DB errors: All $wpdb->query(), $wpdb->get_results() and $wpdb->get_var() calls now check $wpdb->last_error and log failures
-AJAX toggle_module() missing return: Added early return after wp_send_json_error() to prevent further execution
-Chart.js blank page: Wrapped new Chart() calls in try/catch to prevent white pages on JS errors
-REST API empty modules: endpoint_station() now returns proper WP_Error (404) when no modules are found
-Improved
-Database error handling: upsert_by_station(), bulk_insert_readings(), compute_daily_summary() all return/propagate errors instead of silently failing
-AJAX error responses: save_live_settings(), clear_daily_summary(), db_check() validate operation results and return specific error messages
-Importer error handling: upsert_by_station() logs DB failures, get_station_id() logs fallback usage
-Tested up to: WordPress 6.9.4 / PHP 8.4
+* Central error logging (NAWS_Logger): Unified logging with severity levels (error, warning, info), stored in naws_error_log option with rolling window (max 200 entries) and automatic sensitive data redaction
+* Transient caching layer: Database queries for modules (1h), latest readings (5min), rain 24h (5min), readings (10min) and daily summaries (1h) are now cached via WordPress Transient API
+* Cache invalidation: All caches are automatically flushed after each successful data sync
+* Adaptive polling with error backoff: After 3 consecutive sync failures the polling interval doubles (max 60 min), resets immediately on first success
+* Night mode: Reduced polling between 23:00–06:00 (Europe/Berlin) – configurable in Settings
+* Health status indicator: Admin dashboard shows sync health (green/yellow/red) with status message and recent error count
+* Frontend error UI: AJAX requests show user-facing error messages in the DOM instead of silent console errors
+* AJAX retry logic: Transient network errors (status 0 or 500+) are retried up to 2 times with exponential backoff
+* WordPress action hook: naws_data_synced fires after each successful sync for extensibility Fixed
+* N+1 query in history data: Replaced per-year database loop with single query + PHP-side grouping by year
+* Silent DB errors: All $wpdb->query(), $wpdb->get_results() and $wpdb->get_var() calls now check $wpdb->last_error and log failures
+* AJAX toggle_module() missing return: Added early return after wp_send_json_error() to prevent further execution
+* Chart.js blank page: Wrapped new Chart() calls in try/catch to prevent white pages on JS errors
+* REST API empty modules: endpoint_station() now returns proper WP_Error (404) when no modules are found Improved
+* Database error handling: upsert_by_station(), bulk_insert_readings(), compute_daily_summary() all return/propagate errors instead of silently failing
+* AJAX error responses: save_live_settings(), clear_daily_summary(), db_check() validate operation results and return specific error messages
+* Importer error handling: upsert_by_station() logs DB failures, get_station_id() logs fallback usage
+* Tested up to: WordPress 6.9.4 / PHP 8.4
 
 = 1.0.2 =
 * **Removed: Shortcodes** `[naws_chart]`, `[naws_gauge]`, `[naws_dashboard]`, `[naws_card]` – Use `[naws_live]` and `[naws_history]` instead.
