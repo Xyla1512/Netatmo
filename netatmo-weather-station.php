@@ -11,7 +11,7 @@
  * Text Domain: netatmo-weather-station
  * Domain Path: /languages
  * Requires at least: 5.8
- * Tested up to: 6.9
+ * Tested up to: 6.9.4
  * Requires PHP: 7.4
  */
 
