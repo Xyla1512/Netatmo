@@ -90,7 +90,7 @@ All sensitive data (OAuth tokens, client secret, API keys) is encrypted with AES
 
 == Changelog ==
 
-= 1.1.2 = – 2026-03-14
+= 1.1.0 = – 2026-03-14
 Added
 * Central error logging (NAWS_Logger): Unified logging with severity levels (error, warning, info), stored in naws_error_log option with rolling window (max 200 entries) and automatic sensitive data redaction
 * Transient caching layer: Database queries for modules (1h), latest readings (5min), rain 24h (5min), readings (10min) and daily summaries (1h) are now cached via WordPress Transient API
