@@ -45,6 +45,13 @@ class NAWS_Shortcodes {
         wp_enqueue_style(  'naws-frontend' );
         wp_enqueue_script( 'naws-frontend' );
 
+        // Inject configurable CSS variables
+        static $css_injected = false;
+        if ( ! $css_injected ) {
+            wp_add_inline_style( 'naws-frontend', NAWS_Colors::get_inline_css() );
+            $css_injected = true;
+        }
+
         // wp_localize_script MUST be called AFTER wp_enqueue_script
         // and only once – use a static flag
         static $localized = false;
@@ -69,7 +76,6 @@ class NAWS_Shortcodes {
             'parameters' => '',
             'layout'     => 'grid',
             'title'      => '',
-            'theme'      => get_option( 'naws_settings', [] )['chart_theme'] ?? 'light',
             'animate'    => 'true',
         ], $atts, 'naws_current' );
 
@@ -151,7 +157,6 @@ class NAWS_Shortcodes {
             'date_to'           => '',
             'group_by'          => 'day',
             'title'             => naws__( 'hc_history_title' ),
-            'theme'             => get_option( 'naws_settings', [] )['chart_theme'] ?? 'light',
             'height'            => '420',
             'show_range_picker' => 'true',
         ], $atts, 'naws_history' );
@@ -185,16 +190,9 @@ class NAWS_Shortcodes {
 
     /** [naws_infobar] – weather derivations + astronomical data */
     public function sc_infobar( $atts ) {
-        $atts = shortcode_atts( [
-            'theme' => get_option( 'naws_settings', [] )['chart_theme'] ?? 'light',
-        ], $atts, 'naws_infobar' );
+        $atts = shortcode_atts( [], $atts, 'naws_infobar' );
 
-        wp_enqueue_style(
-            'naws-frontend',
-            NAWS_PLUGIN_URL . 'assets/css/frontend.css',
-            [],
-            NAWS_VERSION
-        );
+        $this->enqueue_frontend();
 
         ob_start();
         include NAWS_PLUGIN_DIR . 'templates/infobar.php';

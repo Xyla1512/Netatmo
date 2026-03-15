@@ -75,32 +75,32 @@ $sensor_chart_configs = [];
 
 // NAModule1 – outdoor
 if ( $outdoor_id ) {
-    $sensor_chart_configs[] = [ 'key'=>'Temperature',    'param'=>'Temperature', 'module_id'=>$outdoor_id, 'label'=>naws__( 'chart_temp_out' ),        'unit'=>NAWS_Helpers::get_unit('Temperature'),   'type'=>'line', 'color'=>'rgb(80,168,130)' ];
-    $sensor_chart_configs[] = [ 'key'=>'Humidity',       'param'=>'Humidity',    'module_id'=>$outdoor_id, 'label'=>naws__( 'chart_humid_out' ),       'unit'=>'%',                                    'type'=>'line', 'color'=>'rgb(61,130,191)' ];
+    $sensor_chart_configs[] = [ 'key'=>'Temperature',    'param'=>'Temperature', 'module_id'=>$outdoor_id, 'label'=>naws__( 'chart_temp_out' ),        'unit'=>NAWS_Helpers::get_unit('Temperature'),   'type'=>'line', 'color'=>NAWS_Colors::get('chart_temp_outdoor') ];
+    $sensor_chart_configs[] = [ 'key'=>'Humidity',       'param'=>'Humidity',    'module_id'=>$outdoor_id, 'label'=>naws__( 'chart_humid_out' ),       'unit'=>'%',                                    'type'=>'line', 'color'=>NAWS_Colors::get('chart_humidity_outdoor') ];
 }
 // NAMain – indoor base
 if ( $indoor_id ) {
-    $sensor_chart_configs[] = [ 'key'=>'Temperature_indoor', 'param'=>'Temperature', 'module_id'=>$indoor_id, 'label'=>naws__( 'chart_temp_base' ),   'unit'=>NAWS_Helpers::get_unit('Temperature'),   'type'=>'line', 'color'=>'rgb(100,145,210)' ];
-    $sensor_chart_configs[] = [ 'key'=>'Pressure',           'param'=>'Pressure',    'module_id'=>$indoor_id, 'label'=>naws__( 'chart_pressure' ),     'unit'=>NAWS_Helpers::get_unit('Pressure'),      'type'=>'line', 'color'=>'rgb(120,95,200)' ];
-    $sensor_chart_configs[] = [ 'key'=>'CO2',                'param'=>'CO2',         'module_id'=>$indoor_id, 'label'=>naws__( 'chart_co2_base' ),     'unit'=>'ppm',                                  'type'=>'line', 'color'=>'rgb(74,152,72)' ];
-    $sensor_chart_configs[] = [ 'key'=>'Noise',              'param'=>'Noise',       'module_id'=>$indoor_id, 'label'=>naws__( 'chart_noise_base' ),   'unit'=>'dB',                                   'type'=>'line', 'color'=>'rgb(184,128,48)' ];
+    $sensor_chart_configs[] = [ 'key'=>'Temperature_indoor', 'param'=>'Temperature', 'module_id'=>$indoor_id, 'label'=>naws__( 'chart_temp_base' ),   'unit'=>NAWS_Helpers::get_unit('Temperature'),   'type'=>'line', 'color'=>NAWS_Colors::get('chart_temp_indoor') ];
+    $sensor_chart_configs[] = [ 'key'=>'Pressure',           'param'=>'Pressure',    'module_id'=>$indoor_id, 'label'=>naws__( 'chart_pressure' ),     'unit'=>NAWS_Helpers::get_unit('Pressure'),      'type'=>'line', 'color'=>NAWS_Colors::get('chart_pressure') ];
+    $sensor_chart_configs[] = [ 'key'=>'CO2',                'param'=>'CO2',         'module_id'=>$indoor_id, 'label'=>naws__( 'chart_co2_base' ),     'unit'=>'ppm',                                  'type'=>'line', 'color'=>NAWS_Colors::get('chart_co2') ];
+    $sensor_chart_configs[] = [ 'key'=>'Noise',              'param'=>'Noise',       'module_id'=>$indoor_id, 'label'=>naws__( 'chart_noise_base' ),   'unit'=>'dB',                                   'type'=>'line', 'color'=>NAWS_Colors::get('chart_noise') ];
 }
 // NAModule2 – wind
 if ( $wind_id ) {
-    $sensor_chart_configs[] = [ 'key'=>'WindStrength', 'param'=>'WindStrength', 'module_id'=>$wind_id, 'label'=>naws__( 'chart_wind' ),  'unit'=>NAWS_Helpers::get_unit('WindStrength'), 'type'=>'line', 'color'=>'rgb(66,114,114)' ];
-    $sensor_chart_configs[] = [ 'key'=>'GustStrength', 'param'=>'GustStrength', 'module_id'=>$wind_id, 'label'=>naws__( 'chart_gusts' ), 'unit'=>NAWS_Helpers::get_unit('GustStrength'), 'type'=>'line', 'color'=>'rgb(100,155,155)' ];
+    $sensor_chart_configs[] = [ 'key'=>'WindStrength', 'param'=>'WindStrength', 'module_id'=>$wind_id, 'label'=>naws__( 'chart_wind' ),  'unit'=>NAWS_Helpers::get_unit('WindStrength'), 'type'=>'line', 'color'=>NAWS_Colors::get('chart_wind') ];
+    $sensor_chart_configs[] = [ 'key'=>'GustStrength', 'param'=>'GustStrength', 'module_id'=>$wind_id, 'label'=>naws__( 'chart_gusts' ), 'unit'=>NAWS_Helpers::get_unit('GustStrength'), 'type'=>'line', 'color'=>NAWS_Colors::get('chart_gusts') ];
 }
 // NAModule3 – rain
 if ( $rain_id ) {
-    $sensor_chart_configs[] = [ 'key'=>'Rain', 'param'=>'sum_rain_1', 'module_id'=>$rain_id, 'label'=>naws__( 'chart_rain_hourly' ), 'unit'=>NAWS_Helpers::get_unit('Rain'), 'type'=>'bar', 'color'=>'rgb(53,133,176)' ];
+    $sensor_chart_configs[] = [ 'key'=>'Rain', 'param'=>'sum_rain_1', 'module_id'=>$rain_id, 'label'=>naws__( 'chart_rain_hourly' ), 'unit'=>NAWS_Helpers::get_unit('Rain'), 'type'=>'bar', 'color'=>NAWS_Colors::get('chart_rain') ];
 }
 // NAModule4 – dynamic
 foreach ( $module4_info as $slug => $info ) {
     $mid = $info['id'];
     $name = $info['name'];
-    $sensor_chart_configs[] = [ 'key'=>"Temperature_{$slug}", 'param'=>'Temperature', 'module_id'=>$mid, 'label'=>naws__( 'chart_temp_prefix' )." {$name}",   'unit'=>NAWS_Helpers::get_unit('Temperature'), 'type'=>'line', 'color'=>'rgb(180,100,200)' ];
-    $sensor_chart_configs[] = [ 'key'=>"Humidity_{$slug}",    'param'=>'Humidity',    'module_id'=>$mid, 'label'=>naws__( 'chart_humid_prefix' )." {$name}", 'unit'=>'%',                                   'type'=>'line', 'color'=>'rgb(130,100,200)' ];
-    $sensor_chart_configs[] = [ 'key'=>"CO2_{$slug}",         'param'=>'CO2',         'module_id'=>$mid, 'label'=>naws__( 'chart_co2_prefix' )." {$name}",   'unit'=>'ppm',                                 'type'=>'line', 'color'=>'rgb(100,170,100)' ];
+    $sensor_chart_configs[] = [ 'key'=>"Temperature_{$slug}", 'param'=>'Temperature', 'module_id'=>$mid, 'label'=>naws__( 'chart_temp_prefix' )." {$name}",   'unit'=>NAWS_Helpers::get_unit('Temperature'), 'type'=>'line', 'color'=>NAWS_Colors::get('chart_module4_temp') ];
+    $sensor_chart_configs[] = [ 'key'=>"Humidity_{$slug}",    'param'=>'Humidity',    'module_id'=>$mid, 'label'=>naws__( 'chart_humid_prefix' )." {$name}", 'unit'=>'%',                                   'type'=>'line', 'color'=>NAWS_Colors::get('chart_module4_humidity') ];
+    $sensor_chart_configs[] = [ 'key'=>"CO2_{$slug}",         'param'=>'CO2',         'module_id'=>$mid, 'label'=>naws__( 'chart_co2_prefix' )." {$name}",   'unit'=>'ppm',                                 'type'=>'line', 'color'=>NAWS_Colors::get('chart_module4_co2') ];
 }
 
 // Filter: only sensors that are visible (not hidden_params) AND chart is active (not hidden_charts)

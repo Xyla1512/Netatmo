@@ -436,6 +436,12 @@ class NAWS_Export {
                         update_option( $key, $clean_vals );
                     }
                 }
+                // Appearance colors
+                $appearance_key = NAWS_Colors::OPTION_KEY;
+                if ( isset( $data['display_settings'][ $appearance_key ] ) && is_array( $data['display_settings'][ $appearance_key ] ) ) {
+                    update_option( $appearance_key, NAWS_Colors::sanitize( $data['display_settings'][ $appearance_key ] ) );
+                    NAWS_Colors::flush_cache();
+                }
             }
         }
 
@@ -593,6 +599,7 @@ class NAWS_Export {
             'naws_live_hidden_modules'   => get_option( 'naws_live_hidden_modules', [] ),
             'naws_live_hidden_charts'    => get_option( 'naws_live_hidden_charts', [] ),
             'naws_history_hidden_charts' => get_option( 'naws_history_hidden_charts', [] ),
+            NAWS_Colors::OPTION_KEY      => get_option( NAWS_Colors::OPTION_KEY, [] ),
         ];
     }
 

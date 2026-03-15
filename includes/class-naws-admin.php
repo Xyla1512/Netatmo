@@ -26,6 +26,8 @@ class NAWS_Admin {
         add_action( 'admin_post_naws_export_weather', [ $this, 'handle_export_weather' ] );
         add_action( 'admin_post_naws_export_full',    [ $this, 'handle_export_full' ] );
         add_action( 'admin_post_naws_import_file',    [ $this, 'handle_import_upload' ] );
+        add_action( 'admin_post_naws_save_appearance', [ $this, 'handle_save_appearance' ] );
+        add_action( 'admin_post_naws_reset_appearance', [ $this, 'handle_reset_appearance' ] );
     }
 
     public function add_menu() {
@@ -48,6 +50,7 @@ class NAWS_Admin {
         add_submenu_page( 'naws-dashboard', naws__( 'menu_modules' ),   naws__( 'menu_modules' ),   'manage_options', 'naws-modules',        [ $this, 'page_modules' ] );
         add_submenu_page( 'naws-dashboard', naws__( 'menu_cron_log' ),  naws__( 'menu_cron_log' ),  'manage_options', 'naws-cron-log',       [ $this, 'page_cron_log' ] );
         add_submenu_page( 'naws-dashboard', naws__( 'menu_live' ),      naws__( 'menu_live' ),      'manage_options', 'naws-live-settings',  [ $this, 'page_live_settings' ] );
+        add_submenu_page( 'naws-dashboard', naws__( 'menu_appearance' ),  naws__( 'menu_appearance' ), 'manage_options', 'naws-appearance',     [ $this, 'page_appearance' ] );
         add_submenu_page( 'naws-dashboard', 'Shortcodes',               'Shortcodes',               'manage_options', 'naws-shortcodes',     [ $this, 'page_shortcodes' ] );
         add_submenu_page( 'naws-dashboard', 'REST API',                  'REST API',                 'manage_options', 'naws-rest-api',       [ $this, 'page_rest_api' ] );
     }
@@ -70,7 +73,6 @@ class NAWS_Admin {
         $clean['wind_unit']       = in_array( $input['wind_unit'] ?? 'kmh', ['kmh','ms','mph','kn'], true ) ? $input['wind_unit'] : 'kmh';
         $clean['pressure_unit']   = in_array( $input['pressure_unit'] ?? 'mbar', ['mbar','inHg','mmHg'], true ) ? $input['pressure_unit'] : 'mbar';
         $clean['rain_unit']       = in_array( $input['rain_unit'] ?? 'mm', ['mm','in'], true ) ? $input['rain_unit'] : 'mm';
-        $clean['chart_theme']     = sanitize_text_field( $input['chart_theme'] ?? 'light' );
         $clean['station_name']    = sanitize_text_field( $input['station_name'] ?? '' );
         $clean['night_mode']      = ! empty( $input['night_mode'] ) ? 1 : 0;
 
@@ -106,7 +108,15 @@ class NAWS_Admin {
         if ( strpos( $hook, 'naws-' ) === false ) return;
 
         wp_enqueue_style( 'naws-admin', NAWS_PLUGIN_URL . 'assets/css/admin.css', [], NAWS_VERSION );
-        wp_enqueue_script( 'naws-admin', NAWS_PLUGIN_URL . 'assets/js/admin.js', [ 'jquery' ], NAWS_VERSION, true );
+
+        $js_deps = [ 'jquery' ];
+        // Load WP Color Picker on appearance page
+        if ( strpos( $hook, 'naws-appearance' ) !== false ) {
+            wp_enqueue_style( 'wp-color-picker' );
+            $js_deps[] = 'wp-color-picker';
+        }
+
+        wp_enqueue_script( 'naws-admin', NAWS_PLUGIN_URL . 'assets/js/admin.js', $js_deps, NAWS_VERSION, true );
 
         wp_localize_script( 'naws-admin', 'nawsAdmin', [
             'ajax_url' => admin_url( 'admin-ajax.php' ),
@@ -286,6 +296,36 @@ class NAWS_Admin {
 
     public function page_rest_api() {
         include NAWS_PLUGIN_DIR . 'admin/views/rest-api-docs.php';
+    }
+
+    public function page_appearance() {
+        $colors   = NAWS_Colors::get_all();
+        $defaults = NAWS_Colors::get_defaults();
+        $groups   = NAWS_Colors::get_groups();
+        include NAWS_PLUGIN_DIR . 'admin/views/appearance.php';
+    }
+
+    public function handle_save_appearance() {
+        check_admin_referer( 'naws_save_appearance' );
+        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+
+        $input = isset( $_POST['naws_appearance'] ) ? wp_unslash( $_POST['naws_appearance'] ) : []; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized in NAWS_Colors::sanitize()
+        update_option( NAWS_Colors::OPTION_KEY, NAWS_Colors::sanitize( $input ) );
+        NAWS_Colors::flush_cache();
+
+        wp_safe_redirect( admin_url( 'admin.php?page=naws-appearance&updated=1' ) );
+        exit;
+    }
+
+    public function handle_reset_appearance() {
+        check_admin_referer( 'naws_reset_appearance' );
+        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+
+        delete_option( NAWS_Colors::OPTION_KEY );
+        NAWS_Colors::flush_cache();
+
+        wp_safe_redirect( admin_url( 'admin.php?page=naws-appearance&reset=1' ) );
+        exit;
     }
 
     public function page_export() {

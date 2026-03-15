@@ -146,12 +146,8 @@ var CHARTS = {};
 var modalChart = null;
 
 /* ── COLOURS ─────────────────────────────── */
-// One colour per year, consistent palette
-var PALETTE = [
-  '#3d9e74','#3585b0','#7055c0','#c0392b','#e67e22',
-  '#16a085','#8e44ad','#2980b9','#27ae60','#d35400',
-  '#1abc9c','#e74c3c','#f39c12','#6c5ce7','#00b894',
-];
+// One colour per year, consistent palette (configurable via Admin > Appearance)
+var PALETTE = <?php echo wp_json_encode( NAWS_Colors::get_history_palette() ); ?>;
 function yearColor(yr){ return PALETTE[(yr - YEARS[0]) % PALETTE.length]; }
 
 /* ── AJAX ────────────────────────────────── */
@@ -198,6 +194,9 @@ function aggregateMonthly(dailyData){
 
 function nawsHistFontSize(){ var w=window.innerWidth; return w<480?8:w<768?9:10; }
 
+/* Chart theme colors (configurable via Admin > Appearance) */
+var CHART_THEME = <?php echo wp_json_encode( NAWS_Colors::get_chart_theme() ); ?>;
+
 function baseOpts(unit, type, isModal, isMonthly){
   var fs = nawsHistFontSize();
   var xConfig;
@@ -205,9 +204,9 @@ function baseOpts(unit, type, isModal, isMonthly){
     xConfig = {
       type:'category',
       labels: MONTH_LABELS,
-      grid:{color:'rgba(218,240,240,.4)'},
+      grid:{color:CHART_THEME.grid},
       ticks:{
-        color:'#7aa0a0', font:{family:NAWS_FONT,size:fs},
+        color:CHART_THEME.tick, font:{family:NAWS_FONT,size:fs},
         maxRotation:0, autoSkip:false
       }
     };
@@ -224,9 +223,9 @@ function baseOpts(unit, type, isModal, isMonthly){
         }
         return arr;
       })(),
-      grid:{color:'rgba(218,240,240,.4)'},
+      grid:{color:CHART_THEME.grid},
       ticks:{
-        color:'#7aa0a0', font:{family:NAWS_FONT,size:fs},
+        color:CHART_THEME.tick, font:{family:NAWS_FONT,size:fs},
         maxRotation:0, autoSkip:false,
         callback:function(val,idx){
           var lbl = this.getLabelForValue(idx);
@@ -241,8 +240,8 @@ function baseOpts(unit, type, isModal, isMonthly){
     plugins:{
       legend:{display:false},
       tooltip:{
-        backgroundColor:'rgba(45,82,82,.92)',
-        titleColor:'#a0c8c8', bodyColor:'#fff',
+        backgroundColor:CHART_THEME.tooltip_bg,
+        titleColor:CHART_THEME.tooltip_title, bodyColor:CHART_THEME.tooltip_text,
         titleFont:{family:NAWS_FONT,size:fs+1},
         bodyFont:{family:NAWS_FONT,size:fs+2,weight:'bold'},
         padding:10, cornerRadius:8, displayColors:true, boxWidth:10, boxHeight:10,
@@ -264,12 +263,12 @@ function baseOpts(unit, type, isModal, isMonthly){
     scales:{
       x: xConfig,
       y:{
-        grid:{color:'rgba(218,240,240,.5)'},
+        grid:{color:CHART_THEME.grid},
         ticks:{
-          color:'#7aa0a0',font:{family:NAWS_FONT,size:fs},
+          color:CHART_THEME.tick,font:{family:NAWS_FONT,size:fs},
           callback:function(v){return v;}
         },
-        title:{display:true,text:unit,color:'#a0b8b8',font:{family:NAWS_FONT,size:fs,weight:'600'}}
+        title:{display:true,text:unit,color:CHART_THEME.axis_title,font:{family:NAWS_FONT,size:fs,weight:'600'}}
       }
     }
   };
