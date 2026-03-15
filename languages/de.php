@@ -52,7 +52,7 @@ return [
     // ── Admin menu ────────────────────────────────────────────────────
     'menu_dashboard'        => 'Dashboard',
     'menu_settings'         => 'Einstellungen',
-    'menu_import'           => 'Verlauf importieren',
+    'menu_import'           => 'Historien Import',
     'menu_modules'          => 'Module',
     'menu_cron_log'         => 'Cron-Log',
     'menu_live'             => '🖥️ Live-Dashboard',

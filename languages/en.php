@@ -52,7 +52,7 @@ return [
     // ── Admin menu ────────────────────────────────────────────────────
     'menu_dashboard'        => 'Dashboard',
     'menu_settings'         => 'Settings',
-    'menu_import'           => 'Import History',
+    'menu_import'           => 'History Import',
     'menu_modules'          => 'Modules',
     'menu_cron_log'         => 'Cron Log',
     'menu_live'             => '🖥️ Live-Dashboard',
