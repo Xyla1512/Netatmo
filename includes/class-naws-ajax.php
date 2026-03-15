@@ -22,6 +22,9 @@ class NAWS_Ajax {
         add_action( 'wp_ajax_naws_clear_daily_summary',   [ $this, 'clear_daily_summary' ] );
         add_action( 'wp_ajax_naws_db_check',               [ $this, 'db_check' ] );
         add_action( 'wp_ajax_naws_save_live_settings',     [ $this, 'save_live_settings' ] );
+        add_action( 'wp_ajax_naws_import_process_chunk',   [ $this, 'import_process_chunk' ] );
+        add_action( 'wp_ajax_naws_import_meta',            [ $this, 'import_meta' ] );
+        add_action( 'wp_ajax_naws_import_cleanup',         [ $this, 'import_cleanup' ] );
         add_action( 'wp_ajax_naws_get_modules',         [ $this, 'get_modules' ] );
         add_action( 'wp_ajax_naws_delete_readings',     [ $this, 'delete_readings' ] );
         add_action( 'wp_ajax_naws_toggle_module',        [ $this, 'toggle_module' ] );
@@ -781,5 +784,86 @@ class NAWS_Ajax {
         }
 
         wp_send_json_success( $formatted );
+    }
+
+    // ----------------------------------------------------------------
+    // Export / Import AJAX
+    // ----------------------------------------------------------------
+
+    /**
+     * Process one chunk of daily_summary rows from an uploaded import file.
+     */
+    public function import_process_chunk() {
+        check_ajax_referer( 'naws_admin_nonce', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+
+        $file_path = get_transient( 'naws_import_temp_file' );
+        if ( ! $file_path || ! file_exists( $file_path ) ) {
+            wp_send_json_error( [ 'message' => 'No import file found. Please upload again.' ] );
+            return;
+        }
+
+        $offset = intval( $_POST['offset'] ?? 0 ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- intval sanitizes
+        $result = NAWS_Export::import_weather_data( $file_path, $offset, NAWS_Export::IMPORT_BATCH );
+
+        if ( ! empty( $result['error'] ) ) {
+            wp_send_json_error( [ 'message' => $result['error'] ] );
+            return;
+        }
+
+        wp_send_json_success( $result );
+    }
+
+    /**
+     * Import modules and settings from a full backup file (called once before chunked data import).
+     */
+    public function import_meta() {
+        check_ajax_referer( 'naws_admin_nonce', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+
+        $file_path = get_transient( 'naws_import_temp_file' );
+        if ( ! $file_path || ! file_exists( $file_path ) ) {
+            wp_send_json_error( [ 'message' => 'No import file found.' ] );
+            return;
+        }
+
+        $meta              = get_transient( 'naws_import_meta' );
+        $overwrite         = ! empty( $meta['overwrite_settings'] );
+        $overwrite_from_post = intval( $_POST['overwrite_settings'] ?? 0 ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- intval sanitizes
+        if ( $overwrite_from_post ) {
+            $overwrite = true;
+        }
+
+        $result = NAWS_Export::import_full_backup_meta( $file_path, $overwrite );
+
+        if ( ! empty( $result['error'] ) ) {
+            wp_send_json_error( [ 'message' => $result['error'] ] );
+            return;
+        }
+
+        NAWS_Logger::info( 'export', 'Full backup meta imported', [
+            'modules' => $result['modules_imported'],
+            'settings' => $result['settings_imported'],
+        ] );
+
+        wp_send_json_success( $result );
+    }
+
+    /**
+     * Clean up temporary import file and transients after import is done.
+     */
+    public function import_cleanup() {
+        check_ajax_referer( 'naws_admin_nonce', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+
+        $file_path = get_transient( 'naws_import_temp_file' );
+        if ( $file_path && file_exists( $file_path ) ) {
+            wp_delete_file( $file_path );
+        }
+
+        delete_transient( 'naws_import_temp_file' );
+        delete_transient( 'naws_import_meta' );
+
+        wp_send_json_success();
     }
 }

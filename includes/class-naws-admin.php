@@ -23,6 +23,9 @@ class NAWS_Admin {
         add_action( 'admin_post_naws_manual_sync',   [ $this, 'handle_manual_sync' ] );
         add_action( 'admin_post_naws_import_historical', [ $this, 'handle_import_historical' ] );
         add_action( 'admin_post_naws_disconnect',    [ $this, 'handle_disconnect' ] );
+        add_action( 'admin_post_naws_export_weather', [ $this, 'handle_export_weather' ] );
+        add_action( 'admin_post_naws_export_full',    [ $this, 'handle_export_full' ] );
+        add_action( 'admin_post_naws_import_file',    [ $this, 'handle_import_upload' ] );
     }
 
     public function add_menu() {
@@ -41,6 +44,7 @@ class NAWS_Admin {
         add_submenu_page( 'naws-dashboard', naws__( 'menu_dashboard' ), naws__( 'menu_dashboard' ), 'manage_options', 'naws-dashboard',      [ $this, 'page_dashboard' ] );
         add_submenu_page( 'naws-dashboard', naws__( 'menu_settings' ),  naws__( 'menu_settings' ),  'manage_options', 'naws-settings',       [ $this, 'page_settings' ] );
         add_submenu_page( 'naws-dashboard', naws__( 'menu_import' ),    naws__( 'menu_import' ),    'manage_options', 'naws-import',         [ $this, 'page_import' ] );
+        add_submenu_page( 'naws-dashboard', naws__( 'menu_export' ),    naws__( 'menu_export' ),    'manage_options', 'naws-export',         [ $this, 'page_export' ] );
         add_submenu_page( 'naws-dashboard', naws__( 'menu_modules' ),   naws__( 'menu_modules' ),   'manage_options', 'naws-modules',        [ $this, 'page_modules' ] );
         add_submenu_page( 'naws-dashboard', naws__( 'menu_cron_log' ),  naws__( 'menu_cron_log' ),  'manage_options', 'naws-cron-log',       [ $this, 'page_cron_log' ] );
         add_submenu_page( 'naws-dashboard', naws__( 'menu_live' ),      naws__( 'menu_live' ),      'manage_options', 'naws-live-settings',  [ $this, 'page_live_settings' ] );
@@ -282,6 +286,95 @@ class NAWS_Admin {
 
     public function page_rest_api() {
         include NAWS_PLUGIN_DIR . 'admin/views/rest-api-docs.php';
+    }
+
+    public function page_export() {
+        $daily_count = NAWS_Database::count_daily_summaries();
+        $daily_range = NAWS_Database::get_daily_data_range();
+        $modules     = NAWS_Database::get_modules();
+        include NAWS_PLUGIN_DIR . 'admin/views/export.php';
+    }
+
+    // ----------------------------------------------------------------
+    // Export / Import Handlers
+    // ----------------------------------------------------------------
+
+    public function handle_export_weather() {
+        check_admin_referer( 'naws_export_weather' );
+        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+
+        NAWS_Export::export_weather_data();
+        // export_weather_data() calls exit, so nothing runs after this
+    }
+
+    public function handle_export_full() {
+        check_admin_referer( 'naws_export_full' );
+        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+
+        NAWS_Export::export_full_backup();
+        // export_full_backup() calls exit, so nothing runs after this
+    }
+
+    public function handle_import_upload() {
+        check_admin_referer( 'naws_import_file' );
+        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+
+        $redirect_url = admin_url( 'admin.php?page=naws-export' );
+
+        // Validate file upload
+        if ( empty( $_FILES['naws_import_file'] ) || $_FILES['naws_import_file']['error'] !== UPLOAD_ERR_OK ) {
+            wp_safe_redirect( $redirect_url . '&import_error=' . urlencode( naws__( 'import_file_invalid' ) ) );
+            exit;
+        }
+
+        $file = $_FILES['naws_import_file']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+
+        // Check extension
+        $ext = strtolower( pathinfo( $file['name'], PATHINFO_EXTENSION ) );
+        if ( 'json' !== $ext ) {
+            wp_safe_redirect( $redirect_url . '&import_error=' . urlencode( naws__( 'import_file_invalid' ) ) );
+            exit;
+        }
+
+        // Check file size (max 100 MB)
+        if ( $file['size'] > 100 * MB_IN_BYTES ) {
+            wp_safe_redirect( $redirect_url . '&import_error=' . urlencode( naws__( 'import_file_too_large' ) ) );
+            exit;
+        }
+
+        // Move to safe location in uploads dir
+        $upload_dir = wp_upload_dir();
+        $temp_path  = $upload_dir['basedir'] . '/naws-import-temp-' . wp_generate_password( 8, false ) . '.json';
+
+        if ( ! move_uploaded_file( $file['tmp_name'], $temp_path ) ) { // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+            wp_safe_redirect( $redirect_url . '&import_error=' . urlencode( 'Could not save uploaded file.' ) );
+            exit;
+        }
+
+        // Validate JSON structure
+        $validation = NAWS_Export::validate_import_file( $temp_path );
+        if ( ! $validation['valid'] ) {
+            wp_delete_file( $temp_path );
+            wp_safe_redirect( $redirect_url . '&import_error=' . urlencode( $validation['error'] ) );
+            exit;
+        }
+
+        // Store temp path and meta for chunked AJAX processing
+        $meta = $validation['meta'];
+        $overwrite = ! empty( $_POST['naws_overwrite_settings'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        $meta['overwrite_settings'] = $overwrite;
+
+        set_transient( 'naws_import_temp_file', $temp_path, HOUR_IN_SECONDS );
+        set_transient( 'naws_import_meta', $meta, HOUR_IN_SECONDS );
+
+        NAWS_Logger::info( 'export', 'Import file uploaded', [
+            'type'      => $meta['export_type'],
+            'row_count' => $meta['row_count'] ?? 0,
+            'size'      => $file['size'],
+        ] );
+
+        wp_safe_redirect( $redirect_url . '&import_ready=1' );
+        exit;
     }
 
 }
