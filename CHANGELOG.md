@@ -2,6 +2,20 @@
 
 All notable changes to the Netatmo Weather Station (NAWS) plugin are documented here.
 
+## [1.4.1] – 2026-03-15
+
+### Fixed
+- **24h chart gradient fill broken**: Charts showed solid flat colors instead of gradient fill after color system migration. Root cause: `makeDataset()` used `rgb()`→`rgba()` string replacement which failed on hex color values from `NAWS_Colors`. Now uses proper `hexToRgba()` conversion with `createLinearGradient()` on the actual canvas context for smooth top-to-bottom gradient fill.
+
+### Improved
+- **Appearance admin page redesigned with live previews**: Each color group now shows a real-time preview panel next to the color pickers
+  - **Theme colors**: Mini-card preview with labeled text variants (title, value, muted, meta)
+  - **Accent colors**: Swatch grid with title-gradient preview
+  - **Sensor tiles**: 8 interactive tile previews update gradient bars live when colors change
+  - **24h chart colors**: SVG line+fill preview per sensor showing the actual line color and gradient fill
+  - **Chart theming**: Annotated SVG mock chart showing grid lines, axis labels, tooltip, and axis title
+  - **Year comparison**: Horizontal bar chart with 15 year-colored bars
+
 ## [1.4.0] – 2026-03-15
 
 ### Added

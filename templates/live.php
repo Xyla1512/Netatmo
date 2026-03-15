@@ -724,10 +724,30 @@ function chartOpts(unit, type){
     }
   };
 }
-function makeDataset(cfg, pts){
+function hexToRgba(hex, alpha){
+  var r=0,g=0,b=0;
+  if(hex.length===4){r=parseInt(hex[1]+hex[1],16);g=parseInt(hex[2]+hex[2],16);b=parseInt(hex[3]+hex[3],16);}
+  else if(hex.length===7){r=parseInt(hex.substring(1,3),16);g=parseInt(hex.substring(3,5),16);b=parseInt(hex.substring(5,7),16);}
+  return 'rgba('+r+','+g+','+b+','+alpha+')';
+}
+function colorToRgba(c, alpha){
+  if(c.charAt(0)==='#') return hexToRgba(c, alpha);
+  return c.replace('rgb(','rgba(').replace(')',', '+alpha+')');
+}
+function makeDataset(cfg, pts, canvasCtx){
   var c=cfg.color;
-  var bg=c.replace('rgb(','rgba(').replace(')',', 0.08)');
-  if(cfg.type==='bar') bg=c.replace('rgb(','rgba(').replace(')',', 0.45)');
+  var bg;
+  if(cfg.type==='bar'){
+    bg=colorToRgba(c, 0.45);
+  } else if(canvasCtx){
+    var grad=canvasCtx.createLinearGradient(0,0,0,canvasCtx.canvas.height||300);
+    grad.addColorStop(0, colorToRgba(c, 0.28));
+    grad.addColorStop(0.6, colorToRgba(c, 0.08));
+    grad.addColorStop(1, colorToRgba(c, 0.01));
+    bg=grad;
+  } else {
+    bg=colorToRgba(c, 0.08);
+  }
   return {
     data:pts,
     borderColor:c, backgroundColor:bg,
@@ -739,13 +759,14 @@ function makeDataset(cfg, pts){
 }
 
 function renderChart(canvasId, cfg, labels, vals, animate){
-  var ctx=document.getElementById(canvasId); if(!ctx) return;
+  var el=document.getElementById(canvasId); if(!el) return;
   if(charts[canvasId]){charts[canvasId].destroy();delete charts[canvasId];}
+  var ctx2d=el.getContext('2d');
   var opts=chartOpts(cfg.unit, cfg.type);
   if(!animate) opts.animation={duration:0};
-  charts[canvasId]=new Chart(ctx,{
+  charts[canvasId]=new Chart(el,{
     type:cfg.type,
-    data:{labels:labels, datasets:[makeDataset(cfg,vals)]},
+    data:{labels:labels, datasets:[makeDataset(cfg,vals,ctx2d)]},
     options:opts,
   });
 }
@@ -794,11 +815,12 @@ function openModal(cfgId, label){
     var opts=chartOpts(cd.cfg.unit, cd.cfg.type);
     opts.animation={duration:600,easing:'easeInOutQuart'};
     opts.maintainAspectRatio=false;
-    var ctx=document.getElementById(modalCanvasId); if(!ctx) return;
-    ctx.style.height='340px';
-    charts[modalCanvasId]=new Chart(ctx,{
+    var mEl=document.getElementById(modalCanvasId); if(!mEl) return;
+    mEl.style.height='340px';
+    var mCtx=mEl.getContext('2d');
+    charts[modalCanvasId]=new Chart(mEl,{
       type:cd.cfg.type,
-      data:{labels:cd.labels, datasets:[makeDataset(cd.cfg, cd.vals)]},
+      data:{labels:cd.labels, datasets:[makeDataset(cd.cfg, cd.vals, mCtx)]},
       options:opts,
     });
   },30);
