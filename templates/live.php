@@ -317,10 +317,10 @@ $pressure_diff  = $_pt['diff'];
 
 <script>
 (function(){
-var WID    = <?php echo json_encode($widget_id); ?>;
+var WID    = <?php echo wp_json_encode($widget_id); ?>;
 var NAWS_FONT = getComputedStyle(document.documentElement).fontFamily || 'sans-serif';
 var TIME_SUFFIX = <?php echo wp_json_encode( naws__( 'time_suffix' ) ); ?>;
-var AJAX   = <?php echo json_encode($ajax_url); ?>;
+var AJAX   = <?php echo wp_json_encode($ajax_url); ?>;
 var NONCE  = document.getElementById(WID).dataset.nonce;
 var RFSH   = (parseInt(document.getElementById(WID).dataset.refresh,10)||60)*1000;
 var HIDE   = document.getElementById(WID).dataset.hidden ? document.getElementById(WID).dataset.hidden.split(',').filter(Boolean) : [];
@@ -365,7 +365,7 @@ $trend_html = '<div class="naws-press-trend naws-trend-' . $pressure_trend . '">
     . '</div>';
 ?>
 var NAWS_I18N = <?php echo wp_json_encode( $_i18n ); ?>;
-var PRESS_TREND_HTML = <?php echo json_encode( $trend_html ); ?>;
+var PRESS_TREND_HTML = <?php echo wp_json_encode( $trend_html ); ?>;
 var liveEl = document.getElementById(WID+'-live');
 var chartsEl= document.getElementById(WID+'-charts');
 var built  = false;

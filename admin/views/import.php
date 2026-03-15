@@ -167,8 +167,8 @@
             <p style="font-size:0.85rem; color:#94a3b8; margin:0 0 0.75rem;">
                 Du hast <strong style="color:#f59e0b;"><?php echo number_format($readings_count); ?> Rohwerte</strong>
                 in <code>naws_readings</code>
-                (<?php echo esc_html(date_i18n('d.m.Y', $readings_range['date_begin'])); ?> –
-                 <?php echo esc_html(date_i18n('d.m.Y', $readings_range['date_end'])); ?>).
+                (<?php echo esc_html(wp_date('d.m.Y', $readings_range['date_begin'])); ?> –
+                 <?php echo esc_html(wp_date('d.m.Y', $readings_range['date_end'])); ?>).
                 Alle <strong>abgeschlossenen Tage bis gestern</strong> werden in die Tagesdaten-Tabelle übertragen.
                 Der heutige Tag wird automatisch um 00:01 Uhr vom Cron-Job verarbeitet.
             </p>
@@ -238,7 +238,7 @@ const MODULES = <?php
             'types'       => $t,
         ];
     }
-    echo json_encode($mod_json);
+    echo wp_json_encode($mod_json);
 ?>;
 
 // Pre-populate debug dropdown on page load
@@ -509,7 +509,7 @@ $('#naws-migrate-btn').on('click', function(){
     const dateRange = <?php
         $rr       = NAWS_Database::get_data_range();
         $yesterday = gmdate( 'Y-m-d', strtotime('yesterday'));
-        echo json_encode([
+        echo wp_json_encode([
             'from' => $rr['date_begin'] ? gmdate( 'Y-m-d', $rr['date_begin']) : '',
             'to'   => $yesterday,  // never include today - cron handles it at 00:01
         ]);

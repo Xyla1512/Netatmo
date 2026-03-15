@@ -44,7 +44,7 @@
         <div class="notice notice-info is-dismissible">
             <p><strong>🔍 <?php naws_e( 'oauth_debug' ); ?>:</strong>
             HTTP <?php echo esc_html( $oauth_debug['http_code'] ?? '?' ); ?> –
-            <code><?php echo esc_html( json_encode( $oauth_debug['body'] ?? [] ) ); ?></code></p>
+            <code><?php echo esc_html( wp_json_encode( $oauth_debug['body'] ?? [] ) ); ?></code></p>
         </div>
     <?php endif; ?>
 

@@ -107,7 +107,7 @@ $module_type_colors = [
         <div class="naws-stat-card">
             <div class="naws-stat-icon-wrap naws-stat-color-slate"><?php echo $svg['oldest']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG from trusted source ?></div>
             <div class="naws-stat-body">
-                <div class="naws-stat-value naws-stat-value--date"><?php echo esc_html( date_i18n('d.m.Y', $range['date_begin']) ); ?></div>
+                <div class="naws-stat-value naws-stat-value--date"><?php echo esc_html( wp_date('d.m.Y', $range['date_begin']) ); ?></div>
                 <div class="naws-stat-label"><?php naws_e( 'date' ); ?></div>
             </div>
         </div>
@@ -315,8 +315,8 @@ $module_type_colors = [
                     </div>
                     <div class="naws-daily-controls">
                         <input type="date" id="naws-daily-date"
-                               value="<?php echo esc_attr(date_i18n('Y-m-d', strtotime('yesterday'))); ?>"
-                               max="<?php echo esc_attr(date_i18n('Y-m-d', strtotime('yesterday'))); ?>"
+                               value="<?php echo esc_attr(wp_date('Y-m-d', strtotime('yesterday'))); ?>"
+                               max="<?php echo esc_attr(wp_date('Y-m-d', strtotime('yesterday'))); ?>"
                                class="naws-date-input">
                         <button id="naws-run-daily-btn" class="button button-primary">
                             <?php naws_e( 'daily_summary' ); ?>
@@ -429,7 +429,7 @@ document.addEventListener('DOMContentLoaded', function () {
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.onload = function () {
                 dailyBtn.disabled = false;
-                dailyBtn.textContent = <?php echo json_encode( naws__( 'daily_summary' ) ); ?>;
+                dailyBtn.textContent = <?php echo wp_json_encode( naws__( 'daily_summary' ) ); ?>;
                 try {
                     var r = JSON.parse(xhr.responseText);
                     if (r.success) {
@@ -446,7 +446,7 @@ document.addEventListener('DOMContentLoaded', function () {
             };
             xhr.onerror = function () {
                 dailyBtn.disabled = false;
-                dailyBtn.textContent = <?php echo json_encode( naws__( 'daily_summary' ) ); ?>;
+                dailyBtn.textContent = <?php echo wp_json_encode( naws__( 'daily_summary' ) ); ?>;
                 dailyResult.textContent = '✗ ' + nawsAdmin.strings.error;
                 dailyResult.style.color = '#b32d2e';
             };

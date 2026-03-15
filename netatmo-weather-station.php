@@ -3,7 +3,7 @@
  * Plugin Name: Netatmo Weather Station
  * Plugin URI: https://frank-neumann.de/netatmo-weather-station
  * Description: Connects to the Netatmo API, stores all sensor data locally and displays live dashboards, charts, history and forecasts via shortcodes.
- * Version: 1.2.0
+ * Version: 1.2.1
  * Author: Frank Neumann
  * Author URI: https://frank-neumann.de
  * License: GPL v2 or later
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'NAWS_VERSION',        '1.2.0' );
+define( 'NAWS_VERSION',        '1.2.1' );
 define( 'NAWS_PLUGIN_FILE',    __FILE__ );
 define( 'NAWS_PLUGIN_DIR',     plugin_dir_path( __FILE__ ) );
 define( 'NAWS_PLUGIN_URL',     plugin_dir_url( __FILE__ ) );
@@ -159,11 +159,9 @@ final class Netatmo_Weather_Station {
             if ( ! get_option( 'naws_cleanup_timestamp_readings' ) ) {
                 global $wpdb;
                 $table = $wpdb->prefix . NAWS_TABLE_READINGS;
-                $wpdb->query( "DELETE FROM {$table} WHERE parameter IN (
-                    'time_utc','date_min_temp','date_max_temp',
-                    'date_min_pressure','date_max_pressure',
-                    'date_max_wind_str','date_max_gust'
-                )" );
+                $params = [ 'time_utc', 'date_min_temp', 'date_max_temp', 'date_min_pressure', 'date_max_pressure', 'date_max_wind_str', 'date_max_gust' ];
+                $placeholders = implode( ', ', array_fill( 0, count( $params ), '%s' ) );
+                $wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE parameter IN ({$placeholders})", $params ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constant
                 update_option( 'naws_cleanup_timestamp_readings', true, false );
             }
         }

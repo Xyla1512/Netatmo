@@ -130,9 +130,9 @@ $hidden_history_charts = (array) get_option( 'naws_history_hidden_charts', [] );
 
 <script>
 (function(){
-var WID     = <?php echo json_encode($widget_id); ?>;
+var WID     = <?php echo wp_json_encode($widget_id); ?>;
 var NAWS_FONT = getComputedStyle(document.documentElement).fontFamily || 'sans-serif';
-var AJAX    = <?php echo json_encode($ajax_url); ?>;
+var AJAX    = <?php echo wp_json_encode($ajax_url); ?>;
 var NONCE   = document.getElementById(WID).dataset.nonce;
 var OUTDOOR = document.getElementById(WID).dataset.outdoor;
 var INDOOR  = document.getElementById(WID).dataset.indoor;
