@@ -1,3 +1,0 @@
-warning: redirecting to https://github.com/Xyla1512/Netatmo.git/
-To https://www.github.com/Xyla1512/Netatmo
-   f988d26..b3169f2  main -> main

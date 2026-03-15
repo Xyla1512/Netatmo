@@ -1,5 +1,0 @@
-warning: redirecting to https://github.com/Xyla1512/Netatmo.git/
-From https://www.github.com/Xyla1512/Netatmo
- * branch            main       -> FETCH_HEAD
-   7e54dd0..f988d26  main       -> origin/main
-Rebasing (1/1)Successfully rebased and updated refs/heads/main.

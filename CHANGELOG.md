@@ -2,6 +2,27 @@
 
 All notable changes to the Netatmo Weather Station (NAWS) plugin are documented here.
 
+## [1.4.0] – 2026-03-15
+
+### Added
+- **Appearance / Color Customization**: New admin page "Appearance" with comprehensive color picker for 130+ configurable colors
+  - Base theme colors (background, surfaces, text variants, borders, shadows)
+  - Accent colors (primary, secondary, success, warning, danger)
+  - Sensor tile gradient colors for all 8 sensor types (temperature, humidity, pressure, CO2, noise, wind, rain, health)
+  - 24-hour chart line colors per sensor type
+  - Chart theming (grid lines, axis labels, tooltips, axis titles)
+  - Year comparison palette with 15 distinct colors for multi-year history charts
+  - Icon set selection (emoji, outline, filled, minimal)
+  - Reset-to-defaults functionality
+- New class `NAWS_Colors` with centralized color management, caching, and hex color sanitization
+- New admin view `admin/views/appearance.php` with WordPress Color Picker integration
+- Helper methods for templates: `get_sensor_colors()`, `get_history_palette()`, `get_chart_theme()`, `get_inline_css()`
+- 60+ new translation strings in German and English for all color settings
+
+### Improved
+- **Frontend CSS architecture**: All colors use CSS custom properties, dynamically overridden via `NAWS_Colors::get_inline_css()`
+- **Database version**: Bumped to 1.4
+
 ## [1.3.0] – 2026-03-15
 
 ### Added

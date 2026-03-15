@@ -1,3 +1,0 @@
-085149e Fix forecast cards outside .naws-wx scope, white card background
-7e54dd0 v1.2.0 – Mobile-first responsive redesign
-c1e1bbb Update README.md

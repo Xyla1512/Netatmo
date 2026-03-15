@@ -1,2 +1,0 @@
-[main 085149e] Fix forecast cards outside .naws-wx scope, white card background
- 2 files changed, 77 insertions(+), 76 deletions(-)
