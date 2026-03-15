@@ -90,6 +90,20 @@ All sensitive data (OAuth tokens, client secret, API keys) is encrypted with AES
 
 == Changelog ==
 
+## [1.3.0] – 2026-03-15
+
+### Added
+- **Export / Import feature**: New admin page under "Export / Import" menu
+  - **Weather Data Export**: Download all daily summary data (temperature, pressure, rain, etc.) as JSON file
+  - **Full Backup Export**: Download weather data + module configuration + all plugin settings as JSON – ideal for migrating to a new WordPress installation
+  - **File Import**: Upload previously exported JSON files to restore data, with chunked AJAX processing for large files and real-time progress feedback
+  - Security: API tokens, refresh tokens and API keys are **never** included in exports
+  - Idempotent imports: re-importing the same file safely updates existing records (ON DUPLICATE KEY UPDATE)
+  - File validation: JSON structure, export version and data integrity are verified before import begins
+- New class `NAWS_Export` with streaming export (memory-efficient for large datasets)
+- New admin view `admin/views/export.php` with two-column layout matching existing plugin design
+- Translation strings for German and English
+
 ## [1.2.1] – 2026-03-15
 
 ### Fixed
