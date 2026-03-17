@@ -57,6 +57,14 @@ $chart_short_labels = [
     'chart_module4_humidity' => 'Module4 Hum.',
     'chart_module4_co2'      => 'Module4 CO2',
 ];
+
+// Tab definitions
+$tabs = [
+    'theme'     => naws__( 'appearance_group_theme' ),
+    'chart24h'  => naws__( 'appearance_group_chart_24h' ),
+    'charttheme'=> naws__( 'appearance_group_chart_theme' ),
+    'history'   => naws__( 'appearance_group_history' ),
+];
 ?>
 
 <div class="wrap naws-admin-wrap">
@@ -86,12 +94,19 @@ $chart_short_labels = [
         <?php wp_nonce_field( 'naws_save_appearance' ); ?>
         <input type="hidden" name="action" value="naws_save_appearance">
 
+        <!-- ── Tab Navigation ── -->
+        <div class="naws-appearance-tabs">
+            <?php foreach ( $tabs as $tab_id => $tab_label ) : ?>
+                <button type="button" class="naws-appearance-tab<?php echo $tab_id === 'theme' ? ' active' : ''; ?>" data-tab="<?php echo esc_attr( $tab_id ); ?>">
+                    <?php echo esc_html( $tab_label ); ?>
+                </button>
+            <?php endforeach; ?>
+        </div>
+
         <!-- ============================================================
-             Gruppe 1: Basis-Theme
+             Tab 1: Basis-Theme
              ============================================================ -->
-        <div class="naws-admin-panel">
-            <div class="naws-panel-header"><h2><?php naws_e( 'appearance_group_theme' ); ?></h2></div>
-            <div class="naws-panel-body">
+        <div class="naws-appearance-pane active" data-pane="theme">
             <p class="description"><?php naws_e( 'appearance_group_theme_desc' ); ?></p>
             <div class="naws-appearance-row">
                 <div class="naws-appearance-controls">
@@ -147,12 +162,10 @@ $chart_short_labels = [
                             <div class="naws-pv-card-label" style="color:<?php echo esc_attr( $colors['theme_text_muted'] ); ?>;">💨 WIND</div>
                             <div class="naws-pv-wind-row">
                                 <div class="naws-pv-rose-wrap">
-                                    <!-- Windrose SVG (identisch mit live.php) -->
                                     <svg class="naws-pv-rose-bg" viewBox="-4 -4 168 168" xmlns="http://www.w3.org/2000/svg">
                                         <circle cx="80" cy="80" r="72" fill="<?php echo esc_attr( $colors['theme_surface_alt'] ); ?>" stroke="<?php echo esc_attr( $colors['theme_border'] ); ?>" stroke-width="1.5"/>
                                         <circle cx="80" cy="80" r="54" fill="none" stroke="<?php echo esc_attr( $colors['theme_border'] ); ?>" stroke-width="1"/>
                                         <circle cx="80" cy="80" r="34" fill="none" stroke="<?php echo esc_attr( $colors['theme_border'] ); ?>" stroke-width="1" stroke-dasharray="3 4"/>
-                                        <!-- N/S/E/W Spitzen -->
                                         <polygon points="80,8 88,80 80,92 72,80" fill="<?php echo esc_attr( $colors['theme_text'] ); ?>"/>
                                         <polygon points="80,8 80,92 88,80" fill="<?php echo esc_attr( $colors['theme_border'] ); ?>"/>
                                         <polygon points="80,152 72,80 80,68 88,80" fill="<?php echo esc_attr( $colors['theme_text'] ); ?>"/>
@@ -161,7 +174,6 @@ $chart_short_labels = [
                                         <polygon points="152,80 68,80 80,88" fill="<?php echo esc_attr( $colors['theme_border'] ); ?>"/>
                                         <polygon points="8,80 80,88 92,80 80,72" fill="<?php echo esc_attr( $colors['theme_text'] ); ?>"/>
                                         <polygon points="8,80 92,80 80,72" fill="<?php echo esc_attr( $colors['theme_border'] ); ?>"/>
-                                        <!-- Diagonale Spitzen -->
                                         <polygon points="129,31 76,76 80,80" fill="<?php echo esc_attr( $colors['theme_text_muted'] ); ?>"/>
                                         <polygon points="129,31 84,84 80,80" fill="<?php echo esc_attr( $colors['theme_border'] ); ?>"/>
                                         <polygon points="129,129 84,76 80,80" fill="<?php echo esc_attr( $colors['theme_text_muted'] ); ?>"/>
@@ -170,9 +182,7 @@ $chart_short_labels = [
                                         <polygon points="31,129 76,76 80,80" fill="<?php echo esc_attr( $colors['theme_border'] ); ?>"/>
                                         <polygon points="31,31 76,84 80,80" fill="<?php echo esc_attr( $colors['theme_text_muted'] ); ?>"/>
                                         <polygon points="31,31 84,76 80,80" fill="<?php echo esc_attr( $colors['theme_border'] ); ?>"/>
-                                        <!-- Zentrum -->
                                         <circle cx="80" cy="80" r="9" fill="<?php echo esc_attr( $colors['theme_text'] ); ?>" stroke="<?php echo esc_attr( $colors['theme_surface'] ); ?>" stroke-width="2.5"/>
-                                        <!-- Himmelsrichtungen -->
                                         <text x="80" y="9" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-size="13" font-weight="800" fill="<?php echo esc_attr( $colors['theme_text_darkest'] ); ?>">N</text>
                                         <text x="80" y="153" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-size="13" font-weight="800" fill="<?php echo esc_attr( $colors['theme_text_darkest'] ); ?>">S</text>
                                         <text x="153" y="80" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-size="13" font-weight="800" fill="<?php echo esc_attr( $colors['theme_text_darkest'] ); ?>">E</text>
@@ -182,7 +192,6 @@ $chart_short_labels = [
                                         <text x="27" y="136" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="600" fill="<?php echo esc_attr( $colors['theme_text_muted'] ); ?>">SW</text>
                                         <text x="27" y="27" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="600" fill="<?php echo esc_attr( $colors['theme_text_muted'] ); ?>">NW</text>
                                     </svg>
-                                    <!-- Richtungspfeil (Zeiger) -->
                                     <svg class="naws-pv-rose-arrow" viewBox="-4 -4 168 168" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(225deg);">
                                         <polygon points="80,18 87,38 80,32 73,38" fill="<?php echo esc_attr( $colors['theme_compass_needle'] ); ?>"/>
                                         <line x1="80" y1="32" x2="80" y2="88" stroke="<?php echo esc_attr( $colors['theme_compass_needle'] ); ?>" stroke-width="5" stroke-linecap="round"/>
@@ -199,15 +208,12 @@ $chart_short_labels = [
                     </div>
                 </div>
             </div>
-            </div>
         </div>
 
         <!-- ============================================================
-             Gruppe 2: 24h-Chart-Farben
+             Tab 2: 24h-Chart-Farben
              ============================================================ -->
-        <div class="naws-admin-panel">
-            <div class="naws-panel-header"><h2><?php naws_e( 'appearance_group_chart_24h' ); ?></h2></div>
-            <div class="naws-panel-body">
+        <div class="naws-appearance-pane" data-pane="chart24h">
             <p class="description"><?php naws_e( 'appearance_group_chart_24h_desc' ); ?></p>
             <div class="naws-appearance-row">
                 <div class="naws-appearance-controls">
@@ -252,15 +258,12 @@ $chart_short_labels = [
                     </div>
                 </div>
             </div>
-            </div>
         </div>
 
         <!-- ============================================================
-             Gruppe 3: Chart-Theming
+             Tab 3: Chart-Theming
              ============================================================ -->
-        <div class="naws-admin-panel">
-            <div class="naws-panel-header"><h2><?php naws_e( 'appearance_group_chart_theme' ); ?></h2></div>
-            <div class="naws-panel-body">
+        <div class="naws-appearance-pane" data-pane="charttheme">
             <p class="description"><?php naws_e( 'appearance_group_chart_theme_desc' ); ?></p>
             <div class="naws-appearance-row">
                 <div class="naws-appearance-controls">
@@ -288,13 +291,11 @@ $chart_short_labels = [
                     <div class="naws-preview-label">Live-Vorschau — Chart-Theming</div>
                     <div id="naws-preview-charttheme" class="naws-pv-chart-theme">
                         <svg width="100%" height="180" viewBox="0 0 300 180" preserveAspectRatio="xMidYMid meet">
-                            <!-- Grid lines -->
                             <line class="pv-grid" x1="40" y1="20" x2="280" y2="20" stroke="<?php echo esc_attr( $colors['chart_grid'] ); ?>" stroke-width="1"/>
                             <line class="pv-grid" x1="40" y1="55" x2="280" y2="55" stroke="<?php echo esc_attr( $colors['chart_grid'] ); ?>" stroke-width="1"/>
                             <line class="pv-grid" x1="40" y1="90" x2="280" y2="90" stroke="<?php echo esc_attr( $colors['chart_grid'] ); ?>" stroke-width="1"/>
                             <line class="pv-grid" x1="40" y1="125" x2="280" y2="125" stroke="<?php echo esc_attr( $colors['chart_grid'] ); ?>" stroke-width="1"/>
                             <line class="pv-grid" x1="40" y1="155" x2="280" y2="155" stroke="<?php echo esc_attr( $colors['chart_grid'] ); ?>" stroke-width="1"/>
-                            <!-- Axis ticks -->
                             <text class="pv-tick" x="36" y="24" text-anchor="end" font-size="9" fill="<?php echo esc_attr( $colors['chart_tick'] ); ?>">30°</text>
                             <text class="pv-tick" x="36" y="59" text-anchor="end" font-size="9" fill="<?php echo esc_attr( $colors['chart_tick'] ); ?>">25°</text>
                             <text class="pv-tick" x="36" y="94" text-anchor="end" font-size="9" fill="<?php echo esc_attr( $colors['chart_tick'] ); ?>">20°</text>
@@ -302,11 +303,8 @@ $chart_short_labels = [
                             <text class="pv-tick" x="80" y="170" text-anchor="middle" font-size="9" fill="<?php echo esc_attr( $colors['chart_tick'] ); ?>">06:00</text>
                             <text class="pv-tick" x="160" y="170" text-anchor="middle" font-size="9" fill="<?php echo esc_attr( $colors['chart_tick'] ); ?>">12:00</text>
                             <text class="pv-tick" x="240" y="170" text-anchor="middle" font-size="9" fill="<?php echo esc_attr( $colors['chart_tick'] ); ?>">18:00</text>
-                            <!-- Axis title -->
                             <text class="pv-axis-title" x="8" y="90" text-anchor="middle" font-size="9" fill="<?php echo esc_attr( $colors['chart_axis_title'] ); ?>" transform="rotate(-90 8 90)">°C</text>
-                            <!-- Example line -->
                             <path d="M50,100 Q90,60 130,80 T210,45 T270,65" fill="none" stroke="#50a882" stroke-width="2.5" stroke-linecap="round"/>
-                            <!-- Tooltip mock -->
                             <rect class="pv-tooltip-bg" x="150" y="28" width="80" height="42" rx="6" fill="<?php echo esc_attr( $colors['chart_tooltip_bg'] ); ?>"/>
                             <text class="pv-tooltip-title" x="160" y="43" font-size="9" fill="<?php echo esc_attr( $colors['chart_tooltip_title'] ); ?>">14:00</text>
                             <text class="pv-tooltip-text" x="160" y="60" font-size="12" font-weight="bold" fill="<?php echo esc_attr( $colors['chart_tooltip_text'] ); ?>">22.4 °C</text>
@@ -319,18 +317,14 @@ $chart_short_labels = [
                     </div>
                 </div>
             </div>
-            </div>
         </div>
 
         <!-- ============================================================
-             Gruppe 4: Jahresvergleich-Palette
+             Tab 4: Jahresvergleich-Palette
              ============================================================ -->
-        <div class="naws-admin-panel">
-            <div class="naws-panel-header"><h2><?php naws_e( 'appearance_group_history' ); ?></h2></div>
-            <div class="naws-panel-body">
+        <div class="naws-appearance-pane" data-pane="history">
             <p class="description"><?php naws_e( 'appearance_group_history_desc' ); ?></p>
 
-            <!-- Preview: year bars -->
             <div class="naws-preview-label">Live-Vorschau — Jahresvergleich</div>
             <div id="naws-preview-history" class="naws-pv-history-bars">
                 <?php for ( $i = 1; $i <= 15; $i++ ) :
@@ -361,7 +355,6 @@ $chart_short_labels = [
                     </div>
                 <?php endfor; ?>
             </div>
-            </div>
         </div>
 
         <p class="submit">
@@ -372,6 +365,33 @@ $chart_short_labels = [
 
 <script>
 jQuery(document).ready(function($) {
+    // ── Tab switching ──
+    $('.naws-appearance-tab').on('click', function() {
+        var tab = $(this).data('tab');
+        $('.naws-appearance-tab').removeClass('active');
+        $(this).addClass('active');
+        $('.naws-appearance-pane').removeClass('active');
+        $('.naws-appearance-pane[data-pane="'+tab+'"]').addClass('active');
+        // Re-init color pickers in newly visible pane (WP Color Picker needs visible container)
+        var pane = $('.naws-appearance-pane[data-pane="'+tab+'"]');
+        pane.find('.naws-color-picker').each(function() {
+            var $inp = $(this);
+            if (!$inp.closest('.wp-picker-container').length) {
+                $inp.wpColorPicker({
+                    defaultColor: $inp.data('default-color') || '',
+                    change: function(event, ui) {
+                        var self = $(this);
+                        setTimeout(function(){ updatePreview(self); }, 10);
+                    },
+                    clear: function() {
+                        var self = $(this);
+                        setTimeout(function(){ updatePreview(self); }, 10);
+                    }
+                });
+            }
+        });
+    });
+
     // ── Initialize all color pickers with live preview callback ──
     function getPickerVal($input) {
         return $input.wpColorPicker('color') || $input.val() || $input.data('default-color') || '';
@@ -459,7 +479,6 @@ jQuery(document).ready(function($) {
             if (key === 'chart_tooltip_bg')    svg.find('.pv-tooltip-bg').attr('fill', val);
             if (key === 'chart_tooltip_title') svg.find('.pv-tooltip-title').attr('fill', val);
             if (key === 'chart_tooltip_text')  svg.find('.pv-tooltip-text').attr('fill', val);
-            // Update legend dots
             var legend = $('#naws-preview-charttheme .naws-pv-chart-theme-legend');
             if (key === 'chart_grid')       legend.find('.naws-pv-dot').eq(0).css('background', val);
             if (key === 'chart_tick')        legend.find('.naws-pv-dot').eq(1).css('background', val);
@@ -472,12 +491,12 @@ jQuery(document).ready(function($) {
         }
     }
 
-    $('.naws-color-picker').each(function() {
+    // Init color pickers only in the active/visible pane first
+    $('.naws-appearance-pane.active .naws-color-picker').each(function() {
         var $input = $(this);
         $input.wpColorPicker({
             defaultColor: $input.data('default-color') || '',
             change: function(event, ui) {
-                // wpColorPicker sets the value after this callback, so defer
                 var self = $(this);
                 setTimeout(function(){ updatePreview(self); }, 10);
             },
@@ -491,12 +510,49 @@ jQuery(document).ready(function($) {
 </script>
 
 <style>
+/* ── Tab navigation ── */
+.naws-appearance-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid #e2e8f0;
+    margin: 1rem 0 0;
+}
+.naws-appearance-tab {
+    padding: 10px 20px;
+    border: none;
+    background: none;
+    font-size: 13px;
+    font-weight: 600;
+    color: #646970;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+}
+.naws-appearance-tab:hover {
+    color: #1d2327;
+}
+.naws-appearance-tab.active {
+    color: #2271b1;
+    border-bottom-color: #2271b1;
+}
+
+/* ── Tab panes ── */
+.naws-appearance-pane {
+    display: none;
+    padding: 1.25rem 0 0;
+}
+.naws-appearance-pane.active {
+    display: block;
+}
+
 /* ── Layout: controls left, preview right ── */
 .naws-appearance-row {
     display: grid;
     grid-template-columns: 1fr 340px;
     gap: 1.5rem;
-    padding: 0 1rem 1rem;
+    padding: 0.5rem 0 1rem;
     align-items: start;
 }
 @media (max-width: 1100px) {
