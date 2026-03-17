@@ -37,6 +37,7 @@ class NAWS_Colors {
         'theme_text_light'    => '#a0b8b8',
         'theme_border'        => '#e0eeee',
         'theme_shadow'        => '#28484814', // rgba(40,72,72,0.08) as 8-digit hex
+        'theme_compass_needle'=> '#ef4444',
 
         // ── Gruppe 2: Akzent-Farben ────────────────────────────────────
         'accent_primary'      => '#00d4ff',
@@ -236,6 +237,7 @@ class NAWS_Colors {
         $css .= "  --naws-text-light: {$c['theme_text_light']};\n";
         $css .= "  --naws-border: {$c['theme_border']};\n";
         $css .= "  --naws-shadow-color: {$c['theme_shadow']};\n";
+        $css .= "  --naws-compass-needle: {$c['theme_compass_needle']};\n";
 
         // Akzent-Farben
         $css .= "  --naws-primary: {$c['accent_primary']};\n";
@@ -377,6 +379,7 @@ class NAWS_Colors {
                     'theme_text', 'theme_text_dark', 'theme_text_darkest',
                     'theme_text_muted', 'theme_text_light',
                     'theme_border', 'theme_shadow',
+                    'theme_compass_needle',
                 ],
             ],
             'accent' => [

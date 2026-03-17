@@ -568,6 +568,7 @@ return [
     'appearance_theme_text_light'     => 'Tekst (lys)',
     'appearance_theme_border'         => 'Ramme',
     'appearance_theme_shadow'         => 'Skygge',
+    'appearance_theme_compass_needle'=> 'Kompassnål (Vindrose)',
     'appearance_accent_primary'       => 'Primær',
     'appearance_accent_secondary'     => 'Sekundær',
     'appearance_accent_success'       => 'Suksess',

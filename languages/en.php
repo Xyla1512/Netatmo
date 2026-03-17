@@ -568,6 +568,7 @@ return [
     'appearance_theme_text_light'     => 'Text (Light)',
     'appearance_theme_border'         => 'Border',
     'appearance_theme_shadow'         => 'Shadow',
+    'appearance_theme_compass_needle'=> 'Compass Needle (Wind Rose)',
     'appearance_accent_primary'       => 'Primary',
     'appearance_accent_secondary'     => 'Secondary',
     'appearance_accent_success'       => 'Success',

@@ -19,6 +19,7 @@ $color_labels = [
     'theme_text_light'    => naws__( 'appearance_theme_text_light' ),
     'theme_border'        => naws__( 'appearance_theme_border' ),
     'theme_shadow'        => naws__( 'appearance_theme_shadow' ),
+    'theme_compass_needle'=> naws__( 'appearance_theme_compass_needle' ),
     // Chart 24h
     'chart_temp_outdoor'     => naws__( 'appearance_chart_temp_outdoor' ),
     'chart_humidity_outdoor'  => naws__( 'appearance_chart_humidity_outdoor' ),
@@ -117,16 +118,43 @@ $chart_short_labels = [
                 <div class="naws-appearance-preview naws-preview-sticky">
                     <div class="naws-preview-label">Live-Vorschau</div>
                     <div id="naws-preview-theme" class="naws-preview-theme-box"
-                         style="background:<?php echo esc_attr( $colors['theme_bg'] ); ?>; border-color:<?php echo esc_attr( $colors['theme_border'] ); ?>;">
-                        <div class="naws-pv-surface" style="background:<?php echo esc_attr( $colors['theme_surface'] ); ?>; border-color:<?php echo esc_attr( $colors['theme_border'] ); ?>;">
-                            <div class="naws-pv-title" style="color:<?php echo esc_attr( $colors['theme_text_darkest'] ); ?>;">Wetterdaten</div>
-                            <div class="naws-pv-value" style="color:<?php echo esc_attr( $colors['theme_text'] ); ?>;">21.3 <span style="color:<?php echo esc_attr( $colors['theme_text_muted'] ); ?>;">°C</span></div>
-                            <div class="naws-pv-meta" style="color:<?php echo esc_attr( $colors['theme_text_light'] ); ?>;">Aktualisiert vor 2 Min.</div>
+                         style="background:<?php echo esc_attr( $colors['theme_bg'] ); ?>; border-color:<?php echo esc_attr( $colors['theme_border'] ); ?>; box-shadow: 0 2px 10px <?php echo esc_attr( $colors['theme_shadow'] ); ?>;">
+
+                        <!-- Sensor-Kachel: Temperatur -->
+                        <div class="naws-pv-card" style="background:<?php echo esc_attr( $colors['theme_surface'] ); ?>; border-color:<?php echo esc_attr( $colors['theme_border'] ); ?>;">
+                            <div class="naws-pv-card-label" style="color:<?php echo esc_attr( $colors['theme_text_muted'] ); ?>;">🌡️ TEMPERATUR</div>
+                            <div class="naws-pv-card-value" style="color:<?php echo esc_attr( $colors['theme_text'] ); ?>;">21.3 <span style="color:<?php echo esc_attr( $colors['theme_text_muted'] ); ?>;">°C</span></div>
+                            <div class="naws-pv-card-meta" style="color:<?php echo esc_attr( $colors['theme_text_light'] ); ?>;">Außensensor · vor 2 Min.</div>
                         </div>
-                        <div class="naws-pv-surface" style="background:<?php echo esc_attr( $colors['theme_surface_alt'] ); ?>; border-color:<?php echo esc_attr( $colors['theme_border'] ); ?>;">
-                            <div class="naws-pv-dark" style="color:<?php echo esc_attr( $colors['theme_text_dark'] ); ?>;">Luftfeuchtigkeit</div>
-                            <div style="color:<?php echo esc_attr( $colors['theme_text'] ); ?>;">58%</div>
-                            <div class="naws-pv-muted" style="color:<?php echo esc_attr( $colors['theme_text_muted'] ); ?>;">Normal</div>
+
+                        <!-- Sensor-Kachel: Luftdruck -->
+                        <div class="naws-pv-card" style="background:<?php echo esc_attr( $colors['theme_surface_alt'] ); ?>; border-color:<?php echo esc_attr( $colors['theme_border'] ); ?>;">
+                            <div class="naws-pv-card-label" style="color:<?php echo esc_attr( $colors['theme_text_muted'] ); ?>;">📊 LUFTDRUCK</div>
+                            <div class="naws-pv-card-value" style="color:<?php echo esc_attr( $colors['theme_text'] ); ?>;">1018 <span style="color:<?php echo esc_attr( $colors['theme_text_muted'] ); ?>;">hPa</span></div>
+                            <div class="naws-pv-card-sub" style="color:<?php echo esc_attr( $colors['theme_text_dark'] ); ?>;">Stabil ↔</div>
+                        </div>
+
+                        <!-- Windrose -->
+                        <div class="naws-pv-wind-section" style="background:<?php echo esc_attr( $colors['theme_surface'] ); ?>; border-color:<?php echo esc_attr( $colors['theme_border'] ); ?>;">
+                            <div class="naws-pv-card-label" style="color:<?php echo esc_attr( $colors['theme_text_muted'] ); ?>;">💨 WIND</div>
+                            <div class="naws-pv-wind-row">
+                                <div class="naws-pv-compass" style="border-color:<?php echo esc_attr( $colors['theme_border'] ); ?>;">
+                                    <span class="naws-pv-compass-dir naws-pv-dir-n" style="color:<?php echo esc_attr( $colors['theme_text_light'] ); ?>;">N</span>
+                                    <span class="naws-pv-compass-dir naws-pv-dir-e" style="color:<?php echo esc_attr( $colors['theme_text_light'] ); ?>;">O</span>
+                                    <span class="naws-pv-compass-dir naws-pv-dir-s" style="color:<?php echo esc_attr( $colors['theme_text_light'] ); ?>;">S</span>
+                                    <span class="naws-pv-compass-dir naws-pv-dir-w" style="color:<?php echo esc_attr( $colors['theme_text_light'] ); ?>;">W</span>
+                                    <div class="naws-pv-needle" style="transform: translate(-50%, -100%) rotate(225deg);">
+                                        <div class="naws-pv-needle-top" style="background:<?php echo esc_attr( $colors['theme_compass_needle'] ); ?>;"></div>
+                                        <div class="naws-pv-needle-bottom" style="background:<?php echo esc_attr( $colors['theme_text_muted'] ); ?>;"></div>
+                                    </div>
+                                    <div class="naws-pv-compass-dot" style="background:<?php echo esc_attr( $colors['theme_text_muted'] ); ?>;"></div>
+                                </div>
+                                <div class="naws-pv-wind-info">
+                                    <div style="color:<?php echo esc_attr( $colors['theme_text_darkest'] ); ?>; font-size:1.3rem; font-weight:800;">12 <span style="color:<?php echo esc_attr( $colors['theme_text_muted'] ); ?>; font-size:0.75rem; font-weight:400;">km/h</span></div>
+                                    <div style="color:<?php echo esc_attr( $colors['theme_text_dark'] ); ?>; font-size:0.75rem;">SW · 225°</div>
+                                    <div style="color:<?php echo esc_attr( $colors['theme_text_light'] ); ?>; font-size:0.65rem; margin-top:2px;">Böen: 18 km/h</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -320,14 +348,16 @@ jQuery(document).ready(function($) {
             var box = $('#naws-preview-theme');
             var map = {
                 'theme_bg':           function(v){ box.css('background', v); },
-                'theme_surface':      function(v){ box.find('.naws-pv-surface').first().css('background', v); },
-                'theme_surface_alt':  function(v){ box.find('.naws-pv-surface').last().css('background', v); },
-                'theme_border':       function(v){ box.css('border-color', v); box.find('.naws-pv-surface').css('border-color', v); },
-                'theme_text':         function(v){ box.find('.naws-pv-value').css('color', v); box.find('.naws-pv-surface').last().find('div').eq(1).css('color', v); },
-                'theme_text_dark':    function(v){ box.find('.naws-pv-dark').css('color', v); },
-                'theme_text_darkest': function(v){ box.find('.naws-pv-title').css('color', v); },
-                'theme_text_muted':   function(v){ box.find('.naws-pv-value span, .naws-pv-muted').css('color', v); },
-                'theme_text_light':   function(v){ box.find('.naws-pv-meta').css('color', v); },
+                'theme_surface':      function(v){ box.find('.naws-pv-card').first().css('background', v); box.find('.naws-pv-wind-section').css('background', v); },
+                'theme_surface_alt':  function(v){ box.find('.naws-pv-card').last().css('background', v); },
+                'theme_border':       function(v){ box.css('border-color', v); box.find('.naws-pv-card, .naws-pv-wind-section, .naws-pv-compass').css('border-color', v); },
+                'theme_text':         function(v){ box.find('.naws-pv-card-value').css('color', v); },
+                'theme_text_dark':    function(v){ box.find('.naws-pv-card-sub').css('color', v); box.find('.naws-pv-wind-info div').eq(1).css('color', v); },
+                'theme_text_darkest': function(v){ box.find('.naws-pv-wind-info div').first().css('color', v); },
+                'theme_text_muted':   function(v){ box.find('.naws-pv-card-label').css('color', v); box.find('.naws-pv-card-value span').css('color', v); box.find('.naws-pv-needle-bottom, .naws-pv-compass-dot').css('background', v); },
+                'theme_text_light':   function(v){ box.find('.naws-pv-card-meta').css('color', v); box.find('.naws-pv-compass-dir').css('color', v); box.find('.naws-pv-wind-info div').eq(2).css('color', v); },
+                'theme_shadow':       function(v){ box.css('box-shadow', '0 2px 10px ' + v); },
+                'theme_compass_needle': function(v){ box.find('.naws-pv-needle-top').css('background', v); },
             };
             if (map[key]) map[key](val);
         }
@@ -411,23 +441,86 @@ jQuery(document).ready(function($) {
 .naws-preview-theme-box {
     border: 1.5px solid #e0eeee;
     border-radius: 12px;
-    padding: 1rem;
+    padding: 0.75rem;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.6rem;
     transition: all 0.2s;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
-.naws-pv-surface {
+/* Sensor card preview */
+.naws-pv-card {
     border: 1px solid #e0eeee;
     border-radius: 10px;
-    padding: 0.85rem;
+    padding: 0.75rem 0.85rem;
+    position: relative;
+    overflow: hidden;
 }
-.naws-pv-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem; }
-.naws-pv-value { font-size: 1.75rem; font-weight: 800; line-height: 1.1; }
-.naws-pv-value span { font-size: 1rem; font-weight: 400; }
-.naws-pv-meta { font-size: 0.72rem; margin-top: 0.4rem; }
-.naws-pv-dark { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.15rem; }
-.naws-pv-muted { font-size: 0.72rem; margin-top: 0.15rem; }
+.naws-pv-card-label {
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+}
+.naws-pv-card-value { font-size: 1.5rem; font-weight: 800; line-height: 1.2; }
+.naws-pv-card-value span { font-size: 0.8rem; font-weight: 400; }
+.naws-pv-card-meta { font-size: 0.62rem; margin-top: 0.2rem; }
+.naws-pv-card-sub { font-size: 0.72rem; font-weight: 600; margin-top: 0.15rem; }
+
+/* Wind section with compass */
+.naws-pv-wind-section {
+    border: 1px solid #e0eeee;
+    border-radius: 10px;
+    padding: 0.75rem 0.85rem;
+}
+.naws-pv-wind-row {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-top: 0.3rem;
+}
+.naws-pv-compass {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    border: 2px solid #e0eeee;
+    position: relative;
+    flex-shrink: 0;
+}
+.naws-pv-compass-dir {
+    position: absolute;
+    font-size: 0.5rem;
+    font-weight: 700;
+}
+.naws-pv-dir-n { top: 3px; left: 50%; transform: translateX(-50%); }
+.naws-pv-dir-s { bottom: 3px; left: 50%; transform: translateX(-50%); }
+.naws-pv-dir-e { right: 5px; top: 50%; transform: translateY(-50%); }
+.naws-pv-dir-w { left: 5px; top: 50%; transform: translateY(-50%); }
+.naws-pv-needle {
+    width: 4px; height: 26px;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform-origin: bottom center;
+    z-index: 2;
+}
+.naws-pv-needle-top {
+    width: 100%; height: 50%;
+    background: #ef4444;
+    border-radius: 2px 2px 0 0;
+}
+.naws-pv-needle-bottom {
+    width: 100%; height: 50%;
+    border-radius: 0 0 2px 2px;
+}
+.naws-pv-compass-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+}
+.naws-pv-wind-info { flex: 1; }
 
 /* ── 24h chart line preview ── */
 .naws-pv-chart-lines {

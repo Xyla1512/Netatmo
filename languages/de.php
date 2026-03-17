@@ -568,6 +568,7 @@ return [
     'appearance_theme_text_light'     => 'Text (leicht)',
     'appearance_theme_border'         => 'Rahmen',
     'appearance_theme_shadow'         => 'Schatten',
+    'appearance_theme_compass_needle'=> 'Kompassnadel (Windrose)',
     'appearance_accent_primary'       => 'Primär',
     'appearance_accent_secondary'     => 'Sekundär',
     'appearance_accent_success'       => 'Erfolg',
