@@ -2,6 +2,91 @@
 
 All notable changes to the Netatmo Weather Station (NAWS) plugin are documented here.
 
+## [1.4.3] – 2026-03-17
+
+### Added
+- **4 Frontend Icon Sets**: Emoji (default), Outline, Filled, and Minimal icon sets selectable in the Appearance settings. Each set provides 7 sensor icons (temperature, humidity, pressure, wind, rain, CO₂, noise) with distinct visual styles.
+- **New "Icons" tab in Appearance**: Visual radio-button selector showing all 4 icon sets with real icon previews. No more guessing — see exactly how each set looks before selecting.
+- **Per-sensor icon colors**: 7 new configurable colors (one per sensor type) with live preview. These colors control both the icon tint and the card accent bar in the Live Dashboard.
+- **Dynamic icon rendering**: `live.php` now loads icons dynamically from `NAWS_Icons` class instead of hardcoded SVGs. The `data-icon-set` attribute on `.naws-wx` enables CSS-based rendering variants (filled uses `fill`, minimal uses thinner strokes).
+
+### Changed
+- **Sensor accent colors unified**: Per-card accent colors (`.c-temp`, `.c-wind`, etc.) now reference the new `--naws-ico-*` CSS variables, ensuring consistent colors between icons and card accents.
+
+## [1.4.2] – 2026-03-17
+
+### Fixed
+- **Forecast provider ignored**: Selecting Yr.no as forecast provider still fetched data from Open-Meteo. Root cause: single cache key was shared between providers, so cached Open-Meteo data was served even after switching. Fix: provider-aware cache keys (`naws_forecast_data_open_meteo` / `_yr_no`), `flush_cache()` now clears both, and `normalise()` for Open-Meteo now includes `'provider'` key.
+- **Forecast source label hardcoded**: Templates (live.php, forecast.php) always showed "Open-Meteo.com" regardless of selected provider. Now dynamically displays the correct provider name.
+
+### Added
+- **History shortcode `year` parameter**: `[naws_history year="2025"]` shows data for a specific year only. Supports comma-separated values (`year="2023,2025"`). Without parameter, behavior is unchanged (all years).
+
+### Improved
+- **Appearance admin page streamlined**: Removed "Akzent-Farben" and "Sensor-Kachel-Farben" sections (unused). All panels now use consistent `naws-panel-header`/`naws-panel-body` wrappers for proper padding. Cleaned up unused PHP, JS, and CSS code.
+
+## [1.4.1] – 2026-03-15
+
+### Fixed
+- **24h chart gradient fill broken**: Charts showed solid flat colors instead of gradient fill after color system migration. Root cause: `makeDataset()` used `rgb()`→`rgba()` string replacement which failed on hex color values from `NAWS_Colors`. Now uses proper `hexToRgba()` conversion with `createLinearGradient()` on the actual canvas context for smooth top-to-bottom gradient fill.
+
+### Improved
+- **Appearance admin page redesigned with live previews**: Each color group now shows a real-time preview panel next to the color pickers
+  - **Theme colors**: Mini-card preview with labeled text variants (title, value, muted, meta)
+  - **Accent colors**: Swatch grid with title-gradient preview
+  - **Sensor tiles**: 8 interactive tile previews update gradient bars live when colors change
+  - **24h chart colors**: SVG line+fill preview per sensor showing the actual line color and gradient fill
+  - **Chart theming**: Annotated SVG mock chart showing grid lines, axis labels, tooltip, and axis title
+  - **Year comparison**: Horizontal bar chart with 15 year-colored bars
+
+## [1.4.0] – 2026-03-15
+
+### Added
+- **Appearance / Color Customization**: New admin page "Appearance" with comprehensive color picker for 130+ configurable colors
+  - Base theme colors (background, surfaces, text variants, borders, shadows)
+  - Accent colors (primary, secondary, success, warning, danger)
+  - Sensor tile gradient colors for all 8 sensor types (temperature, humidity, pressure, CO2, noise, wind, rain, health)
+  - 24-hour chart line colors per sensor type
+  - Chart theming (grid lines, axis labels, tooltips, axis titles)
+  - Year comparison palette with 15 distinct colors for multi-year history charts
+  - Icon set selection (emoji, outline, filled, minimal)
+  - Reset-to-defaults functionality
+- New class `NAWS_Colors` with centralized color management, caching, and hex color sanitization
+- New admin view `admin/views/appearance.php` with WordPress Color Picker integration
+- Helper methods for templates: `get_sensor_colors()`, `get_history_palette()`, `get_chart_theme()`, `get_inline_css()`
+- 60+ new translation strings in German and English for all color settings
+
+### Improved
+- **Frontend CSS architecture**: All colors use CSS custom properties, dynamically overridden via `NAWS_Colors::get_inline_css()`
+- **Database version**: Bumped to 1.4
+
+## [1.3.0] – 2026-03-15
+
+### Added
+- **Export / Import feature**: New admin page under "Export / Import" menu
+  - **Weather Data Export**: Download all daily summary data (temperature, pressure, rain, etc.) as JSON file
+  - **Full Backup Export**: Download weather data + module configuration + all plugin settings as JSON – ideal for migrating to a new WordPress installation
+  - **File Import**: Upload previously exported JSON files to restore data, with chunked AJAX processing for large files and real-time progress feedback
+  - Security: API tokens, refresh tokens and API keys are **never** included in exports
+  - Idempotent imports: re-importing the same file safely updates existing records (ON DUPLICATE KEY UPDATE)
+  - File validation: JSON structure, export version and data integrity are verified before import begins
+- New class `NAWS_Export` with streaming export (memory-efficient for large datasets)
+- New admin view `admin/views/export.php` with two-column layout matching existing plugin design
+- Translation strings for German and English
+
+## [1.2.1] – 2026-03-15
+
+### Fixed
+- **WordPress Plugin Check compliance**: Replaced all `json_encode()` calls with `wp_json_encode()` across templates and admin views
+- **SQL injection hardening**: DELETE query in activation cleanup now uses `$wpdb->prepare()` with parameterised placeholders
+- **TRUNCATE replaced with DELETE**: `clear_daily_summary()` now uses `DELETE FROM` instead of `TRUNCATE TABLE` for better WordPress compatibility
+- **Deprecated `date_i18n()` replaced**: All occurrences replaced with `wp_date()` (deprecated since WordPress 5.3)
+- **Debug endpoint sanitised**: `import_debug()` now truncates raw API responses to 2000 chars and strips access tokens from output
+
+### Improved
+- **phpcs compliance**: Removed file-level `phpcs:disable` from `class-naws-ajax.php`; replaced with targeted inline `phpcs:ignore` comments on each affected line
+- **Database class documentation**: Added detailed justification comment block for file-level phpcs suppressions in `class-naws-database.php`
+
 ## [1.2.0] – 2026-03-14
 
 ### Added

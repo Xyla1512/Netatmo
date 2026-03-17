@@ -152,9 +152,8 @@ if ( $lunar_ecl ) {
     ];
 }
 
-$theme = $atts['theme'] ?? 'light';
 ?>
-<div class="naws-infobar">
+<div class="naws-wrap naws-infobar">
     <div class="naws-infobar-grid">
         <?php foreach ( $rows as $row ) : ?>
         <div class="naws-infobar-item naws-ib-<?php echo esc_attr( $row['group'] ); ?>">

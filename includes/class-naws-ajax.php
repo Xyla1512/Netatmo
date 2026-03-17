@@ -1,9 +1,4 @@
 <?php
-// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-// phpcs:disable WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 class NAWS_Ajax {
@@ -27,6 +22,9 @@ class NAWS_Ajax {
         add_action( 'wp_ajax_naws_clear_daily_summary',   [ $this, 'clear_daily_summary' ] );
         add_action( 'wp_ajax_naws_db_check',               [ $this, 'db_check' ] );
         add_action( 'wp_ajax_naws_save_live_settings',     [ $this, 'save_live_settings' ] );
+        add_action( 'wp_ajax_naws_import_process_chunk',   [ $this, 'import_process_chunk' ] );
+        add_action( 'wp_ajax_naws_import_meta',            [ $this, 'import_meta' ] );
+        add_action( 'wp_ajax_naws_import_cleanup',         [ $this, 'import_cleanup' ] );
         add_action( 'wp_ajax_naws_get_modules',         [ $this, 'get_modules' ] );
         add_action( 'wp_ajax_naws_delete_readings',     [ $this, 'delete_readings' ] );
         add_action( 'wp_ajax_naws_toggle_module',        [ $this, 'toggle_module' ] );
@@ -98,7 +96,7 @@ class NAWS_Ajax {
         $module_id   = sanitize_text_field( wp_unslash( $_POST['module_id']   ?? ''  ) );
         $module_type = sanitize_text_field( wp_unslash( $_POST['module_type'] ?? ''  ) );
         $date_begin  = intval( $_POST['date_begin'] ?? 0 ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-        $date_end    = intval( $_POST['date_end']   ?? time() );
+        $date_end    = intval( $_POST['date_end']   ?? time() ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
         if ( empty( $device_id ) || empty( $module_id ) || empty( $module_type ) || ! $date_begin ) {
             wp_send_json_error( [ 'message' => 'Missing required parameters.' ] );
@@ -133,8 +131,8 @@ class NAWS_Ajax {
         $device_id   = sanitize_text_field( wp_unslash( $_POST['device_id']   ?? ''  ) );
         $module_id   = sanitize_text_field( wp_unslash( $_POST['module_id']   ?? ''  ) );
         $module_type = sanitize_text_field( wp_unslash( $_POST['module_type'] ?? ''  ) );
-        $date_begin  = intval( $_POST['date_begin'] ?? strtotime( '2025-01-01' ) );
-        $date_end    = intval( $_POST['date_end']   ?? strtotime( '2025-01-03' ) );
+        $date_begin  = intval( $_POST['date_begin'] ?? strtotime( '2025-01-01' ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        $date_end    = intval( $_POST['date_end']   ?? strtotime( '2025-01-03' ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         $types_raw   = sanitize_text_field( wp_unslash( $_POST['types'] ?? ''  ) );
 
         $types = $types_raw
@@ -195,17 +193,26 @@ class NAWS_Ajax {
         $token_expired = $token_expires > 0 && $token_expires < time();
         $token_age_min = $token_expires > 0 ? round( ( $token_expires - time() ) / 60 ) : null;
 
+        // Sanitize: strip access token from post_body before returning
+        $safe_post_body = $post_body;
+        unset( $safe_post_body['access_token'] );
+
+        // Limit raw_body to 2000 chars to avoid leaking excessive API data
+        $safe_raw_body = mb_strlen( $raw_body ) > 2000
+            ? mb_substr( $raw_body, 0, 2000 ) . '… (truncated)'
+            : $raw_body;
+
         wp_send_json_success( [
             'http_code'         => $http_code,
             'wp_error'          => $wp_error,
-            'raw_body'          => $raw_body,
+            'raw_body'          => $safe_raw_body,
             'parsed'            => $parsed,
             'sends_module_id'   => $sends_module_id,
-            'post_body_sent'    => $post_body,
+            'post_body_sent'    => $safe_post_body,
             'token_present'     => ! empty( $access_token ),
             'token_expired'     => $token_expired,
             'token_expires_in'  => $token_age_min !== null
-                ? ( $token_expired ? "ABGELAUFEN vor " . abs($token_age_min) . " min" : "gültig noch {$token_age_min} min" )
+                ? ( $token_expired ? "ABGELAUFEN vor " . abs($token_age_min) . " min" : "gültig noch {$token_age_min} min" ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
                 : 'unbekannt',
             'date_begin_human'  => wp_date(  'd.m.Y H:i', $date_begin ),
             'date_end_human'    => wp_date(  'd.m.Y H:i', $date_end ),
@@ -246,7 +253,7 @@ class NAWS_Ajax {
             }
         }
 
-        // Hidden history (yearly comparison) charts
+        // Hidden history (yearly comparison) charts // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         $hidden_history_charts = isset( $_POST['hidden_history_charts'] ) ? (array) $_POST['hidden_history_charts'] : [];
         $hidden_history_charts = array_map( 'sanitize_text_field', $hidden_history_charts );
         if ( ! update_option( 'naws_history_hidden_charts', $hidden_history_charts ) ) {
@@ -273,7 +280,7 @@ class NAWS_Ajax {
         $date_to   = sanitize_text_field( wp_unslash( $_POST['date_to']   ?? ''  ) );
         if ( ! $date_from ) $date_from = gmdate(  'Y-m-d', strtotime( '-7 days' ) );
         if ( ! $date_to   ) $date_to   = gmdate(  'Y-m-d' );
-        $rows = $wpdb->get_results( $wpdb->prepare(
+        $rows = $wpdb->get_results( $wpdb->prepare( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             "SELECT day_date,
                     ROUND(temp_min,1)     AS temp_min,
                     ROUND(temp_max,1)     AS temp_max,
@@ -299,10 +306,10 @@ class NAWS_Ajax {
         if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
         global $wpdb;
         $table   = $wpdb->prefix . NAWS_TABLE_DAILY;
-        $deleted = $wpdb->query( "TRUNCATE TABLE {$table}" );
+        $deleted = $wpdb->query( "DELETE FROM {$table}" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constant, no user input
 
         if ( $deleted === false ) {
-            NAWS_Logger::error( 'ajax', 'clear_daily_summary TRUNCATE failed: ' . $wpdb->last_error );
+            NAWS_Logger::error( 'ajax', 'clear_daily_summary DELETE failed: ' . $wpdb->last_error );
             wp_send_json_error( [ 'message' => 'Failed to clear daily summary table: ' . $wpdb->last_error ] );
             return;
         }
@@ -325,7 +332,7 @@ class NAWS_Ajax {
         // Get the date range of existing readings
         $date_from = sanitize_text_field( wp_unslash( $_POST['date_from'] ?? ''  ) );
         $date_to   = sanitize_text_field( wp_unslash( $_POST['date_to']   ?? ''  ) );
-        $batch     = max( 1, intval( $_POST['batch'] ?? 30 ) ); // days per call
+        $batch     = max( 1, intval( $_POST['batch'] ?? 30 ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- intval sanitizes
 
         // Detect range from readings table, always exclude today (Cron handles today at 00:01)
         $today = gmdate(  'Y-m-d' );
@@ -357,7 +364,7 @@ class NAWS_Ajax {
         }
 
         // Get distinct completed days (not today) that have readings
-        $dates = $wpdb->get_col( $wpdb->prepare(
+        $dates = $wpdb->get_col( $wpdb->prepare( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             "SELECT DISTINCT DATE(FROM_UNIXTIME(recorded_at)) as day
              FROM {$r}
              WHERE recorded_at >= UNIX_TIMESTAMP(%s)
@@ -431,7 +438,7 @@ class NAWS_Ajax {
         check_ajax_referer( 'naws_admin_nonce', 'nonce' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
 
-        $days = intval( $_POST['days'] ?? 365 );
+        $days = intval( $_POST['days'] ?? 365 ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- intval sanitizes
         $deleted = NAWS_Database::purge_old_readings( $days );
         wp_send_json_success( [ 'deleted' => $deleted ] );
     }
@@ -478,8 +485,8 @@ class NAWS_Ajax {
                     : $allowed;
         if ( empty( $raw_fields ) ) $raw_fields = $allowed;
 
-        $year_from = intval( $_POST['year_from'] ?? gmdate( 'Y') );
-        $year_to   = intval( $_POST['year_to']   ?? gmdate( 'Y') );
+        $year_from = intval( $_POST['year_from'] ?? gmdate( 'Y') ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        $year_to   = intval( $_POST['year_to']   ?? gmdate( 'Y') ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
         // ── Single query for all years (replaces N+1 per-year loop) ──────
         $field_sql = implode( ', ', array_map( function($f){ return "d.{$f}"; }, $raw_fields ) );
@@ -554,7 +561,7 @@ class NAWS_Ajax {
 
         $date = sanitize_text_field( wp_unslash( $_POST['date'] ?? ''  ) );
         if ( ! $date ) {
-            $date = date_i18n( 'Y-m-d', strtotime( 'yesterday' ) );
+            $date = wp_date( 'Y-m-d', strtotime( 'yesterday' ) );
         }
 
         // Fetch directly from Netatmo API – same as History Import, independent of naws_readings
@@ -599,7 +606,7 @@ class NAWS_Ajax {
         if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
 
         $module_id = sanitize_text_field( wp_unslash( $_POST['module_id'] ?? ''  ) );
-        $is_active = intval( $_POST['is_active'] ?? 1 );
+        $is_active = intval( $_POST['is_active'] ?? 1 ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- intval sanitizes
 
         if ( empty( $module_id ) ) {
             wp_send_json_error( [ 'message' => 'Missing module_id.' ] );
@@ -622,7 +629,7 @@ class NAWS_Ajax {
 
     // ----------------------------------------------------------------
     // Public AJAX
-    // ---------------------------------------------------------------- // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+    // ----------------------------------------------------------------
 
     public function get_chart_data() {
         // Public read-only endpoint — no nonce required.
@@ -635,8 +642,8 @@ class NAWS_Ajax {
             ? array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['parameter'] ) )
             : [];
         $date_from = intval( $_POST['date_from'] ?? strtotime( '-7 days' ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-        $date_to   = intval( $_POST['date_to']   ?? time() );
-        $group_by  = in_array(
+        $date_to   = intval( $_POST['date_to']   ?? time() ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        $group_by  = in_array( // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
             $_POST['group_by'] ?? 'raw',
             [ 'raw', 'hour', 'day', 'week', 'month', 'year' ], true
         ) ? sanitize_key( wp_unslash( $_POST['group_by']  ) ) : 'raw';
@@ -777,5 +784,86 @@ class NAWS_Ajax {
         }
 
         wp_send_json_success( $formatted );
+    }
+
+    // ----------------------------------------------------------------
+    // Export / Import AJAX
+    // ----------------------------------------------------------------
+
+    /**
+     * Process one chunk of daily_summary rows from an uploaded import file.
+     */
+    public function import_process_chunk() {
+        check_ajax_referer( 'naws_admin_nonce', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+
+        $file_path = get_transient( 'naws_import_temp_file' );
+        if ( ! $file_path || ! file_exists( $file_path ) ) {
+            wp_send_json_error( [ 'message' => 'No import file found. Please upload again.' ] );
+            return;
+        }
+
+        $offset = intval( $_POST['offset'] ?? 0 ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- intval sanitizes
+        $result = NAWS_Export::import_weather_data( $file_path, $offset, NAWS_Export::IMPORT_BATCH );
+
+        if ( ! empty( $result['error'] ) ) {
+            wp_send_json_error( [ 'message' => $result['error'] ] );
+            return;
+        }
+
+        wp_send_json_success( $result );
+    }
+
+    /**
+     * Import modules and settings from a full backup file (called once before chunked data import).
+     */
+    public function import_meta() {
+        check_ajax_referer( 'naws_admin_nonce', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+
+        $file_path = get_transient( 'naws_import_temp_file' );
+        if ( ! $file_path || ! file_exists( $file_path ) ) {
+            wp_send_json_error( [ 'message' => 'No import file found.' ] );
+            return;
+        }
+
+        $meta              = get_transient( 'naws_import_meta' );
+        $overwrite         = ! empty( $meta['overwrite_settings'] );
+        $overwrite_from_post = intval( $_POST['overwrite_settings'] ?? 0 ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- intval sanitizes
+        if ( $overwrite_from_post ) {
+            $overwrite = true;
+        }
+
+        $result = NAWS_Export::import_full_backup_meta( $file_path, $overwrite );
+
+        if ( ! empty( $result['error'] ) ) {
+            wp_send_json_error( [ 'message' => $result['error'] ] );
+            return;
+        }
+
+        NAWS_Logger::info( 'export', 'Full backup meta imported', [
+            'modules' => $result['modules_imported'],
+            'settings' => $result['settings_imported'],
+        ] );
+
+        wp_send_json_success( $result );
+    }
+
+    /**
+     * Clean up temporary import file and transients after import is done.
+     */
+    public function import_cleanup() {
+        check_ajax_referer( 'naws_admin_nonce', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+
+        $file_path = get_transient( 'naws_import_temp_file' );
+        if ( $file_path && file_exists( $file_path ) ) {
+            wp_delete_file( $file_path );
+        }
+
+        delete_transient( 'naws_import_temp_file' );
+        delete_transient( 'naws_import_meta' );
+
+        wp_send_json_success();
     }
 }

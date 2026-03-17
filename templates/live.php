@@ -75,32 +75,32 @@ $sensor_chart_configs = [];
 
 // NAModule1 – outdoor
 if ( $outdoor_id ) {
-    $sensor_chart_configs[] = [ 'key'=>'Temperature',    'param'=>'Temperature', 'module_id'=>$outdoor_id, 'label'=>naws__( 'chart_temp_out' ),        'unit'=>NAWS_Helpers::get_unit('Temperature'),   'type'=>'line', 'color'=>'rgb(80,168,130)' ];
-    $sensor_chart_configs[] = [ 'key'=>'Humidity',       'param'=>'Humidity',    'module_id'=>$outdoor_id, 'label'=>naws__( 'chart_humid_out' ),       'unit'=>'%',                                    'type'=>'line', 'color'=>'rgb(61,130,191)' ];
+    $sensor_chart_configs[] = [ 'key'=>'Temperature',    'param'=>'Temperature', 'module_id'=>$outdoor_id, 'label'=>naws__( 'chart_temp_out' ),        'unit'=>NAWS_Helpers::get_unit('Temperature'),   'type'=>'line', 'color'=>NAWS_Colors::get('chart_temp_outdoor') ];
+    $sensor_chart_configs[] = [ 'key'=>'Humidity',       'param'=>'Humidity',    'module_id'=>$outdoor_id, 'label'=>naws__( 'chart_humid_out' ),       'unit'=>'%',                                    'type'=>'line', 'color'=>NAWS_Colors::get('chart_humidity_outdoor') ];
 }
 // NAMain – indoor base
 if ( $indoor_id ) {
-    $sensor_chart_configs[] = [ 'key'=>'Temperature_indoor', 'param'=>'Temperature', 'module_id'=>$indoor_id, 'label'=>naws__( 'chart_temp_base' ),   'unit'=>NAWS_Helpers::get_unit('Temperature'),   'type'=>'line', 'color'=>'rgb(100,145,210)' ];
-    $sensor_chart_configs[] = [ 'key'=>'Pressure',           'param'=>'Pressure',    'module_id'=>$indoor_id, 'label'=>naws__( 'chart_pressure' ),     'unit'=>NAWS_Helpers::get_unit('Pressure'),      'type'=>'line', 'color'=>'rgb(120,95,200)' ];
-    $sensor_chart_configs[] = [ 'key'=>'CO2',                'param'=>'CO2',         'module_id'=>$indoor_id, 'label'=>naws__( 'chart_co2_base' ),     'unit'=>'ppm',                                  'type'=>'line', 'color'=>'rgb(74,152,72)' ];
-    $sensor_chart_configs[] = [ 'key'=>'Noise',              'param'=>'Noise',       'module_id'=>$indoor_id, 'label'=>naws__( 'chart_noise_base' ),   'unit'=>'dB',                                   'type'=>'line', 'color'=>'rgb(184,128,48)' ];
+    $sensor_chart_configs[] = [ 'key'=>'Temperature_indoor', 'param'=>'Temperature', 'module_id'=>$indoor_id, 'label'=>naws__( 'chart_temp_base' ),   'unit'=>NAWS_Helpers::get_unit('Temperature'),   'type'=>'line', 'color'=>NAWS_Colors::get('chart_temp_indoor') ];
+    $sensor_chart_configs[] = [ 'key'=>'Pressure',           'param'=>'Pressure',    'module_id'=>$indoor_id, 'label'=>naws__( 'chart_pressure' ),     'unit'=>NAWS_Helpers::get_unit('Pressure'),      'type'=>'line', 'color'=>NAWS_Colors::get('chart_pressure') ];
+    $sensor_chart_configs[] = [ 'key'=>'CO2',                'param'=>'CO2',         'module_id'=>$indoor_id, 'label'=>naws__( 'chart_co2_base' ),     'unit'=>'ppm',                                  'type'=>'line', 'color'=>NAWS_Colors::get('chart_co2') ];
+    $sensor_chart_configs[] = [ 'key'=>'Noise',              'param'=>'Noise',       'module_id'=>$indoor_id, 'label'=>naws__( 'chart_noise_base' ),   'unit'=>'dB',                                   'type'=>'line', 'color'=>NAWS_Colors::get('chart_noise') ];
 }
 // NAModule2 – wind
 if ( $wind_id ) {
-    $sensor_chart_configs[] = [ 'key'=>'WindStrength', 'param'=>'WindStrength', 'module_id'=>$wind_id, 'label'=>naws__( 'chart_wind' ),  'unit'=>NAWS_Helpers::get_unit('WindStrength'), 'type'=>'line', 'color'=>'rgb(66,114,114)' ];
-    $sensor_chart_configs[] = [ 'key'=>'GustStrength', 'param'=>'GustStrength', 'module_id'=>$wind_id, 'label'=>naws__( 'chart_gusts' ), 'unit'=>NAWS_Helpers::get_unit('GustStrength'), 'type'=>'line', 'color'=>'rgb(100,155,155)' ];
+    $sensor_chart_configs[] = [ 'key'=>'WindStrength', 'param'=>'WindStrength', 'module_id'=>$wind_id, 'label'=>naws__( 'chart_wind' ),  'unit'=>NAWS_Helpers::get_unit('WindStrength'), 'type'=>'line', 'color'=>NAWS_Colors::get('chart_wind') ];
+    $sensor_chart_configs[] = [ 'key'=>'GustStrength', 'param'=>'GustStrength', 'module_id'=>$wind_id, 'label'=>naws__( 'chart_gusts' ), 'unit'=>NAWS_Helpers::get_unit('GustStrength'), 'type'=>'line', 'color'=>NAWS_Colors::get('chart_gusts') ];
 }
 // NAModule3 – rain
 if ( $rain_id ) {
-    $sensor_chart_configs[] = [ 'key'=>'Rain', 'param'=>'sum_rain_1', 'module_id'=>$rain_id, 'label'=>naws__( 'chart_rain_hourly' ), 'unit'=>NAWS_Helpers::get_unit('Rain'), 'type'=>'bar', 'color'=>'rgb(53,133,176)' ];
+    $sensor_chart_configs[] = [ 'key'=>'Rain', 'param'=>'sum_rain_1', 'module_id'=>$rain_id, 'label'=>naws__( 'chart_rain_hourly' ), 'unit'=>NAWS_Helpers::get_unit('Rain'), 'type'=>'bar', 'color'=>NAWS_Colors::get('chart_rain') ];
 }
 // NAModule4 – dynamic
 foreach ( $module4_info as $slug => $info ) {
     $mid = $info['id'];
     $name = $info['name'];
-    $sensor_chart_configs[] = [ 'key'=>"Temperature_{$slug}", 'param'=>'Temperature', 'module_id'=>$mid, 'label'=>naws__( 'chart_temp_prefix' )." {$name}",   'unit'=>NAWS_Helpers::get_unit('Temperature'), 'type'=>'line', 'color'=>'rgb(180,100,200)' ];
-    $sensor_chart_configs[] = [ 'key'=>"Humidity_{$slug}",    'param'=>'Humidity',    'module_id'=>$mid, 'label'=>naws__( 'chart_humid_prefix' )." {$name}", 'unit'=>'%',                                   'type'=>'line', 'color'=>'rgb(130,100,200)' ];
-    $sensor_chart_configs[] = [ 'key'=>"CO2_{$slug}",         'param'=>'CO2',         'module_id'=>$mid, 'label'=>naws__( 'chart_co2_prefix' )." {$name}",   'unit'=>'ppm',                                 'type'=>'line', 'color'=>'rgb(100,170,100)' ];
+    $sensor_chart_configs[] = [ 'key'=>"Temperature_{$slug}", 'param'=>'Temperature', 'module_id'=>$mid, 'label'=>naws__( 'chart_temp_prefix' )." {$name}",   'unit'=>NAWS_Helpers::get_unit('Temperature'), 'type'=>'line', 'color'=>NAWS_Colors::get('chart_module4_temp') ];
+    $sensor_chart_configs[] = [ 'key'=>"Humidity_{$slug}",    'param'=>'Humidity',    'module_id'=>$mid, 'label'=>naws__( 'chart_humid_prefix' )." {$name}", 'unit'=>'%',                                   'type'=>'line', 'color'=>NAWS_Colors::get('chart_module4_humidity') ];
+    $sensor_chart_configs[] = [ 'key'=>"CO2_{$slug}",         'param'=>'CO2',         'module_id'=>$mid, 'label'=>naws__( 'chart_co2_prefix' )." {$name}",   'unit'=>'ppm',                                 'type'=>'line', 'color'=>NAWS_Colors::get('chart_module4_co2') ];
 }
 
 // Filter: only sensors that are visible (not hidden_params) AND chart is active (not hidden_charts)
@@ -164,7 +164,7 @@ $pressure_diff  = $_pt['diff'];
 <?php // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript -- must load synchronously before inline Chart.js code ?>
 <script src="<?php echo esc_url( NAWS_PLUGIN_URL . 'assets/vendor/chart.umd.min.js' ); ?>"></script>
 
-<div id="<?php echo esc_attr($widget_id); ?>" class="naws-wx"
+<div id="<?php echo esc_attr($widget_id); ?>" class="naws-wx" data-icon-set="<?php echo esc_attr( NAWS_Icons::get_current_set() ); ?>"
      data-nonce="<?php echo esc_attr($nonce); ?>"
      data-ajax="<?php echo esc_attr($ajax_url); ?>"
      data-refresh="<?php echo esc_attr($atts['refresh'] ?? '60'); ?>"
@@ -288,7 +288,12 @@ $pressure_diff  = $_pt['diff'];
           <?php endforeach; ?>
         </div>
         <div class="naws-fcc-gust" style="text-align:center;margin-top:8px">
-          <?php echo esc_html( naws__( 'forecast_source' ) ); ?>: Open-Meteo.com
+          <?php
+          $provider_label = ( $forecast['provider'] ?? 'open_meteo' ) === 'yr_no'
+              ? 'Yr.no / MET Norway'
+              : 'Open-Meteo.com';
+          echo esc_html( naws__( 'forecast_source' ) ) . ': ' . esc_html( $provider_label );
+          ?>
         </div>
       </div>
     </div>
@@ -317,10 +322,10 @@ $pressure_diff  = $_pt['diff'];
 
 <script>
 (function(){
-var WID    = <?php echo json_encode($widget_id); ?>;
+var WID    = <?php echo wp_json_encode($widget_id); ?>;
 var NAWS_FONT = getComputedStyle(document.documentElement).fontFamily || 'sans-serif';
 var TIME_SUFFIX = <?php echo wp_json_encode( naws__( 'time_suffix' ) ); ?>;
-var AJAX   = <?php echo json_encode($ajax_url); ?>;
+var AJAX   = <?php echo wp_json_encode($ajax_url); ?>;
 var NONCE  = document.getElementById(WID).dataset.nonce;
 var RFSH   = (parseInt(document.getElementById(WID).dataset.refresh,10)||60)*1000;
 var HIDE   = document.getElementById(WID).dataset.hidden ? document.getElementById(WID).dataset.hidden.split(',').filter(Boolean) : [];
@@ -365,7 +370,7 @@ $trend_html = '<div class="naws-press-trend naws-trend-' . $pressure_trend . '">
     . '</div>';
 ?>
 var NAWS_I18N = <?php echo wp_json_encode( $_i18n ); ?>;
-var PRESS_TREND_HTML = <?php echo json_encode( $trend_html ); ?>;
+var PRESS_TREND_HTML = <?php echo wp_json_encode( $trend_html ); ?>;
 var liveEl = document.getElementById(WID+'-live');
 var chartsEl= document.getElementById(WID+'-charts');
 var built  = false;
@@ -414,15 +419,8 @@ function post(params,cb){
 }
 
 /* ── ICONS ───────────────────────────── */
-var ICO={
-  temp: '<svg viewBox="0 0 24 24"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/></svg>',
-  humid:'<svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/></svg>',
-  press:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
-  wind: '<svg viewBox="0 0 24 24"><path d="M9.59 4.59A2 2 0 1111 8H2m10.59 11.41A2 2 0 1014 16H2m15.73-8.27A2.5 2.5 0 1119.5 12H2"/></svg>',
-  rain: '<svg viewBox="0 0 24 24"><path d="M20 17.58A5 5 0 0018 8h-1.26A8 8 0 104 15.25"/><line x1="8" y1="16" x2="8" y2="20"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="16" y1="16" x2="16" y2="20"/></svg>',
-  co2:  '<svg viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 20.8"/><path d="M9 9.14C9.23 10.5 11.34 14 16 14c3 0 6-2 6-5s-3-5-6-5c-1.5 0-3 .5-4 1.5"/></svg>',
-  noise:'<svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg>',
-};
+var ICO=<?php echo NAWS_Icons::get_js_object(); ?>;
+var NAWS_ICON_SET=<?php echo wp_json_encode( NAWS_Icons::get_current_set() ); ?>;
 
 /* ── COMPASS ─────────────────────────── */
 var ROSE='<svg style="position:absolute;top:0;left:0;width:100%;height:100%" viewBox="-4 -4 168 168" xmlns="http://www.w3.org/2000/svg">'
@@ -724,10 +722,30 @@ function chartOpts(unit, type){
     }
   };
 }
-function makeDataset(cfg, pts){
+function hexToRgba(hex, alpha){
+  var r=0,g=0,b=0;
+  if(hex.length===4){r=parseInt(hex[1]+hex[1],16);g=parseInt(hex[2]+hex[2],16);b=parseInt(hex[3]+hex[3],16);}
+  else if(hex.length===7){r=parseInt(hex.substring(1,3),16);g=parseInt(hex.substring(3,5),16);b=parseInt(hex.substring(5,7),16);}
+  return 'rgba('+r+','+g+','+b+','+alpha+')';
+}
+function colorToRgba(c, alpha){
+  if(c.charAt(0)==='#') return hexToRgba(c, alpha);
+  return c.replace('rgb(','rgba(').replace(')',', '+alpha+')');
+}
+function makeDataset(cfg, pts, canvasCtx){
   var c=cfg.color;
-  var bg=c.replace('rgb(','rgba(').replace(')',', 0.08)');
-  if(cfg.type==='bar') bg=c.replace('rgb(','rgba(').replace(')',', 0.45)');
+  var bg;
+  if(cfg.type==='bar'){
+    bg=colorToRgba(c, 0.45);
+  } else if(canvasCtx){
+    var grad=canvasCtx.createLinearGradient(0,0,0,canvasCtx.canvas.height||300);
+    grad.addColorStop(0, colorToRgba(c, 0.28));
+    grad.addColorStop(0.6, colorToRgba(c, 0.08));
+    grad.addColorStop(1, colorToRgba(c, 0.01));
+    bg=grad;
+  } else {
+    bg=colorToRgba(c, 0.08);
+  }
   return {
     data:pts,
     borderColor:c, backgroundColor:bg,
@@ -739,13 +757,14 @@ function makeDataset(cfg, pts){
 }
 
 function renderChart(canvasId, cfg, labels, vals, animate){
-  var ctx=document.getElementById(canvasId); if(!ctx) return;
+  var el=document.getElementById(canvasId); if(!el) return;
   if(charts[canvasId]){charts[canvasId].destroy();delete charts[canvasId];}
+  var ctx2d=el.getContext('2d');
   var opts=chartOpts(cfg.unit, cfg.type);
   if(!animate) opts.animation={duration:0};
-  charts[canvasId]=new Chart(ctx,{
+  charts[canvasId]=new Chart(el,{
     type:cfg.type,
-    data:{labels:labels, datasets:[makeDataset(cfg,vals)]},
+    data:{labels:labels, datasets:[makeDataset(cfg,vals,ctx2d)]},
     options:opts,
   });
 }
@@ -794,11 +813,12 @@ function openModal(cfgId, label){
     var opts=chartOpts(cd.cfg.unit, cd.cfg.type);
     opts.animation={duration:600,easing:'easeInOutQuart'};
     opts.maintainAspectRatio=false;
-    var ctx=document.getElementById(modalCanvasId); if(!ctx) return;
-    ctx.style.height='340px';
-    charts[modalCanvasId]=new Chart(ctx,{
+    var mEl=document.getElementById(modalCanvasId); if(!mEl) return;
+    mEl.style.height='340px';
+    var mCtx=mEl.getContext('2d');
+    charts[modalCanvasId]=new Chart(mEl,{
       type:cd.cfg.type,
-      data:{labels:cd.labels, datasets:[makeDataset(cd.cfg, cd.vals)]},
+      data:{labels:cd.labels, datasets:[makeDataset(cd.cfg, cd.vals, mCtx)]},
       options:opts,
     });
   },30);

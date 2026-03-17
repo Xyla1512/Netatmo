@@ -20,6 +20,21 @@ $range = NAWS_Database::get_daily_data_range();
 $year_from = $range ? (int) substr($range['date_begin'], 0, 4) : (int) gmdate( 'Y');
 $year_to   = $range ? (int) substr($range['date_end'],   0, 4) : (int) gmdate( 'Y');
 $years     = range($year_from, $year_to);
+
+// Shortcode year="2025" or year="2023,2025" → filter to specific year(s)
+$year_param = trim( $atts['year'] ?? '' );
+if ( $year_param !== '' ) {
+    $requested = array_map( 'intval', explode( ',', $year_param ) );
+    $requested = array_filter( $requested, function( $y ) use ( $years ) {
+        return in_array( $y, $years, true );
+    } );
+    if ( ! empty( $requested ) ) {
+        sort( $requested );
+        $years     = $requested;
+        $year_from = $years[0];
+        $year_to   = end( $years );
+    }
+}
 $hidden_history_charts = (array) get_option( 'naws_history_hidden_charts', [] );
 ?>
 <?php // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript -- must load synchronously before inline Chart.js code ?>
@@ -34,7 +49,7 @@ $hidden_history_charts = (array) get_option( 'naws_history_hidden_charts', [] );
 
   <div class="naws-hist-hdr">
     <div class="naws-hist-title"><?php echo esc_html($atts['title'] ?? 'Historische Wetterdaten'); ?></div>
-    <div class="naws-hist-range"><?php echo esc_html($year_from . ' – ' . $year_to); ?></div>
+    <div class="naws-hist-range"><?php echo esc_html( $year_from === $year_to ? (string) $year_from : $year_from . ' – ' . $year_to ); ?></div>
   </div>
 
   <div class="naws-hist-body">
@@ -130,9 +145,9 @@ $hidden_history_charts = (array) get_option( 'naws_history_hidden_charts', [] );
 
 <script>
 (function(){
-var WID     = <?php echo json_encode($widget_id); ?>;
+var WID     = <?php echo wp_json_encode($widget_id); ?>;
 var NAWS_FONT = getComputedStyle(document.documentElement).fontFamily || 'sans-serif';
-var AJAX    = <?php echo json_encode($ajax_url); ?>;
+var AJAX    = <?php echo wp_json_encode($ajax_url); ?>;
 var NONCE   = document.getElementById(WID).dataset.nonce;
 var OUTDOOR = document.getElementById(WID).dataset.outdoor;
 var INDOOR  = document.getElementById(WID).dataset.indoor;
@@ -146,12 +161,8 @@ var CHARTS = {};
 var modalChart = null;
 
 /* ── COLOURS ─────────────────────────────── */
-// One colour per year, consistent palette
-var PALETTE = [
-  '#3d9e74','#3585b0','#7055c0','#c0392b','#e67e22',
-  '#16a085','#8e44ad','#2980b9','#27ae60','#d35400',
-  '#1abc9c','#e74c3c','#f39c12','#6c5ce7','#00b894',
-];
+// One colour per year, consistent palette (configurable via Admin > Appearance)
+var PALETTE = <?php echo wp_json_encode( NAWS_Colors::get_history_palette() ); ?>;
 function yearColor(yr){ return PALETTE[(yr - YEARS[0]) % PALETTE.length]; }
 
 /* ── AJAX ────────────────────────────────── */
@@ -198,6 +209,9 @@ function aggregateMonthly(dailyData){
 
 function nawsHistFontSize(){ var w=window.innerWidth; return w<480?8:w<768?9:10; }
 
+/* Chart theme colors (configurable via Admin > Appearance) */
+var CHART_THEME = <?php echo wp_json_encode( NAWS_Colors::get_chart_theme() ); ?>;
+
 function baseOpts(unit, type, isModal, isMonthly){
   var fs = nawsHistFontSize();
   var xConfig;
@@ -205,9 +219,9 @@ function baseOpts(unit, type, isModal, isMonthly){
     xConfig = {
       type:'category',
       labels: MONTH_LABELS,
-      grid:{color:'rgba(218,240,240,.4)'},
+      grid:{color:CHART_THEME.grid},
       ticks:{
-        color:'#7aa0a0', font:{family:NAWS_FONT,size:fs},
+        color:CHART_THEME.tick, font:{family:NAWS_FONT,size:fs},
         maxRotation:0, autoSkip:false
       }
     };
@@ -224,9 +238,9 @@ function baseOpts(unit, type, isModal, isMonthly){
         }
         return arr;
       })(),
-      grid:{color:'rgba(218,240,240,.4)'},
+      grid:{color:CHART_THEME.grid},
       ticks:{
-        color:'#7aa0a0', font:{family:NAWS_FONT,size:fs},
+        color:CHART_THEME.tick, font:{family:NAWS_FONT,size:fs},
         maxRotation:0, autoSkip:false,
         callback:function(val,idx){
           var lbl = this.getLabelForValue(idx);
@@ -241,8 +255,8 @@ function baseOpts(unit, type, isModal, isMonthly){
     plugins:{
       legend:{display:false},
       tooltip:{
-        backgroundColor:'rgba(45,82,82,.92)',
-        titleColor:'#a0c8c8', bodyColor:'#fff',
+        backgroundColor:CHART_THEME.tooltip_bg,
+        titleColor:CHART_THEME.tooltip_title, bodyColor:CHART_THEME.tooltip_text,
         titleFont:{family:NAWS_FONT,size:fs+1},
         bodyFont:{family:NAWS_FONT,size:fs+2,weight:'bold'},
         padding:10, cornerRadius:8, displayColors:true, boxWidth:10, boxHeight:10,
@@ -264,12 +278,12 @@ function baseOpts(unit, type, isModal, isMonthly){
     scales:{
       x: xConfig,
       y:{
-        grid:{color:'rgba(218,240,240,.5)'},
+        grid:{color:CHART_THEME.grid},
         ticks:{
-          color:'#7aa0a0',font:{family:NAWS_FONT,size:fs},
+          color:CHART_THEME.tick,font:{family:NAWS_FONT,size:fs},
           callback:function(v){return v;}
         },
-        title:{display:true,text:unit,color:'#a0b8b8',font:{family:NAWS_FONT,size:fs,weight:'600'}}
+        title:{display:true,text:unit,color:CHART_THEME.axis_title,font:{family:NAWS_FONT,size:fs,weight:'600'}}
       }
     }
   };

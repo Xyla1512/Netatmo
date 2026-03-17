@@ -1,49 +1,55 @@
 /* Netatmo Weather Station Pro - Frontend Styles */
 
 /* ============================================================
-   CSS Custom Properties
+   CSS Custom Properties — unified theme (configured via Admin > Appearance)
+   Inline styles from NAWS_Colors::get_inline_css() override these defaults.
    ============================================================ */
-:root {
+.naws-wrap {
+  /* Basis-Theme defaults (Live-Dashboard palette) */
+  --naws-bg:           #ffffff;
+  --naws-surface:      #ffffff;
+  --naws-surface-2:    #f8fafc;
+  --naws-text:         #427272;
+  --naws-text-dark:    #2d5252;
+  --naws-text-darkest: #1a3535;
+  --naws-text-muted:   #7aa0a0;
+  --naws-text-light:   #a0b8b8;
+  --naws-text-subtle:  #a0b8b8;
+  --naws-border:       #e0eeee;
+  --naws-shadow-color: rgba(40,72,72,0.08);
+  --naws-glow:         rgba(0,212,255,0.08);
+
+  /* Akzent-Farben */
   --naws-primary:    #00d4ff;
   --naws-accent:     #7c3aed;
   --naws-success:    #10b981;
   --naws-warning:    #f59e0b;
   --naws-danger:     #ef4444;
+
+  /* Non-color properties */
   --naws-font:       -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --naws-radius:     16px;
   --naws-radius-sm:  10px;
-  --naws-shadow:     0 8px 32px rgba(0,0,0,0.4);
+  --naws-shadow:     0 2px 10px var(--naws-shadow-color);
   --naws-transition: 0.3s cubic-bezier(0.4,0,0.2,1);
-}
 
-/* ============================================================
-   Theme: Dark
-   ============================================================ */
-.naws-theme-dark {
-  --naws-bg:           #0a0e1a;
-  --naws-surface:      #111827;
-  --naws-surface-2:    #1f2937;
-  --naws-surface-3:    #374151;
-  --naws-border:       rgba(255,255,255,0.07);
-  --naws-text:         #f1f5f9;
-  --naws-text-muted:   #64748b;
-  --naws-text-subtle:  #94a3b8;
-  --naws-glow:         rgba(0,212,255,0.15);
-}
+  /* Sensor gradient defaults */
+  --naws-temp-g1: #f59e0b;      --naws-temp-g2: #ef4444;
+  --naws-humidity-g1: #3b82f6;   --naws-humidity-g2: #7c3aed;
+  --naws-pressure-g1: #06b6d4;   --naws-pressure-g2: #3b82f6;
+  --naws-co2-g1: #10b981;        --naws-co2-g2: #06b6d4;
+  --naws-noise-g1: #8b5cf6;      --naws-noise-g2: #ec4899;
+  --naws-wind-g1: #14b8a6;       --naws-wind-g2: #22d3ee;
+  --naws-rain-g1: #0ea5e9;       --naws-rain-g2: #6366f1;
+  --naws-health-g1: #10b981;     --naws-health-g2: #84cc16;
 
-/* ============================================================
-   Theme: Light
-   ============================================================ */
-.naws-theme-light {
-  --naws-bg:           #f0f4f8;
-  --naws-surface:      #ffffff;
-  --naws-surface-2:    #f8fafc;
-  --naws-surface-3:    #e2e8f0;
-  --naws-border:       rgba(0,0,0,0.08);
-  --naws-text:         #1e293b;
-  --naws-text-muted:   #64748b;
-  --naws-text-subtle:  #94a3b8;
-  --naws-glow:         rgba(0,212,255,0.08);
+  /* Chart-Theming */
+  --naws-chart-grid: rgba(218,240,240,0.4);
+  --naws-chart-tick: #7aa0a0;
+  --naws-chart-tooltip-bg: rgba(45,82,82,0.92);
+  --naws-chart-tooltip-title: #a0c8c8;
+  --naws-chart-tooltip-text: #ffffff;
+  --naws-chart-axis-title: #a0b8b8;
 }
 
 /* ============================================================
@@ -165,14 +171,14 @@
 .naws-card:hover::before { opacity: 1; }
 
 /* Card color variants */
-.naws-card.naws-temp      { --naws-gradient: linear-gradient(90deg, #f59e0b, #ef4444); }
-.naws-card.naws-co2       { --naws-gradient: linear-gradient(90deg, #10b981, #06b6d4); }
-.naws-card.naws-humidity  { --naws-gradient: linear-gradient(90deg, #3b82f6, #7c3aed); }
-.naws-card.naws-noise     { --naws-gradient: linear-gradient(90deg, #8b5cf6, #ec4899); }
-.naws-card.naws-pressure  { --naws-gradient: linear-gradient(90deg, #06b6d4, #3b82f6); }
-.naws-card.naws-rain      { --naws-gradient: linear-gradient(90deg, #0ea5e9, #6366f1); }
-.naws-card.naws-wind      { --naws-gradient: linear-gradient(90deg, #14b8a6, #22d3ee); }
-.naws-card.naws-health    { --naws-gradient: linear-gradient(90deg, #10b981, #84cc16); }
+.naws-card.naws-temp      { --naws-gradient: linear-gradient(90deg, var(--naws-temp-g1), var(--naws-temp-g2)); }
+.naws-card.naws-co2       { --naws-gradient: linear-gradient(90deg, var(--naws-co2-g1), var(--naws-co2-g2)); }
+.naws-card.naws-humidity  { --naws-gradient: linear-gradient(90deg, var(--naws-humidity-g1), var(--naws-humidity-g2)); }
+.naws-card.naws-noise     { --naws-gradient: linear-gradient(90deg, var(--naws-noise-g1), var(--naws-noise-g2)); }
+.naws-card.naws-pressure  { --naws-gradient: linear-gradient(90deg, var(--naws-pressure-g1), var(--naws-pressure-g2)); }
+.naws-card.naws-rain      { --naws-gradient: linear-gradient(90deg, var(--naws-rain-g1), var(--naws-rain-g2)); }
+.naws-card.naws-wind      { --naws-gradient: linear-gradient(90deg, var(--naws-wind-g1), var(--naws-wind-g2)); }
+.naws-card.naws-health    { --naws-gradient: linear-gradient(90deg, var(--naws-health-g1), var(--naws-health-g2)); }
 
 .naws-card-icon {
   font-size: 1.75rem;
@@ -486,7 +492,7 @@
   transition: transform 1s cubic-bezier(0.4,0,0.2,1);
 }
 
-.naws-compass-needle::before { content: ''; display: block; width: 100%; height: 50%; background: #ef4444; border-radius: 2px 2px 0 0; }
+.naws-compass-needle::before { content: ''; display: block; width: 100%; height: 50%; background: var(--naws-compass-needle, #ef4444); border-radius: 2px 2px 0 0; }
 .naws-compass-needle::after  { content: ''; display: block; width: 100%; height: 50%; background: var(--naws-text-muted); border-radius: 0 0 2px 2px; }
 
 /* ============================================================
@@ -534,10 +540,10 @@
 .naws-hero-pressure { background: linear-gradient(135deg, rgba(6,182,212,0.18), rgba(59,130,246,0.12)); border-color: rgba(6,182,212,0.25); }
 .naws-hero-rain     { background: linear-gradient(135deg, rgba(14,165,233,0.18), rgba(99,102,241,0.12)); border-color: rgba(14,165,233,0.25); }
 
-.naws-hero-temp::after     { background: linear-gradient(135deg, #f59e0b, #ef4444); }
-.naws-hero-humidity::after { background: linear-gradient(135deg, #3b82f6, #7c3aed); }
-.naws-hero-pressure::after { background: linear-gradient(135deg, #06b6d4, #3b82f6); }
-.naws-hero-rain::after     { background: linear-gradient(135deg, #0ea5e9, #6366f1); }
+.naws-hero-temp::after     { background: linear-gradient(135deg, var(--naws-temp-g1), var(--naws-temp-g2)); }
+.naws-hero-humidity::after { background: linear-gradient(135deg, var(--naws-humidity-g1), var(--naws-humidity-g2)); }
+.naws-hero-pressure::after { background: linear-gradient(135deg, var(--naws-pressure-g1), var(--naws-pressure-g2)); }
+.naws-hero-rain::after     { background: linear-gradient(135deg, var(--naws-rain-g1), var(--naws-rain-g2)); }
 
 .naws-hero-icon {
   font-size: 2.25rem;
@@ -770,14 +776,14 @@
 .naws-sensor-card:hover::before { opacity: 1; }
 
 /* Re-use existing color variants */
-.naws-sensor-card.naws-temp      { --naws-gradient: linear-gradient(90deg, #f59e0b, #ef4444); }
-.naws-sensor-card.naws-co2       { --naws-gradient: linear-gradient(90deg, #10b981, #06b6d4); }
-.naws-sensor-card.naws-humidity  { --naws-gradient: linear-gradient(90deg, #3b82f6, #7c3aed); }
-.naws-sensor-card.naws-noise     { --naws-gradient: linear-gradient(90deg, #8b5cf6, #ec4899); }
-.naws-sensor-card.naws-pressure  { --naws-gradient: linear-gradient(90deg, #06b6d4, #3b82f6); }
-.naws-sensor-card.naws-rain      { --naws-gradient: linear-gradient(90deg, #0ea5e9, #6366f1); }
-.naws-sensor-card.naws-wind      { --naws-gradient: linear-gradient(90deg, #14b8a6, #22d3ee); }
-.naws-sensor-card.naws-health    { --naws-gradient: linear-gradient(90deg, #10b981, #84cc16); }
+.naws-sensor-card.naws-temp      { --naws-gradient: linear-gradient(90deg, var(--naws-temp-g1), var(--naws-temp-g2)); }
+.naws-sensor-card.naws-co2       { --naws-gradient: linear-gradient(90deg, var(--naws-co2-g1), var(--naws-co2-g2)); }
+.naws-sensor-card.naws-humidity  { --naws-gradient: linear-gradient(90deg, var(--naws-humidity-g1), var(--naws-humidity-g2)); }
+.naws-sensor-card.naws-noise     { --naws-gradient: linear-gradient(90deg, var(--naws-noise-g1), var(--naws-noise-g2)); }
+.naws-sensor-card.naws-pressure  { --naws-gradient: linear-gradient(90deg, var(--naws-pressure-g1), var(--naws-pressure-g2)); }
+.naws-sensor-card.naws-rain      { --naws-gradient: linear-gradient(90deg, var(--naws-rain-g1), var(--naws-rain-g2)); }
+.naws-sensor-card.naws-wind      { --naws-gradient: linear-gradient(90deg, var(--naws-wind-g1), var(--naws-wind-g2)); }
+.naws-sensor-card.naws-health    { --naws-gradient: linear-gradient(90deg, var(--naws-health-g1), var(--naws-health-g2)); }
 
 .naws-sensor-top {
   display: flex;
@@ -1067,16 +1073,34 @@
 @media (min-width: 600px) { .naws-wx .naws-card { padding:22px 14px 16px; } }
 .naws-wx .naws-card:hover{transform:translateY(-4px);box-shadow:0 2px 10px rgba(40,72,72,.10);}
 .naws-wx .naws-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3.5px;background:var(--ca,var(--ink));border-radius:14px 14px 0 0;}
-.naws-wx .c-temp{--ca:#3d9e74}.naws-wx .c-humid{--ca:#3d82bf}.naws-wx .c-press{--ca:#7055c0}
 .naws-wx .naws-press-trend{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:4px;font-size:11px;font-weight:700;color:var(--muted);}
 .naws-wx .naws-press-trend svg{flex-shrink:0;}
 .naws-wx .naws-trend-up{color:#3d9e74;}
 .naws-wx .naws-trend-down{color:#c0392b;}
 .naws-wx .naws-trend-stable{color:#7aa0a0;}
-.naws-wx .c-wind{--ca:var(--ink)}.naws-wx .c-rain{--ca:#3585b0}.naws-wx .c-co2{--ca:#4a9848}.naws-wx .c-noise{--ca:#b88030}
+/* Per-sensor accent colors (now using configurable icon color vars) */
+.naws-wx .c-temp{--ca:var(--naws-ico-temp,#50a882)}
+.naws-wx .c-humid{--ca:var(--naws-ico-humid,#3d82bf)}
+.naws-wx .c-press{--ca:var(--naws-ico-press,#785fc8)}
+.naws-wx .c-wind{--ca:var(--naws-ico-wind,var(--ink))}
+.naws-wx .c-rain{--ca:var(--naws-ico-rain,#3585b0)}
+.naws-wx .c-co2{--ca:var(--naws-ico-co2,#4a9848)}
+.naws-wx .c-noise{--ca:var(--naws-ico-noise,#b88030)}
 .naws-wx .naws-ico { width:40px;height:40px;border-radius:50%;background:color-mix(in srgb,var(--ca,var(--ink)) 13%,white);display:flex;align-items:center;justify-content:center;margin-bottom:9px;flex-shrink:0; }
 @media (min-width: 600px) { .naws-wx .naws-ico { width:46px;height:46px;margin-bottom:11px; } }
 .naws-wx .naws-ico svg{width:23px;height:23px;stroke:var(--ca,var(--ink));fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+
+/* ── Icon set: filled — use fill instead of stroke ── */
+.naws-wx[data-icon-set="filled"] .naws-ico svg{fill:var(--ca,var(--ink));stroke:none;color:var(--ca,var(--ink));}
+.naws-wx[data-icon-set="filled"] .naws-ico svg [fill="currentColor"]{fill:var(--ca,var(--ink));}
+.naws-wx[data-icon-set="filled"] .naws-ico svg [stroke="currentColor"]{stroke:var(--ca,var(--ink));}
+
+/* ── Icon set: minimal — thinner strokes ── */
+.naws-wx[data-icon-set="minimal"] .naws-ico svg{stroke-width:1.5;}
+
+/* ── Icon set: emoji — display emoji text, hide SVG styling ── */
+.naws-wx[data-icon-set="emoji"] .naws-ico{font-size:22px;line-height:1;}
+.naws-wx[data-icon-set="emoji"] .naws-ico svg{stroke:var(--ca,var(--ink));fill:none;}
 .naws-wx .naws-lbl-badge{display:block;font-size:8px;font-weight:600;letter-spacing:.08em;color:var(--accent);opacity:.8;text-transform:uppercase;line-height:1;}
 .naws-wx .naws-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px;line-height:1.3;min-height:2.6em;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;}
 .naws-wx .naws-val{font-size:36px;font-weight:800;font-style:italic;color:var(--ink2);line-height:1;letter-spacing:-.03em;margin-bottom:1px;transition:color .35s;}

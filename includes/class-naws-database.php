@@ -1,8 +1,17 @@
 <?php
-// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-// phpcs:disable WordPress.DB.DirectDatabaseQuery.SchemaChange
+/**
+ * Dedicated database abstraction layer for NAWS.
+ *
+ * All queries use $wpdb->prepare() where user input is involved.
+ * Table names are constructed from plugin constants (NAWS_TABLE_*) prefixed
+ * with $wpdb->prefix — never from user input. Caching is handled via the
+ * WordPress Transient API at the method level (see TTL_* constants).
+ *
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery   -- this IS the DB layer
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching     -- transient caching at method level
+ * phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table names use constants only
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.SchemaChange  -- install/migration methods
+ */
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
@@ -510,7 +519,7 @@ class NAWS_Database {
         global $wpdb;
 
         if ( ! $date ) {
-            $date = date_i18n( 'Y-m-d', strtotime( 'yesterday' ) );
+            $date = wp_date( 'Y-m-d', strtotime( 'yesterday' ) );
         }
 
         // Use Europe/Berlin timezone so local day boundaries are correct
@@ -758,8 +767,8 @@ class NAWS_Database {
 
         $args = wp_parse_args( $args, [
             'module_id'  => null,
-            'date_from'  => date_i18n( 'Y-m-d', strtotime( '-365 days' ) ),
-            'date_to'    => date_i18n( 'Y-m-d' ),
+            'date_from'  => wp_date( 'Y-m-d', strtotime( '-365 days' ) ),
+            'date_to'    => wp_date( 'Y-m-d' ),
             'fields'     => [ 'temp_min','temp_max','temp_avg','pressure_avg','rain_sum' ],
             'group_by'   => 'day',
             'limit'      => 0,
