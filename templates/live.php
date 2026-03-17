@@ -288,7 +288,12 @@ $pressure_diff  = $_pt['diff'];
           <?php endforeach; ?>
         </div>
         <div class="naws-fcc-gust" style="text-align:center;margin-top:8px">
-          <?php echo esc_html( naws__( 'forecast_source' ) ); ?>: Open-Meteo.com
+          <?php
+          $provider_label = ( $forecast['provider'] ?? 'open_meteo' ) === 'yr_no'
+              ? 'Yr.no / MET Norway'
+              : 'Open-Meteo.com';
+          echo esc_html( naws__( 'forecast_source' ) ) . ': ' . esc_html( $provider_label );
+          ?>
         </div>
       </div>
     </div>

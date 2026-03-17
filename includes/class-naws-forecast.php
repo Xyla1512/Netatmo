@@ -47,7 +47,12 @@ class NAWS_Forecast {
     public static function get_forecast( int $days = 5 ): array {
         $days = max( 1, min( 7, $days ) );
 
-        $cached = get_transient( self::CACHE_KEY );
+        // Dispatch to provider
+        $opts     = get_option( 'naws_settings', [] );
+        $provider = $opts['forecast_provider'] ?? 'open_meteo';
+        $cache_key = self::CACHE_KEY . '_' . $provider;
+
+        $cached = get_transient( $cache_key );
         if ( $cached !== false && is_array( $cached ) && ! isset( $cached['error'] ) ) {
             $cached['days'] = array_slice( $cached['days'], 0, $days );
             return $cached;
@@ -57,10 +62,6 @@ class NAWS_Forecast {
         if ( isset( $location['error'] ) ) {
             return $location;
         }
-
-        // Dispatch to provider
-        $opts     = get_option( 'naws_settings', [] );
-        $provider = $opts['forecast_provider'] ?? 'open_meteo';
 
         switch ( $provider ) {
             case 'yr_no':
@@ -74,13 +75,14 @@ class NAWS_Forecast {
             return $result;
         }
 
-        set_transient( self::CACHE_KEY, $result, self::CACHE_TTL );
+        set_transient( $cache_key, $result, self::CACHE_TTL );
         $result['days'] = array_slice( $result['days'], 0, $days );
         return $result;
     }
 
     public static function flush_cache(): void {
-        delete_transient( self::CACHE_KEY );
+        delete_transient( self::CACHE_KEY . '_open_meteo' );
+        delete_transient( self::CACHE_KEY . '_yr_no' );
         delete_transient( self::CACHE_KEY_GEO );
     }
 
@@ -482,6 +484,7 @@ class NAWS_Forecast {
             'location'      => [ 'lat' => $location['lat'], 'lon' => $location['lon'] ],
             'location_name' => $location['name'] ?? '',
             'fetched_at'    => time(),
+            'provider'      => 'open_meteo',
         ];
     }
 

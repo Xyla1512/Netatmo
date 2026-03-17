@@ -20,6 +20,21 @@ $range = NAWS_Database::get_daily_data_range();
 $year_from = $range ? (int) substr($range['date_begin'], 0, 4) : (int) gmdate( 'Y');
 $year_to   = $range ? (int) substr($range['date_end'],   0, 4) : (int) gmdate( 'Y');
 $years     = range($year_from, $year_to);
+
+// Shortcode year="2025" or year="2023,2025" → filter to specific year(s)
+$year_param = trim( $atts['year'] ?? '' );
+if ( $year_param !== '' ) {
+    $requested = array_map( 'intval', explode( ',', $year_param ) );
+    $requested = array_filter( $requested, function( $y ) use ( $years ) {
+        return in_array( $y, $years, true );
+    } );
+    if ( ! empty( $requested ) ) {
+        sort( $requested );
+        $years     = $requested;
+        $year_from = $years[0];
+        $year_to   = end( $years );
+    }
+}
 $hidden_history_charts = (array) get_option( 'naws_history_hidden_charts', [] );
 ?>
 <?php // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript -- must load synchronously before inline Chart.js code ?>
@@ -34,7 +49,7 @@ $hidden_history_charts = (array) get_option( 'naws_history_hidden_charts', [] );
 
   <div class="naws-hist-hdr">
     <div class="naws-hist-title"><?php echo esc_html($atts['title'] ?? 'Historische Wetterdaten'); ?></div>
-    <div class="naws-hist-range"><?php echo esc_html($year_from . ' – ' . $year_to); ?></div>
+    <div class="naws-hist-range"><?php echo esc_html( $year_from === $year_to ? (string) $year_from : $year_from . ' – ' . $year_to ); ?></div>
   </div>
 
   <div class="naws-hist-body">

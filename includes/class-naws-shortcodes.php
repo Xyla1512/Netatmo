@@ -159,6 +159,7 @@ class NAWS_Shortcodes {
             'title'             => naws__( 'hc_history_title' ),
             'height'            => '420',
             'show_range_picker' => 'true',
+            'year'              => '',
         ], $atts, 'naws_history' );
 
         $chart_id   = 'naws-hist-' . wp_unique_id();

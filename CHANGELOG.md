@@ -2,6 +2,18 @@
 
 All notable changes to the Netatmo Weather Station (NAWS) plugin are documented here.
 
+## [1.4.2] – 2026-03-17
+
+### Fixed
+- **Forecast provider ignored**: Selecting Yr.no as forecast provider still fetched data from Open-Meteo. Root cause: single cache key was shared between providers, so cached Open-Meteo data was served even after switching. Fix: provider-aware cache keys (`naws_forecast_data_open_meteo` / `_yr_no`), `flush_cache()` now clears both, and `normalise()` for Open-Meteo now includes `'provider'` key.
+- **Forecast source label hardcoded**: Templates (live.php, forecast.php) always showed "Open-Meteo.com" regardless of selected provider. Now dynamically displays the correct provider name.
+
+### Added
+- **History shortcode `year` parameter**: `[naws_history year="2025"]` shows data for a specific year only. Supports comma-separated values (`year="2023,2025"`). Without parameter, behavior is unchanged (all years).
+
+### Improved
+- **Appearance admin page streamlined**: Removed "Akzent-Farben" and "Sensor-Kachel-Farben" sections (unused). All panels now use consistent `naws-panel-header`/`naws-panel-body` wrappers for proper padding. Cleaned up unused PHP, JS, and CSS code.
+
 ## [1.4.1] – 2026-03-15
 
 ### Fixed

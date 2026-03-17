@@ -6,37 +6,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /** @var array $defaults All default colors */
 /** @var array $groups   Group definitions from NAWS_Colors */
 
-// Sensor labels for display
-$sensor_labels = [
-    'temp'     => naws__( 'appearance_sensor_temp' ),
-    'humidity' => naws__( 'appearance_sensor_humidity' ),
-    'pressure' => naws__( 'appearance_sensor_pressure' ),
-    'co2'      => naws__( 'appearance_sensor_co2' ),
-    'noise'    => naws__( 'appearance_sensor_noise' ),
-    'wind'     => naws__( 'appearance_sensor_wind' ),
-    'rain'     => naws__( 'appearance_sensor_rain' ),
-    'health'   => naws__( 'appearance_sensor_health' ),
-];
-
-// Example values for sensor tile previews
-$sensor_examples = [
-    'temp'     => [ 'icon' => '🌡️', 'value' => '21.3', 'unit' => '°C' ],
-    'humidity' => [ 'icon' => '💧', 'value' => '58',   'unit' => '%' ],
-    'pressure' => [ 'icon' => '🔵', 'value' => '1013', 'unit' => 'hPa' ],
-    'co2'      => [ 'icon' => '🫧', 'value' => '612',  'unit' => 'ppm' ],
-    'noise'    => [ 'icon' => '🔊', 'value' => '38',   'unit' => 'dB' ],
-    'wind'     => [ 'icon' => '💨', 'value' => '12',   'unit' => 'km/h' ],
-    'rain'     => [ 'icon' => '🌧️', 'value' => '2.4',  'unit' => 'mm' ],
-    'health'   => [ 'icon' => '❤️', 'value' => '82',   'unit' => '%' ],
-];
-
-$property_labels = [
-    'gradient_start' => naws__( 'appearance_gradient_start' ),
-    'gradient_end'   => naws__( 'appearance_gradient_end' ),
-    'bg'             => naws__( 'appearance_bg' ),
-    'text'           => naws__( 'appearance_text' ),
-];
-
 // Labels for all non-sensor color keys
 $color_labels = [
     // Theme
@@ -50,12 +19,6 @@ $color_labels = [
     'theme_text_light'    => naws__( 'appearance_theme_text_light' ),
     'theme_border'        => naws__( 'appearance_theme_border' ),
     'theme_shadow'        => naws__( 'appearance_theme_shadow' ),
-    // Accent
-    'accent_primary'      => naws__( 'appearance_accent_primary' ),
-    'accent_secondary'    => naws__( 'appearance_accent_secondary' ),
-    'accent_success'      => naws__( 'appearance_accent_success' ),
-    'accent_warning'      => naws__( 'appearance_accent_warning' ),
-    'accent_danger'       => naws__( 'appearance_accent_danger' ),
     // Chart 24h
     'chart_temp_outdoor'     => naws__( 'appearance_chart_temp_outdoor' ),
     'chart_humidity_outdoor'  => naws__( 'appearance_chart_humidity_outdoor' ),
@@ -126,7 +89,8 @@ $chart_short_labels = [
              Gruppe 1: Basis-Theme
              ============================================================ -->
         <div class="naws-admin-panel">
-            <h2><?php naws_e( 'appearance_group_theme' ); ?></h2>
+            <div class="naws-panel-header"><h2><?php naws_e( 'appearance_group_theme' ); ?></h2></div>
+            <div class="naws-panel-body">
             <p class="description"><?php naws_e( 'appearance_group_theme_desc' ); ?></p>
             <div class="naws-appearance-row">
                 <div class="naws-appearance-controls">
@@ -167,134 +131,15 @@ $chart_short_labels = [
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- ============================================================
-             Gruppe 2: Akzent-Farben
-             ============================================================ -->
-        <div class="naws-admin-panel">
-            <h2><?php naws_e( 'appearance_group_accent' ); ?></h2>
-            <div class="naws-appearance-row">
-                <div class="naws-appearance-controls">
-                    <table class="form-table naws-color-table">
-                        <tbody>
-                        <?php foreach ( $groups['accent']['keys'] as $key ) : ?>
-                            <tr>
-                                <th><label for="naws-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $color_labels[ $key ] ?? $key ); ?></label></th>
-                                <td>
-                                    <input type="text"
-                                           id="naws-<?php echo esc_attr( $key ); ?>"
-                                           name="naws_appearance[<?php echo esc_attr( $key ); ?>]"
-                                           value="<?php echo esc_attr( $colors[ $key ] ); ?>"
-                                           class="naws-color-picker"
-                                           data-preview="accent"
-                                           data-key="<?php echo esc_attr( $key ); ?>"
-                                           data-default-color="<?php echo esc_attr( $defaults[ $key ] ); ?>">
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="naws-appearance-preview naws-preview-sticky">
-                    <div class="naws-preview-label">Live-Vorschau</div>
-                    <div id="naws-preview-accent" class="naws-preview-accent-box">
-                        <div class="naws-pv-accent-item">
-                            <div class="naws-pv-accent-swatch" id="naws-pv-accent_primary" style="background:<?php echo esc_attr( $colors['accent_primary'] ); ?>;"></div>
-                            <span>Primary</span>
-                        </div>
-                        <div class="naws-pv-accent-item">
-                            <div class="naws-pv-accent-swatch" id="naws-pv-accent_secondary" style="background:<?php echo esc_attr( $colors['accent_secondary'] ); ?>;"></div>
-                            <span>Secondary</span>
-                        </div>
-                        <div class="naws-pv-accent-item">
-                            <div class="naws-pv-accent-swatch" id="naws-pv-accent_success" style="background:<?php echo esc_attr( $colors['accent_success'] ); ?>;"></div>
-                            <span>Success</span>
-                        </div>
-                        <div class="naws-pv-accent-item">
-                            <div class="naws-pv-accent-swatch" id="naws-pv-accent_warning" style="background:<?php echo esc_attr( $colors['accent_warning'] ); ?>;"></div>
-                            <span>Warning</span>
-                        </div>
-                        <div class="naws-pv-accent-item">
-                            <div class="naws-pv-accent-swatch" id="naws-pv-accent_danger" style="background:<?php echo esc_attr( $colors['accent_danger'] ); ?>;"></div>
-                            <span>Danger</span>
-                        </div>
-                        <div class="naws-pv-accent-gradient" style="background:linear-gradient(135deg, <?php echo esc_attr( $colors['accent_primary'] ); ?>, <?php echo esc_attr( $colors['accent_secondary'] ); ?>);">
-                            <span>Titel-Gradient</span>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
         <!-- ============================================================
-             Gruppe 3: Sensor-Kachel-Farben
+             Gruppe 2: 24h-Chart-Farben
              ============================================================ -->
         <div class="naws-admin-panel">
-            <h2><?php naws_e( 'appearance_group_sensors' ); ?></h2>
-            <p class="description"><?php naws_e( 'appearance_group_sensors_desc' ); ?></p>
-
-            <!-- Tile preview grid -->
-            <div class="naws-preview-label" style="padding:1rem 1rem 0;">Live-Vorschau — Sensorkacheln</div>
-            <div id="naws-preview-sensors" class="naws-pv-sensor-grid">
-                <?php foreach ( $groups['sensors']['sensors'] as $sensor ) :
-                    $g1 = $colors[ $sensor . '_gradient_start' ];
-                    $g2 = $colors[ $sensor . '_gradient_end' ];
-                    $ex = $sensor_examples[ $sensor ];
-                ?>
-                <div class="naws-pv-tile" id="naws-pv-tile-<?php echo esc_attr( $sensor ); ?>"
-                     style="border-image:linear-gradient(90deg, <?php echo esc_attr( $g1 ); ?>, <?php echo esc_attr( $g2 ); ?>) 1; border-top:3px solid;">
-                    <div class="naws-pv-tile-bar" style="background:linear-gradient(90deg, <?php echo esc_attr( $g1 ); ?>, <?php echo esc_attr( $g2 ); ?>);"></div>
-                    <div class="naws-pv-tile-icon"><?php echo esc_html( $ex['icon'] ); ?></div>
-                    <div class="naws-pv-tile-label"><?php echo esc_html( $sensor_labels[ $sensor ] ); ?></div>
-                    <div class="naws-pv-tile-value"><?php echo esc_html( $ex['value'] ); ?> <span class="naws-pv-tile-unit"><?php echo esc_html( $ex['unit'] ); ?></span></div>
-                </div>
-                <?php endforeach; ?>
-            </div>
-
-            <?php foreach ( $groups['sensors']['sensors'] as $sensor ) : ?>
-                <h3 style="margin:1.5em 1rem 0.3em; padding-bottom:0.3em; border-bottom:1px solid #e0eeee;">
-                    <?php echo esc_html( $sensor_labels[ $sensor ] ?? ucfirst( $sensor ) ); ?>
-                </h3>
-                <div class="naws-appearance-controls" style="padding:0 1rem;">
-                    <table class="form-table naws-color-table">
-                        <tbody>
-                        <?php foreach ( $groups['sensors']['per_sensor'] as $prop ) :
-                            $key = $sensor . '_' . $prop;
-                        ?>
-                            <tr>
-                                <th><label for="naws-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $property_labels[ $prop ] ?? $prop ); ?></label></th>
-                                <td>
-                                    <input type="text"
-                                           id="naws-<?php echo esc_attr( $key ); ?>"
-                                           name="naws_appearance[<?php echo esc_attr( $key ); ?>]"
-                                           value="<?php echo esc_attr( $colors[ $key ] ?? '' ); ?>"
-                                           class="naws-color-picker"
-                                           data-preview="sensor"
-                                           data-sensor="<?php echo esc_attr( $sensor ); ?>"
-                                           data-prop="<?php echo esc_attr( $prop ); ?>"
-                                           data-key="<?php echo esc_attr( $key ); ?>"
-                                           data-default-color="<?php echo esc_attr( $defaults[ $key ] ?? '' ); ?>"
-                                           <?php if ( $prop === 'bg' || $prop === 'text' ) : ?>
-                                               placeholder="<?php naws_e( 'appearance_inherit' ); ?>"
-                                           <?php endif; ?>>
-                                    <?php if ( $prop === 'bg' || $prop === 'text' ) : ?>
-                                        <p class="description"><?php naws_e( 'appearance_inherit_desc' ); ?></p>
-                                    <?php endif; ?>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            <?php endforeach; ?>
-        </div>
-
-        <!-- ============================================================
-             Gruppe 4: 24h-Chart-Farben
-             ============================================================ -->
-        <div class="naws-admin-panel">
-            <h2><?php naws_e( 'appearance_group_chart_24h' ); ?></h2>
+            <div class="naws-panel-header"><h2><?php naws_e( 'appearance_group_chart_24h' ); ?></h2></div>
+            <div class="naws-panel-body">
             <p class="description"><?php naws_e( 'appearance_group_chart_24h_desc' ); ?></p>
             <div class="naws-appearance-row">
                 <div class="naws-appearance-controls">
@@ -339,13 +184,15 @@ $chart_short_labels = [
                     </div>
                 </div>
             </div>
+            </div>
         </div>
 
         <!-- ============================================================
-             Gruppe 5: Chart-Theming
+             Gruppe 3: Chart-Theming
              ============================================================ -->
         <div class="naws-admin-panel">
-            <h2><?php naws_e( 'appearance_group_chart_theme' ); ?></h2>
+            <div class="naws-panel-header"><h2><?php naws_e( 'appearance_group_chart_theme' ); ?></h2></div>
+            <div class="naws-panel-body">
             <p class="description"><?php naws_e( 'appearance_group_chart_theme_desc' ); ?></p>
             <div class="naws-appearance-row">
                 <div class="naws-appearance-controls">
@@ -404,17 +251,19 @@ $chart_short_labels = [
                     </div>
                 </div>
             </div>
+            </div>
         </div>
 
         <!-- ============================================================
-             Gruppe 6: Jahresvergleich-Palette
+             Gruppe 4: Jahresvergleich-Palette
              ============================================================ -->
         <div class="naws-admin-panel">
-            <h2><?php naws_e( 'appearance_group_history' ); ?></h2>
+            <div class="naws-panel-header"><h2><?php naws_e( 'appearance_group_history' ); ?></h2></div>
+            <div class="naws-panel-body">
             <p class="description"><?php naws_e( 'appearance_group_history_desc' ); ?></p>
 
             <!-- Preview: year bars -->
-            <div class="naws-preview-label" style="padding:1rem 1rem 0;">Live-Vorschau — Jahresvergleich</div>
+            <div class="naws-preview-label">Live-Vorschau — Jahresvergleich</div>
             <div id="naws-preview-history" class="naws-pv-history-bars">
                 <?php for ( $i = 1; $i <= 15; $i++ ) :
                     $key = "history_year_{$i}";
@@ -443,6 +292,7 @@ $chart_short_labels = [
                                data-default-color="<?php echo esc_attr( $defaults[ $key ] ); ?>">
                     </div>
                 <?php endfor; ?>
+            </div>
             </div>
         </div>
 
@@ -480,30 +330,6 @@ jQuery(document).ready(function($) {
                 'theme_text_light':   function(v){ box.find('.naws-pv-meta').css('color', v); },
             };
             if (map[key]) map[key](val);
-        }
-
-        // ── Accent preview ──
-        if (group === 'accent') {
-            $('#naws-pv-' + key).css('background', val);
-            var p = getPickerVal($('#naws-accent_primary'));
-            var s = getPickerVal($('#naws-accent_secondary'));
-            $('.naws-pv-accent-gradient').css('background', 'linear-gradient(135deg, ' + p + ', ' + s + ')');
-        }
-
-        // ── Sensor tile preview ──
-        if (group === 'sensor') {
-            var sensor = $input.data('sensor');
-            var prop = $input.data('prop');
-            var tile = $('#naws-pv-tile-' + sensor);
-            if (prop === 'gradient_start' || prop === 'gradient_end') {
-                var g1 = getPickerVal($('[data-sensor="'+sensor+'"][data-prop="gradient_start"]'));
-                var g2 = getPickerVal($('[data-sensor="'+sensor+'"][data-prop="gradient_end"]'));
-                tile.find('.naws-pv-tile-bar').css('background', 'linear-gradient(90deg, '+g1+', '+g2+')');
-            }
-            if (prop === 'bg') tile.css('background', val || '#ffffff');
-            if (prop === 'text') {
-                if (val) { tile.find('.naws-pv-tile-value').css('color', val); }
-            }
         }
 
         // ── 24h Chart line colors preview ──
@@ -602,75 +428,6 @@ jQuery(document).ready(function($) {
 .naws-pv-meta { font-size: 0.72rem; margin-top: 0.4rem; }
 .naws-pv-dark { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.15rem; }
 .naws-pv-muted { font-size: 0.72rem; margin-top: 0.15rem; }
-
-/* ── Accent preview ── */
-.naws-preview-accent-box {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.65rem;
-}
-.naws-pv-accent-item {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: 0.78rem;
-    color: #444;
-}
-.naws-pv-accent-swatch {
-    width: 28px;
-    height: 28px;
-    border-radius: 6px;
-    transition: background 0.15s;
-}
-.naws-pv-accent-gradient {
-    width: 100%;
-    height: 36px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-weight: 700;
-    font-size: 0.8rem;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-    margin-top: 0.25rem;
-    transition: background 0.15s;
-}
-
-/* ── Sensor tile grid preview ── */
-.naws-pv-sensor-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 0.6rem;
-    padding: 0.75rem 1rem 1rem;
-}
-.naws-pv-tile {
-    background: #fff;
-    border: 1.5px solid #e0eeee;
-    border-radius: 10px;
-    padding: 0.7rem 0.6rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.2s;
-}
-.naws-pv-tile-bar {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    border-radius: 10px 10px 0 0;
-}
-.naws-pv-tile-icon { font-size: 1.2rem; margin-bottom: 0.2rem; margin-top: 0.15rem; }
-.naws-pv-tile-label {
-    font-size: 0.6rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: #7aa0a0;
-    margin-bottom: 0.2rem;
-}
-.naws-pv-tile-value { font-size: 1.25rem; font-weight: 800; color: #2d5252; }
-.naws-pv-tile-unit { font-size: 0.75rem; font-weight: 400; color: #a0b8b8; }
 
 /* ── 24h chart line preview ── */
 .naws-pv-chart-lines {
