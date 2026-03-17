@@ -99,12 +99,7 @@ $fc_id = 'naws-fc-' . wp_unique_id();
       </div>
 
       <div class="naws-fc-footer">
-        <?php
-        $provider_label = ( $forecast['provider'] ?? 'open_meteo' ) === 'yr_no'
-            ? 'Yr.no / MET Norway'
-            : 'Open-Meteo.com (DWD ICON, ECMWF)';
-        echo esc_html( naws__( 'forecast_source' ) ) . ': ' . esc_html( $provider_label );
-        ?>
+        <?php echo esc_html( naws__( 'forecast_source' ) ); ?>: Open-Meteo.com (DWD ICON, ECMWF)
       </div>
 
     <?php endif; ?>

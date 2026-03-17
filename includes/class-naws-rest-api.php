@@ -341,8 +341,8 @@ class NAWS_Rest_API {
         $group_by = $request->get_param( 'group_by' ) ?: 'day';
         $convert  = $request->get_param( 'convert' ) !== false;
 
-        $date_from = $from ?: wp_date( 'Y-m-d', strtotime( '-30 days' ) );
-        $date_to   = $to   ?: wp_date( 'Y-m-d' );
+        $date_from = $from ?: date_i18n( 'Y-m-d', strtotime( '-30 days' ) );
+        $date_to   = $to   ?: date_i18n( 'Y-m-d' );
 
         // Validate date format
         if ( ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $date_from ) ||

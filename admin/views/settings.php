@@ -44,7 +44,7 @@
         <div class="notice notice-info is-dismissible">
             <p><strong>🔍 <?php naws_e( 'oauth_debug' ); ?>:</strong>
             HTTP <?php echo esc_html( $oauth_debug['http_code'] ?? '?' ); ?> –
-            <code><?php echo esc_html( wp_json_encode( $oauth_debug['body'] ?? [] ) ); ?></code></p>
+            <code><?php echo esc_html( json_encode( $oauth_debug['body'] ?? [] ) ); ?></code></p>
         </div>
     <?php endif; ?>
 
@@ -286,6 +286,7 @@
                 <input type="hidden" name="naws_settings[wind_unit]"       value="<?php echo esc_attr( $options['wind_unit'] ?? 'kmh' ); ?>">
                 <input type="hidden" name="naws_settings[pressure_unit]"   value="<?php echo esc_attr( $options['pressure_unit'] ?? 'mbar' ); ?>">
                 <input type="hidden" name="naws_settings[rain_unit]"       value="<?php echo esc_attr( $options['rain_unit'] ?? 'mm' ); ?>">
+                <input type="hidden" name="naws_settings[chart_theme]"     value="<?php echo esc_attr( $options['chart_theme'] ?? 'light' ); ?>">
                 <input type="hidden" name="naws_settings[station_name]"    value="<?php echo esc_attr( $options['station_name'] ?? '' ); ?>">
                 <input type="hidden" name="naws_settings[forecast_provider]" value="<?php echo esc_attr( $options['forecast_provider'] ?? 'open_meteo' ); ?>">
 

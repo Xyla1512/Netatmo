@@ -191,12 +191,11 @@
         },
 
         render: function(datasets) {
-            // Read chart theme colors from CSS custom properties
-            var cs = getComputedStyle(this.wrap || document.documentElement);
-            const gridColor  = cs.getPropertyValue('--naws-chart-grid').trim() || 'rgba(218,240,240,0.4)';
-            const tickColor  = cs.getPropertyValue('--naws-chart-tick').trim() || '#7aa0a0';
-            const tooltipBg  = cs.getPropertyValue('--naws-chart-tooltip-bg').trim() || 'rgba(45,82,82,0.92)';
-            const tooltipClr = cs.getPropertyValue('--naws-chart-tooltip-text').trim() || '#ffffff';
+            const isDark = this.theme === 'dark';
+            const gridColor  = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.06)';
+            const tickColor  = isDark ? '#64748b' : '#94a3b8';
+            const tooltipBg  = isDark ? '#1f2937' : '#ffffff';
+            const tooltipClr = isDark ? '#f1f5f9' : '#1e293b';
 
             // Fill datasets for area chart
             if (this.chartType === 'area') {
@@ -287,21 +286,16 @@
         if (!canvas) return;
 
         if (typeof Gauge !== 'undefined') {
-            var gcs = getComputedStyle(canvas.closest('.naws-wrap') || document.documentElement);
-            var gPrimary = gcs.getPropertyValue('--naws-primary').trim() || '#00d4ff';
-            var gAccent  = gcs.getPropertyValue('--naws-accent').trim() || '#7c3aed';
-            var gText    = gcs.getPropertyValue('--naws-text').trim() || '#427272';
-            var gBorder  = gcs.getPropertyValue('--naws-border').trim() || '#e0eeee';
             const g = new Gauge(canvas).setOptions({
                 angle:           -0.2,
                 lineWidth:       0.2,
                 radiusScale:     1,
-                pointer:         { length: 0.6, strokeWidth: 0.035, color: gText },
+                pointer:         { length: 0.6, strokeWidth: 0.035, color: theme === 'dark' ? '#f1f5f9' : '#1e293b' },
                 limitMax:        false,
                 limitMin:        false,
-                colorStart:      gPrimary,
-                colorStop:       gAccent,
-                strokeColor:     gBorder,
+                colorStart:      '#00d4ff',
+                colorStop:       '#7c3aed',
+                strokeColor:     theme === 'dark' ? '#1f2937' : '#e2e8f0',
                 generateGradient: true,
                 highDpiSupport:  true,
             });
@@ -325,26 +319,20 @@
         const pct     = Math.max(0, Math.min(1, (value - min) / (max - min)));
         const angle   = start + pct * Math.PI;
 
-        var gcs = getComputedStyle(canvas.closest('.naws-wrap') || document.documentElement);
-        var gPrimary = gcs.getPropertyValue('--naws-primary').trim() || '#00d4ff';
-        var gAccent  = gcs.getPropertyValue('--naws-accent').trim() || '#7c3aed';
-        var gText    = gcs.getPropertyValue('--naws-text').trim() || '#427272';
-        var gBorder  = gcs.getPropertyValue('--naws-border').trim() || '#e0eeee';
-
         ctx.clearRect(0, 0, w, h);
 
         // Background arc
         ctx.beginPath();
         ctx.arc(cx, cy, r, start, end);
-        ctx.strokeStyle = gBorder;
+        ctx.strokeStyle = theme === 'dark' ? '#1f2937' : '#e2e8f0';
         ctx.lineWidth   = r * 0.22;
         ctx.lineCap     = 'round';
         ctx.stroke();
 
         // Value arc
         const grad = ctx.createLinearGradient(cx - r, cy, cx + r, cy);
-        grad.addColorStop(0, gPrimary);
-        grad.addColorStop(1, gAccent);
+        grad.addColorStop(0, '#00d4ff');
+        grad.addColorStop(1, '#7c3aed');
         ctx.beginPath();
         ctx.arc(cx, cy, r, start, angle);
         ctx.strokeStyle = grad;
@@ -356,12 +344,12 @@
         ctx.beginPath();
         ctx.moveTo(cx, cy);
         ctx.lineTo(nx, ny);
-        ctx.strokeStyle = gText;
+        ctx.strokeStyle = theme === 'dark' ? '#f1f5f9' : '#1e293b';
         ctx.lineWidth   = 3;
         ctx.stroke();
         ctx.beginPath();
         ctx.arc(cx, cy, 5, 0, 2 * Math.PI);
-        ctx.fillStyle = gPrimary;
+        ctx.fillStyle = '#00d4ff';
         ctx.fill();
     }
 
@@ -480,9 +468,9 @@ window.NAWS_YearCompare.prototype = {
     },
 
     render: function(yearData) {
-        var ycs = getComputedStyle(this.wrap || document.documentElement);
-        const gridClr  = ycs.getPropertyValue('--naws-chart-grid').trim() || 'rgba(218,240,240,0.4)';
-        const tickClr  = ycs.getPropertyValue('--naws-chart-tick').trim() || '#7aa0a0';
+        const isDark   = this.theme === 'dark';
+        const gridClr  = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.06)';
+        const tickClr  = isDark ? '#64748b' : '#94a3b8';
         const palette  = ['#00d4ff','#f59e0b','#10b981','#ef4444','#8b5cf6','#ec4899','#14b8a6','#f97316'];
 
         // Normalise all points to a "day of year" x-axis (0..364)
@@ -523,9 +511,9 @@ window.NAWS_YearCompare.prototype = {
                         labels: { color: tickClr, usePointStyle: true, font: { size: nawsChartFontSize() } }
                     },
                     tooltip: {
-                        backgroundColor: ycs.getPropertyValue('--naws-chart-tooltip-bg').trim() || 'rgba(45,82,82,0.92)',
-                        titleColor: ycs.getPropertyValue('--naws-chart-tooltip-title').trim() || '#a0c8c8',
-                        bodyColor:  ycs.getPropertyValue('--naws-chart-tooltip-text').trim() || '#ffffff',
+                        backgroundColor: isDark ? '#1f2937' : '#fff',
+                        titleColor: isDark ? '#f1f5f9' : '#1e293b',
+                        bodyColor:  isDark ? '#f1f5f9' : '#1e293b',
                         callbacks: {
                             title: ctx => {
                                 const doy = ctx[0].parsed.x;

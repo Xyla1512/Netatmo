@@ -4,7 +4,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 $animate = $atts['animate'] !== 'false';
 ?>
-<div class="naws-wrap">
+<div class="naws-wrap naws-theme-<?php echo esc_attr($atts['theme']); ?>">
 
     <?php if (!empty($atts['title'])) : ?>
     <div class="naws-header">

@@ -288,8 +288,8 @@ class NAWS_Cron {
             update_option( 'naws_last_sync_time', time(), false );
         }
 
-        $today     = wp_date( 'Y-m-d' );
-        $yesterday = wp_date( 'Y-m-d', strtotime( 'yesterday' ) );
+        $today     = date_i18n( 'Y-m-d' );
+        $yesterday = date_i18n( 'Y-m-d', strtotime( 'yesterday' ) );
 
         // ── Running summary for today (updated on every fetch) ────────────────
         try {
@@ -331,7 +331,7 @@ class NAWS_Cron {
 
     public function run_daily_summary() {
         $tz        = new DateTimeZone( 'Europe/Berlin' );
-        $yesterday = wp_date( 'Y-m-d', strtotime( 'yesterday' ) );
+        $yesterday = date_i18n( 'Y-m-d', strtotime( 'yesterday' ) );
 
         $day_start = ( new DateTimeImmutable( $yesterday . ' 00:00:00', $tz ) )->getTimestamp();
         $day_end   = ( new DateTimeImmutable( $yesterday . ' 23:59:59', $tz ) )->getTimestamp();

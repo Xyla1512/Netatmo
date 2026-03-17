@@ -178,55 +178,7 @@ $value_params = [
         <table class="naws-attr-table" style="margin-top:10px">
             <tr><th><?php naws_e('sc_th_attribute'); ?></th><th><?php naws_e('sc_th_description'); ?></th><th><?php naws_e('sc_th_default'); ?></th></tr>
             <tr><td><code>years</code></td><td><?php naws_e('sc_history_attr_years'); ?></td><td><span class="naws-tag-default">3</span></td></tr>
-            <tr><td><code>year</code></td><td><?php naws_e('sc_history_attr_year'); ?></td><td><span class="naws-tag-default">&ndash;</span></td></tr>
-            <tr><td><code>fields</code></td><td><?php naws_e('sc_history_attr_fields'); ?></td><td><span class="naws-tag-default">temp_min,temp_max,temp_avg</span></td></tr>
-            <tr><td><code>group_by</code></td><td><?php naws_e('sc_history_attr_group_by'); ?></td><td><span class="naws-tag-default">day</span></td></tr>
-            <tr><td><code>title</code></td><td><?php naws_e('sc_history_attr_title'); ?></td><td><span class="naws-tag-default"><?php naws_e('hc_history_title'); ?></span></td></tr>
-            <tr><td><code>height</code></td><td><?php naws_e('sc_history_attr_height'); ?></td><td><span class="naws-tag-default">420</span></td></tr>
-            <tr><td><code>show_range_picker</code></td><td><?php naws_e('sc_history_attr_picker'); ?></td><td><span class="naws-tag-default">true</span></td></tr>
         </table>
-        <div class="naws-inline-examples">
-            <div class="naws-inline-ex"><code>[naws_history year="2025"]</code> &rarr; nur 2025</div>
-            <div class="naws-inline-ex"><code>[naws_history year="2023,2025"]</code> &rarr; 2023 &amp; 2025</div>
-            <div class="naws-inline-ex"><code>[naws_history fields="rain_sum" group_by="month"]</code> &rarr; Niederschlag/Monat</div>
-        </div>
-    </div>
-
-    <div class="naws-sc-card">
-        <h3><code>[naws_current]</code></h3>
-        <p><?php naws_e('sc_current_card_desc'); ?></p>
-        <div class="naws-copy-wrap"><pre>[naws_current]</pre><button class="naws-copy-btn" data-copy='[naws_current]'><?php naws_e('sc_copy'); ?></button></div>
-        <table class="naws-attr-table" style="margin-top:10px">
-            <tr><th><?php naws_e('sc_th_attribute'); ?></th><th><?php naws_e('sc_th_description'); ?></th><th><?php naws_e('sc_th_default'); ?></th></tr>
-            <tr><td><code>module_id</code></td><td><?php naws_e('sc_current_attr_mid'); ?></td><td><span class="naws-tag-default">&ndash;</span></td></tr>
-            <tr><td><code>parameters</code></td><td><?php naws_e('sc_current_attr_params'); ?></td><td><span class="naws-tag-default">&ndash;</span></td></tr>
-            <tr><td><code>layout</code></td><td><?php naws_e('sc_current_attr_layout'); ?></td><td><span class="naws-tag-default">grid</span></td></tr>
-            <tr><td><code>title</code></td><td><?php naws_e('sc_current_attr_title'); ?></td><td><span class="naws-tag-default">&ndash;</span></td></tr>
-            <tr><td><code>animate</code></td><td><?php naws_e('sc_current_attr_animate'); ?></td><td><span class="naws-tag-default">true</span></td></tr>
-        </table>
-        <div class="naws-inline-examples">
-            <div class="naws-inline-ex"><code>[naws_current layout="list"]</code> &rarr; Listenansicht</div>
-            <div class="naws-inline-ex"><code>[naws_current parameters="Temperature,Humidity"]</code> &rarr; nur Temp. &amp; Feuchte</div>
-        </div>
-    </div>
-
-    <div class="naws-sc-card">
-        <h3><code>[naws_table]</code></h3>
-        <p><?php naws_e('sc_table_desc'); ?></p>
-        <div class="naws-copy-wrap"><pre>[naws_table period="24h"]</pre><button class="naws-copy-btn" data-copy='[naws_table period="24h"]'><?php naws_e('sc_copy'); ?></button></div>
-        <table class="naws-attr-table" style="margin-top:10px">
-            <tr><th><?php naws_e('sc_th_attribute'); ?></th><th><?php naws_e('sc_th_description'); ?></th><th><?php naws_e('sc_th_default'); ?></th></tr>
-            <tr><td><code>module_id</code></td><td><?php naws_e('sc_table_attr_mid'); ?></td><td><span class="naws-tag-default">&ndash;</span></td></tr>
-            <tr><td><code>parameters</code></td><td><?php naws_e('sc_table_attr_params'); ?></td><td><span class="naws-tag-default">&ndash;</span></td></tr>
-            <tr><td><code>period</code></td><td><?php naws_e('sc_table_attr_period'); ?></td><td><span class="naws-tag-default">24h</span></td></tr>
-            <tr><td><code>limit</code></td><td><?php naws_e('sc_table_attr_limit'); ?></td><td><span class="naws-tag-default">100</span></td></tr>
-            <tr><td><code>group_by</code></td><td><?php naws_e('sc_table_attr_group_by'); ?></td><td><span class="naws-tag-default">hour</span></td></tr>
-            <tr><td><code>title</code></td><td><?php naws_e('sc_table_attr_title'); ?></td><td><span class="naws-tag-default">&ndash;</span></td></tr>
-        </table>
-        <div class="naws-inline-examples">
-            <div class="naws-inline-ex"><code>[naws_table period="7d" group_by="day"]</code> &rarr; 7 Tage, pro Tag</div>
-            <div class="naws-inline-ex"><code>[naws_table parameters="Temperature,Pressure" period="30d"]</code> &rarr; 30 Tage gefiltert</div>
-        </div>
     </div>
 
     <div class="naws-sc-card">
