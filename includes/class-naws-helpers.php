@@ -28,23 +28,41 @@ class NAWS_Helpers {
     }
 
     public static function get_icon( $parameter ) {
-        $icons = [
-            'Temperature'      => '🌡️',
-            'CO2'              => '💨',
-            'Humidity'         => '💧',
-            'Noise'            => '🔊',
-            'Pressure'         => '🔵',
-            'AbsolutePressure' => '🔵',
-            'Rain'             => '🌧️',
-            'sum_rain_1'       => '🌧️',
-            'sum_rain_24'      => '🌧️',
-            'WindStrength'     => '🌬️',
-            'WindAngle'        => '🧭',
-            'GustStrength'     => '🌪️',
-            'GustAngle'        => '🧭',
-            'health_idx'       => '❤️',
+        // Map parameter names to icon set keys
+        $param_to_key = [
+            'Temperature'      => 'temp',
+            'CO2'              => 'co2',
+            'Humidity'         => 'humid',
+            'Noise'            => 'noise',
+            'Pressure'         => 'press',
+            'AbsolutePressure' => 'press',
+            'Rain'             => 'rain',
+            'sum_rain_1'       => 'rain',
+            'sum_rain_24'      => 'rain',
+            'WindStrength'     => 'wind',
+            'WindAngle'        => 'wind',
+            'GustStrength'     => 'wind',
+            'GustAngle'        => 'wind',
+            'health_idx'       => 'temp',
         ];
-        return $icons[ $parameter ] ?? '📊';
+
+        if ( class_exists( 'NAWS_Icons' ) ) {
+            $key = $param_to_key[ $parameter ] ?? null;
+            if ( $key ) {
+                $icons = NAWS_Icons::get_set();
+                return $icons[ $key ] ?? '📊';
+            }
+        }
+
+        // Fallback to emojis if NAWS_Icons not loaded
+        $emoji_fallback = [
+            'Temperature' => '🌡️', 'CO2' => '💨', 'Humidity' => '💧',
+            'Noise' => '🔊', 'Pressure' => '🔵', 'AbsolutePressure' => '🔵',
+            'Rain' => '🌧️', 'sum_rain_1' => '🌧️', 'sum_rain_24' => '🌧️',
+            'WindStrength' => '🌬️', 'WindAngle' => '🧭',
+            'GustStrength' => '🌪️', 'GustAngle' => '🧭', 'health_idx' => '❤️',
+        ];
+        return $emoji_fallback[ $parameter ] ?? '📊';
     }
 
     public static function get_css_class( $parameter ) {

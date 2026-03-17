@@ -129,6 +129,18 @@ class NAWS_Colors {
 
         // ── Gruppe 7: Icon-Set ─────────────────────────────────────────
         'icon_set' => 'emoji',
+<<<<<<< HEAD
+
+        // ── Gruppe 8: Icon-Farben (per Sensor) ──────────────────────────
+        'icon_color_temp'     => '#50a882',
+        'icon_color_humid'    => '#3d82bf',
+        'icon_color_press'    => '#785fc8',
+        'icon_color_wind'     => '#427272',
+        'icon_color_rain'     => '#3585b0',
+        'icon_color_co2'      => '#4a9848',
+        'icon_color_noise'    => '#b88030',
+=======
+>>>>>>> 21110042bd50af501026cd799024f9ba988552bb
     ];
 
     public static function instance() {
@@ -288,6 +300,15 @@ class NAWS_Colors {
         $css .= "  --c-noise: {$c['chart_noise']};\n";
         $css .= "  --c-wind: {$c['chart_wind']};\n";
         $css .= "  --c-rain: {$c['chart_rain']};\n";
+<<<<<<< HEAD
+
+        // Icon colors (per sensor)
+        $icon_sensors = [ 'temp', 'humid', 'press', 'wind', 'rain', 'co2', 'noise' ];
+        foreach ( $icon_sensors as $s ) {
+            $css .= "  --naws-ico-{$s}: {$c['icon_color_' . $s]};\n";
+        }
+=======
+>>>>>>> 21110042bd50af501026cd799024f9ba988552bb
         $css .= "}\n";
 
         return $css;

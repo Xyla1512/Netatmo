@@ -61,10 +61,30 @@ $chart_short_labels = [
 // Tab definitions
 $tabs = [
     'theme'     => naws__( 'appearance_group_theme' ),
+<<<<<<< HEAD
+    'icons'     => naws__( 'appearance_group_icons' ),
+=======
+>>>>>>> 21110042bd50af501026cd799024f9ba988552bb
     'chart24h'  => naws__( 'appearance_group_chart_24h' ),
     'charttheme'=> naws__( 'appearance_group_chart_theme' ),
     'history'   => naws__( 'appearance_group_history' ),
 ];
+<<<<<<< HEAD
+
+// Icon sets data
+$icon_sets     = NAWS_Icons::get_all_sets();
+$current_set   = NAWS_Icons::get_current_set();
+$icon_color_keys = [
+    'icon_color_temp'  => naws__( 'appearance_sensor_temp' ),
+    'icon_color_humid' => naws__( 'appearance_sensor_humidity' ),
+    'icon_color_press' => naws__( 'appearance_sensor_pressure' ),
+    'icon_color_wind'  => naws__( 'appearance_sensor_wind' ),
+    'icon_color_rain'  => naws__( 'appearance_sensor_rain' ),
+    'icon_color_co2'   => naws__( 'appearance_sensor_co2' ),
+    'icon_color_noise' => naws__( 'appearance_sensor_noise' ),
+];
+=======
+>>>>>>> 21110042bd50af501026cd799024f9ba988552bb
 ?>
 
 <div class="wrap naws-admin-wrap">
@@ -211,7 +231,84 @@ $tabs = [
         </div>
 
         <!-- ============================================================
+<<<<<<< HEAD
+             Tab 2: Icon-Sets & Icon-Farben
+             ============================================================ -->
+        <div class="naws-appearance-pane" data-pane="icons">
+            <p class="description"><?php naws_e( 'appearance_group_icons_desc' ); ?></p>
+
+            <h3 style="margin:0 0 0.75rem;"><?php naws_e( 'appearance_icon_set_label' ); ?></h3>
+            <div class="naws-icon-set-grid">
+                <?php foreach ( $icon_sets as $set_key => $set_data ) : ?>
+                <label class="naws-icon-set-card<?php echo $set_key === $current_set ? ' active' : ''; ?>">
+                    <input type="radio" name="naws_appearance[icon_set]" value="<?php echo esc_attr( $set_key ); ?>"
+                        <?php checked( $set_key, $current_set ); ?>>
+                    <div class="naws-icon-set-header">
+                        <span class="naws-icon-set-name"><?php echo esc_html( $set_data['label'] ); ?></span>
+                    </div>
+                    <div class="naws-icon-set-preview">
+                        <?php foreach ( $set_data['icons'] as $ico_key => $ico_svg ) : ?>
+                        <div class="naws-icon-set-ico" title="<?php echo esc_attr( $ico_key ); ?>">
+                            <?php echo $ico_svg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG markup ?>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="naws-icon-set-desc"><?php echo esc_html( $set_data['desc'] ); ?></div>
+                </label>
+                <?php endforeach; ?>
+            </div>
+
+            <h3 style="margin:1.5rem 0 0.5rem;"><?php naws_e( 'appearance_icon_colors_label' ); ?></h3>
+            <p class="description" style="margin-bottom:0.75rem;"><?php naws_e( 'appearance_icon_colors_desc' ); ?></p>
+            <div class="naws-appearance-row">
+                <div class="naws-appearance-controls">
+                    <table class="form-table naws-color-table">
+                        <tbody>
+                        <?php foreach ( $icon_color_keys as $key => $label ) : ?>
+                            <tr>
+                                <th><label for="naws-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></label></th>
+                                <td>
+                                    <input type="text"
+                                           id="naws-<?php echo esc_attr( $key ); ?>"
+                                           name="naws_appearance[<?php echo esc_attr( $key ); ?>]"
+                                           value="<?php echo esc_attr( $colors[ $key ] ); ?>"
+                                           class="naws-color-picker"
+                                           data-preview="icons"
+                                           data-key="<?php echo esc_attr( $key ); ?>"
+                                           data-default-color="<?php echo esc_attr( $defaults[ $key ] ); ?>">
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="naws-appearance-preview naws-preview-sticky">
+                    <div class="naws-preview-label"><?php naws_e( 'appearance_icon_preview' ); ?></div>
+                    <div id="naws-preview-icons" class="naws-pv-icon-preview">
+                        <?php
+                        $preview_icons = NAWS_Icons::get_set( 'outline' );
+                        foreach ( $icon_color_keys as $key => $label ) :
+                            $sensor = str_replace( 'icon_color_', '', $key );
+                        ?>
+                        <div class="naws-pv-icon-item" data-key="<?php echo esc_attr( $key ); ?>" data-sensor="<?php echo esc_attr( $sensor ); ?>">
+                            <div class="naws-pv-icon-circle" style="background:color-mix(in srgb, <?php echo esc_attr( $colors[ $key ] ); ?> 13%, white);">
+                                <div class="naws-pv-icon-svg" style="color:<?php echo esc_attr( $colors[ $key ] ); ?>;">
+                                    <?php echo $preview_icons[ $sensor ] ?? ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                                </div>
+                            </div>
+                            <span class="naws-pv-icon-label"><?php echo esc_html( $label ); ?></span>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+             Tab 3: 24h-Chart-Farben
+=======
              Tab 2: 24h-Chart-Farben
+>>>>>>> 21110042bd50af501026cd799024f9ba988552bb
              ============================================================ -->
         <div class="naws-appearance-pane" data-pane="chart24h">
             <p class="description"><?php naws_e( 'appearance_group_chart_24h_desc' ); ?></p>
@@ -485,12 +582,32 @@ jQuery(document).ready(function($) {
             if (key === 'chart_axis_title') legend.find('.naws-pv-dot').eq(2).css('background', val);
         }
 
+<<<<<<< HEAD
+        // ── Icon colors preview ──
+        if (group === 'icons') {
+            var item = $('.naws-pv-icon-item[data-key="'+key+'"]');
+            item.find('.naws-pv-icon-svg').css('color', val);
+            item.find('.naws-pv-icon-circle').css('background', 'color-mix(in srgb, ' + val + ' 13%, white)');
+            item.find('svg').css('stroke', val);
+        }
+
+=======
+>>>>>>> 21110042bd50af501026cd799024f9ba988552bb
         // ── History year bars preview ──
         if (group === 'history') {
             $('#naws-pv-bar-' + key).css('background', val);
         }
     }
 
+<<<<<<< HEAD
+    // ── Icon set card selection ──
+    $('.naws-icon-set-card input[type=radio]').on('change', function() {
+        $('.naws-icon-set-card').removeClass('active');
+        $(this).closest('.naws-icon-set-card').addClass('active');
+    });
+
+=======
+>>>>>>> 21110042bd50af501026cd799024f9ba988552bb
     // Init color pickers only in the active/visible pane first
     $('.naws-appearance-pane.active .naws-color-picker').each(function() {
         var $input = $(this);
@@ -786,4 +903,136 @@ jQuery(document).ready(function($) {
     margin-bottom: 0.3rem;
     color: var(--naws-admin-text, #1d2327);
 }
+<<<<<<< HEAD
+
+/* ── Icon set selector ── */
+.naws-icon-set-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.75rem;
+}
+.naws-icon-set-card {
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 0.85rem 0.75rem 0.65rem;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    background: #fff;
+    position: relative;
+}
+.naws-icon-set-card:hover {
+    border-color: #94a3b8;
+}
+.naws-icon-set-card.active {
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+}
+.naws-icon-set-card input[type=radio] {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    margin: 0;
+}
+.naws-icon-set-header {
+    margin-bottom: 0.5rem;
+}
+.naws-icon-set-name {
+    font-weight: 700;
+    font-size: 13px;
+    color: #1d2327;
+}
+.naws-icon-set-preview {
+    display: flex;
+    gap: 0.45rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 0;
+    min-height: 42px;
+}
+.naws-icon-set-ico {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #f0f6f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    line-height: 1;
+}
+.naws-icon-set-ico svg {
+    width: 18px;
+    height: 18px;
+    stroke: #427272;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+/* Filled set preview: use fill instead of stroke */
+.naws-icon-set-card:nth-child(3) .naws-icon-set-ico svg {
+    fill: #427272;
+    stroke: none;
+    color: #427272;
+}
+.naws-icon-set-card:nth-child(3) .naws-icon-set-ico svg [fill="currentColor"] { fill: #427272; }
+.naws-icon-set-card:nth-child(3) .naws-icon-set-ico svg [stroke="currentColor"] { stroke: #427272; }
+/* Minimal set preview: thinner strokes */
+.naws-icon-set-card:nth-child(4) .naws-icon-set-ico svg {
+    stroke-width: 1.5;
+}
+.naws-icon-set-desc {
+    font-size: 11px;
+    color: #646970;
+    line-height: 1.4;
+    margin-top: 0.25rem;
+}
+
+/* ── Icon color preview ── */
+.naws-pv-icon-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+    padding: 0.75rem;
+    background: #fff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+}
+.naws-pv-icon-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+}
+.naws-pv-icon-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+.naws-pv-icon-svg {
+    transition: color 0.2s;
+}
+.naws-pv-icon-svg svg {
+    width: 22px;
+    height: 22px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.naws-pv-icon-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: #646970;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+=======
+>>>>>>> 21110042bd50af501026cd799024f9ba988552bb
 </style>

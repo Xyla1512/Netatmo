@@ -604,4 +604,23 @@ return [
     'appearance_chart_tooltip_title'  => 'Tooltip Titel',
     'appearance_chart_tooltip_text'   => 'Tooltip Text',
     'appearance_chart_axis_title'     => 'Achsen-Titel',
+<<<<<<< HEAD
+
+    // ── Icons ──────────────────────────────────────────────────────────
+    'appearance_group_icons'          => 'Icons',
+    'appearance_group_icons_desc'     => 'Wähle ein Icon-Set für das Frontend und passe die Farben pro Sensor an.',
+    'appearance_icon_set_label'       => 'Icon-Set wählen',
+    'appearance_icon_colors_label'    => 'Icon-Farben',
+    'appearance_icon_colors_desc'     => 'Individuelle Farben für jedes Sensor-Icon. Diese Farben werden auch für den Akzent-Balken der Kacheln verwendet.',
+    'appearance_icon_preview'         => 'Vorschau — Icon-Farben',
+    'icon_set_emoji'                  => 'Emoji',
+    'icon_set_emoji_desc'             => 'Native System-Emojis — sehen auf jedem Gerät etwas anders aus.',
+    'icon_set_outline'                => 'Outline',
+    'icon_set_outline_desc'           => 'Klare Linien-Icons mit feinen Strichen — der klassische Look.',
+    'icon_set_filled'                 => 'Filled',
+    'icon_set_filled_desc'            => 'Ausgefüllte Icons für einen kräftigeren, modernen Look.',
+    'icon_set_minimal'                => 'Minimal',
+    'icon_set_minimal_desc'           => 'Ultra-dünne, geometrische Icons für einen reduzierten Stil.',
+=======
+>>>>>>> 21110042bd50af501026cd799024f9ba988552bb
 ];

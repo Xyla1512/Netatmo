@@ -164,7 +164,7 @@ $pressure_diff  = $_pt['diff'];
 <?php // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript -- must load synchronously before inline Chart.js code ?>
 <script src="<?php echo esc_url( NAWS_PLUGIN_URL . 'assets/vendor/chart.umd.min.js' ); ?>"></script>
 
-<div id="<?php echo esc_attr($widget_id); ?>" class="naws-wx"
+<div id="<?php echo esc_attr($widget_id); ?>" class="naws-wx" data-icon-set="<?php echo esc_attr( NAWS_Icons::get_current_set() ); ?>"
      data-nonce="<?php echo esc_attr($nonce); ?>"
      data-ajax="<?php echo esc_attr($ajax_url); ?>"
      data-refresh="<?php echo esc_attr($atts['refresh'] ?? '60'); ?>"
@@ -419,15 +419,8 @@ function post(params,cb){
 }
 
 /* ── ICONS ───────────────────────────── */
-var ICO={
-  temp: '<svg viewBox="0 0 24 24"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/></svg>',
-  humid:'<svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/></svg>',
-  press:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
-  wind: '<svg viewBox="0 0 24 24"><path d="M9.59 4.59A2 2 0 1111 8H2m10.59 11.41A2 2 0 1014 16H2m15.73-8.27A2.5 2.5 0 1119.5 12H2"/></svg>',
-  rain: '<svg viewBox="0 0 24 24"><path d="M20 17.58A5 5 0 0018 8h-1.26A8 8 0 104 15.25"/><line x1="8" y1="16" x2="8" y2="20"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="16" y1="16" x2="16" y2="20"/></svg>',
-  co2:  '<svg viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 20.8"/><path d="M9 9.14C9.23 10.5 11.34 14 16 14c3 0 6-2 6-5s-3-5-6-5c-1.5 0-3 .5-4 1.5"/></svg>',
-  noise:'<svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg>',
-};
+var ICO=<?php echo NAWS_Icons::get_js_object(); ?>;
+var NAWS_ICON_SET=<?php echo wp_json_encode( NAWS_Icons::get_current_set() ); ?>;
 
 /* ── COMPASS ─────────────────────────── */
 var ROSE='<svg style="position:absolute;top:0;left:0;width:100%;height:100%" viewBox="-4 -4 168 168" xmlns="http://www.w3.org/2000/svg">'

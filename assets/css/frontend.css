@@ -1079,10 +1079,29 @@
 .naws-wx .naws-trend-up{color:#3d9e74;}
 .naws-wx .naws-trend-down{color:#c0392b;}
 .naws-wx .naws-trend-stable{color:#7aa0a0;}
-.naws-wx .c-wind{--ca:var(--ink)}.naws-wx .c-rain{--ca:#3585b0}.naws-wx .c-co2{--ca:#4a9848}.naws-wx .c-noise{--ca:#b88030}
+/* Per-sensor accent colors (now using configurable icon color vars) */
+.naws-wx .c-temp{--ca:var(--naws-ico-temp,#50a882)}
+.naws-wx .c-humid{--ca:var(--naws-ico-humid,#3d82bf)}
+.naws-wx .c-press{--ca:var(--naws-ico-press,#785fc8)}
+.naws-wx .c-wind{--ca:var(--naws-ico-wind,var(--ink))}
+.naws-wx .c-rain{--ca:var(--naws-ico-rain,#3585b0)}
+.naws-wx .c-co2{--ca:var(--naws-ico-co2,#4a9848)}
+.naws-wx .c-noise{--ca:var(--naws-ico-noise,#b88030)}
 .naws-wx .naws-ico { width:40px;height:40px;border-radius:50%;background:color-mix(in srgb,var(--ca,var(--ink)) 13%,white);display:flex;align-items:center;justify-content:center;margin-bottom:9px;flex-shrink:0; }
 @media (min-width: 600px) { .naws-wx .naws-ico { width:46px;height:46px;margin-bottom:11px; } }
 .naws-wx .naws-ico svg{width:23px;height:23px;stroke:var(--ca,var(--ink));fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+
+/* ── Icon set: filled — use fill instead of stroke ── */
+.naws-wx[data-icon-set="filled"] .naws-ico svg{fill:var(--ca,var(--ink));stroke:none;color:var(--ca,var(--ink));}
+.naws-wx[data-icon-set="filled"] .naws-ico svg [fill="currentColor"]{fill:var(--ca,var(--ink));}
+.naws-wx[data-icon-set="filled"] .naws-ico svg [stroke="currentColor"]{stroke:var(--ca,var(--ink));}
+
+/* ── Icon set: minimal — thinner strokes ── */
+.naws-wx[data-icon-set="minimal"] .naws-ico svg{stroke-width:1.5;}
+
+/* ── Icon set: emoji — display emoji text, hide SVG styling ── */
+.naws-wx[data-icon-set="emoji"] .naws-ico{font-size:22px;line-height:1;}
+.naws-wx[data-icon-set="emoji"] .naws-ico svg{stroke:var(--ca,var(--ink));fill:none;}
 .naws-wx .naws-lbl-badge{display:block;font-size:8px;font-weight:600;letter-spacing:.08em;color:var(--accent);opacity:.8;text-transform:uppercase;line-height:1;}
 .naws-wx .naws-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px;line-height:1.3;min-height:2.6em;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;}
 .naws-wx .naws-val{font-size:36px;font-weight:800;font-style:italic;color:var(--ink2);line-height:1;letter-spacing:-.03em;margin-bottom:1px;transition:color .35s;}

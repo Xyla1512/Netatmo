@@ -2,6 +2,20 @@
 
 All notable changes to the Netatmo Weather Station (NAWS) plugin are documented here.
 
+<<<<<<< HEAD
+## [1.4.3] – 2026-03-17
+
+### Added
+- **4 Frontend Icon Sets**: Emoji (default), Outline, Filled, and Minimal icon sets selectable in the Appearance settings. Each set provides 7 sensor icons (temperature, humidity, pressure, wind, rain, CO₂, noise) with distinct visual styles.
+- **New "Icons" tab in Appearance**: Visual radio-button selector showing all 4 icon sets with real icon previews. No more guessing — see exactly how each set looks before selecting.
+- **Per-sensor icon colors**: 7 new configurable colors (one per sensor type) with live preview. These colors control both the icon tint and the card accent bar in the Live Dashboard.
+- **Dynamic icon rendering**: `live.php` now loads icons dynamically from `NAWS_Icons` class instead of hardcoded SVGs. The `data-icon-set` attribute on `.naws-wx` enables CSS-based rendering variants (filled uses `fill`, minimal uses thinner strokes).
+
+### Changed
+- **Sensor accent colors unified**: Per-card accent colors (`.c-temp`, `.c-wind`, etc.) now reference the new `--naws-ico-*` CSS variables, ensuring consistent colors between icons and card accents.
+
+=======
+>>>>>>> 21110042bd50af501026cd799024f9ba988552bb
 ## [1.4.2] – 2026-03-17
 
 ### Fixed

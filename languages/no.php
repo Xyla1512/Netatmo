@@ -604,4 +604,23 @@ return [
     'appearance_chart_tooltip_title'  => 'Verktøytips tittel',
     'appearance_chart_tooltip_text'   => 'Verktøytips tekst',
     'appearance_chart_axis_title'     => 'Aksetittel',
+<<<<<<< HEAD
+
+    // ── Ikoner ─────────────────────────────────────────────────────────
+    'appearance_group_icons'          => 'Ikoner',
+    'appearance_group_icons_desc'     => 'Velg et ikonsett for frontend og tilpass fargene per sensor.',
+    'appearance_icon_set_label'       => 'Velg ikonsett',
+    'appearance_icon_colors_label'    => 'Ikonfarger',
+    'appearance_icon_colors_desc'     => 'Individuelle farger for hvert sensorikon. Disse fargene brukes også for aksentlinjen på flisene.',
+    'appearance_icon_preview'         => 'Forhåndsvisning — Ikonfarger',
+    'icon_set_emoji'                  => 'Emoji',
+    'icon_set_emoji_desc'             => 'Native system-emojier — utseendet varierer etter enhet.',
+    'icon_set_outline'                => 'Outline',
+    'icon_set_outline_desc'           => 'Rene linjeikoner med tynne streker — det klassiske utseendet.',
+    'icon_set_filled'                 => 'Filled',
+    'icon_set_filled_desc'            => 'Fylte ikoner for et dristigere, moderne utseende.',
+    'icon_set_minimal'                => 'Minimal',
+    'icon_set_minimal_desc'           => 'Ultratynne, geometriske ikoner for en redusert stil.',
+=======
+>>>>>>> 21110042bd50af501026cd799024f9ba988552bb
 ];

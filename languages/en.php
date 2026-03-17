@@ -604,4 +604,23 @@ return [
     'appearance_chart_tooltip_title'  => 'Tooltip Title',
     'appearance_chart_tooltip_text'   => 'Tooltip Text',
     'appearance_chart_axis_title'     => 'Axis Title',
+<<<<<<< HEAD
+
+    // ── Icons ──────────────────────────────────────────────────────────
+    'appearance_group_icons'          => 'Icons',
+    'appearance_group_icons_desc'     => 'Choose an icon set for the frontend and customize colors per sensor.',
+    'appearance_icon_set_label'       => 'Choose Icon Set',
+    'appearance_icon_colors_label'    => 'Icon Colors',
+    'appearance_icon_colors_desc'     => 'Individual colors for each sensor icon. These colors are also used for the tile accent bar.',
+    'appearance_icon_preview'         => 'Preview — Icon Colors',
+    'icon_set_emoji'                  => 'Emoji',
+    'icon_set_emoji_desc'             => 'Native system emojis — appearance varies by device.',
+    'icon_set_outline'                => 'Outline',
+    'icon_set_outline_desc'           => 'Clean line icons with thin strokes — the classic look.',
+    'icon_set_filled'                 => 'Filled',
+    'icon_set_filled_desc'            => 'Solid filled icons for a bolder, modern look.',
+    'icon_set_minimal'                => 'Minimal',
+    'icon_set_minimal_desc'           => 'Ultra-thin, geometric icons for a reduced style.',
+=======
+>>>>>>> 21110042bd50af501026cd799024f9ba988552bb
 ];
