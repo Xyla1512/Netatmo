@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 return [
 
     // ── General ───────────────────────────────────────────────────────
-    'plugin_name'             => 'Netatmo Værstasjon',
+    'plugin_name'             => 'XTX Netatmo',
     'save_settings'           => 'Lagre innstillinger',
     'settings_saved'          => 'Innstillinger lagret.',
     'sync_now'                => 'Synkroniser nå',

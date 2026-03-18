@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 return [
 
     // ── General ───────────────────────────────────────────────────────
-    'plugin_name'           => 'Netatmo Wetterstation',
+    'plugin_name'           => 'XTX Netatmo',
     'save_settings'         => 'Einstellungen speichern',
     'settings_saved'        => 'Einstellungen gespeichert.',
     'sync_now'              => 'Jetzt synchronisieren',
@@ -58,7 +58,7 @@ return [
     'menu_live'             => '🖥️ Live-Dashboard',
 
     // ── Settings page ─────────────────────────────────────────────────
-    'settings_title'        => 'Netatmo Wetterstation — Einstellungen',
+    'settings_title'        => 'XTX Netatmo — Einstellungen',
     'netatmo_api'           => 'Netatmo API-Verbindung',
     'api_desc'              => 'Für die Verbindung benötigst du ein Netatmo-Entwicklerkonto. Erstelle eine App auf',
     'api_desc2'             => 'und kopiere Client ID und Secret hierher.',

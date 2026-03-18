@@ -1,8 +1,11 @@
 # Changelog
 
-All notable changes to the Netatmo Weather Station (NAWS) plugin are documented here.
+All notable changes to the XTX Netatmo plugin are documented here.
 
-## [1.4.3] – 2026-03-17
+## [1.4.3] – 2026-03-18
+
+### Changed
+- **Plugin renamed**: "Netatmo Weather Station" → "XTX Netatmo" across all display names, language files, file headers, and documentation.
 
 ### Added
 - **4 Frontend Icon Sets**: Emoji (default), Outline, Filled, and Minimal icon sets selectable in the Appearance settings. Each set provides 7 sensor icons (temperature, humidity, pressure, wind, rain, CO₂, noise) with distinct visual styles.

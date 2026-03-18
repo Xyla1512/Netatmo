@@ -1,5 +1,5 @@
 /**
- * Netatmo Weather Station Pro - Frontend JS
+ * XTX Netatmo - Frontend JS
  */
 (function($) {
     'use strict';

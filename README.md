@@ -1,7 +1,7 @@
 Demo: https://www.frank-neumann.de/netatmo-wetter-plugin/
 
 
-=== Netatmo Weather Station ===
+=== XTX Netatmo ===
 Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 5.8
@@ -15,7 +15,7 @@ Connects to the Netatmo API, stores all sensor data locally and displays live da
 
 == Description ==
 
-**Netatmo Weather Station** connects your Netatmo hardware to WordPress. It reads all sensor data via the official Netatmo API, stores readings in your local database and displays them with beautiful live dashboards, animated charts and weather forecasts.
+**XTX Netatmo** connects your Netatmo hardware to WordPress. It reads all sensor data via the official Netatmo API, stores readings in your local database and displays them with beautiful live dashboards, animated charts and weather forecasts.
 
 = Key Features =
 
@@ -51,7 +51,7 @@ Connects to the Netatmo API, stores all sensor data locally and displays live da
 
 1. Upload the `netatmo-weather-station` folder to `/wp-content/plugins/`
 2. Activate the plugin in WordPress Admin → Plugins
-3. Go to **Weather Station → Settings**
+3. Go to **XTX Netatmo → Settings**
 4. Create a Netatmo developer app at [dev.netatmo.com](https://dev.netatmo.com)
 5. Enter your Client ID and Client Secret
 6. Set the Redirect URI in your Netatmo app to: `https://yoursite.com/wp-admin/admin.php?page=naws-settings`

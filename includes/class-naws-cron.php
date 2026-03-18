@@ -249,7 +249,7 @@ class NAWS_Cron {
         }
 
         if ( get_option( 'naws_auth_required' ) ) {
-            $this->log( 'error', 'Re-authentication required. Please visit Weather Station → Settings.' );
+            $this->log( 'error', 'Re-authentication required. Please visit XTX Netatmo → Settings.' );
             self::record_error();
             return;
         }

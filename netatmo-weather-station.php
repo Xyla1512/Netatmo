@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Netatmo Weather Station
+ * Plugin Name: XTX Netatmo
  * Plugin URI: https://frank-neumann.de/netatmo-weather-station
  * Description: Connects to the Netatmo API, stores all sensor data locally and displays live dashboards, charts, history and forecasts via shortcodes.
  * Version: 1.4.3
