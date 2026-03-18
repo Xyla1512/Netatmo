@@ -3,7 +3,7 @@
  * Plugin Name: XTX Netatmo
  * Plugin URI: https://frank-neumann.de/netatmo-weather-station
  * Description: Connects to the Netatmo API, stores all sensor data locally and displays live dashboards, charts, history and forecasts via shortcodes.
- * Version: 1.4.3
+ * Version: 1.5.0
  * Author: Frank Neumann
  * Author URI: https://frank-neumann.de
  * License: GPL v2 or later
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'NAWS_VERSION',        '1.4.3' );
+define( 'NAWS_VERSION',        '1.5.0' );
 define( 'NAWS_PLUGIN_FILE',    __FILE__ );
 define( 'NAWS_PLUGIN_DIR',     plugin_dir_path( __FILE__ ) );
 define( 'NAWS_PLUGIN_URL',     plugin_dir_url( __FILE__ ) );
@@ -53,6 +53,9 @@ naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-forecast.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-colors.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-icons.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-export.php' );
+
+// ── Auto-updater (checks GitHub releases) ────────────────────────────────
+naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-updater.php' );
 
 // ── Admin classes (only in admin context) ─────────────────────────────────
 if ( is_admin() ) {
@@ -99,6 +102,7 @@ final class Netatmo_Weather_Station {
         NAWS_Shortcodes::instance();
         NAWS_Ajax::instance();
         NAWS_Rest_API::init();
+        NAWS_Updater::instance();
 
         // ── Cron watchdog: schedule if missing OR stale ─────────────────────
         $next_fetch = wp_next_scheduled( NAWS_Cron::HOOK_FETCH );

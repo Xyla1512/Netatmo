@@ -2,6 +2,16 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [1.5.0] – 2026-03-18
+
+### Added
+- **GitHub Auto-Updater**: New `NAWS_Updater` class enables automatic plugin updates via GitHub Releases. WordPress checks the `Xyla1512/Netatmo` repository for new release tags and offers one-click updates in the admin panel — no WordPress.org listing required.
+  - Checks `https://api.github.com/repos/Xyla1512/Netatmo/releases/latest` every 12 hours
+  - Supports attached `.zip` assets or GitHub's auto-generated source ZIP as fallback
+  - "View details" popup shows release notes from GitHub
+  - Post-install hook ensures the plugin folder name stays correct after extraction
+  - Optional: private repo support via `github_token` in settings
+
 ## [1.4.3] – 2026-03-18
 
 ### Changed
