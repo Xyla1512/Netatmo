@@ -2,6 +2,16 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [1.5.3] – 2026-03-18
+
+### Fixed
+- **Auto-update toggle missing**: WordPress showed no "Automatische Aktualisierung aktivieren" link for the plugin. The updater now registers the plugin in `$transient->no_update` when the installed version is current, which enables the WordPress auto-update toggle.
+
+## [1.5.2] – 2026-03-18
+
+### Fixed
+- **Plugin URI corrected**: "Plugin Website aufrufen" link now points to `https://www.frank-neumann.de/netatmo-wetter-plugin/`.
+
 ## [1.5.1] – 2026-03-18
 
 ### Fixed

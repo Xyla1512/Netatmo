@@ -57,16 +57,21 @@ class NAWS_Updater {
 
         $remote_version = ltrim( $release['tag_name'], 'vV' );
 
+        $plugin_data = (object) [
+            'slug'        => dirname( NAWS_PLUGIN_BASENAME ),
+            'plugin'      => NAWS_PLUGIN_BASENAME,
+            'new_version' => $remote_version,
+            'url'         => $release['html_url'],
+            'package'     => $this->get_download_url( $release ),
+            'icons'       => [],
+            'banners'     => [],
+        ];
+
         if ( version_compare( $remote_version, NAWS_VERSION, '>' ) ) {
-            $transient->response[ NAWS_PLUGIN_BASENAME ] = (object) [
-                'slug'        => dirname( NAWS_PLUGIN_BASENAME ),
-                'plugin'      => NAWS_PLUGIN_BASENAME,
-                'new_version' => $remote_version,
-                'url'         => $release['html_url'],
-                'package'     => $this->get_download_url( $release ),
-                'icons'       => [],
-                'banners'     => [],
-            ];
+            $transient->response[ NAWS_PLUGIN_BASENAME ] = $plugin_data;
+        } else {
+            // Register in no_update so WordPress shows the "Enable auto-updates" toggle.
+            $transient->no_update[ NAWS_PLUGIN_BASENAME ] = $plugin_data;
         }
 
         return $transient;
