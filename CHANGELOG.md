@@ -2,6 +2,11 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [1.5.1] – 2026-03-18
+
+### Fixed
+- **Dashboard SVG icons rendered as source code**: The readings table in the admin dashboard escaped SVG icons with `esc_html()`, causing raw SVG markup to display instead of rendered icons. Icon output is now separated from the escaped label text.
+
 ## [1.5.0] – 2026-03-18
 
 ### Added

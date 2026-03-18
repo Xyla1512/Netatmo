@@ -271,7 +271,7 @@ $module_type_colors = [
                                                 if ( in_array( $param, $skip_display, true ) ) continue;
                                             ?>
                                             <tr>
-                                                <td class="naws-param-cell"><?php echo esc_html( NAWS_Helpers::get_icon($param) . ' ' . NAWS_Helpers::get_label($param) ); ?></td>
+                                                <td class="naws-param-cell"><?php echo NAWS_Helpers::get_icon($param); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG from trusted source ?> <?php echo esc_html( NAWS_Helpers::get_label($param) ); ?></td>
                                                 <td class="naws-value-cell"><strong><?php echo esc_html( NAWS_Helpers::format_value($param, $val) ); ?></strong></td>
                                                 <td class="naws-unit-cell"><?php echo esc_html( NAWS_Helpers::get_unit($param) ); ?></td>
                                             </tr>
