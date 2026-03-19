@@ -299,22 +299,22 @@ $pressure_diff  = $_pt['diff'];
     </div>
     <?php endif; ?>
 
+  <!-- Modal overlay -->
+  <div id="<?php echo esc_attr($widget_id); ?>-modal" class="naws-modal" style="display:none" role="dialog" aria-modal="true">
+    <div class="naws-modal-backdrop"></div>
+    <div class="naws-modal-box">
+      <div class="naws-modal-hdr">
+        <span class="naws-modal-title"></span>
+        <button class="naws-modal-close" aria-label="<?php echo esc_attr( naws__( 'close_modal' ) ); ?>">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="naws-modal-body">
+        <canvas id="<?php echo esc_attr($widget_id); ?>-modal-canvas"></canvas>
+      </div>
+    </div>
   </div>
-</div>
 
-<!-- Modal overlay -->
-<div id="<?php echo esc_attr($widget_id); ?>-modal" class="naws-modal" style="display:none" role="dialog" aria-modal="true">
-  <div class="naws-modal-backdrop"></div>
-  <div class="naws-modal-box">
-    <div class="naws-modal-hdr">
-      <span class="naws-modal-title"></span>
-      <button class="naws-modal-close" aria-label="<?php echo esc_attr( naws__( 'close_modal' ) ); ?>">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <div class="naws-modal-body">
-      <canvas id="<?php echo esc_attr($widget_id); ?>-modal-canvas"></canvas>
-    </div>
   </div>
 </div>
 

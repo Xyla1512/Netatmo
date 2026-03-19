@@ -2,6 +2,12 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [1.5.4] – 2026-03-19
+
+### Fixed
+- **Historische Charts – Jahres-Buttons auf Mobile**: Buttons umbrechen jetzt mehrzeilig statt aus dem sichtbaren Bereich zu scrollen. Größe, Padding und Dot-Durchmesser reduziert für kompakte Darstellung auf kleinen Bildschirmen.
+- **24h-Charts öffnen sich nicht im Popup**: Das Modal-Overlay war außerhalb des `.naws-wx`-Wrappers platziert, wodurch die CSS-Regeln (`position:fixed`) nicht griffen. Modal ist jetzt korrekt innerhalb des Wrappers.
+
 ## [1.5.3] – 2026-03-18
 
 ### Fixed
