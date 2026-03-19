@@ -108,7 +108,7 @@ class NAWS_Icons {
         return [
             'temp'  => '🌡️',
             'humid' => '💧',
-            'press' => '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+            'press' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 1 0 20 10 10 0 0 1 0-20z"/><path d="M12 6v6l4 2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 6.34l1.41-1.41"/></svg>',
             'wind'  => '🌬️',
             'rain'  => '🌧️',
             'co2'   => '💨',
@@ -123,7 +123,7 @@ class NAWS_Icons {
         return [
             'temp'  => '<svg viewBox="0 0 24 24"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/></svg>',
             'humid' => '<svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/></svg>',
-            'press' => '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+            'press' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 6.34l1.41-1.41"/></svg>',
             'wind'  => '<svg viewBox="0 0 24 24"><path d="M9.59 4.59A2 2 0 1111 8H2m10.59 11.41A2 2 0 1014 16H2m15.73-8.27A2.5 2.5 0 1119.5 12H2"/></svg>',
             'rain'  => '<svg viewBox="0 0 24 24"><path d="M20 17.58A5 5 0 0018 8h-1.26A8 8 0 104 15.25"/><line x1="8" y1="16" x2="8" y2="20"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="16" y1="16" x2="16" y2="20"/></svg>',
             'co2'   => '<svg viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 20.8"/><path d="M9 9.14C9.23 10.5 11.34 14 16 14c3 0 6-2 6-5s-3-5-6-5c-1.5 0-3 .5-4 1.5"/></svg>',
@@ -138,7 +138,7 @@ class NAWS_Icons {
         return [
             'temp'  => '<svg viewBox="0 0 24 24"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z" fill="currentColor" stroke="none"/></svg>',
             'humid' => '<svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z" fill="currentColor" stroke="none"/></svg>',
-            'press' => '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor" stroke="none"/><polyline points="12 6 12 12 16 14" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+            'press' => '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor" stroke="none"/><path d="M12 6v6l4 2" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.93 4.93l1.41 1.41" stroke="#fff" stroke-width="1.5" fill="none"/><path d="M17.66 6.34l1.41-1.41" stroke="#fff" stroke-width="1.5" fill="none"/></svg>',
             'wind'  => '<svg viewBox="0 0 24 24"><path d="M9.59 4.59A2 2 0 1111 8H2m10.59 11.41A2 2 0 1014 16H2m15.73-8.27A2.5 2.5 0 1119.5 12H2" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
             'rain'  => '<svg viewBox="0 0 24 24"><path d="M20 17.58A5 5 0 0018 8h-1.26A8 8 0 104 15.25" fill="currentColor" stroke="none"/><line x1="8" y1="17" x2="8" y2="21" stroke="#fff" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="19" x2="12" y2="23" stroke="#fff" stroke-width="2" stroke-linecap="round"/><line x1="16" y1="17" x2="16" y2="21" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>',
             'co2'   => '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor" stroke="none"/><text x="12" y="13" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-size="7" font-weight="800" fill="#fff">CO₂</text></svg>',
@@ -153,7 +153,7 @@ class NAWS_Icons {
         return [
             'temp'  => '<svg viewBox="0 0 24 24"><line x1="12" y1="3" x2="12" y2="17"/><circle cx="12" cy="19" r="3" fill="none"/></svg>',
             'humid' => '<svg viewBox="0 0 24 24"><path d="M12 4l-4 8a4.5 4.5 0 108 0z" fill="none"/></svg>',
-            'press' => '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="12" x2="15" y2="14"/></svg>',
+            'press' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/><path d="M5.63 5.63l1 1"/><path d="M17.37 6.63l1-1"/></svg>',
             'wind'  => '<svg viewBox="0 0 24 24"><path d="M3 8h10a2 2 0 100-4M3 16h8a2 2 0 110 4M3 12h14a2.5 2.5 0 100-5" fill="none"/></svg>',
             'rain'  => '<svg viewBox="0 0 24 24"><path d="M4 14h16" fill="none"/><line x1="7" y1="17" x2="7" y2="20"/><line x1="12" y1="17" x2="12" y2="22"/><line x1="17" y1="17" x2="17" y2="20"/></svg>',
             'co2'   => '<svg viewBox="0 0 24 24"><circle cx="8" cy="12" r="4" fill="none"/><circle cx="18" cy="12" r="3" fill="none"/></svg>',

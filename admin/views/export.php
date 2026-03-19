@@ -1,4 +1,7 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
+<?php
+if ( ! defined( 'ABSPATH' ) ) exit;
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+?>
 <div class="wrap naws-admin-wrap">
 <h1 class="naws-admin-page-title">
     <span class="naws-title-icon">📦</span>

@@ -1,4 +1,5 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit;
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 // get_modules(false) = ALL modules including inactive ones
 $modules = NAWS_Database::get_modules( false );
 ?>

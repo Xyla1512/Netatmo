@@ -1,4 +1,5 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit;
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 
 $hidden_params  = (array) get_option( 'naws_live_hidden_params',   [] );
 $hidden_modules = (array) get_option( 'naws_live_hidden_modules',  [] );

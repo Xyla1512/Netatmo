@@ -1,4 +1,5 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit;
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 
 // Gather real module data for examples
 $module_map = [];

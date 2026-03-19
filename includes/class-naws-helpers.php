@@ -57,7 +57,7 @@ class NAWS_Helpers {
         // Fallback to emojis if NAWS_Icons not loaded
         $emoji_fallback = [
             'Temperature' => '🌡️', 'CO2' => '💨', 'Humidity' => '💧',
-            'Noise' => '🔊', 'Pressure' => '🔵', 'AbsolutePressure' => '🔵',
+            'Noise' => '🔊', 'Pressure' => '⏲️', 'AbsolutePressure' => '⏲️',
             'Rain' => '🌧️', 'sum_rain_1' => '🌧️', 'sum_rain_24' => '🌧️',
             'WindStrength' => '🌬️', 'WindAngle' => '🧭',
             'GustStrength' => '🌪️', 'GustAngle' => '🧭', 'health_idx' => '❤️',
