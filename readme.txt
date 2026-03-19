@@ -1,8 +1,11 @@
+Demo: https://www.frank-neumann.de/netatmo-wetter-plugin/
+
+
 === XTX Netatmo ===
 Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 5.8
-Tested up to: 6.9.4
+Tested up to: 6.9
 Stable tag: 1.5.6
 Requires PHP: 7.4
 License: GPLv2 or later
@@ -84,84 +87,3 @@ All sensitive data (OAuth tokens, client ID, client secret, API keys) is encrypt
 3. Admin settings page with Netatmo connection status
 4. REST API documentation in the admin panel
 5. Weather forecast widget
-
-== Changelog ==
-
-= 1.0.2 =
-* **Removed: Shortcodes** `[naws_chart]`, `[naws_gauge]`, `[naws_dashboard]`, `[naws_card]` – Use `[naws_live]` and `[naws_history]` instead.
-* **Removed: gauge.min.js** vendor library and `card.php` template (no longer needed).
-* **Fix: Fatal error on activation** – `spawn_cron()` was called too early during `plugins_loaded`.
-
-= 1.0.1 =
-* **New: Forecast provider selection** – Choose between Open-Meteo (global) and Yr.no / MET Norway (Northern Europe) in Settings
-* **New: Norwegian (Bokmål) language** – Full translation with 326 translated keys, rest falls back to English
-* **New: File-based language system** – Languages are now separate files in /languages/. Adding a new language = adding one PHP file, no core code changes needed. Dropdown auto-discovers available languages.
-* **New: Configurable station name** – Set a custom name in Settings, displayed as default title in live dashboard and shortcodes (fallback: WordPress site title)
-* **Fix: OAuth flow** – Removed AES encryption from Client ID/Secret (broke OAuth redirect). Tokens (access, refresh, API key) remain encrypted. Auto-migration decrypts previously encrypted credentials.
-* **Fix: OAuth state validation** – Replaced transient-based state with wp_option (survives cache purges). Added timing-safe hash_equals() comparison. State no longer overwritten during callback page render.
-* **Fix: Disconnect button** – Added missing action URL (admin-post.php) to the disconnect form.
-* **Fix: Forecast manual location** – Open-Meteo Geocoding API doesn't support postcodes. Input is now auto-cleaned: "Leipzig / 04105" → "Leipzig".
-* **Fix: Cron stops after plugin update** – Added register_activation_hook for NAWS_Cron::schedule(). Watchdog now schedules next run in the future (not "now") and calls spawn_cron(). Silent do_fetch() abort now logs reason.
-* **Fix: Manual sync logging** – "Sync Now" button now writes entries to the Cron Log.
-* **Fix: SVG weather icons stripped** – Replaced wp_kses_post() with direct output + phpcs:ignore for trusted SVG from internal methods.
-* **Fix: "Uhr" hardcoded in English** – Replaced with language key `time_suffix` (DE: "Uhr", EN/NO: empty).
-* **Fix: Plugin Check compliance** – Reduced errors from 126 to 0. Added esc_html/esc_attr, replaced date() with wp_date()/gmdate(), added phpcs:ignore for legitimate direct DB queries and SVG output.
-* **Improvement: Vendor JS files bundled** – chart.umd.min.js, chartjs-adapter-date-fns, gauge.min.js now included in ZIP (no manual download needed after updates).
-* **Improvement: Yr.no privacy disclosure** added to readme.txt.
-
-= 1.0.0 =
-* Initial public release
-* Full Netatmo OAuth2 integration with all module types
-* Live dashboard with animated sensor cards and 24h charts
-* Astronomy: sunrise/sunset, moon phase, next full moon
-* Derived weather: feels-like temperature, heat index, dew point
-* Year-over-year history charts (temperature, pressure, monthly rainfall)
-* 5-day weather forecast via Open-Meteo
-* REST API with API key authentication and rate limiting
-* AES-256-GCM encryption for all stored credentials
-* Full German and English localization
-* 5 shortcodes for flexible frontend display
-* Configurable units (temperature, rain, wind, pressure)
-* Cron watchdog with self-healing for stuck sync jobs
-* Historical data importer with progress tracking
-
-== Upgrade Notice ==
-
-= 1.0.2 =
-Removed shortcodes: naws_chart, naws_gauge, naws_dashboard, naws_card. Use [naws_live], [naws_value] and [naws_history] instead. Fixed fatal error on activation.
-
-= 1.0.1 =
-Multi-provider forecast (Open-Meteo + Yr.no), Norwegian language, file-based i18n system, configurable station name. Critical fixes for OAuth, cron scheduling, and Plugin Check compliance. Vendor JS files now bundled.
-
-= 1.0.0 =
-Initial release.
-
-== Privacy & External Services ==
-
-This plugin connects to the following external services:
-
-= Netatmo API (api.netatmo.com) =
-
-* **Purpose:** Authenticate via OAuth2, fetch sensor readings and station data
-* **Data sent:** OAuth tokens, station/module IDs
-* **When:** During initial authentication and every automatic sync cycle
-* **Privacy policy:** [https://www.netatmo.com/en-gb/legal/privacy](https://www.netatmo.com/en-gb/legal/privacy)
-
-= Open-Meteo API (api.open-meteo.com) =
-
-* **Purpose:** Fetch weather forecast data based on station coordinates (default provider)
-* **Data sent:** Latitude and longitude of your weather station
-* **When:** When the forecast shortcode is displayed (cached for 3 hours)
-* **Privacy policy:** [https://open-meteo.com/en/terms](https://open-meteo.com/en/terms)
-* **Note:** Open-Meteo is a free, open-source weather API. No API key or registration required.
-
-= Yr.no / MET Norway API (api.met.no) =
-
-* **Purpose:** Fetch weather forecast data (optional provider, selectable in settings)
-* **Data sent:** Latitude and longitude of your weather station
-* **When:** When the forecast shortcode is displayed and Yr.no is selected as provider (cached for 3 hours)
-* **Privacy policy:** [https://www.met.no/en/About-us/privacy](https://www.met.no/en/About-us/privacy)
-* **Terms:** [https://developer.yr.no/doc/TermsOfService/](https://developer.yr.no/doc/TermsOfService/)
-* **Note:** Free API, requires User-Agent header (sent automatically). No API key needed.
-
-No personal user data (names, emails, IP addresses) is collected or transmitted by this plugin. All sensor data is stored exclusively in your local WordPress database.
