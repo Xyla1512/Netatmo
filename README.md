@@ -1,80 +1,92 @@
+Demo: https://www.frank-neumann.de/netatmo-wetter-plugin/
+
+
 === XTX Netatmo ===
 Contributors: xylaender
-Tags: netatmo, weather, weather station, windrose, dashboard, climate
+Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 5.8
-Tested up to: 6.4
-Stable tag: 1.5.4
+Tested up to: 6.9
+Stable tag: 1.0.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Professional Netatmo integration for WordPress. Features live dashboards, animated charts, a visual design editor, and historical data sync.
+Connects to the Netatmo API, stores all sensor data locally and displays live dashboards, animated charts, history and weather forecasts.
 
 == Description ==
 
-**XTX Netatmo** is the most comprehensive solution to connect your Netatmo hardware to WordPress. It goes far beyond simple data display by storing all readings locally to provide deep insights, year-over-year comparisons, and beautiful visualizations.
-
-The plugin features a **built-in Design Editor**, allowing you to customize colors, icons, and layouts to match your theme perfectly without touching any code.
+**XTX Netatmo** connects your Netatmo hardware to WordPress. It reads all sensor data via the official Netatmo API, stores readings in your local database and displays them with beautiful live dashboards, animated charts and weather forecasts.
 
 = Key Features =
 
-* **Full Netatmo Integration** – Secure OAuth2 authentication with automatic token refresh.
-* **Visual Design Editor** – Customize the frontend look (colors, icons, styles) directly in the backend.
-* **Advanced Dashboards** – Real-time sensor cards with animated counters, 24h trends, and a graphical **Wind Compass**.
-* **Historical Data & Charts** – Year-over-year comparisons for temperature, pressure, and rainfall with interactive legends.
-* **Data Privacy & Security** – All credentials (OAuth tokens, API keys) are **AES-256-GCM encrypted** at rest.
-* **Astronomy & Derived Data** – Sunrise/sunset, moon phases, feels-like temperature, dew point, and wind chill.
-* **Local Storage & Import** – Chunk-based historical importer to fetch past data without hitting API rate limits.
-* **Weather Forecast** – 5-day forecast based on your station's coordinates (via Open-Meteo).
-* **Developer Friendly** – Includes a read-only REST API (JSON) with key authentication for external tools like Grafana.
+* **Full Netatmo Integration** – OAuth2 authentication, automatic sync, all module types supported (Base, Outdoor, Wind, Rain, Indoor)
+* **Live Dashboard** – Real-time sensor cards with animated counters, 24h trend charts, pressure trend indicator, wind compass, CO₂ air quality levels
+* **Astronomy** – Sunrise/sunset, moon phase with illumination, next full moon
+* **Derived Weather Data** – Feels-like temperature, heat index, dew point, wind chill
+* **Historical Charts** – Year-over-year comparison for temperature, pressure and rainfall with interactive legend
+* **Weather Forecast** – 5-day forecast based on station coordinates via Open-Meteo
+* **REST API** – Read-only JSON API with key authentication and rate limiting for external tools (Google Charts, Grafana, etc.)
+* **Encrypted Storage** – All credentials (OAuth tokens, client secret, API keys) are AES-256-GCM encrypted at rest
+* **Configurable Units** – °C/°F, mm/inch, mbar/inHg/mmHg, km/h/m/s/mph/kn
+* **Bilingual** – Full German and English interface
+* **7 Shortcodes** – Dashboard, live widget, charts, gauge, cards, history table, forecast
 
 = Supported Modules =
-Supports all Netatmo Smart Home modules: Base Station (NAMain), Outdoor (NAModule1), Wind Gauge (NAModule2), Rain Gauge (NAModule3), and additional Indoor Modules (NAModule4).
+
+* **NAMain** – Base Station (Temperature, Humidity, CO₂, Noise, Pressure)
+* **NAModule1** – Outdoor (Temperature, Humidity)
+* **NAModule2** – Wind (Speed, Direction, Gusts)
+* **NAModule3** – Rain Gauge (Hourly, Daily, Rolling 24h)
+* **NAModule4** – Additional Indoor (Temperature, Humidity, CO₂)
+
+= Shortcodes =
+
+* `[naws_live]` – Live sensor tiles with 24h trend charts and forecast
+* `[naws_infobar]` – Astronomy bar with sunrise, moon phase, felt temperature
+* `[naws_value]` – Single inline sensor value
+* `[naws_history]` – Year-over-year comparison charts
+* `[naws_forecast]` – Multi-day weather forecast
 
 == Installation ==
 
-1. Go to **Plugins > Add New** in your WordPress dashboard.
-2. Click **Upload Plugin** and select the `xtx-netatmo.zip` file.
-3. Activate the plugin.
-4. Navigate to **XTX Netatmo > Settings**.
-5. Create a developer app at [dev.netatmo.com](https://dev.netatmo.com) and enter your Client ID and Client Secret.
-6. Copy the **Redirect URI** shown in the plugin settings to your Netatmo app configuration.
-7. Click "Connect to Netatmo", authorize, and you are ready to go!
+1. Upload the `netatmo-weather-station` folder to `/wp-content/plugins/`
+2. Activate the plugin in WordPress Admin → Plugins
+3. Go to **XTX Netatmo → Settings**
+4. Create a Netatmo developer app at [dev.netatmo.com](https://dev.netatmo.com)
+5. Enter your Client ID and Client Secret
+6. Set the Redirect URI in your Netatmo app to: `https://yoursite.com/wp-admin/admin.php?page=naws-settings`
+7. Click "Connect to Netatmo" and authorize
+8. Data syncs automatically – add shortcodes to any page
 
 == Frequently Asked Questions ==
 
-= How often does the data update? =
-Netatmo sensors transmit every 5 minutes. The plugin's sync interval is fully configurable (from 5 minutes up to 24 hours).
+= How do I get Netatmo API credentials? =
 
-= Is the connection stable? =
-Yes. The plugin handles the OAuth2 Refresh Token automatically. Once authorized, it runs indefinitely without manual intervention.
+Visit [dev.netatmo.com](https://dev.netatmo.com), log in with your Netatmo account, create a new application and copy the Client ID and Client Secret.
 
-= Can I customize the look? =
-Absolutely. The plugin includes a dedicated Design Editor in the backend where you can change colors, choose icons, and adjust the layout.
+= How often does data update? =
 
-= Is my data secure? =
-Yes. We take security seriously. All sensitive API credentials and tokens are stored using AES-256-GCM encryption in your database.
+Netatmo sensors transmit every 5 minutes. The plugin sync interval is configurable (5–1440 minutes).
+
+= Can I import historical data? =
+
+Yes. The plugin includes a chunk-based historical importer that fetches data from the Netatmo getmeasure API without hitting rate limits.
+
+= Is the REST API secure? =
+
+Yes. The API requires an API key (generated in the admin panel), supports rate limiting, and all endpoints are read-only.
+
+= Are my Netatmo credentials safe? =
+
+All sensitive data (OAuth tokens, client ID, client secret, API keys) is encrypted with AES-256-GCM before being stored in the database.
 
 == Screenshots ==
 
-1. Professional Live Dashboard with animated sensor cards and 24h trends.
-2. The Visual Design Editor to customize the frontend appearance.
-3. Interactive year-over-year historical comparison charts.
-4. Detailed Windrose and Rain Gauge visualization.
-5. Admin settings and secure connection status.
-
-== Changelog ==
-
-= 1.5.4 =
-* Current stable release.
-* Optimized OAuth2 token handling and encryption.
-* Enhanced Design Editor features.
-* Official WordPress Repository preparation.
-
-= 1.0.2 =
-* Added support for Wind and Rain modules.
-* Improved historical data import.
-
+1. Live dashboard with sensor cards and 24h trend charts
+2. Year-over-year comparison charts for temperature and rainfall
+3. Admin settings page with Netatmo connection status
+4. REST API documentation in the admin panel
+5. Weather forecast widget
 
 == Changelog ==
 
