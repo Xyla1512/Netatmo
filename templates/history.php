@@ -1,5 +1,6 @@
 <?php
 // phpcs:disable PluginCheck.CodeAnalysis.VariableAnalysis.NonPrefixedVariableFound
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 /**
  * Template: [naws_history title=""]
  * v1.0.0 – Historical yearly charts: pressure, temp min/max/avg, rain

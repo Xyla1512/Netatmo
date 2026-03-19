@@ -1,5 +1,6 @@
 <?php
 // phpcs:disable PluginCheck.CodeAnalysis.VariableAnalysis.NonPrefixedVariableFound
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 /* templates/current.php */
 if ( ! defined( 'ABSPATH' ) ) exit;
 $animate = $atts['animate'] !== 'false';

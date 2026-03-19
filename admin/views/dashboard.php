@@ -2,6 +2,7 @@
 
 <?php
 // phpcs:disable PluginCheck.CodeAnalysis.VariableAnalysis.NonPrefixedVariableFound
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 // Module type icons for accordion headers
 $module_type_icons = [
     'NAMain'   => '🏠',

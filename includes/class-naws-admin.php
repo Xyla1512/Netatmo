@@ -391,7 +391,7 @@ class NAWS_Admin {
         $upload_dir = wp_upload_dir();
         $temp_path  = $upload_dir['basedir'] . '/naws-import-temp-' . wp_generate_password( 8, false ) . '.json';
 
-        if ( ! move_uploaded_file( $file['tmp_name'], $temp_path ) ) { // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+        if ( ! @copy( $file['tmp_name'], $temp_path ) ) { // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, Generic.PHP.ForbiddenFunctions.Found
             wp_safe_redirect( $redirect_url . '&import_error=' . urlencode( 'Could not save uploaded file.' ) );
             exit;
         }

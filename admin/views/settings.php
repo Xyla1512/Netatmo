@@ -23,6 +23,7 @@
 
     <?php
 // phpcs:disable PluginCheck.CodeAnalysis.VariableAnalysis.NonPrefixedVariableFound
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
     $access_token  = NAWS_Crypto::get_option( 'naws_access_token', '' );
     $refresh_token = NAWS_Crypto::get_option( 'naws_refresh_token', '' );
     $token_expiry  = (int) get_option( 'naws_token_expiry', 0 );

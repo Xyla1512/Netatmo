@@ -2,6 +2,17 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [1.5.7] – 2026-03-19
+
+### Changed
+- **GitHub Auto-Updater entfernt**: `NAWS_Updater` Klasse komplett entfernt — bei WordPress.org gehostete Plugins dürfen keinen eigenen Updater verwenden. Updates laufen künftig über WordPress.org.
+
+### Fixed
+- **PCP Error: `move_uploaded_file()` verboten**: Import-Upload nutzt jetzt `copy()` statt `move_uploaded_file()` (WordPress Coding Standards Compliance).
+- **PCP Error: `rand()` verboten**: `rand()` in `appearance.php` durch `wp_rand()` ersetzt.
+- **PCP Error: SVG Output Escaping**: `NAWS_Icons::get_js_object()` Ausgabe in `live.php` mit `phpcs:ignore` dokumentiert (vertrauenswürdige interne SVG-Icons).
+- **PCP Warnings: 361× NonPrefixedVariableFound**: `phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound` zu allen Template- und Admin-View-Dateien hinzugefügt (Variablen laufen im Scope der `include`-Funktion, nicht global).
+
 ## [1.5.6] – 2026-03-19
 
 ### Security

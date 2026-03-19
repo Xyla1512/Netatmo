@@ -1,5 +1,6 @@
 <?php
 // phpcs:disable PluginCheck.CodeAnalysis.VariableAnalysis.NonPrefixedVariableFound
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /** @var array $colors   All current colors (merged with defaults) */
@@ -416,7 +417,7 @@ $icon_color_keys = [
             <div id="naws-preview-history" class="naws-pv-history-bars">
                 <?php for ( $i = 1; $i <= 15; $i++ ) :
                     $key = "history_year_{$i}";
-                    $width = max(25, rand(40, 95));
+                    $width = max(25, wp_rand(40, 95));
                 ?>
                 <div class="naws-pv-history-row">
                     <span class="naws-pv-history-label"><?php echo esc_html( 2024 - $i + 1 ); ?></span>

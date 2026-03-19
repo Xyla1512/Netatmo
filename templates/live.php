@@ -1,5 +1,6 @@
 <?php
 // phpcs:disable PluginCheck.CodeAnalysis.VariableAnalysis.NonPrefixedVariableFound
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 /**
  * Template: [naws_live title="" refresh="60"]
  * v0.9.28 – per-sensor tiles, NAModule4 namespacing, correct outdoor temp
@@ -419,7 +420,7 @@ function post(params,cb){
 }
 
 /* ── ICONS ───────────────────────────── */
-var ICO=<?php echo NAWS_Icons::get_js_object(); ?>;
+var ICO=<?php echo NAWS_Icons::get_js_object(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Trusted internal SVG icons, pre-escaped in get_js_object() ?>;
 var NAWS_ICON_SET=<?php echo wp_json_encode( NAWS_Icons::get_current_set() ); ?>;
 
 /* ── COMPASS ─────────────────────────── */
