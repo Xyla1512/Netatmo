@@ -6,7 +6,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 5.8
 Tested up to: 6.9
-Stable tag: 1.0.2
+Stable tag: 1.5.6
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -87,7 +87,3 @@ All sensitive data (OAuth tokens, client ID, client secret, API keys) is encrypt
 3. Admin settings page with Netatmo connection status
 4. REST API documentation in the admin panel
 5. Weather forecast widget
-
-
-
-No personal user data (names, emails, IP addresses) is collected or transmitted by this plugin. All sensor data is stored exclusively in your local WordPress database.
