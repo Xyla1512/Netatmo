@@ -3,7 +3,7 @@
  * Plugin Name: XTX Netatmo
  * Plugin URI: https://www.frank-neumann.de/netatmo-wetter-plugin/
  * Description: Connects to the Netatmo API, stores all sensor data locally and displays live dashboards, charts, history and forecasts via shortcodes.
- * Version: 1.5.4
+ * Version: 1.5.6
  * Author: Frank Neumann
  * Author URI: https://frank-neumann.de
  * License: GPL v2 or later
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'NAWS_VERSION',        '1.5.4' );
+define( 'NAWS_VERSION',        '1.5.6' );
 define( 'NAWS_PLUGIN_FILE',    __FILE__ );
 define( 'NAWS_PLUGIN_DIR',     plugin_dir_path( __FILE__ ) );
 define( 'NAWS_PLUGIN_URL',     plugin_dir_url( __FILE__ ) );
@@ -137,24 +137,9 @@ final class Netatmo_Weather_Station {
             NAWS_Admin::instance();
 
             try {
-                // ── Encrypt tokens + decrypt client credentials (one-time) ───────
+                // ── Encrypt all plaintext secrets (one-time migration) ───────
                 if ( get_option( 'naws_crypto_migrated' ) !== NAWS_VERSION ) {
                     NAWS_Crypto::migrate();
-                }
-                // ── v2 fix: ensure client_id/secret are plaintext, not encrypted ──
-                $s = get_option( 'naws_settings', [] );
-                if ( is_array( $s ) ) {
-                    $changed = false;
-                    foreach ( [ 'client_id', 'client_secret' ] as $k ) {
-                        if ( isset( $s[ $k ] ) && is_string( $s[ $k ] ) && NAWS_Crypto::is_encrypted( $s[ $k ] ) ) {
-                            $s[ $k ] = NAWS_Crypto::decrypt( $s[ $k ] );
-                            $changed = true;
-                        }
-                    }
-                    if ( $changed ) {
-                        update_option( 'naws_settings', $s );
-                        delete_option( 'naws_auth_required' );
-                    }
                 }
             } catch ( \Throwable $e ) {
                 error_log( 'NAWS migration error: ' . $e->getMessage() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log

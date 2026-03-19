@@ -243,7 +243,11 @@ class NAWS_Cron {
     private function do_fetch() {
         $options = get_option( 'naws_settings', [] );
 
-        if ( empty( $options['client_id'] ) || empty( $options['client_secret'] ) ) {
+        $cid = $options['client_id'] ?? '';
+        $cse = $options['client_secret'] ?? '';
+        $cid = NAWS_Crypto::is_encrypted( $cid ) ? NAWS_Crypto::decrypt( $cid ) : $cid;
+        $cse = NAWS_Crypto::is_encrypted( $cse ) ? NAWS_Crypto::decrypt( $cse ) : $cse;
+        if ( empty( $cid ) || empty( $cse ) ) {
             $this->log( 'error', 'Skipped: Client ID or Secret not configured.' );
             return;
         }

@@ -26,7 +26,7 @@
                 <tr>
                     <td><?php echo esc_html( wp_date( 'Y-m-d H:i:s', $entry['time'] ) ); ?></td>
                     <td>
-                        <span class="naws-badge <?php echo $entry['status'] === 'ok' ? 'naws-badge-success' : 'naws-badge-error'; ?>">
+                        <span class="naws-badge <?php echo esc_attr( $entry['status'] === 'ok' ? 'naws-badge-success' : 'naws-badge-error' ); ?>">
                             <?php echo esc_html( $entry['status'] ); ?>
                         </span>
                     </td>

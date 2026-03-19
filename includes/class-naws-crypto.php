@@ -212,15 +212,14 @@ class NAWS_Crypto {
             }
         }
 
-        // 2. Settings array: ensure client_id/secret are in PLAINTEXT
-        //    (encryption was removed for these fields – they appear in OAuth URLs anyway)
+        // 2. Settings array: encrypt client_id/secret if still plaintext
         $settings = \get_option( 'naws_settings', [] );
         if ( is_array( $settings ) ) {
             $needs_save = false;
             foreach ( [ 'client_id', 'client_secret' ] as $field ) {
                 $val = $settings[ $field ] ?? '';
-                if ( $val !== '' && self::is_encrypted( $val ) ) {
-                    $settings[ $field ] = self::decrypt( $val );
+                if ( $val !== '' && ! self::is_encrypted( $val ) ) {
+                    $settings[ $field ] = self::encrypt( $val );
                     $needs_save = true;
                 }
             }

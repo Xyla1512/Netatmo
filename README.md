@@ -6,7 +6,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 5.8
 Tested up to: 6.9
-Stable tag: 1.0.2
+Stable tag: 1.5.6
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -26,7 +26,7 @@ Connects to the Netatmo API, stores all sensor data locally and displays live da
 * **Historical Charts** – Year-over-year comparison for temperature, pressure and rainfall with interactive legend
 * **Weather Forecast** – 5-day forecast based on station coordinates via Open-Meteo
 * **REST API** – Read-only JSON API with key authentication and rate limiting for external tools (Google Charts, Grafana, etc.)
-* **Encrypted Storage** – All credentials (OAuth tokens, API keys) are AES-256-GCM encrypted at rest
+* **Encrypted Storage** – All credentials (OAuth tokens, client secret, API keys) are AES-256-GCM encrypted at rest
 * **Configurable Units** – °C/°F, mm/inch, mbar/inHg/mmHg, km/h/m/s/mph/kn
 * **Bilingual** – Full German and English interface
 * **7 Shortcodes** – Dashboard, live widget, charts, gauge, cards, history table, forecast
@@ -78,7 +78,7 @@ Yes. The API requires an API key (generated in the admin panel), supports rate l
 
 = Are my Netatmo credentials safe? =
 
-All sensitive data (OAuth tokens, client secret, API keys) is encrypted with AES-256-GCM before being stored in the database.
+All sensitive data (OAuth tokens, client ID, client secret, API keys) is encrypted with AES-256-GCM before being stored in the database.
 
 == Screenshots ==
 

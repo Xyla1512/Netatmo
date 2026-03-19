@@ -63,8 +63,13 @@ class NAWS_Admin {
 
     public function sanitize_settings( $input ) {
         $clean = [];
-        $clean['client_id']       = sanitize_text_field( $input['client_id']     ?? '' );
-        $clean['client_secret']   = sanitize_text_field( $input['client_secret'] ?? '' );
+        $raw_client_id     = sanitize_text_field( $input['client_id']     ?? '' );
+        $raw_client_secret = sanitize_text_field( $input['client_secret'] ?? '' );
+        // Encrypt if plaintext; skip if already encrypted (safety guard)
+        $clean['client_id']       = ( $raw_client_id !== '' && ! NAWS_Crypto::is_encrypted( $raw_client_id ) )
+            ? NAWS_Crypto::encrypt( $raw_client_id ) : $raw_client_id;
+        $clean['client_secret']   = ( $raw_client_secret !== '' && ! NAWS_Crypto::is_encrypted( $raw_client_secret ) )
+            ? NAWS_Crypto::encrypt( $raw_client_secret ) : $raw_client_secret;
         $clean['cron_interval']   = max( 5, intval( $input['cron_interval'] ?? 10 ) );
         $clean['data_retention']  = max( 30, intval( $input['data_retention'] ?? 365 ) );
         $valid_langs              = array_merge( ['auto'], array_keys( NAWS_Lang::get_available_languages() ) );

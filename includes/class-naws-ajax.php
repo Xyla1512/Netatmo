@@ -189,7 +189,7 @@ class NAWS_Ajax {
         $wp_error    = is_wp_error( $response ) ? $response->get_error_message() : null;
 
         // Also check token expiry
-        $token_expires = intval( get_option( 'naws_token_expires', 0 ) );
+        $token_expires = intval( get_option( 'naws_token_expiry', 0 ) );
         $token_expired = $token_expires > 0 && $token_expires < time();
         $token_age_min = $token_expires > 0 ? round( ( $token_expires - time() ) / 60 ) : null;
 

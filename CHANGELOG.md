@@ -2,6 +2,22 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [1.5.6] – 2026-03-19
+
+### Security
+- **Client ID & Client Secret now AES-256-GCM encrypted at rest**: Credentials are encrypted on save (`sanitize_settings()`) and transparently decrypted on read. The original v1.0.1 bug (encrypted value leaking into OAuth URL) is resolved by decrypting before use in API class and Cron. All 5 secrets (access token, refresh token, client ID, client secret, REST API key) are now fully encrypted.
+
+### Changed
+- **Migration updated**: `NAWS_Crypto::migrate()` now encrypts plaintext client credentials instead of forcing them to plaintext.
+- **Removed legacy plaintext-enforcement** from `netatmo-weather-station.php` init (no longer needed).
+
+## [1.5.5] – 2026-03-19
+
+### Fixed
+- **WordPress.org Compliance**: Escaping-Fixes für Admin-Views (`esc_attr()` in `modules.php` Zeile 51/78, `cron-log.php` Zeile 29)
+- **readme.txt Stable tag**: Version synchronisiert mit Plugin-Header (war `1.5.0`, jetzt korrekt)
+- **Option-Name Inkonsistenz**: `naws_token_expires` → `naws_token_expiry` in `class-naws-ajax.php` (einheitlich mit allen anderen Dateien)
+
 ## [1.5.4] – 2026-03-19
 
 ### Fixed

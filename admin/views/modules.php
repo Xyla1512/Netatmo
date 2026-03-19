@@ -48,7 +48,7 @@ $modules = NAWS_Database::get_modules( false );
                 <tr id="naws-module-row-<?php echo esc_attr( sanitize_html_class( $m['module_id'] ) ); ?>"
                     style="<?php echo esc_attr( $row_style ); ?> transition:opacity 0.3s;">
                     <td>
-                        <label class="naws-toggle" title="<?php echo $is_active ? 'Deactivate' : 'Activate'; ?>">
+                        <label class="naws-toggle" title="<?php echo esc_attr( $is_active ? 'Deactivate' : 'Activate' ); ?>">
                             <input type="checkbox"
                                    class="naws-module-toggle"
                                    data-module-id="<?php echo esc_attr( $m['module_id'] ); ?>"
@@ -75,7 +75,7 @@ $modules = NAWS_Database::get_modules( false );
                         <?php if ( $batt_pct !== null ) : ?>
                             <div style="display:flex;align-items:center;gap:0.4rem;">
                                 <div class="naws-battery-bar">
-                                    <div class="naws-battery-fill" style="width:<?php echo esc_attr($batt_pct); ?>%;background:<?php echo $batt_pct < 20 ? '#ef4444' : ($batt_pct < 50 ? '#f59e0b' : '#10b981'); ?>"></div>
+                                    <div class="naws-battery-fill" style="width:<?php echo esc_attr($batt_pct); ?>%;background:<?php echo esc_attr( $batt_pct < 20 ? '#ef4444' : ($batt_pct < 50 ? '#f59e0b' : '#10b981') ); ?>"></div>
                                 </div>
                                 <?php echo esc_html( $batt_pct ); ?>%
                             </div>
