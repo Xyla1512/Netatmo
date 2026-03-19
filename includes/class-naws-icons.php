@@ -108,7 +108,7 @@ class NAWS_Icons {
         return [
             'temp'  => '🌡️',
             'humid' => '💧',
-            'press' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 1 0 20 10 10 0 0 1 0-20z"/><path d="M12 6v6l4 2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 6.34l1.41-1.41"/></svg>',
+            'press' => '⏱️',
             'wind'  => '🌬️',
             'rain'  => '🌧️',
             'co2'   => '💨',

@@ -453,6 +453,7 @@
 .naws-readings-table tr:hover td     { background: #fafafa; }
 
 .naws-param-cell { color: var(--naws-admin-text); }
+.naws-param-cell svg { width: 1em; height: 1em; vertical-align: -0.125em; display: inline-block; }
 .naws-value-cell { color: var(--naws-admin-primary); font-weight: 700 !important; }
 .naws-unit-cell  { color: var(--naws-admin-muted); font-size: 0.78rem; }
 
