@@ -17,38 +17,42 @@ Connects to the Netatmo API, stores all sensor data locally and displays live da
 = Key Features =
 
 * **Full Netatmo Integration** – OAuth2 authentication, automatic sync, all module types supported (Base, Outdoor, Wind, Rain, Indoor)
-* **Live Dashboard** – Real-time sensor cards with animated counters, 24h trend charts, pressure trend indicator, wind compass, CO₂ air quality levels
+* **Live Dashboard** – Real-time sensor cards with animated counters, 24h trend charts, pressure trend indicator, wind compass, CO2 air quality levels
 * **Astronomy** – Sunrise/sunset, moon phase with illumination, next full moon
 * **Derived Weather Data** – Feels-like temperature, heat index, dew point, wind chill
 * **Historical Charts** – Year-over-year comparison for temperature, pressure and rainfall with interactive legend
-* **Weather Forecast** – 5-day forecast based on station coordinates via Open-Meteo
+* **Weather Forecast** – 5-day forecast based on station coordinates via Open-Meteo or Yr.no
 * **REST API** – Read-only JSON API with key authentication and rate limiting for external tools (Google Charts, Grafana, etc.)
 * **Encrypted Storage** – All credentials (OAuth tokens, client secret, API keys) are AES-256-GCM encrypted at rest
-* **Configurable Units** – °C/°F, mm/inch, mbar/inHg/mmHg, km/h/m/s/mph/kn
-* **Bilingual** – Full German and English interface
-* **7 Shortcodes** – Dashboard, live widget, charts, gauge, cards, history table, forecast
+* **Configurable Units** – C/F, mm/inch, mbar/inHg/mmHg, km/h/m/s/mph/kn
+* **Multilingual** – Full German, English and Norwegian interface
+* **5 Shortcodes** – Live widget, infobar, single value, history charts, forecast
+* **Export / Import** – Full backup and restore of weather data, modules and settings
+* **Mobile-First Responsive** – All views optimized for smartphones, tablets and desktops
+* **130+ Configurable Colors** – Full appearance customization with live preview
+* **4 Icon Sets** – Emoji, Outline, Filled, Minimal with per-sensor color control
 
 = Supported Modules =
 
-* **NAMain** – Base Station (Temperature, Humidity, CO₂, Noise, Pressure)
+* **NAMain** – Base Station (Temperature, Humidity, CO2, Noise, Pressure)
 * **NAModule1** – Outdoor (Temperature, Humidity)
 * **NAModule2** – Wind (Speed, Direction, Gusts)
 * **NAModule3** – Rain Gauge (Hourly, Daily, Rolling 24h)
-* **NAModule4** – Additional Indoor (Temperature, Humidity, CO₂)
+* **NAModule4** – Additional Indoor (Temperature, Humidity, CO2)
 
 = Shortcodes =
 
 * `[naws_live]` – Live sensor tiles with 24h trend charts and forecast
 * `[naws_infobar]` – Astronomy bar with sunrise, moon phase, felt temperature
 * `[naws_value]` – Single inline sensor value
-* `[naws_history]` – Year-over-year comparison charts
+* `[naws_history]` – Year-over-year comparison charts (supports `year` parameter)
 * `[naws_forecast]` – Multi-day weather forecast
 
 == Installation ==
 
-1. Upload the `netatmo-weather-station` folder to `/wp-content/plugins/`
-2. Activate the plugin in WordPress Admin → Plugins
-3. Go to **XTX Netatmo → Settings**
+1. Upload the `xtx-netatmo` folder to `/wp-content/plugins/`
+2. Activate the plugin in WordPress Admin > Plugins
+3. Go to **XTX Netatmo > Settings**
 4. Create a Netatmo developer app at [dev.netatmo.com](https://dev.netatmo.com)
 5. Enter your Client ID and Client Secret
 6. Set the Redirect URI in your Netatmo app to: `https://yoursite.com/wp-admin/admin.php?page=naws-settings`
@@ -63,7 +67,7 @@ Visit [dev.netatmo.com](https://dev.netatmo.com), log in with your Netatmo accou
 
 = How often does data update? =
 
-Netatmo sensors transmit every 5 minutes. The plugin sync interval is configurable (5–1440 minutes).
+Netatmo sensors transmit every 5 minutes. The plugin sync interval is configurable (5–1440 minutes). Night mode reduces polling between 23:00–06:00.
 
 = Can I import historical data? =
 
@@ -77,6 +81,18 @@ Yes. The API requires an API key (generated in the admin panel), supports rate l
 
 All sensitive data (OAuth tokens, client ID, client secret, API keys) is encrypted with AES-256-GCM before being stored in the database.
 
+= Can I customize the appearance? =
+
+Yes. The Appearance page offers 130+ configurable colors with live preview, 4 icon sets, per-sensor colors, chart theming and year comparison palettes.
+
+= Can I back up my weather data? =
+
+Yes. The Export/Import feature lets you download weather data, module configs and all settings as JSON. Ideal for migrating to a new WordPress installation.
+
+= Which forecast providers are supported? =
+
+Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Europe). Both are free and require no API key.
+
 == Screenshots ==
 
 1. Live dashboard with sensor cards and 24h trend charts
@@ -84,30 +100,118 @@ All sensitive data (OAuth tokens, client ID, client secret, API keys) is encrypt
 3. Admin settings page with Netatmo connection status
 4. REST API documentation in the admin panel
 5. Weather forecast widget
+6. Appearance page with live color preview
+7. Export / Import page for backups
 
 == Changelog ==
 
+= 1.5.7 =
+* Removed GitHub Auto-Updater (WordPress.org compliance – hosted plugins must not include custom updaters)
+* Fix: `move_uploaded_file()` replaced with `copy()` (WordPress Coding Standards)
+* Fix: `rand()` replaced with `wp_rand()`
+* Fix: SVG output escaping documented with `phpcs:ignore`
+* Fix: 361 NonPrefixedVariableFound warnings resolved with scoped phpcs disable
+
+= 1.5.6 =
+* Security: Client ID and Client Secret now AES-256-GCM encrypted at rest (all 5 secrets fully encrypted)
+* Migration updated to encrypt plaintext credentials instead of forcing plaintext
+* Removed legacy plaintext-enforcement from init
+
+= 1.5.5 =
+* Fix: Escaping fixes for admin views (`esc_attr()` in modules.php, cron-log.php)
+* Fix: readme.txt stable tag synchronized with plugin header version
+* Fix: Option name inconsistency `naws_token_expires` unified to `naws_token_expiry`
+
+= 1.5.4 =
+* Fix: History chart year buttons now wrap on mobile instead of overflowing
+* Fix: 24h chart modal overlay positioned correctly inside `.naws-wx` wrapper
+
+= 1.5.3 =
+* Fix: Auto-update toggle now visible in WordPress plugin list (registered in `$transient->no_update`)
+
+= 1.5.2 =
+* Fix: Plugin URI corrected to `https://www.frank-neumann.de/netatmo-wetter-plugin/`
+
+= 1.5.1 =
+* Fix: Dashboard SVG icons no longer rendered as raw source code
+
+= 1.5.0 =
+* New: GitHub Auto-Updater via `NAWS_Updater` class (later removed in 1.5.7 for WordPress.org compliance)
+
+= 1.4.3 =
+* Plugin renamed: "Netatmo Weather Station" to "XTX Netatmo"
+* New: 4 frontend icon sets (Emoji, Outline, Filled, Minimal) selectable in Appearance
+* New: Per-sensor icon colors with live preview (7 configurable colors)
+* New: Dynamic icon rendering via `NAWS_Icons` class
+
+= 1.4.2 =
+* Fix: Forecast provider selection now works correctly (provider-aware cache keys)
+* Fix: Forecast source label dynamically shows correct provider name
+* New: History shortcode `year` parameter (`[naws_history year="2025"]`)
+* Improved: Appearance admin page streamlined, unused sections removed
+
+= 1.4.1 =
+* Fix: 24h chart gradient fill restored (hex-to-RGBA conversion with canvas gradient)
+* Improved: Appearance page redesigned with live previews for all color groups
+
+= 1.4.0 =
+* New: Appearance page with 130+ configurable colors and WordPress Color Picker
+* New: `NAWS_Colors` class with centralized color management and caching
+* New: Theme colors, accent colors, sensor tile gradients, chart theming, year palette
+* New: Reset-to-defaults functionality
+* New: 60+ translation strings for color settings
+* Improved: All frontend colors use CSS custom properties
+
+= 1.3.0 =
+* New: Export / Import feature with full backup and restore
+* New: Weather data export as JSON, full backup export (data + modules + settings)
+* New: File import with chunked AJAX processing and real-time progress
+* Security: API tokens are never included in exports
+* New: `NAWS_Export` class with streaming export for large datasets
+
+= 1.2.1 =
+* Fix: All `json_encode()` replaced with `wp_json_encode()` (Plugin Check compliance)
+* Fix: SQL injection hardening with `$wpdb->prepare()` for DELETE queries
+* Fix: `TRUNCATE` replaced with `DELETE FROM` for WordPress compatibility
+* Fix: Deprecated `date_i18n()` replaced with `wp_date()`
+* Fix: Debug endpoint sanitized (truncated responses, stripped tokens)
+
+= 1.2.0 =
+* New: Mobile-first responsive redesign with standardized breakpoints (480/600/768/1024px)
+* New: Touch-friendly targets meeting WCAG 44x44px minimum
+* New: Responsive wind compass with `clamp()` sizing
+* New: Dynamic chart font sizing based on viewport
+* Improved: ~400 lines of inline styles extracted to centralized `frontend.css`
+* Improved: ID selectors replaced with reusable class selectors
+
+= 1.1.0 =
+* New: Central error logging (`NAWS_Logger`) with severity levels and sensitive data redaction
+* New: Transient caching layer for database queries (modules, readings, daily summaries)
+* New: Adaptive polling with error backoff (doubles interval after 3 failures)
+* New: Night mode with reduced polling between 23:00–06:00
+* New: Health status indicator in admin dashboard (green/yellow/red)
+* New: Frontend error UI and AJAX retry logic with exponential backoff
+* New: `naws_data_synced` action hook for extensibility
+* Fix: N+1 query in history data replaced with single query
+* Fix: Silent DB errors now logged
+* Fix: Chart.js blank page prevented with try/catch
+
 = 1.0.2 =
-* **Removed: Shortcodes** `[naws_chart]`, `[naws_gauge]`, `[naws_dashboard]`, `[naws_card]` – Use `[naws_live]` and `[naws_history]` instead.
-* **Removed: gauge.min.js** vendor library and `card.php` template (no longer needed).
-* **Fix: Fatal error on activation** – `spawn_cron()` was called too early during `plugins_loaded`.
+* Removed shortcodes: `[naws_chart]`, `[naws_gauge]`, `[naws_dashboard]`, `[naws_card]` – use `[naws_live]` and `[naws_history]` instead
+* Removed: gauge.min.js vendor library and unused templates
+* Fix: Fatal error on activation (`spawn_cron()` called too early)
 
 = 1.0.1 =
-* **New: Forecast provider selection** – Choose between Open-Meteo (global) and Yr.no / MET Norway (Northern Europe) in Settings
-* **New: Norwegian (Bokmål) language** – Full translation with 326 translated keys, rest falls back to English
-* **New: File-based language system** – Languages are now separate files in /languages/. Adding a new language = adding one PHP file, no core code changes needed. Dropdown auto-discovers available languages.
-* **New: Configurable station name** – Set a custom name in Settings, displayed as default title in live dashboard and shortcodes (fallback: WordPress site title)
-* **Fix: OAuth flow** – Removed AES encryption from Client ID/Secret (broke OAuth redirect). Tokens (access, refresh, API key) remain encrypted. Auto-migration decrypts previously encrypted credentials.
-* **Fix: OAuth state validation** – Replaced transient-based state with wp_option (survives cache purges). Added timing-safe hash_equals() comparison. State no longer overwritten during callback page render.
-* **Fix: Disconnect button** – Added missing action URL (admin-post.php) to the disconnect form.
-* **Fix: Forecast manual location** – Open-Meteo Geocoding API doesn't support postcodes. Input is now auto-cleaned: "Leipzig / 04105" → "Leipzig".
-* **Fix: Cron stops after plugin update** – Added register_activation_hook for NAWS_Cron::schedule(). Watchdog now schedules next run in the future (not "now") and calls spawn_cron(). Silent do_fetch() abort now logs reason.
-* **Fix: Manual sync logging** – "Sync Now" button now writes entries to the Cron Log.
-* **Fix: SVG weather icons stripped** – Replaced wp_kses_post() with direct output + phpcs:ignore for trusted SVG from internal methods.
-* **Fix: "Uhr" hardcoded in English** – Replaced with language key `time_suffix` (DE: "Uhr", EN/NO: empty).
-* **Fix: Plugin Check compliance** – Reduced errors from 126 to 0. Added esc_html/esc_attr, replaced date() with wp_date()/gmdate(), added phpcs:ignore for legitimate direct DB queries and SVG output.
-* **Improvement: Vendor JS files bundled** – chart.umd.min.js, chartjs-adapter-date-fns, gauge.min.js now included in ZIP (no manual download needed after updates).
-* **Improvement: Yr.no privacy disclosure** added to readme.txt.
+* New: Forecast provider selection (Open-Meteo + Yr.no / MET Norway)
+* New: Norwegian (Bokmal) language with 326 translated keys
+* New: File-based language system (one PHP file per language, auto-discovered)
+* New: Configurable station name in Settings
+* Fix: OAuth flow broken by encryption (auto-migration)
+* Fix: OAuth state validation with `hash_equals()` and 10-min expiry
+* Fix: Cron stops after plugin update (activation hook + watchdog fix)
+* Fix: SVG weather icons stripped by `wp_kses_post()`
+* Improved: Plugin Check compliance (126 errors to 0)
+* Improved: Vendor JS files bundled in ZIP
 
 = 1.0.0 =
 * Initial public release
@@ -120,18 +224,35 @@ All sensitive data (OAuth tokens, client ID, client secret, API keys) is encrypt
 * REST API with API key authentication and rate limiting
 * AES-256-GCM encryption for all stored credentials
 * Full German and English localization
-* 5 shortcodes for flexible frontend display
 * Configurable units (temperature, rain, wind, pressure)
 * Cron watchdog with self-healing for stuck sync jobs
-* Historical data importer with progress tracking
+* Historical data importer with batch processing
 
 == Upgrade Notice ==
 
-= 1.0.2 =
-Removed shortcodes: naws_chart, naws_gauge, naws_dashboard, naws_card. Use [naws_live], [naws_value] and [naws_history] instead. Fixed fatal error on activation.
+= 1.5.7 =
+WordPress.org compliance release. Removed GitHub Auto-Updater. Plugin Check fixes for move_uploaded_file, rand, SVG escaping.
 
-= 1.0.1 =
-Multi-provider forecast (Open-Meteo + Yr.no), Norwegian language, file-based i18n system, configurable station name. Critical fixes for OAuth, cron scheduling, and Plugin Check compliance. Vendor JS files now bundled.
+= 1.5.6 =
+Security update: Client ID and Client Secret are now fully AES-256-GCM encrypted at rest.
+
+= 1.4.3 =
+Plugin renamed to "XTX Netatmo". New icon sets and per-sensor colors.
+
+= 1.4.0 =
+Major visual update: 130+ configurable colors with live preview on new Appearance page.
+
+= 1.3.0 =
+New Export / Import feature for full data backup and migration.
+
+= 1.2.0 =
+Complete mobile-first responsive redesign. All views optimized for smartphones.
+
+= 1.1.0 =
+Error logging, caching, adaptive polling, night mode and health dashboard.
+
+= 1.0.2 =
+Removed shortcodes: naws_chart, naws_gauge, naws_dashboard, naws_card. Use [naws_live] and [naws_history] instead.
 
 = 1.0.0 =
 Initial release.

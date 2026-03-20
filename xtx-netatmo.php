@@ -8,7 +8,7 @@
  * Author URI: https://frank-neumann.de
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: netatmo-weather-station
+ * Text Domain: xtx-netatmo
  * Domain Path: /languages
  * Requires at least: 5.8
  * Tested up to: 6.9
