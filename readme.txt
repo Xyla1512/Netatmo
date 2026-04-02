@@ -50,7 +50,7 @@ Connects to the Netatmo API, stores all sensor data locally and displays live da
 
 == Installation ==
 
-1. Upload the `xtx-netatmo` folder to `/wp-content/plugins/`
+1. Upload the `xtx-integration-for-netatmo` folder to `/wp-content/plugins/`
 2. Activate the plugin in WordPress Admin > Plugins
 3. Go to **XTX Netatmo > Settings**
 4. Create a Netatmo developer app at [dev.netatmo.com](https://dev.netatmo.com)
