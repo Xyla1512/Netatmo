@@ -52,7 +52,7 @@ class NAWS_Ajax {
 
     public function sync_now() {
         check_ajax_referer( 'naws_admin_nonce', 'nonce' );
-        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+        if ( ! current_user_can( 'manage_options' ) ) { wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 ); }
 
         $api    = new NAWS_API();
         $result = $api->sync_current_data();
@@ -90,7 +90,7 @@ class NAWS_Ajax {
 
     public function import_chunk() {
         check_ajax_referer( 'naws_admin_nonce', 'nonce' );
-        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+        if ( ! current_user_can( 'manage_options' ) ) { wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 ); }
 
         $device_id   = sanitize_text_field( wp_unslash( $_POST['device_id']   ?? ''  ) );
         $module_id   = sanitize_text_field( wp_unslash( $_POST['module_id']   ?? ''  ) );
@@ -126,7 +126,7 @@ class NAWS_Ajax {
 
     public function import_debug() {
         check_ajax_referer( 'naws_admin_nonce', 'nonce' );
-        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+        if ( ! current_user_can( 'manage_options' ) ) { wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 ); }
 
         $device_id   = sanitize_text_field( wp_unslash( $_POST['device_id']   ?? ''  ) );
         $module_id   = sanitize_text_field( wp_unslash( $_POST['module_id']   ?? ''  ) );
@@ -221,7 +221,7 @@ class NAWS_Ajax {
 
     public function save_live_settings() {
         check_ajax_referer( 'naws_admin_nonce', 'nonce' );
-        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+        if ( ! current_user_can( 'manage_options' ) ) { wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 ); }
 
         $errors = [];
 
@@ -273,7 +273,7 @@ class NAWS_Ajax {
 
     public function db_check() {
         check_ajax_referer( 'naws_admin_nonce', 'nonce' );
-        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+        if ( ! current_user_can( 'manage_options' ) ) { wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 ); }
         global $wpdb;
         $table     = $wpdb->prefix . NAWS_TABLE_DAILY;
         $date_from = sanitize_text_field( wp_unslash( $_POST['date_from'] ?? ''  ) );
@@ -303,7 +303,7 @@ class NAWS_Ajax {
 
     public function clear_daily_summary() {
         check_ajax_referer( 'naws_admin_nonce', 'nonce' );
-        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+        if ( ! current_user_can( 'manage_options' ) ) { wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 ); }
         global $wpdb;
         $table   = $wpdb->prefix . NAWS_TABLE_DAILY;
         $deleted = $wpdb->query( "DELETE FROM {$table}" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constant, no user input
@@ -324,7 +324,7 @@ class NAWS_Ajax {
      */
     public function migrate_readings() {
         check_ajax_referer( 'naws_admin_nonce', 'nonce' );
-        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+        if ( ! current_user_can( 'manage_options' ) ) { wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 ); }
 
         global $wpdb;
         $r = $wpdb->prefix . NAWS_TABLE_READINGS;
@@ -410,7 +410,7 @@ class NAWS_Ajax {
 
     public function import_get_jobs() {
         check_ajax_referer( 'naws_admin_nonce', 'nonce' );
-        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+        if ( ! current_user_can( 'manage_options' ) ) { wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 ); }
 
         $date_from = sanitize_text_field( wp_unslash( $_POST['date_from'] ?? ''  ) );
         $date_to   = sanitize_text_field( wp_unslash( $_POST['date_to']   ?? ''  ) );
@@ -429,14 +429,14 @@ class NAWS_Ajax {
 
     public function get_modules() {
         check_ajax_referer( 'naws_admin_nonce', 'nonce' );
-        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+        if ( ! current_user_can( 'manage_options' ) ) { wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 ); }
 
         wp_send_json_success( NAWS_Database::get_modules() );
     }
 
     public function delete_readings() {
         check_ajax_referer( 'naws_admin_nonce', 'nonce' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+        if ( ! current_user_can( 'manage_options' ) ) { wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 ); }
 
         $days = intval( $_POST['days'] ?? 365 ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- intval sanitizes
         $deleted = NAWS_Database::purge_old_readings( $days );
@@ -557,7 +557,7 @@ class NAWS_Ajax {
 
     public function run_daily_summary() {
         check_ajax_referer( 'naws_admin_nonce', 'nonce' );
-        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+        if ( ! current_user_can( 'manage_options' ) ) { wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 ); }
 
         $date = sanitize_text_field( wp_unslash( $_POST['date'] ?? ''  ) );
         if ( ! $date ) {
@@ -603,7 +603,7 @@ class NAWS_Ajax {
 
     public function toggle_module() {
         check_ajax_referer( 'naws_admin_nonce', 'nonce' );
-        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+        if ( ! current_user_can( 'manage_options' ) ) { wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 ); }
 
         $module_id = sanitize_text_field( wp_unslash( $_POST['module_id'] ?? ''  ) );
         $is_active = intval( $_POST['is_active'] ?? 1 ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- intval sanitizes
@@ -795,7 +795,7 @@ class NAWS_Ajax {
      */
     public function import_process_chunk() {
         check_ajax_referer( 'naws_admin_nonce', 'nonce' );
-        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+        if ( ! current_user_can( 'manage_options' ) ) { wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 ); }
 
         $file_path = get_transient( 'naws_import_temp_file' );
         if ( ! $file_path || ! file_exists( $file_path ) ) {
@@ -819,7 +819,7 @@ class NAWS_Ajax {
      */
     public function import_meta() {
         check_ajax_referer( 'naws_admin_nonce', 'nonce' );
-        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+        if ( ! current_user_can( 'manage_options' ) ) { wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 ); }
 
         $file_path = get_transient( 'naws_import_temp_file' );
         if ( ! $file_path || ! file_exists( $file_path ) ) {
@@ -854,7 +854,7 @@ class NAWS_Ajax {
      */
     public function import_cleanup() {
         check_ajax_referer( 'naws_admin_nonce', 'nonce' );
-        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+        if ( ! current_user_can( 'manage_options' ) ) { wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 ); }
 
         $file_path = get_transient( 'naws_import_temp_file' );
         if ( $file_path && file_exists( $file_path ) ) {

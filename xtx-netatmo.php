@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: XTX Netatmo
+ * Plugin Name: XTX Integration for Netatmo
  * Plugin URI: https://www.frank-neumann.de/netatmo-wetter-plugin/
  * Description: Connects to the Netatmo API, stores all sensor data locally and displays live dashboards, charts, history and forecasts via shortcodes.
- * Version: 1.5.7
+ * Version: 1.6.0
  * Author: Frank Neumann
  * Author URI: https://frank-neumann.de
  * License: GPL v2 or later
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'NAWS_VERSION',        '1.5.7' );
+define( 'NAWS_VERSION',        '1.6.0' );
 define( 'NAWS_PLUGIN_FILE',    __FILE__ );
 define( 'NAWS_PLUGIN_DIR',     plugin_dir_path( __FILE__ ) );
 define( 'NAWS_PLUGIN_URL',     plugin_dir_url( __FILE__ ) );
@@ -94,6 +94,11 @@ final class Netatmo_Weather_Station {
     }
 
     public function init() {
+        // Increase cURL connect timeout for Netatmo API calls.
+        // Some hosting DNS resolvers are slow; the default 10s connect timeout
+        // causes "Resolving timed out" errors during cron syncs.
+        add_action( 'http_api_curl', [ $this, 'adjust_curl_timeout' ], 10, 3 );
+
         // Always boot cron and shortcodes
         NAWS_Cron::instance();
         NAWS_Shortcodes::instance();
@@ -154,6 +159,22 @@ final class Netatmo_Weather_Station {
             }
         }
 
+    }
+
+    /**
+     * Increase cURL connect timeout for Netatmo & forecast API requests.
+     *
+     * @param resource $handle  cURL handle.
+     * @param array    $parsed  Parsed request arguments.
+     * @param string   $url     Request URL.
+     */
+    public function adjust_curl_timeout( $handle, $parsed, $url ) {
+        $domains = [ 'api.netatmo.com', 'api.open-meteo.com', 'api.met.no' ];
+        $host    = wp_parse_url( $url, PHP_URL_HOST );
+
+        if ( in_array( $host, $domains, true ) ) {
+            curl_setopt( $handle, CURLOPT_CONNECTTIMEOUT, 30 );
+        }
     }
 }
 

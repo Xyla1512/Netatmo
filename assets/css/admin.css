@@ -764,3 +764,256 @@
 .naws-form-table td { padding: 0.6rem 0 !important; }
 .naws-form-table tr:first-child th,
 .naws-form-table tr:first-child td { padding-top: 0.2rem !important; }
+
+/* ============================================================
+   Modules page – toggle switch
+   ============================================================ */
+.naws-toggle {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    cursor: pointer;
+}
+.naws-toggle input { opacity: 0; width: 0; height: 0; }
+.naws-toggle-slider {
+    position: absolute;
+    inset: 0;
+    background: #d1d5db;
+    border-radius: 24px;
+    transition: 0.3s;
+}
+.naws-toggle-slider::before {
+    content: '';
+    position: absolute;
+    height: 18px; width: 18px;
+    left: 3px; bottom: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: 0.3s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.naws-toggle input:checked + .naws-toggle-slider { background: #10b981; }
+.naws-toggle input:checked + .naws-toggle-slider::before { transform: translateX(20px); }
+.naws-toggle input:disabled + .naws-toggle-slider { opacity: 0.5; cursor: not-allowed; }
+
+/* ============================================================
+   Import page – module badges and form table
+   ============================================================ */
+.naws-module-badge{display:inline-flex;align-items:center;gap:.3rem;padding:.25rem .65rem;
+    border-radius:2rem;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);
+    font-size:.78rem; color:#1d2327;}
+.naws-module-badge-skip{background:rgba(100,116,139,.07);border-color:rgba(100,116,139,.2);opacity:.45;}
+.naws-module-badge-info{background:rgba(99,102,241,.07);border-color:rgba(99,102,241,.25);opacity:.85;}
+.naws-admin-panel .naws-form-table { margin: 0 !important; width: 100%; }
+.naws-admin-panel .naws-form-table th { padding: 0.55rem 1rem 0.55rem 0 !important; font-weight: 500; color: #646970; font-size: 0.875rem; }
+.naws-admin-panel .naws-form-table td { padding: 0.55rem 0 !important; }
+
+/* ============================================================
+   REST API docs page
+   ============================================================ */
+.naws-api-wrap{max-width:980px}
+.naws-api-panel{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:24px;margin-bottom:20px}
+.naws-api-panel h2{font-size:15px;font-weight:700;color:#1e293b;margin:0 0 14px;padding-bottom:8px;border-bottom:2px solid #e2e8f0}
+.naws-api-panel h3{font-size:14px;font-weight:600;color:#334155;margin:18px 0 8px}
+.naws-ep-table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+.naws-ep-table th{background:#f1f5f9;padding:8px 12px;text-align:left;font-weight:600;color:#475569;border:1px solid #e2e8f0}
+.naws-ep-table td{padding:8px 12px;border:1px solid #e2e8f0;vertical-align:top;color:#334155}
+.naws-ep-table tr:hover td{background:#f8fafc}
+.naws-ep-table code{background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:12px;color:#0f172a}
+.naws-ep-table .naws-method{display:inline-block;background:#dbeafe;color:#1d4ed8;font-weight:700;font-size:11px;padding:2px 8px;border-radius:4px}
+.naws-code-block{background:#1e293b;color:#e2e8f0;padding:14px 16px;border-radius:8px;font-size:12.5px;line-height:1.6;overflow-x:auto;margin:10px 0;font-family:'JetBrains Mono',Consolas,Monaco,monospace;position:relative;white-space:pre;tab-size:2}
+.naws-code-block .c{color:#64748b}
+.naws-code-block .s{color:#7dd3fc}
+.naws-code-block .k{color:#c084fc}
+.naws-code-block .n{color:#fbbf24}
+.naws-key-box{display:flex;align-items:center;gap:8px;margin:10px 0}
+.naws-key-box input[type=text]{flex:1;background:#f8fafc;border:1px solid #cbd5e1;font-family:monospace;font-size:13px;padding:8px 12px;border-radius:6px;color:#1e293b}
+.naws-key-box .button{flex-shrink:0}
+.naws-status{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}
+.naws-status-on{background:#ecfdf5;color:#059669;border:1px solid #a7f3d0}
+.naws-status-off{background:#fef2f2;color:#dc2626;border:1px solid #fca5a5}
+.naws-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.naws-dot-on{background:#10b981}
+.naws-dot-off{background:#ef4444}
+.naws-hint{color:#64748b;font-size:12.5px;margin:6px 0 0;line-height:1.5}
+.naws-param-tag{display:inline-block;background:#f0f9ff;color:#0369a1;font-size:11.5px;padding:2px 7px;border-radius:4px;border:1px solid #bae6fd;margin:1px 2px}
+.naws-opt-tag{background:#fefce8;color:#a16207;border-color:#fde68a}
+.naws-field-tag{background:#f0fdf4;color:#15803d;border-color:#bbf7d0}
+.naws-copy-btn{position:absolute;top:8px;right:8px;background:#475569;color:#fff;border:none;padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;opacity:.7;transition:all .15s}
+.naws-copy-btn:hover{opacity:1;background:#3b82f6}
+.naws-copy-btn.copied{background:#10b981;opacity:1}
+.naws-tab-bar{display:flex;gap:0;border-bottom:2px solid #e2e8f0;margin-bottom:16px}
+.naws-tab{padding:8px 18px;font-size:13px;font-weight:600;color:#64748b;cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
+.naws-tab:hover{color:#334155}
+.naws-tab.active{color:#3b82f6;border-bottom-color:#3b82f6}
+.naws-tab-content{display:none}
+.naws-tab-content.active{display:block}
+
+/* ============================================================
+   Shortcodes reference page
+   ============================================================ */
+.naws-ref-section{margin-bottom:32px}
+.naws-ref-section h2{font-size:15px;font-weight:700;color:#1e293b;margin:0 0 14px;padding-bottom:8px;border-bottom:2px solid #e2e8f0}
+.naws-ref-table{width:100%;border-collapse:collapse;font-size:13px}
+.naws-ref-table th{background:#f1f5f9;padding:8px 12px;text-align:left;font-weight:600;color:#475569;border:1px solid #e2e8f0}
+.naws-ref-table td{padding:8px 12px;border:1px solid #e2e8f0;vertical-align:middle;color:#334155}
+.naws-ref-table tr:hover td{background:#f8fafc}
+.naws-ref-table code{background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:12px;color:#0f172a}
+.naws-live-badge{display:inline-block;background:#ecfdf5;color:#059669;font-weight:700;font-size:12px;padding:2px 8px;border-radius:20px;border:1px solid #a7f3d0}
+.naws-copy-wrap{display:flex;align-items:center;gap:6px}
+.naws-copy-wrap pre{margin:0;flex:1;background:#1e293b;color:#7dd3fc;padding:7px 10px;border-radius:6px;font-size:11.5px;overflow-x:auto;white-space:pre}
+.naws-sc-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:20px 22px;margin-bottom:20px}
+.naws-sc-card h3{margin:0 0 6px;font-size:14px;color:#1e293b}
+.naws-sc-card h3 code{font-size:14px;color:#7c3aed;background:#f5f3ff;padding:2px 8px;border-radius:4px}
+.naws-sc-card p{margin:0 0 12px;color:#64748b;font-size:13px}
+.naws-attr-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:10px}
+.naws-attr-table th{background:#f8fafc;padding:6px 10px;text-align:left;color:#64748b;border:1px solid #e2e8f0;font-weight:600}
+.naws-attr-table td{padding:6px 10px;border:1px solid #e2e8f0;color:#334155}
+.naws-attr-table td:first-child code{color:#0ea5e9;background:#f0f9ff;padding:2px 6px;border-radius:3px}
+.naws-tag-default{color:#94a3b8;font-size:11px}
+.naws-inline-examples{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.naws-inline-ex{background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:6px 10px;font-size:12px}
+.naws-inline-ex code{color:#7c3aed}
+.naws-section-intro{color:#64748b;font-size:13px;margin:0 0 16px}
+
+/* ============================================================
+   Live settings page
+   ============================================================ */
+.naws-ls-layout{display:grid;grid-template-columns:1fr 280px;gap:1.5rem;align-items:start;max-width:980px;}
+@media(max-width:860px){.naws-ls-layout{grid-template-columns:1fr;}}
+.naws-ls-hint{font-size:.77rem;color:#646970;margin:0 0 .85rem;line-height:1.55;}
+.naws-ls-accordion{border:1px solid #e2e4e7;border-radius:10px;overflow:hidden;background:#fff;}
+.naws-ls-mod{border-bottom:1px solid #e2e4e7;}
+.naws-ls-mod:last-child{border-bottom:none;}
+.naws-ls-mod-header{display:flex;align-items:center;}
+.naws-ls-mod.is-open>.naws-ls-mod-header{background:#f8f9fa;}
+.naws-ls-mod.is-mod-off>.naws-ls-mod-header{background:#fafafa;}
+.naws-ls-mod-toggle{flex-shrink:0;width:40px;height:22px;border-radius:11px;background:#d1d5db;border:none;cursor:pointer;position:relative;margin:0 .7rem 0 .9rem;transition:background .2s;}
+.naws-ls-mod-toggle.is-on{background:#2271b1;}
+.naws-ls-mod-knob{position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform .2s;pointer-events:none;}
+.naws-ls-mod-toggle.is-on .naws-ls-mod-knob{transform:translateX(18px);}
+.naws-ls-mod-trigger{flex:1;display:flex;align-items:center;gap:.65rem;padding:.75rem .9rem .75rem .1rem;background:none;border:none;cursor:pointer;text-align:left;min-width:0;transition:opacity .15s;}
+.naws-ls-mod-trigger:hover{opacity:.8;}
+.naws-ls-mod-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.naws-ls-mod.is-mod-off .naws-ls-mod-dot{opacity:.3;}
+.naws-ls-mod-meta{flex:1;min-width:0;display:flex;flex-direction:column;gap:.08rem;}
+.naws-ls-mod-name{font-size:.87rem;font-weight:600;color:#1d2327;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:.45rem;}
+.naws-ls-mod.is-mod-off .naws-ls-mod-name{color:#9ca3af;}
+.naws-ls-mod-realname{font-size:.7rem;font-weight:400;color:#8d959e;background:#f1f3f5;padding:.05rem .4rem;border-radius:4px;}
+.naws-ls-mod-sub{font-size:.68rem;color:#9ca3af;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.naws-ls-mod-count{color:#2271b1;font-weight:600;}
+.naws-ls-chevron{flex-shrink:0;color:#b0b8c1;transition:transform .22s ease;}
+.naws-ls-mod.is-open .naws-ls-chevron{transform:rotate(180deg);}
+.naws-ls-mod-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .24s ease;}
+.naws-ls-mod.is-open .naws-ls-mod-body{grid-template-rows:1fr;}
+.naws-ls-mod-body-inner{overflow:hidden;border-top:1px solid transparent;transition:border-color .2s;}
+.naws-ls-mod.is-open .naws-ls-mod-body-inner{border-top-color:#e2e4e7;}
+.naws-ls-empty{display:flex;align-items:center;gap:.4rem;padding:.8rem 1rem;font-size:.76rem;color:#9ca3af;font-style:italic;}
+.naws-ls-params{padding:.35rem .7rem .55rem;display:flex;flex-direction:column;gap:2px;}
+.naws-ls-toggle{display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.55rem .7rem;border-radius:7px;cursor:pointer;border:1px solid transparent;transition:background .13s,border-color .13s;user-select:none;}
+.naws-ls-toggle:hover{background:#f8f9fa;}
+.naws-ls-toggle.is-on{background:#f0f6ff;border-color:#c7ddf5;}
+.naws-ls-toggle.is-off{opacity:.5;}
+.naws-ls-mod.is-mod-off .naws-ls-toggle{opacity:.3!important;pointer-events:none;}
+.naws-ls-tgl-info{display:flex;flex-direction:column;gap:.08rem;min-width:0;}
+.naws-ls-tgl-label{font-size:.82rem;font-weight:600;color:#1d2327;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.naws-ls-tgl-meta{display:flex;align-items:center;gap:.35rem;}
+.naws-ls-tgl-meta code{font-size:.67rem;color:#7a9e9b;background:none;padding:0;}
+.naws-ls-tgl-unit{font-size:.67rem;color:#b0b8c1;}
+.naws-ls-sw{width:34px;height:19px;border-radius:10px;background:#d1d5db;flex-shrink:0;position:relative;transition:background .2s;}
+.naws-ls-toggle.is-on .naws-ls-sw,.naws-ls-hc-toggle.is-on .naws-ls-sw{background:#2271b1;}
+.naws-ls-sw-knob{position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform .2s;pointer-events:none;}
+.naws-ls-toggle.is-on .naws-ls-sw-knob,.naws-ls-hc-toggle.is-on .naws-ls-sw-knob{transform:translateX(15px);}
+.naws-ls-actions{display:flex;align-items:center;gap:.9rem;margin-top:1rem;}
+.naws-ls-save-btn{display:inline-flex!important;align-items:center;gap:.4rem;height:35px!important;padding:0 1rem!important;font-size:.84rem!important;}
+#naws-ls-status{font-size:.8rem;color:#646970;}
+.naws-ls-sc{display:block;background:#f5f8fb;padding:.6rem .85rem;border-radius:7px;font-size:.78rem;border:1px solid #dae6ef;word-break:break-all;}
+.naws-ls-sc-desc{margin:.55rem 0 0;font-size:.75rem;color:#5a7a8a;line-height:1.65;}
+.naws-ls-param-row{display:flex;align-items:stretch;gap:4px;}
+.naws-ls-param-row .naws-ls-toggle{flex:1;}
+.naws-ls-chart-toggle{flex-shrink:0;width:34px;display:flex;align-items:center;justify-content:center;border:1px solid transparent;border-radius:7px;cursor:pointer;color:#b0b8c1;transition:background .13s,color .13s,border-color .13s;user-select:none;}
+.naws-ls-chart-toggle:hover{background:#f0f6ff;border-color:#c7ddf5;color:#2271b1;}
+.naws-ls-chart-toggle.is-on{background:#edf7f0;border-color:#a7dfc0;color:#1a7a50;}
+.naws-ls-chart-toggle.is-off{opacity:.5;}
+.naws-ls-mod.is-mod-off .naws-ls-chart-toggle{opacity:.3!important;pointer-events:none;}
+.naws-ls-history-charts{display:flex;flex-direction:column;gap:4px;margin-bottom:.5rem;}
+.naws-ls-hc-toggle{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid #e2e4e7;border-radius:8px;background:#fff;cursor:pointer;user-select:none;transition:border-color .13s,background .13s;}
+.naws-ls-hc-toggle:hover{border-color:#c3c4c7;background:#f9f9f9;}
+.naws-ls-hc-toggle.is-on{border-color:#a7dfc0;background:#edf7f0;}
+.naws-ls-hc-toggle.is-off{opacity:.65;}
+.naws-ls-hc-toggle .naws-ls-tgl-info{flex:1;}
+.naws-ls-hc-toggle .naws-ls-sw{flex-shrink:0;}
+
+/* ============================================================
+   Appearance page
+   ============================================================ */
+.naws-appearance-tabs{display:flex;gap:0;border-bottom:2px solid #e2e8f0;margin:1rem 0 0;}
+.naws-appearance-tab{padding:10px 20px;border:none;background:none;font-size:13px;font-weight:600;color:#646970;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color 0.15s,border-color 0.15s;white-space:nowrap;}
+.naws-appearance-tab:hover{color:#1d2327;}
+.naws-appearance-tab.active{color:#2271b1;border-bottom-color:#2271b1;}
+.naws-appearance-pane{display:none;padding:1.25rem 0 0;}
+.naws-appearance-pane.active{display:block;}
+.naws-appearance-row{display:grid;grid-template-columns:1fr 340px;gap:1.5rem;padding:0.5rem 0 1rem;align-items:start;}
+@media(max-width:1100px){.naws-appearance-row{grid-template-columns:1fr;}}
+.naws-appearance-controls{min-width:0;}
+.naws-appearance-preview{min-width:0;}
+.naws-preview-sticky{position:sticky;top:48px;}
+.naws-color-table th{width:200px;}
+.naws-color-table td .wp-picker-container{display:inline-block;}
+.naws-preview-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#646970;margin-bottom:0.6rem;}
+.naws-preview-theme-box{border:1.5px solid #e0eeee;border-radius:12px;padding:0.75rem;display:flex;flex-direction:column;gap:0.6rem;transition:all 0.2s;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
+.naws-pv-fcard{border:1.5px solid #e0eeee;border-radius:14px;padding:18px 14px 14px;position:relative;overflow:hidden;text-align:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
+.naws-pv-fcard-accent{position:absolute;top:0;left:0;right:0;height:3.5px;background:linear-gradient(90deg,#50a882,#3d82bf);border-radius:14px 14px 0 0;}
+.naws-pv-fcard-icon{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;}
+.naws-pv-fcard-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;line-height:1.3;margin-bottom:4px;}
+.naws-pv-fcard-val{font-size:36px;font-weight:800;font-style:italic;line-height:1;letter-spacing:-.03em;margin-bottom:1px;}
+.naws-pv-fcard-unit{font-size:14px;font-weight:400;margin-bottom:6px;}
+.naws-pv-fcard-subs{display:flex;justify-content:center;gap:16px;margin:8px 0 4px;padding-top:8px;border-top:1px solid rgba(0,0,0,0.06);}
+.naws-pv-fcard-sub{text-align:center;}
+.naws-pv-fcard-sub-lbl{font-size:8px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:1px;}
+.naws-pv-fcard-sub-val{font-size:14px;font-weight:700;font-style:italic;}
+.naws-pv-fcard-sub-val span{font-size:10px;font-weight:400;}
+.naws-pv-fcard-time{font-size:9px;font-style:italic;margin-top:7px;padding-top:7px;}
+.naws-pv-card-label{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;}
+.naws-pv-wind-section{border:1px solid #e0eeee;border-radius:10px;padding:0.75rem 0.85rem;}
+.naws-pv-wind-row{display:flex;align-items:center;gap:0.75rem;margin-top:0.3rem;}
+.naws-pv-rose-wrap{position:relative;width:110px;height:110px;flex-shrink:0;}
+.naws-pv-rose-bg,.naws-pv-rose-arrow{position:absolute;top:0;left:0;width:100%;height:100%;}
+.naws-pv-rose-arrow{transform-origin:50% 50%;transition:transform 0.8s ease;}
+.naws-pv-wind-info{flex:1;}
+.naws-pv-chart-lines{display:flex;flex-direction:column;gap:0.35rem;}
+.naws-pv-chart-line-item{display:flex;align-items:center;gap:0.6rem;padding:0.2rem 0;}
+.naws-pv-chart-line-label{font-size:0.75rem;color:#555;}
+.naws-pv-chart-theme{background:#fff;border:1.5px solid #e0eeee;border-radius:10px;padding:0.5rem;overflow:hidden;}
+.naws-pv-chart-theme svg{display:block;}
+.naws-pv-chart-theme-legend{display:flex;gap:0.75rem;flex-wrap:wrap;padding:0.5rem 0.25rem 0.25rem;font-size:0.7rem;color:#646970;}
+.naws-pv-chart-theme-legend span{display:flex;align-items:center;gap:0.3rem;}
+.naws-pv-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0;}
+.naws-pv-history-bars{padding:0.75rem 1rem;display:flex;flex-direction:column;gap:0.25rem;max-height:320px;overflow-y:auto;}
+.naws-pv-history-row{display:flex;align-items:center;gap:0.5rem;}
+.naws-pv-history-label{font-size:0.72rem;font-weight:600;color:#646970;width:36px;text-align:right;flex-shrink:0;}
+.naws-pv-history-bar{height:14px;border-radius:4px;transition:background 0.15s,width 0.3s;min-width:20px;}
+.naws-palette-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;padding:1rem;}
+.naws-palette-item label{display:block;font-weight:600;margin-bottom:0.3rem;color:var(--naws-admin-text,#1d2327);}
+.naws-icon-set-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.75rem;}
+.naws-icon-set-card{border:2px solid #e2e8f0;border-radius:10px;padding:0.85rem 0.75rem 0.65rem;cursor:pointer;transition:border-color 0.15s,box-shadow 0.15s;background:#fff;position:relative;}
+.naws-icon-set-card:hover{border-color:#94a3b8;}
+.naws-icon-set-card.active{border-color:#2271b1;box-shadow:0 0 0 1px #2271b1;}
+.naws-icon-set-card input[type=radio]{position:absolute;top:10px;right:10px;margin:0;}
+.naws-icon-set-header{margin-bottom:0.5rem;}
+.naws-icon-set-name{font-weight:700;font-size:13px;color:#1d2327;}
+.naws-icon-set-preview{display:flex;gap:0.45rem;align-items:center;justify-content:center;padding:0.5rem 0;min-height:42px;}
+.naws-icon-set-ico{width:34px;height:34px;border-radius:50%;background:#f0f6f6;display:flex;align-items:center;justify-content:center;font-size:16px;line-height:1;}
+.naws-icon-set-ico svg{width:18px;height:18px;stroke:#427272;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.naws-icon-set-card:nth-child(3) .naws-icon-set-ico svg{fill:#427272;stroke:none;color:#427272;}
+.naws-icon-set-card:nth-child(3) .naws-icon-set-ico svg [fill="currentColor"]{fill:#427272;}
+.naws-icon-set-card:nth-child(3) .naws-icon-set-ico svg [stroke="currentColor"]{stroke:#427272;}
+.naws-icon-set-card:nth-child(4) .naws-icon-set-ico svg{stroke-width:1.5;}
+.naws-icon-set-desc{font-size:11px;color:#646970;line-height:1.4;margin-top:0.25rem;}
+.naws-pv-icon-preview{display:flex;flex-wrap:wrap;gap:0.75rem;justify-content:center;padding:0.75rem;background:#fff;border:1.5px solid #e2e8f0;border-radius:10px;}
+.naws-pv-icon-item{display:flex;flex-direction:column;align-items:center;gap:0.35rem;}
+.naws-pv-icon-circle{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background 0.2s;}
+.naws-pv-icon-svg{transition:color 0.2s;}
+.naws-pv-icon-svg svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.naws-pv-icon-label{font-size:10px;font-weight:600;color:#646970;text-transform:uppercase;letter-spacing:0.04em;}

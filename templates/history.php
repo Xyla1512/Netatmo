@@ -38,8 +38,7 @@ if ( $year_param !== '' ) {
 }
 $hidden_history_charts = (array) get_option( 'naws_history_hidden_charts', [] );
 ?>
-<?php // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript -- must load synchronously before inline Chart.js code ?>
-<script src="<?php echo esc_url( NAWS_PLUGIN_URL . 'assets/vendor/chart.umd.min.js' ); ?>"></script>
+<?php // Chart.js loaded via wp_enqueue_script( 'chartjs' ) — see class-naws-shortcodes.php ?>
 
 <div id="<?php echo esc_attr($widget_id); ?>" class="naws-hist"
      data-nonce="<?php echo esc_attr($nonce); ?>"
@@ -144,7 +143,9 @@ $hidden_history_charts = (array) get_option( 'naws_history_hidden_charts', [] );
 
 <!-- Styles moved to assets/css/frontend.css (.naws-hist scope) -->
 
-<script>
+<?php
+ob_start();
+?>
 (function(){
 var WID     = <?php echo wp_json_encode($widget_id); ?>;
 var NAWS_FONT = getComputedStyle(document.documentElement).fontFamily || 'sans-serif';
@@ -590,4 +591,6 @@ window.addEventListener('resize', function(){
 });
 
 })();
-</script>
+<?php
+wp_add_inline_script( 'naws-frontend', ob_get_clean() );
+?>

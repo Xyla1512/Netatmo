@@ -45,34 +45,7 @@ $value_params = [
     [ 'rain_rolling_24h', 'rain',    'NAModule3', 'sc_param_rain24_roll' ],
 ];
 ?>
-<style>
-.naws-ref-section{margin-bottom:32px}
-.naws-ref-section h2{font-size:15px;font-weight:700;color:#1e293b;margin:0 0 14px;padding-bottom:8px;border-bottom:2px solid #e2e8f0}
-.naws-ref-table{width:100%;border-collapse:collapse;font-size:13px}
-.naws-ref-table th{background:#f1f5f9;padding:8px 12px;text-align:left;font-weight:600;color:#475569;border:1px solid #e2e8f0}
-.naws-ref-table td{padding:8px 12px;border:1px solid #e2e8f0;vertical-align:middle;color:#334155}
-.naws-ref-table tr:hover td{background:#f8fafc}
-.naws-ref-table code{background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:12px;color:#0f172a}
-.naws-live-badge{display:inline-block;background:#ecfdf5;color:#059669;font-weight:700;font-size:12px;padding:2px 8px;border-radius:20px;border:1px solid #a7f3d0}
-.naws-copy-wrap{display:flex;align-items:center;gap:6px}
-.naws-copy-wrap pre{margin:0;flex:1;background:#1e293b;color:#7dd3fc;padding:7px 10px;border-radius:6px;font-size:11.5px;overflow-x:auto;white-space:pre}
-.naws-copy-btn{flex-shrink:0;cursor:pointer;background:#3b82f6;color:#fff;border:none;padding:5px 10px;border-radius:5px;font-size:11px;font-weight:600;transition:background .15s}
-.naws-copy-btn:hover{background:#2563eb}
-.naws-copy-btn.copied{background:#10b981}
-.naws-sc-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:20px 22px;margin-bottom:20px}
-.naws-sc-card h3{margin:0 0 6px;font-size:14px;color:#1e293b}
-.naws-sc-card h3 code{font-size:14px;color:#7c3aed;background:#f5f3ff;padding:2px 8px;border-radius:4px}
-.naws-sc-card p{margin:0 0 12px;color:#64748b;font-size:13px}
-.naws-attr-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:10px}
-.naws-attr-table th{background:#f8fafc;padding:6px 10px;text-align:left;color:#64748b;border:1px solid #e2e8f0;font-weight:600}
-.naws-attr-table td{padding:6px 10px;border:1px solid #e2e8f0;color:#334155}
-.naws-attr-table td:first-child code{color:#0ea5e9;background:#f0f9ff;padding:2px 6px;border-radius:3px}
-.naws-tag-default{color:#94a3b8;font-size:11px}
-.naws-inline-examples{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.naws-inline-ex{background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:6px 10px;font-size:12px}
-.naws-inline-ex code{color:#7c3aed}
-.naws-section-intro{color:#64748b;font-size:13px;margin:0 0 16px}
-</style>
+<?php // Styles moved to assets/css/admin.css ?>
 
 <div class="wrap naws-admin-wrap">
 <h1 class="naws-admin-page-title"><span class="naws-title-icon">&#x1F4DD;</span> <?php naws_e('sc_ref_title'); ?></h1>
@@ -299,7 +272,9 @@ $value_params = [
 
 </div>
 
-<script>
+<?php
+ob_start();
+?>
 (function(){
     var copyLabel   = <?php echo wp_json_encode( naws__('sc_copy') ); ?>;
     var copiedLabel = <?php echo wp_json_encode( naws__('sc_copied') ); ?>;
@@ -312,4 +287,6 @@ $value_params = [
         });
     });
 }());
-</script>
+<?php
+wp_add_inline_script( 'naws-admin', ob_get_clean() );
+?>

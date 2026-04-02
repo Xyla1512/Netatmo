@@ -97,39 +97,10 @@ $modules = NAWS_Database::get_modules( false );
     </div>
 </div>
 
-<style>
-/* Toggle switch */
-.naws-toggle {
-    position: relative;
-    display: inline-block;
-    width: 44px;
-    height: 24px;
-    cursor: pointer;
-}
-.naws-toggle input { opacity: 0; width: 0; height: 0; }
-.naws-toggle-slider {
-    position: absolute;
-    inset: 0;
-    background: #d1d5db;
-    border-radius: 24px;
-    transition: 0.3s;
-}
-.naws-toggle-slider::before {
-    content: '';
-    position: absolute;
-    height: 18px; width: 18px;
-    left: 3px; bottom: 3px;
-    background: white;
-    border-radius: 50%;
-    transition: 0.3s;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-}
-.naws-toggle input:checked + .naws-toggle-slider { background: #10b981; }
-.naws-toggle input:checked + .naws-toggle-slider::before { transform: translateX(20px); }
-.naws-toggle input:disabled + .naws-toggle-slider { opacity: 0.5; cursor: not-allowed; }
-</style>
-
-<script>
+<?php // Styles moved to assets/css/admin.css ?>
+<?php
+ob_start();
+?>
 (function($){
     $(document).on('change', '.naws-module-toggle', function() {
         const checkbox  = $(this);
@@ -141,7 +112,7 @@ $modules = NAWS_Database::get_modules( false );
 
         $.post(ajaxurl, {
             action:    'naws_toggle_module',
-            nonce:     '<?php echo esc_attr( wp_create_nonce( 'naws_admin_nonce' ) ); ?>',
+            nonce:     '<?php echo esc_js( wp_create_nonce( 'naws_admin_nonce' ) ); ?>',
             module_id: moduleId,
             is_active: isActive
         }, function(resp) {
@@ -168,4 +139,6 @@ $modules = NAWS_Database::get_modules( false );
         });
     });
 })(jQuery);
-</script>
+<?php
+wp_add_inline_script( 'naws-admin', ob_get_clean() );
+?>

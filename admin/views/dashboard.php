@@ -389,7 +389,9 @@ $module_type_colors = [
     </div><!-- /.naws-admin-two-col -->
 </div><!-- /.naws-admin-wrap -->
 
-<script>
+<?php
+ob_start();
+?>
 document.addEventListener('DOMContentLoaded', function () {
 
     // Accordion logic
@@ -456,4 +458,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 });
-</script>
+<?php
+wp_add_inline_script( 'naws-admin', ob_get_clean() );
+?>

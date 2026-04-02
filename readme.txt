@@ -1,9 +1,9 @@
-=== XTX Netatmo ===
+=== XTX Integration for Netatmo ===
 Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 5.8
 Tested up to: 6.9
-Stable tag: 1.5.7
+Stable tag: 1.6.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -12,7 +12,7 @@ Connects to the Netatmo API, stores all sensor data locally and displays live da
 
 == Description ==
 
-**XTX Netatmo** connects your Netatmo hardware to WordPress. It reads all sensor data via the official Netatmo API, stores readings in your local database and displays them with beautiful live dashboards, animated charts and weather forecasts.
+**XTX Integration for Netatmo** connects your Netatmo hardware to WordPress. It reads all sensor data via the official Netatmo API, stores readings in your local database and displays them with beautiful live dashboards, animated charts and weather forecasts.
 
 = Key Features =
 
@@ -104,6 +104,16 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 7. Export / Import page for backups
 
 == Changelog ==
+
+= 1.6.0 =
+* WordPress.org compliance: all inline `<script>` blocks converted to `wp_add_inline_script()`
+* WordPress.org compliance: all inline `<style>` blocks moved to enqueued stylesheet
+* WordPress.org compliance: plugin renamed to "XTX Integration for Netatmo" (trademark)
+* WordPress.org compliance: removed direct `<script src>` for Chart.js in frontend templates
+* Updated Chart.js vendor from 4.4.0 to 4.5.1
+* REST API docs: replaced Google Charts CDN example with bundled Chart.js example
+* Fix: AJAX capability-check failures now return proper JSON 403 instead of plain `wp_die()`
+* Fix: privacy policy URL in readme.txt corrected
 
 = 1.5.7 =
 * Removed GitHub Auto-Updater (WordPress.org compliance – hosted plugins must not include custom updaters)
@@ -266,7 +276,7 @@ This plugin connects to the following external services:
 * **Purpose:** Authenticate via OAuth2, fetch sensor readings and station data
 * **Data sent:** OAuth tokens, station/module IDs
 * **When:** During initial authentication and every automatic sync cycle
-* **Privacy policy:** [https://www.netatmo.com/en-gb/legal/privacy](https://www.netatmo.com/en-gb/legal/privacy)
+* **Privacy policy:** [https://www.netatmo.com/en-us/legal/privacy-policy](https://www.netatmo.com/en-us/legal/privacy-policy)
 
 = Open-Meteo API (api.open-meteo.com) =
 

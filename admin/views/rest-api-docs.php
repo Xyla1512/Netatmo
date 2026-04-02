@@ -37,60 +37,7 @@ $is_enabled = ! empty( $cfg['enabled'] );
 $rate_limit = (int) ( $cfg['rate_limit'] ?? 60 );
 $base_url   = rest_url( 'naws/v1' );
 ?>
-<style>
-/* ── Layout ──────────────────────────────────────────── */
-.naws-api-wrap{max-width:980px}
-.naws-api-panel{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:24px;margin-bottom:20px}
-.naws-api-panel h2{font-size:15px;font-weight:700;color:#1e293b;margin:0 0 14px;padding-bottom:8px;border-bottom:2px solid #e2e8f0}
-.naws-api-panel h3{font-size:14px;font-weight:600;color:#334155;margin:18px 0 8px}
-
-/* ── Table ───────────────────────────────────────────── */
-.naws-ep-table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
-.naws-ep-table th{background:#f1f5f9;padding:8px 12px;text-align:left;font-weight:600;color:#475569;border:1px solid #e2e8f0}
-.naws-ep-table td{padding:8px 12px;border:1px solid #e2e8f0;vertical-align:top;color:#334155}
-.naws-ep-table tr:hover td{background:#f8fafc}
-.naws-ep-table code{background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:12px;color:#0f172a}
-.naws-ep-table .naws-method{display:inline-block;background:#dbeafe;color:#1d4ed8;font-weight:700;font-size:11px;padding:2px 8px;border-radius:4px}
-
-/* ── Code blocks ─────────────────────────────────────── */
-.naws-code-block{background:#1e293b;color:#e2e8f0;padding:14px 16px;border-radius:8px;font-size:12.5px;line-height:1.6;overflow-x:auto;margin:10px 0;font-family:'JetBrains Mono',Consolas,Monaco,monospace;position:relative;white-space:pre;tab-size:2}
-.naws-code-block .c{color:#64748b}
-.naws-code-block .s{color:#7dd3fc}
-.naws-code-block .k{color:#c084fc}
-.naws-code-block .n{color:#fbbf24}
-
-/* ── Key display ─────────────────────────────────────── */
-.naws-key-box{display:flex;align-items:center;gap:8px;margin:10px 0}
-.naws-key-box input[type=text]{flex:1;background:#f8fafc;border:1px solid #cbd5e1;font-family:monospace;font-size:13px;padding:8px 12px;border-radius:6px;color:#1e293b}
-.naws-key-box .button{flex-shrink:0}
-
-/* ── Status ──────────────────────────────────────────── */
-.naws-status{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}
-.naws-status-on{background:#ecfdf5;color:#059669;border:1px solid #a7f3d0}
-.naws-status-off{background:#fef2f2;color:#dc2626;border:1px solid #fca5a5}
-.naws-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
-.naws-dot-on{background:#10b981}
-.naws-dot-off{background:#ef4444}
-
-/* ── Hints ───────────────────────────────────────────── */
-.naws-hint{color:#64748b;font-size:12.5px;margin:6px 0 0;line-height:1.5}
-.naws-param-tag{display:inline-block;background:#f0f9ff;color:#0369a1;font-size:11.5px;padding:2px 7px;border-radius:4px;border:1px solid #bae6fd;margin:1px 2px}
-.naws-opt-tag{background:#fefce8;color:#a16207;border-color:#fde68a}
-.naws-field-tag{background:#f0fdf4;color:#15803d;border-color:#bbf7d0}
-
-/* ── Copy button ─────────────────────────────────────── */
-.naws-copy-btn{position:absolute;top:8px;right:8px;background:#475569;color:#fff;border:none;padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;opacity:.7;transition:all .15s}
-.naws-copy-btn:hover{opacity:1;background:#3b82f6}
-.naws-copy-btn.copied{background:#10b981;opacity:1}
-
-/* ── Tabs ────────────────────────────────────────────── */
-.naws-tab-bar{display:flex;gap:0;border-bottom:2px solid #e2e8f0;margin-bottom:16px}
-.naws-tab{padding:8px 18px;font-size:13px;font-weight:600;color:#64748b;cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
-.naws-tab:hover{color:#334155}
-.naws-tab.active{color:#3b82f6;border-bottom-color:#3b82f6}
-.naws-tab-content{display:none}
-.naws-tab-content.active{display:block}
-</style>
+<?php // Styles moved to assets/css/admin.css ?>
 
 <div class="wrap naws-admin-wrap naws-api-wrap">
 <h1 class="naws-admin-page-title"><span class="naws-title-icon">🔌</span> <?php naws_e( 'rest_page_title' ); ?></h1>
@@ -418,7 +365,7 @@ $base_url   = rest_url( 'naws/v1' );
     <button class="naws-tab active" data-tab="ex-curl">cURL</button>
     <button class="naws-tab" data-tab="ex-js">JavaScript</button>
     <button class="naws-tab" data-tab="ex-php">PHP</button>
-    <button class="naws-tab" data-tab="ex-google">Google Charts</button>
+    <button class="naws-tab" data-tab="ex-google">Chart.js</button>
     <button class="naws-tab" data-tab="ex-python">Python</button>
 </div>
 
@@ -503,47 +450,35 @@ console.log(current.readings);
 ]);</div>
 </div>
 
-<!-- Google Charts -->
+<!-- Chart.js (vanilla) -->
 <div class="naws-tab-content" id="ex-google">
-<div class="naws-code-block"><span class="c">&lt;!-- Google Charts: Temperaturverlauf --&gt;</span>
-&lt;script src="<span class="s">https://www.gstatic.com/charts/loader.js</span>"&gt;&lt;/script&gt;
-&lt;div id="<span class="s">chart</span>" style="<span class="s">width:100%;height:400px</span>"&gt;&lt;/div&gt;
+<div class="naws-code-block"><span class="c">&lt;!-- Chart.js: Temperaturverlauf (kein externes CDN) --&gt;</span>
+&lt;canvas id="<span class="s">myChart</span>" width="<span class="s">800</span>" height="<span class="s">300</span>"&gt;&lt;/canvas&gt;
 
 &lt;script&gt;
-google.charts.load('<span class="s">current</span>', { packages: ['<span class="s">corechart</span>'] });
-google.charts.setOnLoadCallback(drawChart);
+<span class="k">const</span> API = '<span class="s"><?php echo esc_js( $base_url ); ?></span>';
+<span class="k">const</span> KEY = '<span class="s"><?php echo esc_js( $api_key ?: 'DEIN_API_KEY' ); ?></span>';
 
-<span class="k">async function</span> <span class="n">drawChart</span>() {
-  <span class="k">const</span> API  = '<span class="s"><?php echo esc_js( $base_url ); ?></span>';
-  <span class="k">const</span> KEY  = '<span class="s"><?php echo esc_js( $api_key ?: 'DEIN_API_KEY' ); ?></span>';
+fetch(API + '<span class="s">/daily?fields=temp_min,temp_max&amp;from=2025-02-01&amp;to=2025-03-01</span>',
+  { headers: { '<span class="s">X-NAWS-Key</span>': KEY } }
+)
+.<span class="k">then</span>(r => r.json())
+.<span class="k">then</span>(json => {
+  <span class="k">const</span> labels = json.data.<span class="k">map</span>(r => r.date);
+  <span class="k">const</span> minT   = json.data.<span class="k">map</span>(r => r.temp_min);
+  <span class="k">const</span> maxT   = json.data.<span class="k">map</span>(r => r.temp_max);
 
-  <span class="c">// Tagesdaten der letzten 30 Tage abrufen</span>
-  <span class="k">const</span> res  = <span class="k">await</span> fetch(
-    API + '<span class="s">/daily?fields=temp_min,temp_max&amp;from=2025-02-01&amp;to=2025-03-01</span>',
-    { headers: { '<span class="s">X-NAWS-Key</span>': KEY } }
-  );
-  <span class="k">const</span> json = <span class="k">await</span> res.json();
-
-  <span class="c">// Google DataTable aufbauen</span>
-  <span class="k">const</span> data = <span class="k">new</span> google.visualization.DataTable();
-  data.addColumn('<span class="s">string</span>', '<span class="s">Datum</span>');
-  data.addColumn('<span class="s">number</span>', '<span class="s">Min °C</span>');
-  data.addColumn('<span class="s">number</span>', '<span class="s">Max °C</span>');
-
-  json.data.forEach(<span class="k">row</span> => {
-    data.addRow([<span class="k">row</span>.date, <span class="k">row</span>.temp_min, <span class="k">row</span>.temp_max]);
+  <span class="k">new</span> Chart(document.getElementById('<span class="s">myChart</span>'), {
+    type: '<span class="s">line</span>',
+    data: {
+      labels,
+      datasets: [
+        { label: '<span class="s">Min °C</span>', data: minT, borderColor: '<span class="s">#3b82f6</span>', fill: <span class="k">false</span> },
+        { label: '<span class="s">Max °C</span>', data: maxT, borderColor: '<span class="s">#ef4444</span>', fill: <span class="k">false</span> },
+      ],
+    },
   });
-
-  <span class="k">const</span> chart = <span class="k">new</span> google.visualization.LineChart(
-    document.getElementById('<span class="s">chart</span>')
-  );
-  chart.draw(data, {
-    title: '<span class="s">Temperaturverlauf</span>',
-    curveType: '<span class="s">function</span>',
-    legend: { position: '<span class="s">bottom</span>' },
-    colors: ['<span class="s">#3b82f6</span>', '<span class="s">#ef4444</span>'],
-  });
-}
+});
 &lt;/script&gt;</div>
 </div>
 
@@ -592,7 +527,9 @@ df['date'] = pd.to_datetime(df['date'])
 
 </div><!-- /.wrap -->
 
-<script>
+<?php
+ob_start();
+?>
 (function(){
     /* Tab switching */
     document.querySelectorAll('.naws-tab').forEach(function(tab){
@@ -616,4 +553,6 @@ function nawsCopyKey(){
         setTimeout(function(){ inp.style.borderColor=''; }, 1500);
     });
 }
-</script>
+<?php
+wp_add_inline_script( 'naws-admin', ob_get_clean() );
+?>

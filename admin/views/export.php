@@ -176,7 +176,9 @@ if ( isset( $_GET['import_error'] ) ) : // phpcs:ignore WordPress.Security.Nonce
 </div><!-- .naws-admin-two-col -->
 </div>
 
-<script>
+<?php
+ob_start();
+?>
 (function($){
 'use strict';
 
@@ -299,4 +301,6 @@ if (IMPORT_READY && IMPORT_META) {
 }
 
 })(jQuery);
-</script>
+<?php
+wp_add_inline_script( 'naws-admin', ob_get_clean() );
+?>

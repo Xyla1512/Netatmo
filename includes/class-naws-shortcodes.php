@@ -32,7 +32,7 @@ class NAWS_Shortcodes {
         wp_register_style(  'naws-frontend', NAWS_PLUGIN_URL . 'assets/css/frontend.css', [], NAWS_VERSION );
         wp_register_script( 'chartjs',
             NAWS_PLUGIN_URL . 'assets/vendor/chart.umd.min.js',
-            [], '4.4.0', true );
+            [], '4.5.1', true );
         wp_register_script( 'chartjs-adapter-date-fns',
             NAWS_PLUGIN_URL . 'assets/vendor/chartjs-adapter-date-fns.bundle.min.js',
             [ 'chartjs' ], '3.0.0', true );

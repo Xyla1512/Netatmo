@@ -207,20 +207,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 </div><!-- .naws-admin-two-col -->
 </div>
 
-<style>
-.naws-module-badge{display:inline-flex;align-items:center;gap:.3rem;padding:.25rem .65rem;
-    border-radius:2rem;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);
-    font-size:.78rem; color:#1d2327;}
-.naws-module-badge-skip{background:rgba(100,116,139,.07);border-color:rgba(100,116,139,.2);opacity:.45;}
-.naws-module-badge-info{background:rgba(99,102,241,.07);border-color:rgba(99,102,241,.25);opacity:.85;}
-
-/* form-table inside panel-body: reset WP defaults to match our spacing */
-.naws-admin-panel .naws-form-table { margin: 0 !important; width: 100%; }
-.naws-admin-panel .naws-form-table th { padding: 0.55rem 1rem 0.55rem 0 !important; font-weight: 500; color: #646970; font-size: 0.875rem; }
-.naws-admin-panel .naws-form-table td { padding: 0.55rem 0 !important; }
-</style>
-
-<script>
+<?php // Styles moved to assets/css/admin.css ?>
+<?php
+ob_start();
+?>
 (function($){
 'use strict';
 
@@ -572,4 +562,6 @@ $('#naws-migrate-btn').on('click', function(){
 });
 
 })(jQuery);
-</script>
+<?php
+wp_add_inline_script( 'naws-admin', ob_get_clean() );
+?>

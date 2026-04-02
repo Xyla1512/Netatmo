@@ -371,7 +371,9 @@
                 <?php submit_button( naws__( 'save_settings' ) ); ?>
             </form>
 
-            <script>
+            <?php
+            ob_start();
+            ?>
             (function(){
                 var radios = document.querySelectorAll('input[name="naws_settings[forecast_location]"]');
                 var manual = document.getElementById('naws-forecast-manual-row');
@@ -383,7 +385,9 @@
                 }
                 radios.forEach(function(r){ r.addEventListener('change', toggle); });
             })();
-            </script>
+            <?php
+            wp_add_inline_script( 'naws-admin', ob_get_clean() );
+            ?>
             </div>
         </div>
     </div>

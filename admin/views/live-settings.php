@@ -291,151 +291,10 @@ $module_defs = array_merge( $module_defs, $extra_module4_defs );
     </div><!-- /.naws-ls-layout -->
 </div>
 
-<style>
-.naws-ls-layout{display:grid;grid-template-columns:1fr 280px;gap:1.5rem;align-items:start;max-width:980px;}
-@media(max-width:860px){.naws-ls-layout{grid-template-columns:1fr;}}
-.naws-ls-hint{font-size:.77rem;color:#646970;margin:0 0 .85rem;line-height:1.55;}
-
-/* Accordion */
-.naws-ls-accordion{border:1px solid #e2e4e7;border-radius:10px;overflow:hidden;background:#fff;}
-.naws-ls-mod{border-bottom:1px solid #e2e4e7;}
-.naws-ls-mod:last-child{border-bottom:none;}
-
-/* Header row */
-.naws-ls-mod-header{display:flex;align-items:center;}
-.naws-ls-mod.is-open>.naws-ls-mod-header{background:#f8f9fa;}
-.naws-ls-mod.is-mod-off>.naws-ls-mod-header{background:#fafafa;}
-
-/* Module master toggle */
-.naws-ls-mod-toggle{
-    flex-shrink:0;width:40px;height:22px;border-radius:11px;
-    background:#d1d5db;border:none;cursor:pointer;position:relative;
-    margin:0 .7rem 0 .9rem;transition:background .2s;
-}
-.naws-ls-mod-toggle.is-on{background:#2271b1;}
-.naws-ls-mod-knob{
-    position:absolute;top:3px;left:3px;width:16px;height:16px;
-    border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);
-    transition:transform .2s;pointer-events:none;
-}
-.naws-ls-mod-toggle.is-on .naws-ls-mod-knob{transform:translateX(18px);}
-
-/* Accordion trigger */
-.naws-ls-mod-trigger{
-    flex:1;display:flex;align-items:center;gap:.65rem;
-    padding:.75rem .9rem .75rem .1rem;
-    background:none;border:none;cursor:pointer;text-align:left;min-width:0;
-    transition:opacity .15s;
-}
-.naws-ls-mod-trigger:hover{opacity:.8;}
-
-.naws-ls-mod-dot{
-    width:10px;height:10px;border-radius:50%;flex-shrink:0;
-}
-.naws-ls-mod.is-mod-off .naws-ls-mod-dot{opacity:.3;}
-
-.naws-ls-mod-meta{flex:1;min-width:0;display:flex;flex-direction:column;gap:.08rem;}
-.naws-ls-mod-name{
-    font-size:.87rem;font-weight:600;color:#1d2327;
-    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-    display:flex;align-items:center;gap:.45rem;
-}
-.naws-ls-mod.is-mod-off .naws-ls-mod-name{color:#9ca3af;}
-.naws-ls-mod-realname{
-    font-size:.7rem;font-weight:400;color:#8d959e;
-    background:#f1f3f5;padding:.05rem .4rem;border-radius:4px;
-}
-.naws-ls-mod-sub{font-size:.68rem;color:#9ca3af;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.naws-ls-mod-count{color:#2271b1;font-weight:600;}
-
-.naws-ls-chevron{flex-shrink:0;color:#b0b8c1;transition:transform .22s ease;}
-.naws-ls-mod.is-open .naws-ls-chevron{transform:rotate(180deg);}
-
-/* Accordion body */
-.naws-ls-mod-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .24s ease;}
-.naws-ls-mod.is-open .naws-ls-mod-body{grid-template-rows:1fr;}
-.naws-ls-mod-body-inner{overflow:hidden;border-top:1px solid transparent;transition:border-color .2s;}
-.naws-ls-mod.is-open .naws-ls-mod-body-inner{border-top-color:#e2e4e7;}
-
-/* Empty notice */
-.naws-ls-empty{
-    display:flex;align-items:center;gap:.4rem;
-    padding:.8rem 1rem;font-size:.76rem;color:#9ca3af;font-style:italic;
-}
-
-/* Sensor param list */
-.naws-ls-params{padding:.35rem .7rem .55rem;display:flex;flex-direction:column;gap:2px;}
-
-.naws-ls-toggle{
-    display:flex;align-items:center;justify-content:space-between;gap:.75rem;
-    padding:.55rem .7rem;border-radius:7px;cursor:pointer;
-    border:1px solid transparent;transition:background .13s,border-color .13s;
-    user-select:none;
-}
-.naws-ls-toggle:hover{background:#f8f9fa;}
-.naws-ls-toggle.is-on{background:#f0f6ff;border-color:#c7ddf5;}
-.naws-ls-toggle.is-off{opacity:.5;}
-.naws-ls-mod.is-mod-off .naws-ls-toggle{opacity:.3!important;pointer-events:none;}
-
-.naws-ls-tgl-info{display:flex;flex-direction:column;gap:.08rem;min-width:0;}
-.naws-ls-tgl-label{font-size:.82rem;font-weight:600;color:#1d2327;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.naws-ls-tgl-meta{display:flex;align-items:center;gap:.35rem;}
-.naws-ls-tgl-meta code{font-size:.67rem;color:#7a9e9b;background:none;padding:0;}
-.naws-ls-tgl-unit{font-size:.67rem;color:#b0b8c1;}
-
-/* Sensor switch */
-.naws-ls-sw{
-    width:34px;height:19px;border-radius:10px;background:#d1d5db;
-    flex-shrink:0;position:relative;transition:background .2s;
-}
-.naws-ls-toggle.is-on .naws-ls-sw,
-.naws-ls-hc-toggle.is-on .naws-ls-sw{background:#2271b1;}
-.naws-ls-sw-knob{
-    position:absolute;top:2px;left:2px;width:15px;height:15px;
-    border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);
-    transition:transform .2s;pointer-events:none;
-}
-.naws-ls-toggle.is-on .naws-ls-sw-knob,
-.naws-ls-hc-toggle.is-on .naws-ls-sw-knob{transform:translateX(15px);}
-
-/* Actions */
-.naws-ls-actions{display:flex;align-items:center;gap:.9rem;margin-top:1rem;}
-.naws-ls-save-btn{display:inline-flex!important;align-items:center;gap:.4rem;height:35px!important;padding:0 1rem!important;font-size:.84rem!important;}
-#naws-ls-status{font-size:.8rem;color:#646970;}
-
-/* <?php naws_e( 'ls_shortcode' ); ?> */
-.naws-ls-sc{display:block;background:#f5f8fb;padding:.6rem .85rem;border-radius:7px;font-size:.78rem;border:1px solid #dae6ef;word-break:break-all;}
-.naws-ls-sc-desc{margin:.55rem 0 0;font-size:.75rem;color:#5a7a8a;line-height:1.65;}
-
-/* Param row: Kachel-toggle + Chart-toggle side by side */
-.naws-ls-param-row{display:flex;align-items:stretch;gap:4px;}
-.naws-ls-param-row .naws-ls-toggle{flex:1;}
-.naws-ls-chart-toggle{
-    flex-shrink:0;width:34px;display:flex;align-items:center;justify-content:center;
-    border:1px solid transparent;border-radius:7px;cursor:pointer;
-    color:#b0b8c1;transition:background .13s,color .13s,border-color .13s;
-    user-select:none;
-}
-.naws-ls-chart-toggle:hover{background:#f0f6ff;border-color:#c7ddf5;color:#2271b1;}
-.naws-ls-chart-toggle.is-on{background:#edf7f0;border-color:#a7dfc0;color:#1a7a50;}
-.naws-ls-chart-toggle.is-off{opacity:.5;}
-.naws-ls-mod.is-mod-off .naws-ls-chart-toggle{opacity:.3!important;pointer-events:none;}
-
-/* Jahresvergleich chart-row toggles */
-.naws-ls-history-charts{display:flex;flex-direction:column;gap:4px;margin-bottom:.5rem;}
-.naws-ls-hc-toggle{
-    display:flex;align-items:center;gap:10px;padding:9px 12px;
-    border:1px solid #e2e4e7;border-radius:8px;background:#fff;
-    cursor:pointer;user-select:none;transition:border-color .13s,background .13s;
-}
-.naws-ls-hc-toggle:hover{border-color:#c3c4c7;background:#f9f9f9;}
-.naws-ls-hc-toggle.is-on{border-color:#a7dfc0;background:#edf7f0;}
-.naws-ls-hc-toggle.is-off{opacity:.65;}
-.naws-ls-hc-toggle .naws-ls-tgl-info{flex:1;}
-.naws-ls-hc-toggle .naws-ls-sw{flex-shrink:0;}
-</style>
-
-<script>
+<?php // Styles moved to assets/css/admin.css ?>
+<?php
+ob_start();
+?>
 (function(){
 'use strict';
 
@@ -555,4 +414,6 @@ document.getElementById('naws-save-live').addEventListener('click',function(){
 });
 
 })();
-</script>
+<?php
+wp_add_inline_script( 'naws-admin', ob_get_clean() );
+?>
