@@ -1,6 +1,36 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+/**
+ * Safely output SVG markup using wp_kses() with a strict allowlist.
+ * Use this instead of a bare echo for all SVG output.
+ *
+ * @param  string $svg  Raw SVG markup.
+ * @return string       Sanitized SVG markup safe for output.
+ */
+function naws_kses_svg( string $svg ): string {
+    static $allowed = null;
+    if ( null === $allowed ) {
+        $allowed = [
+            'svg'      => [ 'xmlns' => true, 'viewBox' => true, 'width' => true, 'height' => true,
+                            'fill' => true, 'stroke' => true, 'stroke-width' => true,
+                            'stroke-linecap' => true, 'stroke-linejoin' => true ],
+            'path'     => [ 'd' => true, 'fill' => true, 'stroke' => true, 'stroke-width' => true,
+                            'stroke-linecap' => true, 'stroke-linejoin' => true, 'opacity' => true ],
+            'circle'   => [ 'cx' => true, 'cy' => true, 'r' => true, 'fill' => true,
+                            'stroke' => true, 'stroke-width' => true, 'opacity' => true ],
+            'line'     => [ 'x1' => true, 'y1' => true, 'x2' => true, 'y2' => true,
+                            'stroke' => true, 'stroke-width' => true, 'stroke-linecap' => true ],
+            'polyline' => [ 'points' => true, 'fill' => true, 'stroke' => true,
+                            'stroke-width' => true, 'stroke-linecap' => true, 'stroke-linejoin' => true ],
+            'polygon'  => [ 'points' => true, 'fill' => true, 'stroke' => true, 'stroke-width' => true ],
+            'g'        => [ 'fill' => true, 'stroke' => true, 'stroke-width' => true,
+                            'stroke-linecap' => true, 'stroke-linejoin' => true, 'opacity' => true ],
+        ];
+    }
+    return wp_kses( $svg, $allowed );
+}
+
 class NAWS_Helpers {
 
     public static function get_label( $parameter ) {

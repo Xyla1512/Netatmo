@@ -159,7 +159,7 @@ if ( $lunar_ecl ) {
         <?php foreach ( $rows as $row ) : ?>
         <div class="naws-infobar-item naws-ib-<?php echo esc_attr( $row['group'] ); ?>">
             <span class="naws-ib-icon">
-                <?php echo $row['icon']; // phpcs:ignore -- SVG, no user input ?>
+                <?php echo naws_kses_svg( $row['icon'] ); ?>
             </span>
             <span class="naws-ib-text">
                 <span class="naws-ib-label"><?php echo esc_html( $row['label'] ); ?></span>

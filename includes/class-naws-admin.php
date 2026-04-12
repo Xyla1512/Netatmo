@@ -204,7 +204,7 @@ class NAWS_Admin {
         NAWS_Cron::instance()->reschedule();
 
         $msg = is_wp_error( $result ) ? '&error=' . urlencode( $result->get_error_message() ) : '&synced=1';
-        wp_safe_redirect( admin_url( 'admin.php?page=naws-dashboard' . $msg ) );
+        wp_safe_redirect( wp_nonce_url( admin_url( 'admin.php?page=naws-dashboard' . $msg ), 'naws_notice' ) );
         exit;
     }
 
@@ -314,7 +314,8 @@ class NAWS_Admin {
         check_admin_referer( 'naws_save_appearance' );
         if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
 
-        $input = isset( $_POST['naws_appearance'] ) ? wp_unslash( $_POST['naws_appearance'] ) : []; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized in NAWS_Colors::sanitize()
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- All values sanitized via NAWS_Colors::sanitize() which validates hex colors and whitelists all keys before storing.
+        $input = isset( $_POST['naws_appearance'] ) ? wp_unslash( $_POST['naws_appearance'] ) : [];
         update_option( NAWS_Colors::OPTION_KEY, NAWS_Colors::sanitize( $input ) );
         NAWS_Colors::flush_cache();
 
@@ -365,25 +366,27 @@ class NAWS_Admin {
         if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
 
         $redirect_url = admin_url( 'admin.php?page=naws-export' );
+        $nonce_url    = function( $url ) { return wp_nonce_url( $url, 'naws_notice' ); };
 
         // Validate file upload
         if ( empty( $_FILES['naws_import_file'] ) || $_FILES['naws_import_file']['error'] !== UPLOAD_ERR_OK ) {
-            wp_safe_redirect( $redirect_url . '&import_error=' . urlencode( naws__( 'import_file_invalid' ) ) );
+            wp_safe_redirect( $nonce_url( $redirect_url . '&import_error=' . urlencode( naws__( 'import_file_invalid' ) ) ) );
             exit;
         }
 
-        $file = $_FILES['naws_import_file']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        $file      = $_FILES['naws_import_file']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+        $safe_name = sanitize_file_name( $file['name'] );
 
         // Check extension
-        $ext = strtolower( pathinfo( $file['name'], PATHINFO_EXTENSION ) );
+        $ext = strtolower( pathinfo( $safe_name, PATHINFO_EXTENSION ) );
         if ( 'json' !== $ext ) {
-            wp_safe_redirect( $redirect_url . '&import_error=' . urlencode( naws__( 'import_file_invalid' ) ) );
+            wp_safe_redirect( $nonce_url( $redirect_url . '&import_error=' . urlencode( naws__( 'import_file_invalid' ) ) ) );
             exit;
         }
 
         // Check file size (max 100 MB)
         if ( $file['size'] > 100 * MB_IN_BYTES ) {
-            wp_safe_redirect( $redirect_url . '&import_error=' . urlencode( naws__( 'import_file_too_large' ) ) );
+            wp_safe_redirect( $nonce_url( $redirect_url . '&import_error=' . urlencode( naws__( 'import_file_too_large' ) ) ) );
             exit;
         }
 
@@ -391,8 +394,8 @@ class NAWS_Admin {
         $upload_dir = wp_upload_dir();
         $temp_path  = $upload_dir['basedir'] . '/naws-import-temp-' . wp_generate_password( 8, false ) . '.json';
 
-        if ( ! @copy( $file['tmp_name'], $temp_path ) ) { // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, Generic.PHP.ForbiddenFunctions.Found
-            wp_safe_redirect( $redirect_url . '&import_error=' . urlencode( 'Could not save uploaded file.' ) );
+        if ( ! move_uploaded_file( $file['tmp_name'], $temp_path ) ) {
+            wp_safe_redirect( $nonce_url( $redirect_url . '&import_error=' . urlencode( 'Could not save uploaded file.' ) ) );
             exit;
         }
 
@@ -400,7 +403,7 @@ class NAWS_Admin {
         $validation = NAWS_Export::validate_import_file( $temp_path );
         if ( ! $validation['valid'] ) {
             wp_delete_file( $temp_path );
-            wp_safe_redirect( $redirect_url . '&import_error=' . urlencode( $validation['error'] ) );
+            wp_safe_redirect( $nonce_url( $redirect_url . '&import_error=' . urlencode( $validation['error'] ) ) );
             exit;
         }
 

@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 5.8
 Tested up to: 6.9
-Stable tag: 1.6.0
+Stable tag: 1.6.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -104,6 +104,17 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 7. Export / Import page for backups
 
 == Changelog ==
+
+= 1.6.2 =
+* WordPress.org compliance: file upload sanitized with `sanitize_file_name()` and `move_uploaded_file()`
+* WordPress.org compliance: all `ob_start()` blocks closed with `ob_get_clean()` in same scope
+* WordPress.org compliance: all remaining inline `<script>`/`<style>` blocks converted to `wp_add_inline_script()` / `wp_add_inline_style()`
+* WordPress.org compliance: dynamic SQL column names validated against explicit whitelist before query execution
+* Fix: `phpcs` annotation for `naws_appearance` input sanitization made explicit (sanitized via `NAWS_Colors::sanitize()`)
+
+= 1.6.1 =
+* WordPress.org compliance: renamed class `Netatmo_Weather_Station` to `NAWS_Plugin` (unique prefix requirement)
+* WordPress.org compliance: fixed Netatmo privacy policy URL (was returning 404)
 
 = 1.6.0 =
 * WordPress.org compliance: all inline `<script>` blocks converted to `wp_add_inline_script()`
@@ -240,6 +251,9 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 
 == Upgrade Notice ==
 
+= 1.6.2 =
+WordPress.org compliance release. Input sanitization, ob_start() fixes, inline script/style removal, SQL whitelist validation.
+
 = 1.5.7 =
 WordPress.org compliance release. Removed GitHub Auto-Updater. Plugin Check fixes for move_uploaded_file, rand, SVG escaping.
 
@@ -276,7 +290,7 @@ This plugin connects to the following external services:
 * **Purpose:** Authenticate via OAuth2, fetch sensor readings and station data
 * **Data sent:** OAuth tokens, station/module IDs
 * **When:** During initial authentication and every automatic sync cycle
-* **Privacy policy:** [https://www.netatmo.com/en-us/legal/privacy-policy](https://www.netatmo.com/en-us/legal/privacy-policy)
+* **Privacy policy:** [https://view.netatmo.com/default/legals/magellan?app_type=app_magellan&country=DE&goto=privacy](https://view.netatmo.com/default/legals/magellan?app_type=app_magellan&country=DE&goto=privacy)
 
 = Open-Meteo API (api.open-meteo.com) =
 

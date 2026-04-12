@@ -78,7 +78,7 @@ $fc_id = 'naws-fc-' . wp_unique_id();
         <div class="naws-fc-card<?php echo $is_today ? ' naws-fc-card-today' : ''; ?>">
           <div class="naws-fc-day"><?php echo esc_html( $weekday ); ?></div>
           <div class="naws-fc-date"><?php echo esc_html( $date_str ); ?></div>
-          <div class="naws-fc-svg"><?php echo NAWS_Forecast::get_weather_svg( $wmo['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG from trusted internal method ?></div>
+          <div class="naws-fc-svg"><?php echo naws_kses_svg( NAWS_Forecast::get_weather_svg( $wmo['icon'] ) ); ?></div>
           <div class="naws-fc-cond"><?php echo esc_html( $wmo['label'] ); ?></div>
           <div class="naws-fc-temps">
             <span class="naws-fc-tmax"><?php echo $t_max !== null ? esc_html( $t_max ) : '--'; ?></span>

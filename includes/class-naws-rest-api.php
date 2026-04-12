@@ -40,64 +40,67 @@ class NAWS_Rest_API {
 
         if ( ! self::is_enabled() ) return;
 
-        $auth = [ 'permission_callback' => [ __CLASS__, 'authenticate' ] ];
-
         // GET /naws/v1/station
         register_rest_route( self::API_NS, '/station', [
-            'methods'  => 'GET',
-            'callback' => [ __CLASS__, 'endpoint_station' ],
-        ] + $auth );
+            'methods'             => 'GET',
+            'callback'            => [ __CLASS__, 'endpoint_station' ],
+            'permission_callback' => '__return_true',
+        ] );
 
         // GET /naws/v1/modules
         register_rest_route( self::API_NS, '/modules', [
-            'methods'  => 'GET',
-            'callback' => [ __CLASS__, 'endpoint_modules' ],
-        ] + $auth );
+            'methods'             => 'GET',
+            'callback'            => [ __CLASS__, 'endpoint_modules' ],
+            'permission_callback' => '__return_true',
+        ] );
 
         // GET /naws/v1/current
         register_rest_route( self::API_NS, '/current', [
-            'methods'  => 'GET',
-            'callback' => [ __CLASS__, 'endpoint_current' ],
-            'args'     => [
+            'methods'             => 'GET',
+            'callback'            => [ __CLASS__, 'endpoint_current' ],
+            'permission_callback' => '__return_true',
+            'args'                => [
                 'module_id' => [ 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ],
             ],
-        ] + $auth );
+        ] );
 
         // GET /naws/v1/readings
         register_rest_route( self::API_NS, '/readings', [
-            'methods'  => 'GET',
-            'callback' => [ __CLASS__, 'endpoint_readings' ],
-            'args'     => [
+            'methods'             => 'GET',
+            'callback'            => [ __CLASS__, 'endpoint_readings' ],
+            'permission_callback' => '__return_true',
+            'args'                => [
                 'module_id' => [ 'type' => 'string',  'sanitize_callback' => 'sanitize_text_field' ],
                 'parameter' => [ 'type' => 'string',  'sanitize_callback' => 'sanitize_text_field' ],
                 'from'      => [ 'type' => 'string',  'sanitize_callback' => 'sanitize_text_field' ],
                 'to'        => [ 'type' => 'string',  'sanitize_callback' => 'sanitize_text_field' ],
                 'group_by'  => [
-                    'type' => 'string',
-                    'enum' => [ 'raw', 'hour', 'day', 'week', 'month' ],
+                    'type'    => 'string',
+                    'enum'    => [ 'raw', 'hour', 'day', 'week', 'month' ],
                     'default' => 'raw',
                 ],
-                'limit'     => [ 'type' => 'integer', 'default' => 1000, 'minimum' => 1, 'maximum' => 5000 ],
-                'convert'   => [ 'type' => 'boolean', 'default' => true ],
+                'limit'   => [ 'type' => 'integer', 'default' => 1000, 'minimum' => 1, 'maximum' => 5000 ],
+                'convert' => [ 'type' => 'boolean', 'default' => true ],
             ],
-        ] + $auth );
+        ] );
 
         // GET /naws/v1/daily
         register_rest_route( self::API_NS, '/daily', [
-            'methods'  => 'GET',
-            'callback' => [ __CLASS__, 'endpoint_daily' ],
-            'args'     => [
+            'methods'             => 'GET',
+            'callback'            => [ __CLASS__, 'endpoint_daily' ],
+            'permission_callback' => '__return_true',
+            'args'                => [
                 'from'     => [ 'type' => 'string',  'sanitize_callback' => 'sanitize_text_field' ],
                 'to'       => [ 'type' => 'string',  'sanitize_callback' => 'sanitize_text_field' ],
                 'fields'   => [ 'type' => 'string',  'sanitize_callback' => 'sanitize_text_field' ],
                 'group_by' => [
-                    'type' => 'string',
-                    'enum' => [ 'day', 'week', 'month', 'year' ],
+                    'type'    => 'string',
+                    'enum'    => [ 'day', 'week', 'month', 'year' ],
                     'default' => 'day',
                 ],
-                'convert'  => [ 'type' => 'boolean', 'default' => true ],
+                'convert' => [ 'type' => 'boolean', 'default' => true ],
             ],
-        ] + $auth );
+        ] );
     }
 
     /* ================================================================

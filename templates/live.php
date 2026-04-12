@@ -271,7 +271,7 @@ $pressure_diff  = $_pt['diff'];
           <div class="naws-fcc<?php echo $fc_today ? ' naws-fcc-today' : ''; ?>">
             <div class="naws-fcc-day"><?php echo esc_html( $fc_wd ); ?></div>
             <div class="naws-fcc-date"><?php echo esc_html( $fc_dt ); ?></div>
-            <div class="naws-fcc-svg"><?php echo NAWS_Forecast::get_weather_svg( $fc_wmo['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG from trusted internal method ?></div>
+            <div class="naws-fcc-svg"><?php echo naws_kses_svg( NAWS_Forecast::get_weather_svg( $fc_wmo['icon'] ) ); ?></div>
             <div class="naws-fcc-cond"><?php echo esc_html( $fc_wmo['label'] ); ?></div>
             <div class="naws-fcc-temps">
               <span class="naws-fcc-tmax"><?php echo $fc_tmax !== null ? esc_html( $fc_tmax ) : '--'; ?></span>

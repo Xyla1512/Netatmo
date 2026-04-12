@@ -11,14 +11,16 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 <?php
 // phpcs:disable PluginCheck.CodeAnalysis.VariableAnalysis.NonPrefixedVariableFound
 
-// Show import result message if redirected back
-if ( isset( $_GET['import_error'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-    $error_msg = sanitize_text_field( wp_unslash( $_GET['import_error'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+// Show import result message if redirected back (nonce protects against URL manipulation)
+$naws_notice_valid = isset( $_GET['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'naws_notice' );
+
+if ( $naws_notice_valid && isset( $_GET['import_error'] ) ) :
+    $error_msg = sanitize_text_field( wp_unslash( $_GET['import_error'] ) );
     ?>
     <div class="notice notice-error is-dismissible"><p><?php echo esc_html( $error_msg ); ?></p></div>
 <?php endif; ?>
 
-<?php if ( isset( $_GET['import_done'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
+<?php if ( $naws_notice_valid && isset( $_GET['import_done'] ) ) : ?>
     <div class="notice notice-success is-dismissible"><p><?php echo esc_html( naws__( 'import_complete' ) ); ?></p></div>
 <?php endif; ?>
 

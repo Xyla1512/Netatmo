@@ -444,10 +444,8 @@ class NAWS_Ajax {
     }
 
     public function get_daily_data() {
-        // Public read-only endpoint — no nonce required.
-        // Nonces are session-bound and break cached pages for logged-out visitors.
+        check_ajax_referer( 'naws_public_nonce', 'nonce' );
         nocache_headers();
-        // phpcs:disable WordPress.Security.NonceVerification.Missing
 
         $module_id  = sanitize_text_field( wp_unslash( $_POST['module_id'] ?? ''  ) );
         $date_from  = sanitize_text_field( wp_unslash( $_POST['date_from'] ?? gmdate(  'Y-m-d', strtotime('-365 days' ) ) ) );
@@ -471,11 +469,8 @@ class NAWS_Ajax {
     }
 
     public function get_history_data() {
-        // Public read-only endpoint — no nonce required.
-        // Nonces are session-bound and break cached pages for logged-out visitors.
-        // (Removed nonce check for consistency with get_latest / get_chart_data.)
+        check_ajax_referer( 'naws_public_nonce', 'nonce' );
         nocache_headers();
-        // phpcs:disable WordPress.Security.NonceVerification.Missing
         global $wpdb;
 
         $table      = $wpdb->prefix . NAWS_TABLE_DAILY;
@@ -632,10 +627,8 @@ class NAWS_Ajax {
     // ----------------------------------------------------------------
 
     public function get_chart_data() {
-        // Public read-only endpoint — no nonce required.
-        // Nonces are session-bound and break cached pages for logged-out visitors.
+        check_ajax_referer( 'naws_public_nonce', 'nonce' );
         nocache_headers();
-        // phpcs:disable WordPress.Security.NonceVerification.Missing
 
         $module_id = sanitize_text_field( wp_unslash( $_POST['module_id'] ?? ''  ) );
         $parameter = isset( $_POST['parameter'] )
@@ -733,10 +726,8 @@ class NAWS_Ajax {
     }
 
     public function get_latest() {
-        // Public read-only endpoint — no nonce required.
-        // Nonces are session-bound and break cached pages for logged-out visitors.
+        check_ajax_referer( 'naws_public_nonce', 'nonce' );
         nocache_headers();
-        // phpcs:disable WordPress.Security.NonceVerification.Missing
 
         $module_id = sanitize_text_field( wp_unslash( $_POST['module_id'] ?? ''  ) );
         $readings  = NAWS_Database::get_latest_readings( $module_id ?: null );
