@@ -729,25 +729,32 @@ class NAWS_Database {
         $cols    = array_intersect_key( $cols, array_flip( $allowed ) );
         if ( empty( $cols ) ) return;
 
-        $col_list = implode( ', ', array_keys( $cols ) );
-        // %f ensures all numeric values are properly cast – never inserts '' or null as 0
-        $val_ph   = implode( ', ', array_fill( 0, count( $cols ), '%f' ) );
+        $col_keys  = array_keys( $cols );
+        // %i for column identifiers (WP 6.2+); %f for values
+        $col_ph    = implode( ', ', array_fill( 0, count( $cols ), '%i' ) );
+        $val_ph    = implode( ', ', array_fill( 0, count( $cols ), '%f' ) );
+        // ON DUPLICATE KEY UPDATE: 3 %i per column (LHS, VALUES arg, COALESCE fallback)
+        $on_dup_ph = implode( ', ', array_fill( 0, count( $cols ), '%i = COALESCE(VALUES(%i), %i)' ) );
 
-        $on_dup = implode( ', ', array_map(
-            fn( $k ) => "{$k} = COALESCE(VALUES({$k}), {$k})",
-            array_keys( $cols )
-        ) );
+        $on_dup_params = [];
+        foreach ( $col_keys as $k ) {
+            $on_dup_params[] = $k; // LHS column
+            $on_dup_params[] = $k; // VALUES( col )
+            $on_dup_params[] = $k; // COALESCE fallback
+        }
 
         $params = array_merge(
-            [ $station_id, $station_id, $day_date, $day_date . ' 00:00:00' ],
-            array_values( $cols )
+            $col_keys,                                                           // %i: INSERT column list
+            [ $station_id, $station_id, $day_date, $day_date . ' 00:00:00' ],  // %s: fixed columns
+            array_values( $cols ),                                               // %f: sensor values
+            $on_dup_params                                                        // %i x3: ON DUPLICATE
         );
 
-        $result = $wpdb->query( $wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table/column names from whitelist-validated constants; placeholder count matches merged params array
+        $result = $wpdb->query( $wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- {$table} is prefix+constant; column names passed as %i identifiers
             "INSERT INTO {$table}
-                (module_id, station_id, day_date, created_at, {$col_list})
+                (module_id, station_id, day_date, created_at, {$col_ph})
              VALUES (%s, %s, %s, %s, {$val_ph})
-             ON DUPLICATE KEY UPDATE {$on_dup}, updated_at = NOW()",
+             ON DUPLICATE KEY UPDATE {$on_dup_ph}, updated_at = NOW()",
             $params
         ) );
 
@@ -786,7 +793,8 @@ class NAWS_Database {
         $fields = array_intersect( (array)$args['fields'], $allowed_fields );
         if ( empty( $fields ) ) $fields = $allowed_fields;
 
-        $field_sql = implode( ', ', array_map( function($f) { return "d.{$f}"; }, $fields ) );
+        // %i placeholders for field identifiers (WP 6.2+); passed as first args to prepare()
+        $field_ph = implode( ', ', array_fill( 0, count( $fields ), '%i' ) );
 
         // WHERE
         $where  = [
@@ -818,9 +826,10 @@ class NAWS_Database {
             $date_sel  = "DATE_FORMAT(MIN(d.day_date), '%%Y-01-01') AS day_date";
         } else {
             // day (default – no grouping)
-            $sql     = "SELECT d.module_id, d.station_id, d.day_date, {$field_sql}
+            // Field names passed as %i; WHERE params follow — field args must come first
+            $sql     = "SELECT d.module_id, d.station_id, d.day_date, {$field_ph}
                         FROM {$t} d {$where_sql} ORDER BY d.day_date ASC {$limit_sql}";
-            $results = $wpdb->get_results( $wpdb->prepare( $sql, $params ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+            $results = $wpdb->get_results( $wpdb->prepare( $sql, array_merge( $fields, $params ) ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
             if ( $wpdb->last_error ) {
                 NAWS_Logger::error( 'database', 'get_daily_summaries query failed: ' . $wpdb->last_error );
@@ -833,12 +842,19 @@ class NAWS_Database {
         }
 
         // Aggregated fields
+        // All 5 allowed fields have hardcoded SQL fragments — no column name interpolation
+        $agg_map = [
+            'temp_min'     => 'MIN(d.temp_min)     AS temp_min',
+            'temp_max'     => 'MAX(d.temp_max)     AS temp_max',
+            'temp_avg'     => 'AVG(d.temp_avg)     AS temp_avg',
+            'pressure_avg' => 'AVG(d.pressure_avg) AS pressure_avg',
+            'rain_sum'     => 'SUM(d.rain_sum)     AS rain_sum',
+        ];
         $agg_parts = [];
         foreach ( $fields as $f ) {
-            if      ( $f === 'temp_min' )     $agg_parts[] = "MIN(d.temp_min)  AS temp_min";
-            elseif  ( $f === 'temp_max' )     $agg_parts[] = "MAX(d.temp_max)  AS temp_max";
-            elseif  ( $f === 'rain_sum' )     $agg_parts[] = "SUM(d.rain_sum)  AS rain_sum";
-            else                              $agg_parts[] = "AVG(d.{$f})      AS {$f}";
+            if ( isset( $agg_map[ $f ] ) ) {
+                $agg_parts[] = $agg_map[ $f ];
+            }
         }
 
         $agg_sql = implode( ', ', $agg_parts );

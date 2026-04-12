@@ -490,15 +490,16 @@ class NAWS_Ajax {
         $year_to   = intval( $_POST['year_to']   ?? gmdate( 'Y') ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
         // ── Single query for all years (replaces N+1 per-year loop) ──────
-        $field_sql = implode( ', ', array_map( function($f){ return "d.{$f}"; }, $raw_fields ) );
+        // %i placeholders for field identifiers (WP 6.2+); field args come before WHERE args
+        $field_ph = implode( ', ', array_fill( 0, count( $raw_fields ), '%i' ) );
 
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- table and field names from whitelist-validated constants
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- {$table} is prefix+constant; field names passed as %i identifiers
         $rows = $wpdb->get_results( $wpdb->prepare(
-            "SELECT d.day_date, {$field_sql}
+            "SELECT d.day_date, {$field_ph}
              FROM {$table} d
              WHERE d.day_date BETWEEN %s AND %s
              ORDER BY d.day_date ASC",
-            "{$year_from}-01-01", "{$year_to}-12-31"
+            array_merge( $raw_fields, [ "{$year_from}-01-01", "{$year_to}-12-31" ] )
         ), ARRAY_A );
         // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 

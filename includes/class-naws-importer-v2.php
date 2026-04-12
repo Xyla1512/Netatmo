@@ -356,23 +356,31 @@ class NAWS_Importer {
         $cols    = array_intersect_key( $cols, array_flip( $allowed ) );
         if ( empty( $cols ) ) return;
 
-        $col_list = implode( ', ', array_keys( $cols ) );
-        $val_ph   = implode( ', ', array_fill( 0, count( $cols ), '%f' ) );
+        $col_keys  = array_keys( $cols );
+        // %i for column identifiers (WP 6.2+); %f for values
+        $col_ph    = implode( ', ', array_fill( 0, count( $cols ), '%i' ) );
+        $val_ph    = implode( ', ', array_fill( 0, count( $cols ), '%f' ) );
+        // ON DUPLICATE KEY UPDATE: 3 %i per column (LHS, VALUES arg, COALESCE fallback)
+        $on_dup_ph = implode( ', ', array_fill( 0, count( $cols ), '%i = COALESCE(VALUES(%i), %i)' ) );
 
-        $on_dup = implode( ', ', array_map(
-            fn($k) => "{$k} = COALESCE(VALUES({$k}), {$k})",
-            array_keys( $cols )
-        ) );
+        $on_dup_params = [];
+        foreach ( $col_keys as $k ) {
+            $on_dup_params[] = $k; // LHS column
+            $on_dup_params[] = $k; // VALUES( col )
+            $on_dup_params[] = $k; // COALESCE fallback
+        }
 
         $params = array_merge(
-            [ $station_id, $station_id, $day_date, $day_date . ' 00:00:00' ],
-            array_values( $cols )
+            $col_keys,                                                           // %i: INSERT column list
+            [ $station_id, $station_id, $day_date, $day_date . ' 00:00:00' ],  // %s: fixed columns
+            array_values( $cols ),                                               // %f: sensor values
+            $on_dup_params                                                        // %i x3: ON DUPLICATE
         );
 
-        $result = $wpdb->query( $wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table/column names from whitelist-validated constants; placeholder count matches merged params array
-            "INSERT INTO {$table} (module_id, station_id, day_date, created_at, {$col_list})
+        $result = $wpdb->query( $wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- {$table} is prefix+constant; column names passed as %i identifiers
+            "INSERT INTO {$table} (module_id, station_id, day_date, created_at, {$col_ph})
              VALUES (%s, %s, %s, %s, {$val_ph})
-             ON DUPLICATE KEY UPDATE {$on_dup}",
+             ON DUPLICATE KEY UPDATE {$on_dup_ph}",
             $params
         ) );
 

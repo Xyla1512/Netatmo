@@ -78,12 +78,11 @@ class NAWS_Export {
         // Stream rows in batches
         $offset    = 0;
         $first_row = true;
-        $cols      = implode( ', ', self::DAILY_COLUMNS );
-
         while ( $offset < $total ) {
             $rows = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                 $wpdb->prepare(
-                    "SELECT {$cols} FROM {$table} ORDER BY day_date ASC LIMIT %d OFFSET %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                    // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- {$table} is $wpdb->prefix + constant; columns are hardcoded literals
+                    "SELECT module_id, station_id, day_date, temp_min, temp_max, temp_avg, pressure_avg, rain_sum, humidity_avg, indoor_temp_avg, indoor_humidity_avg, co2_avg, noise_avg, wind_avg, gust_max, wind_angle FROM {$table} ORDER BY day_date ASC LIMIT %d OFFSET %d",
                     self::BATCH_SIZE,
                     $offset
                 ),
@@ -132,8 +131,8 @@ class NAWS_Export {
         fwrite( $out, '{"meta":' . wp_json_encode( $meta ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite
 
         // Modules (small dataset, safe to load all)
-        $mod_cols = implode( ', ', self::MODULE_COLUMNS );
-        $modules  = $wpdb->get_results( "SELECT {$mod_cols} FROM {$table_modules} ORDER BY module_id", ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- {$table_modules} is $wpdb->prefix + constant; columns are hardcoded literals
+        $modules  = $wpdb->get_results( "SELECT module_id, station_id, module_name, module_type, data_types, last_seen, firmware, battery_vp, rf_status, is_active, latitude, longitude FROM {$table_modules} ORDER BY module_id", ARRAY_A );
         fwrite( $out, ',"modules":' . wp_json_encode( $modules ?: [] ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite
 
         // Settings (strip sensitive data)
@@ -149,12 +148,11 @@ class NAWS_Export {
 
         $offset    = 0;
         $first_row = true;
-        $cols      = implode( ', ', self::DAILY_COLUMNS );
-
         while ( $offset < $total_daily ) {
             $rows = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                 $wpdb->prepare(
-                    "SELECT {$cols} FROM {$table_daily} ORDER BY day_date ASC LIMIT %d OFFSET %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                    // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- {$table_daily} is $wpdb->prefix + constant; columns are hardcoded literals
+                    "SELECT module_id, station_id, day_date, temp_min, temp_max, temp_avg, pressure_avg, rain_sum, humidity_avg, indoor_temp_avg, indoor_humidity_avg, co2_avg, noise_avg, wind_avg, gust_max, wind_angle FROM {$table_daily} ORDER BY day_date ASC LIMIT %d OFFSET %d",
                     self::BATCH_SIZE,
                     $offset
                 ),

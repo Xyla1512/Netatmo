@@ -1,7 +1,7 @@
 === XTX Integration for Netatmo ===
 Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
-Requires at least: 5.8
+Requires at least: 6.2
 Tested up to: 6.9
 Stable tag: 1.6.2
 Requires PHP: 7.4
