@@ -268,7 +268,8 @@ class NAWS_Export {
             }
 
             // Upsert: INSERT ... ON DUPLICATE KEY UPDATE
-            $result = $wpdb->query( $wpdb->prepare( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constant
+            // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constant
+            $result = $wpdb->query( $wpdb->prepare(
                 "INSERT INTO {$table}
                     (module_id, station_id, day_date, temp_min, temp_max, temp_avg,
                      pressure_avg, rain_sum, humidity_avg, indoor_temp_avg,
@@ -300,6 +301,7 @@ class NAWS_Export {
                 $clean['gust_max'],
                 $clean['wind_angle'],
             ) );
+            // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
             if ( false === $result ) {
                 $skipped++;
@@ -358,7 +360,8 @@ class NAWS_Export {
                 $clean = self::sanitize_module_row( $mod );
                 if ( null === $clean ) continue;
 
-                $result = $wpdb->query( $wpdb->prepare( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constant
+                // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constant
+                $result = $wpdb->query( $wpdb->prepare(
                     "INSERT INTO {$table}
                         (module_id, station_id, module_name, module_type, data_types,
                          last_seen, firmware, battery_vp, rf_status, is_active, latitude, longitude)
@@ -383,6 +386,7 @@ class NAWS_Export {
                     $clean['latitude'],
                     $clean['longitude'],
                 ) );
+                // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
                 if ( false !== $result ) {
                     $modules_imported++;
