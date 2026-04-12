@@ -369,7 +369,7 @@ class NAWS_Importer {
             array_values( $cols )
         );
 
-        $result = $wpdb->query( $wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        $result = $wpdb->query( $wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table/column names from whitelist-validated constants; placeholder count matches merged params array
             "INSERT INTO {$table} (module_id, station_id, day_date, created_at, {$col_list})
              VALUES (%s, %s, %s, %s, {$val_ph})
              ON DUPLICATE KEY UPDATE {$on_dup}",

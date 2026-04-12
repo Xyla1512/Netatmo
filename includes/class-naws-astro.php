@@ -21,14 +21,14 @@ class NAWS_Astro {
         $table = $wpdb->prefix . NAWS_TABLE_MODULES;
 
         // Ensure columns exist (migration may not have run on update)
-        $col = $wpdb->get_var( "SHOW COLUMNS FROM {$table} LIKE 'latitude'" );
+        $col = $wpdb->get_var( "SHOW COLUMNS FROM {$table} LIKE 'latitude'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constant; schema introspection query
         if ( ! $col ) {
-            $wpdb->query( "ALTER TABLE {$table} ADD COLUMN latitude  DOUBLE DEFAULT NULL" );
-            $wpdb->query( "ALTER TABLE {$table} ADD COLUMN longitude DOUBLE DEFAULT NULL" );
+            $wpdb->query( "ALTER TABLE {$table} ADD COLUMN latitude  DOUBLE DEFAULT NULL" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.SchemaChange -- one-time migration; table name from constant
+            $wpdb->query( "ALTER TABLE {$table} ADD COLUMN longitude DOUBLE DEFAULT NULL" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.SchemaChange -- one-time migration; table name from constant
             return null; // no data yet, will be filled on next sync
         }
 
-        $row = $wpdb->get_row(
+        $row = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constant
             "SELECT latitude, longitude FROM {$table}
              WHERE module_type IN ('NAMain','NAOldModule')
                AND latitude IS NOT NULL

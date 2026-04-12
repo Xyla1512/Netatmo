@@ -121,7 +121,7 @@ function naws_calc_pressure_trend() {
 
     // Helper: get latest reading for a parameter
     $latest = function( $param ) use ( $wpdb, $t_read ) {
-        return $wpdb->get_var( $wpdb->prepare(
+        return $wpdb->get_var( $wpdb->prepare( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constant; no transient cache appropriate for live display
             "SELECT value FROM {$t_read}
              WHERE parameter = %s
              ORDER BY recorded_at DESC LIMIT 1",
@@ -131,7 +131,7 @@ function naws_calc_pressure_trend() {
 
     // Helper: get reading closest to 3 hours ago for a parameter
     $three_hours = function( $param ) use ( $wpdb, $t_read, $three_h_ago ) {
-        return $wpdb->get_var( $wpdb->prepare(
+        return $wpdb->get_var( $wpdb->prepare( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constant; live display, caching would give stale values
             "SELECT value FROM {$t_read}
              WHERE parameter = %s
                AND recorded_at <= %d
@@ -271,7 +271,7 @@ $pressure_diff  = $_pt['diff'];
           <div class="naws-fcc<?php echo $fc_today ? ' naws-fcc-today' : ''; ?>">
             <div class="naws-fcc-day"><?php echo esc_html( $fc_wd ); ?></div>
             <div class="naws-fcc-date"><?php echo esc_html( $fc_dt ); ?></div>
-            <div class="naws-fcc-svg"><?php echo naws_kses_svg( NAWS_Forecast::get_weather_svg( $fc_wmo['icon'] ) ); ?></div>
+            <div class="naws-fcc-svg"><?php echo naws_kses_svg( NAWS_Forecast::get_weather_svg( $fc_wmo['icon'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- naws_kses_svg() uses wp_kses() with SVG allowlist ?></div>
             <div class="naws-fcc-cond"><?php echo esc_html( $fc_wmo['label'] ); ?></div>
             <div class="naws-fcc-temps">
               <span class="naws-fcc-tmax"><?php echo $fc_tmax !== null ? esc_html( $fc_tmax ) : '--'; ?></span>

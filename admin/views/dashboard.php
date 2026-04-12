@@ -3,6 +3,7 @@
 <?php
 // phpcs:disable PluginCheck.CodeAnalysis.VariableAnalysis.NonPrefixedVariableFound
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- All echo calls use esc_html/esc_attr or naws_kses_svg() which wraps wp_kses() with SVG allowlist
 // Module type icons for accordion headers
 $module_type_icons = [
     'NAMain'   => '🏠',

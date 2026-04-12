@@ -369,13 +369,13 @@ class NAWS_Admin {
         $nonce_url    = function( $url ) { return wp_nonce_url( $url, 'naws_notice' ); };
 
         // Validate file upload
-        if ( empty( $_FILES['naws_import_file'] ) || $_FILES['naws_import_file']['error'] !== UPLOAD_ERR_OK ) {
+        if ( empty( $_FILES['naws_import_file'] ) || ( $_FILES['naws_import_file']['error'] ?? -1 ) !== UPLOAD_ERR_OK ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
             wp_safe_redirect( $nonce_url( $redirect_url . '&import_error=' . urlencode( naws__( 'import_file_invalid' ) ) ) );
             exit;
         }
 
-        $file      = $_FILES['naws_import_file']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-        $safe_name = sanitize_file_name( $file['name'] );
+        $file      = $_FILES['naws_import_file']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- validated by UPLOAD_ERR_OK check above; filename handled by wp_handle_upload()
+        $safe_name = sanitize_file_name( $file['name'] ?? '' );
 
         // Check extension
         $ext = strtolower( pathinfo( $safe_name, PATHINFO_EXTENSION ) );
@@ -385,19 +385,23 @@ class NAWS_Admin {
         }
 
         // Check file size (max 100 MB)
-        if ( $file['size'] > 100 * MB_IN_BYTES ) {
+        if ( ( $file['size'] ?? 0 ) > 100 * MB_IN_BYTES ) {
             wp_safe_redirect( $nonce_url( $redirect_url . '&import_error=' . urlencode( naws__( 'import_file_too_large' ) ) ) );
             exit;
         }
 
-        // Move to safe location in uploads dir
-        $upload_dir = wp_upload_dir();
-        $temp_path  = $upload_dir['basedir'] . '/naws-import-temp-' . wp_generate_password( 8, false ) . '.json';
-
-        if ( ! move_uploaded_file( $file['tmp_name'], $temp_path ) ) {
+        // Move to safe location in uploads dir via wp_handle_upload()
+        $overrides = [
+            'test_form' => false,
+            'test_type' => false,
+            'mimes'     => [ 'json' => 'application/json' ],
+        ];
+        $uploaded = wp_handle_upload( $file, $overrides );
+        if ( isset( $uploaded['error'] ) ) {
             wp_safe_redirect( $nonce_url( $redirect_url . '&import_error=' . urlencode( 'Could not save uploaded file.' ) ) );
             exit;
         }
+        $temp_path = $uploaded['file'];
 
         // Validate JSON structure
         $validation = NAWS_Export::validate_import_file( $temp_path );

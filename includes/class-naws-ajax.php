@@ -244,18 +244,20 @@ class NAWS_Ajax {
             }
         }
 
-        // Hidden charts (per-sensor 24h chart toggle) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-        $hidden_charts = isset( $_POST['hidden_charts'] ) ? (array) $_POST['hidden_charts'] : [];
-        $hidden_charts = array_map( 'sanitize_text_field', $hidden_charts );
+        // Hidden charts (per-sensor 24h chart toggle)
+        $hidden_charts = isset( $_POST['hidden_charts'] )
+            ? array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['hidden_charts'] ) )
+            : [];
         if ( ! update_option( 'naws_live_hidden_charts', $hidden_charts ) ) {
             if ( get_option( 'naws_live_hidden_charts' ) !== $hidden_charts ) {
                 $errors[] = 'hidden_charts';
             }
         }
 
-        // Hidden history (yearly comparison) charts // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-        $hidden_history_charts = isset( $_POST['hidden_history_charts'] ) ? (array) $_POST['hidden_history_charts'] : [];
-        $hidden_history_charts = array_map( 'sanitize_text_field', $hidden_history_charts );
+        // Hidden history (yearly comparison) charts
+        $hidden_history_charts = isset( $_POST['hidden_history_charts'] )
+            ? array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['hidden_history_charts'] ) )
+            : [];
         if ( ! update_option( 'naws_history_hidden_charts', $hidden_history_charts ) ) {
             if ( get_option( 'naws_history_hidden_charts' ) !== $hidden_history_charts ) {
                 $errors[] = 'hidden_history_charts';
@@ -280,7 +282,7 @@ class NAWS_Ajax {
         $date_to   = sanitize_text_field( wp_unslash( $_POST['date_to']   ?? ''  ) );
         if ( ! $date_from ) $date_from = gmdate(  'Y-m-d', strtotime( '-7 days' ) );
         if ( ! $date_to   ) $date_to   = gmdate(  'Y-m-d' );
-        $rows = $wpdb->get_results( $wpdb->prepare( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $rows = $wpdb->get_results( $wpdb->prepare( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constant
             "SELECT day_date,
                     ROUND(temp_min,1)     AS temp_min,
                     ROUND(temp_max,1)     AS temp_max,
@@ -364,7 +366,7 @@ class NAWS_Ajax {
         }
 
         // Get distinct completed days (not today) that have readings
-        $dates = $wpdb->get_col( $wpdb->prepare( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $dates = $wpdb->get_col( $wpdb->prepare( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constant
             "SELECT DISTINCT DATE(FROM_UNIXTIME(recorded_at)) as day
              FROM {$r}
              WHERE recorded_at >= UNIX_TIMESTAMP(%s)
@@ -486,7 +488,7 @@ class NAWS_Ajax {
         // ── Single query for all years (replaces N+1 per-year loop) ──────
         $field_sql = implode( ', ', array_map( function($f){ return "d.{$f}"; }, $raw_fields ) );
 
-        $rows = $wpdb->get_results( $wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        $rows = $wpdb->get_results( $wpdb->prepare( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table and field names from whitelist-validated constants
             "SELECT d.day_date, {$field_sql}
              FROM {$table} d
              WHERE d.day_date BETWEEN %s AND %s

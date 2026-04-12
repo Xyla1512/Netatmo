@@ -243,7 +243,7 @@ $icon_color_keys = [
                     <div class="naws-icon-set-preview">
                         <?php foreach ( $set_data['icons'] as $ico_key => $ico_svg ) : ?>
                         <div class="naws-icon-set-ico" title="<?php echo esc_attr( $ico_key ); ?>">
-                            <?php echo naws_kses_svg( $ico_svg ); ?>
+                            <?php echo naws_kses_svg( $ico_svg ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- naws_kses_svg() uses wp_kses() with SVG allowlist ?>
                         </div>
                         <?php endforeach; ?>
                     </div>

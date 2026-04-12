@@ -6,11 +6,11 @@
         <?php naws_e( 'settings_title' ); ?>
     </h1>
 
-    <?php if ( isset( $_GET['updated'] ) ) : ?>
+    <?php if ( isset( $_GET['updated'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only status flag, no data processed ?>
         <div class="notice notice-success is-dismissible"><p><?php naws_e( 'settings_saved' ); ?></p></div>
     <?php endif; ?>
 
-    <?php if ( isset( $_GET['disconnected'] ) ) : ?>
+    <?php if ( isset( $_GET['disconnected'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only status flag, no data processed ?>
         <div class="notice notice-info is-dismissible"><p><?php naws_e( 'disconnected_msg' ); ?></p></div>
     <?php endif; ?>
 

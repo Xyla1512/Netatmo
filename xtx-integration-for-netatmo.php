@@ -154,7 +154,7 @@ final class NAWS_Plugin {
                 $table = $wpdb->prefix . NAWS_TABLE_READINGS;
                 $params = [ 'time_utc', 'date_min_temp', 'date_max_temp', 'date_min_pressure', 'date_max_pressure', 'date_max_wind_str', 'date_max_gust' ];
                 $placeholders = implode( ', ', array_fill( 0, count( $params ), '%s' ) );
-                $wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE parameter IN ({$placeholders})", $params ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constant
+                $wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE parameter IN ({$placeholders})", $params ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table name from constant; placeholders built dynamically from fixed array
                 update_option( 'naws_cleanup_timestamp_readings', true, false );
             }
         }
@@ -173,7 +173,7 @@ final class NAWS_Plugin {
         $host    = wp_parse_url( $url, PHP_URL_HOST );
 
         if ( in_array( $host, $domains, true ) ) {
-            curl_setopt( $handle, CURLOPT_CONNECTTIMEOUT, 30 );
+            curl_setopt( $handle, CURLOPT_CONNECTTIMEOUT, 30 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt -- Required to set cURL connect timeout via http_api_curl hook; no WP-native alternative exists
         }
     }
 }

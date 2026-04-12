@@ -245,7 +245,7 @@ class NAWS_Database {
         global $wpdb;
         $table = $wpdb->prefix . NAWS_TABLE_MODULES;
         $where = $active_only ? 'WHERE is_active = 1' : '';
-        $rows  = $wpdb->get_results(
+        $rows  = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constant; $where is either empty or a literal safe string
             "SELECT * FROM {$table} {$where} ORDER BY is_active DESC, module_type, module_name",
             ARRAY_A
         );
@@ -743,7 +743,7 @@ class NAWS_Database {
             array_values( $cols )
         );
 
-        $result = $wpdb->query( $wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        $result = $wpdb->query( $wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table/column names from whitelist-validated constants; placeholder count matches merged params array
             "INSERT INTO {$table}
                 (module_id, station_id, day_date, created_at, {$col_list})
              VALUES (%s, %s, %s, %s, {$val_ph})
@@ -937,14 +937,14 @@ class NAWS_Database {
         global $wpdb;
         $r     = $wpdb->prefix . NAWS_TABLE_READINGS;
         $where = $module_id ? $wpdb->prepare( 'WHERE module_id = %s', $module_id ) : '';
-        return $wpdb->get_row( "SELECT MIN(recorded_at) AS date_begin, MAX(recorded_at) AS date_end FROM {$r} {$where}", ARRAY_A );
+        return $wpdb->get_row( "SELECT MIN(recorded_at) AS date_begin, MAX(recorded_at) AS date_end FROM {$r} {$where}", ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table from constant; $where is either empty or wpdb->prepare()'d
     }
 
     public static function get_daily_data_range( $module_id = null ) {
         global $wpdb;
         $t     = $wpdb->prefix . NAWS_TABLE_DAILY;
         $where = $module_id ? $wpdb->prepare( 'WHERE module_id = %s', $module_id ) : '';
-        return $wpdb->get_row( "SELECT MIN(day_date) AS date_begin, MAX(day_date) AS date_end FROM {$t} {$where}", ARRAY_A );
+        return $wpdb->get_row( "SELECT MIN(day_date) AS date_begin, MAX(day_date) AS date_end FROM {$t} {$where}", ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table from constant; $where is either empty or wpdb->prepare()'d
     }
 
     public static function count_readings() {
