@@ -750,7 +750,7 @@ class NAWS_Database {
             $on_dup_params                                                        // %i x3: ON DUPLICATE
         );
 
-        $result = $wpdb->query( $wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- {$table} is prefix+constant; column names passed as %i identifiers
+        $result = $wpdb->query( $wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter -- {$table} is prefix+constant; column names passed as %i identifiers; placeholder count is dynamic
             "INSERT INTO {$table}
                 (module_id, station_id, day_date, created_at, {$col_ph})
              VALUES (%s, %s, %s, %s, {$val_ph})

@@ -493,7 +493,7 @@ class NAWS_Ajax {
         // %i placeholders for field identifiers (WP 6.2+); field args come before WHERE args
         $field_ph = implode( ', ', array_fill( 0, count( $raw_fields ), '%i' ) );
 
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- {$table} is prefix+constant; field names passed as %i identifiers
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber,PluginCheck.Security.DirectDB.UnescapedDBParameter -- {$table} is prefix+constant; field names passed as %i identifiers; placeholder count is dynamic
         $rows = $wpdb->get_results( $wpdb->prepare(
             "SELECT d.day_date, {$field_ph}
              FROM {$table} d
