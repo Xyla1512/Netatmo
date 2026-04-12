@@ -369,7 +369,7 @@ class NAWS_Admin {
         $nonce_url    = function( $url ) { return wp_nonce_url( $url, 'naws_notice' ); };
 
         // Validate file upload
-        if ( empty( $_FILES['naws_import_file'] ) || ( $_FILES['naws_import_file']['error'] ?? -1 ) !== UPLOAD_ERR_OK ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+        if ( empty( $_FILES['naws_import_file'] ) || ( $_FILES['naws_import_file']['error'] ?? -1 ) !== UPLOAD_ERR_OK ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- error code is integer, not user-controlled string
             wp_safe_redirect( $nonce_url( $redirect_url . '&import_error=' . urlencode( naws__( 'import_file_invalid' ) ) ) );
             exit;
         }

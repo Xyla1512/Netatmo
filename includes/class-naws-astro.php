@@ -28,13 +28,15 @@ class NAWS_Astro {
             return null; // no data yet, will be filled on next sync
         }
 
-        $row = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constant
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name from constant
+        $row = $wpdb->get_row(
             "SELECT latitude, longitude FROM {$table}
              WHERE module_type IN ('NAMain','NAOldModule')
                AND latitude IS NOT NULL
              LIMIT 1",
             ARRAY_A
         );
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
         if ( ! $row || $row['latitude'] === null ) return null;
         return [ 'lat' => floatval( $row['latitude'] ), 'lng' => floatval( $row['longitude'] ) ];
     }

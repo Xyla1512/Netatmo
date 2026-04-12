@@ -120,8 +120,9 @@ function naws_calc_pressure_trend() {
     $three_h_ago = time() - ( 3 * HOUR_IN_SECONDS );
 
     // Helper: get latest reading for a parameter
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $t_read from constant; live display, no caching appropriate
     $latest = function( $param ) use ( $wpdb, $t_read ) {
-        return $wpdb->get_var( $wpdb->prepare( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constant; no transient cache appropriate for live display
+        return $wpdb->get_var( $wpdb->prepare(
             "SELECT value FROM {$t_read}
              WHERE parameter = %s
              ORDER BY recorded_at DESC LIMIT 1",
@@ -131,7 +132,7 @@ function naws_calc_pressure_trend() {
 
     // Helper: get reading closest to 3 hours ago for a parameter
     $three_hours = function( $param ) use ( $wpdb, $t_read, $three_h_ago ) {
-        return $wpdb->get_var( $wpdb->prepare( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constant; live display, caching would give stale values
+        return $wpdb->get_var( $wpdb->prepare(
             "SELECT value FROM {$t_read}
              WHERE parameter = %s
                AND recorded_at <= %d
@@ -139,6 +140,7 @@ function naws_calc_pressure_trend() {
             $param, $three_h_ago
         ) );
     };
+    // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 
     // Prefer sea-level Pressure, fallback to AbsolutePressure
     $now_val  = $latest( 'Pressure' )       ?: $latest( 'AbsolutePressure' );

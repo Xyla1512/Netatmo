@@ -157,8 +157,8 @@ class NAWS_Database {
                 'wind_angle'          => "DOUBLE DEFAULT NULL AFTER gust_max",
             ];
             foreach ( $add_cols as $col => $def ) {
-                if ( ! $wpdb->get_results( "SHOW COLUMNS FROM {$t_day} LIKE '{$col}'" ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.SchemaChange
-                    $wpdb->query( "ALTER TABLE {$t_day} ADD COLUMN {$col} {$def}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                if ( ! $wpdb->get_results( "SHOW COLUMNS FROM {$t_day} LIKE '{$col}'" ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $col from hardcoded array; table name from constant
+                    $wpdb->query( "ALTER TABLE {$t_day} ADD COLUMN {$col} {$def}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $col from hardcoded array; $def from hardcoded array
                 }
             }
         }
@@ -245,7 +245,7 @@ class NAWS_Database {
         global $wpdb;
         $table = $wpdb->prefix . NAWS_TABLE_MODULES;
         $where = $active_only ? 'WHERE is_active = 1' : '';
-        $rows  = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constant; $where is either empty or a literal safe string
+        $rows  = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name from constant; $where is either empty or a literal safe string
             "SELECT * FROM {$table} {$where} ORDER BY is_active DESC, module_type, module_name",
             ARRAY_A
         );
@@ -937,14 +937,14 @@ class NAWS_Database {
         global $wpdb;
         $r     = $wpdb->prefix . NAWS_TABLE_READINGS;
         $where = $module_id ? $wpdb->prepare( 'WHERE module_id = %s', $module_id ) : '';
-        return $wpdb->get_row( "SELECT MIN(recorded_at) AS date_begin, MAX(recorded_at) AS date_end FROM {$r} {$where}", ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table from constant; $where is either empty or wpdb->prepare()'d
+        return $wpdb->get_row( "SELECT MIN(recorded_at) AS date_begin, MAX(recorded_at) AS date_end FROM {$r} {$where}", ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table from constant; $where is either empty or wpdb->prepare()'d
     }
 
     public static function get_daily_data_range( $module_id = null ) {
         global $wpdb;
         $t     = $wpdb->prefix . NAWS_TABLE_DAILY;
         $where = $module_id ? $wpdb->prepare( 'WHERE module_id = %s', $module_id ) : '';
-        return $wpdb->get_row( "SELECT MIN(day_date) AS date_begin, MAX(day_date) AS date_end FROM {$t} {$where}", ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table from constant; $where is either empty or wpdb->prepare()'d
+        return $wpdb->get_row( "SELECT MIN(day_date) AS date_begin, MAX(day_date) AS date_end FROM {$t} {$where}", ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table from constant; $where is either empty or wpdb->prepare()'d
     }
 
     public static function count_readings() {

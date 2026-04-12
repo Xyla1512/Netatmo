@@ -282,7 +282,8 @@ class NAWS_Ajax {
         $date_to   = sanitize_text_field( wp_unslash( $_POST['date_to']   ?? ''  ) );
         if ( ! $date_from ) $date_from = gmdate(  'Y-m-d', strtotime( '-7 days' ) );
         if ( ! $date_to   ) $date_to   = gmdate(  'Y-m-d' );
-        $rows = $wpdb->get_results( $wpdb->prepare( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constant
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name from constant
+        $rows = $wpdb->get_results( $wpdb->prepare(
             "SELECT day_date,
                     ROUND(temp_min,1)     AS temp_min,
                     ROUND(temp_max,1)     AS temp_max,
@@ -293,6 +294,7 @@ class NAWS_Ajax {
              ORDER BY day_date ASC",
             $date_from, $date_to
         ), ARRAY_A );
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         if ( $wpdb->last_error ) {
             NAWS_Logger::error( 'ajax', 'db_check query failed: ' . $wpdb->last_error );
@@ -308,7 +310,7 @@ class NAWS_Ajax {
         if ( ! current_user_can( 'manage_options' ) ) { wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 ); }
         global $wpdb;
         $table   = $wpdb->prefix . NAWS_TABLE_DAILY;
-        $deleted = $wpdb->query( "DELETE FROM {$table}" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constant, no user input
+        $deleted = $wpdb->query( "DELETE FROM {$table}" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constant, no user input
 
         if ( $deleted === false ) {
             NAWS_Logger::error( 'ajax', 'clear_daily_summary DELETE failed: ' . $wpdb->last_error );
@@ -366,7 +368,8 @@ class NAWS_Ajax {
         }
 
         // Get distinct completed days (not today) that have readings
-        $dates = $wpdb->get_col( $wpdb->prepare( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constant
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name from constant
+        $dates = $wpdb->get_col( $wpdb->prepare(
             "SELECT DISTINCT DATE(FROM_UNIXTIME(recorded_at)) as day
              FROM {$r}
              WHERE recorded_at >= UNIX_TIMESTAMP(%s)
@@ -378,6 +381,7 @@ class NAWS_Ajax {
             $date_to   . ' 23:59:59',
             $batch
         ) );
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         if ( empty( $dates ) ) {
             wp_send_json_success( [
@@ -488,13 +492,15 @@ class NAWS_Ajax {
         // ── Single query for all years (replaces N+1 per-year loop) ──────
         $field_sql = implode( ', ', array_map( function($f){ return "d.{$f}"; }, $raw_fields ) );
 
-        $rows = $wpdb->get_results( $wpdb->prepare( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table and field names from whitelist-validated constants
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- table and field names from whitelist-validated constants
+        $rows = $wpdb->get_results( $wpdb->prepare(
             "SELECT d.day_date, {$field_sql}
              FROM {$table} d
              WHERE d.day_date BETWEEN %s AND %s
              ORDER BY d.day_date ASC",
             "{$year_from}-01-01", "{$year_to}-12-31"
         ), ARRAY_A );
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         if ( $wpdb->last_error ) {
             NAWS_Logger::error( 'ajax', 'get_history_data query failed: ' . $wpdb->last_error );
