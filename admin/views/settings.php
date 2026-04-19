@@ -372,21 +372,20 @@
             </form>
 
             <?php
-            ob_start();
-            ?>
-            (function(){
-                var radios = document.querySelectorAll('input[name="naws_settings[forecast_location]"]');
-                var manual = document.getElementById('naws-forecast-manual-row');
-                var country = document.getElementById('naws-forecast-country-row');
-                function toggle(){
-                    var isManual = document.querySelector('input[name="naws_settings[forecast_location]"]:checked').value === 'manual';
-                    if(manual) manual.style.opacity = isManual ? '1' : '0.5';
-                    if(country) country.style.opacity = isManual ? '1' : '0.5';
-                }
-                radios.forEach(function(r){ r.addEventListener('change', toggle); });
-            })();
-            <?php
-            wp_add_inline_script( 'naws-admin', ob_get_clean() );
+            wp_add_inline_script( 'naws-admin', <<<'EOJS'
+(function(){
+    var radios = document.querySelectorAll('input[name="naws_settings[forecast_location]"]');
+    var manual = document.getElementById('naws-forecast-manual-row');
+    var country = document.getElementById('naws-forecast-country-row');
+    function toggle(){
+        var isManual = document.querySelector('input[name="naws_settings[forecast_location]"]:checked').value === 'manual';
+        if(manual) manual.style.opacity = isManual ? '1' : '0.5';
+        if(country) country.style.opacity = isManual ? '1' : '0.5';
+    }
+    radios.forEach(function(r){ r.addEventListener('change', toggle); });
+})();
+EOJS
+            );
             ?>
             </div>
         </div>

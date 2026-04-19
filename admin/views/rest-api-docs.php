@@ -528,31 +528,27 @@ df['date'] = pd.to_datetime(df['date'])
 </div><!-- /.wrap -->
 
 <?php
-ob_start();
-?>
-(function(){
+wp_add_inline_script( 'naws-admin', '(function(){
     /* Tab switching */
-    document.querySelectorAll('.naws-tab').forEach(function(tab){
-        tab.addEventListener('click', function(){
-            var panel = this.closest('.naws-api-panel');
-            panel.querySelectorAll('.naws-tab').forEach(function(t){ t.classList.remove('active'); });
-            panel.querySelectorAll('.naws-tab-content').forEach(function(c){ c.classList.remove('active'); });
-            this.classList.add('active');
+    document.querySelectorAll(\'.naws-tab\').forEach(function(tab){
+        tab.addEventListener(\'click\', function(){
+            var panel = this.closest(\'.naws-api-panel\');
+            panel.querySelectorAll(\'.naws-tab\').forEach(function(t){ t.classList.remove(\'active\'); });
+            panel.querySelectorAll(\'.naws-tab-content\').forEach(function(c){ c.classList.remove(\'active\'); });
+            this.classList.add(\'active\');
             var target = document.getElementById(this.dataset.tab);
-            if(target) target.classList.add('active');
+            if(target) target.classList.add(\'active\');
         });
     });
 })();
 /* Copy API key */
 function nawsCopyKey(){
-    var inp = document.getElementById('naws-api-key-display');
+    var inp = document.getElementById(\'naws-api-key-display\');
     if(!inp) return;
     inp.select();
     navigator.clipboard.writeText(inp.value).then(function(){
-        inp.style.borderColor='#10b981';
-        setTimeout(function(){ inp.style.borderColor=''; }, 1500);
+        inp.style.borderColor=\'#10b981\';
+        setTimeout(function(){ inp.style.borderColor=\'\'; }, 1500);
     });
-}
-<?php
-wp_add_inline_script( 'naws-admin', ob_get_clean() );
+}' );
 ?>

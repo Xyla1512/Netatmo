@@ -99,8 +99,7 @@ $modules = NAWS_Database::get_modules( false );
 
 <?php // Styles moved to assets/css/admin.css ?>
 <?php
-ob_start();
-?>
+wp_add_inline_script( 'naws-admin', <<<'EOJS'
 (function($){
     $(document).on('change', '.naws-module-toggle', function() {
         const checkbox  = $(this);
@@ -112,7 +111,7 @@ ob_start();
 
         $.post(ajaxurl, {
             action:    'naws_toggle_module',
-            nonce:     '<?php echo esc_js( wp_create_nonce( 'naws_admin_nonce' ) ); ?>',
+            nonce:     nawsAdmin.nonce,
             module_id: moduleId,
             is_active: isActive
         }, function(resp) {
@@ -125,20 +124,20 @@ ob_start();
                     badge.remove();
                 } else {
                     if (!badge.length) {
-                        row.find('strong').after('<span class="naws-badge naws-badge-error" style="margin-left:0.4rem;"><?php echo esc_js( naws__("inactive") ); ?></span>');
+                        row.find('strong').after('<span class="naws-badge naws-badge-error" style="margin-left:0.4rem;">' + nawsAdmin.strings.inactive + '</span>');
                     }
                 }
             } else {
                 // Revert
                 checkbox.prop('checked', !isActive);
-                alert('<?php echo esc_js( naws__("toggle_error") ); ?>');
+                alert(nawsAdmin.strings.toggle_error);
             }
         }).fail(function() {
             checkbox.prop('disabled', false).prop('checked', !isActive);
-            alert('<?php echo esc_js( naws__("request_failed") ); ?>');
+            alert(nawsAdmin.strings.request_failed);
         });
     });
 })(jQuery);
-<?php
-wp_add_inline_script( 'naws-admin', ob_get_clean() );
+EOJS
+);
 ?>

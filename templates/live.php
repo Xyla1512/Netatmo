@@ -273,7 +273,7 @@ $pressure_diff  = $_pt['diff'];
           <div class="naws-fcc<?php echo $fc_today ? ' naws-fcc-today' : ''; ?>">
             <div class="naws-fcc-day"><?php echo esc_html( $fc_wd ); ?></div>
             <div class="naws-fcc-date"><?php echo esc_html( $fc_dt ); ?></div>
-            <div class="naws-fcc-svg"><?php echo naws_kses_svg( NAWS_Forecast::get_weather_svg( $fc_wmo['icon'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- naws_kses_svg() uses wp_kses() with SVG allowlist ?></div>
+            <div class="naws-fcc-svg"><?php echo wp_kses( NAWS_Forecast::get_weather_svg( $fc_wmo['icon'] ), naws_svg_kses_args() ); ?></div>
             <div class="naws-fcc-cond"><?php echo esc_html( $fc_wmo['label'] ); ?></div>
             <div class="naws-fcc-temps">
               <span class="naws-fcc-tmax"><?php echo $fc_tmax !== null ? esc_html( $fc_tmax ) : '--'; ?></span>
@@ -323,21 +323,6 @@ $pressure_diff  = $_pt['diff'];
 <!-- Styles moved to assets/css/frontend.css (.naws-wx scope) -->
 
 <?php
-ob_start();
-?>
-(function(){
-var WID    = <?php echo wp_json_encode($widget_id); ?>;
-var NAWS_FONT = getComputedStyle(document.documentElement).fontFamily || 'sans-serif';
-var TIME_SUFFIX = <?php echo wp_json_encode( naws__( 'time_suffix' ) ); ?>;
-var AJAX   = <?php echo wp_json_encode($ajax_url); ?>;
-var NONCE  = document.getElementById(WID).dataset.nonce;
-var RFSH   = (parseInt(document.getElementById(WID).dataset.refresh,10)||60)*1000;
-var HIDE   = document.getElementById(WID).dataset.hidden ? document.getElementById(WID).dataset.hidden.split(',').filter(Boolean) : [];
-// Map of module_id → slug for NAModule4 modules (e.g. {"70:ee:50:xx:xx:xx": "gast"})
-var MODULE4_SLUGS = JSON.parse(document.getElementById(WID).dataset.module4||'{}');
-// Info about each NAModule4 slug (from PHP)
-var MODULE4_INFO  = <?php echo wp_json_encode( $module4_info ); ?>;
-<?php
 // Build pressure trend HTML server-side – no AJAX needed
 $t_icons = [
     'up'     => '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>',
@@ -372,9 +357,41 @@ $trend_html = '<div class="naws-press-trend naws-trend-' . $pressure_trend . '">
     . $t_icons[ $pressure_trend ]
     . '<span>' . $t_labels[ $pressure_trend ] . $t_diff_str . '</span>'
     . '</div>';
-?>
-var NAWS_I18N = <?php echo wp_json_encode( $_i18n ); ?>;
-var PRESS_TREND_HTML = <?php echo wp_json_encode( $trend_html ); ?>;
+
+// Sanitize icon SVGs for JSON serialization
+$_naws_icons_safe = array_map(
+    function ( $svg ) { return wp_kses( $svg, naws_svg_kses_args() ); },
+    NAWS_Icons::get_set()
+);
+
+// Inject all PHP-derived values as a JS data object (runs before the main script).
+wp_add_inline_script( 'naws-frontend', 'var NAWS_LIVE = ' . wp_json_encode( [
+    'WID'            => $widget_id,
+    'TIME_SUFFIX'    => naws__( 'time_suffix' ),
+    'AJAX'           => $ajax_url,
+    'MODULE4_INFO'   => $module4_info,
+    'I18N'           => $_i18n,
+    'PRESS_TREND_HTML' => $trend_html,
+    'CHART_CONFIGS'  => $chart_configs,
+    'ICO'            => $_naws_icons_safe,
+    'ICON_SET'       => NAWS_Icons::get_current_set(),
+] ) . ';', 'before' );
+
+wp_add_inline_script( 'naws-frontend', <<<'EOJS'
+(function(){
+var WID    = NAWS_LIVE.WID;
+var NAWS_FONT = getComputedStyle(document.documentElement).fontFamily || 'sans-serif';
+var TIME_SUFFIX = NAWS_LIVE.TIME_SUFFIX;
+var AJAX   = NAWS_LIVE.AJAX;
+var NONCE  = document.getElementById(WID).dataset.nonce;
+var RFSH   = (parseInt(document.getElementById(WID).dataset.refresh,10)||60)*1000;
+var HIDE   = document.getElementById(WID).dataset.hidden ? document.getElementById(WID).dataset.hidden.split(',').filter(Boolean) : [];
+// Map of module_id → slug for NAModule4 modules (e.g. {"70:ee:50:xx:xx:xx": "gast"})
+var MODULE4_SLUGS = JSON.parse(document.getElementById(WID).dataset.module4||'{}');
+// Info about each NAModule4 slug (from PHP)
+var MODULE4_INFO  = NAWS_LIVE.MODULE4_INFO;
+var NAWS_I18N = NAWS_LIVE.I18N;
+var PRESS_TREND_HTML = NAWS_LIVE.PRESS_TREND_HTML;
 var liveEl = document.getElementById(WID+'-live');
 var chartsEl= document.getElementById(WID+'-charts');
 var built  = false;
@@ -382,7 +399,7 @@ var charts = {};
 var chartData = {}; // store raw data for modal re-render
 
 // Chart configs from PHP
-var CHART_CONFIGS = <?php echo wp_json_encode($chart_configs); ?>;
+var CHART_CONFIGS = NAWS_LIVE.CHART_CONFIGS;
 
 /* ── HELPERS ─────────────────────────── */
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
@@ -423,13 +440,14 @@ function post(params,cb){
 }
 
 /* ── ICONS ───────────────────────────── */
-var ICO=<?php echo NAWS_Icons::get_js_object(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Trusted internal SVG icons, pre-escaped in get_js_object() ?>;
-var NAWS_ICON_SET=<?php echo wp_json_encode( NAWS_Icons::get_current_set() ); ?>;
+var ICO=NAWS_LIVE.ICO;
+var NAWS_ICON_SET=NAWS_LIVE.ICON_SET;
 
 /* ── COMPASS ─────────────────────────── */
 var ROSE='<svg style="position:absolute;top:0;left:0;width:100%;height:100%" viewBox="-4 -4 168 168" xmlns="http://www.w3.org/2000/svg">'
   +'<circle cx="80" cy="80" r="72" fill="#f4fafa" stroke="#c0d4d4" stroke-width="1.5"/>'
   +'<circle cx="80" cy="80" r="54" fill="none" stroke="#daeaea" stroke-width="1"/>'
+  +'<circle cx="80" cy="80" r="34" fill="none" stroke="#e5f0f0" stroke-width="1" stroke-dasharray="3 4"/>'
   +'<circle cx="80" cy="80" r="34" fill="none" stroke="#e5f0f0" stroke-width="1" stroke-dasharray="3 4"/>'
   +'<polygon points="80,8 88,80 80,92 72,80" fill="#427272"/>'
   +'<polygon points="80,8 80,92 88,80" fill="#c0d8d8"/>'
@@ -925,6 +943,5 @@ window.addEventListener('resize', function(){
   }, 250);
 });
 })();
-<?php
-wp_add_inline_script( 'naws-frontend', ob_get_clean() );
-?>
+EOJS
+);

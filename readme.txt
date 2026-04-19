@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 6.9
-Stable tag: 1.6.2
+Stable tag: 1.6.3
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -105,16 +105,19 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 
 == Changelog ==
 
+= 1.6.3 =
+* WordPress.org compliance: all file-scope `ob_start()` / `ob_get_clean()` patterns removed from admin views and frontend templates
+* WordPress.org compliance: PHP values injected into inline scripts via `wp_add_inline_script( $handle, $data, 'before' )` with `wp_json_encode()` instead of echoing PHP inside JS blocks
+* WordPress.org compliance: all JS strings previously echoed from PHP now served via `nawsAdmin.strings` (localized with `wp_localize_script`) – eliminates PHP interpolation in JavaScript
+* WordPress.org compliance: icon SVGs sanitized with `wp_kses()` before JSON-encoding; `NAWS_Icons::get_js_object()` (raw JS literal) replaced by `wp_json_encode( NAWS_Icons::get_set() )`
+* Added `ls_saving`, `ls_saved`, `ls_error` strings to `nawsAdmin` localization (live-settings page)
+
 = 1.6.2 =
 * WordPress.org compliance: file upload sanitized with `sanitize_file_name()` and `move_uploaded_file()`
 * WordPress.org compliance: all `ob_start()` blocks closed with `ob_get_clean()` in same scope
 * WordPress.org compliance: all remaining inline `<script>`/`<style>` blocks converted to `wp_add_inline_script()` / `wp_add_inline_style()`
 * WordPress.org compliance: dynamic SQL column names validated against explicit whitelist before query execution
 * Fix: `phpcs` annotation for `naws_appearance` input sanitization made explicit (sanitized via `NAWS_Colors::sanitize()`)
-
-= 1.6.1 =
-* WordPress.org compliance: renamed class `Netatmo_Weather_Station` to `NAWS_Plugin` (unique prefix requirement)
-* WordPress.org compliance: fixed Netatmo privacy policy URL (was returning 404)
 
 = 1.6.0 =
 * WordPress.org compliance: all inline `<script>` blocks converted to `wp_add_inline_script()`
@@ -251,6 +254,9 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 
 == Upgrade Notice ==
 
+= 1.6.3 =
+WordPress.org compliance release. All file-scope ob_start() patterns replaced with wp_add_inline_script(). PHP values passed to JS via wp_json_encode() instead of direct echoing.
+
 = 1.6.2 =
 WordPress.org compliance release. Input sanitization, ob_start() fixes, inline script/style removal, SQL whitelist validation.
 
@@ -290,7 +296,7 @@ This plugin connects to the following external services:
 * **Purpose:** Authenticate via OAuth2, fetch sensor readings and station data
 * **Data sent:** OAuth tokens, station/module IDs
 * **When:** During initial authentication and every automatic sync cycle
-* **Privacy policy:** [https://view.netatmo.com/default/legals/magellan?app_type=app_magellan&country=DE&goto=privacy](https://view.netatmo.com/default/legals/magellan?app_type=app_magellan&country=DE&goto=privacy)
+* **Privacy policy:** [https://www.netatmo.com/en-us/legal/privacy-policy](https://www.netatmo.com/en-us/legal/privacy-policy)
 
 = Open-Meteo API (api.open-meteo.com) =
 

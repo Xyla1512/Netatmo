@@ -3,7 +3,7 @@
 <?php
 // phpcs:disable PluginCheck.CodeAnalysis.VariableAnalysis.NonPrefixedVariableFound
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
-// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- All echo calls use esc_html/esc_attr or naws_kses_svg() which wraps wp_kses() with SVG allowlist
+// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG output uses wp_kses() with naws_svg_kses_args() allowlist
 // Module type icons for accordion headers
 $module_type_icons = [
     'NAMain'   => '🏠',
@@ -41,13 +41,10 @@ $module_type_colors = [
         </form>
     </div>
 
-    <?php
-    $naws_notice_valid = isset( $_GET['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'naws_notice' );
-    ?>
-    <?php if ( $naws_notice_valid && isset( $_GET['synced'] ) ) : ?>
+    <?php if ( isset( $_GET['synced'] ) && isset( $_GET['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'naws_notice' ) ) : ?>
         <div class="notice notice-success is-dismissible"><p><?php naws_e( 'synced_ok' ); ?></p></div>
     <?php endif; ?>
-    <?php if ( $naws_notice_valid && isset( $_GET['error'] ) ) : ?>
+    <?php if ( isset( $_GET['error'] ) && isset( $_GET['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'naws_notice' ) ) : ?>
         <div class="notice notice-error is-dismissible"><p><?php echo esc_html( sanitize_text_field( wp_unslash( $_GET['error'] ) ) ); ?></p></div>
     <?php endif; ?>
 
@@ -76,7 +73,7 @@ $module_type_colors = [
     <div class="naws-stats-row">
 
         <div class="naws-stat-card">
-            <div class="naws-stat-icon-wrap naws-stat-color-blue"><?php echo naws_kses_svg( $svg['modules'] ); ?></div>
+            <div class="naws-stat-icon-wrap naws-stat-color-blue"><?php echo wp_kses( $svg['modules'], naws_svg_kses_args() ); ?></div>
             <div class="naws-stat-body">
                 <div class="naws-stat-value"><?php echo esc_html( count($modules) ); ?></div>
                 <div class="naws-stat-label"><?php naws_e( 'menu_modules' ); ?></div>
@@ -84,7 +81,7 @@ $module_type_colors = [
         </div>
 
         <div class="naws-stat-card">
-            <div class="naws-stat-icon-wrap naws-stat-color-green"><?php echo naws_kses_svg( $svg['readings'] ); ?></div>
+            <div class="naws-stat-icon-wrap naws-stat-color-green"><?php echo wp_kses( $svg['readings'], naws_svg_kses_args() ); ?></div>
             <div class="naws-stat-body">
                 <div class="naws-stat-value"><?php echo esc_html( number_format($total, 0, ',', '.') ); ?></div>
                 <div class="naws-stat-label"><?php naws_e( 'current_readings' ); ?></div>
@@ -92,7 +89,7 @@ $module_type_colors = [
         </div>
 
         <div class="naws-stat-card">
-            <div class="naws-stat-icon-wrap naws-stat-color-purple"><?php echo naws_kses_svg( $svg['db'] ); ?></div>
+            <div class="naws-stat-icon-wrap naws-stat-color-purple"><?php echo wp_kses( $svg['db'], naws_svg_kses_args() ); ?></div>
             <div class="naws-stat-body">
                 <div class="naws-stat-value"><?php echo esc_html( $total_mb ); ?> <span class="naws-stat-unit">MB</span></div>
                 <div class="naws-stat-label">DB</div>
@@ -101,7 +98,7 @@ $module_type_colors = [
         </div>
 
         <div class="naws-stat-card">
-            <div class="naws-stat-icon-wrap naws-stat-color-teal"><?php echo naws_kses_svg( $svg['daily'] ); ?></div>
+            <div class="naws-stat-icon-wrap naws-stat-color-teal"><?php echo wp_kses( $svg['daily'], naws_svg_kses_args() ); ?></div>
             <div class="naws-stat-body">
                 <div class="naws-stat-value"><?php echo esc_html( number_format($daily_count, 0, ',', '.') ); ?></div>
                 <div class="naws-stat-label"><?php naws_e( 'daily_summary' ); ?></div>
@@ -110,7 +107,7 @@ $module_type_colors = [
 
         <?php if ( $range && $range['date_begin'] ) : ?>
         <div class="naws-stat-card">
-            <div class="naws-stat-icon-wrap naws-stat-color-slate"><?php echo naws_kses_svg( $svg['oldest'] ); ?></div>
+            <div class="naws-stat-icon-wrap naws-stat-color-slate"><?php echo wp_kses( $svg['oldest'], naws_svg_kses_args() ); ?></div>
             <div class="naws-stat-body">
                 <div class="naws-stat-value naws-stat-value--date"><?php echo esc_html( wp_date('d.m.Y', $range['date_begin']) ); ?></div>
                 <div class="naws-stat-label"><?php naws_e( 'date' ); ?></div>
@@ -120,7 +117,7 @@ $module_type_colors = [
 
         <?php if ( $daily_range && $daily_range['date_begin'] ) : ?>
         <div class="naws-stat-card">
-            <div class="naws-stat-icon-wrap naws-stat-color-slate"><?php echo naws_kses_svg( $svg['history'] ); ?></div>
+            <div class="naws-stat-icon-wrap naws-stat-color-slate"><?php echo wp_kses( $svg['history'], naws_svg_kses_args() ); ?></div>
             <div class="naws-stat-body">
                 <div class="naws-stat-value naws-stat-value--date"><?php echo esc_html( $daily_range['date_begin'] ); ?></div>
                 <div class="naws-stat-label"><?php naws_e( 'history' ); ?></div>
@@ -129,7 +126,7 @@ $module_type_colors = [
         <?php endif; ?>
 
         <div class="naws-stat-card">
-            <div class="naws-stat-icon-wrap naws-stat-color-orange"><?php echo naws_kses_svg( $svg['lastsync'] ); ?></div>
+            <div class="naws-stat-icon-wrap naws-stat-color-orange"><?php echo wp_kses( $svg['lastsync'], naws_svg_kses_args() ); ?></div>
             <div class="naws-stat-body">
                 <div class="naws-stat-value naws-stat-value--date"><?php echo $last_sync ? esc_html( wp_date('H:i', $last_sync) ) : '—'; ?></div>
                 <div class="naws-stat-label"><?php naws_e( 'recent_sync' ); ?></div>
@@ -138,7 +135,7 @@ $module_type_colors = [
         </div>
 
         <div class="naws-stat-card">
-            <div class="naws-stat-icon-wrap naws-stat-color-blue"><?php echo naws_kses_svg( $svg['nextsync'] ); ?></div>
+            <div class="naws-stat-icon-wrap naws-stat-color-blue"><?php echo wp_kses( $svg['nextsync'], naws_svg_kses_args() ); ?></div>
             <div class="naws-stat-body">
                 <div class="naws-stat-value naws-stat-value--date"><?php echo $next_run ? esc_html( wp_date('H:i', $next_run) ) : '—'; ?></div>
                 <div class="naws-stat-label"><?php naws_e( 'next_run' ); ?></div>
@@ -163,7 +160,7 @@ $module_type_colors = [
         $recent_errors = NAWS_Logger::count_recent_errors( 60 );
         ?>
         <div class="naws-stat-card">
-            <div class="naws-stat-icon-wrap naws-stat-color-<?php echo esc_attr( $health_color ); ?>"><?php echo naws_kses_svg( $health_icon ); ?></div>
+            <div class="naws-stat-icon-wrap naws-stat-color-<?php echo esc_attr( $health_color ); ?>"><?php echo wp_kses( $health_icon, naws_svg_kses_args() ); ?></div>
             <div class="naws-stat-body">
                 <div class="naws-stat-value naws-stat-value--date" style="font-size:0.8rem;"><?php echo esc_html( $health['message'] ); ?></div>
                 <div class="naws-stat-label">Health</div>
@@ -230,7 +227,7 @@ $module_type_colors = [
                         <button type="button" class="naws-accordion-trigger" aria-expanded="<?php echo $is_open ? 'true' : 'false'; ?>">
                             <div class="naws-acc-left">
                                 <span class="naws-acc-module-icon" style="background:<?php echo esc_attr($type_color); ?>15; color:<?php echo esc_attr($type_color); ?>;">
-                                    <?php echo naws_kses_svg( $type_icon ); ?>
+                                    <?php echo wp_kses( $type_icon, naws_svg_kses_args() ); ?>
                                 </span>
                                 <div class="naws-acc-titles">
                                     <span class="naws-acc-name"><?php echo esc_html( $module['module_name'] ); ?></span>
@@ -276,7 +273,7 @@ $module_type_colors = [
                                                 if ( in_array( $param, $skip_display, true ) ) continue;
                                             ?>
                                             <tr>
-                                                <td class="naws-param-cell"><?php echo naws_kses_svg( NAWS_Helpers::get_icon( $param ) ); ?> <?php echo esc_html( NAWS_Helpers::get_label($param) ); ?></td>
+                                                <td class="naws-param-cell"><?php echo wp_kses( NAWS_Helpers::get_icon( $param ), naws_svg_kses_args() ); ?> <?php echo esc_html( NAWS_Helpers::get_label($param) ); ?></td>
                                                 <td class="naws-value-cell"><strong><?php echo esc_html( NAWS_Helpers::format_value($param, $val) ); ?></strong></td>
                                                 <td class="naws-unit-cell"><?php echo esc_html( NAWS_Helpers::get_unit($param) ); ?></td>
                                             </tr>
@@ -394,8 +391,7 @@ $module_type_colors = [
 </div><!-- /.naws-admin-wrap -->
 
 <?php
-ob_start();
-?>
+wp_add_inline_script( 'naws-admin', <<<'EOJS'
 document.addEventListener('DOMContentLoaded', function () {
 
     // Accordion logic
@@ -428,15 +424,15 @@ document.addEventListener('DOMContentLoaded', function () {
             dailyResult.style.color = '';
 
             var body = 'action=naws_run_daily_summary'
-                     + '&nonce=' + encodeURIComponent('<?php echo esc_js( wp_create_nonce('naws_admin_nonce') ); ?>')
+                     + '&nonce=' + encodeURIComponent(nawsAdmin.nonce)
                      + '&date='  + encodeURIComponent(date);
 
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', '<?php echo esc_js( admin_url('admin-ajax.php') ); ?>');
+            xhr.open('POST', nawsAdmin.ajax_url);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.onload = function () {
                 dailyBtn.disabled = false;
-                dailyBtn.textContent = <?php echo wp_json_encode( naws__( 'daily_summary' ) ); ?>;
+                dailyBtn.textContent = nawsAdmin.strings.daily_summary;
                 try {
                     var r = JSON.parse(xhr.responseText);
                     if (r.success) {
@@ -453,7 +449,7 @@ document.addEventListener('DOMContentLoaded', function () {
             };
             xhr.onerror = function () {
                 dailyBtn.disabled = false;
-                dailyBtn.textContent = <?php echo wp_json_encode( naws__( 'daily_summary' ) ); ?>;
+                dailyBtn.textContent = nawsAdmin.strings.daily_summary;
                 dailyResult.textContent = '✗ ' + nawsAdmin.strings.error;
                 dailyResult.style.color = '#b32d2e';
             };
@@ -462,6 +458,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 });
-<?php
-wp_add_inline_script( 'naws-admin', ob_get_clean() );
+EOJS
+);
 ?>

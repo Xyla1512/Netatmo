@@ -11,16 +11,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 <?php
 // phpcs:disable PluginCheck.CodeAnalysis.VariableAnalysis.NonPrefixedVariableFound
 
-// Show import result message if redirected back (nonce protects against URL manipulation)
-$naws_notice_valid = isset( $_GET['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'naws_notice' );
-
-if ( $naws_notice_valid && isset( $_GET['import_error'] ) ) :
-    $error_msg = sanitize_text_field( wp_unslash( $_GET['import_error'] ) );
+// Show import result message if redirected back (nonce validates origin)
+if ( isset( $_GET['import_error'] ) && isset( $_GET['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'naws_notice' ) ) :
+    $naws_error_msg = sanitize_text_field( wp_unslash( $_GET['import_error'] ) );
     ?>
-    <div class="notice notice-error is-dismissible"><p><?php echo esc_html( $error_msg ); ?></p></div>
+    <div class="notice notice-error is-dismissible"><p><?php echo esc_html( $naws_error_msg ); ?></p></div>
 <?php endif; ?>
 
-<?php if ( $naws_notice_valid && isset( $_GET['import_done'] ) ) : ?>
+<?php if ( isset( $_GET['import_done'] ) && isset( $_GET['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'naws_notice' ) ) : ?>
     <div class="notice notice-success is-dismissible"><p><?php echo esc_html( naws__( 'import_complete' ) ); ?></p></div>
 <?php endif; ?>
 
@@ -179,30 +177,23 @@ if ( $naws_notice_valid && isset( $_GET['import_error'] ) ) :
 </div>
 
 <?php
-ob_start();
-?>
-(function($){
-'use strict';
+// Compute PHP values before building the inline script.
+$_naws_import_file     = get_transient( 'naws_import_temp_file' );
+$_naws_import_meta_raw = get_transient( 'naws_import_meta' );
+// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- transient validated server-side on upload
+$_naws_import_ready    = ( $_naws_import_file && $_naws_import_meta_raw && isset( $_GET['import_ready'] ) );
+$_naws_import_ready_js = $_naws_import_ready ? 'true' : 'false';
+$_naws_import_meta_js  = $_naws_import_ready ? wp_json_encode( $_naws_import_meta_raw ) : 'null';
+// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only, no data written
+$_naws_overwrite_js    = wp_json_encode(
+    isset( $_GET['overwrite_settings'] ) ? '1'
+    : ( $_naws_import_meta_raw && ! empty( $_naws_import_meta_raw['overwrite_settings'] ) ? '1' : '0' )
+);
 
-const NONCE   = '<?php echo esc_js( wp_create_nonce( 'naws_admin_nonce' ) ); ?>';
-const AJAXURL = '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>';
-
-<?php
-// Check if we have a pending import (redirected back after file upload)
-$import_ready = false;
-$import_meta  = null;
-$import_file  = get_transient( 'naws_import_temp_file' );
-$import_meta  = get_transient( 'naws_import_meta' );
-if ( $import_file && $import_meta && isset( $_GET['import_ready'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-    $import_ready = true;
-?>
-const IMPORT_READY = true;
-const IMPORT_META  = <?php echo wp_json_encode( $import_meta ); ?>;
-<?php else : ?>
-const IMPORT_READY = false;
-const IMPORT_META  = null;
-<?php endif; ?>
-
+$_naws_export_script  = "(function(\$){\n'use strict';\n\n";
+$_naws_export_script .= 'const IMPORT_READY = ' . $_naws_import_ready_js . ";\n";
+$_naws_export_script .= 'const IMPORT_META  = ' . $_naws_import_meta_js . ";\n\n";
+$_naws_export_script .= <<<'EOJS'
 const logEl = document.getElementById('naws-ei-log');
 
 function log(msg, type) {
@@ -236,10 +227,10 @@ if (IMPORT_READY && IMPORT_META) {
     // Step 1: If full_backup, import modules + settings first
     if (exportType === 'full_backup') {
         log('Importiere Module und Einstellungen...', 'info');
-        $.post(AJAXURL, {
+        $.post(nawsAdmin.ajax_url, {
             action: 'naws_import_meta',
-            nonce:  NONCE,
-            overwrite_settings: <?php echo isset( $_GET['overwrite_settings'] ) ? '1' : ( $import_meta && ! empty( $import_meta['overwrite_settings'] ) ? '1' : '0' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
+            nonce:  nawsAdmin.nonce,
+            overwrite_settings: NAWS_OVERWRITE_SETTINGS
         }).done(function(resp) {
             if (resp.success) {
                 var d = resp.data;
@@ -265,9 +256,9 @@ if (IMPORT_READY && IMPORT_META) {
         var pct   = total > 0 ? Math.min(99, Math.round(offset / total * 100)) : 0;
         progress('Importiere Zeile ' + offset + '/' + total + '...', pct);
 
-        $.post(AJAXURL, {
+        $.post(nawsAdmin.ajax_url, {
             action: 'naws_import_process_chunk',
-            nonce:  NONCE,
+            nonce:  nawsAdmin.nonce,
             offset: offset
         }).done(function(resp) {
             if (!resp.success) {
@@ -298,11 +289,12 @@ if (IMPORT_READY && IMPORT_META) {
     }
 
     function cleanupImport() {
-        $.post(AJAXURL, { action: 'naws_import_cleanup', nonce: NONCE });
+        $.post(nawsAdmin.ajax_url, { action: 'naws_import_cleanup', nonce: nawsAdmin.nonce });
     }
 }
 
-})(jQuery);
-<?php
-wp_add_inline_script( 'naws-admin', ob_get_clean() );
+EOJS;
+$_naws_export_script .= "\n})(jQuery);";
+wp_add_inline_script( 'naws-admin', 'const NAWS_OVERWRITE_SETTINGS = ' . $_naws_overwrite_js . ';', 'before' );
+wp_add_inline_script( 'naws-admin', $_naws_export_script );
 ?>

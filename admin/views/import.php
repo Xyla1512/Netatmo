@@ -209,30 +209,30 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 <?php // Styles moved to assets/css/admin.css ?>
 <?php
-ob_start();
-?>
+// Build PHP-derived data for injection into the inline script.
+$_naws_mod_json = [];
+foreach ( $modules as $m ) {
+    $t = NAWS_Importer::get_import_types( $m['module_type'] );
+    if ( empty( $t ) ) continue;
+    $_naws_mod_json[] = [
+        'module_id'   => $m['module_id'],
+        'module_name' => $m['module_name'],
+        'module_type' => $m['module_type'],
+        'device_id'   => $m['station_id'],
+        'types'       => $t,
+    ];
+}
+wp_add_inline_script( 'naws-admin',
+    'const MODULES = ' . wp_json_encode( $_naws_mod_json ) . ';',
+    'before'
+);
+
+wp_add_inline_script( 'naws-admin', <<<'EOJS'
 (function($){
 'use strict';
 
-const NONCE   = '<?php echo esc_js( wp_create_nonce('naws_admin_nonce') ); ?>';
-const AJAXURL = '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>';
-
-// Modules list for debug / job iteration
-const MODULES = <?php
-    $mod_json = [];
-    foreach($modules as $m){
-        $t = NAWS_Importer::get_import_types($m['module_type']);
-        if(empty($t)) continue;
-        $mod_json[] = [
-            'module_id'   => $m['module_id'],
-            'module_name' => $m['module_name'],
-            'module_type' => $m['module_type'],
-            'device_id'   => $m['station_id'],
-            'types'       => $t,
-        ];
-    }
-    echo wp_json_encode($mod_json);
-?>;
+const NONCE   = nawsAdmin.nonce;
+const AJAXURL = nawsAdmin.ajax_url;
 
 // Pre-populate debug dropdown on page load
 (function(){
@@ -499,14 +499,7 @@ $('#naws-migrate-btn').on('click', function(){
     $('#naws-migrate-progress').show();
     $('#naws-migrate-summary').text('');
 
-    const dateRange = <?php
-        $rr       = NAWS_Database::get_data_range();
-        $yesterday = gmdate( 'Y-m-d', strtotime('yesterday'));
-        echo wp_json_encode([
-            'from' => $rr['date_begin'] ? gmdate( 'Y-m-d', $rr['date_begin']) : '',
-            'to'   => $yesterday,  // never include today - cron handles it at 00:01
-        ]);
-    ?>;
+    const dateRange = NAWS_DATE_RANGE;
 
     let totalSaved = 0;
     let totalDays  = 0;
@@ -562,6 +555,18 @@ $('#naws-migrate-btn').on('click', function(){
 });
 
 })(jQuery);
+EOJS
+);
+
+// Pass dateRange as a separate data constant (must run before the main script body).
 <?php
-wp_add_inline_script( 'naws-admin', ob_get_clean() );
+$_naws_rr        = NAWS_Database::get_data_range();
+$_naws_yesterday = gmdate( 'Y-m-d', strtotime( 'yesterday' ) );
+wp_add_inline_script( 'naws-admin',
+    'const NAWS_DATE_RANGE = ' . wp_json_encode( [
+        'from' => $_naws_rr['date_begin'] ? gmdate( 'Y-m-d', $_naws_rr['date_begin'] ) : '',
+        'to'   => $_naws_yesterday,
+    ] ) . ';',
+    'before'
+);
 ?>

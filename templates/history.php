@@ -144,12 +144,26 @@ $hidden_history_charts = (array) get_option( 'naws_history_hidden_charts', [] );
 <!-- Styles moved to assets/css/frontend.css (.naws-hist scope) -->
 
 <?php
-ob_start();
-?>
+// Inject all PHP-derived values as a JS data object (runs before the main script).
+wp_add_inline_script( 'naws-frontend', 'var NAWS_HIST = ' . wp_json_encode( [
+    'WID'         => $widget_id,
+    'AJAX'        => $ajax_url,
+    'PALETTE'     => NAWS_Colors::get_history_palette(),
+    'MONTHS'      => [
+        naws__( 'month_jan' ), naws__( 'month_feb' ), naws__( 'month_mar' ), naws__( 'month_apr' ),
+        naws__( 'month_may' ), naws__( 'month_jun' ), naws__( 'month_jul' ), naws__( 'month_aug' ),
+        naws__( 'month_sep' ), naws__( 'month_oct' ), naws__( 'month_nov' ), naws__( 'month_dec' ),
+    ],
+    'CHART_THEME' => NAWS_Colors::get_chart_theme(),
+    'LBL_MIN'     => naws__( 'lbl_min' ),
+    'LBL_MAX'     => naws__( 'lbl_max' ),
+] ) . ';', 'before' );
+
+wp_add_inline_script( 'naws-frontend', <<<'EOJS'
 (function(){
-var WID     = <?php echo wp_json_encode($widget_id); ?>;
+var WID     = NAWS_HIST.WID;
 var NAWS_FONT = getComputedStyle(document.documentElement).fontFamily || 'sans-serif';
-var AJAX    = <?php echo wp_json_encode($ajax_url); ?>;
+var AJAX    = NAWS_HIST.AJAX;
 var NONCE   = document.getElementById(WID).dataset.nonce;
 var OUTDOOR = document.getElementById(WID).dataset.outdoor;
 var INDOOR  = document.getElementById(WID).dataset.indoor;
@@ -164,7 +178,7 @@ var modalChart = null;
 
 /* ── COLOURS ─────────────────────────────── */
 // One colour per year, consistent palette (configurable via Admin > Appearance)
-var PALETTE = <?php echo wp_json_encode( NAWS_Colors::get_history_palette() ); ?>;
+var PALETTE = NAWS_HIST.PALETTE;
 function yearColor(yr){ return PALETTE[(yr - YEARS[0]) % PALETTE.length]; }
 
 /* ── AJAX ────────────────────────────────── */
@@ -183,11 +197,7 @@ function post(params, cb){
 }
 
 /* ── MONTH LABELS ───────────────────────── */
-var MONTHS = <?php echo wp_json_encode( [
-    naws__('month_jan'), naws__('month_feb'), naws__('month_mar'), naws__('month_apr'),
-    naws__('month_may'), naws__('month_jun'), naws__('month_jul'), naws__('month_aug'),
-    naws__('month_sep'), naws__('month_oct'), naws__('month_nov'), naws__('month_dec'),
-] ); ?>;
+var MONTHS = NAWS_HIST.MONTHS;
 function monthLabel(iso){ return MONTHS[parseInt(iso.slice(5,7),10)-1]; }
 
 /* ── CHART.JS BASE OPTIONS ──────────────── */
@@ -212,7 +222,7 @@ function aggregateMonthly(dailyData){
 function nawsHistFontSize(){ var w=window.innerWidth; return w<480?8:w<768?9:10; }
 
 /* Chart theme colors (configurable via Admin > Appearance) */
-var CHART_THEME = <?php echo wp_json_encode( NAWS_Colors::get_chart_theme() ); ?>;
+var CHART_THEME = NAWS_HIST.CHART_THEME;
 
 function baseOpts(unit, type, isModal, isMonthly){
   var fs = nawsHistFontSize();
@@ -339,7 +349,7 @@ function renderChart(chartId, isModal){
       var c = yearColor(yr);
       var ri=parseInt(c.slice(1,3),16),gi=parseInt(c.slice(3,5),16),bi=parseInt(c.slice(5,7),16);
       datasets.push({
-        label: yr+' '+<?php echo wp_json_encode( naws__('lbl_min') ); ?>, data: yd.values_min||[],
+        label: yr+' '+NAWS_HIST.LBL_MIN, data: yd.values_min||[],
         borderColor:'rgba('+ri+','+gi+','+bi+',.55)',
         backgroundColor:'rgba('+ri+','+gi+','+bi+',.06)',
         borderWidth:1.5, borderDash:[4,3],
@@ -348,7 +358,7 @@ function renderChart(chartId, isModal){
         hidden: cfg.hiddenYears.has(yr),
       });
       datasets.push({
-        label: yr+' '+<?php echo wp_json_encode( naws__('lbl_max') ); ?>, data: yd.values_max||[],
+        label: yr+' '+NAWS_HIST.LBL_MAX, data: yd.values_max||[],
         borderColor:c, backgroundColor:'rgba('+ri+','+gi+','+bi+',.12)',
         borderWidth:2, pointRadius:0, pointHoverRadius:4, tension:0.35, fill:false,
         parsing:{xAxisKey:'x',yAxisKey:'y'},
@@ -591,6 +601,5 @@ window.addEventListener('resize', function(){
 });
 
 })();
-<?php
-wp_add_inline_script( 'naws-frontend', ob_get_clean() );
-?>
+EOJS
+);

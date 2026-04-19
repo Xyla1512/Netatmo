@@ -13,7 +13,6 @@ $history_chart_defs = [
     'pressure'    => [ 'label' => naws__( 'hc_pressure' ),    'icon' => '🔵' ],
     'rain'        => [ 'label' => naws__( 'hc_rain' ),        'icon' => '🌧️' ],
 ];
-$admin_nonce    = wp_create_nonce( 'naws_admin_nonce' );
 $all_modules    = NAWS_Database::get_modules( true );
 
 // Build a lookup: type → first module of that type
@@ -293,8 +292,7 @@ $module_defs = array_merge( $module_defs, $extra_module4_defs );
 
 <?php // Styles moved to assets/css/admin.css ?>
 <?php
-ob_start();
-?>
+wp_add_inline_script( 'naws-admin', <<<'EOJS'
 (function(){
 'use strict';
 
@@ -323,7 +321,7 @@ document.querySelectorAll('.naws-ls-mod-toggle').forEach(function(btn){
         var cb=this.querySelector('.naws-mod-cb');
         cb.checked=!isOn; // checked = hidden
         mod.classList.toggle('is-mod-off',!isOn);
-        this.title=isOn?<?php echo wp_json_encode( naws__('ls_mod_deactivate' ) ); ?>:<?php echo wp_json_encode( naws__('ls_mod_activate' ) ); ?>;
+        this.title=isOn?nawsAdmin.strings.ls_mod_deactivate:nawsAdmin.strings.ls_mod_activate;
         refreshCount(mod);
     });
 });
@@ -344,7 +342,7 @@ function refreshCount(mod){
     var t=mod.querySelectorAll('.naws-ls-toggle').length;
     var e=mod.querySelectorAll('.naws-ls-toggle.is-on').length;
     var el=mod.querySelector('.naws-ls-mod-count');
-    if(el) el.textContent=e+'/'+t+' '+<?php echo wp_json_encode( naws__('ls_count_active' ) ); ?>;
+    if(el) el.textContent=e+'/'+t+' '+nawsAdmin.strings.ls_count_active;
 }
 
 /* 24h Chart toggle */
@@ -355,7 +353,7 @@ document.querySelectorAll('.naws-ls-chart-toggle').forEach(function(lbl){
         var on=cb.checked=!cb.checked;
         this.classList.toggle('is-on',on);
         this.classList.toggle('is-off',!on);
-        this.title=(on?<?php echo wp_json_encode( naws__('ls_chart_disable' ) ); ?>:<?php echo wp_json_encode( naws__('ls_chart_enable' ) ); ?>);
+        this.title=(on?nawsAdmin.strings.ls_chart_disable:nawsAdmin.strings.ls_chart_enable);
     });
 });
 
@@ -373,7 +371,7 @@ document.querySelectorAll('.naws-ls-hc-toggle').forEach(function(lbl){
 document.getElementById('naws-save-live').addEventListener('click',function(){
     var btn=this, status=document.getElementById('naws-ls-status');
     btn.disabled=true;
-    btn.innerHTML='<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> '+<?php echo wp_json_encode( naws__('ls_saving' ) ); ?>;
+    btn.innerHTML='<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> '+nawsAdmin.strings.ls_saving;
 
     var hParams=[], hMods=[], hCharts=[];
     document.querySelectorAll('.naws-ls-toggle input[type=checkbox]').forEach(function(cb){
@@ -386,7 +384,7 @@ document.getElementById('naws-save-live').addEventListener('click',function(){
         if(!cb.checked) hCharts.push(cb.value); // unchecked = chart hidden
     });
 
-    var body='action=naws_save_live_settings&nonce=<?php echo esc_js($admin_nonce); ?>';
+    var body='action=naws_save_live_settings&nonce='+nawsAdmin.nonce;
     hParams.forEach(function(p){body+='&hidden[]='+encodeURIComponent(p);});
     hMods.forEach(function(m){body+='&hidden_modules[]='+encodeURIComponent(m);});
     hCharts.forEach(function(c){body+='&hidden_charts[]='+encodeURIComponent(c);});
@@ -398,22 +396,22 @@ document.getElementById('naws-save-live').addEventListener('click',function(){
     hHistCharts.forEach(function(c){body+='&hidden_history_charts[]='+encodeURIComponent(c);});
 
     var xhr=new XMLHttpRequest();
-    xhr.open('POST','<?php echo esc_url(admin_url('admin-ajax.php')); ?>');
+    xhr.open('POST',nawsAdmin.ajax_url);
     xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
     xhr.onload=function(){
         btn.disabled=false;
         btn.innerHTML='<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Einstellungen speichern';
         try{
             var r=JSON.parse(xhr.responseText);
-            if(r.success){status.textContent=<?php echo wp_json_encode( naws__('ls_saved' ) ); ?>;status.style.color='#1a7a50';}
-            else{status.textContent=<?php echo wp_json_encode( naws__('ls_error' ) ); ?>;status.style.color='#c0392b';}
-        }catch(e){status.textContent=<?php echo wp_json_encode( naws__('ls_error' ) ); ?>;status.style.color='#c0392b';}
+            if(r.success){status.textContent=nawsAdmin.strings.ls_saved;status.style.color='#1a7a50';}
+            else{status.textContent=nawsAdmin.strings.ls_error;status.style.color='#c0392b';}
+        }catch(e){status.textContent=nawsAdmin.strings.ls_error;status.style.color='#c0392b';}
         setTimeout(function(){status.textContent='';},3000);
     };
     xhr.send(body);
 });
 
 })();
-<?php
-wp_add_inline_script( 'naws-admin', ob_get_clean() );
+EOJS
+);
 ?>

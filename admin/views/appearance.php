@@ -243,7 +243,7 @@ $icon_color_keys = [
                     <div class="naws-icon-set-preview">
                         <?php foreach ( $set_data['icons'] as $ico_key => $ico_svg ) : ?>
                         <div class="naws-icon-set-ico" title="<?php echo esc_attr( $ico_key ); ?>">
-                            <?php echo naws_kses_svg( $ico_svg ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- naws_kses_svg() uses wp_kses() with SVG allowlist ?>
+                            <?php echo wp_kses( $ico_svg, naws_svg_kses_args() ); ?>
                         </div>
                         <?php endforeach; ?>
                     </div>
@@ -287,7 +287,7 @@ $icon_color_keys = [
                         <div class="naws-pv-icon-item" data-key="<?php echo esc_attr( $key ); ?>" data-sensor="<?php echo esc_attr( $sensor ); ?>">
                             <div class="naws-pv-icon-circle" style="background:color-mix(in srgb, <?php echo esc_attr( $colors[ $key ] ); ?> 13%, white);">
                                 <div class="naws-pv-icon-svg" style="color:<?php echo esc_attr( $colors[ $key ] ); ?>;">
-                                    <?php echo $preview_icons[ $sensor ] ?? ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                                    <?php echo wp_kses( $preview_icons[ $sensor ] ?? '', naws_svg_kses_args() ); ?>
                                 </div>
                             </div>
                             <span class="naws-pv-icon-label"><?php echo esc_html( $label ); ?></span>
@@ -452,8 +452,7 @@ $icon_color_keys = [
 </div>
 
 <?php
-ob_start();
-?>
+wp_add_inline_script( 'naws-admin', <<<'EOJS'
 jQuery(document).ready(function($) {
     // ── Tab switching ──
     $('.naws-appearance-tab').on('click', function() {
@@ -611,8 +610,8 @@ jQuery(document).ready(function($) {
         });
     });
 });
-<?php
-wp_add_inline_script( 'naws-admin', ob_get_clean() );
+EOJS
+);
 ?>
 
 <?php // Styles moved to assets/css/admin.css ?>

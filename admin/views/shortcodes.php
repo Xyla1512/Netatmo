@@ -273,11 +273,10 @@ $value_params = [
 </div>
 
 <?php
-ob_start();
-?>
+wp_add_inline_script( 'naws-admin', <<<'EOJS'
 (function(){
-    var copyLabel   = <?php echo wp_json_encode( naws__('sc_copy') ); ?>;
-    var copiedLabel = <?php echo wp_json_encode( naws__('sc_copied') ); ?>;
+    var copyLabel   = nawsAdmin.strings.sc_copy;
+    var copiedLabel = nawsAdmin.strings.sc_copied;
     document.querySelectorAll('.naws-copy-btn').forEach(function(btn){
         btn.addEventListener('click',function(){
             navigator.clipboard.writeText(this.dataset.copy).then(function(){
@@ -287,6 +286,6 @@ ob_start();
         });
     });
 }());
-<?php
-wp_add_inline_script( 'naws-admin', ob_get_clean() );
+EOJS
+);
 ?>
