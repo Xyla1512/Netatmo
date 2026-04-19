@@ -159,6 +159,18 @@ wp_add_inline_script( 'naws-frontend', 'var NAWS_HIST = ' . wp_json_encode( [
     'LBL_MAX'     => naws__( 'lbl_max' ),
 ] ) . ';', 'before' );
 
+// Inject ALL_CHART_DEFS as PHP-derived data before the main script.
+$_naws_hist_opts      = get_option( 'naws_settings', [] );
+$_naws_hist_temp_unit = ( $_naws_hist_opts['temperature_unit'] ?? 'C' ) === 'F' ? '°F' : '°C';
+$_naws_hist_pres_unit = NAWS_Helpers::get_unit( 'Pressure' );
+$_naws_hist_rain_unit = $_naws_hist_opts['rain_unit'] ?? 'mm';
+wp_add_inline_script( 'naws-frontend', 'var ALL_CHART_DEFS = ' . wp_json_encode( [
+    [ 'id' => 'temp_minmax', 'title' => naws__( 'hc_temp_minmax' ), 'type' => 'line', 'unit' => $_naws_hist_temp_unit, 'fields' => [ 'temp_min', 'temp_max' ], 'moduleId' => '' ],
+    [ 'id' => 'temp_avg',    'title' => naws__( 'hc_temp_avg' ),    'type' => 'line', 'unit' => $_naws_hist_temp_unit, 'fields' => [ 'temp_avg' ],             'moduleId' => '' ],
+    [ 'id' => 'pressure',    'title' => naws__( 'hc_pressure' ),    'type' => 'line', 'unit' => $_naws_hist_pres_unit, 'fields' => [ 'pressure_avg' ],         'moduleId' => '' ],
+    [ 'id' => 'rain',        'title' => naws__( 'hc_rain' ),        'type' => 'bar',  'unit' => $_naws_hist_rain_unit, 'fields' => [ 'rain_sum' ],             'moduleId' => '' ],
+] ) . ';', 'before' );
+
 wp_add_inline_script( 'naws-frontend', <<<'EOJS'
 (function(){
 var WID     = NAWS_HIST.WID;
@@ -494,23 +506,8 @@ document.addEventListener('click', function(e){
 });
 
 /* ── LOAD DATA ───────────────────────────── */
-// Chart definitions
 /* ── CHART DEFINITIONS ──────────────────── */
-// Each chart fetches one request per year spanning Jan-Dec, group_by=month
-// The daily_data endpoint returns datasets keyed by field label (e.g. "Temp Min (°C)")
-// We identify fields by checking which field key was requested
-// All possible chart definitions
-var ALL_CHART_DEFS = <?php
-$opts      = get_option( 'naws_settings', [] );
-$temp_unit = ( $opts['temperature_unit'] ?? 'C' ) === 'F' ? '°F' : '°C';
-$pres_unit = NAWS_Helpers::get_unit( 'Pressure' );
-$rain_unit = $opts['rain_unit'] ?? 'mm';
-echo wp_json_encode( [
-  [ 'id'=>'temp_minmax', 'title'=>naws__( 'hc_temp_minmax' ), 'type'=>'line', 'unit'=>$temp_unit, 'fields'=>['temp_min','temp_max'],   'moduleId'=>'' ],
-  [ 'id'=>'temp_avg',    'title'=>naws__( 'hc_temp_avg' ),    'type'=>'line', 'unit'=>$temp_unit, 'fields'=>['temp_avg'],              'moduleId'=>'' ],
-  [ 'id'=>'pressure',    'title'=>naws__( 'hc_pressure' ),    'type'=>'line', 'unit'=>$pres_unit, 'fields'=>['pressure_avg'],          'moduleId'=>'' ],
-  [ 'id'=>'rain',        'title'=>naws__( 'hc_rain' ),        'type'=>'bar',  'unit'=>$rain_unit, 'fields'=>['rain_sum'],              'moduleId'=>'' ],
-] ); ?>;
+// ALL_CHART_DEFS is injected by PHP via wp_add_inline_script() before this script.
 
 // Only initialize charts whose canvas is actually in the DOM (not disabled by admin)
 var CHART_DEFS = ALL_CHART_DEFS.filter(function(def){
@@ -523,8 +520,6 @@ CHART_DEFS.forEach(function(def){
     fields:def.fields, yearData:{}, hiddenYears:new Set(), chartObj:null,
   };
 });
-
-
 
 /* One request per chart: fetch all years at once from dedicated history endpoint */
 var pending = CHART_DEFS.length;
@@ -567,7 +562,6 @@ CHART_DEFS.forEach(function(def){
             CHARTS[def.id].yearData[yr]={labels:[],values:[],values_min:[],values_max:[]};
           }
           var yd = CHARTS[def.id].yearData[yr];
-          // labels: use x value; fill empty strings with previous non-empty label
           // Store as {x:'MM-DD', y:val} objects for scatter-style category mapping
           if(s.field==='temp_min')      yd.values_min = s.data;
           else if(s.field==='temp_max') yd.values_max = s.data;
