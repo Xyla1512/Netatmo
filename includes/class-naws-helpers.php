@@ -2,13 +2,12 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Safely output SVG markup using wp_kses() with a strict allowlist.
- * Use this instead of a bare echo for all SVG output.
+ * Returns the wp_kses() allowlist for SVG output.
+ * Use with: echo wp_kses( $svg, naws_svg_kses_args() );
  *
- * @param  string $svg  Raw SVG markup.
- * @return string       Sanitized SVG markup safe for output.
+ * @return array<string, array<string, bool>>
  */
-function naws_kses_svg( string $svg ): string {
+function naws_svg_kses_args(): array {
     static $allowed = null;
     if ( null === $allowed ) {
         $allowed = [
@@ -28,7 +27,17 @@ function naws_kses_svg( string $svg ): string {
                             'stroke-linecap' => true, 'stroke-linejoin' => true, 'opacity' => true ],
         ];
     }
-    return wp_kses( $svg, $allowed );
+    return $allowed;
+}
+
+/**
+ * Sanitize SVG markup using wp_kses() with a strict allowlist.
+ *
+ * @param  string $svg  Raw SVG markup.
+ * @return string       Sanitized SVG markup safe for output via wp_kses().
+ */
+function naws_kses_svg( string $svg ): string {
+    return wp_kses( $svg, naws_svg_kses_args() );
 }
 
 class NAWS_Helpers {
