@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 6.9
-Stable tag: 1.6.3
+Stable tag: 1.6.4
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -104,6 +104,11 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 7. Export / Import page for backups
 
 == Changelog ==
+
+= 1.6.4 =
+* Fix: `$file['size']` in import handler now wrapped in `intval()` for explicit sanitization (WordPress.org compliance)
+* Fix: `SHOW COLUMNS` query in `class-naws-astro.php` now uses `$wpdb->prepare()` consistently with the rest of the codebase
+* Fix: `naws_svg_kses_args()` helper properly available at plugin load time; resolves fatal error on admin dashboard when function was called before class-naws-helpers.php was loaded
 
 = 1.6.3 =
 * WordPress.org compliance: all file-scope `ob_start()` / `ob_get_clean()` patterns removed from admin views and frontend templates

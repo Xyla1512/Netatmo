@@ -90,9 +90,9 @@ class NAWS_Icons {
         $icons = self::get_set( $set );
         $parts = [];
         foreach ( $icons as $key => $svg ) {
-            // Escape single quotes in SVG and output as JS string
-            $escaped = str_replace( "'", "\\'", $svg );
-            $parts[] = "  {$key}: '{$escaped}'";
+            // Sanitize SVG and encode each value as a proper JSON string.
+            $safe_svg = wp_kses( $svg, naws_svg_kses_args() );
+            $parts[]  = '  ' . esc_js( $key ) . ': ' . wp_json_encode( $safe_svg );
         }
         return "{\n" . implode( ",\n", $parts ) . "\n}";
     }

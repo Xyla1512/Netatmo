@@ -506,7 +506,12 @@ document.addEventListener('click', function(e){
 });
 
 /* ── LOAD DATA ───────────────────────────── */
+// Chart definitions
 /* ── CHART DEFINITIONS ──────────────────── */
+// Each chart fetches one request per year spanning Jan-Dec, group_by=month
+// The daily_data endpoint returns datasets keyed by field label (e.g. "Temp Min (°C)")
+// We identify fields by checking which field key was requested
+// All possible chart definitions
 // ALL_CHART_DEFS is injected by PHP via wp_add_inline_script() before this script.
 
 // Only initialize charts whose canvas is actually in the DOM (not disabled by admin)
@@ -520,6 +525,8 @@ CHART_DEFS.forEach(function(def){
     fields:def.fields, yearData:{}, hiddenYears:new Set(), chartObj:null,
   };
 });
+
+
 
 /* One request per chart: fetch all years at once from dedicated history endpoint */
 var pending = CHART_DEFS.length;
@@ -562,6 +569,7 @@ CHART_DEFS.forEach(function(def){
             CHARTS[def.id].yearData[yr]={labels:[],values:[],values_min:[],values_max:[]};
           }
           var yd = CHARTS[def.id].yearData[yr];
+          // labels: use x value; fill empty strings with previous non-empty label
           // Store as {x:'MM-DD', y:val} objects for scatter-style category mapping
           if(s.field==='temp_min')      yd.values_min = s.data;
           else if(s.field==='temp_max') yd.values_max = s.data;

@@ -159,7 +159,7 @@ if ( $lunar_ecl ) {
         <?php foreach ( $rows as $row ) : ?>
         <div class="naws-infobar-item naws-ib-<?php echo esc_attr( $row['group'] ); ?>">
             <span class="naws-ib-icon">
-                <?php echo naws_kses_svg( $row['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- naws_kses_svg() uses wp_kses() with SVG allowlist ?>
+                <?php echo wp_kses( $row['icon'], naws_svg_kses_args() ); ?>
             </span>
             <span class="naws-ib-text">
                 <span class="naws-ib-label"><?php echo esc_html( $row['label'] ); ?></span>

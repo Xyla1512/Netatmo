@@ -448,7 +448,6 @@ var ROSE='<svg style="position:absolute;top:0;left:0;width:100%;height:100%" vie
   +'<circle cx="80" cy="80" r="72" fill="#f4fafa" stroke="#c0d4d4" stroke-width="1.5"/>'
   +'<circle cx="80" cy="80" r="54" fill="none" stroke="#daeaea" stroke-width="1"/>'
   +'<circle cx="80" cy="80" r="34" fill="none" stroke="#e5f0f0" stroke-width="1" stroke-dasharray="3 4"/>'
-  +'<circle cx="80" cy="80" r="34" fill="none" stroke="#e5f0f0" stroke-width="1" stroke-dasharray="3 4"/>'
   +'<polygon points="80,8 88,80 80,92 72,80" fill="#427272"/>'
   +'<polygon points="80,8 80,92 88,80" fill="#c0d8d8"/>'
   +'<polygon points="80,152 72,80 80,68 88,80" fill="#427272"/>'

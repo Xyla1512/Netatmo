@@ -21,7 +21,7 @@ class NAWS_Astro {
         $table = $wpdb->prefix . NAWS_TABLE_MODULES;
 
         // Ensure columns exist (migration may not have run on update)
-        $col = $wpdb->get_var( "SHOW COLUMNS FROM {$table} LIKE 'latitude'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from constant; schema introspection query
+        $col = $wpdb->get_var( $wpdb->prepare( 'SHOW COLUMNS FROM `' . esc_sql( $table ) . '` LIKE %s', 'latitude' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- table name from constant+prefix; LIKE value via prepare()
         if ( ! $col ) {
             $wpdb->query( "ALTER TABLE {$table} ADD COLUMN latitude  DOUBLE DEFAULT NULL" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.SchemaChange -- one-time migration; table name from constant
             $wpdb->query( "ALTER TABLE {$table} ADD COLUMN longitude DOUBLE DEFAULT NULL" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.SchemaChange -- one-time migration; table name from constant

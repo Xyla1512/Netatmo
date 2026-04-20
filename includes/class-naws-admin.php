@@ -328,8 +328,8 @@ class NAWS_Admin {
         check_admin_referer( 'naws_save_appearance' );
         if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
 
-        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- All values sanitized via NAWS_Colors::sanitize() which validates hex colors and whitelists all keys before storing.
-        $input = isset( $_POST['naws_appearance'] ) ? wp_unslash( $_POST['naws_appearance'] ) : [];
+        $raw   = isset( $_POST['naws_appearance'] ) && is_array( $_POST['naws_appearance'] ) ? $_POST['naws_appearance'] : [];
+        $input = map_deep( wp_unslash( $raw ), 'sanitize_text_field' );
         update_option( NAWS_Colors::OPTION_KEY, NAWS_Colors::sanitize( $input ) );
         NAWS_Colors::flush_cache();
 
@@ -388,7 +388,7 @@ class NAWS_Admin {
             exit;
         }
 
-        $file      = $_FILES['naws_import_file']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- validated by UPLOAD_ERR_OK check above; filename handled by wp_handle_upload()
+        $file      = $_FILES['naws_import_file']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- $_FILES values do not use slashes; individual fields sanitized below
         $safe_name = sanitize_file_name( $file['name'] ?? '' );
 
         // Check extension
@@ -399,7 +399,7 @@ class NAWS_Admin {
         }
 
         // Check file size (max 100 MB)
-        if ( ( $file['size'] ?? 0 ) > 100 * MB_IN_BYTES ) {
+        if ( intval( $file['size'] ?? 0 ) > 100 * MB_IN_BYTES ) {
             wp_safe_redirect( $nonce_url( $redirect_url . '&import_error=' . urlencode( naws__( 'import_file_too_large' ) ) ) );
             exit;
         }
@@ -436,7 +436,7 @@ class NAWS_Admin {
         NAWS_Logger::info( 'export', 'Import file uploaded', [
             'type'      => $meta['export_type'],
             'row_count' => $meta['row_count'] ?? 0,
-            'size'      => $file['size'],
+            'size'      => intval( $file['size'] ?? 0 ),
         ] );
 
         wp_safe_redirect( $redirect_url . '&import_ready=1' );

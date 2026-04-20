@@ -137,28 +137,30 @@ class NAWS_Database {
         global $wpdb;
 
         $t_day = $wpdb->prefix . NAWS_TABLE_DAILY;
-        if ( $wpdb->get_results( "SHOW TABLES LIKE '{$t_day}'" ) ) {
+        if ( $wpdb->get_results( $wpdb->prepare( 'SHOW TABLES LIKE %s', $t_day ) ) ) { // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- schema check, no caching applicable
 
             // v1.3: Remove old incorrectly-named column wind_max (was replaced)
             // (humidity_avg, co2_avg, noise_avg were also dropped in v1.3 but are re-added in v1.4)
-            if ( $wpdb->get_results( "SHOW COLUMNS FROM {$t_day} LIKE 'wind_max'" ) ) {
-                $wpdb->query( "ALTER TABLE {$t_day} DROP COLUMN wind_max" );
+            if ( $wpdb->get_results( $wpdb->prepare( 'SHOW COLUMNS FROM `' . esc_sql( $t_day ) . '` LIKE %s', 'wind_max' ) ) ) { // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- table name from constant+prefix only; LIKE value via prepare()
+                $wpdb->query( 'ALTER TABLE `' . esc_sql( $t_day ) . '` DROP COLUMN wind_max' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.NotPrepared -- DDL, table name from constant+prefix only
             }
 
             // v1.4: Add new sensor columns for all module types
+            // $add_cols keys and values are hardcoded — no user input.
             $add_cols = [
-                'humidity_avg'        => "DOUBLE DEFAULT NULL AFTER rain_sum",
-                'indoor_temp_avg'     => "DOUBLE DEFAULT NULL AFTER humidity_avg",
-                'indoor_humidity_avg' => "DOUBLE DEFAULT NULL AFTER indoor_temp_avg",
-                'co2_avg'             => "DOUBLE DEFAULT NULL AFTER indoor_humidity_avg",
-                'noise_avg'           => "DOUBLE DEFAULT NULL AFTER co2_avg",
-                'wind_avg'            => "DOUBLE DEFAULT NULL AFTER noise_avg",
-                'gust_max'            => "DOUBLE DEFAULT NULL AFTER wind_avg",
-                'wind_angle'          => "DOUBLE DEFAULT NULL AFTER gust_max",
+                'humidity_avg'        => 'DOUBLE DEFAULT NULL AFTER rain_sum',
+                'indoor_temp_avg'     => 'DOUBLE DEFAULT NULL AFTER humidity_avg',
+                'indoor_humidity_avg' => 'DOUBLE DEFAULT NULL AFTER indoor_temp_avg',
+                'co2_avg'             => 'DOUBLE DEFAULT NULL AFTER indoor_humidity_avg',
+                'noise_avg'           => 'DOUBLE DEFAULT NULL AFTER co2_avg',
+                'wind_avg'            => 'DOUBLE DEFAULT NULL AFTER noise_avg',
+                'gust_max'            => 'DOUBLE DEFAULT NULL AFTER wind_avg',
+                'wind_angle'          => 'DOUBLE DEFAULT NULL AFTER gust_max',
             ];
             foreach ( $add_cols as $col => $def ) {
-                if ( ! $wpdb->get_results( "SHOW COLUMNS FROM {$t_day} LIKE '{$col}'" ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $col from hardcoded array; table name from constant
-                    $wpdb->query( "ALTER TABLE {$t_day} ADD COLUMN {$col} {$def}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $col from hardcoded array; $def from hardcoded array
+                // $col and $def are from the hardcoded array above — safe to interpolate.
+                if ( ! $wpdb->get_results( $wpdb->prepare( 'SHOW COLUMNS FROM `' . esc_sql( $t_day ) . '` LIKE %s', $col ) ) ) { // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- table name from constant+prefix; LIKE value via prepare()
+                    $wpdb->query( 'ALTER TABLE `' . esc_sql( $t_day ) . '` ADD COLUMN ' . $col . ' ' . $def ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.NotPrepared -- DDL; $col/$def from hardcoded array
                 }
             }
         }
@@ -166,9 +168,9 @@ class NAWS_Database {
         $t_mod = $wpdb->prefix . NAWS_TABLE_MODULES;
 
         // v1→v1.1: add is_active
-        if ( ! $wpdb->get_results( "SHOW COLUMNS FROM {$t_mod} LIKE 'is_active'" ) ) {
-            $wpdb->query( "ALTER TABLE {$t_mod} ADD COLUMN is_active TINYINT(1) NOT NULL DEFAULT 1 AFTER rf_status" );
-            $wpdb->query( "ALTER TABLE {$t_mod} ADD KEY idx_active (is_active)" );
+        if ( ! $wpdb->get_results( $wpdb->prepare( 'SHOW COLUMNS FROM `' . esc_sql( $t_mod ) . '` LIKE %s', 'is_active' ) ) ) { // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- table name from constant+prefix; LIKE value via prepare()
+            $wpdb->query( 'ALTER TABLE `' . esc_sql( $t_mod ) . '` ADD COLUMN is_active TINYINT(1) NOT NULL DEFAULT 1 AFTER rf_status' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.NotPrepared -- DDL; table name from constant+prefix
+            $wpdb->query( 'ALTER TABLE `' . esc_sql( $t_mod ) . '` ADD KEY idx_active (is_active)' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.NotPrepared -- DDL; table name from constant+prefix
         }
     }
 
