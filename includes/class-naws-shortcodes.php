@@ -30,15 +30,15 @@ class NAWS_Shortcodes {
     public function enqueue_frontend_assets() {
         // Register scripts/styles (not enqueued yet – done per-shortcode)
         wp_register_style(  'naws-frontend', NAWS_PLUGIN_URL . 'assets/css/frontend.css', [], NAWS_VERSION );
-        wp_register_script( 'chartjs',
+        wp_register_script( 'naws-chartjs',
             NAWS_PLUGIN_URL . 'assets/vendor/chart.umd.min.js',
             [], '4.5.1', true );
-        wp_register_script( 'chartjs-adapter-date-fns',
+        wp_register_script( 'naws-chartjs-adapter',
             NAWS_PLUGIN_URL . 'assets/vendor/chartjs-adapter-date-fns.bundle.min.js',
-            [ 'chartjs' ], '3.0.0', true );
+            [ 'naws-chartjs' ], '3.0.0', true );
         wp_register_script( 'naws-frontend',
             NAWS_PLUGIN_URL . 'assets/js/frontend.js',
-            [ 'jquery','chartjs','chartjs-adapter-date-fns' ], NAWS_VERSION, true );
+            [ 'jquery','naws-chartjs','naws-chartjs-adapter' ], NAWS_VERSION, true );
     }
 
     private function enqueue_frontend() {
@@ -52,15 +52,17 @@ class NAWS_Shortcodes {
             $css_injected = true;
         }
 
-        // wp_localize_script MUST be called AFTER wp_enqueue_script
-        // and only once – use a static flag
+        // Inject config once via wp_add_inline_script (more reliable than wp_localize_script)
         static $localized = false;
         if ( ! $localized ) {
-            wp_localize_script( 'naws-frontend', 'nawsFrontend', [
-                'ajax_url' => admin_url( 'admin-ajax.php' ),
-                'nonce'    => wp_create_nonce( 'naws_public_nonce' ),
-                'options'  => get_option( 'naws_settings', [] ),
-            ] );
+            wp_add_inline_script( 'naws-frontend',
+                'var nawsFrontend = ' . wp_json_encode( [
+                    'ajax_url' => admin_url( 'admin-ajax.php' ),
+                    'nonce'    => wp_create_nonce( 'naws_public_nonce' ),
+                    'options'  => get_option( 'naws_settings', [] ),
+                ] ) . ';',
+                'before'
+            );
             $localized = true;
         }
     }
@@ -148,7 +150,7 @@ class NAWS_Shortcodes {
     // ----------------------------------------------------------------
     public function sc_history( $atts ) {
         $this->enqueue_frontend();
-        wp_enqueue_script( 'chartjs-adapter-date-fns' );
+        wp_enqueue_script( 'naws-chartjs-adapter' );
 
         $atts = shortcode_atts( [
             'module_id'         => '',

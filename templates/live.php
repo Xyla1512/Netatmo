@@ -706,7 +706,7 @@ var canvasBgPlugin={
     ctx.restore();
   }
 };
-Chart.register(canvasBgPlugin);
+if(typeof Chart !== 'undefined' && Chart.register) Chart.register(canvasBgPlugin);
 
 /* ── CHART.JS CONFIG ─────────────────── */
 function nawsLiveFontSize(){ var w=window.innerWidth; return w<480?9:w<768?10:11; }
