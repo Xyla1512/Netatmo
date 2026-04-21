@@ -217,6 +217,7 @@ return [
     'hc_temp_avg'             => 'Gjennomsnittstemp.',
     'hc_pressure'             => 'Lufttrykk',
     'hc_rain'                 => 'Nedbør',
+    'hc_humidity'             => 'Utendørs luftfuktighet (årsgjennomsnitt)',
     'hc_all_hidden'           => 'Alle diagrammer er skjult. Aktiver minst ett diagram i innstillingene.',
     'month_jan' => 'Jan', 'month_feb' => 'Feb', 'month_mar' => 'Mar',
     'month_apr' => 'Apr', 'month_may' => 'May', 'month_jun' => 'Jun',

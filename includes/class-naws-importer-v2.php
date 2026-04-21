@@ -19,10 +19,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class NAWS_Importer {
 
     const FETCH_TYPES = [
-        'NAMain'    => [ 'Pressure' ],
-        'NAModule1' => [ 'Temperature' ],
+        'NAMain'    => [ 'Pressure', 'Humidity' ],
+        'NAModule1' => [ 'Temperature', 'Humidity' ],
         'NAModule2' => [ 'WindStrength', 'WindAngle', 'GustStrength', 'GustAngle' ],
         'NAModule3' => [ 'sum_rain' ],   // scale=1day: actual daily total mm
+        'NAModule4' => [ 'Temperature', 'Humidity', 'CO2', 'Noise' ],
     ];
 
     // Rain: scale=1day, type=sum_rain, optimize=true, real_time=true
@@ -48,7 +49,7 @@ class NAWS_Importer {
             'NAModule1' => 'NAModule1',
             'NAModule2' => 'NAModule2',
             'NAModule3' => 'NAModule3',
-            'NAModule4' => 'NAMain',
+            'NAModule4' => 'NAModule4',
             'NHC'       => 'NAMain',
         ];
         return $map[ $module_type ] ?? null;
@@ -113,6 +114,9 @@ class NAWS_Importer {
         }
 
         $station_id = self::get_station_id( $module_id ) ?: $device_id;
+        // NAModule4: each indoor module gets its own row (module_id as key).
+        // All other modules share one row per station (station_id as key).
+        $row_key    = ( $class === 'NAModule4' ) ? $module_id : $station_id;
         $inserted   = 0;
 
         // Compute allowed day range from the ORIGINAL function parameters (not modified vars).
@@ -138,8 +142,7 @@ class NAWS_Importer {
             $cols = self::map_to_columns( $class, $vals );
             if ( empty( $cols ) ) continue;
 
-            // Upsert using station_id – one row per day per station
-            self::upsert_by_station( $station_id, $day_date, $cols, $allowed_min, $allowed_max );
+            self::upsert_by_station( $row_key, $station_id, $day_date, $cols, $allowed_min, $allowed_max );
             $inserted++;
         }
 
@@ -278,21 +281,29 @@ class NAWS_Importer {
         $cols = [];
 
         if ( $class === 'NAModule1' ) {
-            // Outdoor temperature module
+            // Outdoor temperature + humidity module
             $temps = $vals['Temperature'] ?? [];
             if ( ! empty( $temps ) ) {
                 $cols['temp_min'] = round( min( $temps ), 1 );
                 $cols['temp_max'] = round( max( $temps ), 1 );
                 $cols['temp_avg'] = round( array_sum( $temps ) / count( $temps ), 1 );
             }
+            $hum = $vals['Humidity'] ?? [];
+            if ( ! empty( $hum ) ) {
+                $cols['humidity_avg'] = round( array_sum( $hum ) / count( $hum ), 1 );
+            }
 
         } elseif ( $class === 'NAMain' ) {
-            // Main station: pressure
+            // Main station: pressure + indoor humidity
             $press = $vals['Pressure'] ?? $vals['AbsolutePressure'] ?? [];
             // Filter invalid values (only sea-level pressure range)
             $press = array_values( array_filter( $press, fn($v) => $v > 850 && $v < 1100 ) );
             if ( ! empty( $press ) ) {
                 $cols['pressure_avg'] = round( array_sum( $press ) / count( $press ), 1 );
+            }
+            $hum = $vals['Humidity'] ?? [];
+            if ( ! empty( $hum ) ) {
+                $cols['indoor_humidity_avg'] = round( array_sum( $hum ) / count( $hum ), 1 );
             }
 
         } elseif ( $class === 'NAModule2' ) {
@@ -311,6 +322,25 @@ class NAWS_Importer {
                 $sin_sum = array_sum( array_map( fn($a) => sin( deg2rad( $a ) ), $angles ) );
                 $cos_sum = array_sum( array_map( fn($a) => cos( deg2rad( $a ) ), $angles ) );
                 $cols['wind_angle'] = round( fmod( rad2deg( atan2( $sin_sum, $cos_sum ) ) + 360, 360 ), 0 );
+            }
+
+        } elseif ( $class === 'NAModule4' ) {
+            // Additional indoor module: temp, humidity, CO2, noise
+            $temp = $vals['Temperature'] ?? [];
+            if ( ! empty( $temp ) ) {
+                $cols['indoor_temp_avg'] = round( array_sum( $temp ) / count( $temp ), 1 );
+            }
+            $hum = $vals['Humidity'] ?? [];
+            if ( ! empty( $hum ) ) {
+                $cols['indoor_humidity_avg'] = round( array_sum( $hum ) / count( $hum ), 1 );
+            }
+            $co2 = $vals['CO2'] ?? [];
+            if ( ! empty( $co2 ) ) {
+                $cols['co2_avg'] = round( array_sum( $co2 ) / count( $co2 ), 1 );
+            }
+            $noise = $vals['Noise'] ?? [];
+            if ( ! empty( $noise ) ) {
+                $cols['noise_avg'] = round( array_sum( $noise ) / count( $noise ), 1 );
             }
 
         } elseif ( $class === 'NAModule3' ) {
@@ -335,7 +365,7 @@ class NAWS_Importer {
      * All modules write to the SAME row – so Temp, Pressure and Rain
      * end up in one row per day instead of three separate rows.
      */
-    private static function upsert_by_station( $station_id, $day_date, $cols, $min_date = null, $max_date = null ) {
+    private static function upsert_by_station( $module_id, $station_id, $day_date, $cols, $min_date = null, $max_date = null ) {
         // Hard date-range guard: reject days outside the requested window
         // This is the final safety net regardless of any upstream filter issues
         if ( $min_date !== null && $day_date < $min_date ) return;
@@ -371,10 +401,10 @@ class NAWS_Importer {
         }
 
         $params = array_merge(
-            $col_keys,                                                           // %i: INSERT column list
-            [ $station_id, $station_id, $day_date, $day_date . ' 00:00:00' ],  // %s: fixed columns
-            array_values( $cols ),                                               // %f: sensor values
-            $on_dup_params                                                        // %i x3: ON DUPLICATE
+            $col_keys,                                                          // %i: INSERT column list
+            [ $module_id, $station_id, $day_date, $day_date . ' 00:00:00' ],  // %s: fixed columns
+            array_values( $cols ),                                              // %f: sensor values
+            $on_dup_params                                                       // %i x3: ON DUPLICATE
         );
 
         $result = $wpdb->query( $wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- {$table} is prefix+constant; column names passed as %i identifiers; placeholder count is dynamic

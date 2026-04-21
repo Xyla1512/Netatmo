@@ -217,6 +217,7 @@ return [
     'hc_temp_avg'           => 'Annual Average Temperature',
     'hc_pressure'           => 'Pressure (Annual Mean)',
     'hc_rain'               => 'Annual Precipitation',
+    'hc_humidity'           => 'Outdoor Humidity (Annual Mean)',
     'hc_all_hidden'         => 'All annual comparisons are currently disabled.',
     'month_jan' => 'Jan', 'month_feb' => 'Feb', 'month_mar' => 'Mar',
     'month_apr' => 'Apr', 'month_may' => 'May', 'month_jun' => 'Jun',

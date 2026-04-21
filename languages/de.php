@@ -217,6 +217,7 @@ return [
     'hc_temp_avg'           => 'Jahresdurchschnittstemperatur',
     'hc_pressure'           => 'Luftdruck (Jahresmittel)',
     'hc_rain'               => 'Jahresniederschlag',
+    'hc_humidity'           => 'Außenluftfeuchte (Jahresmittel)',
     'hc_all_hidden'         => 'Alle Jahresvergleiche sind momentan deaktiviert.',
     'month_jan' => 'Jan', 'month_feb' => 'Feb', 'month_mar' => 'Mär',
     'month_apr' => 'Apr', 'month_may' => 'Mai', 'month_jun' => 'Jun',

@@ -625,6 +625,10 @@ function buildLive(rows){
   if(HIDE.indexOf('Temperature_indoor')<0&&p.Temperature_indoor)
     h+=mkCard('c-temp','temp',NAWS_I18N.card_temperature+'<span class="naws-lbl-badge">'+NAWS_I18N.lbl_base+'</span>','Temperature_indoor',p.Temperature_indoor.value,p.Temperature_indoor.unit||'°C',p.Temperature_indoor.recorded_at,[]);
 
+  // ── Innen-Luftfeuchtigkeit Basis (NAMain) ──────────────────────────────
+  if(HIDE.indexOf('Humidity_indoor')<0&&p.Humidity_indoor)
+    h+=mkCard('c-humid','humid',NAWS_I18N.card_humidity+'<span class="naws-lbl-badge">'+NAWS_I18N.lbl_base+'</span>','Humidity_indoor',p.Humidity_indoor.value,p.Humidity_indoor.unit||'%',p.Humidity_indoor.recorded_at,[]);
+
   // ── Regen (NAModule3) ─────────────────────────────────────────────────
   if(HIDE.indexOf('Rain')<0&&(p.Rain||p.sum_rain_1||p.sum_rain_24||p.rain_rolling_24h)){
     var rm=p.Rain||p.sum_rain_1||p.sum_rain_24||p.rain_rolling_24h,rs=[];

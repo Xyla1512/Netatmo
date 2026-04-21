@@ -6,14 +6,27 @@ $hidden_modules = (array) get_option( 'naws_live_hidden_modules',  [] );
 $hidden_charts         = (array) get_option( 'naws_live_hidden_charts',         [] );
 $hidden_history_charts = (array) get_option( 'naws_history_hidden_charts',        [] );
 
+$all_modules    = NAWS_Database::get_modules( true );
+
 // Available yearly comparison charts
 $history_chart_defs = [
     'temp_minmax' => [ 'label' => naws__( 'hc_temp_minmax' ), 'icon' => '🌡️' ],
     'temp_avg'    => [ 'label' => naws__( 'hc_temp_avg' ),    'icon' => '🌡️' ],
     'pressure'    => [ 'label' => naws__( 'hc_pressure' ),    'icon' => '🔵' ],
     'rain'        => [ 'label' => naws__( 'hc_rain' ),        'icon' => '🌧️' ],
+    'humidity'    => [ 'label' => naws__( 'hc_humidity' ),    'icon' => '💧' ],
 ];
-$all_modules    = NAWS_Database::get_modules( true );
+// Dynamic: add one toggle per NAModule4 indoor module
+foreach ( $all_modules as $_m ) {
+    if ( $_m['module_type'] !== 'NAModule4' ) continue;
+    $_slug = preg_replace( '/[^a-z0-9]/', '', strtolower( $_m['module_name'] ) );
+    if ( $_slug === '' ) $_slug = 'indoor' . substr( str_replace( ':', '', $_m['module_id'] ), -4 );
+    $_slug = substr( $_slug, 0, 16 );
+    $history_chart_defs[ 'indoor_humidity_' . $_slug ] = [
+        'label' => $_m['module_name'] . ' – ' . naws__( 'param_humidity' ),
+        'icon'  => '💧',
+    ];
+}
 
 // Build a lookup: type → first module of that type
 $mod_by_type = [];
@@ -57,6 +70,7 @@ $module_defs = [
         'color'  => '#2271b1',
         'params' => [
             'Temperature_indoor' => [ 'label' => naws__( 'param_temp_indoor' ), 'unit' => '°C'  ],
+            'Humidity_indoor'    => [ 'label' => naws__( 'param_humidity' ),    'unit' => '%'   ],
             'Pressure'           => [ 'label' => 'Luftdruck relativ',      'unit' => 'hPa' ],
             'AbsolutePressure'   => [ 'label' => 'Luftdruck absolut',      'unit' => 'hPa' ],
             'CO2'                => [ 'label' => 'CO₂-Konzentration',      'unit' => 'ppm' ],

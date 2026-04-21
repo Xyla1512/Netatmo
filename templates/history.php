@@ -37,6 +37,22 @@ if ( $year_param !== '' ) {
     }
 }
 $hidden_history_charts = (array) get_option( 'naws_history_hidden_charts', [] );
+
+// Dynamic NAModule4 indoor humidity charts — one per indoor module
+$_naws_m4_charts = [];
+foreach ( NAWS_Database::get_modules( true ) as $_m ) {
+    if ( $_m['module_type'] !== 'NAModule4' ) continue;
+    $_slug = preg_replace( '/[^a-z0-9]/', '', strtolower( $_m['module_name'] ) );
+    if ( $_slug === '' ) $_slug = 'indoor' . substr( str_replace( ':', '', $_m['module_id'] ), -4 );
+    $_slug = substr( $_slug, 0, 16 );
+    $_naws_m4_charts[] = [
+        'id'        => 'indoor_humidity_' . $_slug,
+        'module_id' => $_m['module_id'],
+        'title'     => esc_html( $_m['module_name'] ) . ' – ' . naws__( 'param_humidity' ),
+    ];
+}
+// 5 static charts + one per NAModule4
+$_naws_total_history_charts = 5 + count( $_naws_m4_charts );
 ?>
 <?php // Chart.js loaded via wp_enqueue_script( 'chartjs' ) — see class-naws-shortcodes.php ?>
 
@@ -53,7 +69,7 @@ $hidden_history_charts = (array) get_option( 'naws_history_hidden_charts', [] );
   </div>
 
   <div class="naws-hist-body">
-    <?php if ( count( $hidden_history_charts ) < 4 ) : ?>
+    <?php if ( count( $hidden_history_charts ) < $_naws_total_history_charts ) : ?>
     <div class="naws-hist-loading"><div class="naws-hist-spin"></div></div>
     <?php else : ?>
     <div class="naws-hist-all-hidden">
@@ -120,6 +136,36 @@ $hidden_history_charts = (array) get_option( 'naws_history_hidden_charts', [] );
       </div>
       <?php endif; ?>
 
+      <?php if ( ! in_array( 'humidity', $hidden_history_charts, true ) ) : ?>
+      <!-- Außenluftfeuchte -->
+      <div class="naws-hc-wrap" data-chart="humidity">
+        <div class="naws-hc-bar">
+          <div class="naws-hc-title"><?php naws_e( 'hc_humidity' ); ?></div>
+          <div class="naws-hc-legend" id="<?php echo esc_attr($widget_id); ?>-leg-humidity"></div>
+          <button class="naws-hc-expand" data-target="humidity" title="<?php echo esc_attr( naws__( 'expand_chart' ) ); ?>">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          </button>
+        </div>
+        <canvas id="<?php echo esc_attr($widget_id); ?>-humidity" height="90"></canvas>
+      </div>
+      <?php endif; ?>
+
+      <?php foreach ( $_naws_m4_charts as $_m4c ) : ?>
+      <?php if ( ! in_array( $_m4c['id'], $hidden_history_charts, true ) ) : ?>
+      <!-- Innenluftfeuchte NAModule4 -->
+      <div class="naws-hc-wrap" data-chart="<?php echo esc_attr( $_m4c['id'] ); ?>">
+        <div class="naws-hc-bar">
+          <div class="naws-hc-title"><?php echo wp_kses_post( $_m4c['title'] ); ?></div>
+          <div class="naws-hc-legend" id="<?php echo esc_attr( $widget_id . '-leg-' . $_m4c['id'] ); ?>"></div>
+          <button class="naws-hc-expand" data-target="<?php echo esc_attr( $_m4c['id'] ); ?>" title="<?php echo esc_attr( naws__( 'expand_chart' ) ); ?>">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          </button>
+        </div>
+        <canvas id="<?php echo esc_attr( $widget_id . '-' . $_m4c['id'] ); ?>" height="90"></canvas>
+      </div>
+      <?php endif; ?>
+      <?php endforeach; ?>
+
     </div>
   </div>
 </div>
@@ -169,6 +215,11 @@ wp_add_inline_script( 'naws-frontend', 'var ALL_CHART_DEFS = ' . wp_json_encode(
     [ 'id' => 'temp_avg',    'title' => naws__( 'hc_temp_avg' ),    'type' => 'line', 'unit' => $_naws_hist_temp_unit, 'fields' => [ 'temp_avg' ],             'moduleId' => '' ],
     [ 'id' => 'pressure',    'title' => naws__( 'hc_pressure' ),    'type' => 'line', 'unit' => $_naws_hist_pres_unit, 'fields' => [ 'pressure_avg' ],         'moduleId' => '' ],
     [ 'id' => 'rain',        'title' => naws__( 'hc_rain' ),        'type' => 'bar',  'unit' => $_naws_hist_rain_unit, 'fields' => [ 'rain_sum' ],             'moduleId' => '' ],
+    [ 'id' => 'humidity',    'title' => naws__( 'hc_humidity' ),    'type' => 'line', 'unit' => '%',                   'fields' => [ 'humidity_avg' ],         'moduleId' => '' ],
+    // Dynamic: one entry per NAModule4 indoor module
+    ...array_map( function( $_m4c ) {
+        return [ 'id' => $_m4c['id'], 'title' => $_m4c['title'], 'type' => 'line', 'unit' => '%', 'fields' => [ 'indoor_humidity_avg' ], 'moduleId' => $_m4c['module_id'] ];
+    }, $_naws_m4_charts ),
 ] ) . ';', 'before' );
 
 wp_add_inline_script( 'naws-frontend', <<<'EOJS'
@@ -554,6 +605,7 @@ CHART_DEFS.forEach(function(def){
     +'&year_from='+YEARS[0]
     +'&year_to='+YEARS[YEARS.length-1];
   def.fields.forEach(function(f){ body+='&fields[]='+encodeURIComponent(f); });
+  if(def.moduleId) body+='&module_id='+encodeURIComponent(def.moduleId);
 
   var xhr=new XMLHttpRequest();
   xhr.open('POST',AJAX);

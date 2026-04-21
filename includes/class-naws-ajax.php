@@ -480,7 +480,7 @@ class NAWS_Ajax {
         global $wpdb;
 
         $table      = $wpdb->prefix . NAWS_TABLE_DAILY;
-        $allowed    = [ 'temp_min', 'temp_max', 'temp_avg', 'pressure_avg', 'rain_sum' ];
+        $allowed    = [ 'temp_min', 'temp_max', 'temp_avg', 'pressure_avg', 'rain_sum', 'humidity_avg', 'indoor_humidity_avg' ];
         $raw_fields = isset( $_POST['fields'] ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
                     ? array_intersect( array_map( 'sanitize_key', (array) wp_unslash( $_POST['fields'] ) ), $allowed )
                     : $allowed;
@@ -489,17 +489,28 @@ class NAWS_Ajax {
         $year_from = intval( $_POST['year_from'] ?? gmdate( 'Y') ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         $year_to   = intval( $_POST['year_to']   ?? gmdate( 'Y') ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
+        // Optional: filter by specific module_id (NAModule4 rows keyed by module_id, not station_id)
+        $filter_module_id = isset( $_POST['module_id'] )
+            ? sanitize_text_field( wp_unslash( $_POST['module_id'] ) )
+            : null;
+
         // ── Single query for all years (replaces N+1 per-year loop) ──────
         // %i placeholders for field identifiers (WP 6.2+); field args come before WHERE args
-        $field_ph = implode( ', ', array_fill( 0, count( $raw_fields ), '%i' ) );
+        $field_ph    = implode( ', ', array_fill( 0, count( $raw_fields ), '%i' ) );
+        $where_sql   = 'd.day_date BETWEEN %s AND %s';
+        $where_args  = [ "{$year_from}-01-01", "{$year_to}-12-31" ];
+        if ( $filter_module_id !== null ) {
+            $where_sql  .= ' AND d.module_id = %s';
+            $where_args[] = $filter_module_id;
+        }
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber,PluginCheck.Security.DirectDB.UnescapedDBParameter -- {$table} is prefix+constant; field names passed as %i identifiers; placeholder count is dynamic
         $rows = $wpdb->get_results( $wpdb->prepare(
             "SELECT d.day_date, {$field_ph}
              FROM {$table} d
-             WHERE d.day_date BETWEEN %s AND %s
+             WHERE {$where_sql}
              ORDER BY d.day_date ASC",
-            array_merge( $raw_fields, [ "{$year_from}-01-01", "{$year_to}-12-31" ] )
+            array_merge( $raw_fields, $where_args )
         ), ARRAY_A );
         // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 
@@ -523,11 +534,13 @@ class NAWS_Ajax {
 
         // Field → parameter mapping for unit conversion
         $field_param_map = [
-            'temp_min'     => 'Temperature',
-            'temp_max'     => 'Temperature',
-            'temp_avg'     => 'Temperature',
-            'pressure_avg' => 'Pressure',
-            'rain_sum'     => 'Rain',
+            'temp_min'           => 'Temperature',
+            'temp_max'           => 'Temperature',
+            'temp_avg'           => 'Temperature',
+            'pressure_avg'       => 'Pressure',
+            'rain_sum'           => 'Rain',
+            'humidity_avg'       => 'Humidity',
+            'indoor_humidity_avg' => 'Humidity',
         ];
 
         $result = [];
