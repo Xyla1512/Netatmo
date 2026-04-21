@@ -559,7 +559,6 @@ EOJS
 );
 
 // Pass dateRange as a separate data constant (must run before the main script body).
-<?php
 $_naws_rr        = NAWS_Database::get_data_range();
 $_naws_yesterday = gmdate( 'Y-m-d', strtotime( 'yesterday' ) );
 wp_add_inline_script( 'naws-admin',
