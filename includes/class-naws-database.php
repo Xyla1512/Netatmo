@@ -629,35 +629,30 @@ class NAWS_Database {
                     }
                 }
 
-                // ── NAModule4: Indoor extra module – temp, humidity, CO₂, noise ─
+                // ── NAModule4: own row per module (module_id as key) ────
                 elseif ( $mtype === 'NAModule4' ) {
-                    $press_raw = array_merge(
-                        $p['Pressure']         ?? [],
-                        $p['AbsolutePressure'] ?? []
-                    );
-                    $press = array_values( array_filter(
-                        $press_raw,
-                        fn( $v ) => $v > 850 && $v < 1100
-                    ) );
-                    if ( ! empty( $press ) ) {
-                        $cols['pressure_avg'] = round( array_sum( $press ) / count( $press ), 1 );
-                    }
-                    $itemps = array_merge( $p['Temperature'] ?? [], $p['temperature'] ?? [] );
+                    $m4_cols = [];
+                    $itemps  = array_merge( $p['Temperature'] ?? [], $p['temperature'] ?? [] );
                     if ( ! empty( $itemps ) ) {
-                        $cols['indoor_temp_avg'] = round( array_sum( $itemps ) / count( $itemps ), 1 );
+                        $m4_cols['indoor_temp_avg'] = round( array_sum( $itemps ) / count( $itemps ), 1 );
                     }
                     $ihumid = $p['Humidity'] ?? $p['humidity'] ?? [];
                     if ( ! empty( $ihumid ) ) {
-                        $cols['indoor_humidity_avg'] = round( array_sum( $ihumid ) / count( $ihumid ), 1 );
+                        $m4_cols['indoor_humidity_avg'] = round( array_sum( $ihumid ) / count( $ihumid ), 1 );
                     }
                     $co2 = $p['CO2'] ?? $p['co2'] ?? [];
                     if ( ! empty( $co2 ) ) {
-                        $cols['co2_avg'] = round( array_sum( $co2 ) / count( $co2 ), 0 );
+                        $m4_cols['co2_avg'] = round( array_sum( $co2 ) / count( $co2 ), 0 );
                     }
                     $noise = $p['Noise'] ?? $p['noise'] ?? [];
                     if ( ! empty( $noise ) ) {
-                        $cols['noise_avg'] = round( array_sum( $noise ) / count( $noise ), 1 );
+                        $m4_cols['noise_avg'] = round( array_sum( $noise ) / count( $noise ), 1 );
                     }
+                    if ( ! empty( $m4_cols ) ) {
+                        self::upsert_daily_summary( $mid, $station_id, $date, $m4_cols );
+                        $saved++;
+                    }
+                    continue; // NAModule4 does not contribute to the station row
                 }
 
                 // ── NAModule3: Rain gauge ────────────────────────────────
@@ -697,7 +692,7 @@ class NAWS_Database {
 
             if ( empty( $cols ) ) continue;
 
-            self::upsert_daily_summary( $station_id, $date, $cols );
+            self::upsert_daily_summary( $station_id, $station_id, $date, $cols );
             $saved++;
         }
 
@@ -715,7 +710,7 @@ class NAWS_Database {
      * @param string $day_date    'Y-m-d'
      * @param array  $cols        Associative array of column → value (only non-null values)
      */
-    private static function upsert_daily_summary( $station_id, $day_date, $cols ) {
+    private static function upsert_daily_summary( $module_id, $station_id, $day_date, $cols ) {
         global $wpdb;
         $table = $wpdb->prefix . NAWS_TABLE_DAILY;
 
@@ -746,10 +741,10 @@ class NAWS_Database {
         }
 
         $params = array_merge(
-            $col_keys,                                                           // %i: INSERT column list
-            [ $station_id, $station_id, $day_date, $day_date . ' 00:00:00' ],  // %s: fixed columns
-            array_values( $cols ),                                               // %f: sensor values
-            $on_dup_params                                                        // %i x3: ON DUPLICATE
+            $col_keys,                                                          // %i: INSERT column list
+            [ $module_id, $station_id, $day_date, $day_date . ' 00:00:00' ],  // %s: fixed columns
+            array_values( $cols ),                                              // %f: sensor values
+            $on_dup_params                                                       // %i x3: ON DUPLICATE
         );
 
         $result = $wpdb->query( $wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter -- {$table} is prefix+constant; column names passed as %i identifiers; placeholder count is dynamic
