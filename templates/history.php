@@ -17,9 +17,13 @@ foreach ( NAWS_Database::get_modules( true ) as $m ) {
     if ( $m['module_type'] === 'NAModule1' ) $outdoor_id = $m['module_id'];
     if ( $m['module_type'] === 'NAMain'    ) $indoor_id  = $m['module_id'];
 }
+// MIN()/MAX() always return a row – on an empty table both columns are NULL,
+// so check the values, not just the row (passing null to substr() is
+// deprecated as of PHP 8.1).
 $range = NAWS_Database::get_daily_data_range();
-$year_from = $range ? (int) substr($range['date_begin'], 0, 4) : (int) gmdate( 'Y');
-$year_to   = $range ? (int) substr($range['date_end'],   0, 4) : (int) gmdate( 'Y');
+$year_from = ! empty( $range['date_begin'] ) ? (int) substr( $range['date_begin'], 0, 4 ) : (int) gmdate( 'Y' );
+$year_to   = ! empty( $range['date_end']   ) ? (int) substr( $range['date_end'],   0, 4 ) : (int) gmdate( 'Y' );
+if ( $year_from < 2000 || $year_from > $year_to ) $year_from = $year_to; // guard against malformed day_date
 $years     = range($year_from, $year_to);
 
 // Shortcode year="2025" or year="2023,2025" → filter to specific year(s)

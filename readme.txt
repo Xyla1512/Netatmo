@@ -2,9 +2,9 @@
 Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
-Tested up to: 6.9
-Stable tag: 1.6.4
-Requires PHP: 7.4
+Tested up to: 7.0
+Stable tag: 1.6.5
+Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -104,6 +104,11 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 7. Export / Import page for backups
 
 == Changelog ==
+
+= 1.6.5 =
+* Compatibility: tested against WordPress 7.0
+* Compatibility: minimum PHP requirement raised to 8.0 (`Requires PHP: 8.0`)
+* Fix: history chart no longer emits a PHP 8.1 deprecation notice (`substr(): Passing null`) when the daily-summary table is still empty — the year range now falls back to the current year instead of year 0
 
 = 1.6.4 =
 * Fix: `$file['size']` in import handler now wrapped in `intval()` for explicit sanitization (WordPress.org compliance)
