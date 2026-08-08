@@ -227,6 +227,57 @@ $value_params = [
             <div class="naws-inline-ex"><code>[naws_forecast days="3" title="Weekend"]</code> <?php naws_e('sc_forecast_ex_custom'); ?></div>
         </div>
     </div>
+
+    <div class="naws-sc-card">
+        <h3><code>[naws_weather_icon]</code> &ndash; <?php naws_e('sc_wxicon_desc'); ?></h3>
+        <p><?php naws_e('sc_wxicon_long_desc'); ?></p>
+        <div class="naws-copy-wrap"><pre>[naws_weather_icon]</pre><button class="naws-copy-btn" data-copy='[naws_weather_icon]'><?php naws_e('sc_copy'); ?></button></div>
+        <table class="naws-attr-table" style="margin-top:10px">
+            <tr>
+                <th><?php naws_e('sc_th_attribute'); ?></th>
+                <th><?php naws_e('sc_th_description'); ?></th>
+                <th><?php naws_e('sc_th_default'); ?></th>
+            </tr>
+            <tr><td><code>size</code></td><td><?php naws_e('sc_wxicon_attr_size'); ?></td><td><span class="naws-tag-default">96</span></td></tr>
+        </table>
+        <div class="naws-inline-examples">
+            <div class="naws-inline-ex"><code>[naws_weather_icon]</code> <?php naws_e('sc_wxicon_ex_default'); ?></div>
+            <div class="naws-inline-ex"><code>[naws_weather_icon size="140"]</code> <?php naws_e('sc_wxicon_ex_large'); ?></div>
+        </div>
+        <?php
+        // Live preview: show what the icon looks like right now, so the page
+        // also answers "is it working at all" without leaving the backend.
+        if ( class_exists( 'NAWS_Weather_State' ) ) :
+            $naws_sc_wx = NAWS_Weather_State::get_current();
+            ?>
+            <div style="margin-top:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+                <?php if ( $naws_sc_wx['state'] !== '' ) : ?>
+                    <?php
+                    // The stylesheet is enqueued by NAWS_Admin::enqueue_assets()
+                    // for this page; 'naws-frontend' itself is only registered
+                    // on wp_enqueue_scripts and does not exist in the admin.
+                    // Literal template markup, never a kses-filtered string.
+                    echo NAWS_Weather_Icons::render( $naws_sc_wx['state'], 72 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- compile-time constant SVG, see templates/weather-icon.php
+                    ?>
+                    <div>
+                        <strong><?php echo esc_html( NAWS_Weather_Icons::label( $naws_sc_wx['state'] ) ); ?></strong><br>
+                        <small style="color:#64748b">
+                            <?php naws_e('sc_wxicon_source'); ?>:
+                            <code><?php echo esc_html( $naws_sc_wx['source'] ); ?></code>
+                            <?php if ( $naws_sc_wx['wmo'] !== null ) : ?>
+                                &middot; WMO <?php echo intval( $naws_sc_wx['wmo'] ); ?>
+                            <?php endif; ?>
+                            <?php if ( $naws_sc_wx['stale'] ) : ?>
+                                &middot; <?php naws_e('sc_wxicon_stale'); ?>
+                            <?php endif; ?>
+                        </small>
+                    </div>
+                <?php else : ?>
+                    <small style="color:#64748b"><?php naws_e('sc_wxicon_none'); ?></small>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+    </div>
     </div><!-- /.naws-panel-body -->
 </div>
 

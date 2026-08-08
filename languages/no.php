@@ -638,6 +638,16 @@ return [
     'wx_state_thunder'          => 'Tordenvær',
     'wx_state_storm'            => 'Storm',
 
+    // Kortkode-siden i administrasjonen
+    'sc_wxicon_desc'            => 'Været akkurat nå som animert ikon',
+    'sc_wxicon_long_desc'       => 'Viser gjeldende værtilstand som et animert ikon. Bevisst uten synlig tekst — tilstanden ligger i aria-label for skjermlesere. Står ikonet på samme side som live-dashbordet, oppdateres det sammen med dets hentesyklus. Kan ingen tilstand fastslås, vises ingenting.',
+    'sc_wxicon_attr_size'       => 'Kantlengde i piksler. Verdier under 64 heves til 64; under det lar tilstandene seg ikke skille.',
+    'sc_wxicon_ex_default'      => '96 px, sentrert',
+    'sc_wxicon_ex_large'        => 'større, f.eks. som toppgrafikk',
+    'sc_wxicon_source'          => 'Kilde',
+    'sc_wxicon_stale'           => 'varselet er utdatert, siste kjente verdi',
+    'sc_wxicon_none'            => 'Ingen tilstand kan fastslås nå — verken stasjonsmålinger eller varsel foreligger. Ingenting ville blitt vist.',
+
     'wx_icon_heading'           => 'Værikon',
     'wx_icon_desc'              => 'Ikonet viser været akkurat nå. Målingene fra stasjonen går foran varselet; varselet fyller bare inn der stasjonen ikke kan måle — skydekke, torden og nedbør uten regnmåler.',
     'wx_show_dashboard_label'   => 'Over dashbordet',

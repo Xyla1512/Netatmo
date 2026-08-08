@@ -638,6 +638,16 @@ return [
     'wx_state_thunder'          => 'Gewitter',
     'wx_state_storm'            => 'Sturm',
 
+    // Shortcode-Seite im Backend
+    'sc_wxicon_desc'            => 'Aktuelles Wetter als animiertes Icon',
+    'sc_wxicon_long_desc'       => 'Zeigt den aktuellen Wetterzustand als animiertes Icon. Bewusst ohne sichtbare Beschriftung — der Zustand steckt im aria-label für Screenreader. Steht das Icon auf derselben Seite wie das Live-Dashboard, aktualisiert es sich über dessen Abfragezyklus mit. Lässt sich kein Zustand bestimmen, wird nichts ausgegeben.',
+    'sc_wxicon_attr_size'       => 'Kantenlänge in Pixeln. Kleinere Werte als 64 werden auf 64 angehoben, darunter sind die Zustände nicht mehr unterscheidbar.',
+    'sc_wxicon_ex_default'      => '96 px, zentriert',
+    'sc_wxicon_ex_large'        => 'größer, z. B. als Kopfgrafik',
+    'sc_wxicon_source'          => 'Quelle',
+    'sc_wxicon_stale'           => 'Vorhersage veraltet, letzter bekannter Wert',
+    'sc_wxicon_none'            => 'Zurzeit kein Zustand bestimmbar — weder Stationswerte noch Vorhersage liegen vor. Es würde nichts ausgegeben.',
+
     'wx_icon_heading'           => 'Wetter-Icon',
     'wx_icon_desc'              => 'Das Icon zeigt das aktuelle Wetter. Die Messwerte der Station haben Vorrang vor der Vorhersage; die Vorhersage springt nur dort ein, wo die Station nichts messen kann — Bewölkung, Gewitter und Niederschlag ohne Regenmesser.',
     'wx_show_dashboard_label'   => 'Über dem Dashboard',

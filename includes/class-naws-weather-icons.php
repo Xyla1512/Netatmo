@@ -79,7 +79,11 @@ class NAWS_Weather_Icons {
         }
         self::$defs_queued = true;
 
-        add_action( 'wp_footer', [ __CLASS__, 'print_defs' ], 5 );
+        // wp_footer never fires in the admin, so the backend preview on the
+        // shortcodes page would render icons whose gradients resolve to
+        // nothing.
+        $hook = is_admin() ? 'admin_footer' : 'wp_footer';
+        add_action( $hook, [ __CLASS__, 'print_defs' ], 5 );
     }
 
     /** Print the shared <defs> block. Hooked to wp_footer, never called directly. */

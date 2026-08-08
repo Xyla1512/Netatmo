@@ -185,6 +185,14 @@ class NAWS_Admin {
             $js_deps[] = 'wp-color-picker';
         }
 
+        // The shortcodes page previews the live weather icon, which needs the
+        // frontend stylesheet for its keyframes. The 'naws-frontend' handle
+        // itself is registered on wp_enqueue_scripts and does not exist here,
+        // so the file is enqueued under its own handle.
+        if ( strpos( $hook, 'naws-shortcodes' ) !== false ) {
+            wp_enqueue_style( 'naws-weather-icon', NAWS_PLUGIN_URL . 'assets/css/frontend.css', [], NAWS_VERSION );
+        }
+
         wp_enqueue_script( 'naws-admin', NAWS_PLUGIN_URL . 'assets/js/admin.js', $js_deps, NAWS_VERSION, true );
 
         wp_localize_script( 'naws-admin', 'nawsAdmin', [

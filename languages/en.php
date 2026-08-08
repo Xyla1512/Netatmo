@@ -638,6 +638,16 @@ return [
     'wx_state_thunder'          => 'Thunderstorm',
     'wx_state_storm'            => 'Storm',
 
+    // Backend shortcode page
+    'sc_wxicon_desc'            => 'Current weather as an animated icon',
+    'sc_wxicon_long_desc'       => 'Shows the current weather state as an animated icon. Deliberately without a visible caption — the state is carried by the aria-label for screen readers. If the icon sits on the same page as the live dashboard it refreshes along with that page\'s polling cycle. When no state can be determined, nothing is output.',
+    'sc_wxicon_attr_size'       => 'Edge length in pixels. Values below 64 are raised to 64; below that the states are no longer distinguishable.',
+    'sc_wxicon_ex_default'      => '96 px, centred',
+    'sc_wxicon_ex_large'        => 'larger, e.g. as a header graphic',
+    'sc_wxicon_source'          => 'Source',
+    'sc_wxicon_stale'           => 'forecast stale, last known value',
+    'sc_wxicon_none'            => 'No state determinable right now — neither station readings nor forecast are available. Nothing would be output.',
+
     'wx_icon_heading'           => 'Weather icon',
     'wx_icon_desc'              => 'The icon shows current weather. Station readings take precedence over the forecast; the forecast only fills in where the station cannot measure — cloud cover, thunderstorms, and precipitation when no rain gauge is present.',
     'wx_show_dashboard_label'   => 'Above the dashboard',
