@@ -621,4 +621,34 @@ return [
     'icon_set_filled_desc'            => 'Solid filled icons for a bolder, modern look.',
     'icon_set_minimal'                => 'Minimal',
     'icon_set_minimal_desc'           => 'Ultra-thin, geometric icons for a reduced style.',
+
+    // ── Weather icon (v1.7.0) ─────────────────────────────────────────
+    // The state strings are aria-labels only – the icon deliberately has no
+    // visible caption, so these carry the entire meaning.
+    'wx_state_clear_day'        => 'Clear',
+    'wx_state_clear_night'      => 'Clear night',
+    'wx_state_fair'             => 'Fair',
+    'wx_state_partly'           => 'Partly cloudy',
+    'wx_state_overcast'         => 'Overcast',
+    'wx_state_fog'              => 'Fog',
+    'wx_state_rain'             => 'Rain',
+    'wx_state_rain_heavy'       => 'Heavy rain',
+    'wx_state_snow'             => 'Snow',
+    'wx_state_sleet'            => 'Sleet or hail',
+    'wx_state_thunder'          => 'Thunderstorm',
+    'wx_state_storm'            => 'Storm',
+
+    'wx_icon_heading'           => 'Weather icon',
+    'wx_icon_desc'              => 'The icon shows current weather. Station readings take precedence over the forecast; the forecast only fills in where the station cannot measure — cloud cover, thunderstorms, and precipitation when no rain gauge is present.',
+    'wx_show_dashboard_label'   => 'Above the dashboard',
+    'wx_show_dashboard_desc'    => 'Show the icon above the live dashboard. The [naws_weather_icon] shortcode is unaffected by this.',
+    'wx_rain_heavy_label'       => 'Heavy rain from',
+    'wx_rain_heavy_desc'        => 'At or above this rain rate the icon shows heavy rain instead of rain.',
+    'wx_snow_tw_label'          => 'Snow below',
+    'wx_snow_tw_desc'           => 'Wet-bulb temperature, not air temperature. It decides whether precipitation arrives as rain or snow: in dry air it still snows at 3–4 °C air temperature, while in saturated air it already rains at 1 °C. Computed from outdoor temperature and outdoor humidity.',
+    'wx_fog_rh_label'           => 'Fog from humidity',
+    'wx_fog_spread_label'       => 'and dew-point spread up to',
+    'wx_fog_desc'               => 'Both conditions must hold. The dew-point spread is the difference between air temperature and dew point — the smaller it is, the closer the air is to saturation.',
+    'wx_storm_wind_label'       => 'Storm from',
+    'wx_storm_wind_desc'        => 'Measured on the wind gauge gust peak. Without a wind module the rule is skipped, with no substitute.',
 ];

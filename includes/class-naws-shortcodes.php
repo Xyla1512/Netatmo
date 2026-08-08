@@ -23,6 +23,7 @@ class NAWS_Shortcodes {
         add_shortcode( 'naws_infobar',   [ $this, 'sc_infobar' ] );
         add_shortcode( 'naws_value',     [ $this, 'sc_value' ] );
         add_shortcode( 'naws_forecast',  [ $this, 'sc_forecast' ] );
+        add_shortcode( 'naws_weather_icon', [ $this, 'sc_weather_icon' ] );
 
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_frontend_assets' ] );
     }
@@ -326,6 +327,31 @@ class NAWS_Shortcodes {
         ob_start();
         include NAWS_PLUGIN_DIR . 'templates/forecast.php';
         return ob_get_clean();
+    }
+
+    // ----------------------------------------------------------------
+    // [naws_weather_icon size="96"]
+    // Current weather as one animated icon. No caption by design – the
+    // state is carried by the aria-label only.
+    // ----------------------------------------------------------------
+    public function sc_weather_icon( $atts ) {
+        $atts = shortcode_atts( [
+            'size' => (string) NAWS_Weather_Icons::DEFAULT_SIZE,
+        ], $atts, 'naws_weather_icon' );
+
+        $state = NAWS_Weather_State::get_current();
+
+        // Nothing determinable – render nothing at all. A placeholder would
+        // claim a weather state the plugin does not actually know.
+        if ( $state['state'] === '' ) {
+            return '';
+        }
+
+        // Only enqueue once we know something will be drawn, so a page
+        // without a usable state does not pull in the stylesheet.
+        $this->enqueue_frontend();
+
+        return NAWS_Weather_Icons::render( $state['state'], intval( $atts['size'] ) );
     }
 
 }

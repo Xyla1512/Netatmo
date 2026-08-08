@@ -2,6 +2,23 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [1.7.0] – 2026-08-08
+
+### Added
+- **Animated weather icon.** Twelve states — clear day/night, fair, partly cloudy, overcast, fog, rain, heavy rain, snow, sleet/hail, thunderstorm, storm. Available as the shortcode `[naws_weather_icon size="96"]` and, switchable in the backend, above the live dashboard. Multi-colour SVGs drawn for this plugin; all motion is CSS, no JavaScript, and `prefers-reduced-motion` holds them still. No visible caption by design — the state is carried by the `aria-label`.
+- **`NAWS_Weather_State`** — the precedence table as a pure `decide()` function plus a WordPress-facing `get_current()`. Station readings win over the forecast; the forecast only fills in where the station is structurally blind (cloud cover, thunder, and precipitation when no rain gauge is fitted).
+- **`NAWS_Forecast::get_current_conditions()`** — current conditions on their own 30-minute cache, separate from the 3-hour daily forecast cache. Open-Meteo via `current=weather_code,cloud_cover,is_day,snowfall,precipitation`; Yr.no via the `next_1_hours` block that was previously discarded.
+- **`NAWS_Astro::wet_bulb()`** — wet-bulb temperature (Stull approximation), the criterion that decides rain versus snow.
+- **Six settings** on the forecast tab: icon above dashboard, heavy-rain rate, snow wet-bulb threshold, fog humidity and dew-point spread, storm wind speed. All clamped to physically sensible bands.
+- **`tests/test-weather-state.php`** — 36 cases covering the whole precedence table. Runs without a framework: `php tests/test-weather-state.php`.
+
+### Fixed
+- **Saving one settings form reset the others.** The settings screen is split across three forms, each posting only the fields it owns, but `sanitize_settings()` rebuilt the options array from scratch — so saving the credentials form silently reset language, units, cron interval, data retention and every forecast setting to their defaults. The callback now merges over the stored options and only touches keys the submitted form actually carried. Checkboxes are preceded by a hidden input of the same name with value `0`, so an unchecked box can still be distinguished from a field the form does not manage. Covered by `tests/test-settings-merge.php`.
+- **REST API authentication was not wired up.** All five routes carried `'permission_callback' => '__return_true'` while the implemented `authenticate()` (API key plus rate limit) was never invoked. With the REST API enabled, `/naws/v1/station` — which returns the station latitude and longitude — was readable without a key. Every route is key-protected again.
+
+### Notes
+- Snow is the one state split across two sources, and deliberately so: the unheated tipping-bucket gauge cannot register snow at all, so a reading of `0.0 mm` during snowfall is the *absence* of a measurement rather than a measurement of "no precipitation". Occurrence therefore comes from the forecast, while the phase decision stays with the station's own wet-bulb temperature.
+
 ## [1.6.5] – 2026-08-07
 
 ### Changed

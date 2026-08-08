@@ -197,6 +197,26 @@ $pressure_diff  = $_pt['diff'];
   </div>
 
   <div class="naws-body">
+    <?php
+    // Weather icon above the dashboard. Switchable in the backend; when it
+    // is off the host element is not rendered at all, so applyWeatherIcon()
+    // finds nothing and does no work. The first paint is server-side so the
+    // icon is there before the first AJAX cycle returns.
+    $naws_wx_opts = get_option( 'naws_settings', [] );
+    if ( ( $naws_wx_opts['wx_show_on_dashboard'] ?? '1' ) !== '0' && class_exists( 'NAWS_Weather_State' ) ) :
+        $naws_wx_now = NAWS_Weather_State::get_current();
+        ?>
+        <div class="naws-live-weather-icon" id="<?php echo esc_attr( $widget_id ); ?>-wx"
+             data-state="<?php echo esc_attr( $naws_wx_now['state'] ); ?>">
+            <?php
+            if ( $naws_wx_now['state'] !== '' ) {
+                // Literal template markup, never a kses-filtered string.
+                echo NAWS_Weather_Icons::render( $naws_wx_now['state'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- compile-time constant SVG, see templates/weather-icon.php
+            }
+            ?>
+        </div>
+    <?php endif; ?>
+
     <div id="<?php echo esc_attr($widget_id); ?>-live">
       <div class="naws-loading"><div class="naws-spin"></div></div>
     </div>
@@ -894,11 +914,27 @@ document.addEventListener('click',function(e){
 var _liveRetries = 0;
 var _liveRetryMax = 3; // retry up to 3× with 5s intervals if first load returns empty
 
+/* Since 1.7.0 the response is {readings:[…], weather_state:{…}}.
+   Older cached responses were a bare array, so accept both shapes. */
+function liveRows(d){ return Array.isArray(d) ? d : ((d && d.readings) || []); }
+
+function applyWeatherIcon(d){
+  var host = document.getElementById(WID+'-wx');
+  if(!host) return;                      // icon switched off in the backend
+  var wx = (d && !Array.isArray(d)) ? d.weather_state : null;
+  if(!wx || !wx.markup){ host.innerHTML=''; return; }
+  if(host.dataset.state === wx.state) return;   // unchanged, leave animations running
+  host.dataset.state = wx.state;
+  host.innerHTML = wx.markup;
+}
+
 function loadLive(){
   post({action:'naws_get_latest'},function(r){
-    if(r&&r.success&&r.data&&r.data.length){
+    var rows = r && r.success ? liveRows(r.data) : [];
+    if(r&&r.success) applyWeatherIcon(r.data);
+    if(rows.length){
       _liveRetries = 0;
-      var maxTs=r.data.reduce(function(m,x){return x.recorded_at>m?x.recorded_at:m;},'');
+      var maxTs=rows.reduce(function(m,x){return x.recorded_at>m?x.recorded_at:m;},'');
       var tsEl=document.querySelector('#'+WID+' .naws-ts'); if(tsEl) tsEl.textContent=fmt(maxTs);
       var pulseEl=document.getElementById(WID+'-pulse');
       if(pulseEl){
@@ -914,11 +950,11 @@ function loadLive(){
         }
       }
       if(!built){
-        liveEl.innerHTML=buildLive(r.data);
+        liveEl.innerHTML=buildLive(rows);
         built=true;
         loadCharts();
       } else {
-        softUpdate(r.data);
+        softUpdate(rows);
       }
       // Schedule next normal refresh
       setTimeout(loadLive, RFSH);

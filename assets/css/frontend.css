@@ -1412,3 +1412,90 @@
 .naws-hist-modal-body { padding:12px 14px 14px; flex:1; overflow:hidden; min-height:0; }
 @media (min-width: 600px) { .naws-hist-modal-body { padding:16px 22px 22px; } }
 .naws-hist-modal-body canvas { width:100%!important; height:clamp(200px, 50vh, 420px)!important; }
+
+/* ===============================================================
+   Weather icon (v1.7.0)
+   Twelve animated states, all motion in CSS, no JavaScript.
+   Namespaced .naws-wxi — .naws-wx is already the forecast card.
+   =============================================================== */
+
+.naws-weather-icon { display:flex; justify-content:center; align-items:center; line-height:0; }
+.naws-weather-icon .naws-wxi {
+  width:var(--naws-wx-size, 96px);
+  height:var(--naws-wx-size, 96px);
+  display:block;
+  overflow:visible;            /* drops and flakes fall past the viewBox */
+}
+
+@keyframes naws-wx-spin    { to { transform:rotate(360deg); } }
+@keyframes naws-wx-breathe { 0%,100% { transform:scale(1); } 50% { transform:scale(1.055); } }
+@keyframes naws-wx-drift   { 0%,100% { transform:translateX(0); } 50% { transform:translateX(2.6px); } }
+@keyframes naws-wx-fall {
+  0%   { transform:translateY(-7px); opacity:0; }
+  22%  { opacity:1; }
+  78%  { opacity:1; }
+  100% { transform:translateY(13px); opacity:0; }
+}
+@keyframes naws-wx-flutter {
+  0%   { transform:translate(0,-4px) rotate(0deg); opacity:0; }
+  18%  { opacity:1; }
+  50%  { transform:translate(1.6px,5.5px) rotate(55deg); }
+  82%  { opacity:1; }
+  100% { transform:translate(0,15px) rotate(110deg); opacity:0; }
+}
+@keyframes naws-wx-bounce {
+  0%   { transform:translateY(-6px); opacity:0; }
+  30%  { opacity:1; }
+  70%  { transform:translateY(11px); opacity:1; }
+  85%  { transform:translateY(7px); opacity:.7; }
+  100% { transform:translateY(9px); opacity:0; }
+}
+@keyframes naws-wx-flash {
+  0%,58%,100% { opacity:.2; }
+  62% { opacity:1; } 68% { opacity:.35; } 73% { opacity:1; } 80% { opacity:.28; }
+}
+@keyframes naws-wx-slide {
+  0%   { transform:translateX(-5px); opacity:.25; }
+  50%  { transform:translateX(5px);  opacity:1; }
+  100% { transform:translateX(-5px); opacity:.25; }
+}
+@keyframes naws-wx-gust {
+  0%   { transform:translateX(-9px); opacity:0; }
+  30%  { opacity:1; }
+  70%  { opacity:1; }
+  100% { transform:translateX(9px); opacity:0; }
+}
+@keyframes naws-wx-twinkle {
+  0%,100% { opacity:.25; transform:scale(.8); }
+  50%     { opacity:1;   transform:scale(1.15); }
+}
+
+/* transform-origin is given in viewBox units; --o overrides it for the
+   off-centre suns in "fair" and "partly". */
+.naws-wxi .rays   { transform-origin:var(--o, 32px 32px); animation:naws-wx-spin 26s linear infinite; }
+.naws-wxi .core   { transform-origin:var(--o, 32px 32px); animation:naws-wx-breathe 5s ease-in-out infinite; }
+.naws-wxi .cloud  { transform-origin:32px 34px; animation:naws-wx-drift 7s ease-in-out infinite; }
+.naws-wxi .drop   { animation:naws-wx-fall 1.25s linear infinite; animation-delay:var(--d, 0s); }
+.naws-wxi .drop-f { animation:naws-wx-fall .85s linear infinite;  animation-delay:var(--d, 0s); }
+.naws-wxi .pellet { animation:naws-wx-bounce 1.4s cubic-bezier(.4,0,.6,1) infinite; animation-delay:var(--d, 0s); }
+.naws-wxi .bolt   { animation:naws-wx-flash 3.4s ease-in-out infinite; }
+.naws-wxi .band   { animation:naws-wx-slide 5.5s ease-in-out infinite; animation-delay:var(--d, 0s); }
+.naws-wxi .gust   { animation:naws-wx-gust 3.2s ease-in-out infinite; animation-delay:var(--d, 0s); }
+
+/* fill-box makes these rotate/scale about themselves rather than about the
+   SVG origin. The flakes are positioned by an OUTER <g transform> and
+   animated on this INNER one — an element cannot carry both an SVG
+   transform attribute and a CSS transform, CSS silently wins. */
+.naws-wxi .flake { transform-box:fill-box; transform-origin:center; animation:naws-wx-flutter 3.15s linear infinite; animation-delay:var(--d, 0s); }
+.naws-wxi .star  { transform-box:fill-box; transform-origin:center; animation:naws-wx-twinkle 3.6s ease-in-out infinite; animation-delay:var(--d, 0s); }
+
+/* Same icons, held still. Elements that animate in from opacity 0 have to
+   be forced visible, or reduced motion would blank them entirely. */
+@media (prefers-reduced-motion: reduce) {
+  .naws-wxi * { animation:none !important; }
+  .naws-wxi .drop, .naws-wxi .drop-f, .naws-wxi .flake, .naws-wxi .pellet,
+  .naws-wxi .bolt, .naws-wxi .band,   .naws-wxi .gust,  .naws-wxi .star { opacity:1; }
+}
+
+/* Dashboard placement: above the live grid, centred, breathing room below. */
+.naws-live-weather-icon { margin:0 0 18px; }

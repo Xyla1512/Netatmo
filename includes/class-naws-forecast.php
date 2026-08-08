@@ -19,8 +19,32 @@ class NAWS_Forecast {
 
     const CACHE_KEY      = 'naws_forecast_data';
     const CACHE_KEY_GEO  = 'naws_forecast_geocode';
+    const CACHE_KEY_NOW  = 'naws_forecast_current';
     const CACHE_TTL      = 3 * HOUR_IN_SECONDS;
     const GEO_CACHE_TTL  = 7 * DAY_IN_SECONDS;
+
+    /**
+     * Cache lifetime for current conditions.
+     *
+     * Deliberately much shorter than CACHE_TTL: that one covers daily
+     * forecast rows, this one feeds the live weather icon.
+     */
+    const NOW_CACHE_TTL  = 30 * MINUTE_IN_SECONDS;
+
+    /** Option holding the last successfully fetched observation. */
+    const OPT_LAST_WMO   = 'naws_weather_last_wmo';
+
+    /** Beyond this age the stored last-known code is discarded. */
+    const LAST_WMO_MAX_AGE = 6 * HOUR_IN_SECONDS;
+
+    /** Current-condition variables requested from Open-Meteo. */
+    const CURRENT_VARS = [
+        'weather_code',
+        'cloud_cover',
+        'is_day',
+        'snowfall',
+        'precipitation',
+    ];
 
     const API_URL     = 'https://api.open-meteo.com/v1/forecast';
     const GEOCODE_URL = 'https://geocoding-api.open-meteo.com/v1/search';
@@ -83,7 +107,235 @@ class NAWS_Forecast {
     public static function flush_cache(): void {
         delete_transient( self::CACHE_KEY . '_open_meteo' );
         delete_transient( self::CACHE_KEY . '_yr_no' );
+        delete_transient( self::CACHE_KEY_NOW . '_open_meteo' );
+        delete_transient( self::CACHE_KEY_NOW . '_yr_no' );
         delete_transient( self::CACHE_KEY_GEO );
+    }
+
+    /* ==================================================================
+     * Current conditions (weather icon)
+     * ================================================================*/
+
+    /**
+     * Current observed/modelled conditions for the weather icon.
+     *
+     * Deliberately separate from get_forecast(): that one returns DAILY
+     * rows, where 'weathercode' is the most significant code of the whole
+     * day. A thunderstorm at 18:00 sets the daily code to 95, which would
+     * pin the thunderstorm icon from midnight to midnight. The icon needs
+     * what is happening now, so it gets its own request and its own cache.
+     *
+     * On failure the last successful result is returned with stale => true,
+     * so the station-side rules keep working during an API outage.
+     *
+     * @return array{
+     *     wmo: ?int, is_day: ?bool, cloud_cover: ?int,
+     *     snowfall: ?float, precipitation: ?float,
+     *     fetched_at: int, stale: bool
+     * }
+     */
+    public static function get_current_conditions(): array {
+        $opts      = get_option( 'naws_settings', [] );
+        $provider  = $opts['forecast_provider'] ?? 'open_meteo';
+        $cache_key = self::CACHE_KEY_NOW . '_' . $provider;
+
+        $cached = get_transient( $cache_key );
+        if ( is_array( $cached ) && isset( $cached['wmo'] ) ) {
+            return $cached;
+        }
+
+        $location = self::resolve_location();
+        if ( isset( $location['error'] ) ) {
+            return self::last_known_conditions();
+        }
+
+        $result = ( $provider === 'yr_no' )
+            ? self::fetch_current_yr( $location )
+            : self::fetch_current_open_meteo( $location );
+
+        if ( $result === null ) {
+            return self::last_known_conditions();
+        }
+
+        set_transient( $cache_key, $result, self::NOW_CACHE_TTL );
+
+        update_option( self::OPT_LAST_WMO, [
+            'wmo'    => $result['wmo'],
+            'is_day' => $result['is_day'],
+            'ts'     => $result['fetched_at'],
+        ], false );
+
+        return $result;
+    }
+
+    /**
+     * Last successfully fetched conditions, or an empty result.
+     *
+     * A transient cannot serve this purpose: it expires by definition, and
+     * it expires precisely when the API is unreachable. Hence an option.
+     */
+    private static function last_known_conditions(): array {
+        $empty = [
+            'wmo'           => null,
+            'is_day'        => null,
+            'cloud_cover'   => null,
+            'snowfall'      => null,
+            'precipitation' => null,
+            'fetched_at'    => 0,
+            'stale'         => true,
+        ];
+
+        $last = get_option( self::OPT_LAST_WMO, [] );
+        if ( ! is_array( $last ) || ! isset( $last['wmo'], $last['ts'] ) ) {
+            return $empty;
+        }
+
+        // Older than LAST_WMO_MAX_AGE is worse than nothing: it would show
+        // yesterday's weather as if it were current.
+        if ( ( time() - (int) $last['ts'] ) > self::LAST_WMO_MAX_AGE ) {
+            return $empty;
+        }
+
+        $empty['wmo']        = (int) $last['wmo'];
+        $empty['is_day']     = isset( $last['is_day'] ) ? (bool) $last['is_day'] : null;
+        $empty['fetched_at'] = (int) $last['ts'];
+
+        return $empty;
+    }
+
+    /**
+     * Open-Meteo current block.
+     *
+     * @return array|null  Null on any failure (caller falls back).
+     */
+    private static function fetch_current_open_meteo( array $location ): ?array {
+        $url = add_query_arg( [
+            'latitude'       => $location['lat'],
+            'longitude'      => $location['lon'],
+            'current'        => implode( ',', self::CURRENT_VARS ),
+            'timezone'       => wp_timezone_string() ?: 'Europe/Berlin',
+            'windspeed_unit' => 'kmh',
+        ], self::API_URL );
+
+        $response = wp_remote_get( $url, [
+            'timeout'    => 15,
+            'user-agent' => 'NAWS/' . NAWS_VERSION . ' (WordPress Plugin)',
+        ] );
+
+        if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
+            NAWS_Logger::error( 'forecast', 'Open-Meteo current conditions request failed' );
+            return null;
+        }
+
+        $json = json_decode( wp_remote_retrieve_body( $response ), true );
+        if ( ! is_array( $json ) || ! isset( $json['current']['weather_code'] ) ) {
+            return null;
+        }
+
+        $c = $json['current'];
+
+        return [
+            'wmo'           => (int) $c['weather_code'],
+            'is_day'        => isset( $c['is_day'] ) ? ( (int) $c['is_day'] === 1 ) : null,
+            'cloud_cover'   => isset( $c['cloud_cover'] ) ? (int) $c['cloud_cover'] : null,
+            'snowfall'      => self::sf( $c['snowfall']      ?? null ),
+            'precipitation' => self::sf( $c['precipitation'] ?? null ),
+            'fetched_at'    => time(),
+            'stale'         => false,
+        ];
+    }
+
+    /**
+     * Yr.no current conditions from the first timeseries entry at or after
+     * now. The data is already in the compact response — get_forecast()
+     * simply discards it in favour of the midday symbol.
+     *
+     * Yr.no compact carries no snowfall amount, so that stays null and the
+     * symbol code alone has to carry the phase.
+     *
+     * @return array|null  Null on any failure (caller falls back).
+     */
+    private static function fetch_current_yr( array $location ): ?array {
+        $url = sprintf(
+            'https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=%.4f&lon=%.4f',
+            $location['lat'],
+            $location['lon']
+        );
+
+        $response = wp_remote_get( $url, [
+            'timeout'    => 15,
+            'user-agent' => 'NAWS/' . NAWS_VERSION . ' github.com/naws-plugin (WordPress Weather Plugin)',
+            'headers'    => [ 'Accept' => 'application/json' ],
+        ] );
+
+        if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
+            NAWS_Logger::error( 'forecast', 'Yr.no current conditions request failed' );
+            return null;
+        }
+
+        $json = json_decode( wp_remote_retrieve_body( $response ), true );
+        $series = $json['properties']['timeseries'] ?? null;
+        if ( ! is_array( $series ) ) {
+            return null;
+        }
+
+        $now = time();
+        foreach ( $series as $entry ) {
+            $ts = isset( $entry['time'] ) ? strtotime( $entry['time'] ) : false;
+            if ( $ts === false || $ts < $now - HOUR_IN_SECONDS ) {
+                continue;
+            }
+
+            $symbol = $entry['data']['next_1_hours']['summary']['symbol_code']
+                   ?? $entry['data']['next_6_hours']['summary']['symbol_code']
+                   ?? '';
+
+            $wmo = self::yr_symbol_to_wmo_strict( (string) $symbol );
+            if ( $wmo === null ) {
+                return null;
+            }
+
+            $clouds = $entry['data']['instant']['details']['cloud_area_fraction'] ?? null;
+
+            return [
+                'wmo'           => $wmo,
+                'is_day'        => str_ends_with( (string) $symbol, '_night' ) ? false : null,
+                'cloud_cover'   => $clouds !== null ? (int) round( (float) $clouds ) : null,
+                'snowfall'      => null,
+                'precipitation' => self::sf(
+                    $entry['data']['next_1_hours']['details']['precipitation_amount'] ?? null
+                ),
+                'fetched_at'    => time(),
+                'stale'         => false,
+            ];
+        }
+
+        return null;
+    }
+
+    /**
+     * Strict variant of yr_symbol_to_wmo() for the weather icon.
+     *
+     * yr_symbol_to_wmo() falls back to 3 ("cloudy") for unknown symbols.
+     * That is acceptable for a forecast tile but not for an icon claiming
+     * to show current weather — an unknown symbol would be rendered as a
+     * cloudiness statement. Here an unknown symbol means "no statement".
+     *
+     * @return int|null  WMO code, or null if the symbol is unknown/empty.
+     */
+    private static function yr_symbol_to_wmo_strict( string $symbol ): ?int {
+        if ( $symbol === '' ) {
+            return null;
+        }
+        $mapped = self::yr_symbol_to_wmo( $symbol );
+        $base   = preg_replace( '/_(?:day|night|polartwilight)$/', '', $symbol );
+
+        // yr_symbol_to_wmo() returns 3 both for a genuine "cloudy" and for
+        // anything it does not know. Only the genuine one counts here.
+        if ( $mapped === 3 && $base !== 'cloudy' ) {
+            return null;
+        }
+        return $mapped;
     }
 
     /* ==================================================================

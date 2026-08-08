@@ -101,6 +101,37 @@ class NAWS_Astro {
         return round( $b * $al / ( $a - $al ), 1 );
     }
 
+    /**
+     * Wet-bulb temperature (Stull approximation, °C).
+     *
+     * This — not the air temperature — decides whether precipitation reaches
+     * the ground as rain or as snow. A falling flake cools itself by
+     * evaporation, so in dry air snow arrives at 3–4 °C air temperature,
+     * while at 1 °C and saturated air it already rains. The transition sits
+     * fairly stable around a wet-bulb temperature of 1 °C.
+     *
+     * Valid for roughly 5–99 % RH and −20…+50 °C, error below about 1 K.
+     * Inputs are clamped so log() never receives an argument <= 0.
+     *
+     * @param  float $temp_c       Air temperature in °C.
+     * @param  float $humidity_pct Relative humidity in % (0–100).
+     * @return float               Wet-bulb temperature in °C.
+     *
+     * @see Stull, R. (2011). "Wet-Bulb Temperature from Relative Humidity
+     *      and Air Temperature", J. Appl. Meteor. Climatol. 50, 2267–2269.
+     */
+    public static function wet_bulb( float $temp_c, float $humidity_pct ): float {
+        $rh = max( 1.0, min( 100.0, $humidity_pct ) );
+
+        $tw = $temp_c * atan( 0.151977 * sqrt( $rh + 8.313659 ) )
+            + atan( $temp_c + $rh )
+            - atan( $rh - 1.676331 )
+            + 0.00391838 * pow( $rh, 1.5 ) * atan( 0.023101 * $rh )
+            - 4.686035;
+
+        return round( $tw, 1 );
+    }
+
     // ── Sunrise / Sunset ─────────────────────────────────────────────────────
 
     /**

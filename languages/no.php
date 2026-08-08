@@ -621,4 +621,34 @@ return [
     'icon_set_filled_desc'            => 'Fylte ikoner for et dristigere, moderne utseende.',
     'icon_set_minimal'                => 'Minimal',
     'icon_set_minimal_desc'           => 'Ultratynne, geometriske ikoner for en redusert stil.',
+
+    // ── Værikon (v1.7.0) ──────────────────────────────────────────────
+    // Tilstandstekstene er kun aria-label – ikonet har bevisst ingen synlig
+    // tekst, så disse bærer hele betydningen.
+    'wx_state_clear_day'        => 'Klart',
+    'wx_state_clear_night'      => 'Klar natt',
+    'wx_state_fair'             => 'Lettskyet',
+    'wx_state_partly'           => 'Delvis skyet',
+    'wx_state_overcast'         => 'Overskyet',
+    'wx_state_fog'              => 'Tåke',
+    'wx_state_rain'             => 'Regn',
+    'wx_state_rain_heavy'       => 'Kraftig regn',
+    'wx_state_snow'             => 'Snø',
+    'wx_state_sleet'            => 'Sludd eller hagl',
+    'wx_state_thunder'          => 'Tordenvær',
+    'wx_state_storm'            => 'Storm',
+
+    'wx_icon_heading'           => 'Værikon',
+    'wx_icon_desc'              => 'Ikonet viser været akkurat nå. Målingene fra stasjonen går foran varselet; varselet fyller bare inn der stasjonen ikke kan måle — skydekke, torden og nedbør uten regnmåler.',
+    'wx_show_dashboard_label'   => 'Over dashbordet',
+    'wx_show_dashboard_desc'    => 'Vis ikonet over live-dashbordet. Kortkoden [naws_weather_icon] berøres ikke av dette.',
+    'wx_rain_heavy_label'       => 'Kraftig regn fra',
+    'wx_rain_heavy_desc'        => 'Fra denne regnmengden viser ikonet kraftig regn i stedet for regn.',
+    'wx_snow_tw_label'          => 'Snø under',
+    'wx_snow_tw_desc'           => 'Våtkuletemperatur, ikke lufttemperatur. Den avgjør om nedbøren når bakken som regn eller snø: i tørr luft snør det fortsatt ved 3–4 °C lufttemperatur, mens det i mettet luft regner allerede ved 1 °C. Beregnes fra utetemperatur og uteluftfuktighet.',
+    'wx_fog_rh_label'           => 'Tåke fra luftfuktighet',
+    'wx_fog_spread_label'       => 'og duggpunktavstand opptil',
+    'wx_fog_desc'               => 'Begge vilkår må være oppfylt. Duggpunktavstanden er forskjellen mellom lufttemperatur og duggpunkt — jo mindre, desto nærmere metning er lufta.',
+    'wx_storm_wind_label'       => 'Storm fra',
+    'wx_storm_wind_desc'        => 'Målt på vindmålerens kastvind. Uten vindmodul faller regelen bort uten erstatning.',
 ];

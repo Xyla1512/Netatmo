@@ -61,44 +61,95 @@ class NAWS_Admin {
         ] );
     }
 
+    /**
+     * Sanitize the settings array.
+     *
+     * The settings screen is split across several forms, and each one posts
+     * only the fields it owns. This callback therefore MERGES over the
+     * stored options instead of rebuilding them: a key absent from $input
+     * means "this form does not manage that setting", not "reset it".
+     *
+     * Before 1.7.0 the array was rebuilt from scratch, so saving the
+     * credentials form silently reset language, units, cron interval and
+     * every forecast setting to their defaults. Some forms worked around it
+     * with hidden mirror fields; those are now redundant but harmless,
+     * since they submit exactly the value the merge would have kept.
+     *
+     * Checkboxes need care under merge semantics: an unchecked box is not
+     * submitted at all and would otherwise be indistinguishable from "not
+     * managed here". Every checkbox is therefore preceded in the markup by
+     * a hidden input of the same name with value 0, so the key is always
+     * present and the checkbox only overrides it when ticked.
+     *
+     * @param  array $input  Raw $_POST['naws_settings'] slice.
+     * @return array         Full, sanitized settings array.
+     */
     public function sanitize_settings( $input ) {
-        $clean = [];
-        $raw_client_id     = sanitize_text_field( $input['client_id']     ?? '' );
-        $raw_client_secret = sanitize_text_field( $input['client_secret'] ?? '' );
-        // Encrypt if plaintext; skip if already encrypted (safety guard)
-        $clean['client_id']       = ( $raw_client_id !== '' && ! NAWS_Crypto::is_encrypted( $raw_client_id ) )
-            ? NAWS_Crypto::encrypt( $raw_client_id ) : $raw_client_id;
-        $clean['client_secret']   = ( $raw_client_secret !== '' && ! NAWS_Crypto::is_encrypted( $raw_client_secret ) )
-            ? NAWS_Crypto::encrypt( $raw_client_secret ) : $raw_client_secret;
-        $clean['cron_interval']   = max( 5, intval( $input['cron_interval'] ?? 10 ) );
-        $clean['data_retention']  = max( 30, intval( $input['data_retention'] ?? 365 ) );
-        $valid_langs              = array_merge( ['auto'], array_keys( NAWS_Lang::get_available_languages() ) );
-        $clean['language']        = in_array( $input['language'] ?? 'auto', $valid_langs, true ) ? $input['language'] : 'auto';
-        $clean['temperature_unit'] = in_array( $input['temperature_unit'] ?? 'C', ['C','F'], true ) ? $input['temperature_unit'] : 'C';
-        $clean['wind_unit']       = in_array( $input['wind_unit'] ?? 'kmh', ['kmh','ms','mph','kn'], true ) ? $input['wind_unit'] : 'kmh';
-        $clean['pressure_unit']   = in_array( $input['pressure_unit'] ?? 'mbar', ['mbar','inHg','mmHg'], true ) ? $input['pressure_unit'] : 'mbar';
-        $clean['rain_unit']       = in_array( $input['rain_unit'] ?? 'mm', ['mm','in'], true ) ? $input['rain_unit'] : 'mm';
-        $clean['station_name']    = sanitize_text_field( $input['station_name'] ?? '' );
-        $clean['night_mode']      = ! empty( $input['night_mode'] ) ? 1 : 0;
+        $input    = is_array( $input ) ? $input : [];
+        $old_opts = get_option( 'naws_settings', [] );
+        $clean    = is_array( $old_opts ) ? $old_opts : [];
+
+        // True only when the submitted form actually carried this field.
+        $sent = static function ( string $key ) use ( $input ): bool {
+            return array_key_exists( $key, $input );
+        };
+
+        if ( $sent( 'client_id' ) ) {
+            $raw = sanitize_text_field( $input['client_id'] );
+            // Encrypt if plaintext; skip if already encrypted (safety guard)
+            $clean['client_id'] = ( $raw !== '' && ! NAWS_Crypto::is_encrypted( $raw ) )
+                ? NAWS_Crypto::encrypt( $raw ) : $raw;
+        }
+        if ( $sent( 'client_secret' ) ) {
+            $raw = sanitize_text_field( $input['client_secret'] );
+            $clean['client_secret'] = ( $raw !== '' && ! NAWS_Crypto::is_encrypted( $raw ) )
+                ? NAWS_Crypto::encrypt( $raw ) : $raw;
+        }
+
+        if ( $sent( 'cron_interval' ) )  $clean['cron_interval']  = max( 5,  intval( $input['cron_interval'] ) );
+        if ( $sent( 'data_retention' ) ) $clean['data_retention'] = max( 30, intval( $input['data_retention'] ) );
+
+        if ( $sent( 'language' ) ) {
+            $valid_langs       = array_merge( [ 'auto' ], array_keys( NAWS_Lang::get_available_languages() ) );
+            $clean['language'] = in_array( $input['language'], $valid_langs, true ) ? $input['language'] : 'auto';
+        }
+        if ( $sent( 'temperature_unit' ) ) $clean['temperature_unit'] = in_array( $input['temperature_unit'], ['C','F'], true ) ? $input['temperature_unit'] : 'C';
+        if ( $sent( 'wind_unit' ) )        $clean['wind_unit']        = in_array( $input['wind_unit'], ['kmh','ms','mph','kn'], true ) ? $input['wind_unit'] : 'kmh';
+        if ( $sent( 'pressure_unit' ) )    $clean['pressure_unit']    = in_array( $input['pressure_unit'], ['mbar','inHg','mmHg'], true ) ? $input['pressure_unit'] : 'mbar';
+        if ( $sent( 'rain_unit' ) )        $clean['rain_unit']        = in_array( $input['rain_unit'], ['mm','in'], true ) ? $input['rain_unit'] : 'mm';
+        if ( $sent( 'station_name' ) )     $clean['station_name']     = sanitize_text_field( $input['station_name'] );
+        if ( $sent( 'night_mode' ) )       $clean['night_mode']       = ! empty( $input['night_mode'] ) ? 1 : 0;
 
         // ── Forecast settings ─────────────────────────────────────────
-        $clean['forecast_provider'] = in_array( $input['forecast_provider'] ?? 'open_meteo', ['open_meteo','yr_no'], true )
-            ? $input['forecast_provider'] : 'open_meteo';
-        $clean['forecast_location'] = in_array( $input['forecast_location'] ?? 'auto', ['auto','manual'], true )
-            ? $input['forecast_location'] : 'auto';
-        $clean['forecast_days']     = max( 1, min( 7, intval( $input['forecast_days'] ?? 5 ) ) );
-        $clean['forecast_city']     = sanitize_text_field( $input['forecast_city'] ?? '' );
-        $clean['forecast_country']  = sanitize_text_field( $input['forecast_country'] ?? '' );
+        if ( $sent( 'forecast_provider' ) ) $clean['forecast_provider'] = in_array( $input['forecast_provider'], ['open_meteo','yr_no'], true ) ? $input['forecast_provider'] : 'open_meteo';
+        if ( $sent( 'forecast_location' ) ) $clean['forecast_location'] = in_array( $input['forecast_location'], ['auto','manual'], true ) ? $input['forecast_location'] : 'auto';
+        if ( $sent( 'forecast_days' ) )     $clean['forecast_days']     = max( 1, min( 7, intval( $input['forecast_days'] ) ) );
+        if ( $sent( 'forecast_city' ) )     $clean['forecast_city']     = sanitize_text_field( $input['forecast_city'] );
+        if ( $sent( 'forecast_country' ) )  $clean['forecast_country']  = sanitize_text_field( $input['forecast_country'] );
 
-        // Preserve auto-resolved name (set by Forecast class, not user)
-        $old_opts = get_option( 'naws_settings', [] );
+        // ── Weather icon thresholds (since 1.7.0) ─────────────────────
+        // These belong in the settings and not hard-coded: a station on the
+        // North German plain needs different values from one in the Alps.
+        // Each is clamped to a physically sensible band so a typo cannot
+        // disable a rule outright.
+        if ( $sent( 'wx_show_on_dashboard' ) ) $clean['wx_show_on_dashboard'] = ! empty( $input['wx_show_on_dashboard'] ) ? '1' : '0';
+        if ( $sent( 'wx_rain_heavy' ) ) $clean['wx_rain_heavy'] = self::clamp_float( $input['wx_rain_heavy'], 4.0,   0.1,  50.0 );
+        if ( $sent( 'wx_snow_tw' ) )    $clean['wx_snow_tw']    = self::clamp_float( $input['wx_snow_tw'],    1.0, -20.0,   5.0 );
+        if ( $sent( 'wx_fog_rh' ) )     $clean['wx_fog_rh']     = self::clamp_float( $input['wx_fog_rh'],    97.0,  80.0, 100.0 );
+        if ( $sent( 'wx_fog_spread' ) ) $clean['wx_fog_spread'] = self::clamp_float( $input['wx_fog_spread'], 0.5,   0.1,   5.0 );
+        if ( $sent( 'wx_storm_wind' ) ) $clean['wx_storm_wind'] = self::clamp_float( $input['wx_storm_wind'],75.0,  20.0, 200.0 );
+
+        // Auto-resolved location name is written by NAWS_Forecast, never by
+        // a form, so it is carried over untouched.
         $clean['forecast_auto_name'] = $old_opts['forecast_auto_name'] ?? '';
 
-        // If location or provider changed, flush forecast cache
-        if ( ( $clean['forecast_provider'] !== ( $old_opts['forecast_provider'] ?? 'open_meteo' ) )
-          || ( $clean['forecast_location'] !== ( $old_opts['forecast_location'] ?? 'auto' ) )
-          || ( $clean['forecast_city']     !== ( $old_opts['forecast_city'] ?? '' ) )
-          || ( $clean['forecast_country']  !== ( $old_opts['forecast_country'] ?? '' ) )
+        // If location or provider changed, flush forecast cache.
+        // Both sides are read defensively: under merge semantics a key can
+        // be absent from both the old options and this submission.
+        if ( ( ( $clean['forecast_provider'] ?? 'open_meteo' ) !== ( $old_opts['forecast_provider'] ?? 'open_meteo' ) )
+          || ( ( $clean['forecast_location'] ?? 'auto' )       !== ( $old_opts['forecast_location'] ?? 'auto' ) )
+          || ( ( $clean['forecast_city']     ?? '' )           !== ( $old_opts['forecast_city'] ?? '' ) )
+          || ( ( $clean['forecast_country']  ?? '' )           !== ( $old_opts['forecast_country'] ?? '' ) )
         ) {
             $clean['forecast_auto_name'] = ''; // reset auto name
             NAWS_Forecast::flush_cache();
@@ -107,6 +158,19 @@ class NAWS_Admin {
         do_action( 'naws_settings_saved' );
         NAWS_Lang::reset();
         return $clean;
+    }
+
+    /**
+     * Float from user input, clamped to a band, falling back to a default.
+     *
+     * An empty field means "use the default", not "use zero" — so empty and
+     * non-numeric input both fall back instead of clamping to the minimum.
+     */
+    private static function clamp_float( $value, float $default, float $min, float $max ): float {
+        if ( $value === null || $value === '' || ! is_numeric( $value ) ) {
+            return $default;
+        }
+        return max( $min, min( $max, (float) $value ) );
     }
 
     public function enqueue_assets( $hook ) {

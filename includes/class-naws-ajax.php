@@ -796,7 +796,30 @@ class NAWS_Ajax {
             }
         }
 
-        wp_send_json_success( $formatted );
+        // The weather icon rides along on this cycle instead of polling on
+        // its own. The state is computed server-side and travels as a plain
+        // name — the JS never sees the raw readings or the thresholds, so
+        // the precedence logic exists in exactly one place.
+        $weather = null;
+        if ( class_exists( 'NAWS_Weather_State' ) ) {
+            $wx = NAWS_Weather_State::get_current();
+            if ( $wx['state'] !== '' ) {
+                $weather = [
+                    'state'  => $wx['state'],
+                    'label'  => NAWS_Weather_Icons::label( $wx['state'] ),
+                    'markup' => NAWS_Weather_Icons::render( $wx['state'] ),
+                    'stale'  => (bool) $wx['stale'],
+                ];
+            }
+        }
+
+        // Response shape changed in 1.7.0 from a bare list to an object.
+        // templates/live.php accepts both, so a cached older template still
+        // works until the next page load.
+        wp_send_json_success( [
+            'readings'      => $formatted,
+            'weather_state' => $weather,
+        ] );
     }
 
     // ----------------------------------------------------------------

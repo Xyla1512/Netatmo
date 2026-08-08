@@ -621,4 +621,34 @@ return [
     'icon_set_filled_desc'            => 'Ausgefüllte Icons für einen kräftigeren, modernen Look.',
     'icon_set_minimal'                => 'Minimal',
     'icon_set_minimal_desc'           => 'Ultra-dünne, geometrische Icons für einen reduzierten Stil.',
+
+    // ── Wetter-Icon (v1.7.0) ──────────────────────────────────────────
+    // Die Zustandstexte sind reine aria-label – das Icon hat bewusst keine
+    // sichtbare Beschriftung, sie tragen also die ganze Bedeutung.
+    'wx_state_clear_day'        => 'Klar',
+    'wx_state_clear_night'      => 'Klare Nacht',
+    'wx_state_fair'             => 'Heiter',
+    'wx_state_partly'           => 'Teilweise bewölkt',
+    'wx_state_overcast'         => 'Bedeckt',
+    'wx_state_fog'              => 'Nebel',
+    'wx_state_rain'             => 'Regen',
+    'wx_state_rain_heavy'       => 'Starkregen',
+    'wx_state_snow'             => 'Schnee',
+    'wx_state_sleet'            => 'Graupel oder Hagel',
+    'wx_state_thunder'          => 'Gewitter',
+    'wx_state_storm'            => 'Sturm',
+
+    'wx_icon_heading'           => 'Wetter-Icon',
+    'wx_icon_desc'              => 'Das Icon zeigt das aktuelle Wetter. Die Messwerte der Station haben Vorrang vor der Vorhersage; die Vorhersage springt nur dort ein, wo die Station nichts messen kann — Bewölkung, Gewitter und Niederschlag ohne Regenmesser.',
+    'wx_show_dashboard_label'   => 'Über dem Dashboard',
+    'wx_show_dashboard_desc'    => 'Icon über dem Live-Dashboard anzeigen. Der Shortcode [naws_weather_icon] bleibt davon unberührt.',
+    'wx_rain_heavy_label'       => 'Starkregen ab',
+    'wx_rain_heavy_desc'        => 'Ab dieser Regenrate zeigt das Icon Starkregen statt Regen.',
+    'wx_snow_tw_label'          => 'Schnee unter',
+    'wx_snow_tw_desc'           => 'Feuchtkugeltemperatur, nicht Lufttemperatur. Sie entscheidet, ob Niederschlag als Regen oder als Schnee unten ankommt: in trockener Luft schneit es noch bei 3–4 °C Lufttemperatur, bei gesättigter Luft regnet es schon bei 1 °C. Wird aus Außentemperatur und Außenfeuchte berechnet.',
+    'wx_fog_rh_label'           => 'Nebel ab Luftfeuchte',
+    'wx_fog_spread_label'       => 'und Taupunkt-Abstand bis',
+    'wx_fog_desc'               => 'Beide Bedingungen müssen zutreffen. Der Taupunkt-Abstand ist die Differenz zwischen Lufttemperatur und Taupunkt — je kleiner, desto näher ist die Luft an der Sättigung.',
+    'wx_storm_wind_label'       => 'Sturm ab',
+    'wx_storm_wind_desc'        => 'Gemessen an der Böenspitze des Windmessers. Ohne Windmodul entfällt die Regel ersatzlos.',
 ];

@@ -86,6 +86,16 @@
                 <?php wp_nonce_field( 'naws_save_settings' ); ?>
                 <input type="hidden" name="action" value="naws_save_settings">
 
+                <!-- Preserve weather-icon thresholds (edited on the forecast tab).
+                     NOTE: this form does not preserve the other settings either,
+                     which predates 1.7.0 – see the plugin notes. -->
+                <input type="hidden" name="naws_settings[wx_show_on_dashboard]" value="<?php echo esc_attr( $options['wx_show_on_dashboard'] ?? '1' ); ?>">
+                <input type="hidden" name="naws_settings[wx_rain_heavy]" value="<?php echo esc_attr( $options['wx_rain_heavy'] ?? 4.0 ); ?>">
+                <input type="hidden" name="naws_settings[wx_snow_tw]"    value="<?php echo esc_attr( $options['wx_snow_tw']    ?? 1.0 ); ?>">
+                <input type="hidden" name="naws_settings[wx_fog_rh]"     value="<?php echo esc_attr( $options['wx_fog_rh']     ?? 97.0 ); ?>">
+                <input type="hidden" name="naws_settings[wx_fog_spread]" value="<?php echo esc_attr( $options['wx_fog_spread'] ?? 0.5 ); ?>">
+                <input type="hidden" name="naws_settings[wx_storm_wind]" value="<?php echo esc_attr( $options['wx_storm_wind'] ?? 75.0 ); ?>">
+
                 <table class="form-table naws-form-table">
                     <tr>
                         <th><?php naws_e( 'client_id' ); ?></th>
@@ -156,6 +166,14 @@
                 <input type="hidden" name="naws_settings[forecast_city]"     value="<?php echo esc_attr( $options['forecast_city'] ?? '' ); ?>">
                 <input type="hidden" name="naws_settings[forecast_country]"  value="<?php echo esc_attr( $options['forecast_country'] ?? '' ); ?>">
 
+                <!-- Preserve weather-icon thresholds (edited on the forecast tab) -->
+                <input type="hidden" name="naws_settings[wx_show_on_dashboard]" value="<?php echo esc_attr( $options['wx_show_on_dashboard'] ?? '1' ); ?>">
+                <input type="hidden" name="naws_settings[wx_rain_heavy]" value="<?php echo esc_attr( $options['wx_rain_heavy'] ?? 4.0 ); ?>">
+                <input type="hidden" name="naws_settings[wx_snow_tw]"    value="<?php echo esc_attr( $options['wx_snow_tw']    ?? 1.0 ); ?>">
+                <input type="hidden" name="naws_settings[wx_fog_rh]"     value="<?php echo esc_attr( $options['wx_fog_rh']     ?? 97.0 ); ?>">
+                <input type="hidden" name="naws_settings[wx_fog_spread]" value="<?php echo esc_attr( $options['wx_fog_spread'] ?? 0.5 ); ?>">
+                <input type="hidden" name="naws_settings[wx_storm_wind]" value="<?php echo esc_attr( $options['wx_storm_wind'] ?? 75.0 ); ?>">
+
                 <h3><?php naws_e( 'language' ); ?></h3>
                 <table class="form-table naws-form-table">
                     <tr>
@@ -195,6 +213,8 @@
                     <tr>
                         <th><?php naws_e( 'night_mode' ); ?></th>
                         <td>
+                            <?php // Hidden 0 first – see the note on the weather-icon checkbox. ?>
+                            <input type="hidden" name="naws_settings[night_mode]" value="0">
                             <label>
                                 <input type="checkbox" name="naws_settings[night_mode]" value="1"
                                     <?php checked( ! empty( $options['night_mode'] ) ); ?>>
@@ -349,6 +369,66 @@
                                    class="small-text" maxlength="2" style="width:60px;text-transform:uppercase"
                                    placeholder="DE">
                             <span class="description"><?php naws_e( 'forecast_country_desc' ); ?></span>
+                        </td>
+                    </tr>
+                </table>
+
+                <h3><?php naws_e( 'wx_icon_heading' ); ?></h3>
+                <p class="description" style="margin-bottom:1rem;"><?php naws_e( 'wx_icon_desc' ); ?></p>
+
+                <table class="form-table naws-form-table">
+                    <tr>
+                        <th><?php naws_e( 'wx_show_dashboard_label' ); ?></th>
+                        <td>
+                            <?php // Hidden 0 first: an unchecked box submits nothing, and the
+                                  // sanitize callback merges, so without this the key would look
+                                  // "not managed by this form" and could never be switched off. ?>
+                            <input type="hidden" name="naws_settings[wx_show_on_dashboard]" value="0">
+                            <label>
+                                <input type="checkbox" name="naws_settings[wx_show_on_dashboard]" value="1"
+                                    <?php checked( $options['wx_show_on_dashboard'] ?? '1', '1' ); ?>>
+                                <?php naws_e( 'wx_show_dashboard_desc' ); ?>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><?php naws_e( 'wx_rain_heavy_label' ); ?></th>
+                        <td>
+                            <input type="number" step="0.1" min="0.1" max="50"
+                                   name="naws_settings[wx_rain_heavy]"
+                                   value="<?php echo esc_attr( $options['wx_rain_heavy'] ?? 4.0 ); ?>" class="small-text"> mm/h
+                            <p class="description"><?php naws_e( 'wx_rain_heavy_desc' ); ?></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><?php naws_e( 'wx_snow_tw_label' ); ?></th>
+                        <td>
+                            <input type="number" step="0.1" min="-20" max="5"
+                                   name="naws_settings[wx_snow_tw]"
+                                   value="<?php echo esc_attr( $options['wx_snow_tw'] ?? 1.0 ); ?>" class="small-text"> °C
+                            <p class="description"><?php naws_e( 'wx_snow_tw_desc' ); ?></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><?php naws_e( 'wx_fog_rh_label' ); ?></th>
+                        <td>
+                            <input type="number" step="0.1" min="80" max="100"
+                                   name="naws_settings[wx_fog_rh]"
+                                   value="<?php echo esc_attr( $options['wx_fog_rh'] ?? 97.0 ); ?>" class="small-text"> %
+                            &nbsp;<?php naws_e( 'wx_fog_spread_label' ); ?>&nbsp;
+                            <input type="number" step="0.1" min="0.1" max="5"
+                                   name="naws_settings[wx_fog_spread]"
+                                   value="<?php echo esc_attr( $options['wx_fog_spread'] ?? 0.5 ); ?>" class="small-text"> K
+                            <p class="description"><?php naws_e( 'wx_fog_desc' ); ?></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><?php naws_e( 'wx_storm_wind_label' ); ?></th>
+                        <td>
+                            <input type="number" step="1" min="20" max="200"
+                                   name="naws_settings[wx_storm_wind]"
+                                   value="<?php echo esc_attr( $options['wx_storm_wind'] ?? 75.0 ); ?>" class="small-text"> km/h
+                            <p class="description"><?php naws_e( 'wx_storm_wind_desc' ); ?></p>
                         </td>
                     </tr>
                 </table>

@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.0
-Stable tag: 1.6.5
+Stable tag: 1.7.0
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -104,6 +104,15 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 7. Export / Import page for backups
 
 == Changelog ==
+
+= 1.7.0 =
+* New: animated weather icon with twelve states — shortcode `[naws_weather_icon size="96"]` and, switchable in the backend, above the live dashboard
+* New: the icon combines station readings with the forecast — your own measurements win, the forecast only fills in what the station cannot measure (cloud cover, thunderstorms, and precipitation if you have no rain gauge)
+* New: rain-versus-snow is decided by wet-bulb temperature rather than air temperature, so snow is still recognised at 3–4 °C in dry air
+* New: six thresholds in the settings (heavy rain, snow, fog humidity and spread, storm wind, dashboard placement)
+* New: current conditions are fetched separately from the daily forecast, on a 30-minute cache, so the icon reflects the weather now instead of a whole-day summary
+* Fix: saving one settings form no longer resets the others — saving your Netatmo credentials used to silently reset language, units, sync interval and all forecast settings back to their defaults
+* Fix: REST API routes were not running their authentication callback — with the REST API enabled the endpoints, including station coordinates, were reachable without an API key
 
 = 1.6.5 =
 * Compatibility: tested against WordPress 7.0

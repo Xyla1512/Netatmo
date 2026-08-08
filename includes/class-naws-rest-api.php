@@ -40,36 +40,36 @@ class NAWS_Rest_API {
 
         if ( ! self::is_enabled() ) return;
 
+        // Every route is key-protected and rate-limited. Never replace this
+        // with '__return_true' – /station exposes the station coordinates.
+        $auth = [ 'permission_callback' => [ __CLASS__, 'authenticate' ] ];
+
         // GET /naws/v1/station
         register_rest_route( self::API_NS, '/station', [
-            'methods'             => 'GET',
-            'callback'            => [ __CLASS__, 'endpoint_station' ],
-            'permission_callback' => '__return_true',
-        ] );
+            'methods'  => 'GET',
+            'callback' => [ __CLASS__, 'endpoint_station' ],
+        ] + $auth );
 
         // GET /naws/v1/modules
         register_rest_route( self::API_NS, '/modules', [
-            'methods'             => 'GET',
-            'callback'            => [ __CLASS__, 'endpoint_modules' ],
-            'permission_callback' => '__return_true',
-        ] );
+            'methods'  => 'GET',
+            'callback' => [ __CLASS__, 'endpoint_modules' ],
+        ] + $auth );
 
         // GET /naws/v1/current
         register_rest_route( self::API_NS, '/current', [
-            'methods'             => 'GET',
-            'callback'            => [ __CLASS__, 'endpoint_current' ],
-            'permission_callback' => '__return_true',
-            'args'                => [
+            'methods'  => 'GET',
+            'callback' => [ __CLASS__, 'endpoint_current' ],
+            'args'     => [
                 'module_id' => [ 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ],
             ],
-        ] );
+        ] + $auth );
 
         // GET /naws/v1/readings
         register_rest_route( self::API_NS, '/readings', [
-            'methods'             => 'GET',
-            'callback'            => [ __CLASS__, 'endpoint_readings' ],
-            'permission_callback' => '__return_true',
-            'args'                => [
+            'methods'  => 'GET',
+            'callback' => [ __CLASS__, 'endpoint_readings' ],
+            'args'     => [
                 'module_id' => [ 'type' => 'string',  'sanitize_callback' => 'sanitize_text_field' ],
                 'parameter' => [ 'type' => 'string',  'sanitize_callback' => 'sanitize_text_field' ],
                 'from'      => [ 'type' => 'string',  'sanitize_callback' => 'sanitize_text_field' ],
@@ -82,14 +82,13 @@ class NAWS_Rest_API {
                 'limit'   => [ 'type' => 'integer', 'default' => 1000, 'minimum' => 1, 'maximum' => 5000 ],
                 'convert' => [ 'type' => 'boolean', 'default' => true ],
             ],
-        ] );
+        ] + $auth );
 
         // GET /naws/v1/daily
         register_rest_route( self::API_NS, '/daily', [
-            'methods'             => 'GET',
-            'callback'            => [ __CLASS__, 'endpoint_daily' ],
-            'permission_callback' => '__return_true',
-            'args'                => [
+            'methods'  => 'GET',
+            'callback' => [ __CLASS__, 'endpoint_daily' ],
+            'args'     => [
                 'from'     => [ 'type' => 'string',  'sanitize_callback' => 'sanitize_text_field' ],
                 'to'       => [ 'type' => 'string',  'sanitize_callback' => 'sanitize_text_field' ],
                 'fields'   => [ 'type' => 'string',  'sanitize_callback' => 'sanitize_text_field' ],
@@ -100,7 +99,7 @@ class NAWS_Rest_API {
                 ],
                 'convert' => [ 'type' => 'boolean', 'default' => true ],
             ],
-        ] );
+        ] + $auth );
     }
 
     /* ================================================================
