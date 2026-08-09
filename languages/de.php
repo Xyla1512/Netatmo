@@ -661,4 +661,20 @@ return [
     'wx_fog_desc'               => 'Beide Bedingungen müssen zutreffen. Der Taupunkt-Abstand ist die Differenz zwischen Lufttemperatur und Taupunkt — je kleiner, desto näher ist die Luft an der Sättigung.',
     'wx_storm_wind_label'       => 'Sturm ab',
     'wx_storm_wind_desc'        => 'Gemessen an der Böenspitze des Windmessers. Ohne Windmodul entfällt die Regel ersatzlos.',
+
+    // ── Seitenleisten-Widget (v1.8.0) ─────────────────────────────────
+    'wgt_rain'                  => 'Regen',
+    'wgt_wind'                  => 'Wind',
+    'wgt_heading'               => 'Seitenleisten-Widget',
+    'wgt_desc'                  => 'Kompaktes Wetter-Widget für schmale Spalten. Zeigt Icon und Außentemperatur, darunter Regen und Wind, darunter die Vorhersage. Einzufügen über den Shortcode [naws_weather_widget].',
+    'wgt_days_label'            => 'Vorhersagetage',
+    'wgt_days_3'                => '3 Tage',
+    'wgt_days_5'                => '5 Tage',
+    'wgt_days_desc'             => 'Bei drei Tagen ist jede Spalte 77 Pixel breit, bei fünf nur 46. Auf schmalen Seitenleisten sind drei deutlich besser lesbar.',
+    'wgt_preview_none'          => 'Zurzeit nichts darstellbar — weder Stationswerte noch Vorhersage liegen vor. Das Widget würde nichts ausgeben.',
+    'sc_wgt_desc'               => 'Kompaktes Wetter-Widget für Seitenleisten',
+    'sc_wgt_long_desc'          => 'Icon und Außentemperatur, darunter Regen und Wind, darunter die Vorhersage. Ausgelegt auf 250 Pixel Breite, füllt aber jeden Container. Fehlt ein Zusatzmodul, entfällt der zugehörige Wert ersatzlos. Wird beim Seitenaufbau erzeugt und aktualisiert sich nicht von selbst — die Uhrzeit in der Fußzeile zeigt das Alter.',
+    'sc_wgt_attr_days'          => 'Länge der Vorhersage. Nur 3 oder 5; andere Werte werden auf den nächstliegenden gezogen.',
+    'sc_wgt_ex_default'         => 'nutzt die Einstellung aus dem Backend',
+    'sc_wgt_ex_three'           => 'kürzer, für sehr schmale Spalten',
 ];

@@ -449,6 +449,83 @@ $icon_color_keys = [
             <button type="submit" class="button button-primary"><?php naws_e( 'save_settings' ); ?></button>
         </p>
     </form>
+
+    <!-- ============================================================
+         Sidebar widget: forecast length + live preview.
+         This page's color form posts to its own 'naws_appearance' option
+         via 'naws_save_appearance' (see handle_save_appearance()), so the
+         widget setting — which lives in 'naws_settings' — needs its own
+         small form here rather than being folded into that one. Merge
+         semantics in sanitize_settings() (since 1.7.0) preserve every
+         other naws_settings key automatically, so no hidden mirror
+         fields are needed.
+         ============================================================ -->
+    <div class="naws-admin-panel">
+        <div class="naws-panel-body">
+            <h3><?php naws_e( 'wgt_heading' ); ?></h3>
+            <p class="description" style="margin-bottom:1rem;"><?php naws_e( 'wgt_desc' ); ?></p>
+
+            <?php $naws_wgt_opts = get_option( 'naws_settings', [] ); ?>
+
+            <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+                <?php wp_nonce_field( 'naws_save_settings' ); ?>
+                <input type="hidden" name="action" value="naws_save_settings">
+
+                <table class="form-table naws-form-table">
+                    <tr>
+                        <th><?php naws_e( 'wgt_days_label' ); ?></th>
+                        <td>
+                            <select name="naws_settings[wgt_days]">
+                                <option value="3" <?php selected( intval( $naws_wgt_opts['wgt_days'] ?? 5 ), 3 ); ?>><?php naws_e( 'wgt_days_3' ); ?></option>
+                                <option value="5" <?php selected( intval( $naws_wgt_opts['wgt_days'] ?? 5 ), 5 ); ?>><?php naws_e( 'wgt_days_5' ); ?></option>
+                            </select>
+                            <p class="description"><?php naws_e( 'wgt_days_desc' ); ?></p>
+                        </td>
+                    </tr>
+                </table>
+
+                <?php
+                // Live preview in a real 250 px column, so the setting is
+                // judged at the width it will actually be used at. Built the
+                // same way as NAWS_Shortcodes::sc_weather_widget() so the
+                // preview cannot drift from the real frontend output.
+                $naws_prev_station = NAWS_Weather_State::read_station();
+                $naws_prev_state   = NAWS_Weather_State::get_current();
+                $naws_prev_days    = intval( $naws_wgt_opts['wgt_days'] ?? 5 );
+                $naws_prev_fc      = NAWS_Forecast::get_forecast( $naws_prev_days );
+                $naws_prev_fmt     = static function ( ?float $raw, string $param ): ?array {
+                    if ( $raw === null ) return null;
+                    return [ 'value' => (string) NAWS_Helpers::format_value( $param, $raw ), 'unit' => NAWS_Helpers::get_unit( $param ) ];
+                };
+                $naws_wgt = NAWS_Widget_Data::build(
+                    [
+                        'temp' => $naws_prev_fmt( $naws_prev_station['temp'], 'Temperature' ),
+                        'rain' => $naws_prev_fmt( $naws_prev_station['rain'], 'Rain' ),
+                        'wind' => $naws_prev_fmt( $naws_prev_station['wind_avg'], 'WindStrength' ),
+                    ],
+                    $naws_prev_fc,
+                    $naws_prev_days
+                );
+                ?>
+                <div style="max-width:250px;padding:14px 12px;background:#fbfcfe;border:1px solid #cbd4e0;border-radius:12px;margin:0 0 1rem;">
+                    <?php
+                    if ( $naws_wgt['empty'] ) {
+                        echo '<small style="color:#64748b">' . esc_html( naws__( 'wgt_preview_none' ) ) . '</small>';
+                    } else {
+                        $naws_wgt_state = $naws_prev_state['state'];
+                        $naws_wgt_place = (string) ( $naws_prev_fc['location_name'] ?? '' );
+                        $naws_wgt_time  = empty( $naws_prev_fc['fetched_at'] ) ? '' : wp_date( get_option( 'time_format', 'H:i' ), (int) $naws_prev_fc['fetched_at'] );
+                        include NAWS_PLUGIN_DIR . 'templates/weather-widget.php';
+                    }
+                    ?>
+                </div>
+
+                <p class="submit">
+                    <button type="submit" class="button button-primary"><?php naws_e( 'save_settings' ); ?></button>
+                </p>
+            </form>
+        </div>
+    </div>
 </div>
 
 <?php

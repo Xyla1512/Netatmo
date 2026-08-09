@@ -139,6 +139,12 @@ class NAWS_Admin {
         if ( $sent( 'wx_fog_spread' ) ) $clean['wx_fog_spread'] = self::clamp_float( $input['wx_fog_spread'], 0.5,   0.1,   5.0 );
         if ( $sent( 'wx_storm_wind' ) ) $clean['wx_storm_wind'] = self::clamp_float( $input['wx_storm_wind'],75.0,  20.0, 200.0 );
 
+        // Sidebar widget: only two lengths are offered, so anything else
+        // is pulled to the nearer one rather than rejected.
+        if ( $sent( 'wgt_days' ) ) {
+            $clean['wgt_days'] = intval( $input['wgt_days'] ) < 4 ? 3 : 5;
+        }
+
         // Auto-resolved location name is written by NAWS_Forecast, never by
         // a form, so it is carried over untouched.
         $clean['forecast_auto_name'] = $old_opts['forecast_auto_name'] ?? '';
@@ -185,11 +191,12 @@ class NAWS_Admin {
             $js_deps[] = 'wp-color-picker';
         }
 
-        // The shortcodes page previews the live weather icon, which needs the
-        // frontend stylesheet for its keyframes. The 'naws-frontend' handle
-        // itself is registered on wp_enqueue_scripts and does not exist here,
-        // so the file is enqueued under its own handle.
-        if ( strpos( $hook, 'naws-shortcodes' ) !== false ) {
+        // The shortcodes page previews the live weather icon and the
+        // appearance page previews the sidebar widget; both need the
+        // frontend stylesheet for keyframes and layout. The
+        // 'naws-frontend' handle is registered on wp_enqueue_scripts and
+        // does not exist in the admin, so the file gets its own handle.
+        if ( strpos( $hook, 'naws-shortcodes' ) !== false || strpos( $hook, 'naws-appearance' ) !== false ) {
             wp_enqueue_style( 'naws-weather-icon', NAWS_PLUGIN_URL . 'assets/css/frontend.css', [], NAWS_VERSION );
         }
 
@@ -275,7 +282,17 @@ class NAWS_Admin {
         $input = isset( $_POST['naws_settings'] ) ? wp_unslash( $_POST['naws_settings'] ) : []; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized in sanitize_settings()
         update_option( 'naws_settings', $this->sanitize_settings( $input ) );
 
-        wp_safe_redirect( admin_url( 'admin.php?page=naws-settings&updated=1' ) );
+        // naws_save_settings is now posted from two different admin pages
+        // (the settings page and the appearance page's widget form), so a
+        // fixed redirect target sends the appearance-page save to the wrong
+        // screen. wp_nonce_field() already emits the standard referer hidden
+        // field, so wp_get_referer() recovers the page the form actually
+        // lives on; it falls back to the settings page if the referer is
+        // missing or fails WordPress's validation. Both pages' success
+        // notices key off `updated`, so it is re-added explicitly instead of
+        // assuming the referer URL still carries it.
+        $redirect_to = wp_get_referer() ?: admin_url( 'admin.php?page=naws-settings' );
+        wp_safe_redirect( add_query_arg( 'updated', '1', $redirect_to ) );
         exit;
     }
 

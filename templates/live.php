@@ -293,7 +293,15 @@ $pressure_diff  = $_pt['diff'];
           <div class="naws-fcc<?php echo $fc_today ? ' naws-fcc-today' : ''; ?>">
             <div class="naws-fcc-day"><?php echo esc_html( $fc_wd ); ?></div>
             <div class="naws-fcc-date"><?php echo esc_html( $fc_dt ); ?></div>
-            <div class="naws-fcc-svg"><?php echo wp_kses( NAWS_Forecast::get_weather_svg( $fc_wmo['icon'] ), naws_svg_kses_args() ); ?></div>
+            <div class="naws-fcc-svg"><?php
+            $fcc_state = NAWS_Weather_State::wmo_to_state( (int) $fc_day['weathercode'], true );
+            if ( $fcc_state !== '' ) {
+                // The 40 below is only the fallback size when no CSS rule matches;
+                // the actual rendered size is governed by
+                // .naws-wx .naws-fcc-svg svg { width:100% } in frontend.css.
+                echo NAWS_Weather_Icons::render_inline( $fcc_state, 40 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- compile-time constant SVG, see templates/weather-icon.php
+            }
+            ?></div>
             <div class="naws-fcc-cond"><?php echo esc_html( $fc_wmo['label'] ); ?></div>
             <div class="naws-fcc-temps">
               <span class="naws-fcc-tmax"><?php echo $fc_tmax !== null ? esc_html( $fc_tmax ) : '--'; ?></span>

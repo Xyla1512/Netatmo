@@ -52,6 +52,38 @@ class NAWS_Weather_Icons {
     }
 
     /**
+     * Render a small, still icon for use inside a row of them.
+     *
+     * Differs from render() on three counts, all deliberate:
+     *   - no minimum size: the 64 px floor exists for the standalone state
+     *     icon, which carries the whole statement on its own. In a forecast
+     *     column the icon sits beside a weekday and two temperatures.
+     *   - no wrapper element: the caller owns the layout.
+     *   - no animation: five to seven moving icons in a row pull attention
+     *     away from the numbers they sit next to.
+     *
+     * @param  string $state  One of NAWS_Weather_State::STATES.
+     * @param  int    $size   Edge length in px.
+     * @return string         Icon markup, or '' for an unknown state.
+     */
+    public static function render_inline( string $state, int $size ): string {
+        if ( ! in_array( $state, NAWS_Weather_State::STATES, true ) ) {
+            return '';
+        }
+
+        self::queue_defs();
+
+        $naws_wx_state = $state;
+        $naws_wx_size  = max( 1, $size );
+        $naws_wx_label = self::label( $state );
+        $naws_wx_still = true;
+
+        ob_start();
+        include NAWS_PLUGIN_DIR . 'templates/weather-icon.php';
+        return ob_get_clean();
+    }
+
+    /**
      * Translated aria-label for a state.
      *
      * There is no visible caption anywhere — the label is the only textual

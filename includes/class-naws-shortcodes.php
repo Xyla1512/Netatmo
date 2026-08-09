@@ -24,6 +24,7 @@ class NAWS_Shortcodes {
         add_shortcode( 'naws_value',     [ $this, 'sc_value' ] );
         add_shortcode( 'naws_forecast',  [ $this, 'sc_forecast' ] );
         add_shortcode( 'naws_weather_icon', [ $this, 'sc_weather_icon' ] );
+        add_shortcode( 'naws_weather_widget', [ $this, 'sc_weather_widget' ] );
 
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_frontend_assets' ] );
     }
@@ -43,15 +44,8 @@ class NAWS_Shortcodes {
     }
 
     private function enqueue_frontend() {
-        wp_enqueue_style(  'naws-frontend' );
+        $this->enqueue_frontend_styles();
         wp_enqueue_script( 'naws-frontend' );
-
-        // Inject configurable CSS variables
-        static $css_injected = false;
-        if ( ! $css_injected ) {
-            wp_add_inline_style( 'naws-frontend', NAWS_Colors::get_inline_css() );
-            $css_injected = true;
-        }
 
         // Inject config once via wp_add_inline_script (more reliable than wp_localize_script)
         static $localized = false;
@@ -65,6 +59,27 @@ class NAWS_Shortcodes {
                 'before'
             );
             $localized = true;
+        }
+    }
+
+    /**
+     * Style-only counterpart to enqueue_frontend().
+     *
+     * Used by shortcodes that render no chart and need no JS at all (the
+     * sidebar widget and the single weather icon), so a page carrying only
+     * those never pulls in jquery/Chart.js/frontend.js. The colour-CSS
+     * guard is shared with enqueue_frontend() (not duplicated) so a page
+     * that combines a full dashboard shortcode with the widget/icon still
+     * gets the inline CSS variables exactly once, regardless of which
+     * shortcode runs first.
+     */
+    private function enqueue_frontend_styles() {
+        wp_enqueue_style( 'naws-frontend' );
+
+        static $css_injected = false;
+        if ( ! $css_injected ) {
+            wp_add_inline_style( 'naws-frontend', NAWS_Colors::get_inline_css() );
+            $css_injected = true;
         }
     }
 
@@ -348,10 +363,70 @@ class NAWS_Shortcodes {
         }
 
         // Only enqueue once we know something will be drawn, so a page
-        // without a usable state does not pull in the stylesheet.
-        $this->enqueue_frontend();
+        // without a usable state does not pull in the stylesheet. Styles
+        // only – this shortcode draws no chart and needs no script.
+        $this->enqueue_frontend_styles();
 
         return NAWS_Weather_Icons::render( $state['state'], intval( $atts['size'] ) );
+    }
+
+    // ----------------------------------------------------------------
+    // [naws_weather_widget days="3|5"]
+    // Compact sidebar widget: icon and temperature, rain and wind,
+    // three or five forecast days.
+    // ----------------------------------------------------------------
+    public function sc_weather_widget( $atts ) {
+        $opts = get_option( 'naws_settings', [] );
+
+        $atts = shortcode_atts( [
+            'days' => (string) ( $opts['wgt_days'] ?? 5 ),
+        ], $atts, 'naws_weather_widget' );
+
+        $station = NAWS_Weather_State::read_station();
+        $state   = NAWS_Weather_State::get_current();
+        $days    = intval( $atts['days'] );
+
+        // Values are formatted here so NAWS_Widget_Data::build() stays free
+        // of WordPress and remains testable without a framework.
+        $fmt = static function ( ?float $raw, string $param ): ?array {
+            if ( $raw === null ) {
+                return null;
+            }
+            return [
+                'value' => (string) NAWS_Helpers::format_value( $param, $raw ),
+                'unit'  => NAWS_Helpers::get_unit( $param ),
+            ];
+        };
+
+        $forecast = NAWS_Forecast::get_forecast( $days < 4 ? 3 : 5 );
+
+        $naws_wgt = NAWS_Widget_Data::build(
+            [
+                'temp' => $fmt( $station['temp'], 'Temperature' ),
+                'rain' => $fmt( $station['rain'], 'Rain' ),
+                'wind' => $fmt( $station['wind_avg'], 'WindStrength' ),
+            ],
+            $forecast,
+            $days
+        );
+
+        if ( $naws_wgt['empty'] ) {
+            return '';
+        }
+
+        // Styles only – the sidebar widget draws no chart and does not
+        // need jquery/Chart.js, which enqueue_frontend() would drag in.
+        $this->enqueue_frontend_styles();
+
+        $naws_wgt_state = $state['state'];
+        $naws_wgt_place = (string) ( $forecast['location_name'] ?? '' );
+        $naws_wgt_time  = empty( $forecast['fetched_at'] )
+            ? ''
+            : wp_date( get_option( 'time_format', 'H:i' ), (int) $forecast['fetched_at'] );
+
+        ob_start();
+        include NAWS_PLUGIN_DIR . 'templates/weather-widget.php';
+        return ob_get_clean();
     }
 
 }

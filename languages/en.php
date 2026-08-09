@@ -661,4 +661,20 @@ return [
     'wx_fog_desc'               => 'Both conditions must hold. The dew-point spread is the difference between air temperature and dew point — the smaller it is, the closer the air is to saturation.',
     'wx_storm_wind_label'       => 'Storm from',
     'wx_storm_wind_desc'        => 'Measured on the wind gauge gust peak. Without a wind module the rule is skipped, with no substitute.',
+
+    // ── Sidebar widget (v1.8.0) ───────────────────────────────────────
+    'wgt_rain'                  => 'Rain',
+    'wgt_wind'                  => 'Wind',
+    'wgt_heading'               => 'Sidebar widget',
+    'wgt_desc'                  => 'Compact weather widget for narrow columns. Shows the icon and outdoor temperature, rain and wind below that, then the forecast. Placed with the [naws_weather_widget] shortcode.',
+    'wgt_days_label'            => 'Forecast days',
+    'wgt_days_3'                => '3 days',
+    'wgt_days_5'                => '5 days',
+    'wgt_days_desc'             => 'Three days gives each column 77 pixels, five gives only 46. On narrow sidebars three reads considerably better.',
+    'wgt_preview_none'          => 'Nothing displayable right now — neither station readings nor forecast are available. The widget would output nothing.',
+    'sc_wgt_desc'               => 'Compact weather widget for sidebars',
+    'sc_wgt_long_desc'          => 'Icon and outdoor temperature, rain and wind below that, then the forecast. Designed for 250 pixels but fills any container. A missing add-on module drops its value entirely. Rendered on page load and does not refresh by itself — the time in the footer shows its age.',
+    'sc_wgt_attr_days'          => 'Forecast length. Only 3 or 5; other values are pulled to the nearer one.',
+    'sc_wgt_ex_default'         => 'uses the backend setting',
+    'sc_wgt_ex_three'           => 'shorter, for very narrow columns',
 ];

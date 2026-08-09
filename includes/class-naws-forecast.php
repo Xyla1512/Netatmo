@@ -748,6 +748,16 @@ class NAWS_Forecast {
      * WMO Weather Code mapping
      * ================================================================*/
 
+    /**
+     * WMO code → localised label and legacy icon id.
+     *
+     * The 'icon' half of the returned array was only ever consumed by
+     * get_weather_svg(), which is deprecated and has no remaining callers;
+     * icon selection today goes through NAWS_Weather_State::wmo_to_state().
+     * 'icon' is therefore dead and can silently drift from wmo_to_state()'s
+     * own mapping. Kept as-is because this method is public and the
+     * 'label' half is still live. Do not treat 'icon' as authoritative.
+     */
     public static function wmo_description( int $code, string $lang = '' ): array {
         if ( $lang === '' ) $lang = NAWS_Lang::lang();
 
@@ -783,6 +793,14 @@ class NAWS_Forecast {
         return [ 'label' => $info[0], 'icon' => $info[1] ];
     }
 
+    /**
+     * Flat weather SVGs by icon id.
+     *
+     * @deprecated 1.8.0 Superseded by NAWS_Weather_Icons::render_inline(),
+     *             which serves every weather display in the plugin from one
+     *             set. Kept because it is public static and may sit in a
+     *             user's own theme snippet; nothing in the plugin calls it.
+     */
     public static function get_weather_svg( string $id ): string {
         $s = [
             'clear'=>'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="10" fill="#f59e0b"/><g stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round"><line x1="24" y1="2" x2="24" y2="8"/><line x1="24" y1="40" x2="24" y2="46"/><line x1="2" y1="24" x2="8" y2="24"/><line x1="40" y1="24" x2="46" y2="24"/><line x1="8.4" y1="8.4" x2="12.6" y2="12.6"/><line x1="35.4" y1="35.4" x2="39.6" y2="39.6"/><line x1="8.4" y1="39.6" x2="12.6" y2="35.4"/><line x1="35.4" y1="12.6" x2="39.6" y2="8.4"/></g></svg>',

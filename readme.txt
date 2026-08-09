@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.0
-Stable tag: 1.7.0
+Stable tag: 1.8.0
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -104,6 +104,12 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 7. Export / Import page for backups
 
 == Changelog ==
+
+= 1.8.0 =
+* New: sidebar widget `[naws_weather_widget]` — weather icon, outdoor temperature, rain and wind, plus a three- or five-day forecast, built for narrow columns
+* New: forecast length selectable in the backend, with a live preview at the real width
+* Changed: the colourful weather icons introduced in 1.7.0 are now used everywhere, including the forecast shortcode and the dashboard forecast strip
+* Fix: saving settings on the Appearance page no longer redirects to Settings — forms now return to the page they were submitted from
 
 = 1.7.0 =
 * New: animated weather icon with twelve states — shortcode `[naws_weather_icon size="96"]` and, switchable in the backend, above the live dashboard

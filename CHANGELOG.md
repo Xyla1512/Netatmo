@@ -2,6 +2,20 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [1.8.0] – 2026-08-08
+
+### Added
+- **Sidebar widget.** `[naws_weather_widget days="3|5"]` — weather icon and outdoor temperature, rain and wind below that, then a three- or five-day forecast. Designed against a 250 px column and fills any container. A missing rain or wind module drops its value entirely rather than showing a placeholder.
+- **Forecast length setting** with a live preview at true width on the appearance page.
+
+### Changed
+- **One weather icon set across the whole plugin.** `[naws_forecast]` and the dashboard forecast strip now use the multi-colour set introduced in 1.7.0 instead of the older flat one. Forecast-day icons are rendered still: a row of animated icons pulls attention away from the numbers beside them.
+- The mapping from WMO codes to icon states moved into `NAWS_Weather_State::wmo_to_state()`, shared by all three display places, so they cannot drift apart from each other or from the live icon.
+- `NAWS_Forecast::get_weather_svg()` is deprecated. Nothing in the plugin calls it; it is kept because it is public and may sit in a user's theme snippet.
+
+### Fixed
+- **Appearance page form redirect reset to Settings.** Several forms on the admin settings screens all post to the same save action handler. Because the handler always redirected to the Settings tab, saving settings on the Appearance page threw the user onto Settings instead of keeping them where they were. The handler now detects which page the form was submitted from and redirects back there, preserving both the "settings saved" notice and the user's workflow.
+
 ## [1.7.0] – 2026-08-08
 
 ### Added

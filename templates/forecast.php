@@ -78,7 +78,18 @@ $fc_id = 'naws-fc-' . wp_unique_id();
         <div class="naws-fc-card<?php echo $is_today ? ' naws-fc-card-today' : ''; ?>">
           <div class="naws-fc-day"><?php echo esc_html( $weekday ); ?></div>
           <div class="naws-fc-date"><?php echo esc_html( $date_str ); ?></div>
-          <div class="naws-fc-svg"><?php echo wp_kses( NAWS_Forecast::get_weather_svg( $wmo['icon'] ), naws_svg_kses_args() ); ?></div>
+          <div class="naws-fc-svg"><?php
+            // Literal icon markup, never kses-filtered: the multi-colour set
+            // uses defs/gradients/filters that naws_svg_kses_args() strips.
+            // Forecast days are days, so is_day stays true.
+            $fc_state = NAWS_Weather_State::wmo_to_state( (int) $day['weathercode'], true );
+            if ( $fc_state !== '' ) {
+                // The 44 below is only the fallback size when no CSS rule matches;
+                // the actual rendered size is governed by
+                // .naws-fc-wrap .naws-fc-svg svg { width:100% } in frontend.css.
+                echo NAWS_Weather_Icons::render_inline( $fc_state, 44 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- compile-time constant SVG, see templates/weather-icon.php
+            }
+          ?></div>
           <div class="naws-fc-cond"><?php echo esc_html( $wmo['label'] ); ?></div>
           <div class="naws-fc-temps">
             <span class="naws-fc-tmax"><?php echo $t_max !== null ? esc_html( $t_max ) : '--'; ?></span>

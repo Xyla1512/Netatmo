@@ -84,14 +84,17 @@ class NAWS_Weather_State {
     /**
      * Read the station values the precedence table needs.
      *
+     * Public since 1.8.0: the sidebar widget needs exactly this module
+     * resolution and should not repeat it.
+     *
      * Every value may be null, and null is meaningful: it means "this
      * module is absent or has not reported", which is different from a
      * measured zero. The API fallback ranks hinge on that difference.
      *
-     * @return array{rain: ?float, wind: ?float, temp: ?float, humidity: ?float}
+     * @return array{rain: ?float, wind: ?float, wind_avg: ?float, temp: ?float, humidity: ?float}
      */
-    private static function read_station(): array {
-        $out = [ 'rain' => null, 'wind' => null, 'temp' => null, 'humidity' => null ];
+    public static function read_station(): array {
+        $out = [ 'rain' => null, 'wind' => null, 'wind_avg' => null, 'temp' => null, 'humidity' => null ];
 
         if ( ! class_exists( 'NAWS_Database' ) ) {
             return $out;
@@ -124,12 +127,14 @@ class NAWS_Weather_State {
         $wind_mod = $by_type['NAModule2'][0] ?? null;
         if ( $wind_mod ) {
             foreach ( NAWS_Database::get_latest_readings( $wind_mod ) as $r ) {
-                // Gusts drive the storm rule: a gale is felt in the gusts,
-                // not in the ten-minute mean.
-                if ( $r['parameter'] === 'GustStrength' ) $out['wind'] = (float) $r['value'];
-                if ( $r['parameter'] === 'WindStrength' && $out['wind'] === null ) {
-                    $out['wind'] = (float) $r['value'];
-                }
+                // 'wind' drives the storm rule and prefers the gust peak:
+                // a gale is felt in the gusts, not the ten-minute mean.
+                // 'wind_avg' is the mean, which is what the widget shows.
+                if ( $r['parameter'] === 'GustStrength' ) $out['wind']     = (float) $r['value'];
+                if ( $r['parameter'] === 'WindStrength' ) $out['wind_avg'] = (float) $r['value'];
+            }
+            if ( $out['wind'] === null ) {
+                $out['wind'] = $out['wind_avg'];
             }
         }
 
@@ -322,6 +327,38 @@ class NAWS_Weather_State {
 
         // ── Rank 11: nothing applies – show nothing, never guess ────
         return $out( '', '' );
+    }
+
+    /**
+     * Map a WMO weather code to one of the twelve icon states.
+     *
+     * Shared by the sidebar widget, [naws_forecast] and the dashboard
+     * forecast strip so all three agree with each other — and, because it
+     * reuses the same constants decide() does, with the live icon too.
+     *
+     * The twelve states are coarser than the WMO list: drizzle, showers and
+     * steady rain all become 'rain', and the three snow intensities all
+     * become 'snow'. That is the accepted cost of one shared icon set.
+     *
+     * @param  int  $wmo     WMO weather code.
+     * @param  bool $is_day  Only affects code 0. Forecast days pass true.
+     * @return string        A name from self::STATES, or '' if unknown.
+     */
+    public static function wmo_to_state( int $wmo, bool $is_day = true ): string {
+        if ( $wmo === 0 ) return $is_day ? 'clear_day' : 'clear_night';
+        if ( $wmo === 1 ) return 'fair';
+        if ( $wmo === 2 ) return 'partly';
+        if ( $wmo === 3 ) return 'overcast';
+        if ( $wmo === 95 ) return 'thunder';
+        if ( $wmo === 96 || $wmo === 99 ) return 'sleet';
+
+        if ( in_array( $wmo, self::WMO_FOG, true ) )        return 'fog';
+        if ( in_array( $wmo, self::WMO_SNOW, true ) )       return 'snow';
+        if ( in_array( $wmo, self::WMO_SLEET, true ) )      return 'sleet';
+        if ( in_array( $wmo, self::WMO_RAIN_HEAVY, true ) ) return 'rain_heavy';
+        if ( in_array( $wmo, self::WMO_RAIN, true ) )       return 'rain';
+
+        return '';
     }
 
     /** Nullable float cast: preserves null, converts numeric strings. */

@@ -661,4 +661,20 @@ return [
     'wx_fog_desc'               => 'Begge vilkår må være oppfylt. Duggpunktavstanden er forskjellen mellom lufttemperatur og duggpunkt — jo mindre, desto nærmere metning er lufta.',
     'wx_storm_wind_label'       => 'Storm fra',
     'wx_storm_wind_desc'        => 'Målt på vindmålerens kastvind. Uten vindmodul faller regelen bort uten erstatning.',
+
+    // ── Sidefelt-widget (v1.8.0) ──────────────────────────────────────
+    'wgt_rain'                  => 'Regn',
+    'wgt_wind'                  => 'Vind',
+    'wgt_heading'               => 'Sidefelt-widget',
+    'wgt_desc'                  => 'Kompakt værwidget for smale spalter. Viser ikon og utetemperatur, under det regn og vind, deretter varselet. Settes inn med kortkoden [naws_weather_widget].',
+    'wgt_days_label'            => 'Varseldager',
+    'wgt_days_3'                => '3 dager',
+    'wgt_days_5'                => '5 dager',
+    'wgt_days_desc'             => 'Tre dager gir hver kolonne 77 piksler, fem gir bare 46. I smale sidefelt er tre merkbart lettere å lese.',
+    'wgt_preview_none'          => 'Ingenting kan vises nå — verken stasjonsmålinger eller varsel foreligger. Widgeten ville ikke vist noe.',
+    'sc_wgt_desc'               => 'Kompakt værwidget for sidefelt',
+    'sc_wgt_long_desc'          => 'Ikon og utetemperatur, under det regn og vind, deretter varselet. Laget for 250 piksler, men fyller enhver beholder. Mangler en tilleggsmodul, faller verdien bort uten erstatning. Bygges ved sidelasting og oppdateres ikke av seg selv — klokkeslettet i bunnlinjen viser alderen.',
+    'sc_wgt_attr_days'          => 'Varselets lengde. Bare 3 eller 5; andre verdier trekkes til nærmeste.',
+    'sc_wgt_ex_default'         => 'bruker innstillingen fra administrasjonen',
+    'sc_wgt_ex_three'           => 'kortere, for svært smale spalter',
 ];

@@ -278,6 +278,24 @@ $value_params = [
             </div>
         <?php endif; ?>
     </div>
+
+    <div class="naws-sc-card">
+        <h3><code>[naws_weather_widget]</code> &ndash; <?php naws_e('sc_wgt_desc'); ?></h3>
+        <p><?php naws_e('sc_wgt_long_desc'); ?></p>
+        <div class="naws-copy-wrap"><pre>[naws_weather_widget]</pre><button class="naws-copy-btn" data-copy='[naws_weather_widget]'><?php naws_e('sc_copy'); ?></button></div>
+        <table class="naws-attr-table" style="margin-top:10px">
+            <tr>
+                <th><?php naws_e('sc_th_attribute'); ?></th>
+                <th><?php naws_e('sc_th_description'); ?></th>
+                <th><?php naws_e('sc_th_default'); ?></th>
+            </tr>
+            <tr><td><code>days</code></td><td><?php naws_e('sc_wgt_attr_days'); ?></td><td><span class="naws-tag-default"><?php echo intval( get_option('naws_settings', [])['wgt_days'] ?? 5 ); ?></span></td></tr>
+        </table>
+        <div class="naws-inline-examples">
+            <div class="naws-inline-ex"><code>[naws_weather_widget]</code> <?php naws_e('sc_wgt_ex_default'); ?></div>
+            <div class="naws-inline-ex"><code>[naws_weather_widget days="3"]</code> <?php naws_e('sc_wgt_ex_three'); ?></div>
+        </div>
+    </div>
     </div><!-- /.naws-panel-body -->
 </div>
 

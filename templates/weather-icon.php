@@ -23,19 +23,29 @@
  *
  * Expected variables:
  * @var string $naws_wx_state  One of NAWS_Weather_State::STATES.
- * @var int    $naws_wx_size   Edge length in px (>= 64).
+ * @var int    $naws_wx_size   Edge length in px (>= 64 for render(), unclamped for render_inline()).
  * @var string $naws_wx_label  Translated aria-label.
+ * @var bool   $naws_wx_still  Set by render_inline() only: no wrapper, no animation.
  *
  * @package NAWS
  * @since   1.7.0
  */
 if ( ! defined( 'ABSPATH' ) ) exit;
 ?>
+<?php
+// render_inline() sets $naws_wx_still: no wrapper div, no animation, and
+// the size goes straight onto the svg. render() leaves it unset.
+$naws_wx_still = ! empty( $naws_wx_still );
+$naws_wx_cls   = 'naws-wxi' . ( $naws_wx_still ? ' naws-wxi--still' : '' );
+if ( ! $naws_wx_still ) : ?>
 <div class="naws-weather-icon" style="--naws-wx-size:<?php echo absint( $naws_wx_size ); ?>px">
+<?php endif; ?>
 <?php switch ( $naws_wx_state ) :
 
 	case 'clear_day': ?>
-		<svg class="naws-wxi" viewBox="0 0 64 64" role="img" aria-label="<?php echo esc_attr( $naws_wx_label ); ?>">
+		<svg class="<?php echo esc_attr( $naws_wx_cls ); ?>" viewBox="0 0 64 64" role="img"
+		     width="<?php echo absint( $naws_wx_size ); ?>" height="<?php echo absint( $naws_wx_size ); ?>"
+		     aria-label="<?php echo esc_attr( $naws_wx_label ); ?>">
 			<g class="rays" stroke="url(#naws-g-sun)" stroke-width="3.4" stroke-linecap="round">
 				<line x1="32" y1="6"  x2="32" y2="13"/><line x1="32" y1="51" x2="32" y2="58"/>
 				<line x1="6"  y1="32" x2="13" y2="32"/><line x1="51" y1="32" x2="58" y2="32"/>
@@ -47,7 +57,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	<?php break;
 
 	case 'clear_night': ?>
-		<svg class="naws-wxi" viewBox="0 0 64 64" role="img" aria-label="<?php echo esc_attr( $naws_wx_label ); ?>">
+		<svg class="<?php echo esc_attr( $naws_wx_cls ); ?>" viewBox="0 0 64 64" role="img"
+		     width="<?php echo absint( $naws_wx_size ); ?>" height="<?php echo absint( $naws_wx_size ); ?>"
+		     aria-label="<?php echo esc_attr( $naws_wx_label ); ?>">
 			<path class="core" d="M44 12 A22 22 0 1 0 44 52 A17 17 0 1 1 44 12 Z" fill="url(#naws-g-moon)"/>
 			<circle class="star" style="--d:0s"   cx="15" cy="17" r="2"   fill="#FFF3C9"/>
 			<circle class="star" style="--d:1.2s" cx="52" cy="20" r="1.6" fill="#FFF3C9"/>
@@ -56,7 +68,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	<?php break;
 
 	case 'fair': ?>
-		<svg class="naws-wxi" viewBox="0 0 64 64" role="img" aria-label="<?php echo esc_attr( $naws_wx_label ); ?>">
+		<svg class="<?php echo esc_attr( $naws_wx_cls ); ?>" viewBox="0 0 64 64" role="img"
+		     width="<?php echo absint( $naws_wx_size ); ?>" height="<?php echo absint( $naws_wx_size ); ?>"
+		     aria-label="<?php echo esc_attr( $naws_wx_label ); ?>">
 			<g class="rays" style="--o:22px 22px" stroke="url(#naws-g-sun)" stroke-width="3" stroke-linecap="round">
 				<line x1="22" y1="4"  x2="22" y2="10"/><line x1="4"  y1="22" x2="10" y2="22"/>
 				<line x1="9.5" y1="9.5" x2="13.5" y2="13.5"/><line x1="34.5" y1="9.5" x2="30.5" y2="13.5"/>
@@ -70,7 +84,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	<?php break;
 
 	case 'partly': ?>
-		<svg class="naws-wxi" viewBox="0 0 64 64" role="img" aria-label="<?php echo esc_attr( $naws_wx_label ); ?>">
+		<svg class="<?php echo esc_attr( $naws_wx_cls ); ?>" viewBox="0 0 64 64" role="img"
+		     width="<?php echo absint( $naws_wx_size ); ?>" height="<?php echo absint( $naws_wx_size ); ?>"
+		     aria-label="<?php echo esc_attr( $naws_wx_label ); ?>">
 			<circle class="core" style="--o:21px 21px" cx="21" cy="21" r="9" fill="url(#naws-g-sun)"/>
 			<g class="cloud" fill="url(#naws-g-cloud2)">
 				<circle cx="25" cy="38" r="11"/><circle cx="38" cy="34" r="13"/>
@@ -80,7 +96,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	<?php break;
 
 	case 'overcast': ?>
-		<svg class="naws-wxi" viewBox="0 0 64 64" role="img" aria-label="<?php echo esc_attr( $naws_wx_label ); ?>">
+		<svg class="<?php echo esc_attr( $naws_wx_cls ); ?>" viewBox="0 0 64 64" role="img"
+		     width="<?php echo absint( $naws_wx_size ); ?>" height="<?php echo absint( $naws_wx_size ); ?>"
+		     aria-label="<?php echo esc_attr( $naws_wx_label ); ?>">
 			<g class="cloud" style="animation-duration:9s" fill="url(#naws-g-cloud2)" opacity=".72">
 				<circle cx="20" cy="26" r="9"/><circle cx="32" cy="23" r="11"/>
 				<circle cx="41" cy="28" r="7"/><rect x="13" y="28" width="30" height="8" rx="4"/>
@@ -93,7 +111,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	<?php break;
 
 	case 'fog': ?>
-		<svg class="naws-wxi" viewBox="0 0 64 64" role="img" aria-label="<?php echo esc_attr( $naws_wx_label ); ?>">
+		<svg class="<?php echo esc_attr( $naws_wx_cls ); ?>" viewBox="0 0 64 64" role="img"
+		     width="<?php echo absint( $naws_wx_size ); ?>" height="<?php echo absint( $naws_wx_size ); ?>"
+		     aria-label="<?php echo esc_attr( $naws_wx_label ); ?>">
 			<g class="cloud" fill="url(#naws-g-cloud)" opacity=".9">
 				<circle cx="24" cy="28" r="10"/><circle cx="37" cy="25" r="12"/>
 				<circle cx="45" cy="31" r="7.5"/><rect x="17" y="31" width="32" height="9" rx="4.5"/>
@@ -107,7 +127,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	<?php break;
 
 	case 'rain': ?>
-		<svg class="naws-wxi" viewBox="0 0 64 64" role="img" aria-label="<?php echo esc_attr( $naws_wx_label ); ?>">
+		<svg class="<?php echo esc_attr( $naws_wx_cls ); ?>" viewBox="0 0 64 64" role="img"
+		     width="<?php echo absint( $naws_wx_size ); ?>" height="<?php echo absint( $naws_wx_size ); ?>"
+		     aria-label="<?php echo esc_attr( $naws_wx_label ); ?>">
 			<g class="cloud" fill="url(#naws-g-cloud2)">
 				<circle cx="24" cy="27" r="10"/><circle cx="37" cy="24" r="12"/>
 				<circle cx="45" cy="30" r="7.5"/><rect x="17" y="30" width="32" height="9" rx="4.5"/>
@@ -121,7 +143,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	<?php break;
 
 	case 'rain_heavy': ?>
-		<svg class="naws-wxi" viewBox="0 0 64 64" role="img" aria-label="<?php echo esc_attr( $naws_wx_label ); ?>">
+		<svg class="<?php echo esc_attr( $naws_wx_cls ); ?>" viewBox="0 0 64 64" role="img"
+		     width="<?php echo absint( $naws_wx_size ); ?>" height="<?php echo absint( $naws_wx_size ); ?>"
+		     aria-label="<?php echo esc_attr( $naws_wx_label ); ?>">
 			<g class="cloud" fill="url(#naws-g-cloud-dark)">
 				<circle cx="24" cy="27" r="10"/><circle cx="37" cy="24" r="12"/>
 				<circle cx="45" cy="30" r="7.5"/><rect x="17" y="30" width="32" height="9" rx="4.5"/>
@@ -137,7 +161,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	<?php break;
 
 	case 'snow': ?>
-		<svg class="naws-wxi" viewBox="0 0 64 64" role="img" aria-label="<?php echo esc_attr( $naws_wx_label ); ?>">
+		<svg class="<?php echo esc_attr( $naws_wx_cls ); ?>" viewBox="0 0 64 64" role="img"
+		     width="<?php echo absint( $naws_wx_size ); ?>" height="<?php echo absint( $naws_wx_size ); ?>"
+		     aria-label="<?php echo esc_attr( $naws_wx_label ); ?>">
 			<g class="cloud" fill="url(#naws-g-cloud)">
 				<circle cx="24" cy="27" r="10"/><circle cx="37" cy="24" r="12"/>
 				<circle cx="45" cy="30" r="7.5"/><rect x="17" y="30" width="32" height="9" rx="4.5"/>
@@ -157,7 +183,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	<?php break;
 
 	case 'sleet': ?>
-		<svg class="naws-wxi" viewBox="0 0 64 64" role="img" aria-label="<?php echo esc_attr( $naws_wx_label ); ?>">
+		<svg class="<?php echo esc_attr( $naws_wx_cls ); ?>" viewBox="0 0 64 64" role="img"
+		     width="<?php echo absint( $naws_wx_size ); ?>" height="<?php echo absint( $naws_wx_size ); ?>"
+		     aria-label="<?php echo esc_attr( $naws_wx_label ); ?>">
 			<g class="cloud" fill="url(#naws-g-cloud-dark)">
 				<circle cx="24" cy="27" r="10"/><circle cx="37" cy="24" r="12"/>
 				<circle cx="45" cy="30" r="7.5"/><rect x="17" y="30" width="32" height="9" rx="4.5"/>
@@ -171,7 +199,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	<?php break;
 
 	case 'thunder': ?>
-		<svg class="naws-wxi" viewBox="0 0 64 64" role="img" aria-label="<?php echo esc_attr( $naws_wx_label ); ?>">
+		<svg class="<?php echo esc_attr( $naws_wx_cls ); ?>" viewBox="0 0 64 64" role="img"
+		     width="<?php echo absint( $naws_wx_size ); ?>" height="<?php echo absint( $naws_wx_size ); ?>"
+		     aria-label="<?php echo esc_attr( $naws_wx_label ); ?>">
 			<g class="cloud" fill="url(#naws-g-cloud-dark)">
 				<circle cx="24" cy="26" r="10"/><circle cx="37" cy="23" r="12"/>
 				<circle cx="45" cy="29" r="7.5"/><rect x="17" y="29" width="32" height="9" rx="4.5"/>
@@ -181,7 +211,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	<?php break;
 
 	case 'storm': ?>
-		<svg class="naws-wxi" viewBox="0 0 64 64" role="img" aria-label="<?php echo esc_attr( $naws_wx_label ); ?>">
+		<svg class="<?php echo esc_attr( $naws_wx_cls ); ?>" viewBox="0 0 64 64" role="img"
+		     width="<?php echo absint( $naws_wx_size ); ?>" height="<?php echo absint( $naws_wx_size ); ?>"
+		     aria-label="<?php echo esc_attr( $naws_wx_label ); ?>">
 			<g fill="none" stroke="#7E93AB" stroke-width="3.8" stroke-linecap="round">
 				<path class="gust" style="--d:0s"  d="M8 22 H34 a6 6 0 1 0 -6 -6"/>
 				<path class="gust" style="--d:.5s" d="M8 34 H44 a7 7 0 1 1 -7 7"/>
@@ -191,4 +223,4 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	<?php break;
 
 endswitch; ?>
-</div>
+<?php if ( ! $naws_wx_still ) : ?></div><?php endif; ?>
