@@ -37,10 +37,19 @@ class NAWS_Forecast {
     /** Beyond this age the stored last-known code is discarded. */
     const LAST_WMO_MAX_AGE = 6 * HOUR_IN_SECONDS;
 
-    /** Current-condition variables requested from Open-Meteo. */
+    /**
+     * Current-condition variables requested from Open-Meteo.
+     *
+     * The three cloud layers are what let the icon tell a low deck from
+     * cirrus; weather_code lumps them together and calls a cirrus veil
+     * "overcast". Costs nothing — same request, same rate-limit budget.
+     */
     const CURRENT_VARS = [
         'weather_code',
         'cloud_cover',
+        'cloud_cover_low',
+        'cloud_cover_mid',
+        'cloud_cover_high',
         'is_day',
         'snowfall',
         'precipitation',
@@ -129,7 +138,8 @@ class NAWS_Forecast {
      * so the station-side rules keep working during an API outage.
      *
      * @return array{
-     *     wmo: ?int, is_day: ?bool, cloud_cover: ?int,
+     *     wmo: ?int, is_day: ?bool, cloud_cover: ?float,
+     *     cloud_low: ?float, cloud_mid: ?float, cloud_high: ?float,
      *     snowfall: ?float, precipitation: ?float,
      *     fetched_at: int, stale: bool
      * }
@@ -160,9 +170,13 @@ class NAWS_Forecast {
         set_transient( $cache_key, $result, self::NOW_CACHE_TTL );
 
         update_option( self::OPT_LAST_WMO, [
-            'wmo'    => $result['wmo'],
-            'is_day' => $result['is_day'],
-            'ts'     => $result['fetched_at'],
+            'wmo'         => $result['wmo'],
+            'is_day'      => $result['is_day'],
+            'cloud_cover' => $result['cloud_cover'] ?? null,
+            'cloud_low'   => $result['cloud_low']   ?? null,
+            'cloud_mid'   => $result['cloud_mid']   ?? null,
+            'cloud_high'  => $result['cloud_high']  ?? null,
+            'ts'          => $result['fetched_at'],
         ], false );
 
         return $result;
@@ -179,6 +193,9 @@ class NAWS_Forecast {
             'wmo'           => null,
             'is_day'        => null,
             'cloud_cover'   => null,
+            'cloud_low'     => null,
+            'cloud_mid'     => null,
+            'cloud_high'    => null,
             'snowfall'      => null,
             'precipitation' => null,
             'fetched_at'    => 0,
@@ -199,6 +216,13 @@ class NAWS_Forecast {
         $empty['wmo']        = (int) $last['wmo'];
         $empty['is_day']     = isset( $last['is_day'] ) ? (bool) $last['is_day'] : null;
         $empty['fetched_at'] = (int) $last['ts'];
+
+        // The cloud layers are stored alongside the code because the code on
+        // its own is what mislabels a cirrus veil as "bedeckt". Dropping them
+        // here would reinstate exactly that during an API outage.
+        foreach ( [ 'cloud_cover', 'cloud_low', 'cloud_mid', 'cloud_high' ] as $k ) {
+            $empty[ $k ] = self::sf( $last[ $k ] ?? null );
+        }
 
         return $empty;
     }
@@ -237,7 +261,10 @@ class NAWS_Forecast {
         return [
             'wmo'           => (int) $c['weather_code'],
             'is_day'        => isset( $c['is_day'] ) ? ( (int) $c['is_day'] === 1 ) : null,
-            'cloud_cover'   => isset( $c['cloud_cover'] ) ? (int) $c['cloud_cover'] : null,
+            'cloud_cover'   => self::sf( $c['cloud_cover']      ?? null ),
+            'cloud_low'     => self::sf( $c['cloud_cover_low']  ?? null ),
+            'cloud_mid'     => self::sf( $c['cloud_cover_mid']  ?? null ),
+            'cloud_high'    => self::sf( $c['cloud_cover_high'] ?? null ),
             'snowfall'      => self::sf( $c['snowfall']      ?? null ),
             'precipitation' => self::sf( $c['precipitation'] ?? null ),
             'fetched_at'    => time(),
@@ -295,12 +322,18 @@ class NAWS_Forecast {
                 return null;
             }
 
-            $clouds = $entry['data']['instant']['details']['cloud_area_fraction'] ?? null;
+            // The compact endpoint carries only the total; the layer split
+            // is a 'complete' feature. Read it anyway — null costs nothing
+            // and NAWS_Weather_State degrades to the total on its own.
+            $det = $entry['data']['instant']['details'] ?? [];
 
             return [
                 'wmo'           => $wmo,
                 'is_day'        => str_ends_with( (string) $symbol, '_night' ) ? false : null,
-                'cloud_cover'   => $clouds !== null ? (int) round( (float) $clouds ) : null,
+                'cloud_cover'   => self::sf( $det['cloud_area_fraction']        ?? null ),
+                'cloud_low'     => self::sf( $det['cloud_area_fraction_low']    ?? null ),
+                'cloud_mid'     => self::sf( $det['cloud_area_fraction_medium'] ?? null ),
+                'cloud_high'    => self::sf( $det['cloud_area_fraction_high']   ?? null ),
                 'snowfall'      => null,
                 'precipitation' => self::sf(
                     $entry['data']['next_1_hours']['details']['precipitation_amount'] ?? null

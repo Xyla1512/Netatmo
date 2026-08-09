@@ -34,6 +34,28 @@ class NAWS_Weather_State {
         'storm_wind' => 75.0,  // km/h
     ];
 
+    /**
+     * How much a high cloud counts towards the perceived cloudiness.
+     *
+     * Cirrus at 8–10 km is thin enough to read as a blue, slightly milky sky
+     * and does not hide the sun. Open-Meteo's weather_code counts it like any
+     * other cloud, which is how a cloudless summer morning over Leipzig
+     * (low 0, mid 0, high 83) arrived at code 3, "bedeckt".
+     *
+     * Not a setting: it belongs with the octa thresholds below, and the five
+     * existing wx_ thresholds are already as much as the settings page can
+     * carry without turning into a meteorology console.
+     */
+    const HIGH_CLOUD_WEIGHT = 0.4;
+
+    /**
+     * Cloudiness thresholds in percent, at the octa boundaries 1/8, 3/8, 6/8.
+     * A value exactly on a boundary counts as the cloudier state.
+     */
+    const CLOUD_CLEAR  = 12.5;
+    const CLOUD_FAIR   = 37.5;
+    const CLOUD_PARTLY = 75.0;
+
     /** WMO codes grouped by what they mean for the icon. */
     const WMO_SNOW       = [ 71, 73, 75, 77, 85, 86 ];
     const WMO_RAIN       = [ 51, 53, 55, 56, 57, 61, 63, 80, 81 ];
@@ -74,6 +96,12 @@ class NAWS_Weather_State {
             'humidity'   => $station['humidity'],
             'wmo'        => $conditions['wmo']      ?? null,
             'snowfall'   => $conditions['snowfall'] ?? null,
+            // Cloud layers, where the provider breaks them out. Only the
+            // cloudiness ranks use these; see decide().
+            'cloud_total' => $conditions['cloud_cover'] ?? null,
+            'cloud_low'   => $conditions['cloud_low']   ?? null,
+            'cloud_mid'   => $conditions['cloud_mid']   ?? null,
+            'cloud_high'  => $conditions['cloud_high']  ?? null,
             'is_day'     => (bool) $is_day,
             'stale'      => (bool) ( $conditions['stale'] ?? true ),
             'ts'         => time(),
@@ -208,6 +236,10 @@ class NAWS_Weather_State {
      *     @type ?float $humidity   outdoor %
      *     @type ?int   $wmo        current WMO code, null = no API data
      *     @type ?float $snowfall   cm in the last hour, null = unavailable
+     *     @type ?float $cloud_total total cloud cover %, null = unavailable
+     *     @type ?float $cloud_low   low cloud cover %, null = not broken out
+     *     @type ?float $cloud_mid   mid cloud cover %, null = not broken out
+     *     @type ?float $cloud_high  high cloud cover %, null = not broken out
      *     @type bool   $is_day
      *     @type bool   $stale      WMO code is a last-known value
      *     @type int    $ts
@@ -311,10 +343,27 @@ class NAWS_Weather_State {
         }
 
         // ── Rank 10: cloudiness – only the API can supply this ──────
-        if ( $wmo === 0 ) return $out( $is_day ? 'clear_day' : 'clear_night', 'api' );
-        if ( $wmo === 1 ) return $out( 'fair', 'api' );
-        if ( $wmo === 2 ) return $out( 'partly', 'api' );
-        if ( $wmo === 3 ) return $out( 'overcast', 'api' );
+        // Codes 0–3 are nothing but a four-way bucket of cloud cover. Where
+        // the provider also states the cover as a percentage, that number is
+        // the better signal and replaces the bucket — decisively so when it
+        // is broken out by layer, because the code cannot tell a low deck
+        // from cirrus and those look nothing alike from the ground.
+        //
+        // Deliberately limited to 0–3. A code of 45 or above that reaches
+        // this point was contradicted by the rain gauge and is handled below;
+        // second-guessing that salvage with cloud figures is a separate
+        // question from the one this rank answers.
+        if ( $wmo !== null && $wmo >= 0 && $wmo <= 3 ) {
+            $cover = self::effective_cloud_cover( $in );
+            if ( $cover !== null ) {
+                return $out( self::cloud_state( $cover, $is_day ), 'api' );
+            }
+
+            if ( $wmo === 0 ) return $out( $is_day ? 'clear_day' : 'clear_night', 'api' );
+            if ( $wmo === 1 ) return $out( 'fair', 'api' );
+            if ( $wmo === 2 ) return $out( 'partly', 'api' );
+            return $out( 'overcast', 'api' );
+        }
 
         // Any precipitation code that reaches this line was contradicted by
         // the station: the gauge measured 0.0, so the rain ranks were not
@@ -327,6 +376,43 @@ class NAWS_Weather_State {
 
         // ── Rank 11: nothing applies – show nothing, never guess ────
         return $out( '', '' );
+    }
+
+    /**
+     * Perceived cloud cover in percent, or null if the provider gave none.
+     *
+     * With all three layers known, the high layer is discounted: a sky under
+     * nothing but cirrus is blue to look at. Without the breakdown the total
+     * has to stand on its own — still better than the four-way code, but
+     * cirrus then counts in full.
+     *
+     * Partial layer data falls back to the total rather than treating the
+     * missing layers as zero, which would understate a real deck.
+     */
+    private static function effective_cloud_cover( array $in ): ?float {
+        $low  = self::pct( $in['cloud_low']  ?? null );
+        $mid  = self::pct( $in['cloud_mid']  ?? null );
+        $high = self::pct( $in['cloud_high'] ?? null );
+
+        if ( $low !== null && $mid !== null && $high !== null ) {
+            return max( $low, $mid, $high * self::HIGH_CLOUD_WEIGHT );
+        }
+
+        return self::pct( $in['cloud_total'] ?? null );
+    }
+
+    /** Cloud cover in percent to one of the four cloudiness states. */
+    private static function cloud_state( float $cover, bool $is_day ): string {
+        if ( $cover < self::CLOUD_CLEAR )  return $is_day ? 'clear_day' : 'clear_night';
+        if ( $cover < self::CLOUD_FAIR )   return 'fair';
+        if ( $cover < self::CLOUD_PARTLY ) return 'partly';
+        return 'overcast';
+    }
+
+    /** Nullable percentage cast, clamped to 0–100. */
+    private static function pct( $v ): ?float {
+        $f = self::nf( $v );
+        return $f === null ? null : max( 0.0, min( 100.0, $f ) );
     }
 
     /**

@@ -2,6 +2,11 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [1.8.1] – 2026-08-09
+
+### Fixed
+- **Weather icon showed "overcast" under a cloudless sky.** Open-Meteo's `weather_code` collapses all cloud layers into one four-way bucket, so a veil of cirrus counted the same as a low deck — over Leipzig on 9 August the code read 3 ("bedeckt") while low and mid cover were flat 0 and the entire figure was high cloud, which from the ground is a blue sky. The cloudiness ranks now decide on the cover percentage instead of the code, weighting high cloud at 0.4 and taking the thresholds at the octa boundaries 12.5 / 37.5 / 75 %. `cloud_cover` was already being downloaded and discarded; `cloud_cover_low`, `_mid` and `_high` were added to the same request at no cost. Providers that give only a total (Yr.no compact) fall back to it, and without any cover figure the WMO code still decides as before. The layers are stored alongside the last known code so an API outage does not reinstate the old behaviour. Only codes 0–3 are affected; precipitation, fog, thunder and storm keep their existing precedence. `tests/test-weather-state.php` grew from 36 to 53 cases.
+
 ## [1.8.0] – 2026-08-08
 
 ### Added
