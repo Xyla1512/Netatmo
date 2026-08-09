@@ -1,7 +1,7 @@
 Demo: https://www.frank-neumann.de/netatmo-wetter-plugin/
 
 
-=== XTX Netatmo ===
+=== XTX Netatmo === 
 Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
