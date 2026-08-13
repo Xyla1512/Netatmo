@@ -117,8 +117,10 @@ class NAWS_Lang {
         $files = function_exists( 'glob' ) ? glob( $dir . '*.php' ) : false;
         if ( ! is_array( $files ) ) {
             $files = [];
-            if ( is_dir( $dir ) && ( $dh = opendir( $dir ) ) ) {
-                while ( ( $entry = readdir( $dh ) ) !== false ) {
+            // Assignment inside the condition is the standard opendir/readdir
+            // idiom, not a mistyped comparison.
+            if ( is_dir( $dir ) && ( $dh = opendir( $dir ) ) ) { // phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.Found -- opendir idiom
+                while ( ( $entry = readdir( $dh ) ) !== false ) { // phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition -- readdir idiom
                     if ( substr( $entry, -4 ) === '.php' ) {
                         $files[] = $dir . $entry;
                     }

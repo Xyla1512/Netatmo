@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<ruleset name="XTX Integration for Netatmo">
+
+	<description>
+		Coding standards for the XTX Integration for Netatmo plugin.
+
+		This ruleset is the REVIEW GATE, not a style guide. It carries the
+		sniffs that decide whether WordPress.org accepts the plugin: nonces,
+		input sanitization, output escaping, prepared SQL, i18n, prefixing and
+		PHP cross-version compatibility. It should stay at zero errors.
+
+		The full "WordPress" standard is deliberately NOT used here. Running it
+		reports ~20,700 violations, of which ~19,500 are indentation, array
+		alignment and short-array syntax - the codebase uses four spaces where
+		WPCS wants tabs. Reformatting all of it would touch nearly every line
+		of the plugin for no review benefit and would bury the findings that
+		matter. To look at the style layer anyway, run it ad hoc without
+		changing this file:
+
+		    vendor\bin\phpcs --standard=WordPress --report=source
+	</description>
+
+	<!-- What to scan. -->
+	<file>.</file>
+
+	<exclude-pattern>/vendor/*</exclude-pattern>
+	<exclude-pattern>/node_modules/*</exclude-pattern>
+	<exclude-pattern>/docs/*</exclude-pattern>
+	<exclude-pattern>/\.superpowers/*</exclude-pattern>
+	<!-- Frameworkless test harnesses. They never ship, so review rules that
+	     exist to protect site visitors do not apply to them. -->
+	<exclude-pattern>/tests/*</exclude-pattern>
+
+	<arg name="extensions" value="php"/>
+	<arg name="basepath" value="."/>
+	<arg name="parallel" value="8"/>
+	<arg name="colors"/>
+	<arg value="sp"/>
+
+	<!-- Matches the plugin header: Requires at least 6.2, Requires PHP 8.0. -->
+	<config name="minimum_wp_version" value="6.2"/>
+	<config name="testVersion" value="8.0-"/>
+
+	<!-- ================================================================
+	     Security: nonces, sanitization, escaping. The heart of the review.
+	     ================================================================ -->
+	<rule ref="WordPress.Security"/>
+
+	<!-- Deliberately NOT whitelisting naws_kses_svg() and friends via the
+	     customEscapingFunctions property. PHPCS would happily accept a custom
+	     escaping wrapper, but the review team does not - they want wp_kses()
+	     visible in the echo statement itself. Teaching the sniffer to accept
+	     the wrapper would hide exactly the finding we want to see. -->
+
+	<!-- ================================================================
+	     Database: prepared statements, placeholders, direct queries.
+	     ================================================================ -->
+	<rule ref="WordPress.DB"/>
+
+	<!-- ================================================================
+	     WordPress API misuse: global overrides, cron intervals, enqueueing,
+	     i18n, and PHP functions with a WP alternative.
+	     ================================================================ -->
+	<rule ref="WordPress.WP"/>
+
+	<!-- Every admin view and front-end template in this plugin is pulled in
+	     with include() from inside a method - page_*() in class-naws-admin.php,
+	     and ob_start()/include in the shortcode render methods. Their variables
+	     are therefore function-scoped and cannot overwrite a WordPress global.
+	     PHPCS analyses each file on its own and has to assume file scope, which
+	     produced 18 false positives on $m, $type, $action, $title and $tabs.
+	     This property tells the sniff what is actually true. -->
+	<rule ref="WordPress.WP.GlobalVariablesOverride">
+		<properties>
+			<property name="treat_files_as_scoped" value="true"/>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="xtx-integration-for-netatmo"/>
+			</property>
+		</properties>
+	</rule>
+
+	<!-- ================================================================
+	     PHP-level restrictions WordPress.org enforces: base64 obfuscation,
+	     silenced errors, development functions left in shipping code.
+	     ================================================================ -->
+	<rule ref="WordPress.PHP">
+		<!-- Deprecated in WPCS 3.3 and removed in 4.0; PHPCompatibilityWP below
+		     covers the same ground. Excluded to keep the run output clean. -->
+		<exclude name="WordPress.PHP.POSIXFunctions"/>
+	</rule>
+
+	<!-- Yoda conditions are a house style, not a correctness matter, and the
+	     codebase consistently does not use them. 296 findings, zero risk. -->
+	<rule ref="WordPress.PHP.YodaConditions">
+		<severity>0</severity>
+	</rule>
+
+	<!-- ================================================================
+	     Naming: every global symbol must carry a plugin prefix, and class
+	     files must follow the WordPress file naming scheme.
+	     ================================================================ -->
+	<!-- "xtx" is deliberately absent: the sniff rejects prefixes shorter than
+	     four characters as collision-prone, and every global symbol in the
+	     plugin already uses naws/NAWS anyway. -->
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="naws"/>
+				<element value="NAWS"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.Files.FileName"/>
+
+	<!-- The main plugin file must be named after the plugin slug - that is how
+	     WordPress identifies the plugin - so it cannot follow the class-*.php
+	     convention even though it declares a class. -->
+	<rule ref="WordPress.Files.FileName.InvalidClassFileName">
+		<exclude-pattern>/xtx-integration-for-netatmo\.php$</exclude-pattern>
+	</rule>
+
+	<!-- class-naws-importer-v2.php holds NAWS_Importer. The "-v2" records that
+	     this replaced an earlier importer; renaming the file would drop that
+	     and gains nothing functionally. -->
+	<rule ref="WordPress.Files.FileName.InvalidClassFileName">
+		<exclude-pattern>/class-naws-importer-v2\.php$</exclude-pattern>
+	</rule>
+
+	<!-- ================================================================
+	     Real bug classes, not style: duplicate array keys silently discard
+	     values, assignments in conditions are usually a typo'd comparison.
+	     ================================================================ -->
+	<rule ref="WordPress.CodeAnalysis"/>
+	<rule ref="Universal.Arrays.DuplicateArrayKey"/>
+	<rule ref="Generic.CodeAnalysis.AssignmentInCondition"/>
+	<rule ref="Generic.CodeAnalysis.EmptyStatement"/>
+	<rule ref="Generic.CodeAnalysis.ForLoopWithTestFunctionCall"/>
+	<rule ref="Generic.CodeAnalysis.JumbledIncrementer"/>
+	<rule ref="Generic.CodeAnalysis.UnconditionalIfStatement"/>
+	<rule ref="Squiz.PHP.NonExecutableCode"/>
+
+	<!-- ================================================================
+	     Cross-version compatibility for the declared range (PHP 8.0+).
+	     ================================================================ -->
+	<rule ref="PHPCompatibilityWP"/>
+
+</ruleset>

@@ -504,7 +504,9 @@ class NAWS_Ajax {
             $where_args[] = $filter_module_id;
         }
 
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber,PluginCheck.Security.DirectDB.UnescapedDBParameter -- {$table} is prefix+constant; field names passed as %i identifiers; placeholder count is dynamic
+        // The placeholders are real but built above in $field_ph and $where_sql,
+        // so the sniffs cannot see them in the query string literal.
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare,PluginCheck.Security.DirectDB.UnescapedDBParameter -- {$table} is prefix+constant; field names passed as %i identifiers; placeholder count is dynamic
         $rows = $wpdb->get_results( $wpdb->prepare(
             "SELECT d.day_date, {$field_ph}
              FROM {$table} d
@@ -512,7 +514,7 @@ class NAWS_Ajax {
              ORDER BY d.day_date ASC",
             array_merge( $raw_fields, $where_args )
         ), ARRAY_A );
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare,PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         if ( $wpdb->last_error ) {
             NAWS_Logger::error( 'ajax', 'get_history_data query failed: ' . $wpdb->last_error );

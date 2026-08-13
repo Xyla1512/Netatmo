@@ -1,0 +1,15 @@
+# Composer-installed development toolchain (PHP_CodeSniffer, WPCS,
+# PHPCompatibility). composer.json and composer.lock are tracked so the
+# toolchain can be restored with `composer install`; the installed tree is not.
+vendor/
+
+# Build output. build-zip.ps1 writes one level above the plugin folder, but
+# keep this in case someone runs it from here.
+*.zip
+
+# Editor and OS clutter
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+.DS_Store

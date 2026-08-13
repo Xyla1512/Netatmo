@@ -1,0 +1,51 @@
+# Files and folders that must NOT ship in the WordPress.org package.
+#
+# Read by build-zip.ps1 in this directory, and in the same format used by
+# `wp dist-archive` and the 10up plugin-deploy GitHub Action, so switching
+# to either of those later needs no changes here.
+#
+# One path per line, relative to the plugin root. A trailing slash marks a
+# directory. Lines starting with # are comments.
+
+# Development and verification
+tests/
+docs/
+.superpowers/
+build-zip.ps1
+.distignore
+
+# PHPCS / WordPress Coding Standards toolchain. Dev-only: the plugin ships
+# no Composer dependencies, so vendor/ has no business in the package.
+vendor/
+composer.json
+composer.lock
+.phpcs.xml.dist
+
+# Version control
+.git/
+.gitignore
+.gitattributes
+.github/
+
+# Working notes that live alongside the plugin
+REVIEW_PLAN.md
+blog-post.md
+
+# GitHub-facing documentation. Both stay in the repository - README.md is
+# the project page, CHANGELOG.md the detailed history the release notes are
+# drawn from - but WordPress reads neither, so shipping them only puts
+# 40 KB of dead weight into every installation.
+README.md
+CHANGELOG.md
+
+# Editor and OS clutter
+.vscode/
+.idea/
+*.code-workspace
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Note: readme.txt MUST ship - WordPress.org builds the plugin page from it,
+# and it is the only one of the three readme files WordPress ever reads.
+# Do not add it here.

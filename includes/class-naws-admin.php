@@ -31,7 +31,9 @@ class NAWS_Admin {
     }
 
     public function add_menu() {
-        $icon = 'data:image/svg+xml;base64,' . base64_encode( '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>' );
+        // add_menu_page() takes its icon as a data URI; base64 is the encoding
+        // that format requires, applied to a string literal right here.
+        $icon = 'data:image/svg+xml;base64,' . base64_encode( '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>' ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- menu icon data URI, literal SVG visible above
 
         add_menu_page(
             naws__( 'plugin_name' ),
@@ -306,7 +308,7 @@ class NAWS_Admin {
         // Always reschedule cron after manual sync so it doesn't stay stuck
         NAWS_Cron::instance()->reschedule();
 
-        $msg = is_wp_error( $result ) ? '&error=' . urlencode( $result->get_error_message() ) : '&synced=1';
+        $msg = is_wp_error( $result ) ? '&error=' . rawurlencode( $result->get_error_message() ) : '&synced=1';
         wp_safe_redirect( wp_nonce_url( admin_url( 'admin.php?page=naws-dashboard' . $msg ), 'naws_notice' ) );
         exit;
     }
@@ -417,8 +419,13 @@ class NAWS_Admin {
         check_admin_referer( 'naws_save_appearance' );
         if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
 
-        $raw   = isset( $_POST['naws_appearance'] ) && is_array( $_POST['naws_appearance'] ) ? $_POST['naws_appearance'] : [];
-        $input = map_deep( wp_unslash( $raw ), 'sanitize_text_field' );
+        // Sanitize the superglobal directly rather than through an intermediate
+        // $raw variable. Neither PHPCS nor the plugin review scanner tracks
+        // sanitization across an assignment, so the indirect form gets flagged
+        // as unsanitized input even though it is not.
+        $input = isset( $_POST['naws_appearance'] ) && is_array( $_POST['naws_appearance'] )
+            ? map_deep( wp_unslash( $_POST['naws_appearance'] ), 'sanitize_text_field' )
+            : [];
         update_option( NAWS_Colors::OPTION_KEY, NAWS_Colors::sanitize( $input ) );
         NAWS_Colors::flush_cache();
 
@@ -473,23 +480,28 @@ class NAWS_Admin {
 
         // Validate file upload
         if ( empty( $_FILES['naws_import_file'] ) || ( $_FILES['naws_import_file']['error'] ?? -1 ) !== UPLOAD_ERR_OK ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- error code is integer, not user-controlled string
-            wp_safe_redirect( $nonce_url( $redirect_url . '&import_error=' . urlencode( naws__( 'import_file_invalid' ) ) ) );
+            wp_safe_redirect( $nonce_url( $redirect_url . '&import_error=' . rawurlencode( naws__( 'import_file_invalid' ) ) ) );
             exit;
         }
 
-        $file      = $_FILES['naws_import_file']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- $_FILES values do not use slashes; individual fields sanitized below
+        // The entry is handed to wp_handle_upload() below - the WordPress API
+        // for this - which performs the real validation (upload error, MIME
+        // type, move_uploaded_file). It needs the array intact, so the array
+        // itself cannot be passed through a sanitizer. Every field read
+        // directly in this method is sanitized at its point of use.
+        $file      = $_FILES['naws_import_file']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- see comment above; $_FILES is not slashed
         $safe_name = sanitize_file_name( $file['name'] ?? '' );
 
         // Check extension
         $ext = strtolower( pathinfo( $safe_name, PATHINFO_EXTENSION ) );
         if ( 'json' !== $ext ) {
-            wp_safe_redirect( $nonce_url( $redirect_url . '&import_error=' . urlencode( naws__( 'import_file_invalid' ) ) ) );
+            wp_safe_redirect( $nonce_url( $redirect_url . '&import_error=' . rawurlencode( naws__( 'import_file_invalid' ) ) ) );
             exit;
         }
 
         // Check file size (max 100 MB)
         if ( intval( $file['size'] ?? 0 ) > 100 * MB_IN_BYTES ) {
-            wp_safe_redirect( $nonce_url( $redirect_url . '&import_error=' . urlencode( naws__( 'import_file_too_large' ) ) ) );
+            wp_safe_redirect( $nonce_url( $redirect_url . '&import_error=' . rawurlencode( naws__( 'import_file_too_large' ) ) ) );
             exit;
         }
 
@@ -501,7 +513,7 @@ class NAWS_Admin {
         ];
         $uploaded = wp_handle_upload( $file, $overrides );
         if ( isset( $uploaded['error'] ) ) {
-            wp_safe_redirect( $nonce_url( $redirect_url . '&import_error=' . urlencode( 'Could not save uploaded file.' ) ) );
+            wp_safe_redirect( $nonce_url( $redirect_url . '&import_error=' . rawurlencode( 'Could not save uploaded file.' ) ) );
             exit;
         }
         $temp_path = $uploaded['file'];
@@ -510,7 +522,7 @@ class NAWS_Admin {
         $validation = NAWS_Export::validate_import_file( $temp_path );
         if ( ! $validation['valid'] ) {
             wp_delete_file( $temp_path );
-            wp_safe_redirect( $nonce_url( $redirect_url . '&import_error=' . urlencode( $validation['error'] ) ) );
+            wp_safe_redirect( $nonce_url( $redirect_url . '&import_error=' . rawurlencode( $validation['error'] ) ) );
             exit;
         }
 

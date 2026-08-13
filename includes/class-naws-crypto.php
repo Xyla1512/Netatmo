@@ -55,7 +55,9 @@ class NAWS_Crypto {
         }
 
         // Pack: IV (12) + tag (16) + ciphertext
-        return self::PREFIX . base64_encode( $iv . $tag . $ciphertext );
+        // Binary AES-GCM output has to survive a text option column, so it is
+        // base64 for transport, not to obscure anything.
+        return self::PREFIX . base64_encode( $iv . $tag . $ciphertext ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- encoding binary ciphertext for storage, not obfuscation
     }
 
     /**
@@ -74,7 +76,8 @@ class NAWS_Crypto {
             return $value;
         }
 
-        $raw = base64_decode( substr( $value, strlen( self::PREFIX ) ), true );
+        // Counterpart to the base64_encode() in encrypt(); strict mode on.
+        $raw = base64_decode( substr( $value, strlen( self::PREFIX ) ), true ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode -- decoding our own ciphertext envelope, not obfuscation
         if ( $raw === false || strlen( $raw ) < 12 + self::TAG_LEN + 1 ) {
             error_log( 'NAWS Crypto: invalid encrypted payload (decode failed)' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
             return '';

@@ -28,7 +28,10 @@ class NAWS_Cron {
     }
 
     private function __construct() {
-        add_filter( 'cron_schedules',      [ $this, 'add_schedules' ] );
+        // Intervals are built in add_schedules() from a fixed 5..120 minute
+        // list, so the sniff cannot read the value from this line. Five
+        // minutes is deliberate: it matches how often Netatmo itself updates.
+        add_filter( 'cron_schedules', [ $this, 'add_schedules' ] ); // phpcs:ignore WordPress.WP.CronInterval.ChangeDetected -- intervals defined in add_schedules(), minimum 5 minutes by design
         add_action( self::HOOK_FETCH,      [ $this, 'run_fetch' ] );
         add_action( self::HOOK_DAILY,      [ $this, 'run_daily_summary' ] );
         add_action( 'naws_settings_saved', [ $this, 'reschedule' ] );

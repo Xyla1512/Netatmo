@@ -389,11 +389,12 @@ return [
     'chart_co2_prefix'      => 'CO₂',
 
     // ── Shortcode reference ────────────────────────────────────────────
+    // Four more sc_*_desc keys used to sit here, duplicating the shortcode
+    // reference block above. Being later in the array literal they silently
+    // won, so the backend documentation page showed the terse wording - and
+    // sc_history_desc described [naws_table] rather than [naws_history].
+    // Removed; the detailed entries above are the authoritative ones.
     'sc_current_desc'       => 'Shows animated metric cards with the latest sensor values.',
-    'sc_chart_desc'         => 'Beautiful animated gauge for a single metric.',
-    'sc_dashboard_desc'     => 'Displays all modules with current readings, charts and tabs.',
-    'sc_history_desc'       => 'Historical data in a styled table.',
-    'sc_live_desc'          => 'Live dashboard with auto-refresh.',
 
     // ── Forecast ─────────────────────────────────────────────────────
     'forecast_title'            => '%d-Day Forecast',

@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.0
-Stable tag: 1.8.1
+Stable tag: 1.8.2
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -104,6 +104,11 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 7. Export / Import page for backups
 
 == Changelog ==
+
+= 1.8.2 =
+* Fix: the shortcode reference in the backend showed the wrong descriptions. A leftover block of duplicate entries in the language files overrode the detailed ones, and the entry for `[naws_history]` actually described `[naws_table]`.
+* Security: input sanitization on the appearance settings form is now applied directly to the submitted data instead of through an intermediate variable, so automated review tools can see it. The data was sanitized before as well; only the form of the code changed.
+* Changed: redirect URLs are built with RFC 3986 encoding.
 
 = 1.8.1 =
 * Fix: the weather icon showed "overcast" under a cloudless sky. The forecast provider's weather code lumps all cloud layers together, so a thin veil of cirrus counted the same as a low, closed deck. Cloudiness is now read from the cover percentage per layer, with high cloud weighted down — a cirrus sky reads as fair, not overcast.

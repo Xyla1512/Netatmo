@@ -2,6 +2,22 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [1.8.2] – 2026-08-13
+
+### Fixed
+- **The shortcode reference in the backend described the wrong shortcodes.** All three language files carried a leftover block of four `sc_*_desc` keys that duplicated entries defined earlier in the same array. Because a later key wins in a PHP array literal, the short, older wording silently overrode the detailed descriptions — and `sc_history_desc` had drifted furthest, describing `[naws_table]` ("historical data in a styled table") on the documentation entry for `[naws_history]`, which is the annual comparison chart. The duplicates are gone and the detailed descriptions, the ones that match the attribute lists printed beside them, are now the ones displayed.
+
+### Security
+- `$_POST['naws_appearance']` is sanitized on the superglobal itself rather than through an intermediate variable. The behaviour is unchanged — `map_deep( …, 'sanitize_text_field' )` ran before and runs now — but neither PHP_CodeSniffer nor the plugin review scanner tracks sanitization across an assignment, so the previous form read as unsanitized input to both. This is the same class of finding the review team raised in earlier rounds.
+- The `phpcs:ignore` on the `$_FILES` entry now also covers `InputNotSanitized` and states why the array is passed to `wp_handle_upload()` whole.
+- A `phpcs:disable` block in `class-naws-ajax.php` re-enabled fewer sniffs than it disabled, leaving `PreparedSQLPlaceholders.ReplacementsWrongNumber` switched off for the remainder of the file. Both lists now match.
+
+### Changed
+- The six `urlencode()` calls that build redirect query strings are now `rawurlencode()`, which is the RFC 3986 encoding WordPress recommends.
+
+### Development
+- **PHP_CodeSniffer with the WordPress Coding Standards is now set up** (`composer.json`, `.phpcs.xml.dist`). The ruleset is a review gate rather than a style guide: security, database, WordPress API misuse, i18n, prefixing, PHP cross-version compatibility and genuine bug classes such as duplicate array keys. It reports zero findings. The full `WordPress` standard reports roughly 20,700, of which about 19,500 are indentation and array alignment; reformatting for those would touch nearly every line of the plugin without changing what a reviewer sees, so they are deliberately out of the gate and remain available ad hoc.
+
 ## [1.8.1] – 2026-08-09
 
 ### Fixed
