@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.0
-Stable tag: 1.8.2
+Stable tag: 1.8.3
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -104,6 +104,9 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 7. Export / Import page for backups
 
 == Changelog ==
+
+= 1.8.3 =
+* Fix: the Norwegian interface was only half translated. Norwegian arrived with 326 keys and the plugin has since grown to 612, so everything added later — the forecast, the REST API documentation, the shortcode reference and the live dashboard settings — stayed in English. All 272 missing strings are now translated into Bokmal.
 
 = 1.8.2 =
 * Fix: the shortcode reference in the backend showed the wrong descriptions. A leftover block of duplicate entries in the language files overrode the detailed ones, and the entry for `[naws_history]` actually described `[naws_table]`.

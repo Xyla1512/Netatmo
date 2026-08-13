@@ -2,6 +2,15 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [1.8.3] – 2026-08-13
+
+### Fixed
+- **The Norwegian interface was only half translated.** Norwegian was added in 1.6.0 with 326 keys; the file has since grown to 612, and every string added after that point stayed in English. A Norwegian user saw Bokmål and English side by side — often within a single screen, since the newer areas (forecast, REST API documentation, shortcode reference, live dashboard settings) were entirely untranslated while the surrounding chrome was not. All 272 missing strings are now translated, following the terminology already established in the file: *nedbør*, *lufttrykk*, *luftfuktighet*, *vindkast*, *støynivå*, *diagram*, *24t*.
+
+  36 values remain identical to English on purpose: the product name, API terms (`Client ID`, `Client Secret`), shortcode attribute names that must stay literal (`title`, `refresh`), month abbreviations that are the same in Norwegian, words Norwegian shares with English (*Status*, *Type*, *Live*, *Total*, *Storm*, *Min*, *Alias*), the CO₂ symbol, the icon-set style names that are English in every language, and `time_suffix`, which is empty because Norwegian has no equivalent of the German "Uhr".
+
+  Verified mechanically as well as by eye: all three language files carry the same 612 keys with no duplicates, and every `printf` placeholder, HTML tag, entity and `[naws_*]` shortcode name survives translation intact.
+
 ## [1.8.2] – 2026-08-13
 
 ### Fixed
