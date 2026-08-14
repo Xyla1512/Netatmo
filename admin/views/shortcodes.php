@@ -290,10 +290,12 @@ $value_params = [
                 <th><?php naws_e('sc_th_default'); ?></th>
             </tr>
             <tr><td><code>days</code></td><td><?php naws_e('sc_wgt_attr_days'); ?></td><td><span class="naws-tag-default"><?php echo intval( get_option('naws_settings', [])['wgt_days'] ?? 5 ); ?></span></td></tr>
+            <tr><td><code>width</code></td><td><?php naws_e('sc_wgt_attr_width'); ?></td><td><span class="naws-tag-default"><?php echo absint( NAWS_Widget_Data::normalise_width( get_option('naws_settings', [])['wgt_width'] ?? null ) ); ?></span></td></tr>
         </table>
         <div class="naws-inline-examples">
             <div class="naws-inline-ex"><code>[naws_weather_widget]</code> <?php naws_e('sc_wgt_ex_default'); ?></div>
             <div class="naws-inline-ex"><code>[naws_weather_widget days="3"]</code> <?php naws_e('sc_wgt_ex_three'); ?></div>
+            <div class="naws-inline-ex"><code>[naws_weather_widget width="400"]</code> <?php naws_e('sc_wgt_ex_width'); ?></div>
         </div>
     </div>
     </div><!-- /.naws-panel-body -->

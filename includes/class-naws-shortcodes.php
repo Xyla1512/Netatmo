@@ -371,7 +371,7 @@ class NAWS_Shortcodes {
     }
 
     // ----------------------------------------------------------------
-    // [naws_weather_widget days="3|5"]
+    // [naws_weather_widget days="3|5" width="250..500"]
     // Compact sidebar widget: icon and temperature, rain and wind,
     // three or five forecast days.
     // ----------------------------------------------------------------
@@ -379,7 +379,8 @@ class NAWS_Shortcodes {
         $opts = get_option( 'naws_settings', [] );
 
         $atts = shortcode_atts( [
-            'days' => (string) ( $opts['wgt_days'] ?? 5 ),
+            'days'  => (string) ( $opts['wgt_days'] ?? 5 ),
+            'width' => (string) ( $opts['wgt_width'] ?? NAWS_Widget_Data::DEFAULT_WIDTH ),
         ], $atts, 'naws_weather_widget' );
 
         $station = NAWS_Weather_State::read_station();
@@ -419,6 +420,7 @@ class NAWS_Shortcodes {
         $this->enqueue_frontend_styles();
 
         $naws_wgt_state = $state['state'];
+        $naws_wgt_width = $atts['width'];
         $naws_wgt_place = (string) ( $forecast['location_name'] ?? '' );
         $naws_wgt_time  = empty( $forecast['fetched_at'] )
             ? ''

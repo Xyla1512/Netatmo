@@ -482,16 +482,28 @@ $icon_color_keys = [
                             <p class="description"><?php naws_e( 'wgt_days_desc' ); ?></p>
                         </td>
                     </tr>
+                    <tr>
+                        <th><?php naws_e( 'wgt_width_label' ); ?></th>
+                        <td>
+                            <input type="number" name="naws_settings[wgt_width]"
+                                   value="<?php echo esc_attr( NAWS_Widget_Data::normalise_width( $naws_wgt_opts['wgt_width'] ?? null ) ); ?>"
+                                   min="<?php echo esc_attr( NAWS_Widget_Data::MIN_WIDTH ); ?>"
+                                   max="<?php echo esc_attr( NAWS_Widget_Data::MAX_WIDTH ); ?>"
+                                   step="10" class="small-text"> px
+                            <p class="description"><?php naws_e( 'wgt_width_desc' ); ?></p>
+                        </td>
+                    </tr>
                 </table>
 
                 <?php
-                // Live preview in a real 250 px column, so the setting is
-                // judged at the width it will actually be used at. Built the
-                // same way as NAWS_Shortcodes::sc_weather_widget() so the
-                // preview cannot drift from the real frontend output.
+                // Live preview in a column of the configured width, so the
+                // setting is judged at the width it will actually be used at.
+                // Built the same way as NAWS_Shortcodes::sc_weather_widget()
+                // so the preview cannot drift from the real frontend output.
                 $naws_prev_station = NAWS_Weather_State::read_station();
                 $naws_prev_state   = NAWS_Weather_State::get_current();
                 $naws_prev_days    = intval( $naws_wgt_opts['wgt_days'] ?? 5 );
+                $naws_prev_width   = NAWS_Widget_Data::normalise_width( $naws_wgt_opts['wgt_width'] ?? null );
                 $naws_prev_fc      = NAWS_Forecast::get_forecast( $naws_prev_days );
                 $naws_prev_fmt     = static function ( ?float $raw, string $param ): ?array {
                     if ( $raw === null ) return null;
@@ -507,12 +519,14 @@ $icon_color_keys = [
                     $naws_prev_days
                 );
                 ?>
-                <div style="max-width:250px;padding:14px 12px;background:#fbfcfe;border:1px solid #cbd4e0;border-radius:12px;margin:0 0 1rem;">
+                <?php // 24 px is the frame's own horizontal padding, so the widget inside gets exactly the configured width. ?>
+                <div style="max-width:<?php echo absint( $naws_prev_width + 24 ); ?>px;padding:14px 12px;background:#fbfcfe;border:1px solid #cbd4e0;border-radius:12px;margin:0 0 1rem;">
                     <?php
                     if ( $naws_wgt['empty'] ) {
                         echo '<small style="color:#64748b">' . esc_html( naws__( 'wgt_preview_none' ) ) . '</small>';
                     } else {
                         $naws_wgt_state = $naws_prev_state['state'];
+                        $naws_wgt_width = $naws_prev_width;
                         $naws_wgt_place = (string) ( $naws_prev_fc['location_name'] ?? '' );
                         $naws_wgt_time  = empty( $naws_prev_fc['fetched_at'] ) ? '' : wp_date( get_option( 'time_format', 'H:i' ), (int) $naws_prev_fc['fetched_at'] );
                         include NAWS_PLUGIN_DIR . 'templates/weather-widget.php';

@@ -36,19 +36,7 @@ class NAWS_Weather_Icons {
      * @return string          Icon markup, or '' for an unknown state.
      */
     public static function render( string $state, int $size = self::DEFAULT_SIZE ): string {
-        if ( ! in_array( $state, NAWS_Weather_State::STATES, true ) ) {
-            return '';
-        }
-
-        self::queue_defs();
-
-        $naws_wx_state = $state;
-        $naws_wx_size  = max( self::MIN_SIZE, $size );
-        $naws_wx_label = self::label( $state );
-
-        ob_start();
-        include NAWS_PLUGIN_DIR . 'templates/weather-icon.php';
-        return ob_get_clean();
+        return self::render_icon( $state, max( self::MIN_SIZE, $size ), true, false );
     }
 
     /**
@@ -67,16 +55,56 @@ class NAWS_Weather_Icons {
      * @return string         Icon markup, or '' for an unknown state.
      */
     public static function render_inline( string $state, int $size ): string {
+        return self::render_icon( $state, max( 1, $size ), false, true );
+    }
+
+    /**
+     * Render an animated icon that leaves the layout to its caller.
+     *
+     * The third of the three combinations, and the one the sidebar widget's
+     * head needs: it is the statement icon of that widget, so it animates —
+     * but it sits in a flex row the widget owns, so it brings no wrapper.
+     *
+     * render() cannot serve this. It writes --naws-wx-size as an inline
+     * style on its wrapper, and an inline declaration beats every stylesheet
+     * rule, so the fluid clamp() sizing in .naws-wgt-head would never apply.
+     *
+     * The size given here is the floor for the 250 px layout; CSS scales the
+     * icon up from there with the container. It is also what a reader with
+     * the stylesheet blocked gets, which is why it is not left at 1.
+     *
+     * @param  string $state  One of NAWS_Weather_State::STATES.
+     * @param  int    $size   Edge length in px.
+     * @return string         Icon markup, or '' for an unknown state.
+     */
+    public static function render_head( string $state, int $size ): string {
+        return self::render_icon( $state, max( 1, $size ), false, false );
+    }
+
+    /**
+     * Shared body of the three public renderers.
+     *
+     * Private on purpose: the boolean pair is unreadable at a call site, so
+     * callers pick a named method and the switches stay in here.
+     *
+     * @param  string $state   One of NAWS_Weather_State::STATES.
+     * @param  int    $size    Edge length in px, already clamped by the caller.
+     * @param  bool   $wrapper Emit the .naws-weather-icon wrapper div.
+     * @param  bool   $still   Suppress the animations.
+     * @return string          Icon markup, or '' for an unknown state.
+     */
+    private static function render_icon( string $state, int $size, bool $wrapper, bool $still ): string {
         if ( ! in_array( $state, NAWS_Weather_State::STATES, true ) ) {
             return '';
         }
 
         self::queue_defs();
 
-        $naws_wx_state = $state;
-        $naws_wx_size  = max( 1, $size );
-        $naws_wx_label = self::label( $state );
-        $naws_wx_still = true;
+        $naws_wx_state   = $state;
+        $naws_wx_size    = $size;
+        $naws_wx_label   = self::label( $state );
+        $naws_wx_still   = $still;
+        $naws_wx_wrapper = $wrapper;
 
         ob_start();
         include NAWS_PLUGIN_DIR . 'templates/weather-icon.php';

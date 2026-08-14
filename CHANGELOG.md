@@ -2,6 +2,18 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [1.9.0] – 2026-08-14
+
+### Added
+- **The sidebar widget has an adjustable width.** It was fixed to the 250 px column it was drawn against; it can now be set anywhere between 250 and 500 px, either once in *Appearance → Sidebar widget* or per placement through the new `width` attribute: `[naws_weather_widget width="400"]`. Values outside the range are pulled to the nearer bound rather than rejected, the same way `days` already pulls 4 to 5.
+
+  The contents scale with it rather than the frame merely stretching: at 500 px the weather icon is 96 px instead of 64, the temperature 44 px instead of 32, and the forecast icons 40 px instead of 28, all continuously in between. The width is applied as a maximum, not a fixed size, so a widget set to 400 px placed in a 280 px column shrinks to fit instead of overflowing it. Browsers without container query support fall back to exactly the 1.8.x layout.
+
+### Fixed
+- **The widget's weather icon did not move.** The icon at the head of the sidebar widget is that widget's statement — the animated one, as designed. In the 1.8.0 implementation it was rendered through the same call as the small forecast icons, which are deliberately still, and inherited their frozen state: the sun did not turn, the rain did not fall. It now animates. The forecast icons in the widget, in `[naws_forecast]` and in the dashboard strip stay still, which is intentional — moving pictures beside numbers pull the eye off the numbers.
+
+  The cause was that only two of the three sensible icon variants existed. `NAWS_Weather_Icons` now offers `render_head()` alongside `render()` and `render_inline()`, and all three share one private implementation, so wrapper and animation are separate switches instead of one.
+
 ## [1.8.3] – 2026-08-13
 
 ### Fixed

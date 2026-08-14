@@ -20,6 +20,17 @@ class NAWS_Widget_Data {
     const DAY_CHOICES = [ 3, 5 ];
 
     /**
+     * Width bounds in px.
+     *
+     * MIN is the column the layout was drawn against. MAX is where growing
+     * stops paying: past 500 px the five forecast columns are wider than
+     * anything in them and the widget reads as an empty frame.
+     */
+    const MIN_WIDTH     = 250;
+    const MAX_WIDTH     = 500;
+    const DEFAULT_WIDTH = 250;
+
+    /**
      * Build the display structure.
      *
      * @param array $station  [ 'temp'|'rain'|'wind' => [ 'value','unit' ] | null ]
@@ -72,6 +83,29 @@ class NAWS_Widget_Data {
      */
     private static function normalise_days( int $days ): int {
         return $days < 4 ? 3 : 5;
+    }
+
+    /**
+     * Clamp a requested width into the supported range.
+     *
+     * Out-of-range values are pulled to the nearest bound rather than
+     * rejected, the same way normalise_days() pulls 4 to 5: someone who
+     * typed width="600" wants a wide widget, not the 250 px default.
+     *
+     * Anything that is not a positive number at all — an empty attribute, a
+     * stray word, a zero — is treated as "not set" and yields the default.
+     *
+     * @param  mixed $width Raw attribute or option value.
+     * @return int          A width between MIN_WIDTH and MAX_WIDTH.
+     */
+    public static function normalise_width( $width ): int {
+        $width = is_numeric( $width ) ? (int) $width : 0;
+
+        if ( $width <= 0 ) {
+            return self::DEFAULT_WIDTH;
+        }
+
+        return max( self::MIN_WIDTH, min( self::MAX_WIDTH, $width ) );
     }
 
     /** Validate a value/unit pair, returning null for anything unusable. */

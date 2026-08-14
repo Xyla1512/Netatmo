@@ -1511,39 +1511,75 @@
 .naws-live-weather-icon { margin:0 0 18px; }
 
 /* ===============================================================
-   Sidebar widget (v1.8.0)
-   Designed against a 250 px column; it fills its container and stays
-   legible from about 220 px. Namespace .naws-wgt-* — .naws-wx is the
-   forecast card and .naws-wxi are the icon SVGs.
+   Sidebar widget (v1.8.0, fluid since 1.9.0)
+   Drawn against a 250 px column and adjustable up to 500 px through
+   --naws-wgt-max, which the template sets from the setting or the
+   shortcode's width attribute. Namespace .naws-wgt-* — .naws-wx is
+   the forecast card and .naws-wxi are the icon SVGs.
+
+   How the scaling works: every rule states its 250 px value first and
+   then repeats it as a clamp() in cqw units. Where container queries
+   are missing the cqw declaration is invalid and gets dropped, so
+   those browsers keep exactly the 1.8.x layout. No @supports needed.
+
+   The cqw factors are derived, not guessed: 25.6cqw is 64 px at 250 px
+   wide, and the upper clamp bound is the value wanted at 500 px.
    =============================================================== */
 
 .naws-wgt {
   background:#fff; border:1px solid #e2e8f1; border-radius:12px;
   overflow:hidden; color:#121822; font-size:14px; line-height:1.45;
+  /* max-width, not width: in a container narrower than the setting the
+     widget shrinks with it instead of overflowing the sidebar. */
+  width:100%; max-width:var(--naws-wgt-max, 250px);
+  container-type:inline-size;
 }
 .naws-wgt-head { display:flex; align-items:center; gap:10px; padding:12px 12px 10px; }
+.naws-wgt-head { gap:clamp(10px, 4cqw, 18px); padding:clamp(12px, 4.8cqw, 20px) clamp(12px, 4.8cqw, 20px) clamp(10px, 4cqw, 16px); }
 .naws-wgt-head .naws-wxi { flex:0 0 auto; }
+
+/* The head icon comes from render_head(): animated, and sized by the
+   width/height attributes on the svg until this rule overrides them.
+   CSS beats presentation attributes, so 64 px is the floor, not a cap. */
+.naws-wgt-head .naws-wxi { width:clamp(64px, 25.6cqw, 96px); height:clamp(64px, 25.6cqw, 96px); }
+
 .naws-wgt-temp { font-size:32px; font-weight:640; letter-spacing:-.03em; line-height:1; font-variant-numeric:tabular-nums; }
+.naws-wgt-temp { font-size:clamp(32px, 12.8cqw, 44px); }
 .naws-wgt-deg { font-size:18px; font-weight:500; color:#5f6b7b; }
+.naws-wgt-deg { font-size:clamp(18px, 7.2cqw, 24px); }
 .naws-wgt-cond { font-size:12.5px; color:#5f6b7b; margin-top:3px; }
+.naws-wgt-cond { font-size:clamp(12.5px, 5cqw, 16px); }
 
 .naws-wgt-chips { display:flex; gap:8px; padding:0 12px 12px; }
+.naws-wgt-chips { gap:clamp(8px, 3.2cqw, 14px); padding:0 clamp(12px, 4.8cqw, 20px) clamp(12px, 4.8cqw, 20px); }
 .naws-wgt-chip { flex:1; background:#f2f6fc; border-radius:8px; padding:7px 9px; display:flex; flex-direction:column; gap:2px; }
+.naws-wgt-chip { padding:clamp(7px, 2.8cqw, 11px) clamp(9px, 3.6cqw, 14px); }
 .naws-wgt-k { font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:#5f6b7b; }
+.naws-wgt-k { font-size:clamp(9.5px, 3.8cqw, 11.5px); }
 .naws-wgt-v { font-size:13.5px; font-variant-numeric:tabular-nums; }
+.naws-wgt-v { font-size:clamp(13.5px, 5.4cqw, 18px); }
 .naws-wgt-sub { color:#5f6b7b; font-size:11px; }
+.naws-wgt-sub { font-size:clamp(11px, 4.4cqw, 14px); }
 
 /* One column per forecast day, set from the template so 3 and 5 share
    one rule instead of two hard-coded variants. */
 .naws-wgt-strip { display:grid; grid-template-columns:repeat(var(--naws-wgt-cols,5), 1fr); border-top:1px solid #e2e8f1; }
 .naws-wgt-day { display:flex; flex-direction:column; align-items:center; gap:3px; padding:9px 2px 10px; }
+.naws-wgt-day { gap:clamp(3px, 1.2cqw, 6px); padding:clamp(9px, 3.6cqw, 15px) 2px clamp(10px, 4cqw, 16px); }
 .naws-wgt-day + .naws-wgt-day { border-left:1px solid #e2e8f1; }
 .naws-wgt-dow { font-size:9.5px; letter-spacing:.09em; text-transform:uppercase; color:#5f6b7b; }
+.naws-wgt-dow { font-size:clamp(9.5px, 3.8cqw, 12px); }
 .naws-wgt-t { font-size:11.5px; font-variant-numeric:tabular-nums; text-align:center; }
+.naws-wgt-t { font-size:clamp(11.5px, 4.6cqw, 15px); }
 .naws-wgt-lo { color:#5f6b7b; }
+
+/* The day icons grow with the columns but stay still — moving pictures
+   next to numbers pull the eye off the numbers. */
+.naws-wgt-day .naws-wxi { width:clamp(28px, 11.2cqw, 40px); height:clamp(28px, 11.2cqw, 40px); }
 
 .naws-wgt-foot {
   border-top:1px solid #e2e8f1; padding:6px 12px 8px;
   font-size:10px; color:#5f6b7b; letter-spacing:.04em;
   display:flex; justify-content:space-between; gap:8px;
 }
+.naws-wgt-foot { padding:clamp(6px, 2.4cqw, 10px) clamp(12px, 4.8cqw, 20px) clamp(8px, 3.2cqw, 13px); font-size:clamp(10px, 4cqw, 12.5px); }

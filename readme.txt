@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.0
-Stable tag: 1.8.3
+Stable tag: 1.9.0
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -104,6 +104,10 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 7. Export / Import page for backups
 
 == Changelog ==
+
+= 1.9.0 =
+* New: the sidebar widget's width can be set between 250 and 500 pixels, in Appearance or per placement with `[naws_weather_widget width="400"]`. Icon, figures and spacing scale with it — at 500 pixels the weather icon is 96 pixels instead of 64. The width acts as a maximum, so the widget still shrinks to fit a narrower column.
+* Fix: the weather icon at the head of the sidebar widget was frozen. It was rendered through the same call as the small forecast icons, which are deliberately still, and inherited their frozen state. It now animates, while the forecast icons stay still as intended.
 
 = 1.8.3 =
 * Fix: the Norwegian interface was only half translated. Norwegian arrived with 326 keys and the plugin has since grown to 612, so everything added later — the forecast, the REST API documentation, the shortcode reference and the live dashboard settings — stayed in English. All 272 missing strings are now translated into Bokmal.

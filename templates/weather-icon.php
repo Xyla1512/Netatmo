@@ -22,10 +22,11 @@
  * transform-box: fill-box, which the stylesheet sets.
  *
  * Expected variables:
- * @var string $naws_wx_state  One of NAWS_Weather_State::STATES.
- * @var int    $naws_wx_size   Edge length in px (>= 64 for render(), unclamped for render_inline()).
- * @var string $naws_wx_label  Translated aria-label.
- * @var bool   $naws_wx_still  Set by render_inline() only: no wrapper, no animation.
+ * @var string $naws_wx_state    One of NAWS_Weather_State::STATES.
+ * @var int    $naws_wx_size     Edge length in px, already clamped by the caller.
+ * @var string $naws_wx_label    Translated aria-label.
+ * @var bool   $naws_wx_still    Suppress the animations.
+ * @var bool   $naws_wx_wrapper  Emit the .naws-weather-icon wrapper div.
  *
  * @package NAWS
  * @since   1.7.0
@@ -33,11 +34,13 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 ?>
 <?php
-// render_inline() sets $naws_wx_still: no wrapper div, no animation, and
-// the size goes straight onto the svg. render() leaves it unset.
-$naws_wx_still = ! empty( $naws_wx_still );
-$naws_wx_cls   = 'naws-wxi' . ( $naws_wx_still ? ' naws-wxi--still' : '' );
-if ( ! $naws_wx_still ) : ?>
+// Wrapper and animation are independent: render() has both, render_inline()
+// neither, render_head() animates without a wrapper. Without the wrapper the
+// size goes straight onto the svg.
+$naws_wx_still   = ! empty( $naws_wx_still );
+$naws_wx_wrapper = ! empty( $naws_wx_wrapper );
+$naws_wx_cls     = 'naws-wxi' . ( $naws_wx_still ? ' naws-wxi--still' : '' );
+if ( $naws_wx_wrapper ) : ?>
 <div class="naws-weather-icon" style="--naws-wx-size:<?php echo absint( $naws_wx_size ); ?>px">
 <?php endif; ?>
 <?php switch ( $naws_wx_state ) :
@@ -223,4 +226,4 @@ if ( ! $naws_wx_still ) : ?>
 	<?php break;
 
 endswitch; ?>
-<?php if ( ! $naws_wx_still ) : ?></div><?php endif; ?>
+<?php if ( $naws_wx_wrapper ) : ?></div><?php endif; ?>

@@ -147,6 +147,13 @@ class NAWS_Admin {
             $clean['wgt_days'] = intval( $input['wgt_days'] ) < 4 ? 3 : 5;
         }
 
+        // Same idea for the width: clamped into 250–500 by the one function
+        // the shortcode and the template also use, so the stored value can
+        // never disagree with what gets rendered.
+        if ( $sent( 'wgt_width' ) ) {
+            $clean['wgt_width'] = NAWS_Widget_Data::normalise_width( $input['wgt_width'] );
+        }
+
         // Auto-resolved location name is written by NAWS_Forecast, never by
         // a form, so it is carried over untouched.
         $clean['forecast_auto_name'] = $old_opts['forecast_auto_name'] ?? '';
