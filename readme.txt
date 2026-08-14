@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.0
-Stable tag: 1.9.0
+Stable tag: 1.9.1
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -104,6 +104,12 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 7. Export / Import page for backups
 
 == Changelog ==
+
+= 1.9.1 =
+* Changed: the settings screen has been reorganised. The connection card now spans the full width and the settings below sit in two balanced columns, so the forecast settings are visible near the top instead of at the bottom. The page is around 600 pixels shorter and no longer has a large empty area beside the connection card.
+* Changed: one save button for all settings instead of three. The API credentials keep their own form and button.
+* Fix: every save rewrote every setting. Each form carried hidden copies of the fields it did not own, a leftover from before the merge behaviour added in 1.7.0. Saving the units also rewrote the forecast settings and credentials from stale values, so edits made in a second browser tab could be lost. A save now only touches the fields shown in that form.
+* Fix: the decrypted client secret was written into the page three times instead of once, and was submitted when saving unrelated settings.
 
 = 1.9.0 =
 * New: the sidebar widget's width can be set between 250 and 500 pixels, in Appearance or per placement with `[naws_weather_widget width="400"]`. Icon, figures and spacing scale with it — at 500 pixels the weather icon is 96 pixels instead of 64. The width acts as a maximum, so the widget still shrinks to fit a narrower column.

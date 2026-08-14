@@ -2,6 +2,21 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [1.9.1] – 2026-08-14
+
+### Changed
+- **The settings screen has been reorganised.** It used a two-column grid where every row grew as tall as its tallest panel. The connection card is short and the general settings panel is long, so the first row left 561 px of empty space beside the connection card — and the forecast panel, being the third item, started below all of that in the left column with its whole right side empty. Roughly 2180 px of a 3088 px page was blank, and the forecast settings sat near the bottom.
+
+  The connection card now spans the full width, and the settings below are split into five panels assigned by hand to two columns: *Language & station*, *Operation* and *Units* on the left, *Forecast* and *Weather icon* on the right. The forecast panel now begins at 737 px instead of 1389 px, and the page is 2491 px instead of 3088 px.
+
+- **One save button instead of three.** All settings except the API credentials now live in a single form. The credentials keep their own form and their own button, which is also what keeps the client secret out of the rest of the page.
+
+- The *General settings* panel no longer contains a subsection with the same name; the operational settings are grouped under *Operation*. The weather-icon thresholds have their own panel rather than being appended to the forecast settings. Inline styles on this screen moved into stylesheet classes.
+
+### Fixed
+- **Every save wrote every setting back, defeating the merge semantics added in 1.7.0.** Each of the three forms carried hidden mirror copies of the fields it did not own — the workaround from before 1.7.0, left in place after the fix that made it unnecessary. Because of it, saving the units also rewrote the forecast settings, the credentials and the icon thresholds from whatever values the page happened to be loaded with. Anyone editing settings in two browser tabs could silently lose the older tab's changes. The mirrors are gone; a save now touches only the fields actually shown in that form.
+- **The decrypted Netatmo client secret was rendered into the page three times.** Once in its own password field, which is necessary to edit it, and twice more as hidden mirror fields in the other two forms, which was not. It now appears exactly once, and it is no longer submitted when saving unrelated settings.
+
 ## [1.9.0] – 2026-08-14
 
 ### Added

@@ -605,15 +605,93 @@
 /* ============================================================
    Settings Grid
    ============================================================ */
+/* Settings screen layout (reworked 1.9.1).
+
+   Two columns, each stacking its own panels. The panels are assigned to a
+   column in the markup rather than flowed into a grid: a flowing grid makes
+   every row as tall as its tallest cell, which left ~2000 px of dead space
+   on this screen and pushed the forecast panel below the fold. */
 .naws-settings-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
   align-items: start;
 }
+.naws-settings-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
+}
+/* The column owns the spacing; the panel's own margin would double it. */
+.naws-settings-col .naws-admin-panel { margin-bottom: 0; }
+
+/* The connection card sits above the columns at full width. */
+.naws-settings-connection { margin-bottom: 1.5rem; }
+
 @media (max-width: 900px) {
   .naws-settings-grid { grid-template-columns: 1fr; }
 }
+
+/* ---- Settings screen helpers (replace former inline styles) ---- */
+.naws-info-box--flush { margin: 0 0 1rem; }
+
+.naws-panel-intro { margin: 0 0 1rem !important; }
+
+.naws-rule {
+  border: 0;
+  border-top: 1px solid var(--naws-admin-border);
+  margin: 1.5rem 0;
+}
+
+/* Button rows: keeps a submit button and an inline form on one baseline. */
+.naws-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin: 1rem 0 0;
+}
+.naws-inline-form { display: inline-block; }
+
+.naws-text-ok { color: var(--naws-admin-success); font-weight: 600; }
+
+/* Manual data purge — folded away because it deletes readings. */
+.naws-danger-details > summary {
+  cursor: pointer;
+  color: var(--naws-admin-error);
+}
+.naws-danger-body {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+}
+.naws-btn-danger {
+  color: var(--naws-admin-error) !important;
+  border-color: var(--naws-admin-error) !important;
+}
+
+.naws-radio-list { display: flex; flex-direction: column; gap: 0.4rem; }
+
+/* City and country only apply to the manual location mode. Dimmed rather
+   than hidden so the values stay visible while auto mode is selected. */
+.naws-row-dimmed { opacity: 0.5; }
+
+.naws-input-country { width: 60px !important; text-transform: uppercase; }
+
+/* Resolved-location readout under the forecast fields. */
+.naws-result {
+  margin: 1rem 0 0;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-size: 0.875rem;
+}
+.naws-result small { color: var(--naws-admin-muted); }
+.naws-result--ok    { background: #f0fdf4; border-color: #bbf7d0; }
+.naws-result--error { background: #fef2f2; border-color: #fecaca; }
 
 /* ============================================================
    Info Box
