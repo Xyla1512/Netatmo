@@ -207,9 +207,16 @@ if ( ! defined( 'ABSPATH' ) ) exit; ?>
                             <tr>
                                 <th><?php naws_e( 'cron_interval' ); ?></th>
                                 <td>
-                                    <input type="number" name="naws_settings[cron_interval]" value="<?php echo esc_attr( $options['cron_interval'] ?? 10 ); ?>"
-                                           min="5" max="1440" class="small-text">
+                                    <?php $naws_interval = NAWS_Cron::normalise_interval( $options['cron_interval'] ?? NAWS_Cron::DEFAULT_INTERVAL ); ?>
+                                    <select name="naws_settings[cron_interval]">
+                                        <?php foreach ( NAWS_Cron::INTERVALS as $naws_opt ) : ?>
+                                            <option value="<?php echo esc_attr( $naws_opt ); ?>" <?php selected( $naws_interval, $naws_opt ); ?>>
+                                                <?php echo esc_html( sprintf( naws__( 'cron_interval_minutes' ), $naws_opt ) ); ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
                                     <p class="description"><?php naws_e( 'cron_interval_desc' ); ?></p>
+                                    <p class="description"><?php naws_e( 'cron_backoff_desc' ); ?></p>
                                 </td>
                             </tr>
                             <tr>

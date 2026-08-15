@@ -2,6 +2,27 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [1.9.2] – 2026-08-15
+
+### Fixed
+- **Errors made the plugin poll the API harder instead of easing off.** After three consecutive failures the fetch interval is meant to double. It was computed as `min(interval × 2, 60 minutes)`, and that cap sits below two of the intervals the settings offer: at 120 minutes the backoff halved the interval, and at 60 minutes it did nothing at all. The cap is now 120 minutes — the longest schedule that exists — and the result can never fall below the configured interval. When there is nothing longer to back off to, that is now stated in the log instead of being silently ignored.
+
+- **The backoff interval could land on a schedule that was never registered.** The doubled value was rounded *down* to a known schedule, so a 20-minute interval backed off to 30 rather than 40. Rounding now goes up, to 60 in that case, and the timestamp and the schedule key are derived from the same number instead of being computed separately.
+
+- **A cron interval that is not on the list stopped polling entirely.** The field accepted any number from 5 to 1440, but only 5, 10, 15, 20, 30, 60 and 120 minutes exist as WP-Cron schedules. Saving 45 handed `wp_schedule_event()` an unknown key, which fails without a word — leaving the site with no fetch cron until the setting was changed again. The field is a dropdown now, and any stored value is snapped to the nearest schedule on the way in.
+
+- **Night mode stopped reducing anything as soon as the API had trouble.** The decision to skip a run was measured from the last *successful* sync. During an outage that timestamp stops moving, so the skip never triggered and the plugin polled at full rate through the night — exactly when easing off matters. It is measured from the last attempt now, successful or not.
+
+- **The dashboard reported a stale sync during normal night operation.** The staleness warning fires after three times the configured interval, but night mode deliberately runs at twice that. A single late cron run — normal for WP-Cron — was enough to raise a warning for a perfectly healthy site. The threshold now scales with night mode.
+
+### Changed
+- **Local day boundaries follow the timezone configured in WordPress.** Night mode, the daily summary, the history importer and the manual day fetch all had `Europe/Berlin` compiled in, while the dates they were compared against came from `wp_date()`, which uses the site timezone. On any site not set to Berlin the two disagreed: the night window fell on the wrong hours and daily summaries could be cut at the wrong midnight. All of them now go through one `naws_timezone()` helper.
+
+- The night mode description no longer explains the error backoff. Backoff applies whether night mode is on or off, and describing it on the night mode checkbox suggested that switching the checkbox off would switch the backoff off too. It has its own note under the interval setting.
+
+### Added
+- `tests/test-cron-polling.php` — 48 cases covering interval normalisation, the backoff arithmetic and the night-mode skip, including a simulated night with a late-firing cron.
+
 ## [1.9.1] – 2026-08-14
 
 ### Changed

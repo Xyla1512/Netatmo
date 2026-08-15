@@ -12,8 +12,22 @@ class NAWS_Cron {
     /** Option key for adaptive polling state. */
     const OPT_POLLING_STATE = 'naws_polling_state';
 
-    /** Maximum interval (seconds) during error backoff. */
-    const MAX_BACKOFF_INTERVAL = 3600; // 60 minutes
+    /**
+     * The only fetch intervals (minutes) that exist as WP-Cron schedules.
+     * Anything stored in the settings has to be one of these — see
+     * normalise_interval().
+     */
+    const INTERVALS = [ 5, 10, 15, 20, 30, 60, 120 ];
+
+    /** Default fetch interval (minutes) when nothing is configured. */
+    const DEFAULT_INTERVAL = 10;
+
+    /**
+     * Maximum interval (seconds) during error backoff: the longest schedule
+     * that actually exists. A lower cap would make the backoff *shorten* the
+     * interval for anyone polling every 60 or 120 minutes.
+     */
+    const MAX_BACKOFF_INTERVAL = 7200; // 120 minutes
 
     /** Number of consecutive errors before backoff kicks in. */
     const ERROR_THRESHOLD = 3;
@@ -41,8 +55,43 @@ class NAWS_Cron {
     // Schedules
     // ────────────────────────────────────────────────────────────────
 
+    /**
+     * Snap a requested interval to the nearest schedule that exists.
+     *
+     * wp_schedule_event() silently fails on an unknown schedule key, so an
+     * unlisted value such as 45 would leave the site with no fetch cron at
+     * all. Ties go to the longer interval (less polling).
+     *
+     * @param  mixed $minutes  Requested interval in minutes.
+     * @return int             One of self::INTERVALS.
+     */
+    public static function normalise_interval( $minutes ) {
+        $minutes = is_numeric( $minutes ) ? intval( $minutes ) : self::DEFAULT_INTERVAL;
+        if ( $minutes <= 0 ) {
+            return self::DEFAULT_INTERVAL;
+        }
+
+        $best = self::INTERVALS[0];
+        foreach ( self::INTERVALS as $candidate ) {
+            if ( abs( $candidate - $minutes ) <= abs( $best - $minutes ) ) {
+                $best = $candidate;
+            }
+        }
+        return $best;
+    }
+
+    /**
+     * Configured fetch interval in seconds, snapped to a real schedule.
+     *
+     * @return int
+     */
+    private static function base_interval() {
+        $opts = get_option( 'naws_settings', [] );
+        return self::normalise_interval( $opts['cron_interval'] ?? self::DEFAULT_INTERVAL ) * MINUTE_IN_SECONDS;
+    }
+
     public function add_schedules( $schedules ) {
-        foreach ( [ 5, 10, 15, 20, 30, 60, 120 ] as $min ) {
+        foreach ( self::INTERVALS as $min ) {
             $key = 'naws_' . $min . '_minutes';
             if ( ! isset( $schedules[$key] ) ) {
                 $schedules[$key] = [
@@ -66,14 +115,13 @@ class NAWS_Cron {
     public static function schedule() {
         // Fetch interval
         if ( ! wp_next_scheduled( self::HOOK_FETCH ) ) {
-            $options  = get_option( 'naws_settings', [] );
-            $interval = max( 5, intval( $options['cron_interval'] ?? 10 ) );
+            $interval = intval( self::base_interval() / MINUTE_IN_SECONDS );
             wp_schedule_event( time(), 'naws_' . $interval . '_minutes', self::HOOK_FETCH );
         }
 
-        // Daily summary: fire at 00:01 Berlin time each night
+        // Daily summary: fire at 00:01 site-local time each night
         if ( ! wp_next_scheduled( self::HOOK_DAILY ) ) {
-            $tz             = new DateTimeZone( 'Europe/Berlin' );
+            $tz             = naws_timezone();
             $today_00_01    = ( new DateTimeImmutable( 'today 00:01:00', $tz ) )->getTimestamp();
             $next_run       = $today_00_01 < time()
                 ? $today_00_01 + DAY_IN_SECONDS
@@ -106,6 +154,7 @@ class NAWS_Cron {
      *   current_interval:   int (seconds),
      *   last_success:       int (timestamp),
      *   last_error:         int (timestamp),
+     *   last_attempt:       int (timestamp of the last fetch that ran, success or not),
      * }
      */
     public static function get_polling_state() {
@@ -114,6 +163,7 @@ class NAWS_Cron {
             'current_interval'   => 0, // 0 = use configured interval
             'last_success'       => 0,
             'last_error'         => 0,
+            'last_attempt'       => 0,
         ];
         $state = get_option( self::OPT_POLLING_STATE, [] );
         return wp_parse_args( $state, $defaults );
@@ -130,6 +180,7 @@ class NAWS_Cron {
         $state['consecutive_errors'] = 0;
         $state['current_interval']   = 0; // Reset to configured interval
         $state['last_success']       = time();
+        $state['last_attempt']       = time();
         update_option( self::OPT_POLLING_STATE, $state, false );
 
         // If we were in backoff, reschedule to normal interval
@@ -147,35 +198,91 @@ class NAWS_Cron {
     private static function record_error() {
         $state = self::get_polling_state();
         $state['consecutive_errors']++;
-        $state['last_error'] = time();
+        $state['last_error']   = time();
+        $state['last_attempt'] = time();
 
         // Apply backoff after threshold
         if ( $state['consecutive_errors'] >= self::ERROR_THRESHOLD ) {
-            $opts        = get_option( 'naws_settings', [] );
-            $base_sec    = max( 5, intval( $opts['cron_interval'] ?? 10 ) ) * MINUTE_IN_SECONDS;
-            $new_interval = min( $base_sec * 2, self::MAX_BACKOFF_INTERVAL );
-            $state['current_interval'] = $new_interval;
+            $base_min = intval( self::base_interval() / MINUTE_IN_SECONDS );
+            $new_min  = self::backoff_interval( $base_min );
 
-            // Reschedule with longer interval
-            wp_clear_scheduled_hook( self::HOOK_FETCH );
-            $new_min = intval( $new_interval / MINUTE_IN_SECONDS );
-            // Find nearest valid schedule key
-            $valid_mins = [ 5, 10, 15, 20, 30, 60, 120 ];
-            $schedule_min = $valid_mins[0];
-            foreach ( $valid_mins as $vm ) {
-                if ( $vm <= $new_min ) {
-                    $schedule_min = $vm;
-                }
+            if ( $new_min > $base_min ) {
+                $state['current_interval'] = $new_min * MINUTE_IN_SECONDS;
+
+                // Reschedule with the longer interval
+                wp_clear_scheduled_hook( self::HOOK_FETCH );
+                wp_schedule_event(
+                    time() + ( $new_min * MINUTE_IN_SECONDS ),
+                    'naws_' . $new_min . '_minutes',
+                    self::HOOK_FETCH
+                );
+                NAWS_Logger::warning( 'cron', sprintf(
+                    'Error backoff active: %d consecutive errors. Polling interval increased to %d minutes.',
+                    $state['consecutive_errors'],
+                    $new_min
+                ) );
+            } else {
+                // Already at the longest schedule – nothing left to back off to.
+                $state['current_interval'] = 0;
+                NAWS_Logger::warning( 'cron', sprintf(
+                    'Error backoff: %d consecutive errors. Interval already at the maximum of %d minutes.',
+                    $state['consecutive_errors'],
+                    $base_min
+                ) );
             }
-            wp_schedule_event( time() + $new_interval, 'naws_' . $schedule_min . '_minutes', self::HOOK_FETCH );
-            NAWS_Logger::warning( 'cron', sprintf(
-                'Error backoff active: %d consecutive errors. Polling interval increased to %d minutes.',
-                $state['consecutive_errors'],
-                $new_min
-            ) );
         }
 
         update_option( self::OPT_POLLING_STATE, $state, false );
+    }
+
+    /**
+     * The interval (minutes) to fall back to while errors persist.
+     *
+     * Doubles the configured interval, then rounds up to a schedule that
+     * actually exists. Two guarantees the previous version broke: the result is
+     * never *shorter* than the configured interval — capping at 60 minutes used
+     * to make a 120-minute setting poll twice as often after an error — and it
+     * is always a key from self::INTERVALS, so wp_schedule_event() cannot fail
+     * silently. Returns $base_minutes unchanged when nothing longer exists.
+     *
+     * Pure function: no options, no clock. Covered by tests/test-cron-polling.php.
+     *
+     * @param  int $base_minutes  Configured interval, already normalised.
+     * @return int                Backoff interval in minutes.
+     */
+    public static function backoff_interval( $base_minutes ) {
+        $base_minutes = self::normalise_interval( $base_minutes );
+        $wanted       = min( $base_minutes * 2, intval( self::MAX_BACKOFF_INTERVAL / MINUTE_IN_SECONDS ) );
+
+        foreach ( self::INTERVALS as $candidate ) {
+            if ( $candidate >= $wanted ) {
+                return max( $base_minutes, $candidate );
+            }
+        }
+        return max( $base_minutes, self::INTERVALS[ count( self::INTERVALS ) - 1 ] );
+    }
+
+    /**
+     * Whether a due fetch should be skipped to reach the reduced night rate.
+     *
+     * Pure function: no options, no clock. Covered by tests/test-cron-polling.php.
+     *
+     * @param  int  $now           Current timestamp.
+     * @param  int  $last_attempt  Timestamp of the last fetch that ran (0 = never).
+     * @param  int  $base_seconds  Configured interval in seconds.
+     * @param  bool $night         Whether the night window is currently open.
+     * @return bool
+     */
+    public static function should_skip( $now, $last_attempt, $base_seconds, $night ) {
+        if ( ! $night || $last_attempt <= 0 ) {
+            return false;
+        }
+
+        // Skip when less than 1.5x the interval has passed, so every other run
+        // survives and the effective interval is doubled. The half-slot margin
+        // is deliberate: WP-Cron fires late, and a strict 2x test would let a
+        // slightly delayed run through and cancel the reduction.
+        return ( $now - $last_attempt ) < ( $base_seconds * 1.5 );
     }
 
     /**
@@ -185,8 +292,15 @@ class NAWS_Cron {
         delete_option( self::OPT_POLLING_STATE );
     }
 
+    /** First hour (site-local) of the night window. */
+    const NIGHT_START_HOUR = 23;
+
+    /** First hour (site-local) after the night window. */
+    const NIGHT_END_HOUR = 6;
+
     /**
-     * Check if we're currently in night mode (reduced polling 23:00–06:00).
+     * Check if we're currently in night mode (reduced polling 23:00–06:00
+     * in the site's timezone, the same one wp_date() formats with).
      *
      * @return bool
      */
@@ -196,9 +310,8 @@ class NAWS_Cron {
             return false;
         }
 
-        $tz   = new DateTimeZone( 'Europe/Berlin' );
-        $hour = intval( ( new DateTimeImmutable( 'now', $tz ) )->format( 'G' ) );
-        return ( $hour >= 23 || $hour < 6 );
+        $hour = intval( ( new DateTimeImmutable( 'now', naws_timezone() ) )->format( 'G' ) );
+        return ( $hour >= self::NIGHT_START_HOUR || $hour < self::NIGHT_END_HOUR );
     }
 
     /**
@@ -208,21 +321,17 @@ class NAWS_Cron {
      * @return bool True if this run should be skipped.
      */
     private static function should_skip_night_mode() {
-        if ( ! self::is_night_mode() ) {
-            return false;
-        }
-
-        // Use a simple toggle: skip if the last run was recent (within normal interval)
         $state = self::get_polling_state();
-        $opts  = get_option( 'naws_settings', [] );
-        $base  = max( 5, intval( $opts['cron_interval'] ?? 10 ) ) * MINUTE_IN_SECONDS;
 
-        // Skip if last success was less than 2x interval ago (effectively doubling interval)
-        if ( $state['last_success'] > 0 && ( time() - $state['last_success'] ) < ( $base * 1.5 ) ) {
-            return true;
-        }
-
-        return false;
+        // Measure from the last *attempt*, not the last success: if the API is
+        // failing all night, last_success never moves and the skip would never
+        // fire — dropping the load reduction exactly when it matters most.
+        return self::should_skip(
+            time(),
+            intval( $state['last_attempt'] ),
+            self::base_interval(),
+            self::is_night_mode()
+        );
     }
 
     // ────────────────────────────────────────────────────────────────
@@ -309,7 +418,7 @@ class NAWS_Cron {
         $last_run = get_option( 'naws_last_daily_summary', '' );
         if ( $last_run !== $yesterday ) {
             try {
-                $tz        = new DateTimeZone( 'Europe/Berlin' );
+                $tz        = naws_timezone();
                 $day_start = ( new DateTimeImmutable( $yesterday . ' 00:00:00', $tz ) )->getTimestamp();
                 $day_end   = ( new DateTimeImmutable( $yesterday . ' 23:59:59', $tz ) )->getTimestamp();
                 $jobs      = NAWS_Importer::build_job_list( $day_start, $day_end );
@@ -337,7 +446,7 @@ class NAWS_Cron {
     // ────────────────────────────────────────────────────────────────
 
     public function run_daily_summary() {
-        $tz        = new DateTimeZone( 'Europe/Berlin' );
+        $tz        = naws_timezone();
         $yesterday = wp_date( 'Y-m-d', strtotime( 'yesterday' ) );
 
         $day_start = ( new DateTimeImmutable( $yesterday . ' 00:00:00', $tz ) )->getTimestamp();
@@ -392,8 +501,7 @@ class NAWS_Cron {
      */
     public static function get_health_status() {
         $state = self::get_polling_state();
-        $opts  = get_option( 'naws_settings', [] );
-        $base  = max( 5, intval( $opts['cron_interval'] ?? 10 ) ) * MINUTE_IN_SECONDS;
+        $base  = self::base_interval();
 
         // No successful sync ever
         if ( $state['last_success'] === 0 ) {
@@ -417,8 +525,11 @@ class NAWS_Cron {
             ];
         }
 
-        // Stale: no sync for > 3x interval
-        if ( $since_last > $base * 3 ) {
+        // Stale: no sync for > 3x interval. Night mode already runs at 2x, so
+        // the threshold scales with it — otherwise one late cron run during the
+        // night raises a warning for perfectly normal operation.
+        $stale_factor = self::is_night_mode() ? 6 : 3;
+        if ( $since_last > $base * $stale_factor ) {
             return [
                 'status'  => 'warning',
                 'message' => sprintf( naws__( 'health_stale_sync' ), intval( $since_last / 60 ) ),

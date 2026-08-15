@@ -121,7 +121,7 @@ class NAWS_Importer {
 
         // Compute allowed day range from the ORIGINAL function parameters (not modified vars).
         // The API sometimes returns ±1 extra day; we only save days within [date_begin..date_end].
-        $tz_filter   = new DateTimeZone( 'Europe/Berlin' );
+        $tz_filter   = naws_timezone();
         $allowed_min   = ( new DateTimeImmutable( '@' . $date_begin ) )
                             ->setTimezone( $tz_filter )
                             ->format( 'Y-m-d' );
@@ -148,8 +148,8 @@ class NAWS_Importer {
 
         $last_day = max( array_keys( $daily ) );
         if ( $chunk_end < $date_end ) {
-            // next_begin = midnight Berlin of the day after last_day
-            $tz_b      = new DateTimeZone( 'Europe/Berlin' );
+            // next_begin = site-local midnight of the day after last_day
+            $tz_b      = naws_timezone();
             $dt_next   = new DateTime( $last_day . ' 00:00:00', $tz_b );
             $dt_next->modify( '+1 day' );
             $next_begin = $dt_next->getTimestamp();
@@ -206,13 +206,13 @@ class NAWS_Importer {
      * Returns: [ 'Y-m-d' => [ 'TypeName' => [v, ...], ... ], ... ]
      */
     /**
-     * Convert a Unix timestamp to a calendar date string in Europe/Berlin timezone.
+     * Convert a Unix timestamp to a calendar date string in the site timezone.
      * This is critical: Netatmo returns UTC timestamps, but we want local calendar days.
      * e.g. 1713479400 = 2024-04-18 22:30 UTC = 2024-04-19 00:30 Berlin → "2024-04-19"
      */
-    private static function ts_to_berlin_date( int $ts ): string {
+    private static function ts_to_local_date( int $ts ): string {
         static $tz = null;
-        if ( $tz === null ) $tz = new DateTimeZone( 'Europe/Berlin' );
+        if ( $tz === null ) $tz = naws_timezone();
         // '@timestamp' creates UTC object; setTimezone() then converts to local date correctly
         return ( new DateTimeImmutable( '@' . $ts ) )
                     ->setTimezone( $tz )
@@ -245,7 +245,7 @@ class NAWS_Importer {
                 foreach ( $entry['value'] as $i => $val_arr ) {
                     if ( ! is_array( $val_arr ) ) $val_arr = [ $val_arr ];
                     $entry_ts = $ts + ( $i * $step );
-                    $day_key  = self::ts_to_berlin_date( $entry_ts );
+                    $day_key  = self::ts_to_local_date( $entry_ts );
                     foreach ( $types as $j => $type ) {
                         $v = $val_arr[ $j ] ?? null;
                         if ( $v !== null && $v !== false ) {
@@ -261,7 +261,7 @@ class NAWS_Importer {
         foreach ( $body as $ts_str => $val_arr ) {
             if ( ! is_numeric( $ts_str ) ) continue;
             $ts      = intval( $ts_str );
-            $day_key = self::ts_to_berlin_date( $ts );
+            $day_key = self::ts_to_local_date( $ts );
             if ( ! is_array( $val_arr ) ) $val_arr = [ $val_arr ];
             foreach ( $types as $j => $type ) {
                 $v = $val_arr[ $j ] ?? null;

@@ -147,8 +147,8 @@ class NAWS_Ajax {
         $is_rain = ( $module_type === 'NAModule3' );
 
         if ( $is_rain ) {
-            // Align to Europe/Berlin midnight (same as importer)
-            $tz = new DateTimeZone( 'Europe/Berlin' );
+            // Align to site-local midnight (same as importer)
+            $tz = naws_timezone();
             $dt = new DateTime( '@' . $date_begin );
             $dt->setTimezone( $tz ); $dt->setTime( 0, 0, 0 );
             $date_begin = $dt->getTimestamp();
@@ -584,7 +584,7 @@ class NAWS_Ajax {
         }
 
         // Fetch directly from Netatmo API – same as History Import, independent of naws_readings
-        $tz        = new DateTimeZone( 'Europe/Berlin' );
+        $tz        = naws_timezone();
         $day_start = ( new DateTimeImmutable( $date . ' 00:00:00', $tz ) )->getTimestamp();
         $day_end   = ( new DateTimeImmutable( $date . ' 23:59:59', $tz ) )->getTimestamp();
 

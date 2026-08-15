@@ -524,8 +524,8 @@ class NAWS_Database {
             $date = wp_date( 'Y-m-d', strtotime( 'yesterday' ) );
         }
 
-        // Use Europe/Berlin timezone so local day boundaries are correct
-        $tz        = new DateTimeZone( 'Europe/Berlin' );
+        // Use the site timezone so local day boundaries match wp_date() above
+        $tz        = naws_timezone();
         $day_start = ( new DateTimeImmutable( $date . ' 00:00:00', $tz ) )->getTimestamp();
         $day_end   = ( new DateTimeImmutable( $date . ' 23:59:59', $tz ) )->getTimestamp();
 

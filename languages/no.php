@@ -89,6 +89,8 @@ return [
     'client_id_placeholder'    => 'Din Netatmo Client ID',
     'cron_interval'           => 'Cron-intervall (minutter)',
     'cron_interval_desc'    => 'Minimum: 5 minutter. Merk: Netatmo oppdaterer sensorene hvert 5. minutt.',
+    'cron_interval_minutes' => 'Hvert %d. minutt',
+    'cron_backoff_desc'     => 'Ved feil trer en backoff inn automatisk: etter 3 feil på rad dobles intervallet (høyst 120 minutter), og det tilbakestilles ved første vellykkede henting. Dette gjelder uavhengig av nattmodus.',
     'data_retention'          => 'Datalagring',
     'data_kept'             => '✅ Alle data lagres permanent.',
     'data_kept_desc'        => 'Ingen automatisk sletting. Du kan rydde bort gamle data manuelt under ved behov.',
@@ -534,8 +536,8 @@ return [
 
     // ── Smart Polling & Health ──────────────────────────────────────
     'night_mode'               => 'Nattmodus',
-    'night_mode_label'         => 'Aktiver redusert polling mellom 23:00–06:00',
-    'night_mode_desc'          => 'I nattetimene dobles intervallet for å redusere serverbelastningen. Feilhåndtering skjer automatisk: etter 3 påfølgende feil dobles intervallet, og gjenopprettes umiddelbart ved suksess.',
+    'night_mode_label'         => 'Aktiver redusert polling mellom 23:00 og 06:00',
+    'night_mode_desc'          => 'I nattetimene hoppes annenhver henting over, slik at intervallet dobles. Tidsvinduet følger tidssonen som er satt i WordPress.',
     'health_ok'                => 'Sync OK (%d min. siden)',
     'health_night_mode'        => 'Nattmodus aktiv (redusert polling)',
     'health_stale_sync'        => 'Advarsel: Siste sync %d minutter siden',

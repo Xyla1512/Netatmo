@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.0
-Stable tag: 1.9.1
+Stable tag: 1.9.2
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -104,6 +104,14 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 7. Export / Import page for backups
 
 == Changelog ==
+
+= 1.9.2 =
+* Fix: repeated API errors made the plugin poll harder rather than easing off. The interval is meant to double after three failures, but the ceiling on that calculation sat below the longest intervals the settings offer, so a 120-minute interval was halved and a 60-minute one never changed at all.
+* Fix: a cron interval that is not one of the available schedules stopped polling completely. The field accepted any value from 5 to 1440 minutes while only seven of them exist as schedules, and an unlisted value such as 45 left the site with no fetch cron. The interval is a dropdown now, and stored values are snapped to the nearest schedule.
+* Fix: night mode stopped reducing polling as soon as the API had trouble, because it measured from the last successful sync rather than the last attempt.
+* Fix: the dashboard warned about a stale sync during normal night operation. The warning threshold now accounts for the doubled night interval.
+* Changed: night mode, daily summaries and the history importer now use the timezone configured in WordPress instead of Europe/Berlin. On sites in other timezones the night window fell on the wrong hours and daily boundaries could be cut at the wrong midnight.
+* Changed: the error backoff is described under the interval setting rather than on the night mode checkbox. It applies regardless of night mode.
 
 = 1.9.1 =
 * Changed: the settings screen has been reorganised. The connection card now spans the full width and the settings below sit in two balanced columns, so the forecast settings are visible near the top instead of at the bottom. The page is around 600 pixels shorter and no longer has a large empty area beside the connection card.

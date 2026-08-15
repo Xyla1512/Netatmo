@@ -108,7 +108,9 @@ class NAWS_Admin {
                 ? NAWS_Crypto::encrypt( $raw ) : $raw;
         }
 
-        if ( $sent( 'cron_interval' ) )  $clean['cron_interval']  = max( 5,  intval( $input['cron_interval'] ) );
+        // Snap to a real WP-Cron schedule: an unlisted value such as 45 would
+        // make wp_schedule_event() fail silently and stop polling altogether.
+        if ( $sent( 'cron_interval' ) )  $clean['cron_interval']  = NAWS_Cron::normalise_interval( $input['cron_interval'] );
         if ( $sent( 'data_retention' ) ) $clean['data_retention'] = max( 30, intval( $input['data_retention'] ) );
 
         if ( $sent( 'language' ) ) {

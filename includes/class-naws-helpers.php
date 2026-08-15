@@ -40,6 +40,20 @@ function naws_kses_svg( string $svg ): string {
     return wp_kses( $svg, naws_svg_kses_args() );
 }
 
+/**
+ * The timezone all local day boundaries and hour-of-day checks are based on.
+ *
+ * This is the site timezone, matching what wp_date() already formats with.
+ * Everything in this plugin that turns a calendar date into a timestamp — daily
+ * summaries, the importer, night mode — has to agree on one zone, or the day
+ * boundaries drift apart between components.
+ *
+ * @return DateTimeZone
+ */
+function naws_timezone(): DateTimeZone {
+    return wp_timezone();
+}
+
 class NAWS_Helpers {
 
     public static function get_label( $parameter ) {

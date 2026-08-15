@@ -89,6 +89,8 @@ return [
     'client_id_placeholder'    => 'Deine Netatmo Client ID',
     'cron_interval'         => 'Cron-Intervall (Minuten)',
     'cron_interval_desc'    => 'Minimum: 5 Minuten. Hinweis: Netatmo aktualisiert Sensoren alle 5 Minuten.',
+    'cron_interval_minutes' => 'Alle %d Minuten',
+    'cron_backoff_desc'     => 'Bei Störungen greift automatisch ein Backoff: nach 3 Fehlern in Folge wird das Intervall verdoppelt (höchstens 120 Minuten) und beim ersten Erfolg sofort wieder zurückgesetzt. Das gilt unabhängig vom Nachtmodus.',
     'data_retention'        => 'Datenhaltung',
     'data_kept'             => '✅ Alle Daten werden dauerhaft gespeichert.',
     'data_kept_desc'        => 'Es findet keine automatische Löschung statt. Du kannst unten manuell eine Bereinigung durchführen falls nötig.',
@@ -534,8 +536,8 @@ return [
 
     // ── Smartes Polling & Health ────────────────────────────────────
     'night_mode'               => 'Nachtmodus',
-    'night_mode_label'         => 'Reduziertes Polling zwischen 23:00–06:00 Uhr aktivieren',
-    'night_mode_desc'          => 'In den Nachtstunden wird das Abfrage-Intervall verdoppelt, um die Serverlast zu reduzieren. Error-Backoff wird automatisch behandelt: nach 3 aufeinanderfolgenden Fehlern wird das Intervall verdoppelt und erholt sich sofort bei Erfolg.',
+    'night_mode_label'         => 'Reduziertes Polling zwischen 23:00 und 06:00 Uhr aktivieren',
+    'night_mode_desc'          => 'In den Nachtstunden wird jede zweite Abfrage übersprungen, das Intervall also verdoppelt. Maßgeblich ist die in WordPress eingestellte Zeitzone.',
     'health_ok'                => 'Sync OK (vor %d Min.)',
     'health_night_mode'        => 'Nachtmodus aktiv (reduziertes Polling)',
     'health_stale_sync'        => 'Warnung: Letzter Sync vor %d Minuten',
