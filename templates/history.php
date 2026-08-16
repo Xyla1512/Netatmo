@@ -89,12 +89,12 @@ $_naws_total_history_charts = 5 + count( $_naws_m4_charts );
       <div class="naws-hc-wrap" data-chart="temp_minmax">
         <div class="naws-hc-bar">
           <div class="naws-hc-title"><?php naws_e( 'hc_temp_minmax' ); ?></div>
-          <div class="naws-hc-legend" id="<?php echo esc_attr($widget_id); ?>-leg-temp_minmax"></div>
           <button class="naws-hc-expand" data-target="temp_minmax" title="<?php echo esc_attr( naws__( 'expand_chart' ) ); ?>">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
           </button>
         </div>
         <canvas id="<?php echo esc_attr($widget_id); ?>-temp_minmax" height="90"></canvas>
+        <div class="naws-hc-legend" id="<?php echo esc_attr($widget_id); ?>-leg-temp_minmax"></div>
       </div>
       <?php endif; ?>
 
@@ -103,12 +103,12 @@ $_naws_total_history_charts = 5 + count( $_naws_m4_charts );
       <div class="naws-hc-wrap" data-chart="temp_avg">
         <div class="naws-hc-bar">
           <div class="naws-hc-title"><?php naws_e( 'hc_temp_avg' ); ?></div>
-          <div class="naws-hc-legend" id="<?php echo esc_attr($widget_id); ?>-leg-temp_avg"></div>
           <button class="naws-hc-expand" data-target="temp_avg" title="<?php echo esc_attr( naws__( 'expand_chart' ) ); ?>">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
           </button>
         </div>
         <canvas id="<?php echo esc_attr($widget_id); ?>-temp_avg" height="90"></canvas>
+        <div class="naws-hc-legend" id="<?php echo esc_attr($widget_id); ?>-leg-temp_avg"></div>
       </div>
       <?php endif; ?>
 
@@ -117,12 +117,12 @@ $_naws_total_history_charts = 5 + count( $_naws_m4_charts );
       <div class="naws-hc-wrap" data-chart="pressure">
         <div class="naws-hc-bar">
           <div class="naws-hc-title"><?php naws_e( 'hc_pressure' ); ?></div>
-          <div class="naws-hc-legend" id="<?php echo esc_attr($widget_id); ?>-leg-pressure"></div>
           <button class="naws-hc-expand" data-target="pressure" title="<?php echo esc_attr( naws__( 'expand_chart' ) ); ?>">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
           </button>
         </div>
         <canvas id="<?php echo esc_attr($widget_id); ?>-pressure" height="90"></canvas>
+        <div class="naws-hc-legend" id="<?php echo esc_attr($widget_id); ?>-leg-pressure"></div>
       </div>
       <?php endif; ?>
 
@@ -131,12 +131,12 @@ $_naws_total_history_charts = 5 + count( $_naws_m4_charts );
       <div class="naws-hc-wrap" data-chart="rain">
         <div class="naws-hc-bar">
           <div class="naws-hc-title"><?php naws_e( 'hc_rain' ); ?></div>
-          <div class="naws-hc-legend" id="<?php echo esc_attr($widget_id); ?>-leg-rain"></div>
           <button class="naws-hc-expand" data-target="rain" title="<?php echo esc_attr( naws__( 'expand_chart' ) ); ?>">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
           </button>
         </div>
         <canvas id="<?php echo esc_attr($widget_id); ?>-rain" height="90"></canvas>
+        <div class="naws-hc-legend" id="<?php echo esc_attr($widget_id); ?>-leg-rain"></div>
       </div>
       <?php endif; ?>
 
@@ -145,12 +145,12 @@ $_naws_total_history_charts = 5 + count( $_naws_m4_charts );
       <div class="naws-hc-wrap" data-chart="humidity">
         <div class="naws-hc-bar">
           <div class="naws-hc-title"><?php naws_e( 'hc_humidity' ); ?></div>
-          <div class="naws-hc-legend" id="<?php echo esc_attr($widget_id); ?>-leg-humidity"></div>
           <button class="naws-hc-expand" data-target="humidity" title="<?php echo esc_attr( naws__( 'expand_chart' ) ); ?>">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
           </button>
         </div>
         <canvas id="<?php echo esc_attr($widget_id); ?>-humidity" height="90"></canvas>
+        <div class="naws-hc-legend" id="<?php echo esc_attr($widget_id); ?>-leg-humidity"></div>
       </div>
       <?php endif; ?>
 
@@ -160,12 +160,12 @@ $_naws_total_history_charts = 5 + count( $_naws_m4_charts );
       <div class="naws-hc-wrap" data-chart="<?php echo esc_attr( $_m4c['id'] ); ?>">
         <div class="naws-hc-bar">
           <div class="naws-hc-title"><?php echo wp_kses_post( $_m4c['title'] ); ?></div>
-          <div class="naws-hc-legend" id="<?php echo esc_attr( $widget_id . '-leg-' . $_m4c['id'] ); ?>"></div>
           <button class="naws-hc-expand" data-target="<?php echo esc_attr( $_m4c['id'] ); ?>" title="<?php echo esc_attr( naws__( 'expand_chart' ) ); ?>">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
           </button>
         </div>
         <canvas id="<?php echo esc_attr( $widget_id . '-' . $_m4c['id'] ); ?>" height="90"></canvas>
+        <div class="naws-hc-legend" id="<?php echo esc_attr( $widget_id . '-leg-' . $_m4c['id'] ); ?>"></div>
       </div>
       <?php endif; ?>
       <?php endforeach; ?>
@@ -180,7 +180,6 @@ $_naws_total_history_charts = 5 + count( $_naws_m4_charts );
   <div class="naws-hist-modal-box">
     <div class="naws-hist-modal-hdr">
       <span class="naws-hist-modal-title"></span>
-      <div class="naws-hist-modal-leg"></div>
       <button class="naws-hist-modal-close">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
@@ -188,45 +187,52 @@ $_naws_total_history_charts = 5 + count( $_naws_m4_charts );
     <div class="naws-hist-modal-body">
       <canvas id="<?php echo esc_attr($widget_id); ?>-modal-canvas"></canvas>
     </div>
+    <div class="naws-hist-modal-leg"></div>
   </div>
 </div>
 
 <!-- Styles moved to assets/css/frontend.css (.naws-hist scope) -->
 
 <?php
-// Inject all PHP-derived values as a JS data object (runs before the main script).
-wp_add_inline_script( 'naws-frontend', 'var NAWS_HIST = ' . wp_json_encode( [
-    'WID'         => $widget_id,
-    'AJAX'        => $ajax_url,
-    'PALETTE'     => NAWS_Colors::get_history_palette(),
-    'MONTHS'      => [
-        naws__( 'month_jan' ), naws__( 'month_feb' ), naws__( 'month_mar' ), naws__( 'month_apr' ),
-        naws__( 'month_may' ), naws__( 'month_jun' ), naws__( 'month_jul' ), naws__( 'month_aug' ),
-        naws__( 'month_sep' ), naws__( 'month_oct' ), naws__( 'month_nov' ), naws__( 'month_dec' ),
-    ],
-    'CHART_THEME' => NAWS_Colors::get_chart_theme(),
-    'LBL_MIN'     => naws__( 'lbl_min' ),
-    'LBL_MAX'     => naws__( 'lbl_max' ),
-] ) . ';', 'before' );
-
-// Inject ALL_CHART_DEFS as PHP-derived data before the main script.
 $_naws_hist_opts      = get_option( 'naws_settings', [] );
 $_naws_hist_temp_unit = ( $_naws_hist_opts['temperature_unit'] ?? 'C' ) === 'F' ? '°F' : '°C';
 $_naws_hist_pres_unit = NAWS_Helpers::get_unit( 'Pressure' );
 $_naws_hist_rain_unit = $_naws_hist_opts['rain_unit'] ?? 'mm';
-wp_add_inline_script( 'naws-frontend', 'var ALL_CHART_DEFS = ' . wp_json_encode( [
-    [ 'id' => 'temp_minmax', 'title' => naws__( 'hc_temp_minmax' ), 'type' => 'line', 'unit' => $_naws_hist_temp_unit, 'fields' => [ 'temp_min', 'temp_max' ], 'moduleId' => '' ],
-    [ 'id' => 'temp_avg',    'title' => naws__( 'hc_temp_avg' ),    'type' => 'line', 'unit' => $_naws_hist_temp_unit, 'fields' => [ 'temp_avg' ],             'moduleId' => '' ],
-    [ 'id' => 'pressure',    'title' => naws__( 'hc_pressure' ),    'type' => 'line', 'unit' => $_naws_hist_pres_unit, 'fields' => [ 'pressure_avg' ],         'moduleId' => '' ],
-    [ 'id' => 'rain',        'title' => naws__( 'hc_rain' ),        'type' => 'bar',  'unit' => $_naws_hist_rain_unit, 'fields' => [ 'rain_sum' ],             'moduleId' => '' ],
-    [ 'id' => 'humidity',    'title' => naws__( 'hc_humidity' ),    'type' => 'line', 'unit' => '%',                   'fields' => [ 'humidity_avg' ],         'moduleId' => '' ],
-    // Dynamic: one entry per NAModule4 indoor module
-    ...array_map( function( $_m4c ) {
-        return [ 'id' => $_m4c['id'], 'title' => $_m4c['title'], 'type' => 'line', 'unit' => '%', 'fields' => [ 'indoor_humidity_avg' ], 'moduleId' => $_m4c['module_id'] ];
-    }, $_naws_m4_charts ),
-] ) . ';', 'before' );
 
-wp_add_inline_script( 'naws-frontend', <<<'EOJS'
+// ── Data container: non-executable JSON element, always output reliably ──────
+// Same pattern as live.php: wp_add_inline_script() is silently dropped on some
+// WP setups (the inline fragment never reaches the page), which left every
+// history chart blank. A type="application/json" element is plain markup and
+// always survives.
+// phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript -- type=application/json is not executable; pure data container
+echo '<script type="application/json" id="' . esc_attr( $widget_id ) . '-data">'
+    . wp_json_encode( [
+        'WID'         => $widget_id,
+        'AJAX'        => $ajax_url,
+        'PALETTE'     => NAWS_Colors::get_history_palette(),
+        'MONTHS'      => [
+            naws__( 'month_jan' ), naws__( 'month_feb' ), naws__( 'month_mar' ), naws__( 'month_apr' ),
+            naws__( 'month_may' ), naws__( 'month_jun' ), naws__( 'month_jul' ), naws__( 'month_aug' ),
+            naws__( 'month_sep' ), naws__( 'month_oct' ), naws__( 'month_nov' ), naws__( 'month_dec' ),
+        ],
+        'CHART_THEME' => NAWS_Colors::get_chart_theme(),
+        'LBL_MIN'     => naws__( 'lbl_min' ),
+        'LBL_MAX'     => naws__( 'lbl_max' ),
+        // One chart definition per canvas (5 static + one per NAModule4 module)
+        'DEFS'        => [
+            [ 'id' => 'temp_minmax', 'title' => naws__( 'hc_temp_minmax' ), 'type' => 'line', 'unit' => $_naws_hist_temp_unit, 'fields' => [ 'temp_min', 'temp_max' ], 'moduleId' => '' ],
+            [ 'id' => 'temp_avg',    'title' => naws__( 'hc_temp_avg' ),    'type' => 'line', 'unit' => $_naws_hist_temp_unit, 'fields' => [ 'temp_avg' ],             'moduleId' => '' ],
+            [ 'id' => 'pressure',    'title' => naws__( 'hc_pressure' ),    'type' => 'line', 'unit' => $_naws_hist_pres_unit, 'fields' => [ 'pressure_avg' ],         'moduleId' => '' ],
+            [ 'id' => 'rain',        'title' => naws__( 'hc_rain' ),        'type' => 'bar',  'unit' => $_naws_hist_rain_unit, 'fields' => [ 'rain_sum' ],             'moduleId' => '' ],
+            [ 'id' => 'humidity',    'title' => naws__( 'hc_humidity' ),    'type' => 'line', 'unit' => '%',                   'fields' => [ 'humidity_avg' ],         'moduleId' => '' ],
+            ...array_map( function( $_m4c ) {
+                return [ 'id' => $_m4c['id'], 'title' => $_m4c['title'], 'type' => 'line', 'unit' => '%', 'fields' => [ 'indoor_humidity_avg' ], 'moduleId' => $_m4c['module_id'] ];
+            }, $_naws_m4_charts ),
+        ],
+    ] )
+    . '</script>';
+
+$_naws_hist_js = <<<'EOJS'
 (function(){
 var WID     = NAWS_HIST.WID;
 var NAWS_FONT = getComputedStyle(document.documentElement).fontFamily || 'sans-serif';
@@ -480,13 +486,13 @@ function buildLegend(chartId, containerId){
     pill.innerHTML = '<span class="naws-leg-pill-dot" style="background:'+c+'"></span>'+yr+extra;
     pill.addEventListener('click', function(e){
       e.stopPropagation();
-      toggleYear(chartId, yr, containerId);
+      toggleYear(chartId, yr);
     });
     el.appendChild(pill);
   });
 }
 
-function toggleYear(chartId, year, legendId){
+function toggleYear(chartId, year){
   var cfg = CHARTS[chartId]; if(!cfg) return;
   if(cfg.hiddenYears.has(year)) cfg.hiddenYears.delete(year);
   else cfg.hiddenYears.add(year);
@@ -509,11 +515,12 @@ function toggleYear(chartId, year, legendId){
       if(ds.label.startsWith(year+' ')) ds.hidden = cfg.hiddenYears.has(year);
     });
     modalChart.update();
-    // Sync modal legend
-    buildLegend(chartId, WID+'-modal-leg-'+chartId);
   }
 
-  buildLegend(chartId, legendId);
+  // Rebuild BOTH legends, no matter which one was clicked. Rebuilding only the
+  // clicked container left the other one showing a stale active/inactive state
+  // (e.g. year hidden from the modal, card pill still looked enabled).
+  buildLegend(chartId, WID+'-leg-'+chartId);
   buildLegend(chartId, WID+'-modal-leg-'+chartId);
 }
 
@@ -567,7 +574,7 @@ document.addEventListener('click', function(e){
 // The daily_data endpoint returns datasets keyed by field label (e.g. "Temp Min (°C)")
 // We identify fields by checking which field key was requested
 // All possible chart definitions
-// ALL_CHART_DEFS is injected by PHP via wp_add_inline_script() before this script.
+// ALL_CHART_DEFS is read from the JSON data container by the footer boot IIFE.
 
 // Only initialize charts whose canvas is actually in the DOM (not disabled by admin)
 var CHART_DEFS = ALL_CHART_DEFS.filter(function(def){
@@ -659,5 +666,27 @@ window.addEventListener('resize', function(){
 });
 
 })();
-EOJS
-);
+EOJS;
+
+// ── Boot IIFE via wp_footer: Chart.js is guaranteed loaded at this point ─────
+// wp_print_footer_scripts() is registered on wp_footer/20 during init, so it
+// runs before this closure (same priority, earlier registration).
+$_naws_hist_wid = $widget_id;
+add_action( 'wp_footer', static function () use ( $_naws_hist_wid, $_naws_hist_js ) {
+    // phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedScript -- direct footer output required; wp_add_inline_script proved unreliable on some WP setups
+    ?>
+<script>
+(function(){
+var WID=<?php echo wp_json_encode( $_naws_hist_wid ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_json_encode output is safe ?>;
+if(window['_nawsHistBoot_'+WID])return;
+var _d=document.getElementById(WID+'-data');
+if(!_d||!document.getElementById(WID))return;
+window['_nawsHistBoot_'+WID]=true;
+var NAWS_HIST=JSON.parse(_d.textContent||'{}');
+var ALL_CHART_DEFS=NAWS_HIST.DEFS||[];
+<?php echo $_naws_hist_js; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static JS literal, no user input ?>
+})();
+</script>
+    <?php
+    // phpcs:enable WordPress.WP.EnqueuedResources.NonEnqueuedScript
+}, 20 );

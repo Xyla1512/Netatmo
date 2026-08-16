@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.0
-Stable tag: 1.9.2
+Stable tag: 1.9.3
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -104,6 +104,11 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 7. Export / Import page for backups
 
 == Changelog ==
+
+= 1.9.3 =
+* Fix: the history charts stayed empty on some setups. The chart data and the chart script were injected with wp_add_inline_script(), which is silently dropped on those installations, so nothing at all was rendered. Both now use the same reliable pattern the live dashboard already used: a plain JSON data element plus a footer script block.
+* Changed: the year buttons in the history charts sit below their chart instead of beside the title. They now use the full chart width and wrap over as many rows as needed, so stations with ten or more years of records no longer push the buttons out to the right. The enlarged chart view follows the same layout.
+* Fix: hiding a year from the enlarged chart view left the corresponding button in the small chart looking active, even though the chart below had already dropped that year. Both legends are refreshed together now.
 
 = 1.9.2 =
 * Fix: repeated API errors made the plugin poll harder rather than easing off. The interval is meant to double after three failures, but the ceiling on that calculation sat below the longest intervals the settings offer, so a 120-minute interval was halved and a 60-minute one never changed at all.

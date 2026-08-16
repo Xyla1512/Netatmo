@@ -2,6 +2,24 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [1.9.3] – 2026-08-16
+
+### Fixed
+- **The history charts rendered nothing at all on some installations.** `templates/history.php` handed all three of its payloads — `NAWS_HIST`, `ALL_CHART_DEFS` and the entire chart script — to `wp_add_inline_script( 'naws-frontend', … )`. On setups where that call is silently dropped, none of the fragments reached the page: `naws-frontend-js` was present in the markup, the JSON blobs and the boot code were not, and every canvas stayed blank. There was no error and no warning — the shortcode simply produced an empty widget.
+
+  `templates/live.php` already worked around this in 1.7.0 with a `<script type="application/json">` data element plus a `wp_footer` script block. The history template now uses exactly the same pattern: the chart definitions moved into the JSON container as `DEFS`, and the chart script is emitted on `wp_footer` at priority 20, after `wp_print_footer_scripts()` has printed Chart.js. A `_nawsHistBoot_<widget-id>` guard keeps several `[naws_history]` shortcodes on one page from booting each other twice.
+
+- **Hiding a year from the enlarged chart left the small chart's button looking active.** `toggleYear()` rebuilt the legend it was clicked in and the modal legend — which, for a click inside the modal, meant rebuilding the same container twice and never the one in the card. The chart in the card did drop the year, so the card showed a button marked active for a year that was no longer plotted. Both legends are now rebuilt unconditionally, and the unused `legendId` parameter is gone.
+
+### Changed
+- **The year buttons sit below their chart instead of beside the title.** They shared the header row with the chart title and the expand button, so they were confined to whatever horizontal space those two left over — a narrow column in the middle of the card. For a station with a decade or more of records the buttons ran past the right-hand edge instead of using the width available to them.
+
+  `.naws-hc-legend` moved out of `.naws-hc-bar` to below the `<canvas>` in all six chart blocks, and is now a full-width wrapping flex row (`width:100%`, `flex-wrap:wrap`, centred). Measured with 20 years of history at a 744 px viewport, every legend is exactly the card's inner width with no horizontal overflow, wrapping over two rows (four for the rain chart, whose buttons carry the annual total). The enlarged chart view follows the same layout, capped at `max-height:26vh` with its own scroll so a very long history cannot push the chart off screen.
+
+  Both legend rules carry an explicit `box-sizing:border-box`; the plugin stylesheet sets none globally, and without it the modal legend overran its box by its own padding.
+
+- The chart title now shrinks and wraps (`flex:1 1 auto; min-width:0`) rather than forcing the header row wider.
+
 ## [1.9.2] – 2026-08-15
 
 ### Fixed

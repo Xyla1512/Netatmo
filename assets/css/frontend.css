@@ -1333,19 +1333,28 @@
 @media (min-width: 600px) { .naws-hc-wrap { padding:16px 18px 14px; } }
 .naws-hc-wrap:hover { transform:translateY(-3px); }
 .naws-hc-wrap:last-child { margin-bottom:0; }
+/* Header row: title + expand button only. The year legend sits BELOW the
+   canvas (see .naws-hc-legend) so it can use the full card width and wrap
+   over as many lines as a long station history needs. */
 .naws-hc-bar {
-  display:flex; align-items:flex-start; gap:8px;
-  margin-bottom:12px; flex-wrap:wrap; flex-direction:column;
+  display:flex; align-items:center; gap:8px;
+  margin-bottom:12px;
 }
-@media (min-width: 600px) { .naws-hc-bar { flex-direction:row; align-items:center; gap:12px; } }
+@media (min-width: 600px) { .naws-hc-bar { gap:12px; } }
 .naws-hc-title {
   font-size:10px; font-weight:700; text-transform:uppercase;
-  letter-spacing:.1em; color:var(--muted); flex-shrink:0;
+  letter-spacing:.1em; color:var(--muted);
+  flex:1 1 auto; min-width:0; overflow-wrap:anywhere;
 }
+/* Year toggles below the chart: never wider than the chart, wraps to as many
+   rows as needed (stations with 10+ years of history). */
 .naws-hc-legend {
-  display:flex; gap:4px; flex:1; flex-wrap:wrap;
+  display:flex; gap:4px; flex-wrap:wrap; justify-content:center;
+  box-sizing:border-box; width:100%; max-width:100%; min-width:0;
+  margin-top:10px;
 }
-@media (min-width: 600px) { .naws-hc-legend { gap:6px; } }
+.naws-hc-legend:empty { margin-top:0; }
+@media (min-width: 600px) { .naws-hc-legend { gap:6px; margin-top:12px; } }
 .naws-hc-expand {
   background:none; border:1px solid var(--line); border-radius:6px;
   padding:8px 10px; cursor:pointer; color:var(--muted); flex-shrink:0;
@@ -1397,9 +1406,17 @@
 @media (min-width: 600px) { .naws-hist-modal-hdr { padding:16px 22px 12px; gap:12px; } }
 .naws-hist-modal-title {
   font-size:12px; font-weight:700; text-transform:uppercase;
-  letter-spacing:.09em; color:#7aa0a0; flex-shrink:0;
+  letter-spacing:.09em; color:#7aa0a0;
+  flex:1 1 auto; min-width:0; overflow-wrap:anywhere;
 }
-.naws-hist-modal-leg { display:flex; flex-wrap:wrap; gap:6px; flex:1; }
+/* Same rule as the card legend: below the chart, full width, wrapping.
+   Capped in height so a 20-year history cannot push the chart off-screen. */
+.naws-hist-modal-leg {
+  display:flex; flex-wrap:wrap; gap:6px; justify-content:center;
+  box-sizing:border-box; width:100%; max-width:100%; min-width:0; flex:0 0 auto;
+  padding:0 14px 14px; max-height:26vh; overflow-y:auto;
+}
+@media (min-width: 600px) { .naws-hist-modal-leg { padding:0 22px 18px; } }
 .naws-hist-modal-close {
   background:none; border:1px solid #e0eeee; border-radius:8px;
   padding:8px 10px; cursor:pointer; color:#7aa0a0;
