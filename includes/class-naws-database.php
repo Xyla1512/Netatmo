@@ -145,23 +145,34 @@ class NAWS_Database {
                 $wpdb->query( 'ALTER TABLE `' . esc_sql( $t_day ) . '` DROP COLUMN wind_max' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.NotPrepared -- DDL, table name from constant+prefix only
             }
 
-            // v1.4: Add new sensor columns for all module types
-            // $add_cols keys and values are hardcoded — no user input.
-            $add_cols = [
-                'humidity_avg'        => 'DOUBLE DEFAULT NULL AFTER rain_sum',
-                'indoor_temp_avg'     => 'DOUBLE DEFAULT NULL AFTER humidity_avg',
-                'indoor_humidity_avg' => 'DOUBLE DEFAULT NULL AFTER indoor_temp_avg',
-                'co2_avg'             => 'DOUBLE DEFAULT NULL AFTER indoor_humidity_avg',
-                'noise_avg'           => 'DOUBLE DEFAULT NULL AFTER co2_avg',
-                'wind_avg'            => 'DOUBLE DEFAULT NULL AFTER noise_avg',
-                'gust_max'            => 'DOUBLE DEFAULT NULL AFTER wind_avg',
-                'wind_angle'          => 'DOUBLE DEFAULT NULL AFTER gust_max',
-            ];
-            foreach ( $add_cols as $col => $def ) {
-                // $col and $def are from the hardcoded array above — safe to interpolate.
-                if ( ! $wpdb->get_results( $wpdb->prepare( 'SHOW COLUMNS FROM `' . esc_sql( $t_day ) . '` LIKE %s', $col ) ) ) { // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- table name from constant+prefix; LIKE value via prepare()
-                    $wpdb->query( 'ALTER TABLE `' . esc_sql( $t_day ) . '` ADD COLUMN ' . $col . ' ' . $def ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.NotPrepared -- DDL; $col/$def from hardcoded array
-                }
+            // v1.4: Add new sensor columns for all module types.
+            // Every ALTER below is a complete SQL literal — no identifier is ever
+            // interpolated from a variable, so no escaping question can arise.
+            $cols = $wpdb->get_col( 'SHOW COLUMNS FROM `' . esc_sql( $t_day ) . '`' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- schema check; table name from constant+prefix
+
+            if ( ! in_array( 'humidity_avg', $cols, true ) ) {
+                $wpdb->query( 'ALTER TABLE `' . esc_sql( $t_day ) . '` ADD COLUMN humidity_avg DOUBLE DEFAULT NULL AFTER rain_sum' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.NotPrepared -- DDL; table name from constant+prefix
+            }
+            if ( ! in_array( 'indoor_temp_avg', $cols, true ) ) {
+                $wpdb->query( 'ALTER TABLE `' . esc_sql( $t_day ) . '` ADD COLUMN indoor_temp_avg DOUBLE DEFAULT NULL AFTER humidity_avg' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.NotPrepared -- DDL; table name from constant+prefix
+            }
+            if ( ! in_array( 'indoor_humidity_avg', $cols, true ) ) {
+                $wpdb->query( 'ALTER TABLE `' . esc_sql( $t_day ) . '` ADD COLUMN indoor_humidity_avg DOUBLE DEFAULT NULL AFTER indoor_temp_avg' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.NotPrepared -- DDL; table name from constant+prefix
+            }
+            if ( ! in_array( 'co2_avg', $cols, true ) ) {
+                $wpdb->query( 'ALTER TABLE `' . esc_sql( $t_day ) . '` ADD COLUMN co2_avg DOUBLE DEFAULT NULL AFTER indoor_humidity_avg' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.NotPrepared -- DDL; table name from constant+prefix
+            }
+            if ( ! in_array( 'noise_avg', $cols, true ) ) {
+                $wpdb->query( 'ALTER TABLE `' . esc_sql( $t_day ) . '` ADD COLUMN noise_avg DOUBLE DEFAULT NULL AFTER co2_avg' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.NotPrepared -- DDL; table name from constant+prefix
+            }
+            if ( ! in_array( 'wind_avg', $cols, true ) ) {
+                $wpdb->query( 'ALTER TABLE `' . esc_sql( $t_day ) . '` ADD COLUMN wind_avg DOUBLE DEFAULT NULL AFTER noise_avg' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.NotPrepared -- DDL; table name from constant+prefix
+            }
+            if ( ! in_array( 'gust_max', $cols, true ) ) {
+                $wpdb->query( 'ALTER TABLE `' . esc_sql( $t_day ) . '` ADD COLUMN gust_max DOUBLE DEFAULT NULL AFTER wind_avg' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.NotPrepared -- DDL; table name from constant+prefix
+            }
+            if ( ! in_array( 'wind_angle', $cols, true ) ) {
+                $wpdb->query( 'ALTER TABLE `' . esc_sql( $t_day ) . '` ADD COLUMN wind_angle DOUBLE DEFAULT NULL AFTER gust_max' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.NotPrepared -- DDL; table name from constant+prefix
             }
         }
 

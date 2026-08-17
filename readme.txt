@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.0
-Stable tag: 1.9.3
+Stable tag: 1.9.4
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -104,6 +104,10 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 7. Export / Import page for backups
 
 == Changelog ==
+
+= 1.9.4 =
+* Changed: the database migration that adds the v1.4 sensor columns no longer assembles its SQL from variables. The column names came from a hardcoded list and were never user input, but Plugin Check's security scanner cannot verify that and flagged the query. Every ALTER TABLE statement is now written out in full, which leaves nothing to flag.
+* Changed: that migration checked for each of its eight columns with a separate query. It reads the column list once now. The migration only runs on activation and upgrade, so this changes nothing you would notice.
 
 = 1.9.3 =
 * Fix: the history charts stayed empty on some setups. The chart data and the chart script were injected with wp_add_inline_script(), which is silently dropped on those installations, so nothing at all was rendered. Both now use the same reliable pattern the live dashboard already used: a plain JSON data element plus a footer script block.

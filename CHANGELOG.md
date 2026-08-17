@@ -2,6 +2,15 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [1.9.4] – 2026-08-17
+
+### Changed
+- **The v1.4 column migration no longer builds its SQL from variables.** `NAWS_Database::maybe_migrate()` looped over a hardcoded array of column names and definitions and concatenated both into the `ALTER TABLE` statement. The values never came from anywhere but that array, so nothing was ever injectable — but static analysis cannot see that. Plugin Check's `PluginCheck.Security.DirectDB` sniff traces each query parameter back to its assignment, arrives at the `foreach`, and reports `Unescaped parameter $col used in $wpdb->query()`. A comment saying the array is hardcoded convinces a reviewer, not a scanner, and the WordPress.org review queue runs the scanner.
+
+  Each `ALTER TABLE … ADD COLUMN` is now written out in full as a literal. No identifier is interpolated from a variable, so there is no parameter left to trace. Verified against Plugin Check 2.1.0's own PHPCS ruleset: one warning before, none after.
+
+- **The same migration ran nine schema queries where two suffice.** Each of the eight columns was probed with its own `SHOW COLUMNS … LIKE`. The column list is now read once with a single `SHOW COLUMNS` and checked in PHP. This runs on plugin activation and upgrade only, so it was never a performance problem — it is simply eight round trips that had no reason to exist.
+
 ## [1.9.3] – 2026-08-16
 
 ### Fixed
