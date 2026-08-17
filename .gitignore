@@ -1,11 +1,27 @@
-# Composer-installed development toolchain (PHP_CodeSniffer, WPCS,
-# PHPCompatibility). composer.json and composer.lock are tracked so the
-# toolchain can be restored with `composer install`; the installed tree is not.
-vendor/
+# Development scratch for the working copy.
+#
+# This repository is the WORKSHOP: it carries the per-task development
+# history. The published history lives in the GitHub clone, which receives
+# one clean commit per release.
 
-# Build output. build-zip.ps1 writes one level above the plugin folder, but
-# keep this in case someone runs it from here.
+# Subagent-driven-development workspace: ledgers, briefs, review packages.
+.superpowers/
+
+# Build output. build-zip.ps1 writes one level up, but keep this in case
+# someone runs it from here.
 *.zip
+
+# Composer-installed PHPCS toolchain. The lock file and composer.json are
+# tracked deliberately; only the installed tree is ignored.
+#
+# The leading slash matters. Written as "vendor/" the rule matches a
+# directory of that name at ANY depth, so it also covered assets/vendor/ -
+# the bundled Chart.js and its date adapter, which DO ship in the plugin
+# ZIP. Those two files were committed before the rule existed and stayed
+# tracked (.gitignore does not apply to tracked files), so nothing was
+# ever missing from a clone. But the next file added there would have
+# been dropped without a word.
+/vendor/
 
 # Editor and OS clutter
 .vscode/

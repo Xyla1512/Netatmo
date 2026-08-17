@@ -73,6 +73,24 @@ class NAWS_Forecast {
         'sunset',
     ];
 
+    /**
+     * Identifying User-Agent for every outgoing forecast request.
+     *
+     * MET Norway's terms of service require a User-Agent that names the
+     * application and carries a way to reach whoever is running it, so they
+     * can get in touch before blocking a misbehaving client. The site's own
+     * address is that contact: to them each installation is a separate
+     * client, and a plugin page would not reach any one of them.
+     *
+     * Until 1.9.4 two of the five requests advertised github.com/naws-plugin,
+     * which has never existed, and the other three named no contact at all.
+     *
+     * @see https://developer.yr.no/doc/TermsOfService/
+     */
+    private static function user_agent(): string {
+        return 'XTX-Integration-for-Netatmo/' . NAWS_VERSION . ' (+' . home_url( '/' ) . ')';
+    }
+
     /* ==================================================================
      * Public API
      * ================================================================*/
@@ -243,7 +261,7 @@ class NAWS_Forecast {
 
         $response = wp_remote_get( $url, [
             'timeout'    => 15,
-            'user-agent' => 'NAWS/' . NAWS_VERSION . ' (WordPress Plugin)',
+            'user-agent' => self::user_agent(),
         ] );
 
         if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
@@ -291,7 +309,7 @@ class NAWS_Forecast {
 
         $response = wp_remote_get( $url, [
             'timeout'    => 15,
-            'user-agent' => 'NAWS/' . NAWS_VERSION . ' github.com/naws-plugin (WordPress Weather Plugin)',
+            'user-agent' => self::user_agent(),
             'headers'    => [ 'Accept' => 'application/json' ],
         ] );
 
@@ -387,7 +405,7 @@ class NAWS_Forecast {
 
         $response = wp_remote_get( $url, [
             'timeout'    => 15,
-            'user-agent' => 'NAWS/' . NAWS_VERSION . ' (WordPress Plugin)',
+            'user-agent' => self::user_agent(),
         ] );
 
         if ( is_wp_error( $response ) ) {
@@ -426,7 +444,7 @@ class NAWS_Forecast {
 
         $response = wp_remote_get( $url, [
             'timeout'    => 15,
-            'user-agent' => 'NAWS/' . NAWS_VERSION . ' github.com/naws-plugin (WordPress Weather Plugin)',
+            'user-agent' => self::user_agent(),
             'headers'    => [ 'Accept' => 'application/json' ],
         ] );
 
@@ -654,7 +672,7 @@ class NAWS_Forecast {
 
         $response = wp_remote_get( $geo_url, [
             'timeout'    => 10,
-            'user-agent' => 'NAWS/' . NAWS_VERSION . ' (WordPress Plugin)',
+            'user-agent' => self::user_agent(),
         ] );
 
         if ( is_wp_error( $response ) ) {
@@ -719,7 +737,10 @@ class NAWS_Forecast {
             'format'   => 'json',
         ], self::GEOCODE_URL );
 
-        $response = wp_remote_get( $geo_url, [ 'timeout' => 5 ] );
+        $response = wp_remote_get( $geo_url, [
+            'timeout'    => 5,
+            'user-agent' => self::user_agent(),
+        ] );
         if ( ! is_wp_error( $response ) ) {
             $json = json_decode( wp_remote_retrieve_body( $response ), true );
             if ( ! empty( $json['results'] ) ) {

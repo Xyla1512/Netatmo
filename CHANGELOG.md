@@ -2,6 +2,28 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [1.9.5] – 2026-08-17
+
+Compliance pass against the eighteen WordPress.org plugin directory guidelines. Nothing here changes what the plugin does; it changes what it discloses, what it identifies itself as, and what it ships alongside the code.
+
+### Fixed
+- **The User-Agent sent to MET Norway named a repository that does not exist.** Two of the five outgoing forecast requests advertised `github.com/naws-plugin` — a 404. MET Norway's terms of service require a User-Agent that identifies the client and offers a way to reach whoever runs it, precisely so they can get in touch before restricting a misbehaving one; an address nobody can open satisfies neither half. The remaining three requests named no contact at all, and the geocoding lookup in automatic mode sent no User-Agent whatsoever.
+
+  All five now go through one `NAWS_Forecast::user_agent()` and send `XTX-Integration-for-Netatmo/<version> (+<site address>)`. The site's own address is the useful contact here: to MET Norway every installation is a separate client, and a plugin homepage would not reach any particular one of them.
+
+- **The Netatmo privacy policy link in the readme was dead** (`netatmo.com/en-us/legal/privacy-policy`, 404). It now points at `legals.netatmo.com`, and the entry gained the API terms of service link the other two services already had.
+
+### Changed
+- **The bundled JavaScript libraries now declare their source.** `assets/vendor/chart.umd.min.js` (Chart.js 4.5.1) and `assets/vendor/chartjs-adapter-date-fns.bundle.min.js` (3.0.0) ship as minified distribution builds. Guideline 4 requires that minified code be accompanied either by its source or by a readme link to the source and the build tooling, and neither was present. A new `== Third-Party Libraries ==` readme section names both libraries, their versions, their MIT licenses, the exact release tags and the repositories. Linking is the route the guideline explicitly allows, so no unminified megabyte was added to the package.
+
+- **A dangling source map reference was removed** from the end of `chart.umd.min.js`. It pointed at `chart.umd.min.js.map`, which has never been part of the package, so every browser that opened developer tools on a page with a chart requested a file that was not there.
+
+- **Two undisclosed uses of the Open-Meteo geocoding API are now documented.** `geocoding-api.open-meteo.com` is a different host from `api.open-meteo.com` and had no entry of its own. It is contacted in manual location mode with the city or postal code from the settings, and — this was the less obvious one — once in automatic mode with the station's coordinates, to resolve the place name shown above the forecast.
+
+- **The Netatmo entry no longer understates what is sent.** It said "OAuth tokens, station/module IDs". The Client ID and Client Secret of the Netatmo application go to the token endpoint as well, and a historical import is a further occasion on which the service is contacted. Both are now stated.
+
+- **The shipped `LICENSE` file is GPL v2, matching the declared license.** The plugin header, `readme.txt` and `README.md` all state "GPLv2 or later" while the file next to them carried the GPL v3 text. Distribution under v3 is something "or later" permits, so this was never a licensing conflict — but a package whose license file contradicts its own header invites exactly the question nobody wants to answer during review. The declaration is unchanged; only the file now agrees with it.
+
 ## [1.9.4] – 2026-08-17
 
 ### Changed
