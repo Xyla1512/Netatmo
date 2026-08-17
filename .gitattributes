@@ -1,0 +1,24 @@
+# Line endings.
+#
+# Without this file the behaviour depends on each clone's core.autocrlf,
+# which is a per-machine setting and therefore not a decision the project
+# has made. That is where the constant "LF will be replaced by CRLF"
+# warnings came from. The index has always held LF; this only writes that
+# down so a second machine cannot decide otherwise.
+* text=auto
+
+# PowerShell 5.1 is the fussy one here. build-zip.ps1 already documents why
+# it stays pure ASCII (a .ps1 without BOM is read as ANSI, and one stray en
+# dash breaks parsing); CRLF is the matching half of that. Everything else
+# in the tree is read by PHP, Node tooling or a browser, none of which care.
+*.ps1 text eol=crlf
+
+# .distignore and .gitattributes itself are read by build-zip.ps1 and git,
+# both line-ending agnostic, but keep them normalised for the same reason.
+.distignore  text
+.gitattributes text
+
+# Vendored libraries ship exactly as their upstream released them. They are
+# generated artefacts, so diffing them line by line is noise rather than
+# information.
+assets/vendor/* -diff
