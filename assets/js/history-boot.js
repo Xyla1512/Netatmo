@@ -1,0 +1,454 @@
+/**
+ * Boot routine for the [naws_history] year-over-year charts.
+ *
+ * See assets/js/live-boot.js for why this no longer ships as an inline
+ * <script> block. The chart definitions and labels travel in the
+ * <script type="application/json" data-naws="history"> element the
+ * template prints next to the widget.
+ */
+(function () {
+  var _nodes = document.querySelectorAll('script[type="application/json"][data-naws="history"]');
+  for (var _i = 0; _i < _nodes.length; _i++) { nawsHistBoot(_nodes[_i]); }
+
+  function nawsHistBoot(_d) {
+    var NAWS_HIST = JSON.parse(_d.textContent || '{}');
+    var WID = NAWS_HIST.WID;
+    if (!WID || window['_nawsHistBoot_' + WID]) return;
+    if (!document.getElementById(WID)) return;
+    window['_nawsHistBoot_' + WID] = true;
+    var ALL_CHART_DEFS = NAWS_HIST.DEFS || [];
+(function(){
+var WID     = NAWS_HIST.WID;
+var NAWS_FONT = getComputedStyle(document.documentElement).fontFamily || 'sans-serif';
+var AJAX    = NAWS_HIST.AJAX;
+var NONCE   = document.getElementById(WID).dataset.nonce;
+var OUTDOOR = document.getElementById(WID).dataset.outdoor;
+var INDOOR  = document.getElementById(WID).dataset.indoor;
+var YEARS   = document.getElementById(WID).dataset.years.split(',').map(Number).filter(Boolean);
+
+var chartsEl = document.getElementById(WID+'-charts');
+var loadEl   = document.querySelector('#'+WID+' .naws-hist-loading');
+
+// Store per-chart: { config, yearDatasets:{year:{labels,data}}, hiddenYears:Set, chartObj }
+var CHARTS = {};
+var modalChart = null;
+
+/* ── COLOURS ─────────────────────────────── */
+// One colour per year, consistent palette (configurable via Admin > Appearance)
+var PALETTE = NAWS_HIST.PALETTE;
+function yearColor(yr){ return PALETTE[(yr - YEARS[0]) % PALETTE.length]; }
+
+/* ── AJAX ────────────────────────────────── */
+function post(params, cb){
+  var xhr=new XMLHttpRequest();
+  xhr.open('POST',AJAX);
+  xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+  xhr.onload=function(){try{cb(JSON.parse(xhr.responseText));}catch(e){cb(null);}};
+  var body='nonce='+encodeURIComponent(NONCE);
+  Object.keys(params).forEach(function(k){
+    var v=params[k];
+    if(Array.isArray(v)) v.forEach(function(vi){body+='&'+encodeURIComponent(k)+'[]='+encodeURIComponent(vi);});
+    else body+='&'+encodeURIComponent(k)+'='+encodeURIComponent(v);
+  });
+  xhr.send(body);
+}
+
+/* ── MONTH LABELS ───────────────────────── */
+var MONTHS = NAWS_HIST.MONTHS;
+function monthLabel(iso){ return MONTHS[parseInt(iso.slice(5,7),10)-1]; }
+
+/* ── CHART.JS BASE OPTIONS ──────────────── */
+/* Fixed Jan-Dec x-axis labels */
+var MONTH_LABELS = MONTHS.slice();
+var MONTH_TICKS  = ['01-01','02-01','03-01','04-01','05-01','06-01',
+                    '07-01','08-01','09-01','10-01','11-01','12-01'];
+
+/* Aggregate daily {x:'MM-DD',y:val} data to 12 monthly sums */
+function aggregateMonthly(dailyData){
+  var sums = [0,0,0,0,0,0,0,0,0,0,0,0];
+  for(var i=0;i<dailyData.length;i++){
+    var pt = dailyData[i];
+    var mi = parseInt(pt.x.slice(0,2),10)-1;
+    if(mi>=0 && mi<12 && pt.y!==null && !isNaN(pt.y)) sums[mi]+=parseFloat(pt.y);
+  }
+  var out=[];
+  for(var m=0;m<12;m++) out.push({x:MONTH_LABELS[m], y:Math.round(sums[m]*100)/100});
+  return out;
+}
+
+function nawsHistFontSize(){ var w=window.innerWidth; return w<480?8:w<768?9:10; }
+
+/* Chart theme colors (configurable via Admin > Appearance) */
+var CHART_THEME = NAWS_HIST.CHART_THEME;
+
+function baseOpts(unit, type, isModal, isMonthly){
+  var fs = nawsHistFontSize();
+  var xConfig;
+  if(isMonthly){
+    xConfig = {
+      type:'category',
+      labels: MONTH_LABELS,
+      grid:{color:CHART_THEME.grid},
+      ticks:{
+        color:CHART_THEME.tick, font:{family:NAWS_FONT,size:fs},
+        maxRotation:0, autoSkip:false
+      }
+    };
+  } else {
+    xConfig = {
+      type:'category',
+      labels: (function(){
+        var arr=[];
+        var days=[31,28,31,30,31,30,31,31,30,31,30,31];
+        for(var m=0;m<12;m++){
+          for(var d=1;d<=days[m];d++){
+            arr.push((m+1<10?'0':'')+(m+1)+'-'+(d<10?'0':'')+d);
+          }
+        }
+        return arr;
+      })(),
+      grid:{color:CHART_THEME.grid},
+      ticks:{
+        color:CHART_THEME.tick, font:{family:NAWS_FONT,size:fs},
+        maxRotation:0, autoSkip:false,
+        callback:function(val,idx){
+          var lbl = this.getLabelForValue(idx);
+          return lbl && lbl.slice(3)==='01' ? MONTH_LABELS[parseInt(lbl.slice(0,2),10)-1] : '';
+        }
+      }
+    };
+  }
+  return {
+    responsive:true, maintainAspectRatio:!isModal,
+    animation:{duration:600,easing:'easeInOutQuart'},
+    plugins:{
+      legend:{display:false},
+      tooltip:{
+        backgroundColor:CHART_THEME.tooltip_bg,
+        titleColor:CHART_THEME.tooltip_title, bodyColor:CHART_THEME.tooltip_text,
+        titleFont:{family:NAWS_FONT,size:fs+1},
+        bodyFont:{family:NAWS_FONT,size:fs+2,weight:'bold'},
+        padding:10, cornerRadius:8, displayColors:true, boxWidth:10, boxHeight:10,
+        callbacks:{
+          title:function(items){
+            var x = items[0] ? items[0].label : '';
+            if(isMonthly) return x;
+            var parts = x.split('-');
+            if(parts.length===2){
+              var mo = parseInt(parts[0],10)-1;
+              return MONTH_LABELS[mo]+' '+parseInt(parts[1],10)+'.';
+            }
+            return x;
+          },
+          label:function(c){return ' '+c.dataset.label+': '+c.parsed.y+' '+unit;}
+        }
+      }
+    },
+    scales:{
+      x: xConfig,
+      y:{
+        grid:{color:CHART_THEME.grid},
+        ticks:{
+          color:CHART_THEME.tick,font:{family:NAWS_FONT,size:fs},
+          callback:function(v){return v;}
+        },
+        title:{display:true,text:unit,color:CHART_THEME.axis_title,font:{family:NAWS_FONT,size:fs,weight:'600'}}
+      }
+    }
+  };
+}
+
+/* ── BUILD DATASET FOR ONE YEAR ─────────── */
+function buildDataset(chartId, year, data, type){
+  var c = yearColor(year);
+  var r=parseInt(c.slice(1,3),16),g=parseInt(c.slice(3,5),16),b=parseInt(c.slice(5,7),16);
+  var bg = type==='bar' ? 'rgba('+r+','+g+','+b+',.45)' : 'rgba('+r+','+g+','+b+',.12)';
+  return {
+    label: String(year),
+    data: data,           // array of {x:'MM-DD', y:val}
+    borderColor: c,
+    backgroundColor: bg,
+    borderWidth: type==='bar' ? 1.5 : 2,
+    pointRadius: 0, pointHoverRadius: 4,
+    tension: 0.35,
+    fill: false,
+    borderRadius: type==='bar' ? 4 : 0,
+    barPercentage: 0.9,
+    categoryPercentage: 0.8,
+    hidden: CHARTS[chartId] ? CHARTS[chartId].hiddenYears.has(year) : false,
+    parsing: { xAxisKey:'x', yAxisKey:'y' },
+  };
+}
+
+/* ── RENDER CHART ───────────────────────── */
+function renderChart(chartId, isModal){
+  var cfg = CHARTS[chartId]; if(!cfg) return;
+  var canvasId = isModal ? WID+'-modal-canvas' : WID+'-'+chartId;
+  var ctx = document.getElementById(canvasId); if(!ctx) return;
+
+  if(isModal && modalChart){ modalChart.destroy(); modalChart=null; }
+  if(!isModal && cfg.chartObj){ cfg.chartObj.destroy(); cfg.chartObj=null; }
+
+  var isMonthly = cfg.type === 'bar';
+  var opts = baseOpts(cfg.unit, cfg.type, isModal, isMonthly);
+  var datasets = [];
+
+  YEARS.forEach(function(yr){
+    var yd = cfg.yearData[yr]; if(!yd) return;
+    datasets.push(buildDataset(chartId, yr, yd.values, cfg.type));
+  });
+
+  // For minmax: rebuild datasets with min=dashed, max=solid
+  if(chartId==='temp_minmax'){
+    datasets = [];
+    YEARS.forEach(function(yr){
+      var yd = cfg.yearData[yr]; if(!yd) return;
+      var c = yearColor(yr);
+      var ri=parseInt(c.slice(1,3),16),gi=parseInt(c.slice(3,5),16),bi=parseInt(c.slice(5,7),16);
+      datasets.push({
+        label: yr+' '+NAWS_HIST.LBL_MIN, data: yd.values_min||[],
+        borderColor:'rgba('+ri+','+gi+','+bi+',.55)',
+        backgroundColor:'rgba('+ri+','+gi+','+bi+',.06)',
+        borderWidth:1.5, borderDash:[4,3],
+        pointRadius:0, pointHoverRadius:3, tension:0.35, fill:false,
+        parsing:{xAxisKey:'x',yAxisKey:'y'},
+        hidden: cfg.hiddenYears.has(yr),
+      });
+      datasets.push({
+        label: yr+' '+NAWS_HIST.LBL_MAX, data: yd.values_max||[],
+        borderColor:c, backgroundColor:'rgba('+ri+','+gi+','+bi+',.12)',
+        borderWidth:2, pointRadius:0, pointHoverRadius:4, tension:0.35, fill:false,
+        parsing:{xAxisKey:'x',yAxisKey:'y'},
+        hidden: cfg.hiddenYears.has(yr),
+      });
+    });
+  }
+
+  var chartObj = new Chart(ctx, {
+    type: cfg.type==='bar' ? 'bar' : 'line',
+    data:{ datasets:datasets },
+    options: opts,
+  });
+
+  if(isModal) modalChart = chartObj;
+  else cfg.chartObj = chartObj;
+}
+
+/* ── BUILD LEGEND ───────────────────────── */
+function buildLegend(chartId, containerId){
+  var cfg = CHARTS[chartId]; if(!cfg) return;
+  var el = document.getElementById(containerId); if(!el) return;
+  el.innerHTML = '';
+
+  YEARS.forEach(function(yr){
+    if(!cfg.yearData[yr]) return; // no data for this year
+    var c = yearColor(yr);
+    var pill = document.createElement('span');
+    pill.className = 'naws-leg-pill' + (cfg.hiddenYears.has(yr)?' hidden':'');
+    pill.dataset.year = yr;
+    pill.dataset.chart = chartId;
+    pill.style.borderColor = c;
+    pill.style.background = cfg.hiddenYears.has(yr) ? 'transparent' : c+'18';
+
+    // For rain chart: show yearly total in the pill
+    var extra = '';
+    if(chartId === 'rain'){
+      try{
+        var vals = cfg.yearData[yr] && cfg.yearData[yr].values;
+        if(vals && vals.length){
+          var total = 0;
+          for(var i=0;i<vals.length;i++){
+            var v = vals[i];
+            var n = (v && typeof v==='object') ? v.y : v;
+            if(n !== null && n !== undefined && !isNaN(n)) total += parseFloat(n);
+          }
+          extra = '<span class="naws-leg-rain-total">'+Math.round(total)+' '+cfg.unit+'</span>';
+        }
+      }catch(e){}
+    }
+
+    pill.innerHTML = '<span class="naws-leg-pill-dot" style="background:'+c+'"></span>'+yr+extra;
+    pill.addEventListener('click', function(e){
+      e.stopPropagation();
+      toggleYear(chartId, yr);
+    });
+    el.appendChild(pill);
+  });
+}
+
+function toggleYear(chartId, year){
+  var cfg = CHARTS[chartId]; if(!cfg) return;
+  if(cfg.hiddenYears.has(year)) cfg.hiddenYears.delete(year);
+  else cfg.hiddenYears.add(year);
+
+  // Update chart datasets visibility
+  if(cfg.chartObj){
+    cfg.chartObj.data.datasets.forEach(function(ds){
+      var dsYear = parseInt(ds.label);
+      if(dsYear===year) ds.hidden = cfg.hiddenYears.has(year);
+      // minmax: label is "2023 Min" / "2023 Max"
+      if(ds.label.startsWith(year+' ')) ds.hidden = cfg.hiddenYears.has(year);
+    });
+    cfg.chartObj.update();
+  }
+  // Also update modal if open for same chart
+  if(modalChart && currentModalChart===chartId){
+    modalChart.data.datasets.forEach(function(ds){
+      var dsYear = parseInt(ds.label);
+      if(dsYear===year) ds.hidden = cfg.hiddenYears.has(year);
+      if(ds.label.startsWith(year+' ')) ds.hidden = cfg.hiddenYears.has(year);
+    });
+    modalChart.update();
+  }
+
+  // Rebuild BOTH legends, no matter which one was clicked. Rebuilding only the
+  // clicked container left the other one showing a stale active/inactive state
+  // (e.g. year hidden from the modal, card pill still looked enabled).
+  buildLegend(chartId, WID+'-leg-'+chartId);
+  buildLegend(chartId, WID+'-modal-leg-'+chartId);
+}
+
+/* ── MODAL ───────────────────────────────── */
+var modal = document.getElementById(WID+'-modal');
+var currentModalChart = null;
+
+function openModal(chartId){
+  if(!modal||!CHARTS[chartId]) return;
+  currentModalChart = chartId;
+  var cfg = CHARTS[chartId];
+
+  modal.querySelector('.naws-hist-modal-title').textContent = cfg.title;
+
+  // Build modal legend
+  var mleg = modal.querySelector('.naws-hist-modal-leg');
+  var legId = WID+'-modal-leg-'+chartId;
+  mleg.id = legId;
+  mleg.innerHTML = '';
+  buildLegend(chartId, legId);
+
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+
+  setTimeout(function(){ renderChart(chartId, true); }, 30);
+}
+function closeModal(){
+  if(!modal) return;
+  modal.style.display = 'none';
+  document.body.style.overflow = '';
+  if(modalChart){ modalChart.destroy(); modalChart=null; }
+  currentModalChart = null;
+}
+
+modal.querySelector('.naws-hist-modal-bg').addEventListener('click', closeModal);
+modal.querySelector('.naws-hist-modal-close').addEventListener('click', closeModal);
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeModal(); });
+
+// Expand buttons + card click
+document.addEventListener('click', function(e){
+  var btn = e.target.closest('.naws-hc-expand');
+  if(btn){ openModal(btn.dataset.target); return; }
+  var wrap = e.target.closest('.naws-hc-wrap');
+  if(wrap && !e.target.closest('.naws-leg-pill')){ openModal(wrap.dataset.chart); }
+});
+
+/* ── LOAD DATA ───────────────────────────── */
+// Chart definitions
+/* ── CHART DEFINITIONS ──────────────────── */
+// Each chart fetches one request per year spanning Jan-Dec, group_by=month
+// The daily_data endpoint returns datasets keyed by field label (e.g. "Temp Min (°C)")
+// We identify fields by checking which field key was requested
+// All possible chart definitions
+// ALL_CHART_DEFS is read from the JSON data container by the footer boot IIFE.
+
+// Only initialize charts whose canvas is actually in the DOM (not disabled by admin)
+var CHART_DEFS = ALL_CHART_DEFS.filter(function(def){
+  return !!document.getElementById(WID+'-'+def.id);
+});
+
+CHART_DEFS.forEach(function(def){
+  CHARTS[def.id] = {
+    title:def.title, type:def.type, unit:def.unit,
+    fields:def.fields, yearData:{}, hiddenYears:new Set(), chartObj:null,
+  };
+});
+
+
+
+/* One request per chart: fetch all years at once from dedicated history endpoint */
+var pending = CHART_DEFS.length;
+var loaded  = 0;
+
+// If all charts are disabled by admin, skip spinner immediately
+if(pending === 0){
+  if(loadEl) loadEl.style.display = 'none';
+}
+
+function checkDone(){
+  if(++loaded >= pending){
+    loadEl.style.display = 'none';
+    chartsEl.style.display = '';
+    CHART_DEFS.forEach(function(def){
+      renderChart(def.id, false);
+      buildLegend(def.id, WID+'-leg-'+def.id);
+    });
+  }
+}
+
+CHART_DEFS.forEach(function(def){
+  var body = 'nonce='+encodeURIComponent(NONCE)
+    +'&action=naws_get_history_data'
+    +'&year_from='+YEARS[0]
+    +'&year_to='+YEARS[YEARS.length-1];
+  def.fields.forEach(function(f){ body+='&fields[]='+encodeURIComponent(f); });
+  if(def.moduleId) body+='&module_id='+encodeURIComponent(def.moduleId);
+
+  var xhr=new XMLHttpRequest();
+  xhr.open('POST',AJAX);
+  xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+  xhr.onload=function(){
+    try{
+      var r=JSON.parse(xhr.responseText);
+      if(r&&r.success&&r.data&&r.data.series&&r.data.series.length){
+        // series = [{year, field, data:[{x:'Jan',y:val},...]}]
+        r.data.series.forEach(function(s){
+          var yr = s.year;
+          if(!CHARTS[def.id].yearData[yr]){
+            CHARTS[def.id].yearData[yr]={labels:[],values:[],values_min:[],values_max:[]};
+          }
+          var yd = CHARTS[def.id].yearData[yr];
+          // labels: use x value; fill empty strings with previous non-empty label
+          // Store as {x:'MM-DD', y:val} objects for scatter-style category mapping
+          if(s.field==='temp_min')      yd.values_min = s.data;
+          else if(s.field==='temp_max') yd.values_max = s.data;
+          else yd.values = def.type==='bar' ? aggregateMonthly(s.data) : s.data;
+        });
+      } else {
+        console.warn('naws history NO DATA', def.id, r&&r.data||'no data');
+      }
+    }catch(e){ console.warn('naws history error',e,xhr.responseText.substr(0,300)); }
+    checkDone();
+  };
+  xhr.onerror=function(){ checkDone(); };
+  xhr.send(body);
+});
+
+/* ── RESPONSIVE: update chart fonts on resize ── */
+var _nawsHistResizeTimer;
+window.addEventListener('resize', function(){
+  clearTimeout(_nawsHistResizeTimer);
+  _nawsHistResizeTimer = setTimeout(function(){
+    var fs = nawsHistFontSize();
+    Object.keys(CHARTS).forEach(function(id){
+      var ch = CHARTS[id].chartObj;
+      if(!ch) return;
+      if(ch.options.scales && ch.options.scales.x && ch.options.scales.x.ticks) ch.options.scales.x.ticks.font.size = fs;
+      if(ch.options.scales && ch.options.scales.y && ch.options.scales.y.ticks) ch.options.scales.y.ticks.font.size = fs;
+      if(ch.options.scales && ch.options.scales.y && ch.options.scales.y.title) ch.options.scales.y.title.font.size = fs;
+      ch.update('none');
+    });
+  }, 250);
+});
+
+})();
+  }
+})();

@@ -41,6 +41,21 @@ class NAWS_Shortcodes {
         wp_register_script( 'naws-frontend',
             NAWS_PLUGIN_URL . 'assets/js/frontend.js',
             [ 'jquery','naws-chartjs','naws-chartjs-adapter' ], NAWS_VERSION, true );
+
+        // Boot routines for the two chart-bearing shortcodes. Until 1.9.5 both
+        // were printed into the page as inline <script> blocks on wp_footer,
+        // because wp_add_inline_script() turned out to be silently dropped on
+        // some installations and left every chart blank. A registered file
+        // cannot be dropped that way, and it keeps the plugin free of inline
+        // script output. Each file locates its own payload through the
+        // <script type="application/json" data-naws="…"> element the template
+        // prints, so any number of shortcodes on a page share one copy.
+        wp_register_script( 'naws-live-boot',
+            NAWS_PLUGIN_URL . 'assets/js/live-boot.js',
+            [ 'naws-frontend' ], NAWS_VERSION, true );
+        wp_register_script( 'naws-history-boot',
+            NAWS_PLUGIN_URL . 'assets/js/history-boot.js',
+            [ 'naws-frontend', 'naws-chartjs-adapter' ], NAWS_VERSION, true );
     }
 
     private function enqueue_frontend() {
@@ -167,6 +182,7 @@ class NAWS_Shortcodes {
     public function sc_history( $atts ) {
         $this->enqueue_frontend();
         wp_enqueue_script( 'naws-chartjs-adapter' );
+        wp_enqueue_script( 'naws-history-boot' );
 
         $atts = shortcode_atts( [
             'module_id'         => '',
@@ -195,6 +211,7 @@ class NAWS_Shortcodes {
     // ----------------------------------------------------------------
     public function sc_live( $atts ) {
         $this->enqueue_frontend();
+        wp_enqueue_script( 'naws-live-boot' );
 
         $atts = shortcode_atts( [
             'title'   => '',

@@ -2,6 +2,17 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [1.9.6] – 2026-08-17
+
+### Changed
+- **The plugin no longer prints any inline `<script>` block.** The boot routines for `[naws_live]` and `[naws_history]` were the last two, and they existed for a reason: 1.9.3 moved them into `wp_footer` output because `wp_add_inline_script()` is silently dropped on some installations, which left every chart blank with no error to go on. The workaround fixed that symptom but reintroduced exactly the pattern the plugin guidelines ask about, and it would have been the first thing a reviewer noticed.
+
+  Both routines now ship as ordinary registered files — `assets/js/live-boot.js` and `assets/js/history-boot.js` — enqueued through `wp_enqueue_script()` with `naws-frontend` as a dependency, so Chart.js is loaded before either runs. This is a better fix than the one it replaces: a registered file cannot be dropped the way an inline fragment can, so the original 1.9.3 bug is addressed at its root rather than routed around.
+
+  The per-widget payload still travels in the non-executable `<script type="application/json">` element beside each widget. Those elements now carry a `data-naws="live"` or `data-naws="history"` attribute, and each boot file collects its own by that attribute and reads the widget id from the payload. That removes the last thing the old inline block was needed for — a PHP value interpolated into JavaScript — and it means any number of shortcodes on one page boot from a single copy of the file, where previously each occurrence printed its own script block.
+
+  The JavaScript itself is byte-for-byte the code that ran before; only the surrounding function wrapper is new.
+
 ## [1.9.5] – 2026-08-17
 
 Compliance pass against the eighteen WordPress.org plugin directory guidelines. Nothing here changes what the plugin does; it changes what it discloses, what it identifies itself as, and what it ships alongside the code.

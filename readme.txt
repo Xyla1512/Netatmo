@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.0
-Stable tag: 1.9.5
+Stable tag: 1.9.6
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -104,6 +104,9 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 7. Export / Import page for backups
 
 == Changelog ==
+
+= 1.9.6 =
+* Changed: the plugin no longer outputs any inline script. The boot code for the live dashboard and the history charts now ships as two ordinary JavaScript files that are enqueued the WordPress way. This also removes the reason the 1.9.3 workaround existed: an enqueued file cannot be silently dropped the way an inline fragment can. The JavaScript itself is unchanged, and several shortcodes on one page now share a single copy of it.
 
 = 1.9.5 =
 * Fix: the User-Agent sent to the Yr.no / MET Norway forecast API named a repository that does not exist, and three other outgoing requests named no contact at all. MET Norway's terms require every client to identify itself with a reachable contact. All requests now send the plugin name, its version and your site address.
