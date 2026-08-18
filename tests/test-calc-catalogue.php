@@ -46,6 +46,8 @@ foreach ( $catalogue as $key => $entry ) {
     check( "$key hat einen Sprachkey",     ! empty( $entry['label'] ),                    true );
     check( "$key: param ist String/null",  ( ! isset( $entry['param'] ) || $entry['param'] === null || is_string( $entry['param'] ) ), true );
     check( "has('$key') ist wahr",         NAWS_Calc::has( $key ),                        true );
+    check( "$key: unit fehlt oder ist String", ( ! isset( $entry['unit'] ) || is_string( $entry['unit'] ) ), true );
+    check( "$key: unit nur ohne param",        ( ! isset( $entry['unit'] ) || ! isset( $entry['param'] ) || $entry['param'] === null ), true );
 }
 
 check( 'has() weist Unbekanntes ab', NAWS_Calc::has( 'gibt_es_nicht' ), false );

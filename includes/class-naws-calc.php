@@ -59,6 +59,26 @@ class NAWS_Calc {
     }
 
     /**
+     * Unit label for a catalogue entry.
+     *
+     * Two sources, never both: an entry either names a NAWS_Helpers sensor
+     * parameter — which brings its own unit and its own °C/°F conversion —
+     * or it carries a literal unit of its own. Degree days (Kd) and day
+     * counts have no sensor parameter to borrow from, which is why the
+     * literal exists.
+     */
+    public static function unit_for( string $key ): string {
+        $entry = self::catalogue()[ $key ] ?? null;
+        if ( $entry === null ) {
+            return '';
+        }
+        if ( ! empty( $entry['unit'] ) ) {
+            return (string) $entry['unit'];
+        }
+        return $entry['param'] ? NAWS_Helpers::get_unit( $entry['param'] ) : '';
+    }
+
+    /**
      * Module type behind each alias, same mapping [naws_value] uses.
      */
     private const TYPE_MAP = [
@@ -119,13 +139,12 @@ class NAWS_Calc {
     /**
      * The raw value behind a catalogue key.
      *
-     * Numbers come back in metric base units (°C, %); text values come back
-     * as finished, translated strings. null means "the data does not support
-     * this value" — the shortcode turns that into the fallback.
+     * Dispatches on the entry's kind. Each kind reads different sources and
+     * honours different attributes, so keeping them in one switch would mean
+     * every branch paying for every other branch's setup — an instant value
+     * needs a current reading, a day class needs a range of daily rows.
      *
-     * @param string $key  Catalogue key.
-     * @param array  $atts Shortcode attributes, already sanitised.
-     * @return float|string|null
+     * @return float|string|null null means "the data does not support this".
      */
     public static function raw( string $key, array $atts ) {
         if ( ! self::has( $key ) ) {
@@ -137,6 +156,18 @@ class NAWS_Calc {
             return null;
         }
 
+        switch ( self::catalogue()[ $key ]['kind'] ) {
+            case 'instant':
+                return self::raw_instant( $key, $atts );
+        }
+
+        return null;
+    }
+
+    /**
+     * Values that follow from the current reading or the station location.
+     */
+    private static function raw_instant( string $key, array $atts ) {
         $module = self::module_id( (string) ( $atts['module'] ?? 'outdoor' ) );
         $temp   = self::reading( $module, 'Temperature' );
         $hum    = self::reading( $module, 'Humidity' );

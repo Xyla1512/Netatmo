@@ -380,7 +380,8 @@ class NAWS_Shortcodes {
             }
             $value = round( floatval( $value ), $dec );
 
-            $unit_str = ( $atts['unit'] !== '0' && $param ) ? ' ' . NAWS_Helpers::get_unit( $param ) : '';
+            $unit_label = NAWS_Calc::unit_for( $key );
+            $unit_str   = ( $atts['unit'] !== '0' && $unit_label !== '' ) ? ' ' . $unit_label : '';
             $output   = esc_html( $value . $unit_str );
         }
 
