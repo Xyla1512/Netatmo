@@ -363,6 +363,33 @@ return [
     'moon_waning_gibbous'  => 'Abnehmend',
     'moon_last_quarter'    => 'Letztes Viertel',
     'moon_waning_crescent' => 'Abnehmende Sichel',
+
+    // [naws_calc] – Bezeichnungen der berechneten Werte
+    'calc_dewpoint'           => 'Taupunkt',
+    'calc_feels_like'         => 'Gefühlte Temperatur',
+    'calc_heat_index'         => 'Hitzeindex',
+    'calc_wet_bulb'           => 'Feuchtkugeltemperatur',
+    'calc_bioclimate'         => 'Bioklimatisches Empfinden',
+    'calc_wind_compass'       => 'Windrichtung',
+    'calc_co2_level'          => 'CO₂-Bewertung',
+    'calc_sunrise'            => 'Sonnenaufgang',
+    'calc_sunset'             => 'Sonnenuntergang',
+    'calc_daylength'          => 'Tageslänge',
+    'calc_moon_phase'         => 'Mondphase',
+    'calc_moon_illumination'  => 'Beleuchtungsgrad des Mondes',
+    'calc_next_supermoon'     => 'Nächster Supermond',
+    'calc_next_lunar_eclipse' => 'Nächste Mondfinsternis',
+
+    // [naws_calc] – Empfindungsstufen zur gefühlten Temperatur
+    'sens_very_cold'          => 'sehr kalt',
+    'sens_cold'               => 'kalt',
+    'sens_cool'               => 'kühl',
+    'sens_pleasantly_cool'    => 'angenehm kühl',
+    'sens_pleasant'           => 'angenehm',
+    'sens_warm'               => 'warm',
+    'sens_hot'                => 'heiß',
+    'sens_extremely_hot'      => 'extrem heiß',
+
     'infobar_feels_like'   => 'Gefühlte Temp.',
     'infobar_heat_index'   => 'Hitzeindex',
     'infobar_dew_point'    => 'Taupunkt',

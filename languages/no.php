@@ -363,6 +363,33 @@ return [
     'moon_waning_gibbous'     => 'Avtagende måne',
     'moon_last_quarter'       => 'Siste kvarter',
     'moon_waning_crescent'    => 'Avtagende månesigd',
+
+    // [naws_calc] – navn på de beregnede verdiene
+    'calc_dewpoint'           => 'Duggpunkt',
+    'calc_feels_like'         => 'Følt temperatur',
+    'calc_heat_index'         => 'Varmeindeks',
+    'calc_wet_bulb'           => 'Våtkuletemperatur',
+    'calc_bioclimate'         => 'Termisk opplevelse',
+    'calc_wind_compass'       => 'Vindretning',
+    'calc_co2_level'          => 'CO₂-vurdering',
+    'calc_sunrise'            => 'Soloppgang',
+    'calc_sunset'             => 'Solnedgang',
+    'calc_daylength'          => 'Dagens lengde',
+    'calc_moon_phase'         => 'Månefase',
+    'calc_moon_illumination'  => 'Månens belysningsgrad',
+    'calc_next_supermoon'     => 'Neste supermåne',
+    'calc_next_lunar_eclipse' => 'Neste måneformørkelse',
+
+    // [naws_calc] – trinn for termisk opplevelse
+    'sens_very_cold'          => 'svært kaldt',
+    'sens_cold'               => 'kaldt',
+    'sens_cool'               => 'kjølig',
+    'sens_pleasantly_cool'    => 'behagelig kjølig',
+    'sens_pleasant'           => 'behagelig',
+    'sens_warm'               => 'varmt',
+    'sens_hot'                => 'hett',
+    'sens_extremely_hot'      => 'ekstremt hett',
+
     'infobar_feels_like'   => 'Føles som',
     'infobar_heat_index'   => 'Varmeindeks',
     'infobar_dew_point'    => 'Duggpunkt',

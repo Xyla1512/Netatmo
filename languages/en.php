@@ -363,6 +363,33 @@ return [
     'moon_waning_gibbous'  => 'Waning Gibbous',
     'moon_last_quarter'    => 'Last Quarter',
     'moon_waning_crescent' => 'Waning Crescent',
+
+    // [naws_calc] – names of the computed values
+    'calc_dewpoint'           => 'Dew point',
+    'calc_feels_like'         => 'Feels like',
+    'calc_heat_index'         => 'Heat index',
+    'calc_wet_bulb'           => 'Wet-bulb temperature',
+    'calc_bioclimate'         => 'Thermal sensation',
+    'calc_wind_compass'       => 'Wind direction',
+    'calc_co2_level'          => 'CO₂ rating',
+    'calc_sunrise'            => 'Sunrise',
+    'calc_sunset'             => 'Sunset',
+    'calc_daylength'          => 'Length of day',
+    'calc_moon_phase'         => 'Moon phase',
+    'calc_moon_illumination'  => 'Moon illumination',
+    'calc_next_supermoon'     => 'Next supermoon',
+    'calc_next_lunar_eclipse' => 'Next lunar eclipse',
+
+    // [naws_calc] – thermal sensation bands
+    'sens_very_cold'          => 'very cold',
+    'sens_cold'               => 'cold',
+    'sens_cool'               => 'cool',
+    'sens_pleasantly_cool'    => 'pleasantly cool',
+    'sens_pleasant'           => 'pleasant',
+    'sens_warm'               => 'warm',
+    'sens_hot'                => 'hot',
+    'sens_extremely_hot'      => 'extremely hot',
+
     'infobar_feels_like'   => 'Feels like',
     'infobar_heat_index'   => 'Heat Index',
     'infobar_dew_point'    => 'Dew Point',
