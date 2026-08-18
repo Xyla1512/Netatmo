@@ -7,9 +7,10 @@
  *
  *   wind_chill()        – NOAA 2001, metric. Must always come out below the
  *                         air temperature when it is cold and windy.
- *   feels_like()        – the three-regime switch. Before 2026-08 this was
- *                         Steadman across the whole range, which reported
- *                         cold windy weather as far milder than it feels.
+ *   feels_like()        – the three-regime switch: wind chill below 10 °C with
+ *                         wind, the heat index in hot humid air, Steadman
+ *                         between. Guards that each regime is actually selected
+ *                         at its boundaries.
  *   thermal_sensation() – the band a felt temperature falls into. The bands
  *                         are the source's, not invented here.
  *
@@ -88,11 +89,6 @@ check( 'genau 27 C bei 41 % ist Hitzeindex',
 check( 'genau 40 % ist kein Hitzeindex',
     NAWS_Astro::feels_like( 27.0, 40.0, 2.0 ),
     NAWS_Astro::apparent_temperature( 27.0, 40.0, 2.0 ) );
-
-// Der Fehler, der behoben wird: Steadman meldete Kaltwind zu mild.
-check( 'Windchill ist kaelter als der alte Steadman-Wert',
-    NAWS_Astro::feels_like( -5.0, 80.0, 25.0 ) < NAWS_Astro::apparent_temperature( -5.0, 80.0, 25.0 ),
-    true );
 
 echo "\nNAWS_Astro::thermal_sensation()\n" . str_repeat( '-', 74 ) . "\n";
 

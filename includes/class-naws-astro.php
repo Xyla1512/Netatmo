@@ -83,10 +83,10 @@ class NAWS_Astro {
      * Felt temperature, switched by weather regime.
      *
      * Three models, because no single formula covers the range: wind chill
-     * carries cold windy air, the heat index carries hot humid air, and
-     * Steadman carries everything between. Before this switch existed the
-     * plugin reported -5 °C in a stiff breeze as roughly -8 °C when it feels
-     * closer to -13 °C.
+     * is defined for cold moving air, the heat index for hot humid air, and
+     * Steadman's apparent temperature for the broad middle. Which of them
+     * reads coldest varies with temperature and wind speed — the point is
+     * that each regime is now evaluated by the model built for it.
      *
      * @param float $temp_c       Air temperature in °C.
      * @param float $humidity_pct Relative humidity in % (0–100).
