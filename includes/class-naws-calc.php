@@ -170,6 +170,63 @@ class NAWS_Calc {
                 // already-translated label belongs in running text.
                 $level = NAWS_Helpers::get_co2_level( $ppm );
                 return $level['label'];
+
+            case 'sunrise':
+            case 'sunset': {
+                $coords = NAWS_Astro::get_coords();
+                if ( ! $coords ) {
+                    return null;
+                }
+                $sun  = NAWS_Astro::sun_times( $coords['lat'], $coords['lng'] );
+                $time = ( $key === 'sunrise' ) ? ( $sun['rise'] ?? '' ) : ( $sun['set'] ?? '' );
+
+                // '--:--' means the sun did not cross the horizon that day.
+                // Above the Arctic Circle that is normal, not an error — and
+                // this plugin ships a Norwegian translation.
+                return ( $time === '' || $time === '--:--' ) ? null : $time;
+            }
+
+            case 'daylength': {
+                $coords = NAWS_Astro::get_coords();
+                if ( ! $coords ) {
+                    return null;
+                }
+                // date_sun_info() is used directly here because sun_times()
+                // hands back formatted strings, which cannot be subtracted.
+                $info = date_sun_info( time(), $coords['lat'], $coords['lng'] );
+
+                // Polar day and polar night come back as bool true/false
+                // rather than a timestamp. Neither has a length to report.
+                if ( ! is_int( $info['sunrise'] ?? null ) || ! is_int( $info['sunset'] ?? null ) ) {
+                    return null;
+                }
+                $seconds = $info['sunset'] - $info['sunrise'];
+                if ( $seconds <= 0 ) {
+                    return null;
+                }
+                return sprintf( '%d:%02d', intdiv( $seconds, 3600 ), intdiv( $seconds % 3600, 60 ) );
+            }
+
+            case 'moon_phase': {
+                $moon = NAWS_Astro::moon_data();
+                // Already translated by moon_data() — do not translate twice.
+                return empty( $moon['name'] ) ? null : $moon['name'];
+            }
+
+            case 'moon_illumination': {
+                $moon = NAWS_Astro::moon_data();
+                return isset( $moon['phase_pct'] ) ? floatval( $moon['phase_pct'] ) : null;
+            }
+
+            case 'next_supermoon': {
+                $ev = NAWS_Astro::next_supermoon();
+                return empty( $ev['date'] ) ? null : $ev['date'];
+            }
+
+            case 'next_lunar_eclipse': {
+                $ev = NAWS_Astro::next_lunar_eclipse();
+                return empty( $ev['date'] ) ? null : $ev['date'];
+            }
         }
 
         return null;
