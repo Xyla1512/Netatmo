@@ -390,6 +390,13 @@ return [
     'sens_hot'                => 'hot',
     'sens_extremely_hot'      => 'extremely hot',
 
+    // [naws_calc] – catalogue reference table on the backend
+    'sc_calc_title'    => 'Computed values',
+    'sc_calc_intro'    => 'One shortcode for every computed value. The value goes in the <code>value</code> attribute; everything else is optional and behaves as it does in <code>[naws_value]</code>.',
+    'sc_calc_col_key'  => 'Shortcode',
+    'sc_calc_col_live' => 'Right now',
+    'sc_calc_col_desc' => 'Meaning',
+
     'infobar_feels_like'   => 'Feels like',
     'infobar_heat_index'   => 'Heat Index',
     'infobar_dew_point'    => 'Dew Point',

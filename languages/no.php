@@ -390,6 +390,13 @@ return [
     'sens_hot'                => 'hett',
     'sens_extremely_hot'      => 'ekstremt hett',
 
+    // [naws_calc] – katalog-referansetabell i backend
+    'sc_calc_title'    => 'Beregnede verdier',
+    'sc_calc_intro'    => 'Én kortkode for alle beregnede verdier. Verdien står i attributtet <code>value</code>; resten er valgfritt og virker som i <code>[naws_value]</code>.',
+    'sc_calc_col_key'  => 'Skrivemåte',
+    'sc_calc_col_live' => 'Akkurat nå',
+    'sc_calc_col_desc' => 'Betydning',
+
     'infobar_feels_like'   => 'Føles som',
     'infobar_heat_index'   => 'Varmeindeks',
     'infobar_dew_point'    => 'Duggpunkt',

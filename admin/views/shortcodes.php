@@ -129,6 +129,32 @@ $value_params = [
     </table>
 </div>
 
+<?php /* ── naws_calc ── */ ?>
+<div class="naws-admin-panel" style="margin-top:1rem;">
+    <div class="naws-panel-header">
+        <h2><?php naws_e( 'sc_calc_title' ); ?></h2>
+    </div>
+    <p style="padding:0 1.25rem;"><?php NAWS_Lang::r( 'sc_calc_intro' ); ?></p>
+    <table class="wp-list-table widefat striped naws-list-table">
+        <thead>
+            <tr>
+                <th><?php naws_e( 'sc_calc_col_key' ); ?></th>
+                <th><?php naws_e( 'sc_calc_col_desc' ); ?></th>
+                <th><?php naws_e( 'sc_calc_col_live' ); ?></th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ( NAWS_Calc::catalogue() as $calc_key => $calc_entry ) : ?>
+            <tr>
+                <td><code>[naws_calc value="<?php echo esc_attr( $calc_key ); ?>"]</code></td>
+                <td><?php echo esc_html( naws__( $calc_entry['label'] ) ); ?></td>
+                <td><?php echo do_shortcode( '[naws_calc value="' . esc_attr( $calc_key ) . '" tag="none"]' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- sc_calc() escapes its own output ?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
 <?php /* ── Layout Shortcodes ── */ ?>
 <div class="naws-admin-panel naws-ref-section">
     <div class="naws-panel-header"><h2><?php naws_e('sc_section_layout'); ?></h2></div>

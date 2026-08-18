@@ -390,6 +390,13 @@ return [
     'sens_hot'                => 'heiß',
     'sens_extremely_hot'      => 'extrem heiß',
 
+    // [naws_calc] – Katalog-Referenztabelle im Backend
+    'sc_calc_title'    => 'Berechnete Werte',
+    'sc_calc_intro'    => 'Ein Shortcode für alle berechneten Werte. Der Wert steckt im Attribut <code>value</code>, alles andere ist optional und wirkt wie bei <code>[naws_value]</code>.',
+    'sc_calc_col_key'  => 'Schreibweise',
+    'sc_calc_col_live' => 'Aktuell bei dir',
+    'sc_calc_col_desc' => 'Bedeutung',
+
     'infobar_feels_like'   => 'Gefühlte Temp.',
     'infobar_heat_index'   => 'Hitzeindex',
     'infobar_dew_point'    => 'Taupunkt',
