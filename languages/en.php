@@ -410,10 +410,25 @@ return [
 
     // [naws_calc] – catalogue reference table on the backend
     'sc_calc_title'    => 'Computed values',
-    'sc_calc_intro'    => 'One shortcode for every computed value. The value goes in the <code>value</code> attribute; everything else is optional and behaves as it does in <code>[naws_value]</code>.',
+    'sc_calc_intro'    => 'One shortcode for every computed value. The value goes in the <code>value</code> attribute — which of the other attributes apply depends on its kind (instant value, day class or sum); see the table below.',
     'sc_calc_col_key'  => 'Shortcode',
     'sc_calc_col_live' => 'Right now',
     'sc_calc_col_desc' => 'Meaning',
+    'sc_calc_attr_title'      => 'Additional attributes',
+    'sc_th_applies'           => 'Applies to',
+    'sc_attr_station_desc'    => 'Which station to read, by module or station ID.',
+    'sc_attr_period_desc'     => 'The date range to count or sum over.',
+    'sc_attr_year_desc'       => 'A single calendar year; overrides period when set.',
+    'sc_attr_mode_desc'       => 'How day classes are counted.',
+    'sc_attr_note_desc'       => 'Appends a note stating how many days of the period actually carry data.',
+    'sc_attr_base_desc'       => 'The threshold temperature the sum is measured against.',
+    'sc_attr_cap_desc'        => 'The upper temperature the sum is capped at.',
+    'sc_calc_applies_instant'  => 'instant values',
+    'sc_calc_applies_daysum'   => 'day classes, sums, index',
+    'sc_calc_applies_dayclass' => 'day classes only',
+    'sc_calc_applies_sum'      => 'sums (hdd, cdd, gdd)',
+    'sc_calc_applies_gdd'      => 'sums (gdd)',
+    'sc_calc_applies_all'      => 'everything',
 
     // Limit temperatures for the degree-day indices
     'deg_limits'        => 'Limit temperatures',

@@ -410,10 +410,25 @@ return [
 
     // [naws_calc] – Katalog-Referenztabelle im Backend
     'sc_calc_title'    => 'Berechnete Werte',
-    'sc_calc_intro'    => 'Ein Shortcode für alle berechneten Werte. Der Wert steckt im Attribut <code>value</code>, alles andere ist optional und wirkt wie bei <code>[naws_value]</code>.',
+    'sc_calc_intro'    => 'Ein Shortcode für alle berechneten Werte. Der Wert steckt im Attribut <code>value</code> — welche der übrigen Attribute gelten, hängt von seiner Art ab (Momentanwert, Tagesklasse oder Summe); siehe Tabelle unten.',
     'sc_calc_col_key'  => 'Schreibweise',
     'sc_calc_col_live' => 'Aktuell bei dir',
     'sc_calc_col_desc' => 'Bedeutung',
+    'sc_calc_attr_title'      => 'Weitere Attribute',
+    'sc_th_applies'           => 'Gilt für',
+    'sc_attr_station_desc'    => 'Welche Station gelesen wird, per Modul- oder Stations-ID.',
+    'sc_attr_period_desc'     => 'Der Zeitraum, über den gezählt oder summiert wird.',
+    'sc_attr_year_desc'       => 'Ein einzelnes Kalenderjahr; überschreibt period, wenn gesetzt.',
+    'sc_attr_mode_desc'       => 'Wie Tagesklassen gezählt werden.',
+    'sc_attr_note_desc'       => 'Hängt einen Hinweis an, an wie vielen Tagen des Zeitraums tatsächlich Daten vorliegen.',
+    'sc_attr_base_desc'       => 'Die Schwellentemperatur, gegen die die Summe gerechnet wird.',
+    'sc_attr_cap_desc'        => 'Die obere Temperatur, bei der die Summe gedeckelt wird.',
+    'sc_calc_applies_instant'  => 'Momentanwerte',
+    'sc_calc_applies_daysum'   => 'Tagesklassen, Summen, Index',
+    'sc_calc_applies_dayclass' => 'nur Tagesklassen',
+    'sc_calc_applies_sum'      => 'Summen (hdd, cdd, gdd)',
+    'sc_calc_applies_gdd'      => 'Summen (gdd)',
+    'sc_calc_applies_all'      => 'alle',
 
     // Grenztemperaturen für die Gradtag-Kennzahlen
     'deg_limits'        => 'Grenztemperaturen',

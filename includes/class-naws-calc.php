@@ -34,8 +34,15 @@ class NAWS_Calc {
      * threshold – comparison value for a dayclass entry; null means "take
      *             it from the settings" (heating_limit or cooling_limit),
      *             which is what keeps that limit country-configurable
+     * needs     – daily-summary columns this value requires to be non-NULL
+     *             on a row before that row counts as measured. A row exists
+     *             as soon as ANY column has a value, so a day with only a
+     *             pressure reading still produces a row whose temperatures
+     *             are all NULL — without this, such days silently count as
+     *             "measured" and turn "nobody measured this" into "0 frost
+     *             days". Absent (instant values) means no filtering applies.
      *
-     * @return array<string, array{kind:string, param:?string, decimals:int, label:string, unit?:string, field?:string, op?:string, threshold?:?float}>
+     * @return array<string, array{kind:string, param:?string, decimals:int, label:string, unit?:string, field?:string, op?:string, threshold?:?float, needs?:string[]}>
      */
     public static function catalogue(): array {
         return [
@@ -60,20 +67,20 @@ class NAWS_Calc {
             'next_lunar_eclipse' => [ 'kind' => 'instant', 'param' => null,          'decimals' => 0,  'label' => 'calc_next_lunar_eclipse' ],
 
             // ── Tagesklassen aus der Tagestabelle ──────────────────────
-            'ice_days'          => [ 'kind' => 'dayclass', 'param' => null, 'unit' => '', 'decimals' => 0, 'label' => 'calc_ice_days',        'field' => 'temp_max', 'op' => '<',  'threshold' => 0.0 ],
-            'frost_days'        => [ 'kind' => 'dayclass', 'param' => null, 'unit' => '', 'decimals' => 0, 'label' => 'calc_frost_days',      'field' => 'temp_min', 'op' => '<',  'threshold' => 0.0 ],
-            'summer_days'       => [ 'kind' => 'dayclass', 'param' => null, 'unit' => '', 'decimals' => 0, 'label' => 'calc_summer_days',     'field' => 'temp_max', 'op' => '>=', 'threshold' => 25.0 ],
-            'hot_days'          => [ 'kind' => 'dayclass', 'param' => null, 'unit' => '', 'decimals' => 0, 'label' => 'calc_hot_days',        'field' => 'temp_max', 'op' => '>=', 'threshold' => 30.0 ],
-            'tropical_nights'   => [ 'kind' => 'dayclass', 'param' => null, 'unit' => '', 'decimals' => 0, 'label' => 'calc_tropical_nights', 'field' => 'temp_min', 'op' => '>=', 'threshold' => 20.0 ],
-            'heating_days'      => [ 'kind' => 'dayclass', 'param' => null, 'unit' => '', 'decimals' => 0, 'label' => 'calc_heating_days',    'field' => 'temp_avg', 'op' => '<',  'threshold' => null ],
-            'cooling_days'      => [ 'kind' => 'dayclass', 'param' => null, 'unit' => '', 'decimals' => 0, 'label' => 'calc_cooling_days',    'field' => 'temp_avg', 'op' => '>',  'threshold' => null ],
+            'ice_days'          => [ 'kind' => 'dayclass', 'param' => null, 'unit' => '', 'decimals' => 0, 'label' => 'calc_ice_days',        'field' => 'temp_max', 'op' => '<',  'threshold' => 0.0,  'needs' => [ 'temp_max' ] ],
+            'frost_days'        => [ 'kind' => 'dayclass', 'param' => null, 'unit' => '', 'decimals' => 0, 'label' => 'calc_frost_days',      'field' => 'temp_min', 'op' => '<',  'threshold' => 0.0,  'needs' => [ 'temp_min' ] ],
+            'summer_days'       => [ 'kind' => 'dayclass', 'param' => null, 'unit' => '', 'decimals' => 0, 'label' => 'calc_summer_days',     'field' => 'temp_max', 'op' => '>=', 'threshold' => 25.0, 'needs' => [ 'temp_max' ] ],
+            'hot_days'          => [ 'kind' => 'dayclass', 'param' => null, 'unit' => '', 'decimals' => 0, 'label' => 'calc_hot_days',        'field' => 'temp_max', 'op' => '>=', 'threshold' => 30.0, 'needs' => [ 'temp_max' ] ],
+            'tropical_nights'   => [ 'kind' => 'dayclass', 'param' => null, 'unit' => '', 'decimals' => 0, 'label' => 'calc_tropical_nights', 'field' => 'temp_min', 'op' => '>=', 'threshold' => 20.0, 'needs' => [ 'temp_min' ] ],
+            'heating_days'      => [ 'kind' => 'dayclass', 'param' => null, 'unit' => '', 'decimals' => 0, 'label' => 'calc_heating_days',    'field' => 'temp_avg', 'op' => '<',  'threshold' => null, 'needs' => [ 'temp_avg' ] ],
+            'cooling_days'      => [ 'kind' => 'dayclass', 'param' => null, 'unit' => '', 'decimals' => 0, 'label' => 'calc_cooling_days',    'field' => 'temp_avg', 'op' => '>',  'threshold' => null, 'needs' => [ 'temp_avg' ] ],
 
             // ── Summenkennzahlen ──────────────────────────────────────
-            'hdd'        => [ 'kind' => 'sum', 'param' => null, 'unit' => 'Kd', 'decimals' => 0, 'label' => 'calc_hdd' ],
-            'cdd'        => [ 'kind' => 'sum', 'param' => null, 'unit' => 'Kd', 'decimals' => 0, 'label' => 'calc_cdd' ],
-            'gdd'        => [ 'kind' => 'sum', 'param' => null, 'unit' => 'Kd', 'decimals' => 0, 'label' => 'calc_gdd' ],
-            'glts'       => [ 'kind' => 'sum', 'param' => null, 'unit' => '°C', 'decimals' => 1, 'label' => 'calc_glts' ],
-            'glts_start' => [ 'kind' => 'sum', 'param' => null, 'unit' => '',   'decimals' => 0, 'label' => 'calc_glts_start' ],
+            'hdd'        => [ 'kind' => 'sum', 'param' => null, 'unit' => 'Kd', 'decimals' => 0, 'label' => 'calc_hdd',        'needs' => [ 'temp_avg' ] ],
+            'cdd'        => [ 'kind' => 'sum', 'param' => null, 'unit' => 'Kd', 'decimals' => 0, 'label' => 'calc_cdd',        'needs' => [ 'temp_avg' ] ],
+            'gdd'        => [ 'kind' => 'sum', 'param' => null, 'unit' => 'Kd', 'decimals' => 0, 'label' => 'calc_gdd',        'needs' => [ 'temp_min', 'temp_max' ] ],
+            'glts'       => [ 'kind' => 'sum', 'param' => null, 'unit' => '°C', 'decimals' => 1, 'label' => 'calc_glts',       'needs' => [ 'temp_avg' ] ],
+            'glts_start' => [ 'kind' => 'sum', 'param' => null, 'unit' => '',   'decimals' => 0, 'label' => 'calc_glts_start', 'needs' => [ 'temp_avg' ] ],
         ];
     }
 
@@ -237,6 +244,45 @@ class NAWS_Calc {
             'fields'    => $fields,
             'group_by'  => 'day',
         ] );
+    }
+
+    /**
+     * Rows that actually carry every column this value needs.
+     *
+     * A daily row exists as soon as ANY column has a value — a day with only
+     * a pressure reading still produces a row whose temperatures are all
+     * NULL. Counting those as measured days is how "nobody measured this
+     * month" turns into "0 frost days", which is exactly the confusion the
+     * fallback exists to prevent.
+     */
+    private static function rows_with( array $rows, array $needs ): array {
+        if ( empty( $needs ) ) {
+            return $rows;
+        }
+        return array_values( array_filter( $rows, static function ( $row ) use ( $needs ) {
+            foreach ( $needs as $field ) {
+                if ( ( $row[ $field ] ?? null ) === null ) {
+                    return false;
+                }
+            }
+            return true;
+        } ) );
+    }
+
+    /**
+     * Force the period a catalogue key is defined over, regardless of what
+     * the shortcode attribute says.
+     *
+     * glts and glts_start are defined as "since 1 January", so they ignore
+     * an explicit period and honour only an explicit year. Both raw_sum()
+     * and coverage() call this — that is what keeps the coverage note from
+     * ever describing a different window than the number it annotates.
+     */
+    private static function normalise_period_atts( string $key, array $atts ): array {
+        if ( $key === 'glts' || $key === 'glts_start' ) {
+            $atts['period'] = 'year';
+        }
+        return $atts;
     }
 
     /**
@@ -415,10 +461,15 @@ class NAWS_Calc {
      */
     private static function raw_dayclass( string $key, array $atts ) {
         $entry = self::catalogue()[ $key ];
-        $rows  = self::daily_rows( $atts, [ 'temp_min', 'temp_max', 'temp_avg' ] );
+        $rows  = self::rows_with(
+            self::daily_rows( $atts, [ 'temp_min', 'temp_max', 'temp_avg' ] ),
+            $entry['needs'] ?? []
+        );
 
         // "No data" and "no such days" must not look alike: an empty range
-        // gives the fallback, a range with rows and no hits gives 0.
+        // (or a range with rows that never carry the column this value
+        // needs) gives the fallback, a range with matching rows and no
+        // hits gives 0.
         if ( empty( $rows ) ) {
             return null;
         }
@@ -447,10 +498,28 @@ class NAWS_Calc {
         if ( $entry === null || $entry['kind'] === 'instant' ) {
             return null;
         }
-        $rows  = self::daily_rows( $atts, [ 'temp_min', 'temp_max', 'temp_avg' ] );
-        $range = self::period_range( $atts );
 
-        $from = strtotime( $range['from'] . ' 12:00:00' );
+        $cov_atts = self::normalise_period_atts( $key, $atts );
+        $rows     = self::rows_with(
+            self::daily_rows( $cov_atts, [ 'temp_min', 'temp_max', 'temp_avg' ] ),
+            $entry['needs'] ?? []
+        );
+        $range    = self::period_range( $cov_atts );
+
+        $from_str = $range['from'];
+
+        // 'all' resolves to 1900-01-01 in period_range() — a denominator no
+        // station's data can ever fill, which turns an honest coverage note
+        // into 126 years of noise. Anchor it to the first day that actually
+        // carries this value instead.
+        if ( $from_str === '1900-01-01' ) {
+            if ( empty( $rows ) ) {
+                return [ 'rows' => 0, 'days' => 0 ];
+            }
+            $from_str = (string) $rows[0]['day_date'];
+        }
+
+        $from = strtotime( $from_str . ' 12:00:00' );
         $to   = strtotime( $range['to'] . ' 12:00:00' );
         $days = ( $from && $to && $to >= $from ) ? intval( round( ( $to - $from ) / DAY_IN_SECONDS ) ) + 1 : 0;
 
@@ -473,15 +542,17 @@ class NAWS_Calc {
      */
     private static function raw_sum( string $key, array $atts ) {
         $opts = get_option( 'naws_settings', [] );
+        $entry = self::catalogue()[ $key ];
 
         // The grassland sum is defined as "since the first of January", so it
-        // ignores period and honours only an explicit year.
-        $sum_atts = $atts;
-        if ( $key === 'glts' || $key === 'glts_start' ) {
-            $sum_atts['period'] = 'year';
-        }
+        // ignores period and honours only an explicit year — normalise_period_atts()
+        // applies that override.
+        $sum_atts = self::normalise_period_atts( $key, $atts );
 
-        $rows = self::daily_rows( $sum_atts, [ 'temp_min', 'temp_max', 'temp_avg' ] );
+        $rows = self::rows_with(
+            self::daily_rows( $sum_atts, [ 'temp_min', 'temp_max', 'temp_avg' ] ),
+            $entry['needs'] ?? []
+        );
         if ( empty( $rows ) ) {
             return null;
         }

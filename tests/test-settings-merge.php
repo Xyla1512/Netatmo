@@ -242,6 +242,14 @@ scenario(
     [ 'heating_limit' => 30.0 ]
 );
 
+// Fix 1: a cleared field must fall back to the default, not to floatval('') = 0.0.
+scenario(
+    'Leere Heizgrenze faellt auf den Standardwert zurueck, nicht auf 0',
+    [ 'heating_limit' => '' ],
+    [ 'room_temp', 'cooling_limit' ],
+    [ 'heating_limit' => 15.0 ]
+);
+
 echo str_repeat( '-', 70 ) . "\n";
 echo $failed === 0 ? "alle Szenarien bestanden\n\n" : "{$failed} Szenarien fehlgeschlagen\n\n";
 

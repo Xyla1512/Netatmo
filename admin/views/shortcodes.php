@@ -134,6 +134,32 @@ $value_params = [
     <div class="naws-panel-header"><h2><?php naws_e( 'sc_calc_title' ); ?></h2></div>
     <div class="naws-panel-body">
     <p class="naws-section-intro"><?php NAWS_Lang::r( 'sc_calc_intro' ); ?></p>
+
+    <div class="naws-sc-card">
+        <h3><?php naws_e( 'sc_calc_attr_title' ); ?></h3>
+        <table class="naws-attr-table">
+            <tr>
+                <th><?php naws_e( 'sc_th_attribute' ); ?></th>
+                <th><?php naws_e( 'sc_th_description' ); ?></th>
+                <th><?php naws_e( 'sc_th_values' ); ?></th>
+                <th><?php naws_e( 'sc_th_applies' ); ?></th>
+            </tr>
+            <tr><td><code>module</code></td><td><?php naws_e( 'sc_attr_module_desc' ); ?></td><td><code>outdoor</code> &middot; <code>indoor</code> &middot; <code>wind</code> &middot; <code>rain</code> &middot; MAC</td><td><?php naws_e( 'sc_calc_applies_instant' ); ?></td></tr>
+            <tr><td><code>station</code></td><td><?php naws_e( 'sc_attr_station_desc' ); ?></td><td><code>module_id</code> / <code>station_id</code></td><td><?php naws_e( 'sc_calc_applies_daysum' ); ?></td></tr>
+            <tr><td><code>period</code></td><td><?php naws_e( 'sc_attr_period_desc' ); ?></td><td><code>year</code> &middot; <code>month</code> &middot; <code>Nd</code> &middot; <code>all</code></td><td><?php naws_e( 'sc_calc_applies_daysum' ); ?></td></tr>
+            <tr><td><code>year</code></td><td><?php naws_e( 'sc_attr_year_desc' ); ?></td><td><code>2024</code></td><td><?php naws_e( 'sc_calc_applies_daysum' ); ?></td></tr>
+            <tr><td><code>note</code></td><td><?php naws_e( 'sc_attr_note_desc' ); ?></td><td><code>1</code></td><td><?php naws_e( 'sc_calc_applies_daysum' ); ?></td></tr>
+            <tr><td><code>mode</code></td><td><?php naws_e( 'sc_attr_mode_desc' ); ?></td><td><code>count</code> &middot; <code>streak</code> &middot; <code>max_streak</code></td><td><?php naws_e( 'sc_calc_applies_dayclass' ); ?></td></tr>
+            <tr><td><code>base</code></td><td><?php naws_e( 'sc_attr_base_desc' ); ?></td><td>°C</td><td><?php naws_e( 'sc_calc_applies_sum' ); ?></td></tr>
+            <tr><td><code>cap</code></td><td><?php naws_e( 'sc_attr_cap_desc' ); ?></td><td>°C</td><td><?php naws_e( 'sc_calc_applies_gdd' ); ?></td></tr>
+            <tr><td><code>unit</code></td><td><?php naws_e( 'sc_attr_unit_desc' ); ?></td><td><?php naws_e( 'sc_attr_unit_vals' ); ?></td><td><?php naws_e( 'sc_calc_applies_all' ); ?></td></tr>
+            <tr><td><code>decimals</code></td><td><?php naws_e( 'sc_attr_decimals_desc' ); ?></td><td><?php naws_e( 'sc_attr_decimals_vals' ); ?></td><td><?php naws_e( 'sc_calc_applies_all' ); ?></td></tr>
+            <tr><td><code>fallback</code></td><td><?php naws_e( 'sc_attr_fallback_desc' ); ?></td><td><?php naws_e( 'sc_attr_fallback_vals' ); ?></td><td><?php naws_e( 'sc_calc_applies_all' ); ?></td></tr>
+            <tr><td><code>tag</code></td><td><?php naws_e( 'sc_attr_tag_desc' ); ?></td><td><code>span</code> &middot; <code>div</code> &middot; <code>p</code> &middot; <code>strong</code> &middot; <code>none</code></td><td><?php naws_e( 'sc_calc_applies_all' ); ?></td></tr>
+            <tr><td><code>class</code></td><td><?php naws_e( 'sc_attr_class_desc' ); ?></td><td><?php naws_e( 'sc_attr_class_vals' ); ?></td><td><?php naws_e( 'sc_calc_applies_all' ); ?></td></tr>
+        </table>
+    </div>
+
     <table class="wp-list-table widefat striped naws-list-table">
         <thead>
             <tr>

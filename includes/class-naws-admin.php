@@ -124,9 +124,9 @@ class NAWS_Admin {
         if ( $sent( 'station_name' ) )     $clean['station_name']     = sanitize_text_field( $input['station_name'] );
         if ( $sent( 'night_mode' ) )       $clean['night_mode']       = ! empty( $input['night_mode'] ) ? 1 : 0;
 
-        if ( $sent( 'heating_limit' ) ) $clean['heating_limit'] = max( -10.0, min( 30.0, floatval( $input['heating_limit'] ) ) );
-        if ( $sent( 'room_temp' ) )     $clean['room_temp']     = max(  10.0, min( 30.0, floatval( $input['room_temp'] ) ) );
-        if ( $sent( 'cooling_limit' ) ) $clean['cooling_limit'] = max(   0.0, min( 40.0, floatval( $input['cooling_limit'] ) ) );
+        if ( $sent( 'heating_limit' ) ) $clean['heating_limit'] = self::clamp_float( $input['heating_limit'], 15.0, -10.0, 30.0 );
+        if ( $sent( 'room_temp' ) )     $clean['room_temp']     = self::clamp_float( $input['room_temp'],     20.0,  10.0, 30.0 );
+        if ( $sent( 'cooling_limit' ) ) $clean['cooling_limit'] = self::clamp_float( $input['cooling_limit'], 18.0,   0.0, 40.0 );
 
         // ── Forecast settings ─────────────────────────────────────────
         if ( $sent( 'forecast_provider' ) ) $clean['forecast_provider'] = in_array( $input['forecast_provider'], ['open_meteo','yr_no'], true ) ? $input['forecast_provider'] : 'open_meteo';

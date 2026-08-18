@@ -410,10 +410,25 @@ return [
 
     // [naws_calc] – katalog-referansetabell i backend
     'sc_calc_title'    => 'Beregnede verdier',
-    'sc_calc_intro'    => 'Én kortkode for alle beregnede verdier. Verdien står i attributtet <code>value</code>; resten er valgfritt og virker som i <code>[naws_value]</code>.',
+    'sc_calc_intro'    => 'Én kortkode for alle beregnede verdier. Verdien står i attributtet <code>value</code> — hvilke av de øvrige attributtene som gjelder, avhenger av hvilken art den er (momentanverdi, dagsklasse eller sum); se tabellen under.',
     'sc_calc_col_key'  => 'Skrivemåte',
     'sc_calc_col_live' => 'Akkurat nå',
     'sc_calc_col_desc' => 'Betydning',
+    'sc_calc_attr_title'      => 'Flere attributter',
+    'sc_th_applies'           => 'Gjelder for',
+    'sc_attr_station_desc'    => 'Hvilken stasjon som leses, med modul- eller stasjons-ID.',
+    'sc_attr_period_desc'     => 'Tidsrommet det telles eller summeres over.',
+    'sc_attr_year_desc'       => 'Et enkelt kalenderår; overstyrer period når det er satt.',
+    'sc_attr_mode_desc'       => 'Hvordan dagsklasser telles.',
+    'sc_attr_note_desc'       => 'Legger til en merknad om hvor mange av periodens dager som faktisk har data.',
+    'sc_attr_base_desc'       => 'Terskeltemperaturen summen måles mot.',
+    'sc_attr_cap_desc'        => 'Den øvre temperaturen summen begrenses til.',
+    'sc_calc_applies_instant'  => 'momentanverdier',
+    'sc_calc_applies_daysum'   => 'dagsklasser, summer, indeks',
+    'sc_calc_applies_dayclass' => 'kun dagsklasser',
+    'sc_calc_applies_sum'      => 'summer (hdd, cdd, gdd)',
+    'sc_calc_applies_gdd'      => 'summer (gdd)',
+    'sc_calc_applies_all'      => 'alt',
 
     // Grensetemperaturer for graddag-tallene
     'deg_limits'        => 'Grensetemperaturer',
