@@ -217,6 +217,8 @@ if ( ! defined( 'ABSPATH' ) ) exit; ?>
                                     </select>
                                     <p class="description"><?php naws_e( 'cron_interval_desc' ); ?></p>
                                     <p class="description"><?php naws_e( 'cron_backoff_desc' ); ?></p>
+                                    <?php // Raw output: the text carries <code> markup. See NAWS_Lang::r(). ?>
+                                    <p class="description"><?php NAWS_Lang::r( 'cron_wpcron_desc' ); ?></p>
                                 </td>
                             </tr>
                             <tr>

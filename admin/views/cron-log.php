@@ -39,6 +39,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
             </tbody>
         </table>
         <?php endif; ?>
+
+        <?php // Explains gaps in the table above. Raw output: the text carries <code> markup. ?>
+        <p class="description" style="padding:0 1.25rem 1rem;"><?php NAWS_Lang::r( 'cron_wpcron_desc' ); ?></p>
     </div>
 
     <div class="naws-admin-panel" style="margin-top:1rem;">

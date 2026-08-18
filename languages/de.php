@@ -91,6 +91,7 @@ return [
     'cron_interval_desc'    => 'Minimum: 5 Minuten. Hinweis: Netatmo aktualisiert Sensoren alle 5 Minuten.',
     'cron_interval_minutes' => 'Alle %d Minuten',
     'cron_backoff_desc'     => 'Bei Störungen greift automatisch ein Backoff: nach 3 Fehlern in Folge wird das Intervall verdoppelt (höchstens 120 Minuten) und beim ersten Erfolg sofort wieder zurückgesetzt. Das gilt unabhängig vom Nachtmodus.',
+    'cron_wpcron_desc'      => 'WP-Cron wird von Seitenaufrufen ausgelöst, nicht von einer Uhr: Ruft niemand die Seite auf, findet auch keine Abfrage statt — in besucherarmen Nächten unter Umständen stundenlang nicht. Der Nachtmodus bleibt dann wirkungslos, und in den Messwerten entsteht eine Lücke; die Tageszusammenfassung holt die fehlenden Werte später über die Netatmo-API nach. Verlässlich wird der Takt erst, wenn <code>define( \'DISABLE_WP_CRON\', true );</code> in der <code>wp-config.php</code> steht und ein echter Server-Cron <code>wp-cron.php</code> im gewünschten Intervall aufruft.',
     'data_retention'        => 'Datenhaltung',
     'data_kept'             => '✅ Alle Daten werden dauerhaft gespeichert.',
     'data_kept_desc'        => 'Es findet keine automatische Löschung statt. Du kannst unten manuell eine Bereinigung durchführen falls nötig.',
