@@ -28,7 +28,7 @@
 
 ### Task 1: Drei-Regime-Modell in NAWS_Astro
 
-Baut die Rechenkerne, auf denen `feels_like` und `bioclimate` später stehen. Nach dieser Aufgabe zeigt die bestehende Infobar bei Kaltwind bereits andere (korrektere) Werte — das ist beabsichtigt (Spec §6.1).
+Baut die Rechenkerne, auf denen `feels_like` und `bioclimate` später stehen. Nach dieser Aufgabe zeigt die bestehende Infobar bei Kaltwind andere Werte — teils wärmere, teils kältere. Das ist beabsichtigt (Spec §6.1).
 
 **Files:**
 - Modify: `includes/class-naws-astro.php:63-75` (Rumpf von `feels_like()`)
@@ -56,9 +56,10 @@ Create `tests/test-thermal.php`:
  *
  *   wind_chill()        – NOAA 2001, metric. Must always come out below the
  *                         air temperature when it is cold and windy.
- *   feels_like()        – the three-regime switch. Before 2026-08 this was
- *                         Steadman across the whole range, which reported
- *                         cold windy weather as far milder than it feels.
+ *   feels_like()        – the three-regime switch: wind chill below 10 °C
+ *                         with wind, the heat index in hot humid air,
+ *                         Steadman between. Guards that each regime is
+ *                         actually selected at its boundaries.
  *   thermal_sensation() – the band a felt temperature falls into. The bands
  *                         are the source's, not invented here.
  *
@@ -138,11 +139,6 @@ check( 'genau 40 % ist kein Hitzeindex',
     NAWS_Astro::feels_like( 27.0, 40.0, 2.0 ),
     NAWS_Astro::apparent_temperature( 27.0, 40.0, 2.0 ) );
 
-// Der Fehler, der behoben wird: Steadman meldete Kaltwind zu mild.
-check( 'Windchill ist kaelter als der alte Steadman-Wert',
-    NAWS_Astro::feels_like( -5.0, 80.0, 25.0 ) < NAWS_Astro::apparent_temperature( -5.0, 80.0, 25.0 ),
-    true );
-
 echo "\nNAWS_Astro::thermal_sensation()\n" . str_repeat( '-', 74 ) . "\n";
 
 check( '-11 -> sehr kalt',        NAWS_Astro::thermal_sensation( -11.0 ), 'sens_very_cold' );
@@ -216,9 +212,9 @@ In `includes/class-naws-astro.php` den Rumpf von `feels_like()` (Zeilen 63–75)
      *
      * Three models, because no single formula covers the range: wind chill
      * carries cold windy air, the heat index carries hot humid air, and
-     * Steadman carries everything between. Before this switch existed the
-     * plugin reported -5 °C in a stiff breeze as roughly -8 °C when it feels
-     * closer to -13 °C.
+     * Steadman carries everything between. Which of them reads coldest
+     * varies with temperature and wind speed; the point is that each
+     * regime is now evaluated by the model built for it.
      *
      * @param float $temp_c       Air temperature in °C.
      * @param float $humidity_pct Relative humidity in % (0–100).
@@ -260,7 +256,7 @@ In `includes/class-naws-astro.php` den Rumpf von `feels_like()` (Zeilen 63–75)
 
 Run: `php tests/test-thermal.php | grep -E "bestanden|FAIL"`
 
-Expected: `26 bestanden, 0 fehlgeschlagen`, keine `FAIL`-Zeile. (5 Windchill, 8 Regime-Weiche, 13 Empfindungsstufen.)
+Expected: `25 bestanden, 0 fehlgeschlagen`, keine `FAIL`-Zeile. (5 Windchill, 7 Regime-Weiche, 13 Empfindungsstufen.)
 
 - [ ] **Step 5: Sicherstellen, dass nichts anderes gebrochen ist**
 
@@ -280,7 +276,8 @@ Expected: keine Syntaxfehler, PHPCS ohne Befund.
 git add includes/class-naws-astro.php tests/test-thermal.php
 git commit -m "Felt temperature switches by regime instead of one formula
 
-Steadman alone reported cold windy weather as far milder than it is.
+Steadman alone covered the whole range, including regimes it was never
+built for.
 wind_chill() (NOAA 2001, metric) now carries the cold end, the existing
 heat index carries the hot humid end, and the old Steadman body keeps
 the middle under the honest name apparent_temperature().

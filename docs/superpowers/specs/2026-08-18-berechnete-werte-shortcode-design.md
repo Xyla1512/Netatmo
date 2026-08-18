@@ -182,7 +182,18 @@ Für NAModule1 (außen), NAModule2 (Wind) und NAModule3 (Regen) existiert **kein
 
 ### 6.1 Gefühlte Temperatur — Umbau von `NAWS_Astro::feels_like()`
 
-**Bisher:** ausschließlich Steadman/BOM über alle Temperaturbereiche, ohne Windchill-Zweig. Bei Kälte mit Wind liefert das einen zu milden Wert.
+**Bisher:** ausschließlich Steadman/BOM über alle Temperaturbereiche, ohne Windchill-Zweig — also ein Modell auch dort, wo es nicht dafür gebaut wurde.
+
+**Korrektur einer früheren Behauptung dieser Spec (2026-08-18, an echten Zahlen nachgerechnet):** Hier stand, Steadman liefere bei Kaltwind „einen zu milden Wert". **Das stimmt nicht.** Die beiden Formeln überkreuzen sich, je nach Temperatur und Windgeschwindigkeit:
+
+| Lage | Windchill | Steadman | kälter |
+|---|---|---|---|
+| −10 °C, 10 km/h | −15,3 | −15,4 | Steadman |
+| −10 °C, 20 km/h | −17,9 | −17,3 | Windchill |
+| −5 °C, 25 km/h | −12,3 | −12,7 | Steadman |
+| −5 °C, 40 km/h | −14,1 | −15,7 | Steadman |
+
+Der Umbau ist deshalb **keine Korrektur eines zu milden Wertes**, sondern die Zuordnung jeder Wetterlage zu dem Modell, das für sie aufgestellt wurde. Das war auch der Grund der Entscheidung: das Drei-Regime-Modell stammt aus der vom Nutzer benannten Quelle. Welche Formel im Einzelfall kälter rechnet, war nie das Argument.
 
 **Neu:** Drei Regime, umgeschaltet nach Wetterlage.
 
@@ -196,7 +207,7 @@ Quelle: <https://rechner-portal.de/wetter-klima/gefuehlte-temperatur/gefuehlte-t
 
 **Neu zu schreiben ist nur `wind_chill()`**; die anderen beiden Zweige rufen vorhandene Funktionen.
 
-**Bewusste Nebenwirkung:** Die Infobar (`templates/infobar.php`) zeigt danach bei Kaltwind andere Werte als bisher. Das ist die Korrektur einer Schwäche, keine Regression — gehört aber in die Release-Notes.
+**Bewusste Nebenwirkung:** Die Infobar (`templates/infobar.php`) zeigt danach bei Kaltwind andere Werte als bisher — teils wärmere, teils kältere, siehe Tabelle oben. Gehört in die Release-Notes.
 
 **Nicht umgesetzt wird das Klima-Michel-Modell des DWD.** Es verlangt Strahlungsbilanz sowie Bekleidungs- und Aktivitätsannahmen; eine Netatmo-Station misst nichts davon.
 
