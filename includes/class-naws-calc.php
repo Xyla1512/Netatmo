@@ -19,11 +19,21 @@ class NAWS_Calc {
     /**
      * Every value [naws_calc] knows.
      *
-     * kind     – instant | dayclass | sum | index; decides which attributes apply
-     * param    – NAWS_Helpers parameter name for unit and unit conversion,
-     *            or null for values that are text or carry their own unit
-     * decimals – default decimal places; -1 means "leave as produced"
-     * label    – language key of the human-readable name
+     * kind      – instant | dayclass | sum | index; decides which attributes apply
+     * param     – NAWS_Helpers parameter name for unit and unit conversion,
+     *             or null for values that are text or carry their own unit
+     * unit      – literal unit string, for values with no sensor parameter
+     *             to borrow one from (day counts, degree days); '' means
+     *             explicitly unitless, not "forgot to set it"
+     * decimals  – default decimal places; -1 means "leave as produced"
+     * label     – language key of the human-readable name
+     * field     – daily-summary column a dayclass entry matches on
+     *             (temp_min | temp_max | temp_avg)
+     * op        – comparison operator a dayclass entry matches with
+     *             ('<' | '>' | '>=')
+     * threshold – comparison value for a dayclass entry; null means "take
+     *             it from the settings" (heating_limit or cooling_limit),
+     *             which is what keeps that limit country-configurable
      *
      * @return array<string, array{kind:string, param:?string, decimals:int, label:string}>
      */
@@ -48,6 +58,15 @@ class NAWS_Calc {
             'moon_illumination' => [ 'kind' => 'instant', 'param' => 'Humidity',    'decimals' => 0,  'label' => 'calc_moon_illumination' ],
             'next_supermoon'    => [ 'kind' => 'instant', 'param' => null,          'decimals' => 0,  'label' => 'calc_next_supermoon' ],
             'next_lunar_eclipse' => [ 'kind' => 'instant', 'param' => null,          'decimals' => 0,  'label' => 'calc_next_lunar_eclipse' ],
+
+            // ── Tagesklassen aus der Tagestabelle ──────────────────────
+            'ice_days'          => [ 'kind' => 'dayclass', 'param' => null, 'unit' => '', 'decimals' => 0, 'label' => 'calc_ice_days',        'field' => 'temp_max', 'op' => '<',  'threshold' => 0.0 ],
+            'frost_days'        => [ 'kind' => 'dayclass', 'param' => null, 'unit' => '', 'decimals' => 0, 'label' => 'calc_frost_days',      'field' => 'temp_min', 'op' => '<',  'threshold' => 0.0 ],
+            'summer_days'       => [ 'kind' => 'dayclass', 'param' => null, 'unit' => '', 'decimals' => 0, 'label' => 'calc_summer_days',     'field' => 'temp_max', 'op' => '>=', 'threshold' => 25.0 ],
+            'hot_days'          => [ 'kind' => 'dayclass', 'param' => null, 'unit' => '', 'decimals' => 0, 'label' => 'calc_hot_days',        'field' => 'temp_max', 'op' => '>=', 'threshold' => 30.0 ],
+            'tropical_nights'   => [ 'kind' => 'dayclass', 'param' => null, 'unit' => '', 'decimals' => 0, 'label' => 'calc_tropical_nights', 'field' => 'temp_min', 'op' => '>=', 'threshold' => 20.0 ],
+            'heating_days'      => [ 'kind' => 'dayclass', 'param' => null, 'unit' => '', 'decimals' => 0, 'label' => 'calc_heating_days',    'field' => 'temp_avg', 'op' => '<',  'threshold' => null ],
+            'cooling_days'      => [ 'kind' => 'dayclass', 'param' => null, 'unit' => '', 'decimals' => 0, 'label' => 'calc_cooling_days',    'field' => 'temp_avg', 'op' => '>',  'threshold' => null ],
         ];
     }
 
@@ -137,6 +156,116 @@ class NAWS_Calc {
     }
 
     /**
+     * The module_id of the station row in naws_daily_summary.
+     *
+     * Measured on a real installation: the daily table holds rows for the
+     * station (NAMain) and for indoor modules only — outdoor, wind and rain
+     * modules have no row of their own. compute_daily_summary() writes the
+     * station aggregates under the station_id, so outdoor temperatures and
+     * rain both live on the station row. Reading "the outdoor module" here
+     * would return nothing at all.
+     */
+    private static function station_row_id( array $atts ): ?string {
+        $wanted = isset( $atts['station'] ) ? sanitize_text_field( (string) $atts['station'] ) : '';
+        foreach ( NAWS_Database::get_modules( true ) as $m ) {
+            if ( $m['module_type'] !== 'NAMain' ) {
+                continue;
+            }
+            if ( $wanted === '' || $m['module_id'] === $wanted || $m['station_id'] === $wanted ) {
+                return $m['module_id'];
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Resolve period/year attributes into a date range, in the site timezone.
+     *
+     * @return array{from:string,to:string} Both 'Y-m-d'.
+     */
+    private static function period_range( array $atts ): array {
+        $today = wp_date( 'Y-m-d' );
+
+        $year = isset( $atts['year'] ) ? intval( $atts['year'] ) : 0;
+        if ( $year >= 1900 && $year <= 2999 ) {
+            return [ 'from' => sprintf( '%04d-01-01', $year ), 'to' => sprintf( '%04d-12-31', $year ) ];
+        }
+
+        $period = strtolower( (string) ( $atts['period'] ?? 'year' ) );
+
+        if ( $period === 'all' ) {
+            return [ 'from' => '1900-01-01', 'to' => $today ];
+        }
+        if ( $period === 'month' ) {
+            return [ 'from' => wp_date( 'Y-m-01' ), 'to' => $today ];
+        }
+        if ( preg_match( '/^(\d+)d$/', $period, $m ) ) {
+            $days = max( 1, intval( $m[1] ) );
+            return [ 'from' => wp_date( 'Y-m-d', time() - ( $days - 1 ) * DAY_IN_SECONDS ), 'to' => $today ];
+        }
+
+        // 'year' — the running calendar year, and the default.
+        return [ 'from' => wp_date( 'Y-01-01' ), 'to' => $today ];
+    }
+
+    /**
+     * Daily rows of the station for the requested period.
+     *
+     * Deliberately reuses NAWS_Database::get_daily_summaries() rather than
+     * querying here: it already selects by date range and module, sorts
+     * ascending, and carries its own transient cache. Ten shortcodes on one
+     * page therefore cost one query, not ten.
+     */
+    private static function daily_rows( array $atts, array $fields ): array {
+        $station = self::station_row_id( $atts );
+        if ( $station === null ) {
+            return [];
+        }
+        $range = self::period_range( $atts );
+
+        return NAWS_Database::get_daily_summaries( [
+            'module_id' => $station,
+            'date_from' => $range['from'],
+            'date_to'   => $range['to'],
+            'fields'    => $fields,
+            'group_by'  => 'day',
+        ] );
+    }
+
+    /**
+     * Build the matcher for a day class from its catalogue metadata.
+     *
+     * A null threshold means "take it from the settings" — that is how the
+     * heating and cooling limits stay country-configurable without every
+     * shortcode repeating them.
+     */
+    private static function day_matcher( array $entry ): callable {
+        $field = (string) $entry['field'];
+        $op    = (string) $entry['op'];
+        $limit = $entry['threshold'];
+
+        if ( $limit === null ) {
+            $opts  = get_option( 'naws_settings', [] );
+            $limit = ( $op === '>' )
+                ? floatval( $opts['cooling_limit'] ?? 18.0 )
+                : floatval( $opts['heating_limit'] ?? 15.0 );
+        }
+        $limit = (float) $limit;
+
+        return static function ( array $row ) use ( $field, $op, $limit ): bool {
+            $v = $row[ $field ] ?? null;
+            if ( $v === null ) {
+                return false;
+            }
+            $v = (float) $v;
+            if ( $op === '<' )  return $v <  $limit;
+            if ( $op === '>' )  return $v >  $limit;
+            if ( $op === '>=' ) return $v >= $limit;
+            return false;
+        };
+    }
+
+    /**
      * The raw value behind a catalogue key.
      *
      * Dispatches on the entry's kind. Each kind reads different sources and
@@ -159,6 +288,8 @@ class NAWS_Calc {
         switch ( self::catalogue()[ $key ]['kind'] ) {
             case 'instant':
                 return self::raw_instant( $key, $atts );
+            case 'dayclass':
+                return self::raw_dayclass( $key, $atts );
         }
 
         return null;
@@ -268,5 +399,30 @@ class NAWS_Calc {
         }
 
         return null;
+    }
+
+    /**
+     * Day classes: countable and streakable over a range of daily rows.
+     */
+    private static function raw_dayclass( string $key, array $atts ) {
+        $entry = self::catalogue()[ $key ];
+        $rows  = self::daily_rows( $atts, [ 'temp_min', 'temp_max', 'temp_avg' ] );
+
+        // "No data" and "no such days" must not look alike: an empty range
+        // gives the fallback, a range with rows and no hits gives 0.
+        if ( empty( $rows ) ) {
+            return null;
+        }
+
+        $matches = self::day_matcher( $entry );
+        $mode    = strtolower( (string) ( $atts['mode'] ?? 'count' ) );
+
+        if ( $mode === 'streak' ) {
+            return (float) NAWS_Climate::current_streak( $rows, $matches );
+        }
+        if ( $mode === 'max_streak' ) {
+            return (float) NAWS_Climate::max_streak( $rows, $matches );
+        }
+        return (float) NAWS_Climate::count_days( $rows, $matches );
     }
 }

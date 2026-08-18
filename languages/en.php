@@ -380,6 +380,15 @@ return [
     'calc_next_supermoon'     => 'Next supermoon',
     'calc_next_lunar_eclipse' => 'Next lunar eclipse',
 
+    // [naws_calc] – day classes
+    'calc_ice_days'        => 'Ice days',
+    'calc_frost_days'      => 'Frost days',
+    'calc_summer_days'     => 'Summer days',
+    'calc_hot_days'        => 'Hot days',
+    'calc_tropical_nights' => 'Tropical nights',
+    'calc_heating_days'    => 'Heating days',
+    'calc_cooling_days'    => 'Cooling days',
+
     // [naws_calc] – thermal sensation bands
     'sens_very_cold'          => 'very cold',
     'sens_cold'               => 'cold',

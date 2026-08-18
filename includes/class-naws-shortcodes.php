@@ -346,6 +346,11 @@ class NAWS_Shortcodes {
             'fallback' => '--',
             'tag'      => 'span',
             'class'    => '',
+            'station'  => '',
+            'period'   => 'year',
+            'year'     => '',
+            'mode'     => 'count',
+            'note'     => '0',
         ], $atts, 'naws_calc' );
 
         $key      = sanitize_key( $atts['value'] );
@@ -361,7 +366,13 @@ class NAWS_Shortcodes {
         }
 
         $entry = NAWS_Calc::catalogue()[ $key ];
-        $raw   = NAWS_Calc::raw( $key, [ 'module' => sanitize_text_field( $atts['module'] ) ] );
+        $raw   = NAWS_Calc::raw( $key, [
+            'module'  => sanitize_text_field( $atts['module'] ),
+            'station' => sanitize_text_field( $atts['station'] ),
+            'period'  => sanitize_text_field( $atts['period'] ),
+            'year'    => sanitize_text_field( $atts['year'] ),
+            'mode'    => sanitize_key( $atts['mode'] ),
+        ] );
 
         if ( $raw === null ) {
             return $fallback;

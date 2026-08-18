@@ -380,6 +380,15 @@ return [
     'calc_next_supermoon'     => 'Nächster Supermond',
     'calc_next_lunar_eclipse' => 'Nächste Mondfinsternis',
 
+    // [naws_calc] – Tagesklassen
+    'calc_ice_days'        => 'Eistage',
+    'calc_frost_days'      => 'Frosttage',
+    'calc_summer_days'     => 'Sommertage',
+    'calc_hot_days'        => 'Heiße Tage',
+    'calc_tropical_nights' => 'Tropennächte',
+    'calc_heating_days'    => 'Heiztage',
+    'calc_cooling_days'    => 'Kühltage',
+
     // [naws_calc] – Empfindungsstufen zur gefühlten Temperatur
     'sens_very_cold'          => 'sehr kalt',
     'sens_cold'               => 'kalt',

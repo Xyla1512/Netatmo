@@ -380,6 +380,15 @@ return [
     'calc_next_supermoon'     => 'Neste supermåne',
     'calc_next_lunar_eclipse' => 'Neste måneformørkelse',
 
+    // [naws_calc] – døgnklasser
+    'calc_ice_days'        => 'Isdager',
+    'calc_frost_days'      => 'Frostdager',
+    'calc_summer_days'     => 'Sommerdager',
+    'calc_hot_days'        => 'Hete dager',
+    'calc_tropical_nights' => 'Tropenetter',
+    'calc_heating_days'    => 'Fyringsdager',
+    'calc_cooling_days'    => 'Kjøledager',
+
     // [naws_calc] – trinn for termisk opplevelse
     'sens_very_cold'          => 'svært kaldt',
     'sens_cold'               => 'kaldt',
