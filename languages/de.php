@@ -397,6 +397,15 @@ return [
     'sc_calc_col_live' => 'Aktuell bei dir',
     'sc_calc_col_desc' => 'Bedeutung',
 
+    // Grenztemperaturen für die Gradtag-Kennzahlen
+    'deg_limits'        => 'Grenztemperaturen',
+    'heating_limit'     => 'Heizgrenztemperatur (°C)',
+    'heating_limit_desc'=> 'Unterhalb dieses Tagesmittels gilt ein Tag als Heiztag. Deutschland 15 °C (VDI 2067), Österreich und Schweiz 12 °C.',
+    'room_temp'         => 'Raumtemperatur (°C)',
+    'room_temp_desc'    => 'Bezugstemperatur der Heizgradtage. In allen genannten Normen 20 °C.',
+    'cooling_limit'     => 'Kühlgrenztemperatur (°C)',
+    'cooling_limit_desc'=> 'Oberhalb dieses Tagesmittels gilt ein Tag als Kühltag. Hier gibt es keinen einheitlichen Standard — 18 °C und 21 °C sind beide gebräuchlich.',
+
     'infobar_feels_like'   => 'Gefühlte Temp.',
     'infobar_heat_index'   => 'Hitzeindex',
     'infobar_dew_point'    => 'Taupunkt',

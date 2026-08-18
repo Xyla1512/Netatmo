@@ -235,6 +235,29 @@ if ( ! defined( 'ABSPATH' ) ) exit; ?>
                                 </td>
                             </tr>
                             <tr>
+                                <th><?php naws_e( 'deg_limits' ); ?></th>
+                                <td>
+                                    <p>
+                                        <label><?php naws_e( 'heating_limit' ); ?><br>
+                                        <input type="number" step="0.5" min="-10" max="30" name="naws_settings[heating_limit]"
+                                            value="<?php echo esc_attr( $options['heating_limit'] ?? 15 ); ?>"></label>
+                                    </p>
+                                    <p class="description"><?php naws_e( 'heating_limit_desc' ); ?></p>
+                                    <p>
+                                        <label><?php naws_e( 'room_temp' ); ?><br>
+                                        <input type="number" step="0.5" min="10" max="30" name="naws_settings[room_temp]"
+                                            value="<?php echo esc_attr( $options['room_temp'] ?? 20 ); ?>"></label>
+                                    </p>
+                                    <p class="description"><?php naws_e( 'room_temp_desc' ); ?></p>
+                                    <p>
+                                        <label><?php naws_e( 'cooling_limit' ); ?><br>
+                                        <input type="number" step="0.5" min="0" max="40" name="naws_settings[cooling_limit]"
+                                            value="<?php echo esc_attr( $options['cooling_limit'] ?? 18 ); ?>"></label>
+                                    </p>
+                                    <p class="description"><?php naws_e( 'cooling_limit_desc' ); ?></p>
+                                </td>
+                            </tr>
+                            <tr>
                                 <th><?php naws_e( 'data_retention' ); ?></th>
                                 <td>
                                     <p><span class="naws-text-ok"><?php naws_e( 'data_kept' ); ?></span><br>

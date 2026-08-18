@@ -397,6 +397,15 @@ return [
     'sc_calc_col_live' => 'Akkurat nå',
     'sc_calc_col_desc' => 'Betydning',
 
+    // Grensetemperaturer for graddag-tallene
+    'deg_limits'        => 'Grensetemperaturer',
+    'heating_limit'     => 'Fyringsgrense (°C)',
+    'heating_limit_desc'=> 'En dag regnes som fyringsdag når døgnmiddelet faller under denne. Tyskland 15 °C (VDI 2067), Østerrike og Sveits 12 °C.',
+    'room_temp'         => 'Romtemperatur (°C)',
+    'room_temp_desc'    => 'Referansetemperatur for fyringsgraddager. 20 °C i alle standardene som er nevnt her.',
+    'cooling_limit'     => 'Kjølegrense (°C)',
+    'cooling_limit_desc'=> 'En dag regnes som kjøledag når døgnmiddelet stiger over denne. Her finnes ingen enhetlig standard — både 18 °C og 21 °C er i vanlig bruk.',
+
     'infobar_feels_like'   => 'Føles som',
     'infobar_heat_index'   => 'Varmeindeks',
     'infobar_dew_point'    => 'Duggpunkt',

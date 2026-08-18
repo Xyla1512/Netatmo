@@ -397,6 +397,15 @@ return [
     'sc_calc_col_live' => 'Right now',
     'sc_calc_col_desc' => 'Meaning',
 
+    // Limit temperatures for the degree-day indices
+    'deg_limits'        => 'Limit temperatures',
+    'heating_limit'     => 'Heating limit (°C)',
+    'heating_limit_desc'=> 'A day counts as a heating day when its mean falls below this. Germany 15 °C (VDI 2067), Austria and Switzerland 12 °C.',
+    'room_temp'         => 'Room temperature (°C)',
+    'room_temp_desc'    => 'Reference temperature for heating degree days. 20 °C in every standard named here.',
+    'cooling_limit'     => 'Cooling limit (°C)',
+    'cooling_limit_desc'=> 'A day counts as a cooling day when its mean rises above this. There is no single standard here — 18 °C and 21 °C are both in common use.',
+
     'infobar_feels_like'   => 'Feels like',
     'infobar_heat_index'   => 'Heat Index',
     'infobar_dew_point'    => 'Dew Point',
