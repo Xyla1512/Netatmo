@@ -45,6 +45,7 @@ Connects to the Netatmo API, stores all sensor data locally and displays live da
 * `[naws_live]` – Live sensor tiles with 24h trend charts and forecast
 * `[naws_infobar]` – Astronomy bar with sunrise, moon phase, felt temperature
 * `[naws_value]` – Single inline sensor value
+* `[naws_calc]` – Single computed value (dew point, felt temperature, sunrise, moon phase, …); full list on the Shortcodes page in the backend
 * `[naws_history]` – Year-over-year comparison charts (supports `year` parameter)
 * `[naws_forecast]` – Multi-day weather forecast
 

@@ -106,6 +106,14 @@ check( '39.9 -> heiss',           NAWS_Astro::thermal_sensation( 39.9 ),  'sens_
 check( '40 -> extrem heiss',      NAWS_Astro::thermal_sensation( 40.0 ),  'sens_extremely_hot' );
 check( '55 -> extrem heiss',      NAWS_Astro::thermal_sensation( 55.0 ),  'sens_extremely_hot' );
 
+echo "\nNAWS_Astro::heat_index_applies()\n" . str_repeat( '-', 74 ) . "\n";
+
+check( '24.9 C liegt ausserhalb', NAWS_Astro::heat_index_applies( 24.9 ), false );
+check( '25 C liegt innerhalb',    NAWS_Astro::heat_index_applies( 25.0 ), true  );
+check( '30 C liegt innerhalb',    NAWS_Astro::heat_index_applies( 30.0 ), true  );
+// Warum die Schranke noetig ist: ungated liefert die Regression Unsinn.
+check( '-5 C waere absurd (>50)', NAWS_Astro::heat_index( -5.0, 80.0 ) > 50.0, true );
+
 echo "\n" . str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );

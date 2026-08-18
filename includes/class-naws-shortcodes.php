@@ -352,7 +352,11 @@ class NAWS_Shortcodes {
         $fallback = esc_html( $atts['fallback'] );
 
         if ( $key === '' || ! NAWS_Calc::has( $key ) ) {
-            NAWS_Logger::warning( 'calc', 'Unknown or missing value attribute on [naws_calc]: ' . $atts['value'] );
+            static $logged = [];
+            if ( ! isset( $logged[ $key ] ) ) {
+                $logged[ $key ] = true;
+                NAWS_Logger::warning( 'calc', 'Unknown or missing value attribute on [naws_calc]: ' . $key );
+            }
             return $fallback;
         }
 

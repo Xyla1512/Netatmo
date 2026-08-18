@@ -130,11 +130,10 @@ $value_params = [
 </div>
 
 <?php /* ── naws_calc ── */ ?>
-<div class="naws-admin-panel" style="margin-top:1rem;">
-    <div class="naws-panel-header">
-        <h2><?php naws_e( 'sc_calc_title' ); ?></h2>
-    </div>
-    <p style="padding:0 1.25rem;"><?php NAWS_Lang::r( 'sc_calc_intro' ); ?></p>
+<div class="naws-admin-panel naws-ref-section">
+    <div class="naws-panel-header"><h2><?php naws_e( 'sc_calc_title' ); ?></h2></div>
+    <div class="naws-panel-body">
+    <p class="naws-section-intro"><?php NAWS_Lang::r( 'sc_calc_intro' ); ?></p>
     <table class="wp-list-table widefat striped naws-list-table">
         <thead>
             <tr>
@@ -153,6 +152,7 @@ $value_params = [
         <?php endforeach; ?>
         </tbody>
     </table>
+    </div><!-- /.naws-panel-body -->
 </div>
 
 <?php /* ── Layout Shortcodes ── */ ?>

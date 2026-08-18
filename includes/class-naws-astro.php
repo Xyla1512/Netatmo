@@ -124,6 +124,21 @@ class NAWS_Astro {
     }
 
     /**
+     * Is the heat index defined for these conditions?
+     *
+     * The Rothfusz regression is fitted for hot weather and diverges badly
+     * below roughly 25 °C — at -5 °C and 80 % it returns 103.9, which is not
+     * a temperature anyone should be shown. Callers must gate on this rather
+     * than publish whatever the polynomial produces.
+     *
+     * The threshold matches templates/infobar.php, which has always gated
+     * its own heat-index display at 25 °C.
+     */
+    public static function heat_index_applies( float $temp_c ): bool {
+        return $temp_c >= 25.0;
+    }
+
+    /**
      * Heat index (Rothfusz regression, °C).
      */
     public static function heat_index( float $t, float $rh ): float {

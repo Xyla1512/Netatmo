@@ -47,7 +47,7 @@ class NAWS_Calc {
             'moon_phase'        => [ 'kind' => 'instant', 'param' => null,          'decimals' => 0,  'label' => 'calc_moon_phase' ],
             'moon_illumination' => [ 'kind' => 'instant', 'param' => 'Humidity',    'decimals' => 0,  'label' => 'calc_moon_illumination' ],
             'next_supermoon'    => [ 'kind' => 'instant', 'param' => null,          'decimals' => 0,  'label' => 'calc_next_supermoon' ],
-            'next_lunar_eclipse'=> [ 'kind' => 'instant', 'param' => null,          'decimals' => 0,  'label' => 'calc_next_lunar_eclipse' ],
+            'next_lunar_eclipse' => [ 'kind' => 'instant', 'param' => null,          'decimals' => 0,  'label' => 'calc_next_lunar_eclipse' ],
         ];
     }
 
@@ -129,7 +129,11 @@ class NAWS_Calc {
      */
     public static function raw( string $key, array $atts ) {
         if ( ! self::has( $key ) ) {
-            NAWS_Logger::warning( 'calc', 'Unknown [naws_calc] value key: ' . $key );
+            static $logged = [];
+            if ( ! isset( $logged[ $key ] ) ) {
+                $logged[ $key ] = true;
+                NAWS_Logger::warning( 'calc', 'Unknown [naws_calc] value key: ' . $key );
+            }
             return null;
         }
 
@@ -139,13 +143,16 @@ class NAWS_Calc {
 
         switch ( $key ) {
             case 'dewpoint':
-                return ( $temp === null || $hum === null ) ? null : NAWS_Astro::dew_point( $temp, $hum );
+                return ( $temp === null || $hum === null || $hum <= 0.0 ) ? null : NAWS_Astro::dew_point( $temp, $hum );
 
             case 'wet_bulb':
-                return ( $temp === null || $hum === null ) ? null : NAWS_Astro::wet_bulb( $temp, $hum );
+                return ( $temp === null || $hum === null || $hum <= 0.0 ) ? null : NAWS_Astro::wet_bulb( $temp, $hum );
 
             case 'heat_index':
-                return ( $temp === null || $hum === null ) ? null : NAWS_Astro::heat_index( $temp, $hum );
+                if ( $temp === null || $hum === null || ! NAWS_Astro::heat_index_applies( $temp ) ) {
+                    return null; // out of the regression's domain -> fallback
+                }
+                return NAWS_Astro::heat_index( $temp, $hum );
 
             case 'feels_like':
                 return ( $temp === null || $hum === null ) ? null : NAWS_Astro::feels_like( $temp, $hum, self::wind_kmh() );

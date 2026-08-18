@@ -43,6 +43,7 @@ Data then syncs on its own. Drop a shortcode on any page to display it.
 | `[naws_table]` | Readings as a table |
 | `[naws_infobar]` | Astronomy bar: sunrise, moon phase, felt temperature |
 | `[naws_value]` | A single sensor value, inline |
+| `[naws_calc]` | A single computed value (dew point, felt temperature, sunrise, moon phase, …), for running text or a table; full list on the Shortcodes page in the backend |
 
 The backend has a **Shortcodes** page listing every attribute with a live preview.
 
