@@ -38,7 +38,14 @@ $kinds     = [ 'instant', 'dayclass', 'sum', 'index' ];
 echo "\nKatalog-Struktur\n" . str_repeat( '-', 74 ) . "\n";
 
 check( 'Katalog ist nicht leer', count( $catalogue ) > 0, true );
-check( 'Stufe 1 liefert 14 Eintraege', count( $catalogue ), 14 );
+
+// Ein absoluter Gesamtwert veraltet bei jedem Ausbau der Katalog-Stufen —
+// genau das ist hier passiert: eine Stufe-1-Pruefung hielt 14 fest, waehrend
+// Stufe 2 sieben Tagesklassen hinzufuegte. Zaehlung je Art sagt etwas
+// Sinnvolles aus und macht sichtbar, welche Aufgabe die Zahlen pflegen muss.
+$by_kind = array_count_values( array_column( $catalogue, 'kind' ) );
+check( 'Katalog: 14 Momentanwerte', $by_kind['instant']  ?? 0, 14 );
+check( 'Katalog: 7 Tagesklassen',   $by_kind['dayclass'] ?? 0, 7  );
 
 foreach ( $catalogue as $key => $entry ) {
     check( "$key hat eine gueltige Art",   in_array( $entry['kind'] ?? '', $kinds, true ), true );
