@@ -57,4 +57,121 @@ class NAWS_Calc {
     public static function has( string $key ): bool {
         return isset( self::catalogue()[ $key ] );
     }
+
+    /**
+     * Module type behind each alias, same mapping [naws_value] uses.
+     */
+    private const TYPE_MAP = [
+        'outdoor' => 'NAModule1',
+        'indoor'  => 'NAMain',
+        'wind'    => 'NAModule2',
+        'rain'    => 'NAModule3',
+    ];
+
+    /**
+     * Resolve a module alias or MAC address to a module_id.
+     *
+     * @return string|null null when the station has no such module.
+     */
+    private static function module_id( string $alias ): ?string {
+        $alias = strtolower( $alias );
+        if ( ! isset( self::TYPE_MAP[ $alias ] ) ) {
+            return $alias; // treated as a direct MAC address
+        }
+        foreach ( NAWS_Database::get_modules( true ) as $m ) {
+            if ( $m['module_type'] === self::TYPE_MAP[ $alias ] ) {
+                return $m['module_id'];
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Latest value of one parameter on one module, in the unit Netatmo sends.
+     *
+     * Deliberately NOT run through NAWS_Helpers::format_value() — the maths
+     * below needs °C and km/h, not whatever the display setting says. The
+     * conversion happens once, at the very end, in the shortcode.
+     */
+    private static function reading( ?string $module_id, string $param ): ?float {
+        if ( $module_id === null ) {
+            return null;
+        }
+        foreach ( NAWS_Database::get_latest_readings( $module_id ) as $row ) {
+            if ( $row['parameter'] === $param ) {
+                return floatval( $row['value'] );
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Wind speed in km/h from the wind module, 0.0 when there is none.
+     *
+     * A station without a wind gauge is normal, and the thermal formulas
+     * behave sensibly at zero wind — so this returns 0.0 rather than null,
+     * which would otherwise suppress the dew point on half the stations.
+     */
+    private static function wind_kmh(): float {
+        return self::reading( self::module_id( 'wind' ), 'WindStrength' ) ?? 0.0;
+    }
+
+    /**
+     * The raw value behind a catalogue key.
+     *
+     * Numbers come back in metric base units (°C, %); text values come back
+     * as finished, translated strings. null means "the data does not support
+     * this value" — the shortcode turns that into the fallback.
+     *
+     * @param string $key  Catalogue key.
+     * @param array  $atts Shortcode attributes, already sanitised.
+     * @return float|string|null
+     */
+    public static function raw( string $key, array $atts ) {
+        if ( ! self::has( $key ) ) {
+            NAWS_Logger::warning( 'calc', 'Unknown [naws_calc] value key: ' . $key );
+            return null;
+        }
+
+        $module = self::module_id( (string) ( $atts['module'] ?? 'outdoor' ) );
+        $temp   = self::reading( $module, 'Temperature' );
+        $hum    = self::reading( $module, 'Humidity' );
+
+        switch ( $key ) {
+            case 'dewpoint':
+                return ( $temp === null || $hum === null ) ? null : NAWS_Astro::dew_point( $temp, $hum );
+
+            case 'wet_bulb':
+                return ( $temp === null || $hum === null ) ? null : NAWS_Astro::wet_bulb( $temp, $hum );
+
+            case 'heat_index':
+                return ( $temp === null || $hum === null ) ? null : NAWS_Astro::heat_index( $temp, $hum );
+
+            case 'feels_like':
+                return ( $temp === null || $hum === null ) ? null : NAWS_Astro::feels_like( $temp, $hum, self::wind_kmh() );
+
+            case 'bioclimate':
+                if ( $temp === null || $hum === null ) {
+                    return null;
+                }
+                $felt = NAWS_Astro::feels_like( $temp, $hum, self::wind_kmh() );
+                return naws__( NAWS_Astro::thermal_sensation( $felt ) );
+
+            case 'wind_compass':
+                $angle = self::reading( self::module_id( 'wind' ), 'WindAngle' );
+                return $angle === null ? null : NAWS_Helpers::degrees_to_compass( $angle );
+
+            case 'co2_level':
+                $ppm = self::reading( self::module_id( 'indoor' ), 'CO2' );
+                if ( $ppm === null ) {
+                    return null;
+                }
+                // get_co2_level() returns [ level, color, label ] — only the
+                // already-translated label belongs in running text.
+                $level = NAWS_Helpers::get_co2_level( $ppm );
+                return $level['label'];
+        }
+
+        return null;
+    }
 }

@@ -22,6 +22,7 @@ class NAWS_Shortcodes {
         add_shortcode( 'naws_live',      [ $this, 'sc_live' ] );
         add_shortcode( 'naws_infobar',   [ $this, 'sc_infobar' ] );
         add_shortcode( 'naws_value',     [ $this, 'sc_value' ] );
+        add_shortcode( 'naws_calc',      [ $this, 'sc_calc' ] );
         add_shortcode( 'naws_forecast',  [ $this, 'sc_forecast' ] );
         add_shortcode( 'naws_weather_icon', [ $this, 'sc_weather_icon' ] );
         add_shortcode( 'naws_weather_widget', [ $this, 'sc_weather_widget' ] );
@@ -323,6 +324,61 @@ class NAWS_Shortcodes {
 
         $unit_str = $show_unit ? ' ' . NAWS_Helpers::get_unit( $param ) : '';
         $output   = esc_html( $value . $unit_str );
+
+        $tag = sanitize_key( $atts['tag'] );
+        if ( $tag === 'none' || $tag === '' ) {
+            return $output;
+        }
+        $class = $atts['class'] ? ' class="' . esc_attr( $atts['class'] ) . '"' : '';
+        return "<{$tag}{$class}>{$output}</{$tag}>";
+    }
+
+    // ----------------------------------------------------------------
+    // [naws_calc value="dewpoint" module="outdoor"]
+    // A single computed value, for dropping into running text or a table.
+    // ----------------------------------------------------------------
+    public function sc_calc( $atts ) {
+        $atts = shortcode_atts( [
+            'value'    => '',
+            'module'   => 'outdoor',
+            'unit'     => '1',
+            'decimals' => '-1',
+            'fallback' => '--',
+            'tag'      => 'span',
+            'class'    => '',
+        ], $atts, 'naws_calc' );
+
+        $key      = sanitize_key( $atts['value'] );
+        $fallback = esc_html( $atts['fallback'] );
+
+        if ( $key === '' || ! NAWS_Calc::has( $key ) ) {
+            NAWS_Logger::warning( 'calc', 'Unknown or missing value attribute on [naws_calc]: ' . $atts['value'] );
+            return $fallback;
+        }
+
+        $entry = NAWS_Calc::catalogue()[ $key ];
+        $raw   = NAWS_Calc::raw( $key, [ 'module' => sanitize_text_field( $atts['module'] ) ] );
+
+        if ( $raw === null ) {
+            return $fallback;
+        }
+
+        // Text values carry no unit and need no conversion.
+        if ( is_string( $raw ) ) {
+            $output = esc_html( $raw );
+        } else {
+            $param = $entry['param'];
+            $value = $param ? NAWS_Helpers::format_value( $param, floatval( $raw ) ) : $raw;
+
+            $dec = intval( $atts['decimals'] );
+            if ( $dec < 0 ) {
+                $dec = intval( $entry['decimals'] );
+            }
+            $value = round( floatval( $value ), $dec );
+
+            $unit_str = ( $atts['unit'] !== '0' && $param ) ? ' ' . NAWS_Helpers::get_unit( $param ) : '';
+            $output   = esc_html( $value . $unit_str );
+        }
 
         $tag = sanitize_key( $atts['tag'] );
         if ( $tag === 'none' || $tag === '' ) {
