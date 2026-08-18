@@ -179,10 +179,14 @@ close( 'Basis 5 statt 10',     NAWS_Climate::growing_degree_days( $wachstum, 5.0
 close( 'leere Liste ergibt 0.0', NAWS_Climate::growing_degree_days( [], 10.0, 30.0 ), 0.0 );
 
 // Fehlt Tmin oder Tmax, wird der Tag uebersprungen, nicht mit 0 gerechnet.
+// Basis bewusst 5.0 statt 10.0: bei Basis 10 wuerde eine falsch auf 0.0
+// gecastete Null-Ablesung durch max(0.0, ...) ohnehin auf 0 gekappt und
+// waere vom korrekten "uebersprungen" nicht zu unterscheiden. Bei Basis 5
+// trennen sich die Ergebnisse: korrekt 0.0 gegen fehlerhaft 10.0 bzw. 5.0.
 close( 'null-Minimum wird uebersprungen',
-    NAWS_Climate::growing_degree_days( rows( [ '2026-05-01' => [ null, 20.0, 14.0 ] ] ), 10.0, 30.0 ), 0.0 );
+    NAWS_Climate::growing_degree_days( rows( [ '2026-05-01' => [ null, 30.0, 14.0 ] ] ), 5.0, 30.0 ), 0.0 );
 close( 'null-Maximum wird uebersprungen',
-    NAWS_Climate::growing_degree_days( rows( [ '2026-05-01' => [ 5.0, null, 14.0 ] ] ), 10.0, 30.0 ), 0.0 );
+    NAWS_Climate::growing_degree_days( rows( [ '2026-05-01' => [ 20.0, null, 14.0 ] ] ), 5.0, 30.0 ), 0.0 );
 
 echo "\nNAWS_Climate::grassland_sum() — Monatsgewichte\n" . str_repeat( '-', 74 ) . "\n";
 
@@ -203,8 +207,13 @@ close( 'leere Liste ergibt 0.0', NAWS_Climate::grassland_sum( [] ), 0.0 );
 close( 'Schaltjahr 29.02. mit 0,75',
     NAWS_Climate::grassland_sum( rows( [ '2024-02-29' => [ 0.0, 8.0, 4.0 ] ] ) ), 3.0 );
 
-// Fehlt temp_avg, traegt der Tag 0 bei -- kein Fehler, kein Fallback auf 0 Grad.
-close( 'null-Mittel traegt 0 bei',
+// Sanity-Check, keine Regressionswache: grassland_contribution() prueft
+// "$avg === null || (float) $avg <= 0.0" in einer einzigen Bedingung, daher
+// waere eine falsch auf 0.0 gecastete Null-Ablesung durch den zweiten Teil
+// derselben Bedingung ohnehin abgefangen. Die Zeile stellt nur sicher, dass
+// ein fehlendes Mittel nicht zum Fehler fuehrt, nicht dass der Null-Check
+// selbst greift -- das laesst sich mit keiner Fixture trennen.
+close( 'null-Mittel fuehrt nicht zum Fehler und traegt 0 bei',
     NAWS_Climate::grassland_sum( rows( [ '2026-03-01' => [ 2.0, 14.0, null ] ] ) ), 0.0 );
 
 echo "\nNAWS_Climate::grassland_start()\n" . str_repeat( '-', 74 ) . "\n";
@@ -220,8 +229,11 @@ check( 'unter 200 ergibt null',
     NAWS_Climate::grassland_start( rows( [ '2026-03-01' => [ 2.0, 14.0, 9.0 ] ] ) ), null );
 check( 'leere Liste ergibt null', NAWS_Climate::grassland_start( [] ), null );
 
-// Fehlt temp_avg, traegt der Tag 0 bei und loest die Schwelle nicht aus.
-check( 'null-Mittel loest die Schwelle nicht aus',
+// Sanity-Check, keine Regressionswache: dieselbe "=== null || <= 0.0"
+// Bedingung wie bei grassland_sum() macht eine falsch gecastete Null-Ablesung
+// strukturell nicht von einer korrekt uebersprungenen unterscheidbar. Zeigt
+// nur, dass ein fehlendes Mittel die Schwelle nicht faelschlich ausloest.
+check( 'null-Mittel fuehrt nicht zum Fehler und loest die Schwelle nicht aus',
     NAWS_Climate::grassland_start( rows( [ '2026-03-01' => [ 2.0, 14.0, null ] ] ) ), null );
 
 echo "\n" . str_repeat( '-', 74 ) . "\n";
