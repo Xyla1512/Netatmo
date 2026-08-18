@@ -389,6 +389,14 @@ return [
     'calc_heating_days'    => 'Heating days',
     'calc_cooling_days'    => 'Cooling days',
 
+    // [naws_calc] – sum indices
+    'calc_hdd'            => 'Heating degree days',
+    'calc_cdd'            => 'Cooling degree days',
+    'calc_gdd'            => 'Growing degree days',
+    'calc_glts'           => 'Grassland temperature sum',
+    'calc_glts_start'     => 'Start of the growing season',
+    'calc_glts_pending'   => 'not yet reached',
+
     // [naws_calc] – thermal sensation bands
     'sens_very_cold'          => 'very cold',
     'sens_cold'               => 'cold',

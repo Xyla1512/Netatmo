@@ -35,7 +35,7 @@ class NAWS_Calc {
      *             it from the settings" (heating_limit or cooling_limit),
      *             which is what keeps that limit country-configurable
      *
-     * @return array<string, array{kind:string, param:?string, decimals:int, label:string}>
+     * @return array<string, array{kind:string, param:?string, decimals:int, label:string, unit?:string, field?:string, op?:string, threshold?:?float}>
      */
     public static function catalogue(): array {
         return [
@@ -67,6 +67,13 @@ class NAWS_Calc {
             'tropical_nights'   => [ 'kind' => 'dayclass', 'param' => null, 'unit' => '', 'decimals' => 0, 'label' => 'calc_tropical_nights', 'field' => 'temp_min', 'op' => '>=', 'threshold' => 20.0 ],
             'heating_days'      => [ 'kind' => 'dayclass', 'param' => null, 'unit' => '', 'decimals' => 0, 'label' => 'calc_heating_days',    'field' => 'temp_avg', 'op' => '<',  'threshold' => null ],
             'cooling_days'      => [ 'kind' => 'dayclass', 'param' => null, 'unit' => '', 'decimals' => 0, 'label' => 'calc_cooling_days',    'field' => 'temp_avg', 'op' => '>',  'threshold' => null ],
+
+            // ── Summenkennzahlen ──────────────────────────────────────
+            'hdd'        => [ 'kind' => 'sum', 'param' => null, 'unit' => 'Kd', 'decimals' => 0, 'label' => 'calc_hdd' ],
+            'cdd'        => [ 'kind' => 'sum', 'param' => null, 'unit' => 'Kd', 'decimals' => 0, 'label' => 'calc_cdd' ],
+            'gdd'        => [ 'kind' => 'sum', 'param' => null, 'unit' => 'Kd', 'decimals' => 0, 'label' => 'calc_gdd' ],
+            'glts'       => [ 'kind' => 'sum', 'param' => null, 'unit' => '°C', 'decimals' => 1, 'label' => 'calc_glts' ],
+            'glts_start' => [ 'kind' => 'sum', 'param' => null, 'unit' => '',   'decimals' => 0, 'label' => 'calc_glts_start' ],
         ];
     }
 
@@ -290,6 +297,8 @@ class NAWS_Calc {
                 return self::raw_instant( $key, $atts );
             case 'dayclass':
                 return self::raw_dayclass( $key, $atts );
+            case 'sum':
+                return self::raw_sum( $key, $atts );
         }
 
         return null;
@@ -424,5 +433,56 @@ class NAWS_Calc {
             return (float) NAWS_Climate::max_streak( $rows, $matches );
         }
         return (float) NAWS_Climate::count_days( $rows, $matches );
+    }
+
+    /**
+     * Sum indices over a range of daily rows.
+     */
+    private static function raw_sum( string $key, array $atts ) {
+        $opts = get_option( 'naws_settings', [] );
+
+        // The grassland sum is defined as "since the first of January", so it
+        // ignores period and honours only an explicit year.
+        $sum_atts = $atts;
+        if ( $key === 'glts' || $key === 'glts_start' ) {
+            $sum_atts['period'] = 'year';
+        }
+
+        $rows = self::daily_rows( $sum_atts, [ 'temp_min', 'temp_max', 'temp_avg' ] );
+        if ( empty( $rows ) ) {
+            return null;
+        }
+
+        switch ( $key ) {
+            case 'hdd':
+                $limit = isset( $atts['base'] ) && $atts['base'] !== ''
+                    ? floatval( $atts['base'] )
+                    : floatval( $opts['heating_limit'] ?? 15.0 );
+                return NAWS_Climate::degree_days( $rows, $limit, floatval( $opts['room_temp'] ?? 20.0 ), 'heating' );
+
+            case 'cdd':
+                $limit = isset( $atts['base'] ) && $atts['base'] !== ''
+                    ? floatval( $atts['base'] )
+                    : floatval( $opts['cooling_limit'] ?? 18.0 );
+                return NAWS_Climate::degree_days( $rows, $limit, 0.0, 'cooling' );
+
+            case 'gdd':
+                $base = ( isset( $atts['base'] ) && $atts['base'] !== '' ) ? floatval( $atts['base'] ) : 10.0;
+                $cap  = ( isset( $atts['cap'] )  && $atts['cap']  !== '' ) ? floatval( $atts['cap'] )  : 30.0;
+                return NAWS_Climate::growing_degree_days( $rows, $base, $cap );
+
+            case 'glts':
+                return NAWS_Climate::grassland_sum( $rows );
+
+            case 'glts_start':
+                $date = NAWS_Climate::grassland_start( $rows );
+                // A sum below 200 is a correct value, not a missing one — say
+                // so in words rather than showing an empty field.
+                return $date === null
+                    ? naws__( 'calc_glts_pending' )
+                    : wp_date( get_option( 'date_format', 'd.m.Y' ), strtotime( $date . ' 12:00:00' ) );
+        }
+
+        return null;
     }
 }

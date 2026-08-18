@@ -389,6 +389,14 @@ return [
     'calc_heating_days'    => 'Heiztage',
     'calc_cooling_days'    => 'Kühltage',
 
+    // [naws_calc] – Summenkennzahlen
+    'calc_hdd'            => 'Heizgradtage',
+    'calc_cdd'            => 'Kühlgradtage',
+    'calc_gdd'            => 'Wachstumsgradtage',
+    'calc_glts'           => 'Grünlandtemperatursumme',
+    'calc_glts_start'     => 'Vegetationsbeginn',
+    'calc_glts_pending'   => 'noch nicht erreicht',
+
     // [naws_calc] – Empfindungsstufen zur gefühlten Temperatur
     'sens_very_cold'          => 'sehr kalt',
     'sens_cold'               => 'kalt',

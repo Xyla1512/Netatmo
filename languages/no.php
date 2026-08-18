@@ -389,6 +389,14 @@ return [
     'calc_heating_days'    => 'Fyringsdager',
     'calc_cooling_days'    => 'Kjøledager',
 
+    // [naws_calc] – summindekser
+    'calc_hdd'            => 'Fyringsgraddager',
+    'calc_cdd'            => 'Kjølegraddager',
+    'calc_gdd'            => 'Veksstgraddager',
+    'calc_glts'           => 'Grasmarkstemperatursum',
+    'calc_glts_start'     => 'Vekstsesongens start',
+    'calc_glts_pending'   => 'ikke nådd ennå',
+
     // [naws_calc] – trinn for termisk opplevelse
     'sens_very_cold'          => 'svært kaldt',
     'sens_cold'               => 'kaldt',

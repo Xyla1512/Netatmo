@@ -351,6 +351,8 @@ class NAWS_Shortcodes {
             'year'     => '',
             'mode'     => 'count',
             'note'     => '0',
+            'base'     => '',
+            'cap'      => '',
         ], $atts, 'naws_calc' );
 
         $key      = sanitize_key( $atts['value'] );
@@ -372,6 +374,8 @@ class NAWS_Shortcodes {
             'period'  => sanitize_text_field( $atts['period'] ),
             'year'    => sanitize_text_field( $atts['year'] ),
             'mode'    => sanitize_key( $atts['mode'] ),
+            'base'    => sanitize_text_field( $atts['base'] ),
+            'cap'     => sanitize_text_field( $atts['cap'] ),
         ] );
 
         if ( $raw === null ) {
