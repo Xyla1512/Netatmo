@@ -42,6 +42,9 @@ $GLOBALS['naws_stored'] = [
     'wx_fog_rh'     => 98.0,
     'wx_fog_spread' => 0.4,
     'wx_show_on_dashboard' => '1',
+    'heating_limit' => 16.5,
+    'room_temp'     => 21.0,
+    'cooling_limit' => 19.0,
 ];
 
 // ── Minimal WordPress surface ────────────────────────────────────────────
@@ -220,6 +223,23 @@ scenario(
       'forecast_country', 'wx_rain_heavy', 'wx_snow_tw', 'wx_fog_rh',
       'wx_fog_spread', 'wx_storm_wind', 'wx_show_on_dashboard' ],
     [ 'language' => 'no' ]
+);
+
+// ── Stufe 2: die drei neuen Limit-Einstellungen ─────────────────────────
+// Genau die Regression, wegen der die Merge-Semantik existiert: vor 1.7.0
+// hat das Speichern eines Formulars jedes andere Setting zurueckgesetzt.
+scenario(
+    'Zugangsdaten speichern laesst die Limits stehen',
+    [ 'client_id' => 'newid', 'client_secret' => 'newsecret' ],
+    [ 'heating_limit', 'room_temp', 'cooling_limit' ],
+    [ 'client_id' => 'ENC:newid' ]
+);
+
+scenario(
+    'Heizgrenze wird auf 30 geklemmt',
+    [ 'heating_limit' => 99 ],
+    [ 'room_temp', 'cooling_limit' ],
+    [ 'heating_limit' => 30.0 ]
 );
 
 echo str_repeat( '-', 70 ) . "\n";

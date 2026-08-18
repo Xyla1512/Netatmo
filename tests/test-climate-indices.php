@@ -116,6 +116,16 @@ check( 'Tauwetter bricht die Serie', NAWS_Climate::max_streak( $unterbrochen, $f
 check( 'ein einzelner Tag',   NAWS_Climate::max_streak( rows( [ '2026-01-01' => [ -3.0, -1.0, -2.0 ] ] ), $frost ), 1 );
 check( 'leere Liste ergibt 0', NAWS_Climate::max_streak( [], $frost ), 0 );
 
+// Endet die Liste mit einem nicht passenden Tag, bleibt die beste
+// fruehere Serie erhalten -- der letzte Tag darf sie nicht loeschen.
+$endet_nicht_passend = rows( [
+    '2026-01-01' => [ -3.0, -1.0, -2.0 ],
+    '2026-01-02' => [ -4.0, -1.0, -2.5 ],
+    '2026-01-03' => [ -2.0, -0.5, -1.2 ],
+    '2026-01-04' => [  5.0,  9.0,  7.0 ],
+] );
+check( 'endet nicht passend, bester Wert bleibt', NAWS_Climate::max_streak( $endet_nicht_passend, $frost ), 3 );
+
 echo "\nNAWS_Climate::current_streak()\n" . str_repeat( '-', 74 ) . "\n";
 
 // Zaehlt vom Ende der Liste rueckwaerts.
@@ -123,6 +133,15 @@ check( 'laufende Serie am Ende',  NAWS_Climate::current_streak( $luecke, $frost 
 check( 'zwei Frosttage am Ende',  NAWS_Climate::current_streak( $unterbrochen, $frost ), 2 );
 check( 'Tauwetter davor bricht ab', NAWS_Climate::current_streak( $w, $frost ), 1 );
 check( 'leere Liste ergibt 0',    NAWS_Climate::current_streak( [], $frost ), 0 );
+
+// Passt der letzte Tag nicht, ist die laufende Serie 0 -- unabhaengig
+// davon, was davor lag.
+$letzter_bricht = rows( [
+    '2026-01-01' => [ -3.0, -1.0, -2.0 ],
+    '2026-01-02' => [ -2.0, -0.5, -1.2 ],
+    '2026-01-03' => [  5.0,  9.0,  7.0 ],
+] );
+check( 'letzter Tag passt nicht -> 0', NAWS_Climate::current_streak( $letzter_bricht, $frost ), 0 );
 
 echo "\nNAWS_Climate::degree_days()\n" . str_repeat( '-', 74 ) . "\n";
 
@@ -159,6 +178,12 @@ close( 'ohne Kappung waere es mehr', NAWS_Climate::growing_degree_days( $wachstu
 close( 'Basis 5 statt 10',     NAWS_Climate::growing_degree_days( $wachstum, 5.0, 30.0 ), 36.0 );
 close( 'leere Liste ergibt 0.0', NAWS_Climate::growing_degree_days( [], 10.0, 30.0 ), 0.0 );
 
+// Fehlt Tmin oder Tmax, wird der Tag uebersprungen, nicht mit 0 gerechnet.
+close( 'null-Minimum wird uebersprungen',
+    NAWS_Climate::growing_degree_days( rows( [ '2026-05-01' => [ null, 20.0, 14.0 ] ] ), 10.0, 30.0 ), 0.0 );
+close( 'null-Maximum wird uebersprungen',
+    NAWS_Climate::growing_degree_days( rows( [ '2026-05-01' => [ 5.0, null, 14.0 ] ] ), 10.0, 30.0 ), 0.0 );
+
 echo "\nNAWS_Climate::grassland_sum() — Monatsgewichte\n" . str_repeat( '-', 74 ) . "\n";
 
 // Januar x0,5 · Februar x0,75 · ab Maerz x1,0 · nur Mittel ueber 0.
@@ -178,6 +203,10 @@ close( 'leere Liste ergibt 0.0', NAWS_Climate::grassland_sum( [] ), 0.0 );
 close( 'Schaltjahr 29.02. mit 0,75',
     NAWS_Climate::grassland_sum( rows( [ '2024-02-29' => [ 0.0, 8.0, 4.0 ] ] ) ), 3.0 );
 
+// Fehlt temp_avg, traegt der Tag 0 bei -- kein Fehler, kein Fallback auf 0 Grad.
+close( 'null-Mittel traegt 0 bei',
+    NAWS_Climate::grassland_sum( rows( [ '2026-03-01' => [ 2.0, 14.0, null ] ] ) ), 0.0 );
+
 echo "\nNAWS_Climate::grassland_start()\n" . str_repeat( '-', 74 ) . "\n";
 
 // Erst wenn die laufende Summe 200 ueberschreitet.
@@ -190,6 +219,10 @@ check( 'Datum der Ueberschreitung', NAWS_Climate::grassland_start( rows( $lang )
 check( 'unter 200 ergibt null',
     NAWS_Climate::grassland_start( rows( [ '2026-03-01' => [ 2.0, 14.0, 9.0 ] ] ) ), null );
 check( 'leere Liste ergibt null', NAWS_Climate::grassland_start( [] ), null );
+
+// Fehlt temp_avg, traegt der Tag 0 bei und loest die Schwelle nicht aus.
+check( 'null-Mittel loest die Schwelle nicht aus',
+    NAWS_Climate::grassland_start( rows( [ '2026-03-01' => [ 2.0, 14.0, null ] ] ) ), null );
 
 echo "\n" . str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );

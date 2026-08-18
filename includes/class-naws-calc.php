@@ -458,6 +458,17 @@ class NAWS_Calc {
     }
 
     /**
+     * A float attribute, falling back to a default when absent or empty.
+     *
+     * The empty-string check matters: shortcode_atts() defaults these to '',
+     * and floatval('') is 0.0 — which would silently turn every day into a
+     * heating day rather than falling back to the configured limit.
+     */
+    private static function att_float( array $atts, string $key, float $default ): float {
+        return ( isset( $atts[ $key ] ) && $atts[ $key ] !== '' ) ? floatval( $atts[ $key ] ) : $default;
+    }
+
+    /**
      * Sum indices over a range of daily rows.
      */
     private static function raw_sum( string $key, array $atts ) {
@@ -477,20 +488,16 @@ class NAWS_Calc {
 
         switch ( $key ) {
             case 'hdd':
-                $limit = isset( $atts['base'] ) && $atts['base'] !== ''
-                    ? floatval( $atts['base'] )
-                    : floatval( $opts['heating_limit'] ?? 15.0 );
+                $limit = self::att_float( $atts, 'base', floatval( $opts['heating_limit'] ?? 15.0 ) );
                 return NAWS_Climate::degree_days( $rows, $limit, floatval( $opts['room_temp'] ?? 20.0 ), 'heating' );
 
             case 'cdd':
-                $limit = isset( $atts['base'] ) && $atts['base'] !== ''
-                    ? floatval( $atts['base'] )
-                    : floatval( $opts['cooling_limit'] ?? 18.0 );
+                $limit = self::att_float( $atts, 'base', floatval( $opts['cooling_limit'] ?? 18.0 ) );
                 return NAWS_Climate::degree_days( $rows, $limit, 0.0, 'cooling' );
 
             case 'gdd':
-                $base = ( isset( $atts['base'] ) && $atts['base'] !== '' ) ? floatval( $atts['base'] ) : 10.0;
-                $cap  = ( isset( $atts['cap'] )  && $atts['cap']  !== '' ) ? floatval( $atts['cap'] )  : 30.0;
+                $base = self::att_float( $atts, 'base', 10.0 );
+                $cap  = self::att_float( $atts, 'cap', 30.0 );
                 return NAWS_Climate::growing_degree_days( $rows, $base, $cap );
 
             case 'glts':
