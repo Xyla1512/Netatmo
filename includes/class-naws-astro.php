@@ -44,33 +44,83 @@ class NAWS_Astro {
     // ── Weather derivations ──────────────────────────────────────────────────
 
     /**
-     * Feels-like / Apparent Temperature (Steadman, Australian Bureau of Meteorology).
+     * Wind chill (NOAA 2001, metric form).
      *
-     * AT = Ta + 0.33 × e − 0.70 × ws − 4.00
+     * Valid below roughly 10 °C and above roughly 5 km/h; outside that range
+     * the regression drifts, which is why feels_like() gates it.
      *
-     * Works across the full temperature range (−40 °C to +50 °C) without gaps.
-     * At low temps + wind the wind-chill effect dominates,
-     * at high temps + humidity the vapour-pressure effect dominates.
+     * @param float $temp_c   Air temperature in °C.
+     * @param float $wind_kmh Wind speed in km/h.
+     * @return float          Wind chill temperature in °C.
+     */
+    public static function wind_chill( float $temp_c, float $wind_kmh ): float {
+        $v = pow( max( 0.0, $wind_kmh ), 0.16 );
+        return round( 13.12 + 0.6215 * $temp_c - 11.37 * $v + 0.3965 * $temp_c * $v, 1 );
+    }
+
+    /**
+     * Apparent temperature (Steadman / BOM, °C).
      *
-     * @param float $temp_c       Air temperature in °C.
-     * @param float $humidity_pct Relative humidity in % (0–100).
-     * @param float $wind_kmh     Wind speed in km/h.
-     * @return float              Apparent temperature in °C.
+     * This used to be the whole of feels_like(). It stays available under its
+     * own name because it is the right model for the middle of the range —
+     * it just never belonged in freezing wind.
      *
-     * @see https://en.wikipedia.org/wiki/Apparent_temperature
      * @see Steadman, R. G. (1984). "A Universal Scale of Apparent Temperature"
      */
-    public static function feels_like( float $temp_c, float $humidity_pct, float $wind_kmh ): float {
+    public static function apparent_temperature( float $temp_c, float $humidity_pct, float $wind_kmh ): float {
         // Water vapour pressure (hPa) via Magnus formula
         $e = ( $humidity_pct / 100.0 ) * 6.105 * exp( ( 17.27 * $temp_c ) / ( 237.7 + $temp_c ) );
 
         // Wind speed in m/s (Netatmo delivers km/h)
         $ws = $wind_kmh / 3.6;
 
-        // Apparent temperature (Steadman / BOM)
         $at = $temp_c + 0.33 * $e - 0.70 * $ws - 4.00;
 
         return round( $at, 1 );
+    }
+
+    /**
+     * Felt temperature, switched by weather regime.
+     *
+     * Three models, because no single formula covers the range: wind chill
+     * carries cold windy air, the heat index carries hot humid air, and
+     * Steadman carries everything between. Before this switch existed the
+     * plugin reported -5 °C in a stiff breeze as roughly -8 °C when it feels
+     * closer to -13 °C.
+     *
+     * @param float $temp_c       Air temperature in °C.
+     * @param float $humidity_pct Relative humidity in % (0–100).
+     * @param float $wind_kmh     Wind speed in km/h.
+     * @return float              Felt temperature in °C.
+     */
+    public static function feels_like( float $temp_c, float $humidity_pct, float $wind_kmh ): float {
+        if ( $temp_c < 10.0 && $wind_kmh > 5.0 ) {
+            return self::wind_chill( $temp_c, $wind_kmh );
+        }
+        if ( $temp_c >= 27.0 && $humidity_pct > 40.0 ) {
+            return self::heat_index( $temp_c, $humidity_pct );
+        }
+        return self::apparent_temperature( $temp_c, $humidity_pct, $wind_kmh );
+    }
+
+    /**
+     * Thermal sensation band for a felt temperature.
+     *
+     * Returns a language key, not a finished string — the caller translates.
+     * The bands are taken from the source model, not chosen here.
+     *
+     * @param float $felt_c Felt temperature in °C.
+     * @return string       One of the sens_* language keys.
+     */
+    public static function thermal_sensation( float $felt_c ): string {
+        if ( $felt_c < -10.0 ) return 'sens_very_cold';
+        if ( $felt_c <   0.0 ) return 'sens_cold';
+        if ( $felt_c <  10.0 ) return 'sens_cool';
+        if ( $felt_c <  20.0 ) return 'sens_pleasantly_cool';
+        if ( $felt_c <  25.0 ) return 'sens_pleasant';
+        if ( $felt_c <  32.0 ) return 'sens_warm';
+        if ( $felt_c <  40.0 ) return 'sens_hot';
+        return 'sens_extremely_hot';
     }
 
     /**
