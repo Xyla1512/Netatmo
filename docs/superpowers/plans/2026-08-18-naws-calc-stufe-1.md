@@ -962,8 +962,9 @@ git add includes/class-naws-calc.php
 git commit -m "[naws_calc] covers sun and moon as well
 
 Seven more keys, all on functions that already existed and were only
-reachable from inside templates. Dates and times go through wp_date()
-so they land in the site timezone rather than UTC."
+reachable from inside templates. Dates and times keep the formatting
+NAWS_Astro already applies through wp_timezone(), so they land in the
+site timezone rather than UTC."
 ```
 
 ---
