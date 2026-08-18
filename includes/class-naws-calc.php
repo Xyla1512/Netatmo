@@ -436,6 +436,28 @@ class NAWS_Calc {
     }
 
     /**
+     * How much of the requested period actually carries data.
+     *
+     * Only meaningful for kinds that read the daily table; instant values
+     * return null. Counting gaps is the honest way to publish a frost-day
+     * total: 31 out of 31 days means something different from 31 out of 200.
+     */
+    public static function coverage( string $key, array $atts ): ?array {
+        $entry = self::catalogue()[ $key ] ?? null;
+        if ( $entry === null || $entry['kind'] === 'instant' ) {
+            return null;
+        }
+        $rows  = self::daily_rows( $atts, [ 'temp_min', 'temp_max', 'temp_avg' ] );
+        $range = self::period_range( $atts );
+
+        $from = strtotime( $range['from'] . ' 12:00:00' );
+        $to   = strtotime( $range['to'] . ' 12:00:00' );
+        $days = ( $from && $to && $to >= $from ) ? intval( round( ( $to - $from ) / DAY_IN_SECONDS ) ) + 1 : 0;
+
+        return [ 'rows' => count( $rows ), 'days' => $days ];
+    }
+
+    /**
      * Sum indices over a range of daily rows.
      */
     private static function raw_sum( string $key, array $atts ) {

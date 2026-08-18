@@ -396,6 +396,7 @@ return [
     'calc_glts'           => 'Grasmarkstemperatursum',
     'calc_glts_start'     => 'Vekstsesongens start',
     'calc_glts_pending'   => 'ikke nådd ennå',
+    'calc_note'           => '(fra %1$d av %2$d dager)',
 
     // [naws_calc] – trinn for termisk opplevelse
     'sens_very_cold'          => 'svært kaldt',

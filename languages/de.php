@@ -396,6 +396,7 @@ return [
     'calc_glts'           => 'Grünlandtemperatursumme',
     'calc_glts_start'     => 'Vegetationsbeginn',
     'calc_glts_pending'   => 'noch nicht erreicht',
+    'calc_note'           => '(bei %1$d von %2$d Tagen)',
 
     // [naws_calc] – Empfindungsstufen zur gefühlten Temperatur
     'sens_very_cold'          => 'sehr kalt',

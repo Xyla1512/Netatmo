@@ -396,6 +396,7 @@ return [
     'calc_glts'           => 'Grassland temperature sum',
     'calc_glts_start'     => 'Start of the growing season',
     'calc_glts_pending'   => 'not yet reached',
+    'calc_note'           => '(from %1$d of %2$d days)',
 
     // [naws_calc] – thermal sensation bands
     'sens_very_cold'          => 'very cold',

@@ -400,6 +400,17 @@ class NAWS_Shortcodes {
             $output   = esc_html( $value . $unit_str );
         }
 
+        if ( $atts['note'] === '1' ) {
+            $cov = NAWS_Calc::coverage( $key, [
+                'station' => sanitize_text_field( $atts['station'] ),
+                'period'  => sanitize_text_field( $atts['period'] ),
+                'year'    => sanitize_text_field( $atts['year'] ),
+            ] );
+            if ( $cov !== null && $cov['days'] > 0 ) {
+                $output .= ' ' . esc_html( sprintf( naws__( 'calc_note' ), $cov['rows'], $cov['days'] ) );
+            }
+        }
+
         $tag = sanitize_key( $atts['tag'] );
         if ( $tag === 'none' || $tag === '' ) {
             return $output;
