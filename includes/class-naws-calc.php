@@ -45,6 +45,22 @@ class NAWS_Calc {
      * @return array<string, array{kind:string, param:?string, decimals:int, label:string, unit?:string, field?:string, op?:string, threshold?:?float, needs?:string[]}>
      */
     public static function catalogue(): array {
+        // The table is constant in everything but syntax: every entry is a
+        // literal, with no option, no clock and no translated string in it —
+        // labels are language KEYS. So it is built once per request, which is
+        // worth doing because it is asked for often: has(), unit_for(), raw()
+        // and the documentation table each want it, the last one per row.
+        static $cache = null;
+        if ( $cache === null ) {
+            $cache = self::build_catalogue();
+        }
+        return $cache;
+    }
+
+    /**
+     * The literal table behind catalogue().
+     */
+    private static function build_catalogue(): array {
         return [
             // ── thermal, from the current reading ──────────────────────────
             'dewpoint'          => [ 'kind' => 'instant', 'param' => 'Temperature', 'decimals' => 1,  'label' => 'calc_dewpoint' ],
@@ -129,9 +145,15 @@ class NAWS_Calc {
     /**
      * Resolve a module alias or MAC address to a module_id.
      *
+     * Public because [naws_value] resolves the same four aliases and used to
+     * carry its own copy of the table. Two copies of "what outdoor means" is
+     * one too many — and they had already drifted: the copy in sc_value()
+     * lower-cased the alias for the lookup but handed a MAC address on with
+     * its original case, so an uppercase MAC matched nothing.
+     *
      * @return string|null null when the station has no such module.
      */
-    private static function module_id( string $alias ): ?string {
+    public static function module_id( string $alias ): ?string {
         $alias = strtolower( $alias );
         if ( ! isset( self::TYPE_MAP[ $alias ] ) ) {
             return $alias; // treated as a direct MAC address
@@ -612,7 +634,6 @@ class NAWS_Calc {
      * Sum indices over a range of daily rows.
      */
     private static function raw_sum( string $key, array $atts ) {
-        $opts = get_option( 'naws_settings', [] );
         $entry = self::catalogue()[ $key ];
 
         // The grassland sum is defined as "since the first of January", so it
@@ -629,13 +650,19 @@ class NAWS_Calc {
         }
 
         switch ( $key ) {
-            case 'hdd':
+            // Only the two degree-day branches read the settings, so only
+            // they pay for the option lookup.
+            case 'hdd': {
+                $opts  = get_option( 'naws_settings', [] );
                 $limit = self::att_float( $atts, 'base', floatval( $opts['heating_limit'] ?? 15.0 ) );
                 return NAWS_Climate::degree_days( $rows, $limit, floatval( $opts['room_temp'] ?? 20.0 ), 'heating' );
+            }
 
-            case 'cdd':
+            case 'cdd': {
+                $opts  = get_option( 'naws_settings', [] );
                 $limit = self::att_float( $atts, 'base', floatval( $opts['cooling_limit'] ?? 18.0 ) );
                 return NAWS_Climate::degree_days( $rows, $limit, 0.0, 'cooling' );
+            }
 
             case 'gdd':
                 $base = self::att_float( $atts, 'base', 10.0 );

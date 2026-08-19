@@ -104,17 +104,24 @@ class NAWS_Climate {
      *
      * @param float  $threshold Heating or cooling limit temperature.
      * @param float  $reference Room temperature; used by 'heating' only.
-     * @param string $direction 'heating' or 'cooling'.
+     * @param string $direction 'cooling' picks the cooling reading; ANY other
+     *                          value, including a misspelt one, is treated as
+     *                          heating. Deliberate: both callers pass a
+     *                          literal, and a fourth branch that returned 0.0
+     *                          for an unknown direction would answer a typo
+     *                          with a plausible number instead of an obvious
+     *                          one. tests/test-climate-indices.php pins it.
      */
     public static function degree_days( array $rows, float $threshold, float $reference, string $direction ): float {
-        $sum = 0.0;
+        $cooling = ( $direction === 'cooling' );
+        $sum     = 0.0;
         foreach ( $rows as $row ) {
             $avg = $row['temp_avg'] ?? null;
             if ( $avg === null ) {
                 continue;
             }
             $avg = (float) $avg;
-            if ( $direction === 'cooling' ) {
+            if ( $cooling ) {
                 if ( $avg > $threshold ) {
                     $sum += $avg - $threshold;
                 }

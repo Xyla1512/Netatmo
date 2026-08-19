@@ -2,6 +2,37 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [Unreleased]
+
+Work finished and merged, waiting for the release it will ship in. The version number is deliberately still 1.9.6: more is coming, and it belongs in the same release.
+
+### Added
+- **`[naws_calc]` — one shortcode for every computed value.** Twenty-seven of them, in four kinds, and the kind decides which attributes apply. Fourteen *instant* values read the latest measurement or the location: dew point, apparent temperature, wet-bulb temperature, heat index, thermal sensation, CO₂ rating, wind compass, sunrise, sunset, day length, moon phase and illumination, next supermoon, next lunar eclipse. Seven *day classes* count and streak over the daily table — ice days, frost days, summer days, hot days, tropical nights, heating days, cooling days — with `mode="count|streak|max_streak"`. Five *sums* aggregate it: heating and cooling degree days, growing degree days, the grassland temperature sum and the date the growing season started. One *index*, the SPI.
+
+  The single most important rule in it is that "nobody measured this" and "it happened on zero days" must never look alike. A row in the daily table exists as soon as any column carries a value, so a stretch of days with only a pressure reading would otherwise produce a confident "0 frost days". Every value that reads the daily table declares the columns it actually needs, and a period whose rows never carry them gives the fallback, not a zero.
+
+  `note="1"` appends how much of the period really carries data — `31 (from 230 of 230 days)` — because a frost-day total means something different over a complete year than over a year with a three-week gap in it.
+
+- **The Standardized Precipitation Index**, `[naws_calc value="spi" months="1|3|6|12"]`. It fits a gamma distribution to every window of that length in the record and reports where the newest one falls, as a standard normal deviate. Two departures from the textbook are documented at the function: the windows are pooled across the calendar rather than grouped by end month, because the classic form needs decades before any single month has a sample worth fitting; and it computes from two complete years rather than the customary thirty. The documentation page states the reference length with the installation's own numbers and says plainly that below about thirty years the index is a tendency rather than a measurement.
+
+  Months are only counted when every one of their days carries a rain reading. A month missing three days is not a drier month, it is an unknown one, and feeding it to the fit would turn a gauge outage into a drought.
+
+- **Three settings for the degree-day limits** — heating limit, room temperature, cooling limit — because they depend on the country (Germany 15 °C per VDI 2067, Austria and Switzerland 12 °C) and would otherwise have to be repeated at every shortcode.
+
+### Fixed
+- **The apparent temperature ignored wind chill.** `feels_like()` computed Steadman's formula at every temperature. It now runs three regimes: wind chill below 10 °C with wind above 5 km/h, the heat index from 27 °C with humidity above 40 %, Steadman in between. In cold wind the displayed value changes — sometimes colder, sometimes warmer, since the two formulas cross.
+
+- **The heat index was computed outside its domain.** Rothfusz's regression is a fit for hot, humid conditions and returns nonsense below about 25 °C: at −5 °C and 80 % humidity it produced 103.9 °C. The infobar had always gated it; the new catalogue had not inherited that. It is now gated in one place both callers use.
+
+- **The next supermoon, the next lunar eclipse and the next full moon were dated in German** regardless of the language setting — a fixed `d.m.Y – H:i` plus the word "Uhr", in a plugin that ships a complete Norwegian translation. All three now use the site's own date and time format through `wp_date()`, the same route the start of the growing season already took.
+
+- **An uppercase MAC address in `[naws_value module="…"]` matched nothing.** The shortcode kept its own copy of the alias table (`outdoor`, `indoor`, `wind`, `rain`) and lower-cased the alias for the lookup while passing a MAC address on with its original case. There is now one table, in `NAWS_Calc`, and both shortcodes resolve modules through it.
+
+- **An emptied degree-day limit field silently stored 0 °C.** `floatval('')` is `0.0`, which the inline clamp then treated as a deliberate setting rather than as "use the default".
+
+### Changed
+- **The cron settings and the cron log now explain what WP-Cron does not do.** WordPress cron runs on page views: without visitors there is no fetch, the night mode setting has nothing to suppress, and the readings show a gap that the daily summary later fills in. Both screens now say so and name the remedy — `DISABLE_WP_CRON` plus a real server cron on `wp-cron.php`.
+
 ## [1.9.6] – 2026-08-17
 
 ### Changed

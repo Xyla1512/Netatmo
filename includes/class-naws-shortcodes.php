@@ -265,27 +265,10 @@ class NAWS_Shortcodes {
         $show_unit = $atts['unit'] !== '0';
         $fallback  = esc_html( $atts['fallback'] );
 
-        // Resolve module alias → module_id
-        $module_id = null;
+        // Resolve module alias → module_id. NAWS_Calc owns the alias table;
+        // this shortcode used to keep a second copy of it.
         $modules   = NAWS_Database::get_modules( true );
-        $type_map  = [
-            'outdoor' => 'NAModule1',
-            'indoor'  => 'NAMain',
-            'wind'    => 'NAModule2',
-            'rain'    => 'NAModule3',
-        ];
-        $alias = strtolower( $atts['module'] );
-        if ( isset( $type_map[ $alias ] ) ) {
-            foreach ( $modules as $m ) {
-                if ( $m['module_type'] === $type_map[ $alias ] ) {
-                    $module_id = $m['module_id'];
-                    break;
-                }
-            }
-        } else {
-            // Treat as direct MAC address
-            $module_id = sanitize_text_field( $atts['module'] );
-        }
+        $module_id = NAWS_Calc::module_id( sanitize_text_field( $atts['module'] ) );
 
         // Fetch latest readings
         $readings = NAWS_Database::get_latest_readings( $module_id );

@@ -164,6 +164,16 @@ close( 'leere Liste ergibt 0.0', NAWS_Climate::degree_days( [], 15.0, 20.0, 'hea
 close( 'null-Mittel wird uebersprungen',
     NAWS_Climate::degree_days( rows( [ '2026-01-01' => [ null, null, null ] ] ), 15.0, 20.0, 'heating' ), 0.0 );
 
+// Nur 'cooling' schaltet um; alles andere heizt. Das ist die dokumentierte
+// Zusage, nicht ein Versehen — hier festgenagelt, damit ein spaeterer
+// "Aufraeumer" nicht stillschweigend eine dritte Bedeutung einfuehrt.
+close( 'ein unbekannter Richtungsstring rechnet wie heating',
+    NAWS_Climate::degree_days( $heiz, 15.0, 20.0, 'Cooling' ),
+    NAWS_Climate::degree_days( $heiz, 15.0, 20.0, 'heating' ) );
+close( 'auch ein leerer Richtungsstring',
+    NAWS_Climate::degree_days( $heiz, 15.0, 20.0, '' ),
+    NAWS_Climate::degree_days( $heiz, 15.0, 20.0, 'heating' ) );
+
 echo "\nNAWS_Climate::growing_degree_days()\n" . str_repeat( '-', 74 ) . "\n";
 
 // (min(Tmax,cap) + Tmin)/2 - Basis, negative Beitraege auf 0.

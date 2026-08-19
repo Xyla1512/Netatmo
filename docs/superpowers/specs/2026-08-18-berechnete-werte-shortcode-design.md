@@ -113,8 +113,8 @@ Ein Attribut, das für die Art des Wertes keine Bedeutung hat, wird **ignoriert 
 | `daylength` | Tageslänge | h:mm | aus `sun_times()` |
 | `moon_phase` | Mondphase | Text | `NAWS_Astro::moon_data()` |
 | `moon_illumination` | Beleuchtungsgrad | % | `NAWS_Astro::moon_data()` |
-| `next_supermoon` | Nächster Supermond | Datum | `NAWS_Astro::next_supermoon()` |
-| `next_lunar_eclipse` | Nächste Mondfinsternis | Datum | `NAWS_Astro::next_lunar_eclipse()` |
+| `next_supermoon` | Nächster Supermond | Datum und Uhrzeit | `NAWS_Astro::next_supermoon()` |
+| `next_lunar_eclipse` | Nächste Mondfinsternis | Datum und Uhrzeit | `NAWS_Astro::next_lunar_eclipse()` |
 
 Vierzehn Einträge, davon **zwölf auf bereits vorhandenen Funktionen** — sie werden bisher nur in Templates verwendet. Neue Rechenlogik brauchen nur `feels_like` (Umbau) und `bioclimate`.
 
@@ -149,6 +149,9 @@ Alle zählbar (`count`), serienfähig (`streak`, `max_streak`). Quelle ist die S
 | `spi` | Standardized Precipitation Index über `months` Monate | dimensionslos |
 
 **Gesamt: 27 Katalogeinträge.**
+
+**Nachtrag 2026-08-19:** Die Einheit der beiden Mondereignisse steht hier als „Datum", geliefert wird **Datum und Uhrzeit** — bewusst, weil eine Finsternis um 20:11 etwas anderes ist als eine um 04:00. Formatiert wird seit dem 2026-08-19 über `wp_date()` mit den Datums- und Zeitformaten der Website; vorher stand dort ein fest deutsches `d.m.Y – H:i` plus „Uhr".
+
 
 ---
 

@@ -437,13 +437,13 @@ return [
     'sc_calc_spi_basis'        => 'Datengrundlage des SPI: %1$d vollständige Monate lückenloser Regenmessung (%2$d volle Jahre). Gerechnet wird ab 24 Monaten; üblich sind rund 30 Jahre — darunter ist der Index eher Tendenz als Messgröße.',
 
     // Grenztemperaturen für die Gradtag-Kennzahlen
-    'deg_limits'        => 'Grenztemperaturen',
-    'heating_limit'     => 'Heizgrenztemperatur (°C)',
-    'heating_limit_desc'=> 'Unterhalb dieses Tagesmittels gilt ein Tag als Heiztag. Deutschland 15 °C (VDI 2067), Österreich und Schweiz 12 °C.',
-    'room_temp'         => 'Raumtemperatur (°C)',
-    'room_temp_desc'    => 'Bezugstemperatur der Heizgradtage. In allen genannten Normen 20 °C.',
-    'cooling_limit'     => 'Kühlgrenztemperatur (°C)',
-    'cooling_limit_desc'=> 'Oberhalb dieses Tagesmittels gilt ein Tag als Kühltag. Hier gibt es keinen einheitlichen Standard — 18 °C und 21 °C sind beide gebräuchlich.',
+    'deg_limits'         => 'Grenztemperaturen',
+    'heating_limit'      => 'Heizgrenztemperatur (°C)',
+    'heating_limit_desc' => 'Unterhalb dieses Tagesmittels gilt ein Tag als Heiztag. Deutschland 15 °C (VDI 2067), Österreich und Schweiz 12 °C.',
+    'room_temp'          => 'Raumtemperatur (°C)',
+    'room_temp_desc'     => 'Bezugstemperatur der Heizgradtage. In allen genannten Normen 20 °C.',
+    'cooling_limit'      => 'Kühlgrenztemperatur (°C)',
+    'cooling_limit_desc' => 'Oberhalb dieses Tagesmittels gilt ein Tag als Kühltag. Hier gibt es keinen einheitlichen Standard — 18 °C und 21 °C sind beide gebräuchlich.',
 
     'infobar_feels_like'   => 'Gefühlte Temp.',
     'infobar_heat_index'   => 'Hitzeindex',

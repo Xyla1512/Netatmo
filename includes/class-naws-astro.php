@@ -240,7 +240,6 @@ class NAWS_Astro {
      */
     public static function moon_data( ?int $timestamp = null ): array {
         $timestamp = $timestamp ?? time();
-        $tz        = wp_timezone();
 
         // Reference new moon: 2000-01-06 18:14 UTC (Julian day 2451549.5)
         $known_new = 2451549.5 + 0.75972; // JD of reference new moon
@@ -260,8 +259,6 @@ class NAWS_Astro {
         $days_to_full = ( 0.5 - $phase );
         if ( $days_to_full < 0 ) $days_to_full += 1.0;
         $next_full_ts  = intval( $timestamp + $days_to_full * $synodic * 86400 );
-        $next_full_dt  = new DateTime( 'now', $tz );
-        $next_full_dt->setTimestamp( $next_full_ts );
 
         [ $name, $emoji ] = self::_moon_name( $phase );
 
@@ -270,7 +267,7 @@ class NAWS_Astro {
             'phase_pct'     => $pct,
             'name'          => $name,
             'emoji'         => $emoji,
-            'next_full'     => $next_full_dt->format( 'd.m.Y – H:i' ) . ' Uhr',
+            'next_full'     => self::format_event( $next_full_ts ),
             'next_full_ts'  => $next_full_ts,
         ];
     }
@@ -409,9 +406,25 @@ class NAWS_Astro {
      * Next supermoon: full moon where distance < 360,000 km (Nolle definition).
      * Returns [ 'date' => 'DD.MM.YYYY – HH:MM', 'distance_km' => int ] or null.
      */
+    /**
+     * A dated astronomical event, in the site's own date and time format.
+     *
+     * Both event finders used to hand back 'd.m.Y – H:i' plus the word "Uhr",
+     * which is German whatever the language setting says — and this plugin
+     * ships a complete Norwegian translation. wp_date() with the site's own
+     * format options is the same route NAWS_Calc already takes for the start
+     * of the growing season, so the two agree.
+     *
+     * The time is kept, not trimmed to the date: an eclipse at 20:11 and one
+     * at 04:00 are a different proposition for whoever wants to watch it.
+     */
+    private static function format_event( int $ts ): string {
+        $format = get_option( 'date_format', 'd.m.Y' ) . ' – ' . get_option( 'time_format', 'H:i' );
+        return wp_date( $format, $ts );
+    }
+
     public static function next_supermoon( ?int $from_ts = null ): ?array {
         $from_ts = $from_ts ?? time();
-        $tz      = wp_timezone();
 
         // Iterate full moons: synodic = 29.53058770 days
         // Reference full moon: 2000-01-20 04:41 UTC
@@ -428,10 +441,9 @@ class NAWS_Astro {
             $dist = self::_moon_distance_km( $jd_full );
             if ( $dist < 360000 ) {
                 $unix = intval( ( $jd_full - 2440587.5 ) * 86400 );
-                $dt   = new DateTime( 'now', $tz );
-                $dt->setTimestamp( $unix );
                 return [
-                    'date'        => $dt->format( 'd.m.Y – H:i' ) . ' Uhr',
+                    'date'        => self::format_event( $unix ),
+                    'ts'          => $unix,
                     'distance_km' => intval( $dist ),
                 ];
             }
@@ -474,7 +486,6 @@ class NAWS_Astro {
      */
     public static function next_lunar_eclipse( ?int $from_ts = null ): ?array {
         $from_ts  = $from_ts ?? time();
-        $tz       = wp_timezone();
 
         $ref_full = 2451563.694444;
         $synodic  = 29.53058770;
@@ -494,10 +505,8 @@ class NAWS_Astro {
             if ( $sinF < 0.36 ) {
                 $type = $sinF < 0.09 ? 'total' : ( $sinF < 0.26 ? 'partial' : 'penumbral' );
                 $unix = intval( ( $jd_full - 2440587.5 ) * 86400 );
-                $dt   = new DateTime( 'now', $tz );
-                $dt->setTimestamp( $unix );
                 return [
-                    'date'  => $dt->format( 'd.m.Y – H:i' ) . ' Uhr',
+                    'date'  => self::format_event( $unix ),
                     'type'  => $type,
                     'ts'    => $unix,
                 ];
