@@ -23,7 +23,11 @@
     if (!WID || window['_nawsBoot_' + WID]) return;
     if (!document.getElementById(WID)) return;
     window['_nawsBoot_' + WID] = true;
-var NAWS_FONT=getComputedStyle(document.documentElement).fontFamily||'sans-serif';
+// See history-boot.js: read the widget's own element, not <html>, which most
+// themes never give a font — that gave every chart the browser default.
+var NAWS_FONT=getComputedStyle(document.getElementById(WID)).fontFamily
+            ||getComputedStyle(document.body).fontFamily
+            ||'sans-serif';
 var TIME_SUFFIX=NAWS_LIVE.TIME_SUFFIX;
 var AJAX=NAWS_LIVE.AJAX;
 var NONCE=document.getElementById(WID).dataset.nonce;
@@ -104,14 +108,14 @@ var ROSE='<svg style="position:absolute;top:0;left:0;width:100%;height:100%" vie
   +'<polygon points="31,31 76,84 80,80" fill="#7aa0a0"/>'
   +'<polygon points="31,31 84,76 80,80" fill="#c0d8d8"/>'
   +'<circle cx="80" cy="80" r="9" fill="#427272" stroke="#fff" stroke-width="2.5"/>'
-  +'<text x="80" y="9" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-size="13" font-weight="800" fill="#2d5252">N</text>'
-  +'<text x="80" y="153" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-size="13" font-weight="800" fill="#2d5252">S</text>'
-  +'<text x="153" y="80" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-size="13" font-weight="800" fill="#2d5252">E</text>'
-  +'<text x="7" y="80" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-size="13" font-weight="800" fill="#2d5252">W</text>'
-  +'<text x="133" y="27" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="600" fill="#7aa0a0">NE</text>'
-  +'<text x="133" y="136" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="600" fill="#7aa0a0">SE</text>'
-  +'<text x="27" y="136" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="600" fill="#7aa0a0">SW</text>'
-  +'<text x="27" y="27" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="600" fill="#7aa0a0">NW</text>'
+  +'<text x="80" y="9" text-anchor="middle" dominant-baseline="middle" font-size="13" font-weight="800" fill="#2d5252">N</text>'
+  +'<text x="80" y="153" text-anchor="middle" dominant-baseline="middle" font-size="13" font-weight="800" fill="#2d5252">S</text>'
+  +'<text x="153" y="80" text-anchor="middle" dominant-baseline="middle" font-size="13" font-weight="800" fill="#2d5252">E</text>'
+  +'<text x="7" y="80" text-anchor="middle" dominant-baseline="middle" font-size="13" font-weight="800" fill="#2d5252">W</text>'
+  +'<text x="133" y="27" text-anchor="middle" font-size="10" font-weight="600" fill="#7aa0a0">NE</text>'
+  +'<text x="133" y="136" text-anchor="middle" font-size="10" font-weight="600" fill="#7aa0a0">SE</text>'
+  +'<text x="27" y="136" text-anchor="middle" font-size="10" font-weight="600" fill="#7aa0a0">SW</text>'
+  +'<text x="27" y="27" text-anchor="middle" font-size="10" font-weight="600" fill="#7aa0a0">NW</text>'
   +'</svg>';
 function arrowSVG(deg){
   return '<svg id="'+WID+'-arr" style="position:absolute;top:0;left:0;width:100%;height:100%;transform:rotate('+deg+'deg);transform-origin:50% 50%;transition:transform 1.2s ease" viewBox="-4 -4 168 168" xmlns="http://www.w3.org/2000/svg">'
@@ -155,7 +159,7 @@ function gaugeSVG(wv,gv){
       +' stroke="#7aa0a0" stroke-width="1.8"/>';
     var lx=(CX+(R-29)*Math.cos(a)).toFixed(1),ly=(CY+(R-29)*Math.sin(a)).toFixed(1);
     s+='<text x="'+lx+'" y="'+ly+'" text-anchor="middle" dominant-baseline="middle"'
-      +' font-family="sans-serif" font-size="9" font-weight="700" fill="#7aa0a0">'+Math.round(val)+'</text>';
+      +' font-size="9" font-weight="700" fill="#7aa0a0">'+Math.round(val)+'</text>';
   }
   s+='<line x1="'+CX+'" y1="'+CY+'" x2="'+w.x+'" y2="'+w.y+'" stroke="#2d5252" stroke-width="3.5" stroke-linecap="round"/>';
   if(gv>0) s+='<line x1="'+CX+'" y1="'+CY+'" x2="'+g.x+'" y2="'+g.y+'" stroke="#7aa0a0" stroke-width="2.5" stroke-linecap="round" opacity=".55" stroke-dasharray="4 3"/>';

@@ -19,7 +19,15 @@
     var ALL_CHART_DEFS = NAWS_HIST.DEFS || [];
 (function(){
 var WID     = NAWS_HIST.WID;
-var NAWS_FONT = getComputedStyle(document.documentElement).fontFamily || 'sans-serif';
+// The widget's own element, so axis labels and tooltips match the card they
+// sit in. This used to read document.documentElement — <html>, which most
+// themes never give a font — so the charts came out in the browser default
+// (Times New Roman) while the page around them was the theme font. The
+// `|| 'sans-serif'` fallback never caught it, because that default is a
+// perfectly valid value.
+var NAWS_FONT = getComputedStyle(document.getElementById(WID)).fontFamily
+             || getComputedStyle(document.body).fontFamily
+             || 'sans-serif';
 var AJAX    = NAWS_HIST.AJAX;
 var NONCE   = document.getElementById(WID).dataset.nonce;
 var OUTDOOR = document.getElementById(WID).dataset.outdoor;

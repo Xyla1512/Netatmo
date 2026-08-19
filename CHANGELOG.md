@@ -26,6 +26,10 @@ Work finished and merged, waiting for the release it will ship in. The version n
 
 - **The next supermoon, the next lunar eclipse and the next full moon were dated in German** regardless of the language setting — a fixed `d.m.Y – H:i` plus the word "Uhr", in a plugin that ships a complete Norwegian translation. All three now use the site's own date and time format through `wp_date()`, the same route the start of the growing season already took.
 
+- **The plugin now uses the theme's font throughout, and the charts finally do too.** Most of it always inherited the surrounding font; two places did not. `[naws_current]` carried a hardcoded system stack in the `--naws-font` variable, and — more visibly — every chart asked `document.documentElement` for its font. That is `<html>`, which most themes never style, so the axis labels, tooltips and legends came out in the browser default while the page around them was the theme font. On a Twenty Twenty-Five site with Manrope, all eleven charts on a page rendered in Times New Roman. The `|| 'sans-serif'` fallback never caught it, because the browser default is a perfectly valid value.
+
+  Charts now read the font from the widget's own element, so they match the card they sit in even inside a section with its own typography. The compass letters in the live dashboard lost their hardcoded `sans-serif` for the same reason. `--naws-font` stays a variable, so overriding it is still one line: `.naws-wrap { --naws-font: Georgia, serif; }`.
+
 - **An uppercase MAC address in `[naws_value module="…"]` matched nothing.** The shortcode kept its own copy of the alias table (`outdoor`, `indoor`, `wind`, `rain`) and lower-cased the alias for the lookup while passing a MAC address on with its original case. There is now one table, in `NAWS_Calc`, and both shortcodes resolve modules through it.
 
 - **An emptied degree-day limit field silently stored 0 °C.** `floatval('')` is `0.0`, which the inline clamp then treated as a deliberate setting rather than as "use the default".
