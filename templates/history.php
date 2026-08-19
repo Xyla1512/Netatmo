@@ -42,20 +42,9 @@ if ( $year_param !== '' ) {
 }
 $hidden_history_charts = (array) get_option( 'naws_history_hidden_charts', [] );
 
-// Dynamic NAModule4 indoor humidity charts — one per indoor module
-$_naws_m4_charts = [];
-foreach ( NAWS_Database::get_modules( true ) as $_m ) {
-    if ( $_m['module_type'] !== 'NAModule4' ) continue;
-    $_slug = preg_replace( '/[^a-z0-9]/', '', strtolower( $_m['module_name'] ) );
-    if ( $_slug === '' ) $_slug = 'indoor' . substr( str_replace( ':', '', $_m['module_id'] ), -4 );
-    $_slug = substr( $_slug, 0, 16 );
-    $_naws_m4_charts[] = [
-        'id'        => 'indoor_humidity_' . $_slug,
-        'module_id' => $_m['module_id'],
-        'title'     => esc_html( $_m['module_name'] ) . ' – ' . naws__( 'param_humidity' ),
-    ];
-}
-// 5 static charts + one per NAModule4
+// Dynamic NAModule4 charts — indoor temperature and humidity per module
+$_naws_m4_charts = NAWS_Helpers::indoor_chart_defs();
+// 5 static charts + two per NAModule4
 $_naws_total_history_charts = 5 + count( $_naws_m4_charts );
 ?>
 <?php // Chart.js loaded via wp_enqueue_script( 'chartjs' ) — see class-naws-shortcodes.php ?>
@@ -156,10 +145,10 @@ $_naws_total_history_charts = 5 + count( $_naws_m4_charts );
 
       <?php foreach ( $_naws_m4_charts as $_m4c ) : ?>
       <?php if ( ! in_array( $_m4c['id'], $hidden_history_charts, true ) ) : ?>
-      <!-- Innenluftfeuchte NAModule4 -->
+      <!-- NAModule4: Innentemperatur bzw. Innenluftfeuchte -->
       <div class="naws-hc-wrap" data-chart="<?php echo esc_attr( $_m4c['id'] ); ?>">
         <div class="naws-hc-bar">
-          <div class="naws-hc-title"><?php echo wp_kses_post( $_m4c['title'] ); ?></div>
+          <div class="naws-hc-title"><?php echo esc_html( $_m4c['label'] ); ?></div>
           <button class="naws-hc-expand" data-target="<?php echo esc_attr( $_m4c['id'] ); ?>" title="<?php echo esc_attr( naws__( 'expand_chart' ) ); ?>">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
           </button>
@@ -226,7 +215,9 @@ echo '<script type="application/json" data-naws="history" id="' . esc_attr( $wid
             [ 'id' => 'rain',        'title' => naws__( 'hc_rain' ),        'type' => 'bar',  'unit' => $_naws_hist_rain_unit, 'fields' => [ 'rain_sum' ],             'moduleId' => '' ],
             [ 'id' => 'humidity',    'title' => naws__( 'hc_humidity' ),    'type' => 'line', 'unit' => '%',                   'fields' => [ 'humidity_avg' ],         'moduleId' => '' ],
             ...array_map( function( $_m4c ) {
-                return [ 'id' => $_m4c['id'], 'title' => $_m4c['title'], 'type' => 'line', 'unit' => '%', 'fields' => [ 'indoor_humidity_avg' ], 'moduleId' => $_m4c['module_id'] ];
+                // Unit and field come from the definition now: the pair is
+                // temperature and humidity, and only one of them is a percent.
+                return [ 'id' => $_m4c['id'], 'title' => $_m4c['label'], 'type' => 'line', 'unit' => $_m4c['unit'], 'fields' => [ $_m4c['field'] ], 'moduleId' => $_m4c['module_id'] ];
             }, $_naws_m4_charts ),
         ],
     ] )

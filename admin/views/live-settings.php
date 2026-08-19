@@ -16,15 +16,13 @@ $history_chart_defs = [
     'rain'        => [ 'label' => naws__( 'hc_rain' ),        'icon' => '🌧️' ],
     'humidity'    => [ 'label' => naws__( 'hc_humidity' ),    'icon' => '💧' ],
 ];
-// Dynamic: add one toggle per NAModule4 indoor module
-foreach ( $all_modules as $_m ) {
-    if ( $_m['module_type'] !== 'NAModule4' ) continue;
-    $_slug = preg_replace( '/[^a-z0-9]/', '', strtolower( $_m['module_name'] ) );
-    if ( $_slug === '' ) $_slug = 'indoor' . substr( str_replace( ':', '', $_m['module_id'] ), -4 );
-    $_slug = substr( $_slug, 0, 16 );
-    $history_chart_defs[ 'indoor_humidity_' . $_slug ] = [
-        'label' => $_m['module_name'] . ' – ' . naws__( 'param_humidity' ),
-        'icon'  => '💧',
+// Dynamic: two toggles per NAModule4 indoor module — temperature and
+// humidity. The list comes from NAWS_Helpers so these switches and the
+// charts they switch can never disagree about ids or labels.
+foreach ( NAWS_Helpers::indoor_chart_defs() as $_def ) {
+    $history_chart_defs[ $_def['id'] ] = [
+        'label' => $_def['label'],
+        'icon'  => $_def['icon'],
     ];
 }
 

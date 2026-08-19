@@ -480,7 +480,10 @@ class NAWS_Ajax {
         global $wpdb;
 
         $table      = $wpdb->prefix . NAWS_TABLE_DAILY;
-        $allowed    = [ 'temp_min', 'temp_max', 'temp_avg', 'pressure_avg', 'rain_sum', 'humidity_avg', 'indoor_humidity_avg' ];
+        // indoor_temp_avg belongs here for the same reason indoor_humidity_avg
+        // does: an NAModule4 keeps its readings in the indoor_* columns, so a
+        // chart for one of those modules can ask for nothing else.
+        $allowed    = [ 'temp_min', 'temp_max', 'temp_avg', 'pressure_avg', 'rain_sum', 'humidity_avg', 'indoor_temp_avg', 'indoor_humidity_avg' ];
         $raw_fields = isset( $_POST['fields'] ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
                     ? array_intersect( array_map( 'sanitize_key', (array) wp_unslash( $_POST['fields'] ) ), $allowed )
                     : $allowed;
@@ -542,6 +545,7 @@ class NAWS_Ajax {
             'pressure_avg'       => 'Pressure',
             'rain_sum'           => 'Rain',
             'humidity_avg'       => 'Humidity',
+            'indoor_temp_avg'    => 'Temperature',
             'indoor_humidity_avg' => 'Humidity',
         ];
 

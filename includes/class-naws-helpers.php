@@ -136,6 +136,57 @@ class NAWS_Helpers {
         return $classes[ $parameter ] ?? 'naws-other';
     }
 
+    /**
+     * Yearly-comparison chart definitions for the indoor modules.
+     *
+     * An NAModule4 does not store its readings in the temp_* columns — those
+     * carry the station's outdoor values — but in indoor_temp_avg and
+     * indoor_humidity_avg, on its own row per day. So each indoor module
+     * needs its own pair of charts, and the history template and the
+     * visibility switches in the settings both need the same list. They used
+     * to build it twice, each with its own copy of the slug rule.
+     *
+     * The temperature chart comes first: it is what the module is mainly
+     * for. The humidity id is unchanged from when it was the only one, so a
+     * chart somebody switched off stays switched off.
+     *
+     * @return array<int,array<string,string>> id, module_id, module_name,
+     *         field, param, label, icon, unit.
+     */
+    public static function indoor_chart_defs(): array {
+        $defs = [];
+
+        foreach ( NAWS_Database::get_modules( true ) as $module ) {
+            if ( $module['module_type'] !== 'NAModule4' ) {
+                continue;
+            }
+
+            $slug = preg_replace( '/[^a-z0-9]/', '', strtolower( $module['module_name'] ) );
+            if ( $slug === '' ) {
+                $slug = 'indoor' . substr( str_replace( ':', '', $module['module_id'] ), -4 );
+            }
+            $slug = substr( $slug, 0, 16 );
+
+            foreach ( [
+                [ 'indoor_temp_',     'indoor_temp_avg',     'Temperature', 'param_temperature', '🌡️' ],
+                [ 'indoor_humidity_', 'indoor_humidity_avg', 'Humidity',    'param_humidity',    '💧' ],
+            ] as [ $prefix, $field, $param, $lang_key, $icon ] ) {
+                $defs[] = [
+                    'id'          => $prefix . $slug,
+                    'module_id'   => $module['module_id'],
+                    'module_name' => $module['module_name'],
+                    'field'       => $field,
+                    'param'       => $param,
+                    'label'       => $module['module_name'] . ' – ' . naws__( $lang_key ),
+                    'icon'        => $icon,
+                    'unit'        => self::get_unit( $param ),
+                ];
+            }
+        }
+
+        return $defs;
+    }
+
     public static function get_unit( $parameter ) {
         $options  = get_option( 'naws_settings', [] );
         $temp_u   = $options['temperature_unit'] ?? 'C';
