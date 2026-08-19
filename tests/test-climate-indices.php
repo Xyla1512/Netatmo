@@ -236,6 +236,182 @@ check( 'leere Liste ergibt null', NAWS_Climate::grassland_start( [] ), null );
 check( 'null-Mittel fuehrt nicht zum Fehler und loest die Schwelle nicht aus',
     NAWS_Climate::grassland_start( rows( [ '2026-03-01' => [ 2.0, 14.0, null ] ] ) ), null );
 
+// ══ SPI ═════════════════════════════════════════════════════════════════
+//
+// Der Index ist die einzige Stelle im Plugin mit Verteilungsmathematik, und
+// eine falsche Gammafunktion faellt nirgends auf — sie liefert ja Zahlen.
+// Deshalb werden die Bausteine hier gegen geschlossene Formen geprueft, nicht
+// gegen frueher gemessene Ausgaben: P(k, x) hat fuer ganzzahliges k eine
+// endliche Reihe, P(0.5, x) ist erf(sqrt(x)), lnG faellt auf Fakultaeten
+// zurueck, und die Normalquantile stehen in jeder Tabelle.
+
+echo "\n" . str_repeat( '-', 74 ) . "\n";
+echo "SPI\n";
+
+/** Ruft eine private Statik von NAWS_Climate. */
+function priv( string $method, ...$args ) {
+    $m = new ReflectionMethod( 'NAWS_Climate', $method );
+    if ( PHP_VERSION_ID < 80100 ) {
+        $m->setAccessible( true );
+    }
+    return $m->invoke( null, ...$args );
+}
+
+/** P(k, x) fuer ganzzahliges k: 1 - e^-x * Summe x^i/i!, i < k. */
+function gamma_p_exakt( int $k, float $x ): float {
+    $sum  = 0.0;
+    $term = 1.0;
+    for ( $i = 0; $i < $k; $i++ ) {
+        $sum  += $term;
+        $term *= $x / ( $i + 1 );
+    }
+    return 1.0 - exp( -$x ) * $sum;
+}
+
+foreach ( [ [ 1, 0.5 ], [ 1, 3.0 ], [ 2, 2.0 ], [ 3, 5.0 ], [ 5, 4.0 ], [ 10, 25.0 ] ] as [ $k, $x ] ) {
+    close( sprintf( 'unvollstaendige Gammafunktion P(%d, %.1f)', $k, $x ),
+        priv( 'gamma_p', (float) $k, $x ), gamma_p_exakt( $k, $x ), 1e-12 );
+}
+
+// P(0.5, x) = erf(sqrt(x)); erf(0.5), erf(1) und erf(2) aus der Tabelle.
+close( 'P(0.5, 0.25) ist erf(0.5)', priv( 'gamma_p', 0.5, 0.25 ), 0.520499877813047, 1e-12 );
+close( 'P(0.5, 1) ist erf(1)',      priv( 'gamma_p', 0.5, 1.0 ),  0.842700792949715, 1e-12 );
+close( 'P(0.5, 4) ist erf(2)',      priv( 'gamma_p', 0.5, 4.0 ),  0.995322265018953, 1e-12 );
+check( 'P(a, 0) ist 0', priv( 'gamma_p', 2.0, 0.0 ), 0.0 );
+
+close( 'lnGamma(1) = 0',        priv( 'log_gamma', 1.0 ),  0.0,               1e-10 );
+close( 'lnGamma(5) = ln 4!',    priv( 'log_gamma', 5.0 ),  log( 24.0 ),       1e-10 );
+close( 'lnGamma(10) = ln 9!',   priv( 'log_gamma', 10.0 ), log( 362880.0 ),   1e-10 );
+close( 'lnGamma(0.5) = ln sqrt(pi)', priv( 'log_gamma', 0.5 ), log( sqrt( M_PI ) ), 1e-10 );
+
+// Abramowitz & Stegun 26.2.23 verspricht 4.5e-4 — daran wird es gemessen.
+close( 'Normalquantil bei 0.5',   priv( 'inverse_normal', 0.5 ),   0.0,          4.5e-4 );
+close( 'Normalquantil bei 0.95',  priv( 'inverse_normal', 0.95 ),  1.6448536270, 4.5e-4 );
+close( 'Normalquantil bei 0.975', priv( 'inverse_normal', 0.975 ), 1.9599639845, 4.5e-4 );
+close( 'Normalquantil bei 0.025', priv( 'inverse_normal', 0.025 ), -1.9599639845, 4.5e-4 );
+close( 'Normalquantil bei 0.275', priv( 'inverse_normal', 0.275 ), -0.5977601260, 4.5e-4 );
+
+/** Quantil einer Gamma(2, beta) — geschlossene CDF, per Bisektion invertiert. */
+function gamma2_quantil( float $p, float $beta ): float {
+    $lo = 0.0;
+    $hi = 10000.0;
+    for ( $i = 0; $i < 200; $i++ ) {
+        $mid = ( $lo + $hi ) / 2;
+        $t   = $mid / $beta;
+        if ( 1.0 - exp( -$t ) * ( 1.0 + $t ) < $p ) {
+            $lo = $mid;
+        } else {
+            $hi = $mid;
+        }
+    }
+    return ( $lo + $hi ) / 2;
+}
+
+/** Monatsreihe ab 2000-01, Werte der Reihe nach. */
+function monate( array $werte ): array {
+    $out = [];
+    $ts  = strtotime( '2000-01-01' );
+    foreach ( array_values( $werte ) as $i => $v ) {
+        $out[ gmdate( 'Y-m', strtotime( "+{$i} month", $ts ) ) ] = $v;
+    }
+    return $out;
+}
+
+// Die Stichprobe ist der exakte Quantilsatz einer Gamma(2, 20). Legt man
+// einen Wert vom bekannten Quantil q als juengsten Monat hinein, muss der
+// Index das zugehoerige Normalquantil zurueckgeben. Die Toleranz ist die
+// Schaetzunsicherheit von Thoms Verfahren auf 40 Punkten, nicht Rechenfehler.
+$stichprobe = [];
+for ( $i = 0; $i < 40; $i++ ) {
+    $stichprobe[] = gamma2_quantil( ( $i + 0.5 ) / 40, 20.0 );
+}
+foreach ( [ [ 0.5, 0.0 ], [ 0.1586552539, -1.0 ], [ 0.8413447461, 1.0 ],
+            [ 0.0227501319, -2.0 ], [ 0.9772498681, 2.0 ] ] as [ $p, $z ] ) {
+    $reihe = $stichprobe;
+    $reihe[ count( $reihe ) - 1 ] = gamma2_quantil( $p, 20.0 );
+    close( sprintf( 'Wert am %.4f-Quantil ergibt SPI %+.0f', $p, $z ),
+        NAWS_Climate::spi( monate( $reihe ), 1 ), $z, 0.15 );
+}
+
+// Mehr Regen im juengsten Monat kann den Index nur anheben.
+$trocken = $stichprobe;
+$trocken[ 39 ] = 5.0;
+$nass = $stichprobe;
+$nass[ 39 ] = 200.0;
+check( 'nasser ist nie kleiner als trockener',
+    NAWS_Climate::spi( monate( $nass ), 1 ) > NAWS_Climate::spi( monate( $trocken ), 1 ), true );
+
+// Trockene Fenster tragen die Gammaverteilung nicht — sie werden als eigene
+// Wahrscheinlichkeit q herausgehalten. Ist das juengste Fenster selbst
+// trocken, ist H genau q, hier 11/40, und der Index dessen Normalquantil.
+$mit_nullen = [];
+for ( $i = 0; $i < 40; $i++ ) {
+    $mit_nullen[] = $i < 10 ? 0.0 : gamma2_quantil( ( $i - 10 + 0.5 ) / 29, 20.0 );
+}
+$mit_nullen[ 39 ] = 0.0;
+close( 'trockenes Fenster landet exakt auf dem Quantil von q = 11/40',
+    NAWS_Climate::spi( monate( $mit_nullen ), 1 ), -0.5977601260, 1e-3 );
+
+// Fenster ueber mehrere Monate: die Summe zaehlt, nicht der einzelne Monat.
+$dreier = NAWS_Climate::spi( monate( $stichprobe ), 3 );
+check( 'ein Dreimonatsfenster liefert eine Zahl', is_float( $dreier ), true );
+
+// ── Wo der Index sich weigert ────────────────────────────────────────────
+check( '23 Monate sind zu wenig',
+    NAWS_Climate::spi( monate( array_slice( $stichprobe, 0, 23 ) ), 1 ), null );
+check( '24 Monate reichen fuer 12 Fenster',
+    is_float( NAWS_Climate::spi( monate( array_slice( $stichprobe, 0, 24 ) ), 13 ) ), true );
+check( 'bei 11 Fenstern verweigert er',
+    NAWS_Climate::spi( monate( array_slice( $stichprobe, 0, 24 ) ), 14 ), null );
+check( 'months = 0 ergibt null',
+    NAWS_Climate::spi( monate( $stichprobe ), 0 ), null );
+check( 'eine konstante Reihe hat keine Verteilung',
+    NAWS_Climate::spi( monate( array_fill( 0, 30, 42.0 ) ), 1 ), null );
+check( 'eine durchweg trockene Reihe auch nicht',
+    NAWS_Climate::spi( monate( array_fill( 0, 30, 0.0 ) ), 1 ), null );
+
+// Ein Loch direkt vor dem juengsten Monat macht dessen Dreimonatsfenster
+// unvollstaendig — dann gibt es nichts zu bewerten, auch wenn aeltere
+// Fenster vollstaendig waeren.
+$mit_loch = monate( $stichprobe );
+unset( $mit_loch['2003-03'] );          // der vorletzte Monat der Reihe
+check( 'Loch im juengsten Dreimonatsfenster ergibt null',
+    NAWS_Climate::spi( $mit_loch, 3 ), null );
+check( 'dasselbe Loch stoert das Einmonatsfenster nicht',
+    is_float( NAWS_Climate::spi( $mit_loch, 1 ) ), true );
+
+// ── monthly_sums(): nur lueckenlose Monate zaehlen ───────────────────────
+/** Tageszeilen fuer einen ganzen Monat mit festem Wert. */
+function regen_monat( string $month, int $days, $wert ): array {
+    $out = [];
+    for ( $d = 1; $d <= $days; $d++ ) {
+        $out[] = [ 'day_date' => sprintf( '%s-%02d', $month, $d ), 'rain_sum' => $wert ];
+    }
+    return $out;
+}
+
+$voll = regen_monat( '2025-04', 30, 1.5 );
+check( 'ein lueckenloser April zaehlt',
+    NAWS_Climate::monthly_sums( $voll, 'rain_sum' ), [ '2025-04' => 45.0 ] );
+check( 'ein April mit 29 Tagen zaehlt nicht',
+    NAWS_Climate::monthly_sums( array_slice( $voll, 0, 29 ), 'rain_sum' ), [] );
+check( 'der Februar eines Schaltjahres braucht 29 Tage',
+    NAWS_Climate::monthly_sums( regen_monat( '2024-02', 29, 2.0 ), 'rain_sum' ), [ '2024-02' => 58.0 ] );
+check( 'im Schaltjahr reichen 28 Tage nicht',
+    NAWS_Climate::monthly_sums( regen_monat( '2024-02', 28, 2.0 ), 'rain_sum' ), [] );
+check( 'im Nicht-Schaltjahr sind 28 Tage vollstaendig',
+    NAWS_Climate::monthly_sums( regen_monat( '2025-02', 28, 2.0 ), 'rain_sum' ), [ '2025-02' => 56.0 ] );
+
+// Ein Tag ohne Regenwert ist kein trockener Tag, sondern ein fehlender —
+// der Monat faellt heraus, statt zu klein in die Verteilung einzugehen.
+$mit_luecke      = regen_monat( '2025-04', 30, 1.5 );
+$mit_luecke[10]['rain_sum'] = null;
+check( 'ein einziger fehlender Regenwert kippt den Monat',
+    NAWS_Climate::monthly_sums( $mit_luecke, 'rain_sum' ), [] );
+
+check( 'trockene Tage sind keine fehlenden',
+    NAWS_Climate::monthly_sums( regen_monat( '2025-04', 30, 0.0 ), 'rain_sum' ), [ '2025-04' => 0.0 ] );
+
 echo "\n" . str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );
