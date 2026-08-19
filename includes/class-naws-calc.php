@@ -81,6 +81,11 @@ class NAWS_Calc {
             'gdd'        => [ 'kind' => 'sum', 'param' => null, 'unit' => 'Kd', 'decimals' => 0, 'label' => 'calc_gdd',        'needs' => [ 'temp_min', 'temp_max' ] ],
             'glts'       => [ 'kind' => 'sum', 'param' => null, 'unit' => '°C', 'decimals' => 1, 'label' => 'calc_glts',       'needs' => [ 'temp_avg' ] ],
             'glts_start' => [ 'kind' => 'sum', 'param' => null, 'unit' => '',   'decimals' => 0, 'label' => 'calc_glts_start', 'needs' => [ 'temp_avg' ] ],
+
+            // ── Index ────────────────────────────────────────────────────
+            // Dimensionless by definition: the deviate IS the value, so the
+            // unit is explicitly empty rather than merely unset.
+            'spi'        => [ 'kind' => 'index', 'param' => null, 'unit' => '', 'decimals' => 2, 'label' => 'calc_spi', 'needs' => [ 'rain_sum' ] ],
         ];
     }
 
@@ -274,13 +279,19 @@ class NAWS_Calc {
      * the shortcode attribute says.
      *
      * glts and glts_start are defined as "since 1 January", so they ignore
-     * an explicit period and honour only an explicit year. Both raw_sum()
-     * and coverage() call this — that is what keeps the coverage note from
-     * ever describing a different window than the number it annotates.
+     * an explicit period and honour only an explicit year. spi is defined
+     * over the whole record — its own history IS the reference — so it
+     * ignores both. Every reader of the daily table calls this, which is
+     * what keeps the coverage note from ever describing a different window
+     * than the number it annotates.
      */
     private static function normalise_period_atts( string $key, array $atts ): array {
         if ( $key === 'glts' || $key === 'glts_start' ) {
             $atts['period'] = 'year';
+        }
+        if ( $key === 'spi' ) {
+            $atts['period'] = 'all';
+            unset( $atts['year'] );
         }
         return $atts;
     }
@@ -345,6 +356,8 @@ class NAWS_Calc {
                 return self::raw_dayclass( $key, $atts );
             case 'sum':
                 return self::raw_sum( $key, $atts );
+            case 'index':
+                return self::raw_index( $key, $atts );
         }
 
         return null;
@@ -487,6 +500,60 @@ class NAWS_Calc {
     }
 
     /**
+     * The index: a distribution fit over the whole record.
+     *
+     * Unlike the other kinds this one has no period of its own to argue
+     * about — the record IS the reference, so normalise_period_atts() pins
+     * it to 'all'. What it does have is a window length, and the arithmetic
+     * lives one layer down in NAWS_Climate.
+     */
+    private static function raw_index( string $key, array $atts ) {
+        $rows = self::rows_with(
+            self::daily_rows( self::normalise_period_atts( $key, $atts ), [ 'rain_sum' ] ),
+            [ 'rain_sum' ]
+        );
+        if ( empty( $rows ) ) {
+            return null;
+        }
+
+        return NAWS_Climate::spi(
+            NAWS_Climate::monthly_sums( $rows, 'rain_sum' ),
+            self::window_months( $atts )
+        );
+    }
+
+    /**
+     * How much of a reference this record offers the index.
+     *
+     * The documentation page shows it so the value can be judged before it
+     * is built into a page: below two years the index refuses, thirty is the
+     * customary reference, and everything between is a tendency.
+     *
+     * @return array{months:int,years:int}
+     */
+    public static function spi_basis( array $atts = [] ): array {
+        $rows = self::rows_with(
+            self::daily_rows( self::normalise_period_atts( 'spi', $atts ), [ 'rain_sum' ] ),
+            [ 'rain_sum' ]
+        );
+        $months = count( NAWS_Climate::monthly_sums( $rows, 'rain_sum' ) );
+
+        return [ 'months' => $months, 'years' => intdiv( $months, 12 ) ];
+    }
+
+    /**
+     * Window length for the index, in months.
+     *
+     * Four lengths are documented, and anything else falls back to three
+     * rather than computing an index nobody asked for — the same silent
+     * fallback period= and mode= already use for values they do not know.
+     */
+    private static function window_months( array $atts ): int {
+        $months = isset( $atts['months'] ) ? intval( $atts['months'] ) : 0;
+        return in_array( $months, [ 1, 3, 6, 12 ], true ) ? $months : 3;
+    }
+
+    /**
      * How much of the requested period actually carries data.
      *
      * Only meaningful for kinds that read the daily table; instant values
@@ -499,10 +566,14 @@ class NAWS_Calc {
             return null;
         }
 
+        // Read exactly the columns this value needs — otherwise the index,
+        // which lives on rain_sum, would filter every row away for want of a
+        // column nobody selected.
+        $needs    = $entry['needs'] ?? [];
         $cov_atts = self::normalise_period_atts( $key, $atts );
         $rows     = self::rows_with(
-            self::daily_rows( $cov_atts, [ 'temp_min', 'temp_max', 'temp_avg' ] ),
-            $entry['needs'] ?? []
+            self::daily_rows( $cov_atts, $needs ?: [ 'temp_min', 'temp_max', 'temp_avg' ] ),
+            $needs
         );
         $range    = self::period_range( $cov_atts );
 

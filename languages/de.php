@@ -398,6 +398,9 @@ return [
     'calc_glts_pending'   => 'noch nicht erreicht',
     'calc_note'           => '(bei %1$d von %2$d Tagen)',
 
+    // [naws_calc] – Index
+    'calc_spi'            => 'Standardisierter Niederschlagsindex (SPI)',
+
     // [naws_calc] – Empfindungsstufen zur gefühlten Temperatur
     'sens_very_cold'          => 'sehr kalt',
     'sens_cold'               => 'kalt',
@@ -410,7 +413,7 @@ return [
 
     // [naws_calc] – Katalog-Referenztabelle im Backend
     'sc_calc_title'    => 'Berechnete Werte',
-    'sc_calc_intro'    => 'Ein Shortcode für alle berechneten Werte. Der Wert steckt im Attribut <code>value</code> — welche der übrigen Attribute gelten, hängt von seiner Art ab (Momentanwert, Tagesklasse oder Summe); siehe Tabelle unten.',
+    'sc_calc_intro'    => 'Ein Shortcode für alle berechneten Werte. Der Wert steckt im Attribut <code>value</code> — welche der übrigen Attribute gelten, hängt von seiner Art ab (Momentanwert, Tagesklasse, Summe oder Index); siehe Tabelle unten.',
     'sc_calc_col_key'  => 'Schreibweise',
     'sc_calc_col_live' => 'Aktuell bei dir',
     'sc_calc_col_desc' => 'Bedeutung',
@@ -423,12 +426,15 @@ return [
     'sc_attr_note_desc'       => 'Hängt einen Hinweis an, an wie vielen Tagen des Zeitraums tatsächlich Daten vorliegen.',
     'sc_attr_base_desc'       => 'Die Schwellentemperatur, gegen die die Summe gerechnet wird.',
     'sc_attr_cap_desc'        => 'Die obere Temperatur, bei der die Summe gedeckelt wird.',
+    'sc_attr_months_desc'     => 'Die Fensterlänge des Index in Monaten.',
     'sc_calc_applies_instant'  => 'Momentanwerte',
     'sc_calc_applies_daysum'   => 'Tagesklassen, Summen, Index',
     'sc_calc_applies_dayclass' => 'nur Tagesklassen',
     'sc_calc_applies_sum'      => 'Summen (hdd, cdd, gdd)',
     'sc_calc_applies_gdd'      => 'Summen (gdd)',
+    'sc_calc_applies_index'    => 'nur Index',
     'sc_calc_applies_all'      => 'alle',
+    'sc_calc_spi_basis'        => 'Datengrundlage des SPI: %1$d vollständige Monate lückenloser Regenmessung (%2$d volle Jahre). Gerechnet wird ab 24 Monaten; üblich sind rund 30 Jahre — darunter ist der Index eher Tendenz als Messgröße.',
 
     // Grenztemperaturen für die Gradtag-Kennzahlen
     'deg_limits'        => 'Grenztemperaturen',

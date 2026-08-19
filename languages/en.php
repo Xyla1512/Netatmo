@@ -398,6 +398,9 @@ return [
     'calc_glts_pending'   => 'not yet reached',
     'calc_note'           => '(from %1$d of %2$d days)',
 
+    // [naws_calc] – Index
+    'calc_spi'            => 'Standardized Precipitation Index (SPI)',
+
     // [naws_calc] – thermal sensation bands
     'sens_very_cold'          => 'very cold',
     'sens_cold'               => 'cold',
@@ -410,7 +413,7 @@ return [
 
     // [naws_calc] – catalogue reference table on the backend
     'sc_calc_title'    => 'Computed values',
-    'sc_calc_intro'    => 'One shortcode for every computed value. The value goes in the <code>value</code> attribute — which of the other attributes apply depends on its kind (instant value, day class or sum); see the table below.',
+    'sc_calc_intro'    => 'One shortcode for every computed value. The value goes in the <code>value</code> attribute — which of the other attributes apply depends on its kind (instant value, day class, sum or index); see the table below.',
     'sc_calc_col_key'  => 'Shortcode',
     'sc_calc_col_live' => 'Right now',
     'sc_calc_col_desc' => 'Meaning',
@@ -423,12 +426,15 @@ return [
     'sc_attr_note_desc'       => 'Appends a note stating how many days of the period actually carry data.',
     'sc_attr_base_desc'       => 'The threshold temperature the sum is measured against.',
     'sc_attr_cap_desc'        => 'The upper temperature the sum is capped at.',
+    'sc_attr_months_desc'     => 'The window length of the index, in months.',
     'sc_calc_applies_instant'  => 'instant values',
     'sc_calc_applies_daysum'   => 'day classes, sums, index',
     'sc_calc_applies_dayclass' => 'day classes only',
     'sc_calc_applies_sum'      => 'sums (hdd, cdd, gdd)',
     'sc_calc_applies_gdd'      => 'sums (gdd)',
+    'sc_calc_applies_index'    => 'index only',
     'sc_calc_applies_all'      => 'everything',
+    'sc_calc_spi_basis'        => 'SPI data basis: %1$d complete months of gap-free rain measurement (%2$d full years). It computes from 24 months on; the customary reference is about 30 years — below that the index is a tendency rather than a measurement.',
 
     // Limit temperatures for the degree-day indices
     'deg_limits'        => 'Limit temperatures',

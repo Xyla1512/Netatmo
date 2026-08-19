@@ -47,6 +47,7 @@ $by_kind = array_count_values( array_column( $catalogue, 'kind' ) );
 check( 'Katalog: 14 Momentanwerte', $by_kind['instant']  ?? 0, 14 );
 check( 'Katalog: 7 Tagesklassen',   $by_kind['dayclass'] ?? 0, 7  );
 check( 'Katalog: 5 Summen', $by_kind['sum'] ?? 0, 5 );
+check( 'Katalog: 1 Index',  $by_kind['index'] ?? 0, 1 );
 
 foreach ( $catalogue as $key => $entry ) {
     check( "$key hat eine gueltige Art",   in_array( $entry['kind'] ?? '', $kinds, true ), true );

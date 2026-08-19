@@ -164,6 +164,26 @@ check( 'ein ausdrueckliches Jahr ueberlebt die Fixierung',
     calc( 'normalise_period_atts', 'glts', [ 'period' => 'month', 'year' => '2025' ] ),
     [ 'period' => 'year', 'year' => '2025' ] );
 
+// Der Index ist ueber die ganze Reihe definiert: seine eigene Geschichte IST
+// die Referenz. Ein Jahr auszuwaehlen wuerde die Verteilung wegnehmen, gegen
+// die er misst — deshalb faellt year hier weg, statt zu gewinnen.
+check( 'spi erzwingt period=all',
+    calc( 'normalise_period_atts', 'spi', [ 'period' => 'month' ] )['period'], 'all' );
+check( 'spi wirft ein ausdrueckliches Jahr weg',
+    calc( 'normalise_period_atts', 'spi', [ 'period' => 'month', 'year' => '2025' ] ),
+    [ 'period' => 'all' ] );
+
+// Fensterlaenge: vier dokumentierte Werte, alles andere faellt auf drei
+// zurueck — dieselbe stille Ruecknahme wie bei period und mode.
+foreach ( [ '1' => 1, '3' => 3, '6' => 6, '12' => 12 ] as $att => $want ) {
+    check( "months=$att wird uebernommen", calc( 'window_months', [ 'months' => $att ] ), $want );
+}
+foreach ( [ '', '0', '5', '24', '-3', 'viele' ] as $att ) {
+    check( "months=" . var_export( $att, true ) . " faellt auf 3 zurueck",
+        calc( 'window_months', [ 'months' => $att ] ), 3 );
+}
+check( 'ohne months-Attribut sind es drei Monate', calc( 'window_months', [] ), 3 );
+
 // ── raw_dayclass(): Fallback gegen echte Null ────────────────────────────
 // Der Kern: 2023 hat 31 Zeilen, aber keine einzige Temperatur.
 check( 'nur temperaturlose Zeilen ergeben den Fallback, nicht 0.0',

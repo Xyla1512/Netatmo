@@ -152,6 +152,7 @@ $value_params = [
             <tr><td><code>mode</code></td><td><?php naws_e( 'sc_attr_mode_desc' ); ?></td><td><code>count</code> &middot; <code>streak</code> &middot; <code>max_streak</code></td><td><?php naws_e( 'sc_calc_applies_dayclass' ); ?></td></tr>
             <tr><td><code>base</code></td><td><?php naws_e( 'sc_attr_base_desc' ); ?></td><td>°C</td><td><?php naws_e( 'sc_calc_applies_sum' ); ?></td></tr>
             <tr><td><code>cap</code></td><td><?php naws_e( 'sc_attr_cap_desc' ); ?></td><td>°C</td><td><?php naws_e( 'sc_calc_applies_gdd' ); ?></td></tr>
+            <tr><td><code>months</code></td><td><?php naws_e( 'sc_attr_months_desc' ); ?></td><td><code>1</code> &middot; <code>3</code> &middot; <code>6</code> &middot; <code>12</code></td><td><?php naws_e( 'sc_calc_applies_index' ); ?></td></tr>
             <tr><td><code>unit</code></td><td><?php naws_e( 'sc_attr_unit_desc' ); ?></td><td><?php naws_e( 'sc_attr_unit_vals' ); ?></td><td><?php naws_e( 'sc_calc_applies_all' ); ?></td></tr>
             <tr><td><code>decimals</code></td><td><?php naws_e( 'sc_attr_decimals_desc' ); ?></td><td><?php naws_e( 'sc_attr_decimals_vals' ); ?></td><td><?php naws_e( 'sc_calc_applies_all' ); ?></td></tr>
             <tr><td><code>fallback</code></td><td><?php naws_e( 'sc_attr_fallback_desc' ); ?></td><td><?php naws_e( 'sc_attr_fallback_vals' ); ?></td><td><?php naws_e( 'sc_calc_applies_all' ); ?></td></tr>
@@ -178,6 +179,17 @@ $value_params = [
         <?php endforeach; ?>
         </tbody>
     </table>
+
+    <?php /* Spec 8.3: the index is the one value whose worth depends on how
+             long the record is, so the page says how long this record is. */ ?>
+    <?php $naws_spi_basis = NAWS_Calc::spi_basis(); ?>
+    <p class="naws-section-intro"><?php
+        echo esc_html( sprintf(
+            naws__( 'sc_calc_spi_basis' ),
+            $naws_spi_basis['months'],
+            $naws_spi_basis['years']
+        ) );
+    ?></p>
     </div><!-- /.naws-panel-body -->
 </div>
 

@@ -398,6 +398,9 @@ return [
     'calc_glts_pending'   => 'ikke nådd ennå',
     'calc_note'           => '(fra %1$d av %2$d dager)',
 
+    // [naws_calc] – Indeks
+    'calc_spi'            => 'Standardisert nedbørindeks (SPI)',
+
     // [naws_calc] – trinn for termisk opplevelse
     'sens_very_cold'          => 'svært kaldt',
     'sens_cold'               => 'kaldt',
@@ -410,7 +413,7 @@ return [
 
     // [naws_calc] – katalog-referansetabell i backend
     'sc_calc_title'    => 'Beregnede verdier',
-    'sc_calc_intro'    => 'Én kortkode for alle beregnede verdier. Verdien står i attributtet <code>value</code> — hvilke av de øvrige attributtene som gjelder, avhenger av hvilken art den er (momentanverdi, dagsklasse eller sum); se tabellen under.',
+    'sc_calc_intro'    => 'Én kortkode for alle beregnede verdier. Verdien står i attributtet <code>value</code> — hvilke av de øvrige attributtene som gjelder, avhenger av hvilken art den er (momentanverdi, dagsklasse, sum eller indeks); se tabellen under.',
     'sc_calc_col_key'  => 'Skrivemåte',
     'sc_calc_col_live' => 'Akkurat nå',
     'sc_calc_col_desc' => 'Betydning',
@@ -423,12 +426,15 @@ return [
     'sc_attr_note_desc'       => 'Legger til en merknad om hvor mange av periodens dager som faktisk har data.',
     'sc_attr_base_desc'       => 'Terskeltemperaturen summen måles mot.',
     'sc_attr_cap_desc'        => 'Den øvre temperaturen summen begrenses til.',
+    'sc_attr_months_desc'     => 'Indeksens vinduslengde i måneder.',
     'sc_calc_applies_instant'  => 'momentanverdier',
     'sc_calc_applies_daysum'   => 'dagsklasser, summer, indeks',
     'sc_calc_applies_dayclass' => 'kun dagsklasser',
     'sc_calc_applies_sum'      => 'summer (hdd, cdd, gdd)',
     'sc_calc_applies_gdd'      => 'summer (gdd)',
+    'sc_calc_applies_index'    => 'kun indeks',
     'sc_calc_applies_all'      => 'alt',
+    'sc_calc_spi_basis'        => 'Datagrunnlag for SPI: %1$d fullstendige måneder med sammenhengende nedbørmåling (%2$d hele år). Den regner fra 24 måneder; vanlig referanse er rundt 30 år — under det er indeksen mer en tendens enn en måling.',
 
     // Grensetemperaturer for graddag-tallene
     'deg_limits'        => 'Grensetemperaturer',
