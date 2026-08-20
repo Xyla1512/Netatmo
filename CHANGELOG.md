@@ -27,7 +27,12 @@ Work finished and merged, waiting for the release it will ship in. The version n
 
 - **Three settings for the degree-day limits** — heating limit, room temperature, cooling limit — because they depend on the country (Germany 15 °C per VDI 2067, Austria and Switzerland 12 °C) and would otherwise have to be repeated at every shortcode.
 
+### Changed
+- **Breaking: the REST API key is accepted in the `X-NAWS-Key` header only.** It used to be read from `?api_key=` as a fallback, and the documentation page advertised that form with a ready-made example URL containing the live key. A secret in a query string is written down by access logs, by the `Referer` header, by browser history and by every proxy and CDN in between; RFC 6750 §5.3 makes the same point about bearer tokens, and every route here is `GET`, so that parameter was always a query string. Calls of the older form now answer `401`. The admin documentation, the FAQ and all three translations were rewritten to match.
+
 ### Fixed
+- **An unauthenticated request could turn a 401 into a fatal 500.** `WP_REST_Request::get_header()` does not promise a string — a repeated header arrives as an array, which `empty()` waves through and `hash_equals()` answers with a `TypeError`. Anything that is not a string is now simply no key.
+
 - **The apparent temperature ignored wind chill.** `feels_like()` computed Steadman's formula at every temperature. It now runs three regimes: wind chill below 10 °C with wind above 5 km/h, the heat index from 27 °C with humidity above 40 %, Steadman in between. In cold wind the displayed value changes — sometimes colder, sometimes warmer, since the two formulas cross.
 
 - **The heat index was computed outside its domain.** Rothfusz's regression is a fit for hot, humid conditions and returns nonsense below about 25 °C: at −5 °C and 80 % humidity it produced 103.9 °C. The infobar had always gated it; the new catalogue had not inherited that. It is now gated in one place both callers use.

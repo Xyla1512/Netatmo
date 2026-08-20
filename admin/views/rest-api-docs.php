@@ -133,13 +133,11 @@ $base_url   = rest_url( 'naws/v1' );
 <h2>🔐 <?php naws_e( 'rest_auth_title' ); ?></h2>
 <p style="color:#475569;font-size:13px;margin:0 0 12px"><?php naws_e( 'rest_auth_intro' ); ?></p>
 
-<h3>Option A: HTTP-Header (<?php naws_e( 'rest_recommended' ); ?>)</h3>
+<h3><?php naws_e( 'rest_auth_header_only' ); ?></h3>
 <div class="naws-code-block">X-NAWS-Key: <?php echo esc_html( $api_key ?: 'naws_xxxxxxxxxxxx' ); ?></div>
 
-<h3>Option B: Query-Parameter</h3>
-<div class="naws-code-block"><?php echo esc_html( $base_url ); ?>/current?api_key=<?php echo esc_html( $api_key ?: 'naws_xxxxxxxxxxxx' ); ?></div>
-
 <p class="naws-hint">💡 <?php naws_e( 'rest_auth_header_hint' ); ?></p>
+<p class="naws-hint">⚠️ <?php naws_e( 'rest_auth_no_query' ); ?></p>
 </div>
 
 

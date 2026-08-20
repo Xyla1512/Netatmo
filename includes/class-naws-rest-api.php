@@ -6,7 +6,7 @@
  * (Google Charts, Grafana, custom dashboards, etc.).
  *
  * Namespace : naws/v1
- * Auth      : API key via X-NAWS-Key header or ?api_key= query param
+ * Auth      : API key in the X-NAWS-Key header (header only, never a query parameter)
  * Rate limit: configurable, default 60 req/min per key
  *
  * @since 0.9.96
@@ -123,16 +123,27 @@ class NAWS_Rest_API {
             );
         }
 
-        // Accept key from header or query parameter
+        // The key travels in the header and nowhere else. It used to be
+        // accepted from ?api_key= as well, which is convenient and wrong:
+        // a secret in a query string is written down by access logs, by the
+        // Referer header, by browser history and by every proxy and CDN in
+        // between. RFC 6750 §5.3 makes the same point about bearer tokens,
+        // and every route here is GET, so that parameter was always a query
+        // string.
         $provided = $request->get_header( 'X-NAWS-Key' );
-        if ( empty( $provided ) ) {
-            $provided = $request->get_param( 'api_key' );
+
+        // get_header() does not promise a string — a repeated header arrives
+        // as an array, which empty() waves through and hash_equals() answers
+        // with a TypeError. That would turn an unauthenticated 401 into a
+        // fatal 500, so anything that is not a string is simply no key.
+        if ( ! is_string( $provided ) ) {
+            $provided = '';
         }
 
-        if ( empty( $provided ) || ! hash_equals( $stored_key, $provided ) ) {
+        if ( '' === $provided || ! hash_equals( $stored_key, $provided ) ) {
             return new WP_Error(
                 'naws_unauthorized',
-                'Invalid or missing API key. Supply via X-NAWS-Key header or api_key parameter.',
+                'Invalid or missing API key. Supply it in the X-NAWS-Key header.',
                 [ 'status' => 401 ]
             );
         }

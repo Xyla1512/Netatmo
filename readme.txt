@@ -76,7 +76,7 @@ Yes. The plugin includes a chunk-based historical importer that fetches data fro
 
 = Is the REST API secure? =
 
-Yes. The API requires an API key (generated in the admin panel), supports rate limiting, and all endpoints are read-only.
+Yes. Every endpoint is read-only, rate-limited, and requires an API key generated in the admin panel. The key is accepted in the X-NAWS-Key header only — never as a query parameter, so it cannot end up in access logs, the Referer header, browser history or a proxy along the way.
 
 = Are my Netatmo credentials safe? =
 
