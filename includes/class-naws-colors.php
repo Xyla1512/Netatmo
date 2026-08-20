@@ -39,6 +39,20 @@ class NAWS_Colors {
         'theme_shadow'        => '#28484814', // rgba(40,72,72,0.08) as 8-digit hex
         'theme_compass_needle'=> '#ef4444',
 
+        // The dark bar above the live widget, both forecast variants and
+        // the history block. It used to be three separate things: one bar
+        // read --ink2 (fed from theme_text_dark), the other two carried
+        // the value as a literal. The defaults are what those three
+        // painted, so nothing moves until somebody changes them.
+        'header_bg'           => '#2d5252',
+        'header_text'         => '#ffffff',
+
+        // Not colors, but they live on the same screen and in the same
+        // option. font_family holds a NAWS_Fonts slug; font_custom is the
+        // escape hatch for a family no source knows about.
+        'font_family'         => 'inherit',
+        'font_custom'         => '',
+
         // ── Gruppe 2: Akzent-Farben ────────────────────────────────────
         'accent_primary'      => '#00d4ff',
         'accent_secondary'    => '#7c3aed',
@@ -170,6 +184,17 @@ class NAWS_Colors {
             $saved = [];
         }
         $inst->colors = array_merge( self::DEFAULTS, $saved );
+
+        // Before the header got a key of its own, the only way to recolor
+        // the live widget's bar was theme_text_dark, because that is what
+        // fed --ink2. Anyone who did that would see the bar snap back to
+        // the default on update, so their choice is carried over once.
+        if ( ! isset( $saved['header_bg'] )
+            && isset( $saved['theme_text_dark'] )
+            && $saved['theme_text_dark'] !== self::DEFAULTS['theme_text_dark'] ) {
+            $inst->colors['header_bg'] = $saved['theme_text_dark'];
+        }
+
         return $inst->colors;
     }
 
@@ -193,6 +218,19 @@ class NAWS_Colors {
                 $valid = [ 'emoji', 'outline', 'filled', 'minimal' ];
                 $clean['icon_set'] = in_array( $input['icon_set'] ?? 'emoji', $valid, true )
                     ? $input['icon_set'] : 'emoji';
+                continue;
+            }
+            // The font is not a color and no hex pattern can vet it. A
+            // slug has to be one NAWS_Fonts still offers, or the stylesheet
+            // would name a family the browser cannot resolve.
+            if ( $key === 'font_family' ) {
+                $slug = (string) ( $input['font_family'] ?? 'inherit' );
+                $clean['font_family'] = ( 'custom' === $slug || isset( NAWS_Fonts::available()[ $slug ] ) )
+                    ? $slug : 'inherit';
+                continue;
+            }
+            if ( $key === 'font_custom' ) {
+                $clean['font_custom'] = NAWS_Fonts::sanitize_family( (string) ( $input['font_custom'] ?? '' ) );
                 continue;
             }
             if ( ! isset( $input[ $key ] ) ) {
@@ -305,6 +343,17 @@ class NAWS_Colors {
         }
         $css .= "}\n";
 
+        // The header bar and the font reach further than the two wrappers
+        // above: the history block and the standalone forecast bring their
+        // own variables and never saw an override, which is exactly why
+        // their bars ignored every setting. Kept as its own rule so the
+        // established cascade above stays untouched.
+        $css .= ".naws-wrap, .naws-wx, .naws-hist, .naws-hist-modal, .naws-fc-wrap {\n";
+        $css .= "  --naws-header-bg: {$c['header_bg']};\n";
+        $css .= "  --naws-header-text: {$c['header_text']};\n";
+        $css .= '  --naws-font: ' . NAWS_Fonts::stack( (string) $c['font_family'], (string) $c['font_custom'] ) . ";\n";
+        $css .= "}\n";
+
         return $css;
     }
 
@@ -395,6 +444,7 @@ class NAWS_Colors {
                     'theme_text_muted', 'theme_text_light',
                     'theme_border', 'theme_shadow',
                     'theme_compass_needle',
+                    'header_bg', 'header_text',
                 ],
             ],
             'accent' => [

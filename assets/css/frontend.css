@@ -951,7 +951,7 @@
    Infobar
    ============================================================ */
 .naws-infobar {
-  font-family: inherit;
+  font-family: var(--naws-font, inherit);
   margin: 0;
 }
 
@@ -1052,13 +1052,13 @@
   --ink:#427272; --ink2:#2d5252; --ink3:#1a3535;
   --muted:#7aa0a0; --light:#a0b8b8;
   --line:#e0eeee; --bg:#ffffff; --card:#ffffff; --sh:rgba(40,72,72,.08);
-  font-family:inherit; color:var(--ink);
+  font-family:var(--naws-font,inherit); color:var(--ink);
 }
-.naws-wx .naws-hdr { background:var(--ink2); border-radius:16px 16px 0 0; padding:12px 16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+.naws-wx .naws-hdr { background:var(--naws-header-bg,var(--ink2)); border-radius:16px 16px 0 0; padding:12px 16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
 @media (min-width: 600px) { .naws-wx .naws-hdr { padding:15px 24px; } }
-.naws-wx .naws-hdr-name { font-size:16px; font-weight:800; font-style:italic; color:#fff; }
+.naws-wx .naws-hdr-name { font-size:16px; font-weight:800; font-style:italic; color:var(--naws-header-text,#fff); }
 @media (min-width: 600px) { .naws-wx .naws-hdr-name { font-size:18px; } }
-.naws-wx .naws-hdr-meta { display:flex; align-items:center; gap:9px; color:rgba(255,255,255,.75); font-size:12.5px; font-weight:600; }
+.naws-wx .naws-hdr-meta { display:flex; align-items:center; gap:9px; color:color-mix(in srgb,var(--naws-header-text,#fff) 75%,transparent); font-size:12.5px; font-weight:600; }
 .naws-wx .naws-pulse { width:8px; height:8px; border-radius:50%; background:#7ee8cc; flex-shrink:0; animation:npulse 2.5s ease-in-out infinite; }
 @keyframes npulse{0%,100%{box-shadow:0 0 0 0 rgba(126,232,204,.5)}50%{box-shadow:0 0 0 6px rgba(126,232,204,0)}}
 .naws-wx .naws-body { background:var(--bg); border:1.5px solid var(--line); border-top:none; border-radius:0 0 16px 16px; padding:12px; }
@@ -1191,11 +1191,11 @@
 @media (min-width: 768px) { .naws-wx .naws-modal-body canvas { max-height:none; } }
 
 /* Live Forecast section */
-.naws-wx .naws-fc-header{background:#2d5252;border-radius:16px 16px 0 0;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;}
+.naws-wx .naws-fc-header{background:var(--naws-header-bg,#2d5252);border-radius:16px 16px 0 0;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;}
 @media (min-width: 600px) { .naws-wx .naws-fc-header { padding:12px 20px; } }
-.naws-wx .naws-fc-header-title{font-size:14px;font-weight:800;font-style:italic;color:#fff;}
+.naws-wx .naws-fc-header-title{font-size:14px;font-weight:800;font-style:italic;color:var(--naws-header-text,#fff);}
 @media (min-width: 600px) { .naws-wx .naws-fc-header-title { font-size:15px; } }
-.naws-wx .naws-fc-header-meta{display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.75);font-size:11.5px;font-weight:600;}
+.naws-wx .naws-fc-header-meta{display:flex;align-items:center;gap:10px;color:color-mix(in srgb,var(--naws-header-text,#fff) 75%,transparent);font-size:11.5px;font-weight:600;}
 .naws-wx .naws-fc-body-wrap{background:var(--bg,#fff);border:1.5px solid var(--line,#e0eeee);border-top:none;border-radius:0 0 16px 16px;padding:12px;}
 @media (min-width: 600px) { .naws-wx .naws-fc-body-wrap { padding:14px; } }
 
@@ -1239,16 +1239,16 @@
 /* ============================================================
    Forecast Standalone (extracted from forecast.php)
    ============================================================ */
-.naws-fc-wrap { font-family: inherit; max-width: 100%; }
+.naws-fc-wrap { font-family: var(--naws-font, inherit); max-width: 100%; }
 .naws-fc-wrap .naws-fc-hdr {
-  background: #2d5252; border-radius: 16px 16px 0 0;
+  background: var(--naws-header-bg, #2d5252); border-radius: 16px 16px 0 0;
   padding: 12px 16px; display: flex; justify-content: space-between;
   align-items: center; flex-wrap: wrap; gap: 8px;
 }
 @media (min-width: 600px) { .naws-fc-wrap .naws-fc-hdr { padding: 14px 22px; } }
-.naws-fc-wrap .naws-fc-hdr-title { font-size: 15px; font-weight: 800; font-style: italic; color: #fff; }
+.naws-fc-wrap .naws-fc-hdr-title { font-size: 15px; font-weight: 800; font-style: italic; color: var(--naws-header-text, #fff); }
 @media (min-width: 600px) { .naws-fc-wrap .naws-fc-hdr-title { font-size: 17px; } }
-.naws-fc-wrap .naws-fc-hdr-meta { display: flex; align-items: center; gap: 12px; color: rgba(255,255,255,.75); font-size: 12px; font-weight: 600; }
+.naws-fc-wrap .naws-fc-hdr-meta { display: flex; align-items: center; gap: 12px; color: color-mix(in srgb, var(--naws-header-text, #fff) 75%, transparent); font-size: 12px; font-weight: 600; }
 .naws-fc-wrap .naws-fc-hdr-loc { white-space: nowrap; }
 .naws-fc-wrap .naws-fc-body {
   background: #ffffff; border: 1.5px solid #e0eeee;
@@ -1301,17 +1301,17 @@
   --ink:#427272; --ink2:#2d5252; --ink3:#1a3535;
   --muted:#7aa0a0; --light:#a0b8b8;
   --line:#e0eeee; --bg:#ffffff; --card:#ffffff; --sh:rgba(40,72,72,.08);
-  font-family:inherit; color:var(--ink);
+  font-family:var(--naws-font,inherit); color:var(--ink);
 }
 .naws-hist-hdr {
-  background:var(--ink2); border-radius:16px 16px 0 0;
+  background:var(--naws-header-bg,var(--ink2)); border-radius:16px 16px 0 0;
   padding:12px 16px; display:flex; justify-content:space-between; align-items:center;
   flex-wrap:wrap; gap:4px;
 }
 @media (min-width: 600px) { .naws-hist-hdr { padding:15px 24px; } }
-.naws-hist-title { font-size:16px; font-weight:800; font-style:italic; color:#fff; }
+.naws-hist-title { font-size:16px; font-weight:800; font-style:italic; color:var(--naws-header-text,#fff); }
 @media (min-width: 600px) { .naws-hist-title { font-size:18px; } }
-.naws-hist-range { font-size:12px; font-weight:600; color:rgba(255,255,255,.6); }
+.naws-hist-range { font-size:12px; font-weight:600; color:color-mix(in srgb,var(--naws-header-text,#fff) 60%,transparent); }
 .naws-hist-body {
   background:var(--bg); border:1.5px solid var(--line);
   border-top:none; border-radius:0 0 16px 16px; padding:14px;

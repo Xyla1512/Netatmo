@@ -144,7 +144,7 @@ class NAWS_Fonts {
             }
             $fonts[ $slug ] = [
                 'label'  => $name,
-                'stack'  => self::family_stack( $name ),
+                'stack'  => self::stack_from_name( $name ),
                 'origin' => 'elementor',
             ];
         }
@@ -157,7 +157,7 @@ class NAWS_Fonts {
      * fallback, because the name alone leaves the browser nothing to do
      * when the family is missing.
      */
-    private static function family_stack( string $name ): string {
+    private static function stack_from_name( string $name ): string {
         $name = str_replace( [ '"', "'", ';', '{', '}' ], '', $name );
         return '"' . $name . '", sans-serif';
     }

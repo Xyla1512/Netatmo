@@ -21,6 +21,8 @@ $color_labels = [
     'theme_border'        => naws__( 'appearance_theme_border' ),
     'theme_shadow'        => naws__( 'appearance_theme_shadow' ),
     'theme_compass_needle'=> naws__( 'appearance_theme_compass_needle' ),
+    'header_bg'           => naws__( 'appearance_header_bg' ),
+    'header_text'         => naws__( 'appearance_header_text' ),
     // Chart 24h
     'chart_temp_outdoor'     => naws__( 'appearance_chart_temp_outdoor' ),
     'chart_humidity_outdoor'  => naws__( 'appearance_chart_humidity_outdoor' ),
@@ -144,11 +146,56 @@ $icon_color_keys = [
                         <?php endforeach; ?>
                         </tbody>
                     </table>
+
+                    <h3 style="margin:1.5rem 0 0.5rem;"><?php naws_e( 'appearance_font_label' ); ?></h3>
+                    <p class="description" style="margin-bottom:0.75rem;"><?php naws_e( 'appearance_font_desc' ); ?></p>
+                    <table class="form-table naws-color-table">
+                        <tbody>
+                        <tr>
+                            <th><label for="naws-font-family"><?php naws_e( 'appearance_font_family' ); ?></label></th>
+                            <td>
+                                <select id="naws-font-family" name="naws_appearance[font_family]">
+                                    <?php foreach ( NAWS_Fonts::grouped() as $origin => $items ) : ?>
+                                        <?php if ( 'inherit' === $origin ) : ?>
+                                            <?php foreach ( $items as $slug => $label ) : ?>
+                                                <option value="<?php echo esc_attr( $slug ); ?>" <?php selected( $colors['font_family'], $slug ); ?> data-stack="inherit"><?php echo esc_html( $label ); ?></option>
+                                            <?php endforeach; ?>
+                                        <?php else : ?>
+                                            <optgroup label="<?php echo esc_attr( naws__( 'appearance_font_group_' . $origin ) ); ?>">
+                                                <?php foreach ( $items as $slug => $label ) : ?>
+                                                    <option value="<?php echo esc_attr( $slug ); ?>" <?php selected( $colors['font_family'], $slug ); ?> data-stack="<?php echo esc_attr( NAWS_Fonts::stack( $slug ) ); ?>"><?php echo esc_html( $label ); ?></option>
+                                                <?php endforeach; ?>
+                                            </optgroup>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                    <option value="custom" <?php selected( $colors['font_family'], 'custom' ); ?>><?php naws_e( 'appearance_font_own' ); ?></option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr id="naws-font-custom-row"<?php echo 'custom' === $colors['font_family'] ? '' : ' style="display:none;"'; ?>>
+                            <th><label for="naws-font-custom"><?php naws_e( 'appearance_font_own' ); ?></label></th>
+                            <td>
+                                <input type="text" class="regular-text" id="naws-font-custom"
+                                       name="naws_appearance[font_custom]"
+                                       value="<?php echo esc_attr( $colors['font_custom'] ); ?>"
+                                       placeholder="&quot;PT Sans&quot;, Arial, sans-serif">
+                                <p class="description"><?php naws_e( 'appearance_font_own_desc' ); ?></p>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <div class="naws-appearance-preview naws-preview-sticky">
                     <div class="naws-preview-label">Live-Vorschau</div>
                     <div id="naws-preview-theme" class="naws-preview-theme-box"
                          style="background:<?php echo esc_attr( $colors['theme_bg'] ); ?>; border-color:<?php echo esc_attr( $colors['theme_border'] ); ?>; box-shadow: 0 2px 10px <?php echo esc_attr( $colors['theme_shadow'] ); ?>;">
+
+                        <!-- Kopfleiste: dieselbe Leiste wie ueber Live-Ansicht, Vorhersage und Historie -->
+                        <div id="naws-pv-header" class="naws-pv-header"
+                             style="background:<?php echo esc_attr( $colors['header_bg'] ); ?>;">
+                            <span class="naws-pv-header-title" style="color:<?php echo esc_attr( $colors['header_text'] ); ?>;"><?php naws_e( 'appearance_header_preview_title' ); ?></span>
+                            <span class="naws-pv-header-meta" style="color:<?php echo esc_attr( $colors['header_text'] ); ?>; opacity:.75;">Live · 14:23</span>
+                        </div>
 
                         <!-- Temperatur-Karte (identisch mit Frontend .naws-card) -->
                         <div class="naws-pv-fcard" style="background:<?php echo esc_attr( $colors['theme_surface'] ); ?>; border-color:<?php echo esc_attr( $colors['theme_border'] ); ?>;">
@@ -639,6 +686,8 @@ jQuery(document).ready(function($) {
                     roseArr.find('polygon').attr('fill', v);
                     roseArr.find('line').first().attr('stroke', v);
                 },
+                'header_bg':   function(v){ $('#naws-pv-header').css('background', v); },
+                'header_text': function(v){ $('#naws-pv-header').find('span').css('color', v); },
             };
             if (map[key]) map[key](val);
         }
@@ -678,6 +727,20 @@ jQuery(document).ready(function($) {
             $('#naws-pv-bar-' + key).css('background', val);
         }
     }
+
+    // ── Font: the free-text field only matters for "own family" ──
+    function syncFont() {
+        var $sel   = $('#naws-font-family');
+        var custom = $sel.val() === 'custom';
+        $('#naws-font-custom-row').toggle(custom);
+        var stack = custom
+            ? ($('#naws-font-custom').val() || 'inherit')
+            : ($sel.find('option:selected').data('stack') || 'inherit');
+        $('#naws-preview-theme').css('font-family', stack);
+    }
+    $('#naws-font-family').on('change', syncFont);
+    $('#naws-font-custom').on('input', syncFont);
+    syncFont();
 
     // ── Icon set card selection ──
     $('.naws-icon-set-card input[type=radio]').on('change', function() {

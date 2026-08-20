@@ -17,6 +17,14 @@ Work finished and merged, waiting for the release it will ship in. The version n
 
   Months are only counted when every one of their days carries a rain reading. A month missing three days is not a drier month, it is an unknown one, and feeding it to the fit would turn a gauge outage into a drought.
 
+- **The header bar is a setting now.** The dark bar above the live widget, above both forecast variants and above the history block reached that color by three different routes: one read `--ink2`, which the inline CSS fed from the *dark text* color, and the other two carried `#2d5252` as a literal. So the only way to recolor a header was to change a text color — which repainted text elsewhere and still left two of the four bars standing. All four now read `--naws-header-bg` and `--naws-header-text` from *Appearance → Basis-Theme*, and the muted meta lines derive from the text color instead of being fixed white. Defaults are exactly what those bars painted before; anyone who had bent *dark text* to reach the bar keeps that shade, it is carried over to the new key once.
+
+- **A font setting, listing only fonts the page already serves.** *Appearance → Basis-Theme* offers the families declared in the theme's `theme.json`, those installed through the WordPress font library, those Elementor actually enqueued, and the generic stacks — plus a free-text field for anything else. The plugin still loads no font file of its own: an external font request would be a disclosure matter at WordPress.org, and a family nobody enqueued would simply fall back in the browser and make the setting a lie.
+
+  Elementor deliberately does not go through its own font catalogue. That lists more than 1600 families, nearly all Google Fonts it fetches only where a widget uses one; what it really put on the page is recorded in the active kit's compiled CSS. Uploaded Pro families are read too. Both paths are guarded — no Elementor, no reading.
+
+  A stored slug the list no longer knows falls back to inheritance rather than writing a dangling family into the stylesheet, and the free-text field takes a font family and nothing else: anything carrying a semicolon, brace or parenthesis is discarded whole rather than trimmed into something that still runs.
+
 - **Three settings for the degree-day limits** — heating limit, room temperature, cooling limit — because they depend on the country (Germany 15 °C per VDI 2067, Austria and Switzerland 12 °C) and would otherwise have to be repeated at every shortcode.
 
 ### Fixed
