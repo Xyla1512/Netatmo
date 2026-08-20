@@ -10,10 +10,12 @@
  * here is GET, so that parameter was always a query string.
  *
  * The other case is what a request can do to the comparison itself.
- * get_param() and get_header() do not have to return a string —
- * ?api_key[]=x hands over an array, which empty() waves through and
- * hash_equals() rejects with a TypeError. That turns an unauthenticated
- * 401 into a fatal 500, so the value is pinned to a string first.
+ * get_param() hands back whatever arrived, so ?api_key[]=x delivers an
+ * array — which empty() waves through and hash_equals() rejects with a
+ * TypeError, trading an unauthenticated 401 for a fatal 500. That was
+ * the parameter's doing, not the header's: get_header() joins its values
+ * and always returns a string or null. Dropping the parameter closes the
+ * path; pinning the value to a string keeps it closed.
  *
  *   php tests/test-rest-auth.php
  *
@@ -54,7 +56,19 @@ class WP_Error {
     public function get_status() { return $this->data['status'] ?? 0; }
 }
 
-/** Steht fuer die echte Anfrage: Header und Parameter, sonst nichts. */
+/**
+ * Steht fuer die echte Anfrage: Header und Parameter, sonst nichts.
+ *
+ * Die beiden Zugriffe verhalten sich unterschiedlich, und genau darauf
+ * kommt es hier an — gemessen an der echten WP_REST_Request unter
+ * WordPress 7.1:
+ *
+ *   get_header() fuehrt Werte intern als Liste und gibt sie mit Komma
+ *   verbunden zurueck: ['aaa'] wird 'aaa', ['aaa','bbb'] wird 'aaa,bbb',
+ *   ein fehlender Header wird NULL. Ein Array kommt nie heraus.
+ *
+ *   get_param() reicht durch, was ankam. ?api_key[]=aaa ergibt ein Array.
+ */
 class WP_REST_Request {
     private $headers;
     private $params;
@@ -62,8 +76,14 @@ class WP_REST_Request {
         $this->headers = $headers;
         $this->params  = $params;
     }
-    public function get_header( $name ) { return $this->headers[ $name ] ?? null; }
-    public function get_param( $name )  { return $this->params[ $name ] ?? null; }
+    public function get_header( $name ) {
+        if ( ! isset( $this->headers[ $name ] ) ) {
+            return null;
+        }
+        $value = $this->headers[ $name ];
+        return is_array( $value ) ? implode( ',', $value ) : $value;
+    }
+    public function get_param( $name ) { return $this->params[ $name ] ?? null; }
 }
 
 class NAWS_Crypto {
@@ -125,13 +145,22 @@ check( 'auch wenn der Header leer mitgeschickt wird',
     ergebnis( [ 'X-NAWS-Key' => '' ], [ 'api_key' => SCHLUESSEL ] ), 'naws_unauthorized/401' );
 
 // ── Was kein String ist, darf nichts zum Absturz bringen ─────────────────
-// ?api_key[]=x bzw. ein doppelter Header: empty() winkt ein nicht-leeres
-// Array durch, hash_equals() wirft darauf einen TypeError — aus der 401
-// wuerde ein Fatal 500, unauthentifiziert ausloesbar.
-check( 'ein Array im Header ergibt 401, keinen Absturz',
-    ergebnis( [ 'X-NAWS-Key' => [ SCHLUESSEL ] ] ), 'naws_unauthorized/401' );
-check( 'ein Array im Parameter ebenso',
+// Der Absturzweg lief ueber den Parameter, nicht ueber den Header:
+// ?api_key[]=x liefert aus get_param() ein Array, das empty() durchwinkt
+// und hash_equals() mit einem TypeError quittiert — aus der 401 wuerde
+// ein Fatal 500, unauthentifiziert ausloesbar. Der Parameter wird jetzt
+// gar nicht mehr gelesen, der Weg ist also zu.
+check( 'ein Array im Parameter ergibt 401, keinen Absturz',
     ergebnis( [], [ 'api_key' => [ SCHLUESSEL ] ] ), 'naws_unauthorized/401' );
+
+// Der Header dagegen kommt immer als String an, weil get_header() die
+// Werte verbindet. Ein einzeln gesetzter Wert bleibt damit gueltig —
+// alles andere waere eine Behauptung ueber die Attrappe, nicht ueber
+// WordPress.
+check( 'ein einzeln gelisteter Header-Wert bleibt derselbe Schluessel',
+    ergebnis( [ 'X-NAWS-Key' => [ SCHLUESSEL ] ] ), true );
+check( 'ein doppelt gesendeter Header wird zu einem falschen Schluessel',
+    ergebnis( [ 'X-NAWS-Key' => [ SCHLUESSEL, 'zweiter' ] ] ), 'naws_unauthorized/401' );
 
 // ── Ohne hinterlegten Schluessel ist der Dienst nicht eingerichtet ───────
 konfiguriere( '' );

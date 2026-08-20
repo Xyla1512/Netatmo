@@ -132,10 +132,12 @@ class NAWS_Rest_API {
         // string.
         $provided = $request->get_header( 'X-NAWS-Key' );
 
-        // get_header() does not promise a string — a repeated header arrives
-        // as an array, which empty() waves through and hash_equals() answers
-        // with a TypeError. That would turn an unauthenticated 401 into a
-        // fatal 500, so anything that is not a string is simply no key.
+        // get_header() joins its values and hands back a string or null, so
+        // this cannot be an array today. The parameter could: ?api_key[]=x
+        // reached hash_equals() as an array and answered with a TypeError,
+        // trading an unauthenticated 401 for a fatal 500. Dropping the
+        // parameter closes that path; this keeps the comparison from ever
+        // seeing anything but a string again.
         if ( ! is_string( $provided ) ) {
             $provided = '';
         }
