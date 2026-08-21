@@ -103,6 +103,59 @@ check( 'ein anderer Schluessel einen anderen',
 check( 'der Abdruck ist 16 Hexzeichen lang',
     (bool) preg_match( '/^[0-9a-f]{16}$/', NAWS_Crypto::key_fingerprint( ECHTER_SALT ) ), true );
 
+// ── encrypt() bei kaputtem Cipher ────────────────────────────────────────
+// Der Fehlschlag wird echt erzeugt, nicht nachgebaut: die Unterklasse
+// liefert einen Cipher, den OpenSSL nicht kennt, und openssl_encrypt()
+// gibt daraufhin tatsaechlich false zurueck.
+class Krypto_Kaputt extends NAWS_Crypto {
+    protected static function cipher(): string {
+        return 'kein-solcher-cipher';
+    }
+}
+
+/** Ruft etwas auf und schluckt die PHP-Warnung des unbekannten Ciphers. */
+function ohne_warnung( callable $fn ) {
+    set_error_handler( static function () { return true; } );
+    $ergebnis = $fn();
+    restore_error_handler();
+    return $ergebnis;
+}
+
+check( 'ein kaputter Cipher liefert null, nicht den Klartext',
+    ohne_warnung( static function () { return Krypto_Kaputt::encrypt( 'geheim' ); } ), null );
+
+check( 'der heile Weg liefert weiterhin einen Chiffretext',
+    strpos( (string) NAWS_Crypto::encrypt( 'geheim' ), NAWS_Crypto::PREFIX ), 0 );
+
+check( 'ein leerer Wert ist kein Fehlschlag',
+    NAWS_Crypto::encrypt( '' ), '' );
+
+check( 'was verschluesselt wurde, kommt auch wieder heraus',
+    NAWS_Crypto::decrypt( (string) NAWS_Crypto::encrypt( 'geheim' ) ), 'geheim' );
+
+// ── save_option() schreibt bei Fehlschlag nicht ──────────────────────────
+// Der eigentliche Punkt der ganzen Aenderung: der alte Wert bleibt stehen.
+$GLOBALS['naws_test_options']['naws_test_secret'] = 'naws_enc:alter-wert';
+
+check( 'ein fehlgeschlagenes Speichern meldet false',
+    ohne_warnung( static function () { return Krypto_Kaputt::save_option( 'naws_test_secret', 'neu' ); } ), false );
+check( 'und laesst den alten Wert unberuehrt',
+    $GLOBALS['naws_test_options']['naws_test_secret'], 'naws_enc:alter-wert' );
+
+check( 'ein gelungenes Speichern meldet true',
+    NAWS_Crypto::save_option( 'naws_test_secret', 'neu' ), true );
+check( 'und hat den Wert ersetzt',
+    NAWS_Crypto::decrypt( $GLOBALS['naws_test_options']['naws_test_secret'] ), 'neu' );
+
+// ── encrypt_fields() laesst das Feld erkennbar stehen ────────────────────
+$felder = ohne_warnung( static function () {
+    return Krypto_Kaputt::encrypt_fields( [ 'client_secret' => 'roh' ], [ 'client_secret' ] );
+} );
+check( 'ein nicht verschluesseltes Feld behaelt seinen Wert',
+    $felder['client_secret'], 'roh' );
+check( 'und traegt kein Praefix, woran der Aufrufer es erkennt',
+    NAWS_Crypto::is_encrypted( $felder['client_secret'] ), false );
+
 echo str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );

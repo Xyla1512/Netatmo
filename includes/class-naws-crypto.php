@@ -39,21 +39,41 @@ class NAWS_Crypto {
      * ================================================================*/
 
     /**
+     * The cipher, read through a method so a test double can break it.
+     *
+     * Production behaviour is unchanged: it returns the constant.
+     */
+    protected static function cipher(): string {
+        return self::CIPHER;
+    }
+
+    /**
      * Encrypt a plaintext string.
      *
      * @param  string $plaintext
-     * @return string  Prefixed base64: "naws_enc:<base64(iv.tag.ciphertext)>"
+     * @return string|null  Prefixed base64, '' for empty input, or null when
+     *                      the secret could not be encrypted.
      */
-    public static function encrypt( string $plaintext ): string {
+    public static function encrypt( string $plaintext ): ?string {
         if ( $plaintext === '' ) return '';
 
-        $key = self::derive_key();
+        // Without the extension this would be a call to an undefined
+        // function, which is a fatal error rather than a return value.
+        if ( ! function_exists( 'openssl_encrypt' ) ) {
+            error_log( 'NAWS Crypto: ext-openssl is missing, refusing to store a secret' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+            return null;
+        }
+
+        // static::, not self:: — derive_key() is overridable, and self::
+        // would bypass the override even though it forwards late static
+        // binding. This is the seam the rotation test depends on.
+        $key = static::derive_key();
         $iv  = random_bytes( 12 ); // 96-bit IV for GCM
         $tag = '';
 
         $ciphertext = openssl_encrypt(
             $plaintext,
-            self::CIPHER,
+            static::cipher(),
             $key,
             OPENSSL_RAW_DATA,
             $iv,
@@ -63,8 +83,11 @@ class NAWS_Crypto {
         );
 
         if ( $ciphertext === false ) {
-            error_log( 'NAWS Crypto: encryption failed – ' . openssl_error_string() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-            return $plaintext; // Fallback: return plaintext rather than lose data
+            error_log( 'NAWS Crypto: encryption failed - ' . openssl_error_string() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+            // Never the plaintext. An unencrypted secret in the database is
+            // the single outcome this class exists to prevent, and the caller
+            // cannot tell a plaintext return from a successful one.
+            return null;
         }
 
         // Pack: IV (12) + tag (16) + ciphertext
@@ -99,7 +122,7 @@ class NAWS_Crypto {
         $iv         = substr( $raw, 0, 12 );
         $tag        = substr( $raw, 12, self::TAG_LEN );
         $ciphertext = substr( $raw, 12 + self::TAG_LEN );
-        $key        = self::derive_key();
+        $key        = static::derive_key();
 
         $plaintext = openssl_decrypt(
             $ciphertext,
@@ -136,10 +159,16 @@ class NAWS_Crypto {
      * @param string $option_name  The option key.
      * @param string $plaintext    The value to store.
      * @param bool   $autoload     WordPress autoload flag.
+     * @return bool  False when the value could not be encrypted; nothing is
+     *               written in that case and whatever is stored stays.
      */
-    public static function save_option( string $option_name, string $plaintext, bool $autoload = true ): void {
+    public static function save_option( string $option_name, string $plaintext, bool $autoload = true ): bool {
         $encrypted = self::encrypt( $plaintext );
+        if ( $encrypted === null ) {
+            return false;
+        }
         update_option( $option_name, $encrypted, $autoload );
+        return true;
     }
 
     /**
@@ -187,7 +216,12 @@ class NAWS_Crypto {
     public static function encrypt_fields( array $data, array $fields ): array {
         foreach ( $fields as $field ) {
             if ( isset( $data[ $field ] ) && $data[ $field ] !== '' ) {
-                $data[ $field ] = self::encrypt( $data[ $field ] );
+                $encrypted = self::encrypt( $data[ $field ] );
+                if ( $encrypted !== null ) {
+                    $data[ $field ] = $encrypted;
+                }
+                // On failure the field keeps its plaintext value and carries
+                // no naws_enc: prefix, which is how the caller tells.
             }
         }
         return $data;
@@ -318,7 +352,7 @@ class NAWS_Crypto {
      *
      * @return string  32-byte binary key.
      */
-    private static function derive_key(): string {
+    protected static function derive_key(): string {
         // Primary source: AUTH_KEY from wp-config.php
         $source = defined( 'AUTH_KEY' ) ? AUTH_KEY : 'naws-fallback-key-' . DB_NAME;
 
