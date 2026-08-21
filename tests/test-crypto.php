@@ -210,6 +210,32 @@ $GLOBALS['naws_test_options'] = [];
 check( 'ohne gespeicherten Abdruck gibt es kein key_changed',
     in_array( 'key_changed', Krypto_OhneAbdruck::zustand()['issues'], true ), false );
 
+// ── migrate() ────────────────────────────────────────────────────────────
+// Die Flagge behauptete frueher "migriert", auch wenn kein einziges Feld
+// verschluesselt werden konnte.
+$GLOBALS['naws_test_options'] = [
+    'naws_access_token' => 'roher-token',
+    'naws_settings'     => [ 'client_id' => 'roh-id', 'client_secret' => 'roh-secret' ],
+];
+check( 'eine gelungene Migration meldet true',
+    NAWS_Crypto::migrate(), true );
+check( 'und setzt die Flagge',
+    get_option( 'naws_crypto_migrated' ), NAWS_VERSION );
+check( 'der Token liegt danach verschluesselt vor',
+    NAWS_Crypto::is_encrypted( get_option( 'naws_access_token' ) ), true );
+check( 'und der Abdruck ist nachgetragen',
+    is_string( get_option( NAWS_Crypto::OPT_KEYFP ) ) && get_option( NAWS_Crypto::OPT_KEYFP ) !== '', true );
+
+$GLOBALS['naws_test_options'] = [
+    'naws_access_token' => 'roher-token',
+];
+check( 'eine gescheiterte Migration meldet false',
+    ohne_warnung( static function () { return Krypto_Kaputt::migrate(); } ), false );
+check( 'und setzt die Flagge NICHT',
+    get_option( 'naws_crypto_migrated' ), false );
+check( 'der Token bleibt dabei unveraendert im Klartext, nicht geloescht',
+    get_option( 'naws_access_token' ), 'roher-token' );
+
 echo str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );

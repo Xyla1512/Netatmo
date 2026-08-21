@@ -254,15 +254,27 @@ class NAWS_Crypto {
 
     /**
      * Migrate all plaintext secrets to encrypted storage.
-     * Safe to call multiple times – skips already-encrypted values.
+     *
+     * Safe to call repeatedly - it skips values that already carry the
+     * prefix. The flag is only set when every field really ended up
+     * encrypted; on a host where that cannot happen it stays unset and the
+     * caller tries again on the next admin page. That costs a handful of
+     * get_option calls and writes nothing, and it heals itself the moment
+     * openssl comes back.
+     *
+     * @return bool  True when everything intended is encrypted.
      */
-    public static function migrate() {
+    public static function migrate(): bool {
+        $all_done = true;
+
         // 1. Individual token options
         $secret_options = [ 'naws_access_token', 'naws_refresh_token' ];
         foreach ( $secret_options as $opt ) {
             $val = \get_option( $opt, '' );
-            if ( $val !== '' && ! self::is_encrypted( $val ) ) {
-                self::save_option( $opt, $val );
+            if ( is_string( $val ) && $val !== '' && ! self::is_encrypted( $val ) ) {
+                if ( ! self::save_option( $opt, $val ) ) {
+                    $all_done = false;
+                }
             }
         }
 
@@ -272,9 +284,14 @@ class NAWS_Crypto {
             $needs_save = false;
             foreach ( [ 'client_id', 'client_secret' ] as $field ) {
                 $val = $settings[ $field ] ?? '';
-                if ( $val !== '' && ! self::is_encrypted( $val ) ) {
-                    $settings[ $field ] = self::encrypt( $val );
-                    $needs_save = true;
+                if ( is_string( $val ) && $val !== '' && ! self::is_encrypted( $val ) ) {
+                    $encrypted = self::encrypt( $val );
+                    if ( $encrypted === null ) {
+                        $all_done = false;
+                        continue;
+                    }
+                    $settings[ $field ] = $encrypted;
+                    $needs_save         = true;
                 }
             }
             if ( $needs_save ) {
@@ -286,13 +303,28 @@ class NAWS_Crypto {
         $rest_cfg = \get_option( 'naws_rest_api', [] );
         if ( is_array( $rest_cfg ) ) {
             $key = $rest_cfg['api_key'] ?? '';
-            if ( $key !== '' && ! self::is_encrypted( $key ) ) {
-                $rest_cfg['api_key'] = self::encrypt( $key );
-                \update_option( 'naws_rest_api', $rest_cfg );
+            if ( is_string( $key ) && $key !== '' && ! self::is_encrypted( $key ) ) {
+                $encrypted = self::encrypt( $key );
+                if ( $encrypted === null ) {
+                    $all_done = false;
+                } else {
+                    $rest_cfg['api_key'] = $encrypted;
+                    \update_option( 'naws_rest_api', $rest_cfg );
+                }
             }
         }
 
-        \update_option( 'naws_crypto_migrated', NAWS_VERSION, false );
+        // Existing installations carry ciphertext but no fingerprint yet.
+        // This is where they get one, so a later rotation is recognisable.
+        if ( \get_option( self::OPT_KEYFP, '' ) === '' && $all_done ) {
+            self::remember_key();
+        }
+
+        if ( $all_done ) {
+            \update_option( 'naws_crypto_migrated', NAWS_VERSION, false );
+        }
+
+        return $all_done;
     }
 
     /* ================================================================
