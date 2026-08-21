@@ -96,7 +96,6 @@ class NAWS_Crypto {
         // Pack: IV (12) + tag (16) + ciphertext
         // Binary AES-GCM output has to survive a text option column, so it is
         // base64 for transport, not to obscure anything.
-        self::remember_key();
         return self::PREFIX . base64_encode( $iv . $tag . $ciphertext ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- encoding binary ciphertext for storage, not obfuscation
     }
 
@@ -114,6 +113,17 @@ class NAWS_Crypto {
         // Not encrypted? Return as-is (plaintext migration path)
         if ( ! self::is_encrypted( $value ) ) {
             return $value;
+        }
+
+        // Counterpart to the guard in encrypt(): without the extension
+        // openssl_decrypt() is an undefined function, and a stored
+        // ciphertext would turn every read of a token into a fatal error -
+        // in the frontend too, through the cron watchdog. '' is what this
+        // method documents for a failed decryption, so returning it keeps
+        // the contract the callers already handle.
+        if ( ! function_exists( 'openssl_decrypt' ) ) {
+            error_log( 'NAWS Crypto: ext-openssl is missing, cannot read the stored secret' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+            return '';
         }
 
         // Counterpart to the base64_encode() in encrypt(); strict mode on.
@@ -172,6 +182,15 @@ class NAWS_Crypto {
             return false;
         }
         update_option( $option_name, $encrypted, $autoload );
+
+        // The fingerprint belongs to what is stored, not to what was merely
+        // computed: it is written here, after the value reached the database.
+        // An empty value is stored verbatim and is no ciphertext, so it says
+        // nothing about the key the stored ciphertexts were made with.
+        if ( $encrypted !== '' ) {
+            self::remember_key();
+        }
+
         return true;
     }
 
@@ -378,9 +397,13 @@ class NAWS_Crypto {
     /**
      * Record which key the ciphertexts in the database were made with.
      *
-     * Called on every successful encrypt, so reconnecting after a salt
-     * rotation clears the warning by itself: the new values carry the new
-     * key and the fingerprint moves with them.
+     * Called after a secret was written through save_option(), so
+     * reconnecting after a salt rotation clears the warning by itself: both
+     * tokens are stored again under the new key and the fingerprint moves
+     * with them. It is deliberately not called from encrypt(): saving the
+     * credentials encrypts client_id without touching the tokens, and a
+     * fingerprint moved by that write would retract the one explanation the
+     * plugin has while both tokens still decrypt to nothing.
      */
     private static function remember_key(): void {
         $fp = self::key_fingerprint( static::derive_key() );

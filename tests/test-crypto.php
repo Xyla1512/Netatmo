@@ -185,9 +185,17 @@ class Krypto_SchluesselB extends NAWS_Crypto {
     public static function zustand(): array { return static::health(); }
 }
 
+// Der Abdruck haengt am Schreibvorgang, nicht am Verschluesseln. Sonst
+// verschiebt ihn schon das Speichern der Zugangsdaten -- client_id laeuft
+// ueber encrypt() direkt --, waehrend beide Tokens noch unter dem alten
+// Schluessel liegen, und die Warnung verschwindet vor der Ursache.
 $GLOBALS['naws_test_options'] = [];
 Krypto_SchluesselA::encrypt( 'geheim' );
-check( 'ein gelungenes encrypt() hinterlegt den Abdruck',
+check( 'ein encrypt() allein hinterlegt den Abdruck NICHT',
+    get_option( NAWS_Crypto::OPT_KEYFP ), false );
+
+Krypto_SchluesselA::save_option( 'naws_test_secret', 'geheim' );
+check( 'ein gelungenes save_option() hinterlegt den Abdruck',
     get_option( NAWS_Crypto::OPT_KEYFP ), NAWS_Crypto::key_fingerprint( str_repeat( 'A', 32 ) ) );
 
 check( 'unter demselben Schluessel meldet health() kein key_changed',
@@ -238,11 +246,12 @@ check( 'der Token bleibt dabei unveraendert im Klartext, nicht geloescht',
 
 // ── Nachruestung des Abdrucks fuer Bestandsinstallationen ────────────────
 // Der eigentliche Zielfall: alles liegt schon verschluesselt vor, es wird
-// also nichts neu verschluesselt -- und damit ruft auch kein encrypt()
+// also nichts neu geschrieben -- und damit ruft auch kein save_option()
 // nebenbei remember_key() auf. Nur die Backfill-Zeile in migrate() kann
 // den Abdruck hier ueberhaupt noch setzen.
 $GLOBALS['naws_test_options'] = [];
-$naws_ct      = NAWS_Crypto::encrypt( 'schon-verschluesselt' );
+NAWS_Crypto::save_option( 'naws_access_token', 'schon-verschluesselt' );
+$naws_ct      = get_option( 'naws_access_token' );
 $naws_abdruck = get_option( NAWS_Crypto::OPT_KEYFP );
 
 // Neu aufsetzen: der Chiffretext bleibt, der Abdruck ist weg.
