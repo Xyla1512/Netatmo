@@ -42,6 +42,8 @@ Work finished and merged, waiting for the release it will ship in. The version n
 ### Changed
 - **Breaking: the REST API key is accepted in the `X-NAWS-Key` header only.** It used to be read from `?api_key=` as a fallback, and the documentation page advertised that form with a ready-made example URL containing the live key. A secret in a query string is written down by access logs, by the `Referer` header, by browser history and by every proxy and CDN in between; RFC 6750 §5.3 makes the same point about bearer tokens, and every route here is `GET`, so that parameter was always a query string. Calls of the older form now answer `401`. The admin documentation, the FAQ and all three translations were rewritten to match.
 
+- **The cron settings and the cron log now explain what WP-Cron does not do.** WordPress cron runs on page views: without visitors there is no fetch, the night mode setting has nothing to suppress, and the readings show a gap that the daily summary later fills in. Both screens now say so and name the remedy — `DISABLE_WP_CRON` plus a real server cron on `wp-cron.php`.
+
 ### Fixed
 
 - **The sidebar widget never named its location.** In automatic mode the name came from the geocoding API, which cannot supply it: that endpoint searches *by name*, and it was being handed coordinates. Measured against the live service, `?name=51.35,12.37` answers HTTP 200 with `{"generationtime_ms":0.18763542}` and no results key at all, while `?name=Leipzig` returns Leipzig — Open-Meteo has no reverse geocoding, so the call spent a five-second timeout to always fall through to the placeholder word `Station Location`, which then travelled into the forecast cache and showed up in the footer as if it were a place.
@@ -67,9 +69,6 @@ Work finished and merged, waiting for the release it will ship in. The version n
 - **An uppercase MAC address in `[naws_value module="…"]` matched nothing.** The shortcode kept its own copy of the alias table (`outdoor`, `indoor`, `wind`, `rain`) and lower-cased the alias for the lookup while passing a MAC address on with its original case. There is now one table, in `NAWS_Calc`, and both shortcodes resolve modules through it.
 
 - **An emptied degree-day limit field silently stored 0 °C.** `floatval('')` is `0.0`, which the inline clamp then treated as a deliberate setting rather than as "use the default".
-
-### Changed
-- **The cron settings and the cron log now explain what WP-Cron does not do.** WordPress cron runs on page views: without visitors there is no fetch, the night mode setting has nothing to suppress, and the readings show a gap that the daily summary later fills in. Both screens now say so and name the remedy — `DISABLE_WP_CRON` plus a real server cron on `wp-cron.php`.
 
 ## [1.9.6] – 2026-08-17
 
