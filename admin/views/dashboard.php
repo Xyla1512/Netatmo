@@ -170,6 +170,26 @@ $module_type_colors = [
             </div>
         </div>
 
+        <?php
+        // Encryption state. Deliberately its own tile: turning the polling
+        // health red because openssl is missing would make both statements
+        // useless.
+        $crypto        = NAWS_Crypto::health();
+        $crypto_ok     = ( $crypto['status'] === 'ok' );
+        $crypto_color  = $crypto_ok ? 'green' : 'orange';
+        $crypto_icon   = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
+        ?>
+        <div class="naws-stat-card">
+            <div class="naws-stat-icon-wrap naws-stat-color-<?php echo esc_attr( $crypto_color ); ?>"><?php echo wp_kses( $crypto_icon, naws_svg_kses_args() ); ?></div>
+            <div class="naws-stat-body">
+                <div class="naws-stat-value naws-stat-value--date" style="font-size:0.8rem;"><?php echo esc_html( $crypto_ok ? naws__( 'crypto_state_ok' ) : naws__( 'crypto_state_warn' ) ); ?></div>
+                <div class="naws-stat-label"><?php naws_e( 'crypto_state_label' ); ?></div>
+                <?php if ( ! $crypto_ok ) : ?>
+                <div class="naws-stat-sub" style="color:#f59e0b;"><?php echo esc_html( naws__( 'crypto_' . $crypto['issues'][0] ) ); ?></div>
+                <?php endif; ?>
+            </div>
+        </div>
+
     </div>
 
     <!-- ═══════════════════════════ MAIN CONTENT ═══════════════════════════ -->

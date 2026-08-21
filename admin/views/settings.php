@@ -36,6 +36,27 @@ if ( ! defined( 'ABSPATH' ) ) exit; ?>
         <div class="notice notice-info is-dismissible"><p><?php naws_e( 'disconnected_msg' ); ?></p></div>
     <?php endif; ?>
 
+    <?php
+    $naws_crypto = NAWS_Crypto::health();
+    if ( $naws_crypto['status'] !== 'ok' ) : ?>
+        <div class="notice notice-warning">
+            <?php foreach ( $naws_crypto['issues'] as $naws_issue ) : ?>
+                <p>
+                    <?php echo esc_html( naws__( 'crypto_' . $naws_issue ) ); ?>
+                    <?php if ( $naws_issue === 'weak_key' ) : ?>
+                        <a href="https://api.wordpress.org/secret-key/1.1/salt/" target="_blank" rel="noopener noreferrer"><?php naws_e( 'crypto_salt_link' ); ?></a>
+                    <?php endif; ?>
+                </p>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if ( get_option( 'naws_crypto_write_failed' ) ) : ?>
+        <div class="notice notice-error">
+            <p><strong><?php naws_e( 'crypto_connect_failed' ); ?></strong></p>
+        </div>
+    <?php endif; ?>
+
     <?php if ( get_option( 'naws_auth_required' ) ) : ?>
         <div class="notice notice-error">
             <p><strong>🔴 <?php naws_e( 'token_revoked' ); ?></strong><br>
