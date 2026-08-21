@@ -236,6 +236,23 @@ check( 'und setzt die Flagge NICHT',
 check( 'der Token bleibt dabei unveraendert im Klartext, nicht geloescht',
     get_option( 'naws_access_token' ), 'roher-token' );
 
+// ── Nachruestung des Abdrucks fuer Bestandsinstallationen ────────────────
+// Der eigentliche Zielfall: alles liegt schon verschluesselt vor, es wird
+// also nichts neu verschluesselt -- und damit ruft auch kein encrypt()
+// nebenbei remember_key() auf. Nur die Backfill-Zeile in migrate() kann
+// den Abdruck hier ueberhaupt noch setzen.
+$GLOBALS['naws_test_options'] = [];
+$naws_ct      = NAWS_Crypto::encrypt( 'schon-verschluesselt' );
+$naws_abdruck = get_option( NAWS_Crypto::OPT_KEYFP );
+
+// Neu aufsetzen: der Chiffretext bleibt, der Abdruck ist weg.
+$GLOBALS['naws_test_options'] = [ 'naws_access_token' => $naws_ct ];
+
+check( 'ohne neu zu verschluesselnde Felder meldet migrate() trotzdem true',
+    NAWS_Crypto::migrate(), true );
+check( 'und traegt den fehlenden Abdruck nach',
+    get_option( NAWS_Crypto::OPT_KEYFP ), $naws_abdruck );
+
 echo str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );
