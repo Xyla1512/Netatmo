@@ -18,7 +18,7 @@
 - **Kommentarsprache:** Produktionscode Englisch (Konvention der Klasse), Testdateien Deutsch (Konvention von `tests/`).
 - **Commit-Stil:** ganze Sätze im Imperativ, **keine** `feat:`/`fix:`-Präfixe. Vorbilder aus dem Log: „The API key belongs in the header, and nowhere else". Jeder Commit endet mit `Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>`.
 - **Sprachdateien:** `languages/de.php`, `en.php`, `no.php` haben aktuell **je 694 Schlüssel** und müssen nach der Arbeit **je 704** haben — identische Schlüsselmengen, nicht nur identische Zahlen.
-- **PHPCS-Gate:** `vendor\bin\phpcs` muss null Fehler melden. `tests/` ist in `.phpcs.xml.dist:32` vom Scan ausgeschlossen; neue Testdateien tauchen in der Dateizahl 52 nie auf und müssen einzeln geprüft werden.
+- **PHPCS-Gate:** `vendor\bin\phpcs` muss null Fehler melden. `tests/` ist in `.phpcs.xml.dist:32` vom Scan ausgeschlossen; neue Testdateien tauchen in der geprüften Dateizahl (aktuell 53) nie auf und müssen einzeln geprüft werden.
 - **`error_log()`-Aufrufe** brauchen `// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log`, **`base64_encode/decode`** brauchen `// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_*` mit Begründung — beide Muster stehen schon in der Datei.
 - **Yoda-Bedingungen** sind über `WordPress.PHP.YodaConditions` aktiv; die bestehende Datei ist davon offenbar ausgenommen — beim Hinzufügen dem Stil der umgebenden Zeilen folgen und am Ende PHPCS laufen lassen.
 
@@ -727,7 +727,7 @@ Das Gate ändert sich hier, deshalb ausnahmsweise der volle Lauf:
 cd "C:/Users/xyla1/.claude/Netatmo" && vendor/bin/phpcs --standard=.phpcs.xml.dist
 ```
 
-Erwartet: null Fehler, 52 geprüfte Dateien.
+Erwartet: null Fehler (aktuell 53 geprüfte Dateien; bindend ist die Fehlerzahl, nicht die Dateizahl).
 
 - [ ] **Step 8: Commit**
 
@@ -1480,3 +1480,48 @@ Nicht Teil der Tasks, aber vor dem Live-Einspielen zu bedenken:
 - **Live-Patch** über `novamira/create-upload-link` + `curl`, dann `patch -p1 --forward --dry-run` (Rückgabewert prüfen), echt anwenden, **`opcache_reset()`** aufrufen, Dateien gegen die lokalen Hashes stellen. `CHANGELOG.md` liegt nicht auf der Installation und muss aus dem Patch ausgeschlossen werden.
 - **Zeilenenden:** Die Installation ist gemischt — 32 LF gegen 30 CRLF, LF genau bei den schon einmal gepatchten Dateien. `admin/views/settings.php` und `class-naws-database.php` gehören zu den CRLF-Dateien. Vor dem Patchen die Zieldateien prüfen und CRLF-Ziele einmal mit `str_replace("\r\n","\n")` normalisieren.
 - **Live-Abnahme:** `NAWS_Crypto::health()` muss auf der Referenzinstallation `status => ok` und eine leere `issues`-Liste liefern; der Abdruck ist nach dem ersten Admin-Seitenaufruf nachgetragen. Die vier Geheimnisse müssen weiterhin das `naws_enc:`-Präfix tragen.
+
+---
+
+## Nachtrag zu Task 4 (Ruling aus der Review, 2026-08-21)
+
+Die Review von Task 4 hat einen Fehler **in diesem Plan** gefunden, nicht in der Umsetzung: Die Zusicherung „und der Abdruck ist nachgetragen" prüft nicht, was sie behauptet. Im Erfolgsszenario werden Felder neu verschlüsselt, und jedes erfolgreiche `encrypt()` ruft intern schon `remember_key()`. `OPT_KEYFP` ist damit gesetzt, **bevor** die Nachrüst-Bedingung in `migrate()` ausgewertet wird — man könnte die Backfill-Zeilen ersatzlos streichen, und der Test bliebe grün.
+
+Der eigentliche Zielfall aus Spec §7 ist ein anderer: eine Bestandsinstallation, auf der **alles bereits verschlüsselt** vorliegt, also gar nichts neu verschlüsselt wird und folglich kein `encrypt()` nebenbei den Abdruck setzt. Genau so sieht die Referenzinstallation aus.
+
+**Ruling:** Nachziehen, nicht vertagen. Die Nachrüstung ist der einzige Weg, auf dem eine Bestandsinstallation je einen Abdruck bekommt; bleibt sie ungetestet, bemerkt niemand ihren Ausfall. **Kosten falls falsch:** zwei Zusicherungen mehr als nötig — vernachlässigbar gegen einen ungeprüften Kernpfad.
+
+- [ ] **Nachtrag-Step 1: Den Zielfall wirklich prüfen**
+
+In `tests/test-crypto.php` nach dem bestehenden `migrate()`-Block einfügen:
+
+```php
+// ── Nachruestung des Abdrucks fuer Bestandsinstallationen ────────────────
+// Der eigentliche Zielfall: alles liegt schon verschluesselt vor, es wird
+// also nichts neu verschluesselt -- und damit ruft auch kein encrypt()
+// nebenbei remember_key() auf. Nur die Backfill-Zeile in migrate() kann
+// den Abdruck hier ueberhaupt noch setzen.
+$GLOBALS['naws_test_options'] = [];
+$naws_ct     = NAWS_Crypto::encrypt( 'schon-verschluesselt' );
+$naws_abdruck = get_option( NAWS_Crypto::OPT_KEYFP );
+
+// Neu aufsetzen: der Chiffretext bleibt, der Abdruck ist weg.
+$GLOBALS['naws_test_options'] = [ 'naws_access_token' => $naws_ct ];
+
+check( 'ohne neu zu verschluesselnde Felder meldet migrate() trotzdem true',
+    NAWS_Crypto::migrate(), true );
+check( 'und traegt den fehlenden Abdruck nach',
+    get_option( NAWS_Crypto::OPT_KEYFP ), $naws_abdruck );
+```
+
+Erwartet danach: **37 bestanden, 0 fehlgeschlagen**.
+
+- [ ] **Nachtrag-Step 2: Mutation 6 in Task 8 ergänzen**
+
+Die Probe, die belegt, dass die neuen Zusicherungen wirken — die Nachrüstung wird wirkungslos gemacht:
+
+```bash
+cd "C:/Users/xyla1/.claude/Netatmo" && sed -i "s/        if ( \\get_option( self::OPT_KEYFP, '' ) === '' && \$all_done ) {/        if ( false ) {/" includes/class-naws-crypto.php && php tests/test-crypto.php; echo "exit=$?"
+```
+
+Erwartet: `FAIL` bei „und traegt den fehlenden Abdruck nach", `exit=1`. Danach `git checkout -- includes/class-naws-crypto.php`.
