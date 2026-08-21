@@ -275,15 +275,27 @@ zuerst läuft. **`decrypt()` bleibt unverändert.**
 - geschrieben in `migrate()`, wenn er fehlt — das ist die Nachrüstung für bestehende
   Installationen wie die Referenzinstallation, die heute verschlüsselte Werte, aber
   keinen Abdruck hat
-- geschrieben nach jedem erfolgreichen `encrypt()` — deshalb verschwindet die Warnung
-  nach einem Neuverbinden von allein: die neuen Werte tragen den neuen Schlüssel, der
-  Abdruck zieht mit
+- geschrieben nach jedem gelungenen `save_option()` — deshalb verschwindet die Warnung
+  nach einem Neuverbinden von allein: beide Tokens liegen danach unter dem neuen
+  Schlüssel, der Abdruck zieht mit. Bewusst **nicht** nach jedem `encrypt()`:
+  `client_id` und `client_secret` laufen an `save_option()` vorbei, und ein Abdruck, den
+  schon das Speichern der Zugangsdaten verschiebt, nähme die Warnung zurück, während
+  beide Tokens weiter unter dem alten Schlüssel liegen und leer entschlüsseln
 
 **Grenze, die das Design nicht überspielen darf:** Wer erst *nach* einer Rotation
-aktualisiert, hat keinen gespeicherten Abdruck, gegen den zu vergleichen wäre. Dann
-bleibt die Ursache unbekannt, und die Meldung muss das sagen — nicht lesbare
-Zugangsdaten, mögliche Ursache geänderte WordPress-Salts — statt einer Behauptung. Ein
-Abdruck, der fehlt, ist kein Abdruck, der passt.
+aktualisiert, hat keinen gespeicherten Abdruck, gegen den zu vergleichen wäre. Dann wird
+**keine Aussage gemacht und keine Meldung gezeigt**: `health()` meldet kein
+`key_changed`, und der Nutzer sieht den ohnehin vorhandenen Hinweis, dass das Plugin
+nicht verbunden ist.
+
+Das ist eine Entscheidung, kein Versäumnis. „Zugangsdaten nicht lesbar" ließe sich nur
+feststellen, indem `health()` einen Entschlüsselungsversuch unternimmt — und damit
+genau das aufgibt, was zwei Absätze weiter oben festgelegt ist: dass der Vergleich ohne
+jeden Chiffretext auskommt und `decrypt()` seine Fehlschlag-Semantik behält. Beides
+zugleich geht nicht. Die Zustandsanzeige, die ohne Chiffretext auskommt, wiegt schwerer
+als die eine Konstellation, die sie nicht erklären kann — und der Preis dafür ist, dass
+genau diese eine unerklärt bleibt: Rotation zuerst, Update danach. Ein Abdruck, der
+fehlt, ist kein Abdruck, der passt — und auch keiner, der etwas sagt.
 
 ---
 
@@ -361,9 +373,12 @@ ausgeschlossen, ein neuer Test taucht in der Dateizahl 52 nie auf.
 
 - **Kein Versions-Bump, kein Tag, kein Release.** Es bleibt bei 1.9.6; der Eintrag geht
   in den bestehenden `## [Unreleased]`-Abschnitt.
-- **Keine Änderung an `decrypt()`.** Der Rückgabewert `''` bei Fehlschlag bleibt: Er
-  wählt bewusst Datenverlust statt falscher Daten und ist damit richtig. Neu ist nur,
-  dass `health()` die Ursache erklären kann.
+- **Keine Änderung an der Fehlschlag-Semantik von `decrypt()`.** Der Rückgabewert `''`
+  bei Fehlschlag bleibt: Er wählt bewusst Datenverlust statt falscher Daten und ist
+  damit richtig. Neu ist nur, dass `health()` die Ursache erklären kann. Der Schutz
+  gegen ein fehlendes `ext-openssl` ist deshalb keine Ausnahme davon: Ohne die
+  Erweiterung wäre `openssl_decrypt()` eine undefinierte Funktion und damit ein Fatal
+  Error statt eines Rückgabewerts; der Schutz liefert genau die dokumentierten `''`.
 - **Kein Wechsel der Schlüsselquelle.** Weder auf `wp_salt()` — läge in der Datenbank —
   noch auf eine eigene Schlüsseldatei.
 - **Keine Verschlüsselung weiterer Felder.** Der Umfang bleibt bei den vier Geheimnissen.

@@ -21,26 +21,62 @@ class NAWS_Crypto {
     /** GCM tag length in bytes */
     const TAG_LEN = 16;
 
+    /**
+     * The placeholder wp-config-sample.php ships with.
+     *
+     * At 27 characters it is already shorter than MIN_KEY_LENGTH, so the
+     * length rule alone catches the English original. It is named here for
+     * the localized sample files, whose translated phrase is long enough to
+     * pass for a real key.
+     */
+    const SAMPLE_PHRASE = 'put your unique phrase here';
+
+    /** Shortest key source we are willing to treat as real. */
+    const MIN_KEY_LENGTH = 32;
+
+    /** Option holding the fingerprint of the key our ciphertexts were made with. */
+    const OPT_KEYFP = 'naws_crypto_keyfp';
+
     /* ================================================================
      * Core encrypt / decrypt
      * ================================================================*/
 
     /**
+     * The cipher, read through a method so a test double can break it.
+     *
+     * Production behaviour is unchanged: it returns the constant.
+     */
+    protected static function cipher(): string {
+        return self::CIPHER;
+    }
+
+    /**
      * Encrypt a plaintext string.
      *
      * @param  string $plaintext
-     * @return string  Prefixed base64: "naws_enc:<base64(iv.tag.ciphertext)>"
+     * @return string|null  Prefixed base64, '' for empty input, or null when
+     *                      the secret could not be encrypted.
      */
-    public static function encrypt( string $plaintext ): string {
+    public static function encrypt( string $plaintext ): ?string {
         if ( $plaintext === '' ) return '';
 
-        $key = self::derive_key();
+        // Without the extension this would be a call to an undefined
+        // function, which is a fatal error rather than a return value.
+        if ( ! function_exists( 'openssl_encrypt' ) ) {
+            error_log( 'NAWS Crypto: ext-openssl is missing, refusing to store a secret' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+            return null;
+        }
+
+        // static::, not self:: — derive_key() is overridable, and self::
+        // would bypass the override even though it forwards late static
+        // binding. This is the seam the rotation test depends on.
+        $key = static::derive_key();
         $iv  = random_bytes( 12 ); // 96-bit IV for GCM
         $tag = '';
 
         $ciphertext = openssl_encrypt(
             $plaintext,
-            self::CIPHER,
+            static::cipher(),
             $key,
             OPENSSL_RAW_DATA,
             $iv,
@@ -50,8 +86,11 @@ class NAWS_Crypto {
         );
 
         if ( $ciphertext === false ) {
-            error_log( 'NAWS Crypto: encryption failed – ' . openssl_error_string() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-            return $plaintext; // Fallback: return plaintext rather than lose data
+            error_log( 'NAWS Crypto: encryption failed - ' . openssl_error_string() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+            // Never the plaintext. An unencrypted secret in the database is
+            // the single outcome this class exists to prevent, and the caller
+            // cannot tell a plaintext return from a successful one.
+            return null;
         }
 
         // Pack: IV (12) + tag (16) + ciphertext
@@ -76,6 +115,17 @@ class NAWS_Crypto {
             return $value;
         }
 
+        // Counterpart to the guard in encrypt(): without the extension
+        // openssl_decrypt() is an undefined function, and a stored
+        // ciphertext would turn every read of a token into a fatal error -
+        // in the frontend too, through the cron watchdog. '' is what this
+        // method documents for a failed decryption, so returning it keeps
+        // the contract the callers already handle.
+        if ( ! function_exists( 'openssl_decrypt' ) ) {
+            error_log( 'NAWS Crypto: ext-openssl is missing, cannot read the stored secret' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+            return '';
+        }
+
         // Counterpart to the base64_encode() in encrypt(); strict mode on.
         $raw = base64_decode( substr( $value, strlen( self::PREFIX ) ), true ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode -- decoding our own ciphertext envelope, not obfuscation
         if ( $raw === false || strlen( $raw ) < 12 + self::TAG_LEN + 1 ) {
@@ -86,7 +136,7 @@ class NAWS_Crypto {
         $iv         = substr( $raw, 0, 12 );
         $tag        = substr( $raw, 12, self::TAG_LEN );
         $ciphertext = substr( $raw, 12 + self::TAG_LEN );
-        $key        = self::derive_key();
+        $key        = static::derive_key();
 
         $plaintext = openssl_decrypt(
             $ciphertext,
@@ -123,10 +173,25 @@ class NAWS_Crypto {
      * @param string $option_name  The option key.
      * @param string $plaintext    The value to store.
      * @param bool   $autoload     WordPress autoload flag.
+     * @return bool  False when the value could not be encrypted; nothing is
+     *               written in that case and whatever is stored stays.
      */
-    public static function save_option( string $option_name, string $plaintext, bool $autoload = true ): void {
+    public static function save_option( string $option_name, string $plaintext, bool $autoload = true ): bool {
         $encrypted = self::encrypt( $plaintext );
+        if ( $encrypted === null ) {
+            return false;
+        }
         update_option( $option_name, $encrypted, $autoload );
+
+        // The fingerprint belongs to what is stored, not to what was merely
+        // computed: it is written here, after the value reached the database.
+        // An empty value is stored verbatim and is no ciphertext, so it says
+        // nothing about the key the stored ciphertexts were made with.
+        if ( $encrypted !== '' ) {
+            self::remember_key();
+        }
+
+        return true;
     }
 
     /**
@@ -174,7 +239,12 @@ class NAWS_Crypto {
     public static function encrypt_fields( array $data, array $fields ): array {
         foreach ( $fields as $field ) {
             if ( isset( $data[ $field ] ) && $data[ $field ] !== '' ) {
-                $data[ $field ] = self::encrypt( $data[ $field ] );
+                $encrypted = self::encrypt( $data[ $field ] );
+                if ( $encrypted !== null ) {
+                    $data[ $field ] = $encrypted;
+                }
+                // On failure the field keeps its plaintext value and carries
+                // no naws_enc: prefix, which is how the caller tells.
             }
         }
         return $data;
@@ -203,15 +273,27 @@ class NAWS_Crypto {
 
     /**
      * Migrate all plaintext secrets to encrypted storage.
-     * Safe to call multiple times – skips already-encrypted values.
+     *
+     * Safe to call repeatedly - it skips values that already carry the
+     * prefix. The flag is only set when every field really ended up
+     * encrypted; on a host where that cannot happen it stays unset and the
+     * caller tries again on the next admin page. That costs a handful of
+     * get_option calls and writes nothing, and it heals itself the moment
+     * openssl comes back.
+     *
+     * @return bool  True when everything intended is encrypted.
      */
-    public static function migrate() {
+    public static function migrate(): bool {
+        $all_done = true;
+
         // 1. Individual token options
         $secret_options = [ 'naws_access_token', 'naws_refresh_token' ];
         foreach ( $secret_options as $opt ) {
             $val = \get_option( $opt, '' );
-            if ( $val !== '' && ! self::is_encrypted( $val ) ) {
-                self::save_option( $opt, $val );
+            if ( is_string( $val ) && $val !== '' && ! self::is_encrypted( $val ) ) {
+                if ( ! self::save_option( $opt, $val ) ) {
+                    $all_done = false;
+                }
             }
         }
 
@@ -221,9 +303,14 @@ class NAWS_Crypto {
             $needs_save = false;
             foreach ( [ 'client_id', 'client_secret' ] as $field ) {
                 $val = $settings[ $field ] ?? '';
-                if ( $val !== '' && ! self::is_encrypted( $val ) ) {
-                    $settings[ $field ] = self::encrypt( $val );
-                    $needs_save = true;
+                if ( is_string( $val ) && $val !== '' && ! self::is_encrypted( $val ) ) {
+                    $encrypted = self::encrypt( $val );
+                    if ( $encrypted === null ) {
+                        $all_done = false;
+                        continue;
+                    }
+                    $settings[ $field ] = $encrypted;
+                    $needs_save         = true;
                 }
             }
             if ( $needs_save ) {
@@ -235,13 +322,151 @@ class NAWS_Crypto {
         $rest_cfg = \get_option( 'naws_rest_api', [] );
         if ( is_array( $rest_cfg ) ) {
             $key = $rest_cfg['api_key'] ?? '';
-            if ( $key !== '' && ! self::is_encrypted( $key ) ) {
-                $rest_cfg['api_key'] = self::encrypt( $key );
-                \update_option( 'naws_rest_api', $rest_cfg );
+            if ( is_string( $key ) && $key !== '' && ! self::is_encrypted( $key ) ) {
+                $encrypted = self::encrypt( $key );
+                if ( $encrypted === null ) {
+                    $all_done = false;
+                } else {
+                    $rest_cfg['api_key'] = $encrypted;
+                    \update_option( 'naws_rest_api', $rest_cfg );
+                }
             }
         }
 
-        \update_option( 'naws_crypto_migrated', NAWS_VERSION, false );
+        // Existing installations carry ciphertext but no fingerprint yet.
+        // This is where they get one, so a later rotation is recognisable.
+        if ( \get_option( self::OPT_KEYFP, '' ) === '' && $all_done ) {
+            self::remember_key();
+        }
+
+        if ( $all_done ) {
+            \update_option( 'naws_crypto_migrated', NAWS_VERSION, false );
+        }
+
+        return $all_done;
+    }
+
+    /* ================================================================
+     * Pure predicates - no options, no constants, no clock
+     * ================================================================*/
+
+    /**
+     * Is this key source too weak to derive an encryption key from?
+     *
+     * Everything it judges arrives as an argument, including the phrases to
+     * compare against, so the function never calls __() itself and stays
+     * testable without WordPress.
+     *
+     * @param string   $source       The value of AUTH_KEY, or '' when undefined.
+     * @param string[] $siblings     All defined KEY/SALT constants, $source included.
+     * @param string[] $placeholders Sample-file phrases, original and translated.
+     */
+    public static function weak_key_source( string $source, array $siblings, array $placeholders ): bool {
+        if ( $source === '' || strlen( $source ) < self::MIN_KEY_LENGTH ) {
+            return true;
+        }
+
+        foreach ( $placeholders as $phrase ) {
+            if ( is_string( $phrase ) && $phrase !== '' && $source === $phrase ) {
+                return true;
+            }
+        }
+
+        // The same phrase in two constants means one was pasted over the
+        // other, which halves the entropy of both.
+        $seen = 0;
+        foreach ( $siblings as $value ) {
+            if ( is_string( $value ) && $value === $source ) {
+                $seen++;
+            }
+        }
+
+        return $seen > 1;
+    }
+
+    /**
+     * A short, non-reversible marker for a derived key.
+     *
+     * The key is the HMAC key rather than the message, so the fingerprint
+     * says nothing about it beyond "the same one" or "a different one".
+     */
+    public static function key_fingerprint( string $key ): string {
+        return substr( hash_hmac( 'sha256', 'naws-keyfp-v1', $key ), 0, 16 );
+    }
+
+    /**
+     * Record which key the ciphertexts in the database were made with.
+     *
+     * Called after a secret was written through save_option(), so
+     * reconnecting after a salt rotation clears the warning by itself: both
+     * tokens are stored again under the new key and the fingerprint moves
+     * with them. It is deliberately not called from encrypt(): saving the
+     * credentials encrypts client_id without touching the tokens, and a
+     * fingerprint moved by that write would retract the one explanation the
+     * plugin has while both tokens still decrypt to nothing.
+     */
+    private static function remember_key(): void {
+        $fp = self::key_fingerprint( static::derive_key() );
+        if ( \get_option( self::OPT_KEYFP, '' ) !== $fp ) {
+            \update_option( self::OPT_KEYFP, $fp, false );
+        }
+    }
+
+    /**
+     * What is wrong with the environment, if anything.
+     *
+     * Returns codes rather than sentences: NAWS_Crypto runs at plugin load
+     * through migrate(), and making it depend on NAWS_Lang's load order for
+     * a statement that has nothing to do with translation would be a
+     * needless coupling. The views do the wording.
+     *
+     * @return array{status:string,issues:string[]}
+     */
+    public static function health(): array {
+        static $cache = [];
+        $who = static::class;
+        if ( isset( $cache[ $who ] ) ) {
+            return $cache[ $who ];
+        }
+
+        $issues = [];
+
+        if ( ! function_exists( 'openssl_encrypt' ) ) {
+            $issues[] = 'no_openssl';
+        } elseif ( ! in_array( self::CIPHER, openssl_get_cipher_methods(), true ) ) {
+            $issues[] = 'no_gcm';
+        }
+
+        $source   = ( defined( 'AUTH_KEY' ) && is_string( AUTH_KEY ) ) ? AUTH_KEY : '';
+        $siblings = [];
+        foreach ( [ 'AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'NONCE_KEY', 'AUTH_SALT', 'SECURE_AUTH_SALT', 'LOGGED_IN_SALT', 'NONCE_SALT' ] as $name ) {
+            if ( defined( $name ) && is_string( constant( $name ) ) ) {
+                $siblings[] = constant( $name );
+            }
+        }
+
+        // The translated phrase is looked up in core's own text domain,
+        // because it is core's string in core's sample file.
+        $placeholders = [ self::SAMPLE_PHRASE, __( 'put your unique phrase here', 'default' ) ];
+
+        if ( self::weak_key_source( $source, $siblings, $placeholders ) ) {
+            $issues[] = 'weak_key';
+        }
+
+        // A fingerprint that is missing is not a fingerprint that matches:
+        // whoever updated after a rotation has nothing to compare against,
+        // and nothing may be claimed then.
+        $stored = \get_option( self::OPT_KEYFP, '' );
+        if ( is_string( $stored ) && $stored !== ''
+            && $stored !== self::key_fingerprint( static::derive_key() ) ) {
+            $issues[] = 'key_changed';
+        }
+
+        $cache[ $who ] = [
+            'status' => $issues === [] ? 'ok' : 'warning',
+            'issues' => $issues,
+        ];
+        return $cache[ $who ];
     }
 
     /* ================================================================
@@ -257,7 +482,7 @@ class NAWS_Crypto {
      *
      * @return string  32-byte binary key.
      */
-    private static function derive_key(): string {
+    protected static function derive_key(): string {
         // Primary source: AUTH_KEY from wp-config.php
         $source = defined( 'AUTH_KEY' ) ? AUTH_KEY : 'naws-fallback-key-' . DB_NAME;
 

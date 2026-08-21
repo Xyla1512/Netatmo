@@ -76,10 +76,16 @@
 		</properties>
 	</rule>
 
+	<!-- Two domains on purpose. The plugin's own strings go through
+	     NAWS_Lang, not through __(); the single __() call in
+	     NAWS_Crypto::health() deliberately looks up a CORE string in CORE's
+	     domain - the phrase wp-config-sample.php ships - so that a localized
+	     sample file is recognized too. -->
 	<rule ref="WordPress.WP.I18n">
 		<properties>
 			<property name="text_domain" type="array">
 				<element value="xtx-integration-for-netatmo"/>
+				<element value="default"/>
 			</property>
 		</properties>
 	</rule>

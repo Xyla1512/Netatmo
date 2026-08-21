@@ -457,13 +457,24 @@ class NAWS_Rest_API {
         ] );
     }
 
-    /** Save config (encrypts api_key before storing). */
-    public static function save_config( array $cfg ) {
-        // Encrypt the API key before saving
+    /**
+     * Save config (encrypts api_key before storing).
+     *
+     * @return bool  False when the key could not be encrypted; nothing is
+     *               written then, and the caller reports it.
+     */
+    public static function save_config( array $cfg ): bool {
+        // Encrypt the API key before saving. A key that cannot be encrypted
+        // is not stored at all - it is self-generated and one click away.
         if ( isset( $cfg['api_key'] ) && $cfg['api_key'] !== '' && ! NAWS_Crypto::is_encrypted( $cfg['api_key'] ) ) {
-            $cfg['api_key'] = NAWS_Crypto::encrypt( $cfg['api_key'] );
+            $encrypted = NAWS_Crypto::encrypt( $cfg['api_key'] );
+            if ( $encrypted === null ) {
+                return false;
+            }
+            $cfg['api_key'] = $encrypted;
         }
         update_option( self::OPT, $cfg );
+        return true;
     }
 
     /* ================================================================

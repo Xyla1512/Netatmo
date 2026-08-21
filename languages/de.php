@@ -783,4 +783,16 @@ return [
     'sc_wgt_ex_default'         => 'nutzt die Einstellung aus dem Backend',
     'sc_wgt_ex_three'           => 'kürzer, für sehr schmale Spalten',
     'sc_wgt_ex_width'           => 'breiter, mit größerem Icon und größeren Zahlen',
+
+    // ── Verschluesselung ──────────────────────────────────────────────
+    'crypto_state_label'    => 'Zugangsdaten',
+    'crypto_state_ok'       => 'Verschlüsselt gespeichert',
+    'crypto_state_warn'     => 'Prüfen',
+    'crypto_no_openssl'     => 'Die PHP-Erweiterung openssl fehlt auf diesem Server. Zugangsdaten können nicht verschlüsselt gespeichert werden — sie werden deshalb gar nicht gespeichert.',
+    'crypto_no_gcm'         => 'Dieser Server kennt das Verfahren aes-256-gcm nicht. Zugangsdaten können nicht verschlüsselt gespeichert werden — sie werden deshalb gar nicht gespeichert.',
+    'crypto_weak_key'       => 'AUTH_KEY in der wp-config.php ist der Beispielwert oder zu kurz. Die Zugangsdaten sind zwar verschlüsselt, aber mit einem Schlüssel, den jeder nachrechnen kann.',
+    'crypto_key_changed'    => 'Die WordPress-Salts wurden geändert, seit die Zugangsdaten gespeichert wurden. Sie sind damit nicht mehr lesbar — bitte einmal neu mit Netatmo verbinden.',
+    'crypto_save_failed'    => 'Die Zugangsdaten wurden NICHT übernommen: Sie ließen sich nicht verschlüsselt speichern. Der bisher gespeicherte Wert bleibt unverändert.',
+    'crypto_connect_failed' => 'Die Verbindung ließ sich nicht sicher speichern. Ursache siehe Hinweise oben.',
+    'crypto_salt_link'      => 'Neue Salts erzeugen',
 ];

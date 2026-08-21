@@ -783,4 +783,16 @@ return [
     'sc_wgt_ex_default'         => 'bruker innstillingen fra administrasjonen',
     'sc_wgt_ex_three'           => 'kortere, for svært smale spalter',
     'sc_wgt_ex_width'           => 'bredere, med større ikon og større tall',
+
+    // ── Kryptering ────────────────────────────────────────────────────
+    'crypto_state_label'    => 'Tilgangsdata',
+    'crypto_state_ok'       => 'Lagret kryptert',
+    'crypto_state_warn'     => 'Må sjekkes',
+    'crypto_no_openssl'     => 'PHP-utvidelsen openssl mangler på denne serveren. Tilgangsdata kan ikke lagres kryptert, og lagres derfor ikke i det hele tatt.',
+    'crypto_no_gcm'         => 'Denne serveren kjenner ikke metoden aes-256-gcm. Tilgangsdata kan ikke lagres kryptert, og lagres derfor ikke i det hele tatt.',
+    'crypto_weak_key'       => 'AUTH_KEY i wp-config.php er eksempelverdien eller for kort. Tilgangsdataene er kryptert, men med en nøkkel hvem som helst kan regne ut.',
+    'crypto_key_changed'    => 'WordPress-saltene er endret siden tilgangsdataene ble lagret, så de kan ikke leses lenger. Koble til Netatmo på nytt.',
+    'crypto_save_failed'    => 'Tilgangsdataene ble IKKE lagret: de kunne ikke lagres kryptert. Verdien som var lagret fra før, er uendret.',
+    'crypto_connect_failed' => 'Tilkoblingen kunne ikke lagres sikkert. Se merknadene over for årsaken.',
+    'crypto_salt_link'      => 'Lag nye salt',
 ];

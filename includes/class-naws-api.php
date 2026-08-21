@@ -158,13 +158,37 @@ class NAWS_API {
         $this->token_expiry  = time() + intval( $body['expires_in'] ?? 10800 );
 
         // Netatmo ALWAYS returns a refresh_token on initial authorization.
-        // On refresh_token grants it may or may not rotate it – keep old one if missing.
+        // On refresh_token grants it may or may not rotate it - keep old one if missing.
+        $stored_ok = true;
         if ( ! empty( $body['refresh_token'] ) ) {
             $this->refresh_token = $body['refresh_token'];
-            NAWS_Crypto::save_option( 'naws_refresh_token', $this->refresh_token );
+            $stored_ok = NAWS_Crypto::save_option( 'naws_refresh_token', $this->refresh_token );
         }
 
-        NAWS_Crypto::save_option( 'naws_access_token', $this->access_token );
+        if ( ! NAWS_Crypto::save_option( 'naws_access_token', $this->access_token ) ) {
+            $stored_ok = false;
+        }
+
+        // The refresh token cannot be fetched again, so a failure here is
+        // worth remembering past this request - the settings page turns it
+        // into a sentence. It is cleared as soon as a write succeeds.
+        if ( ! $stored_ok ) {
+            error_log( 'NAWS Crypto: could not store the Netatmo tokens encrypted' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+            update_option( 'naws_crypto_write_failed', time(), false );
+
+            // No expiry either: it would promise three hours of validity for a
+            // token that was never stored, and ensure_token() would sit out
+            // those hours before trying again. The debug record stays for the
+            // same reason - a write that failed is when someone needs to read
+            // it. Reporting this as an error is what keeps the OAuth return
+            // from putting a green "connected" next to the red notice.
+            return new WP_Error( 'crypto_write_failed',
+                'Connected to Netatmo, but the tokens could not be stored encrypted. See the encryption notice on the settings page.'
+            );
+        }
+
+        delete_option( 'naws_crypto_write_failed' );
+
         update_option( 'naws_token_expiry',  $this->token_expiry );
 
         // Clear debug log on success

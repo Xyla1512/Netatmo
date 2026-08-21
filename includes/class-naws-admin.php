@@ -98,14 +98,32 @@ class NAWS_Admin {
 
         if ( $sent( 'client_id' ) ) {
             $raw = sanitize_text_field( $input['client_id'] );
-            // Encrypt if plaintext; skip if already encrypted (safety guard)
-            $clean['client_id'] = ( $raw !== '' && ! NAWS_Crypto::is_encrypted( $raw ) )
-                ? NAWS_Crypto::encrypt( $raw ) : $raw;
+            // Encrypt if plaintext; skip if already encrypted (safety guard).
+            // On a failed encrypt the key is left out of $clean entirely, so
+            // the stored value survives untouched and no plaintext is written.
+            if ( $raw !== '' && ! NAWS_Crypto::is_encrypted( $raw ) ) {
+                $encrypted = NAWS_Crypto::encrypt( $raw );
+                if ( $encrypted === null ) {
+                    add_settings_error( 'naws', 'naws_crypto_failed', naws__( 'crypto_save_failed' ) );
+                } else {
+                    $clean['client_id'] = $encrypted;
+                }
+            } else {
+                $clean['client_id'] = $raw;
+            }
         }
         if ( $sent( 'client_secret' ) ) {
             $raw = sanitize_text_field( $input['client_secret'] );
-            $clean['client_secret'] = ( $raw !== '' && ! NAWS_Crypto::is_encrypted( $raw ) )
-                ? NAWS_Crypto::encrypt( $raw ) : $raw;
+            if ( $raw !== '' && ! NAWS_Crypto::is_encrypted( $raw ) ) {
+                $encrypted = NAWS_Crypto::encrypt( $raw );
+                if ( $encrypted === null ) {
+                    add_settings_error( 'naws', 'naws_crypto_failed_secret', naws__( 'crypto_save_failed' ) );
+                } else {
+                    $clean['client_secret'] = $encrypted;
+                }
+            } else {
+                $clean['client_secret'] = $raw;
+            }
         }
 
         // Snap to a real WP-Cron schedule: an unlisted value such as 45 would
@@ -297,6 +315,39 @@ class NAWS_Admin {
         $input = isset( $_POST['naws_settings'] ) ? wp_unslash( $_POST['naws_settings'] ) : []; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized in sanitize_settings()
         update_option( 'naws_settings', $this->sanitize_settings( $input ) );
 
+        // sanitize_settings() reports a failed encrypt through
+        // add_settings_error(), and that alone reaches nobody here: this form
+        // posts to admin-post.php, not to options.php, so nothing writes the
+        // transient the settings screen reads back, and admin_notices never
+        // fires on this request. The redirect below would drop the message and
+        // the target page would answer a discarded secret with "settings
+        // saved". The state therefore travels as a query argument.
+        $crypto_failed = false;
+        foreach ( get_settings_errors( 'naws' ) as $naws_error ) {
+            if ( in_array( $naws_error['code'], [ 'naws_crypto_failed', 'naws_crypto_failed_secret' ], true ) ) {
+                $crypto_failed = true;
+                break;
+            }
+        }
+
+        // Did this request actually hand a credential to encrypt()? Only then
+        // does "no error" mean an encrypt succeeded. The same action also
+        // serves the appearance page's widget form, which carries no
+        // credentials and may not clear a warning it knows nothing about.
+        $encrypted_something = false;
+        foreach ( [ 'client_id', 'client_secret' ] as $naws_field ) {
+            if ( isset( $input[ $naws_field ] ) && is_string( $input[ $naws_field ] ) && $input[ $naws_field ] !== '' ) {
+                $encrypted_something = true;
+            }
+        }
+
+        // A failed token write leaves a red notice behind that is cleared on
+        // the next successful write. Encrypting the credentials is such a
+        // write, so the notice does not outlive the condition it describes.
+        if ( $encrypted_something && ! $crypto_failed ) {
+            delete_option( 'naws_crypto_write_failed' );
+        }
+
         // naws_save_settings is now posted from two different admin pages
         // (the settings page and the appearance page's widget form), so a
         // fixed redirect target sends the appearance-page save to the wrong
@@ -307,6 +358,16 @@ class NAWS_Admin {
         // notices key off `updated`, so it is re-added explicitly instead of
         // assuming the referer URL still carries it.
         $redirect_to = wp_get_referer() ?: admin_url( 'admin.php?page=naws-settings' );
+
+        if ( $crypto_failed ) {
+            // The referer is the page a previous save already redirected to,
+            // so it can still carry `updated` from then. Dropping it keeps the
+            // green notice from standing next to the red one.
+            $redirect_to = remove_query_arg( 'updated', $redirect_to );
+            wp_safe_redirect( add_query_arg( 'naws_crypto_failed', '1', $redirect_to ) );
+            exit;
+        }
+
         wp_safe_redirect( add_query_arg( 'updated', '1', $redirect_to ) );
         exit;
     }

@@ -28,12 +28,40 @@ if ( ! defined( 'ABSPATH' ) ) exit; ?>
         <?php naws_e( 'settings_title' ); ?>
     </h1>
 
-    <?php if ( isset( $_GET['updated'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only status flag, no data processed ?>
+    <?php // A save that could not encrypt a credential redirects with this
+          // flag instead of `updated`: the value was rejected, so saying
+          // "saved" would be the one wrong answer here. ?>
+    <?php if ( isset( $_GET['naws_crypto_failed'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only status flag, no data processed ?>
+        <div class="notice notice-error"><p><?php naws_e( 'crypto_save_failed' ); ?></p></div>
+    <?php endif; ?>
+
+    <?php if ( isset( $_GET['updated'] ) && ! isset( $_GET['naws_crypto_failed'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only status flags, no data processed ?>
         <div class="notice notice-success is-dismissible"><p><?php naws_e( 'settings_saved' ); ?></p></div>
     <?php endif; ?>
 
     <?php if ( isset( $_GET['disconnected'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only status flag, no data processed ?>
         <div class="notice notice-info is-dismissible"><p><?php naws_e( 'disconnected_msg' ); ?></p></div>
+    <?php endif; ?>
+
+    <?php
+    $naws_crypto = NAWS_Crypto::health();
+    if ( $naws_crypto['status'] !== 'ok' ) : ?>
+        <div class="notice notice-warning">
+            <?php foreach ( $naws_crypto['issues'] as $naws_issue ) : ?>
+                <p>
+                    <?php echo esc_html( naws__( 'crypto_' . $naws_issue ) ); ?>
+                    <?php if ( $naws_issue === 'weak_key' ) : ?>
+                        <a href="https://api.wordpress.org/secret-key/1.1/salt/" target="_blank" rel="noopener noreferrer"><?php naws_e( 'crypto_salt_link' ); ?></a>
+                    <?php endif; ?>
+                </p>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if ( get_option( 'naws_crypto_write_failed' ) ) : ?>
+        <div class="notice notice-error">
+            <p><strong><?php naws_e( 'crypto_connect_failed' ); ?></strong></p>
+        </div>
     <?php endif; ?>
 
     <?php if ( get_option( 'naws_auth_required' ) ) : ?>
