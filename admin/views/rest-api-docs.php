@@ -14,14 +14,22 @@ if ( isset( $_POST['naws_rest_action'] ) && check_admin_referer( 'naws_rest_api_
     if ( $action === 'save_settings' ) {
         $cfg['enabled']    = ! empty( $_POST['rest_enabled'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- boolean check
         $cfg['rate_limit'] = max( 1, min( 600, intval( $_POST['rate_limit'] ?? 60 ) ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- cast to int
-        NAWS_Rest_API::save_config( $cfg );
-        $message = naws__( 'rest_saved' );
+        if ( NAWS_Rest_API::save_config( $cfg ) ) {
+            $message = naws__( 'rest_saved' );
+        } else {
+            $message  = naws__( 'crypto_save_failed' );
+            $msg_type = 'notice-error';
+        }
     }
 
     if ( $action === 'generate_key' ) {
         $cfg['api_key'] = NAWS_Rest_API::generate_api_key();
-        NAWS_Rest_API::save_config( $cfg );
-        $message = naws__( 'rest_key_generated' );
+        if ( NAWS_Rest_API::save_config( $cfg ) ) {
+            $message = naws__( 'rest_key_generated' );
+        } else {
+            $message  = naws__( 'crypto_save_failed' );
+            $msg_type = 'notice-error';
+        }
     }
 
     if ( $action === 'revoke_key' ) {

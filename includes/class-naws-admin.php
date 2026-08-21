@@ -98,14 +98,32 @@ class NAWS_Admin {
 
         if ( $sent( 'client_id' ) ) {
             $raw = sanitize_text_field( $input['client_id'] );
-            // Encrypt if plaintext; skip if already encrypted (safety guard)
-            $clean['client_id'] = ( $raw !== '' && ! NAWS_Crypto::is_encrypted( $raw ) )
-                ? NAWS_Crypto::encrypt( $raw ) : $raw;
+            // Encrypt if plaintext; skip if already encrypted (safety guard).
+            // On a failed encrypt the key is left out of $clean entirely, so
+            // the stored value survives untouched and no plaintext is written.
+            if ( $raw !== '' && ! NAWS_Crypto::is_encrypted( $raw ) ) {
+                $encrypted = NAWS_Crypto::encrypt( $raw );
+                if ( $encrypted === null ) {
+                    add_settings_error( 'naws', 'naws_crypto_failed', naws__( 'crypto_save_failed' ) );
+                } else {
+                    $clean['client_id'] = $encrypted;
+                }
+            } else {
+                $clean['client_id'] = $raw;
+            }
         }
         if ( $sent( 'client_secret' ) ) {
             $raw = sanitize_text_field( $input['client_secret'] );
-            $clean['client_secret'] = ( $raw !== '' && ! NAWS_Crypto::is_encrypted( $raw ) )
-                ? NAWS_Crypto::encrypt( $raw ) : $raw;
+            if ( $raw !== '' && ! NAWS_Crypto::is_encrypted( $raw ) ) {
+                $encrypted = NAWS_Crypto::encrypt( $raw );
+                if ( $encrypted === null ) {
+                    add_settings_error( 'naws', 'naws_crypto_failed_secret', naws__( 'crypto_save_failed' ) );
+                } else {
+                    $clean['client_secret'] = $encrypted;
+                }
+            } else {
+                $clean['client_secret'] = $raw;
+            }
         }
 
         // Snap to a real WP-Cron schedule: an unlisted value such as 45 would
