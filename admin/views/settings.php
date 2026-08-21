@@ -28,7 +28,14 @@ if ( ! defined( 'ABSPATH' ) ) exit; ?>
         <?php naws_e( 'settings_title' ); ?>
     </h1>
 
-    <?php if ( isset( $_GET['updated'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only status flag, no data processed ?>
+    <?php // A save that could not encrypt a credential redirects with this
+          // flag instead of `updated`: the value was rejected, so saying
+          // "saved" would be the one wrong answer here. ?>
+    <?php if ( isset( $_GET['naws_crypto_failed'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only status flag, no data processed ?>
+        <div class="notice notice-error"><p><?php naws_e( 'crypto_save_failed' ); ?></p></div>
+    <?php endif; ?>
+
+    <?php if ( isset( $_GET['updated'] ) && ! isset( $_GET['naws_crypto_failed'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only status flags, no data processed ?>
         <div class="notice notice-success is-dismissible"><p><?php naws_e( 'settings_saved' ); ?></p></div>
     <?php endif; ?>
 
