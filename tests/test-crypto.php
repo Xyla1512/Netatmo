@@ -156,6 +156,60 @@ check( 'ein nicht verschluesseltes Feld behaelt seinen Wert',
 check( 'und traegt kein Praefix, woran der Aufrufer es erkennt',
     NAWS_Crypto::is_encrypted( $felder['client_secret'] ), false );
 
+// ── health() ─────────────────────────────────────────────────────────────
+// AUTH_KEY ist im Test nicht definiert, health() bekommt also '' und muss
+// weak_key melden. Das ist zugleich der DB_NAME-Rueckfall aus derive_key().
+$GLOBALS['naws_test_options'] = [];
+$zustand = NAWS_Crypto::health();
+check( 'ohne AUTH_KEY meldet health() eine Warnung',
+    $zustand['status'], 'warning' );
+check( 'und nennt weak_key',
+    in_array( 'weak_key', $zustand['issues'], true ), true );
+check( 'openssl ist hier vorhanden, no_openssl faellt weg',
+    in_array( 'no_openssl', $zustand['issues'], true ), false );
+
+// ── Rotation ─────────────────────────────────────────────────────────────
+// Zwei Unterklassen mit verschiedenen Schluesseln. Anders ist ein
+// Salt-Wechsel nicht nachstellbar, weil Konstanten sich nicht neu
+// definieren lassen.
+class Krypto_SchluesselA extends NAWS_Crypto {
+    protected static function derive_key(): string {
+        return str_repeat( 'A', 32 );
+    }
+    public static function zustand(): array { return static::health(); }
+}
+class Krypto_SchluesselB extends NAWS_Crypto {
+    protected static function derive_key(): string {
+        return str_repeat( 'B', 32 );
+    }
+    public static function zustand(): array { return static::health(); }
+}
+
+$GLOBALS['naws_test_options'] = [];
+Krypto_SchluesselA::encrypt( 'geheim' );
+check( 'ein gelungenes encrypt() hinterlegt den Abdruck',
+    get_option( NAWS_Crypto::OPT_KEYFP ), NAWS_Crypto::key_fingerprint( str_repeat( 'A', 32 ) ) );
+
+check( 'unter demselben Schluessel meldet health() kein key_changed',
+    in_array( 'key_changed', Krypto_SchluesselA::zustand()['issues'], true ), false );
+check( 'unter einem anderen Schluessel schon',
+    in_array( 'key_changed', Krypto_SchluesselB::zustand()['issues'], true ), true );
+
+// Ohne hinterlegten Abdruck darf nichts behauptet werden.
+// Eine DRITTE Unterklasse, nicht noch einmal B: health() legt sein
+// Ergebnis je Klasse ab, ein zweiter Aufruf von B bekaeme die
+// zwischengespeicherte Antwort von eben und der Test pruefte nichts.
+class Krypto_OhneAbdruck extends NAWS_Crypto {
+    protected static function derive_key(): string {
+        return str_repeat( 'B', 32 );
+    }
+    public static function zustand(): array { return static::health(); }
+}
+
+$GLOBALS['naws_test_options'] = [];
+check( 'ohne gespeicherten Abdruck gibt es kein key_changed',
+    in_array( 'key_changed', Krypto_OhneAbdruck::zustand()['issues'], true ), false );
+
 echo str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );

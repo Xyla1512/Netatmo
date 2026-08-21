@@ -34,6 +34,9 @@ class NAWS_Crypto {
     /** Shortest key source we are willing to treat as real. */
     const MIN_KEY_LENGTH = 32;
 
+    /** Option holding the fingerprint of the key our ciphertexts were made with. */
+    const OPT_KEYFP = 'naws_crypto_keyfp';
+
     /* ================================================================
      * Core encrypt / decrypt
      * ================================================================*/
@@ -93,6 +96,7 @@ class NAWS_Crypto {
         // Pack: IV (12) + tag (16) + ciphertext
         // Binary AES-GCM output has to survive a text option column, so it is
         // base64 for transport, not to obscure anything.
+        self::remember_key();
         return self::PREFIX . base64_encode( $iv . $tag . $ciphertext ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- encoding binary ciphertext for storage, not obfuscation
     }
 
@@ -337,6 +341,77 @@ class NAWS_Crypto {
      */
     public static function key_fingerprint( string $key ): string {
         return substr( hash_hmac( 'sha256', 'naws-keyfp-v1', $key ), 0, 16 );
+    }
+
+    /**
+     * Record which key the ciphertexts in the database were made with.
+     *
+     * Called on every successful encrypt, so reconnecting after a salt
+     * rotation clears the warning by itself: the new values carry the new
+     * key and the fingerprint moves with them.
+     */
+    private static function remember_key(): void {
+        $fp = self::key_fingerprint( static::derive_key() );
+        if ( \get_option( self::OPT_KEYFP, '' ) !== $fp ) {
+            \update_option( self::OPT_KEYFP, $fp, false );
+        }
+    }
+
+    /**
+     * What is wrong with the environment, if anything.
+     *
+     * Returns codes rather than sentences: NAWS_Crypto runs at plugin load
+     * through migrate(), and making it depend on NAWS_Lang's load order for
+     * a statement that has nothing to do with translation would be a
+     * needless coupling. The views do the wording.
+     *
+     * @return array{status:string,issues:string[]}
+     */
+    public static function health(): array {
+        static $cache = [];
+        $who = static::class;
+        if ( isset( $cache[ $who ] ) ) {
+            return $cache[ $who ];
+        }
+
+        $issues = [];
+
+        if ( ! function_exists( 'openssl_encrypt' ) ) {
+            $issues[] = 'no_openssl';
+        } elseif ( ! in_array( self::CIPHER, openssl_get_cipher_methods(), true ) ) {
+            $issues[] = 'no_gcm';
+        }
+
+        $source   = ( defined( 'AUTH_KEY' ) && is_string( AUTH_KEY ) ) ? AUTH_KEY : '';
+        $siblings = [];
+        foreach ( [ 'AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'NONCE_KEY', 'AUTH_SALT', 'SECURE_AUTH_SALT', 'LOGGED_IN_SALT', 'NONCE_SALT' ] as $name ) {
+            if ( defined( $name ) && is_string( constant( $name ) ) ) {
+                $siblings[] = constant( $name );
+            }
+        }
+
+        // The translated phrase is looked up in core's own text domain,
+        // because it is core's string in core's sample file.
+        $placeholders = [ self::SAMPLE_PHRASE, __( 'put your unique phrase here', 'default' ) ];
+
+        if ( self::weak_key_source( $source, $siblings, $placeholders ) ) {
+            $issues[] = 'weak_key';
+        }
+
+        // A fingerprint that is missing is not a fingerprint that matches:
+        // whoever updated after a rotation has nothing to compare against,
+        // and nothing may be claimed then.
+        $stored = \get_option( self::OPT_KEYFP, '' );
+        if ( is_string( $stored ) && $stored !== ''
+            && $stored !== self::key_fingerprint( static::derive_key() ) ) {
+            $issues[] = 'key_changed';
+        }
+
+        $cache[ $who ] = [
+            'status' => $issues === [] ? 'ok' : 'warning',
+            'issues' => $issues,
+        ];
+        return $cache[ $who ];
     }
 
     /* ================================================================
