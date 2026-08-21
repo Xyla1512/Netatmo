@@ -21,6 +21,19 @@ class NAWS_Crypto {
     /** GCM tag length in bytes */
     const TAG_LEN = 16;
 
+    /**
+     * The placeholder wp-config-sample.php ships with.
+     *
+     * At 27 characters it is already shorter than MIN_KEY_LENGTH, so the
+     * length rule alone catches the English original. It is named here for
+     * the localized sample files, whose translated phrase is long enough to
+     * pass for a real key.
+     */
+    const SAMPLE_PHRASE = 'put your unique phrase here';
+
+    /** Shortest key source we are willing to treat as real. */
+    const MIN_KEY_LENGTH = 32;
+
     /* ================================================================
      * Core encrypt / decrypt
      * ================================================================*/
@@ -242,6 +255,54 @@ class NAWS_Crypto {
         }
 
         \update_option( 'naws_crypto_migrated', NAWS_VERSION, false );
+    }
+
+    /* ================================================================
+     * Pure predicates - no options, no constants, no clock
+     * ================================================================*/
+
+    /**
+     * Is this key source too weak to derive an encryption key from?
+     *
+     * Everything it judges arrives as an argument, including the phrases to
+     * compare against, so the function never calls __() itself and stays
+     * testable without WordPress.
+     *
+     * @param string   $source       The value of AUTH_KEY, or '' when undefined.
+     * @param string[] $siblings     All defined KEY/SALT constants, $source included.
+     * @param string[] $placeholders Sample-file phrases, original and translated.
+     */
+    public static function weak_key_source( string $source, array $siblings, array $placeholders ): bool {
+        if ( $source === '' || strlen( $source ) < self::MIN_KEY_LENGTH ) {
+            return true;
+        }
+
+        foreach ( $placeholders as $phrase ) {
+            if ( is_string( $phrase ) && $phrase !== '' && $source === $phrase ) {
+                return true;
+            }
+        }
+
+        // The same phrase in two constants means one was pasted over the
+        // other, which halves the entropy of both.
+        $seen = 0;
+        foreach ( $siblings as $value ) {
+            if ( is_string( $value ) && $value === $source ) {
+                $seen++;
+            }
+        }
+
+        return $seen > 1;
+    }
+
+    /**
+     * A short, non-reversible marker for a derived key.
+     *
+     * The key is the HMAC key rather than the message, so the fingerprint
+     * says nothing about it beyond "the same one" or "a different one".
+     */
+    public static function key_fingerprint( string $key ): string {
+        return substr( hash_hmac( 'sha256', 'naws-keyfp-v1', $key ), 0, 16 );
     }
 
     /* ================================================================
