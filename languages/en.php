@@ -783,4 +783,16 @@ return [
     'sc_wgt_ex_default'         => 'uses the backend setting',
     'sc_wgt_ex_three'           => 'shorter, for very narrow columns',
     'sc_wgt_ex_width'           => 'wider, with a larger icon and larger figures',
+
+    // ── Encryption ────────────────────────────────────────────────────
+    'crypto_state_label'    => 'Credentials',
+    'crypto_state_ok'       => 'Stored encrypted',
+    'crypto_state_warn'     => 'Needs attention',
+    'crypto_no_openssl'     => 'The PHP openssl extension is missing on this server. Credentials cannot be stored encrypted, so they are not stored at all.',
+    'crypto_no_gcm'         => 'This server does not know the aes-256-gcm cipher. Credentials cannot be stored encrypted, so they are not stored at all.',
+    'crypto_weak_key'       => 'AUTH_KEY in wp-config.php is the sample value or too short. Your credentials are encrypted, but with a key anyone can reconstruct.',
+    'crypto_key_changed'    => 'The WordPress salts have changed since the credentials were stored, so they can no longer be read. Please connect to Netatmo again.',
+    'crypto_save_failed'    => 'The credentials were NOT saved: they could not be stored encrypted. The previously stored value is unchanged.',
+    'crypto_connect_failed' => 'The connection could not be stored securely. See the notices above for the reason.',
+    'crypto_salt_link'      => 'Generate new salts',
 ];
