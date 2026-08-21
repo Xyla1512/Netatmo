@@ -116,8 +116,8 @@ WordPress-berührenden Code**, wie `NAWS_Climate` sie gegenüber `NAWS_Calc` sch
 vormacht. Die reinen Funktionen sind ohne WordPress-Bootstrap testbar.
 
 ```php
-// rein - kein get_option, keine Konstante, keine Uhr
-public static function weak_key_source( string $source, array $siblings ): bool
+// rein - kein get_option, keine Konstante, keine Uhr, kein __()
+public static function weak_key_source( string $source, array $siblings, array $placeholders ): bool
 public static function key_fingerprint( string $key ): string
 
 // beruehrt WordPress
@@ -125,19 +125,21 @@ public static function health(): array
 public static function encrypt( string $plaintext ): ?string   // war: string
 ```
 
-### `weak_key_source( string $source, array $siblings ): bool`
+### `weak_key_source( string $source, array $siblings, array $placeholders ): bool`
 
 `true`, wenn eine der vier Bedingungen zutrifft:
 
 1. leer
 2. kürzer als 32 Zeichen
-3. gleich dem englischen Platzhalter **oder** gleich dessen Übersetzung, geholt über
-   `__()` — eine lokalisierte `wp-config-sample.php` trägt den übersetzten Satz, und für
-   eine deutsche Installation ist das der eigentlich relevante Fall
+3. gleich einem Eintrag aus `$placeholders` — dort stehen der englische Platzhalter und
+   dessen Übersetzung, denn eine lokalisierte `wp-config-sample.php` trägt den
+   übersetzten Satz, und für eine deutsche Installation ist das der eigentlich
+   relevante Fall
 4. der Wert kommt in `$siblings` noch einmal vor (dieselbe Phrase in zwei Konstanten)
 
-Beide Vergleichsphrasen und die Geschwisterliste kommen als Parameter herein, damit die
-Funktion rein bleibt. Der Aufrufer stellt sie aus den echten Konstanten zusammen.
+Die Vergleichsphrasen und die Geschwisterliste kommen als Parameter herein, damit die
+Funktion rein bleibt — insbesondere ruft sie `__()` nicht selbst auf. Der Aufrufer
+`health()` stellt beides aus den echten Konstanten und der Übersetzung zusammen.
 
 ### `key_fingerprint( string $key ): string`
 
@@ -150,12 +152,15 @@ und erlaubt trotzdem den Vergleich, ob es noch derselbe ist.
 ```php
 [
   'status' => 'ok' | 'warning',
-  'issues' => [ [ 'code' => 'no_openssl', 'message' => '...' ], ... ],
+  'issues' => [ 'no_openssl', 'weak_key', ... ],   // nur Codes
 ]
 ```
 
 Eine **Liste**, keine einzelne Meldung, weil vier unabhängige Zustände zusammenkommen
-können. Die Codes:
+können. **Codes, keine fertigen Texte:** Die Übersetzung macht die Ansicht, nicht die
+Klasse. Sonst hinge `NAWS_Crypto` — die über `migrate()` beim Plugin-Start läuft — an der
+Ladereihenfolge von `NAWS_Lang`, und der Test bräuchte eine Übersetzungsattrappe für eine
+Aussage, die mit Übersetzung nichts zu tun hat. Die Codes:
 
 | Code | Bedingung | Aussage |
 |---|---|---|
@@ -304,13 +309,23 @@ Rund zehn neue Schlüssel je Datei (`de.php`, `en.php`, `no.php`, aktuell je 694
 vier `health()`-Codes, die Dashboard-Kachel, die `add_settings_error()`-Meldungen und den
 Hinweis auf den Salt-Generator. Alle drei Dateien müssen dieselbe Schlüsselzahl behalten.
 
+**Eine Änderung am Prüf-Gate ist nötig und gemessen:** `weak_key_source()` vergleicht
+gegen die **übersetzte** Platzhalterphrase, die in Cores Textdomain steht. Der Aufruf
+`__( 'put your unique phrase here', 'default' )` meldet unter der aktuellen
+`.phpcs.xml.dist` einen `WordPress.WP.I18n.TextDomainMismatch` — nachgemessen, und das
+Gate steht auf null Fehler. Die Regel bekommt deshalb `default` als zweite erlaubte
+Domain, mit Begründung im Kommentar: Hier wird bewusst ein Core-String in Cores Domain
+nachgeschlagen, statt einen eigenen zu übersetzen. Ebenfalls nachgemessen: Mit der
+Freigabe läuft die Datei fehlerfrei durch.
+
 ---
 
 ## 10. Tests
 
-Neue Datei `tests/test-crypto.php` im Stil der zwölf vorhandenen: eigenständig,
-handgebaute WordPress-Attrappen, Aufruf `php tests/test-crypto.php`. Damit **13
-Testdateien + `smoke-render-inline.php`**.
+Neue Datei `tests/test-crypto.php` im Stil der dreizehn vorhandenen: eigenständig,
+handgebaute WordPress-Attrappen, Aufruf `php tests/test-crypto.php`. Damit **14
+Testdateien + `smoke-render-inline.php`** (nachgezählt, die frühere Notiz „zwölf" war
+zu niedrig).
 
 Abgedeckt:
 
