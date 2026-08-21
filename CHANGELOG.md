@@ -7,6 +7,18 @@ All notable changes to the XTX Netatmo plugin are documented here.
 Work finished and merged, waiting for the release it will ship in. The version number is deliberately still 1.9.6: more is coming, and it belongs in the same release.
 
 ### Added
+- **Verschlüsselung meldet sich, wenn sie nicht greift.** `NAWS_Crypto::encrypt()` gab bei einem Fehlschlag den Klartext zurück, damit die Zugangsdaten nicht verloren gehen — der Aufrufer konnte das an der Rückgabe nicht erkennen und schrieb ein unverschlüsseltes Geheimnis in `wp_options`, wovon nur `error_log()` erfuhr. Das war genau der eine Ausgang, den die Klasse verhindern soll: Ihr Schlüssel liegt in `wp-config.php`, ihr Chiffretext in der Datenbank, damit ein Dump allein nicht reicht.
+
+  Ein fehlgeschlagenes Verschlüsseln schreibt jetzt gar nichts. Der bereits gespeicherte Wert bleibt unverändert, der übrige Speichervorgang läuft durch, und eine Meldung sagt, dass die Eingabe nicht übernommen wurde. Blockiert wird nichts — die Fähigkeitsprüfung ist eine Vorhersage und darf niemandem den Weg versperren, bei dem es in Wahrheit funktioniert hätte.
+
+- **Das Backend zeigt den Zustand der Verschlüsselung**, auch wenn er in Ordnung ist. Eine eigene Kachel neben der Polling-Anzeige, und auf der Einstellungsseite ein Hinweis je Befund: fehlende openssl-Erweiterung, fehlendes aes-256-gcm, ein `AUTH_KEY`, der noch der Beispielwert aus `wp-config-sample.php` ist, und geänderte WordPress-Salts.
+
+  Der Platzhalter war der unauffälligste der vier: `defined( 'AUTH_KEY' )` ist auch für ihn wahr, er nahm also nicht den Notweg, sondern den regulären — und leitete den Schlüssel aus einer Phrase ab, die in jedem WordPress-Archiv steht. Erkannt wird jetzt auch die *übersetzte* Phrase aus einer lokalisierten `wp-config-sample.php`, die lang genug ist, um sonst als echter Schlüssel durchzugehen.
+
+- **Ein Fingerabdruck des Schlüssels** neben dem Chiffretext, damit ein Salt-Wechsel als solcher erkennbar ist. Werden die Salts erneuert, scheitert jede Entschlüsselung, und das Plugin hörte bisher ohne Erklärung auf zu arbeiten. Der Vergleich braucht keinen Chiffretext und steht deshalb in der Zustandsanzeige, nicht im Entschlüsseln. Wer erst nach einem Wechsel aktualisiert, hat keinen Abdruck zum Vergleichen — dann nennt die Meldung die Salts als *mögliche* Ursache und behauptet nichts.
+
+- **`migrate()` setzt die Erledigt-Flagge nur noch, wenn sie stimmt.** Sie trug bisher die Versionsnummer, auch wenn kein einziges Feld verschlüsselt werden konnte.
+
 - **`[naws_calc]` — one shortcode for every computed value.** Twenty-seven of them, in four kinds, and the kind decides which attributes apply. Fourteen *instant* values read the latest measurement or the location: dew point, apparent temperature, wet-bulb temperature, heat index, thermal sensation, CO₂ rating, wind compass, sunrise, sunset, day length, moon phase and illumination, next supermoon, next lunar eclipse. Seven *day classes* count and streak over the daily table — ice days, frost days, summer days, hot days, tropical nights, heating days, cooling days — with `mode="count|streak|max_streak"`. Five *sums* aggregate it: heating and cooling degree days, growing degree days, the grassland temperature sum and the date the growing season started. One *index*, the SPI.
 
   The single most important rule in it is that "nobody measured this" and "it happened on zero days" must never look alike. A row in the daily table exists as soon as any column carries a value, so a stretch of days with only a pressure reading would otherwise produce a confident "0 frost days". Every value that reads the daily table declares the columns it actually needs, and a period whose rows never carry them gives the fallback, not a zero.
