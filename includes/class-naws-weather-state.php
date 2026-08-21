@@ -121,8 +121,28 @@ class NAWS_Weather_State {
      *
      * @return array{rain: ?float, wind: ?float, wind_avg: ?float, temp: ?float, humidity: ?float}
      */
+    /**
+     * Newest measurement time in a set of readings, or null if there is none.
+     *
+     * Pure, so the widget footer can be tested without a database. A zero
+     * timestamp counts as absent: rows carry it when nothing was recorded.
+     */
+    public static function newest_ts( array $readings ): ?int {
+        $newest = null;
+        foreach ( $readings as $r ) {
+            if ( ! isset( $r['recorded_at'] ) ) {
+                continue;
+            }
+            $ts = (int) $r['recorded_at'];
+            if ( $ts > 0 && ( $newest === null || $ts > $newest ) ) {
+                $newest = $ts;
+            }
+        }
+        return $newest;
+    }
+
     public static function read_station(): array {
-        $out = [ 'rain' => null, 'wind' => null, 'wind_avg' => null, 'temp' => null, 'humidity' => null ];
+        $out = [ 'rain' => null, 'wind' => null, 'wind_avg' => null, 'temp' => null, 'humidity' => null, 'ts' => null ];
 
         if ( ! class_exists( 'NAWS_Database' ) ) {
             return $out;
@@ -137,9 +157,17 @@ class NAWS_Weather_State {
         // Temperature and humidity come from the OUTDOOR module only.
         // The base station sits indoors; its readings say nothing about
         // whether precipitation outside falls as rain or snow.
+        // Every reading this method consumes also carries when it was taken.
+        // The newest of them is what the sidebar widget prints in its footer:
+        // it moves with the station's ten-minute rhythm, unlike the forecast
+        // fetch time it used to show, which stands still for three hours.
+        $seen = [];
+
         $outdoor = $by_type['NAModule1'][0] ?? null;
         if ( $outdoor ) {
-            foreach ( NAWS_Database::get_latest_readings( $outdoor ) as $r ) {
+            $readings = NAWS_Database::get_latest_readings( $outdoor );
+            $seen     = array_merge( $seen, $readings );
+            foreach ( $readings as $r ) {
                 if ( $r['parameter'] === 'Temperature' ) $out['temp']     = (float) $r['value'];
                 if ( $r['parameter'] === 'Humidity' )    $out['humidity'] = (float) $r['value'];
             }
@@ -147,14 +175,18 @@ class NAWS_Weather_State {
 
         $rain_mod = $by_type['NAModule3'][0] ?? null;
         if ( $rain_mod ) {
-            foreach ( NAWS_Database::get_latest_readings( $rain_mod ) as $r ) {
+            $readings = NAWS_Database::get_latest_readings( $rain_mod );
+            $seen     = array_merge( $seen, $readings );
+            foreach ( $readings as $r ) {
                 if ( $r['parameter'] === 'Rain' ) $out['rain'] = (float) $r['value'];
             }
         }
 
         $wind_mod = $by_type['NAModule2'][0] ?? null;
         if ( $wind_mod ) {
-            foreach ( NAWS_Database::get_latest_readings( $wind_mod ) as $r ) {
+            $readings = NAWS_Database::get_latest_readings( $wind_mod );
+            $seen     = array_merge( $seen, $readings );
+            foreach ( $readings as $r ) {
                 // 'wind' drives the storm rule and prefers the gust peak:
                 // a gale is felt in the gusts, not the ten-minute mean.
                 // 'wind_avg' is the mean, which is what the widget shows.
@@ -165,6 +197,8 @@ class NAWS_Weather_State {
                 $out['wind'] = $out['wind_avg'];
             }
         }
+
+        $out['ts'] = self::newest_ts( $seen );
 
         return $out;
     }

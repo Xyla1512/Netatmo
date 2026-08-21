@@ -511,9 +511,12 @@ class NAWS_Shortcodes {
         $naws_wgt_state = $state['state'];
         $naws_wgt_width = $atts['width'];
         $naws_wgt_place = (string) ( $forecast['location_name'] ?? '' );
-        $naws_wgt_time  = empty( $forecast['fetched_at'] )
+        // The station's newest measurement, not the forecast fetch. The
+        // forecast is cached for three hours, so printing its fetch time put
+        // a number in the footer that looked like a clock and stood still.
+        $naws_wgt_time  = empty( $station['ts'] )
             ? ''
-            : wp_date( get_option( 'time_format', 'H:i' ), (int) $forecast['fetched_at'] );
+            : wp_date( get_option( 'time_format', 'H:i' ), (int) $station['ts'] );
 
         ob_start();
         include NAWS_PLUGIN_DIR . 'templates/weather-widget.php';

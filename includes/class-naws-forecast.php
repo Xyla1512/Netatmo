@@ -24,6 +24,14 @@ class NAWS_Forecast {
     const GEO_CACHE_TTL  = 7 * DAY_IN_SECONDS;
 
     /**
+     * Option holding the station's own city and country.
+     *
+     * Netatmo sends them with every sync; NAWS_Database::save_module() writes
+     * them here. Autoload stays off: only the forecast widget reads it.
+     */
+    const OPT_PLACE      = 'naws_station_place';
+
+    /**
      * Cache lifetime for current conditions.
      *
      * Deliberately much shorter than CACHE_TTL: that one covers daily
@@ -621,10 +629,7 @@ class NAWS_Forecast {
                 return [
                     'lat'  => round( (float) $m['latitude'], 4 ),
                     'lon'  => round( (float) $m['longitude'], 4 ),
-                    'name' => self::get_auto_location_name(
-                        (float) $m['latitude'],
-                        (float) $m['longitude']
-                    ),
+                    'name' => self::get_auto_location_name(),
                 ];
             }
         }
@@ -720,36 +725,52 @@ class NAWS_Forecast {
     }
 
     /**
-     * Get location name for auto mode (cached in option).
+     * Build a location name out of what Netatmo sends with the station.
+     *
+     * Pure: the caller hands in the place array as it arrived.
      */
-    private static function get_auto_location_name( float $lat, float $lon ): string {
+    public static function place_name( array $place ): string {
+        $parts = [];
+        foreach ( [ 'city', 'country' ] as $key ) {
+            $value = isset( $place[ $key ] ) && is_string( $place[ $key ] ) ? trim( $place[ $key ] ) : '';
+            if ( $value !== '' ) {
+                $parts[] = $value;
+            }
+        }
+        return implode( ', ', $parts );
+    }
+
+    /**
+     * Get location name for auto mode.
+     *
+     * The name comes from Netatmo's own place data, which arrives with every
+     * sync and is stored by NAWS_Database::save_module().
+     *
+     * It used to come from the geocoding API, which cannot work: that
+     * endpoint searches BY NAME, and it was being handed coordinates.
+     * Measured against the live service — `?name=51.35,12.37` answers HTTP
+     * 200 with `{"generationtime_ms":0.18763542}` and no results key at all,
+     * while `?name=Leipzig` returns Leipzig. Open-Meteo has no reverse
+     * geocoding, so the call spent a five-second timeout to always fall
+     * through to the placeholder. Netatmo already knows the city; asking a
+     * second service was never necessary, and adding one that does reverse
+     * lookups would mean another external service to declare.
+     */
+    private static function get_auto_location_name(): string {
         $opts = get_option( 'naws_settings', [] );
         $name = $opts['forecast_auto_name'] ?? '';
-        if ( $name !== '' ) {
+        if ( is_string( $name ) && $name !== '' ) {
             return $name;
         }
 
-        // Try geocoding API to find nearest city
-        $geo_url = add_query_arg( [
-            'name'     => round( $lat, 2 ) . ',' . round( $lon, 2 ),
-            'count'    => 1,
-            'language' => NAWS_Lang::lang(),
-            'format'   => 'json',
-        ], self::GEOCODE_URL );
-
-        $response = wp_remote_get( $geo_url, [
-            'timeout'    => 5,
-            'user-agent' => self::user_agent(),
-        ] );
-        if ( ! is_wp_error( $response ) ) {
-            $json = json_decode( wp_remote_retrieve_body( $response ), true );
-            if ( ! empty( $json['results'] ) ) {
-                $name = self::build_location_name( $json['results'][0] );
-                $opts['forecast_auto_name'] = $name;
-                update_option( 'naws_settings', $opts );
-                return $name;
+        $place = get_option( self::OPT_PLACE, [] );
+        if ( is_array( $place ) ) {
+            $from_place = self::place_name( $place );
+            if ( $from_place !== '' ) {
+                return $from_place;
             }
         }
+
         return naws__( 'forecast_station_location' );
     }
 

@@ -205,6 +205,21 @@ class NAWS_Database {
         $location  = $data['place']['location'] ?? null;
         $latitude  = isset( $location[1] ) ? floatval( $location[1] ) : null;
         $longitude = isset( $location[0] ) ? floatval( $location[0] ) : null;
+
+        // The same place object carries the city and country. Keeping them is
+        // what lets the forecast widget name the location: the geocoding API
+        // only searches by name and cannot turn coordinates back into a city,
+        // and adding a service that can would be another external service to
+        // declare. Netatmo already told us.
+        if ( isset( $data['place'] ) && is_array( $data['place'] ) && class_exists( 'NAWS_Forecast' ) ) {
+            $place = [
+                'city'    => sanitize_text_field( (string) ( $data['place']['city'] ?? '' ) ),
+                'country' => sanitize_text_field( (string) ( $data['place']['country'] ?? '' ) ),
+            ];
+            if ( $place['city'] !== '' || $place['country'] !== '' ) {
+                update_option( NAWS_Forecast::OPT_PLACE, $place, false );
+            }
+        }
         $station_id  = sanitize_text_field( $data['station_id'] );
         $module_name = sanitize_text_field( $data['module_name'] ?? $data['station_name'] ?? 'Unknown' );
         $module_type = sanitize_text_field( $data['type'] ?? 'NAMain' );
