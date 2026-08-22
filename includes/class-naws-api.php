@@ -8,6 +8,15 @@ class NAWS_API {
     const MEASURE_URL    = 'https://api.netatmo.com/api/getmeasure';
     const HOMESDATA_URL  = 'https://api.netatmo.com/api/homesdata';
 
+    /** How many times one polling cycle asks again after a transient failure. */
+    const MAX_FETCH_ATTEMPTS = 3;
+
+    /** Wait used when the server names no Retry-After we can act on. */
+    const RETRY_WAIT_DEFAULT = 5;
+
+    /** Longest wait we are willing to sit out inside a single request. */
+    const RETRY_WAIT_MAX = 15;
+
     private string $client_id;
     private string $client_secret;
     private string $access_token;
@@ -224,34 +233,131 @@ class NAWS_API {
     // ----------------------------------------------------------------
 
     /**
-     * Get all station data with modules and dashboard_data
+     * Decide whether a failed Netatmo answer deserves another attempt.
+     *
+     * Pure function: no clock, no options, no HTTP. Same shape as
+     * NAWS_Cron::backoff_interval(), and covered by tests/test-api-retry.php.
+     *
+     * @param  int      $http_code    HTTP status, or 0 when no response arrived.
+     * @param  int|null $error_code   Netatmo's error.code, when the body had one.
+     * @param  mixed    $retry_after  Raw Retry-After header value.
+     * @param  int      $attempt      Which attempt just failed, 1-based.
+     * @return int|null               Seconds to wait, or null to give up.
      */
-    public function get_stations_data() {
+    public static function retry_delay( $http_code, $error_code, $retry_after, $attempt ) {
+        if ( $attempt >= self::MAX_FETCH_ATTEMPTS ) {
+            return null;
+        }
+
+        $http_code  = (int) $http_code;
+        $error_code = ( null === $error_code ) ? null : (int) $error_code;
+
+        // 0 means the request never reached an answer at all (timeout, DNS).
+        // Code 27 is Netatmo's "service temporarily unavailable"; it usually
+        // rides along with a 503, but the body is the more reliable of the two.
+        $transient = ( 0 === $http_code )
+            || ( $http_code >= 500 )
+            || ( 27 === $error_code );
+
+        if ( ! $transient ) {
+            return null;
+        }
+
+        // Only the plain-integer form of Retry-After is acted on. The HTTP-date
+        // form is legal too, but reading it needs a clock, and this decision
+        // stays pure. A server asking for longer than we may sit out in one
+        // request is not shortened to fit -- the next polling cycle is the
+        // answer to that, not a call it never asked for.
+        if ( is_numeric( $retry_after ) ) {
+            $wait = (int) $retry_after;
+            if ( $wait > self::RETRY_WAIT_MAX ) {
+                return null;
+            }
+            if ( $wait >= 1 ) {
+                return $wait;
+            }
+        }
+
+        return self::RETRY_WAIT_DEFAULT;
+    }
+
+    /**
+     * Get all station data with modules and dashboard_data.
+     *
+     * Netatmo answers this endpoint with HTTP 503, error code 27 and
+     * "Retry-After: 5" when it is briefly out of breath. Measured in the cron
+     * context of the reference installation on 2026-08-22, and visible in the
+     * log well before that: bursts of one to three cycles, several times an
+     * hour, heaviest overnight. Treating that as a final answer threw away a
+     * whole ten-minute cycle over an outage the server itself expected to last
+     * five seconds -- while refresh_access_token(), against the very same host,
+     * has always knocked three times. That asymmetry was the bug. Netatmo's
+     * hiccup is not something this plugin can fix.
+     *
+     * @param  bool $_refreshed  Internal: true once a token refresh has been
+     *                           tried, so an expired token cannot recurse.
+     * @return array|WP_Error    The devices, or the final error.
+     */
+    public function get_stations_data( $_refreshed = false ) {
         $refresh = $this->ensure_token();
         if ( is_wp_error( $refresh ) ) return $refresh;
 
-        $response = wp_remote_get( add_query_arg( [
-            'get_favorites' => 'false',
-        ], self::STATIONS_URL ), [
-            'headers' => [ 'Authorization' => 'Bearer ' . $this->access_token ],
-            'timeout' => 30,
-        ] );
+        $url = add_query_arg( [ 'get_favorites' => 'false' ], self::STATIONS_URL );
 
-        if ( is_wp_error( $response ) ) return $response;
+        for ( $attempt = 1; $attempt <= self::MAX_FETCH_ATTEMPTS; $attempt++ ) {
+            $response = wp_remote_get( $url, [
+                'headers' => [ 'Authorization' => 'Bearer ' . $this->access_token ],
+                'timeout' => 30,
+            ] );
 
-        $data = json_decode( wp_remote_retrieve_body( $response ), true );
+            $no_answer  = is_wp_error( $response );
+            $http_code  = $no_answer ? 0 : (int) wp_remote_retrieve_response_code( $response );
+            $data       = $no_answer ? null : json_decode( wp_remote_retrieve_body( $response ), true );
+            $error_code = isset( $data['error']['code'] ) ? (int) $data['error']['code'] : null;
 
-        if ( isset( $data['error'] ) ) {
-            if ( $data['error']['code'] === 3 ) {
-                // Token expired, try refresh
+            // An expired token is not a server fault, so it must not eat a
+            // retry. Refresh once and start over -- the guard mirrors the one
+            // get_measure() has always carried against endless recursion.
+            if ( 3 === $error_code && ! $_refreshed ) {
                 $refresh = $this->refresh_access_token();
                 if ( is_wp_error( $refresh ) ) return $refresh;
-                return $this->get_stations_data(); // retry
+                return $this->get_stations_data( true );
             }
-            return new WP_Error( 'api_error', $data['error']['message'] ?? 'Unknown API error' );
+
+            $wait = self::retry_delay(
+                $http_code,
+                $error_code,
+                $no_answer ? '' : wp_remote_retrieve_header( $response, 'retry-after' ),
+                $attempt
+            );
+
+            if ( null !== $wait ) {
+                sleep( $wait );
+                continue;
+            }
+
+            if ( $no_answer ) {
+                return $response;
+            }
+
+            if ( null !== $error_code ) {
+                // The code and the status belong in the message. Without them
+                // the cron log cannot tell a Netatmo outage from a bad token,
+                // which is exactly the question one asks while reading it.
+                return new WP_Error( 'api_error', sprintf(
+                    '%s (Netatmo code %d, HTTP %d)',
+                    $data['error']['message'] ?? 'Unknown API error',
+                    $error_code,
+                    $http_code
+                ) );
+            }
+
+            return $data['body']['devices'] ?? [];
         }
 
-        return $data['body']['devices'] ?? [];
+        // Unreachable while retry_delay() gives up at MAX_FETCH_ATTEMPTS. Kept
+        // so that changing either constant alone cannot silently return null.
+        return new WP_Error( 'api_error', 'Netatmo request gave up without an answer.' );
     }
 
     /**

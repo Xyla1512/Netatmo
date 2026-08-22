@@ -46,6 +46,14 @@ Work finished and merged, waiting for the release it will ship in. The version n
 
 ### Fixed
 
+- **A five-second hiccup at Netatmo cost a whole ten-minute polling cycle.** `getstationsdata` answers `HTTP 503` with error code 27 and a `Retry-After: 5` header when the service is briefly out of breath — caught in the cron context of the reference installation on 2026-08-22, and visible in its log for days before that: bursts of one to three cycles, several times an hour, heaviest overnight. Thirty-five failures in thirty-one hours, and every one of them a red row in the cron log with a data gap behind it.
+
+  The server says exactly when it will be back, and the plugin threw that away. `refresh_access_token()`, against the very same host, has always knocked three times before giving up; the data path knocked once. That asymmetry was the bug — Netatmo's hiccup is not something this plugin can fix, but treating it as a final answer was. A transient answer is now repeated up to three times, waiting as long as `Retry-After` asks. Nothing is invented: a server asking for longer than fifteen seconds is not shortened to fit but left to the next cycle, and an expired token still takes the refresh path rather than eating a retry.
+
+  The decision itself is a pure function, `NAWS_API::retry_delay()` — response state in, wait or give up out, no clock and no options — so the rules about what counts as transient are testable without a network. Only 5xx, a dead connection, and code 27 qualify. A bad token, a rate limit and a malformed request are final, because asking again would only cost time and blur the log.
+
+- **The cron log could not tell an outage from a bad token.** `get_stations_data()` reported Netatmo's error *message* and discarded the error code and the HTTP status, so `Sync failed: Service temporarily unavailable` was all one had to go on — enough to see that something broke, not enough to say what. The message now carries both: `Service temporarily unavailable (Netatmo code 27, HTTP 503)`.
+
 - **The sidebar widget never named its location.** In automatic mode the name came from the geocoding API, which cannot supply it: that endpoint searches *by name*, and it was being handed coordinates. Measured against the live service, `?name=51.35,12.37` answers HTTP 200 with `{"generationtime_ms":0.18763542}` and no results key at all, while `?name=Leipzig` returns Leipzig — Open-Meteo has no reverse geocoding, so the call spent a five-second timeout to always fall through to the placeholder word `Station Location`, which then travelled into the forecast cache and showed up in the footer as if it were a place.
 
   The name now comes from Netatmo, which sends the station's city and country with every sync. The plugin was reading that same object already and keeping only the coordinates. No second external service, and nothing new to declare.
