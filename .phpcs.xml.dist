@@ -81,11 +81,23 @@
 	     NAWS_Crypto::health() deliberately looks up a CORE string in CORE's
 	     domain - the phrase wp-config-sample.php ships - so that a localized
 	     sample file is recognized too. -->
+	<!--
+		Only the plugin's own domain counts. "default" used to be listed here
+		as a second allowed value, which made this gate quieter than the one
+		that actually decides: Plugin Check accepts the plugin slug and
+		nothing else, so it reported a mismatch this ruleset had waved
+		through. A gate that is more permissive than the gate it stands in
+		for is worse than no gate - it produces confidence instead of
+		findings.
+
+		There is exactly one place that legitimately reads from core's
+		catalogue (the wp-config sample phrase in NAWS_Crypto), and it carries
+		a phpcs:ignore with its reason.
+	-->
 	<rule ref="WordPress.WP.I18n">
 		<properties>
 			<property name="text_domain" type="array">
 				<element value="xtx-integration-for-netatmo"/>
-				<element value="default"/>
 			</property>
 		</properties>
 	</rule>

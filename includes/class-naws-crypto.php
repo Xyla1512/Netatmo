@@ -446,8 +446,21 @@ class NAWS_Crypto {
         }
 
         // The translated phrase is looked up in core's own text domain,
-        // because it is core's string in core's sample file.
-        $placeholders = [ self::SAMPLE_PHRASE, __( 'put your unique phrase here', 'default' ) ];
+        // because it is core's string in core's sample file. On a German
+        // installation AUTH_KEY may well hold the German rendering of that
+        // placeholder, and only core's catalogue knows it.
+        //
+        // Plugin Check flags the foreign domain (TextDomainMismatch). It is
+        // right that this is unusual and wrong that it is a defect: our own
+        // catalogue does not carry core's sample string, so looking it up
+        // there would hand back the English original and the check would miss
+        // every translated wp-config.php. Silenced deliberately - not because
+        // the warning is noise, but because the answer is written down here.
+        $placeholders = [
+            self::SAMPLE_PHRASE,
+            // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- core's own string, see above.
+            __( 'put your unique phrase here', 'default' ),
+        ];
 
         if ( self::weak_key_source( $source, $siblings, $placeholders ) ) {
             $issues[] = 'weak_key';
