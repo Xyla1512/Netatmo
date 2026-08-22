@@ -52,6 +52,12 @@ Work finished and merged, waiting for the release it will ship in. The version n
 
   The decision itself is a pure function, `NAWS_API::retry_delay()` — response state in, wait or give up out, no clock and no options — so the rules about what counts as transient are testable without a network. Only 5xx, a dead connection, and code 27 qualify. A bad token, a rate limit and a malformed request are final, because asking again would only cost time and blur the log.
 
+  Measured on the reference installation the same morning: seventeen missed ten-minute slots between midnight and 08:00, none at all between 09:00 and 12:00 — with one 503 in that window, at 11:00:26, whose cycle finished five seconds later as `Sync OK` instead of a red row.
+
+  `get_measure()` reads through the same decision. That path feeds the daily summary and the historical import, where giving up costs a day of a module rather than a single reading, and where a 503 answering with an HTML page used to surface as `Invalid JSON response`.
+
+- **An error without an error code was handed back as an empty result.** Both API methods asked whether Netatmo had sent an error *code*; a body carrying `error` but no `code` therefore fell through to `return $data['body'] ?? []`, turning a failure into an empty device list or an empty measurement series — which the callers read as "nothing to save". Netatmo always sends the code, so this was never observed, but the check now gates on the error key itself and prints `?` where a code is missing.
+
 - **The cron log could not tell an outage from a bad token.** `get_stations_data()` reported Netatmo's error *message* and discarded the error code and the HTTP status, so `Sync failed: Service temporarily unavailable` was all one had to go on — enough to see that something broke, not enough to say what. The message now carries both: `Service temporarily unavailable (Netatmo code 27, HTTP 503)`.
 
 - **The sidebar widget never named its location.** In automatic mode the name came from the geocoding API, which cannot supply it: that endpoint searches *by name*, and it was being handed coordinates. Measured against the live service, `?name=51.35,12.37` answers HTTP 200 with `{"generationtime_ms":0.18763542}` and no results key at all, while `?name=Leipzig` returns Leipzig — Open-Meteo has no reverse geocoding, so the call spent a five-second timeout to always fall through to the placeholder word `Station Location`, which then travelled into the forecast cache and showed up in the footer as if it were a place.

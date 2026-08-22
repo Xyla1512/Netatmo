@@ -340,14 +340,17 @@ class NAWS_API {
                 return $response;
             }
 
-            if ( null !== $error_code ) {
+            // Gate on the error key, not on the code: Netatmo always sends one,
+            // but an error without a code is still an error, and reading the
+            // code alone would hand it back as an empty device list.
+            if ( isset( $data['error'] ) ) {
                 // The code and the status belong in the message. Without them
                 // the cron log cannot tell a Netatmo outage from a bad token,
                 // which is exactly the question one asks while reading it.
                 return new WP_Error( 'api_error', sprintf(
-                    '%s (Netatmo code %d, HTTP %d)',
+                    '%s (Netatmo code %s, HTTP %d)',
                     $data['error']['message'] ?? 'Unknown API error',
-                    $error_code,
+                    null === $error_code ? '?' : $error_code,
                     $http_code
                 ) );
             }
@@ -396,36 +399,72 @@ class NAWS_API {
             $body['module_id'] = $module_id;
         }
 
-        $response = wp_remote_post( self::MEASURE_URL, [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $this->access_token,
-                'Content-Type'  => 'application/x-www-form-urlencoded',
-            ],
-            'body'    => $body,
-            'timeout' => 60,
-        ] );
+        // Same transient answers as getstationsdata, same treatment. This path
+        // feeds the daily summary and the historical import, where giving up
+        // costs a day of a module rather than a single reading.
+        for ( $attempt = 1; $attempt <= self::MAX_FETCH_ATTEMPTS; $attempt++ ) {
+            $response = wp_remote_post( self::MEASURE_URL, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->access_token,
+                    'Content-Type'  => 'application/x-www-form-urlencoded',
+                ],
+                'body'    => $body,
+                'timeout' => 60,
+            ] );
 
-        if ( is_wp_error( $response ) ) return $response;
+            $no_answer  = is_wp_error( $response );
+            $http_code  = $no_answer ? 0 : (int) wp_remote_retrieve_response_code( $response );
+            $raw        = $no_answer ? '' : wp_remote_retrieve_body( $response );
+            $data       = $no_answer ? null : json_decode( $raw, true );
+            $error_code = isset( $data['error']['code'] ) ? (int) $data['error']['code'] : null;
 
-        $raw  = wp_remote_retrieve_body( $response );
-        $data = json_decode( $raw, true );
-
-        if ( ! is_array( $data ) ) {
-            return new WP_Error( 'api_error', 'Invalid JSON response: ' . substr( $raw, 0, 200 ) );
-        }
-
-        if ( isset( $data['error'] ) ) {
-            $code = $data['error']['code'] ?? 0;
-            $msg  = $data['error']['message'] ?? 'Unknown error';
-            // Error 3 = expired token. Retry ONCE after refresh to prevent infinite recursion.
-            if ( $code === 3 && ! $_retry ) {
+            // Error 3 = expired token. Refresh and start over once; not a
+            // server fault, so it must not consume one of the retries.
+            if ( 3 === $error_code && ! $_retry ) {
                 $this->refresh_access_token();
                 return $this->get_measure( $device_id, $module_id, $types, $date_begin, $date_end, $scale, $optimize, $limit, $real_time, true );
             }
-            return new WP_Error( 'api_error', "Netatmo API error {$code}: {$msg}" );
+
+            $wait = self::retry_delay(
+                $http_code,
+                $error_code,
+                $no_answer ? '' : wp_remote_retrieve_header( $response, 'retry-after' ),
+                $attempt
+            );
+
+            if ( null !== $wait ) {
+                sleep( $wait );
+                continue;
+            }
+
+            if ( $no_answer ) {
+                return $response;
+            }
+
+            // A 503 often answers with an HTML page rather than JSON. That is
+            // caught above by the status; what reaches here is a body that is
+            // broken for some other reason and will not mend itself.
+            if ( ! is_array( $data ) ) {
+                return new WP_Error( 'api_error', 'Invalid JSON response: ' . substr( $raw, 0, 200 ) );
+            }
+
+            // Gate on the error key, not on the code: an error without a code
+            // is still an error and must not be mistaken for an empty result.
+            if ( isset( $data['error'] ) ) {
+                return new WP_Error( 'api_error', sprintf(
+                    'Netatmo API error %s: %s (HTTP %d)',
+                    null === $error_code ? '?' : $error_code,
+                    $data['error']['message'] ?? 'Unknown error',
+                    $http_code
+                ) );
+            }
+
+            return $data['body'] ?? [];
         }
 
-        return $data['body'] ?? [];
+        // Unreachable while retry_delay() gives up at MAX_FETCH_ATTEMPTS. Kept
+        // so that changing either constant alone cannot silently return null.
+        return new WP_Error( 'api_error', 'Netatmo request gave up without an answer.' );
     }
 
     // ----------------------------------------------------------------
