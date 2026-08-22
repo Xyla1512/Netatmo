@@ -48,6 +48,16 @@ The state of this section is testable as `1.9.7-beta.1`: a GitHub pre-release, a
 
 ### Fixed
 
+- **`readme.txt` advertised five shortcodes and documented six; ten are registered.** The feature list said "5 Shortcodes", the shortcode section then listed six, and `add_shortcode()` runs ten times. `[naws_current]`, `[naws_table]`, `[naws_weather_widget]` and `[naws_weather_icon]` had no entry at all — four working features that nobody reading the plugin page would have known existed.
+
+  The count and the list are now both taken from the code. Recount with:
+
+  ```
+  grep -rho "add_shortcode( *'[a-z_]*'" includes/ | sort -u | wc -l
+  ```
+
+  This lands in the next release. The 1.9.6 package currently under review at WordPress.org still carries the wrong figures.
+
 - **A five-second hiccup at Netatmo cost a whole ten-minute polling cycle.** `getstationsdata` answers `HTTP 503` with error code 27 and a `Retry-After: 5` header when the service is briefly out of breath — caught in the cron context of the reference installation on 2026-08-22, and visible in its log for days before that: bursts of one to three cycles, several times an hour, heaviest overnight. Thirty-five failures in thirty-one hours, and every one of them a red row in the cron log with a data gap behind it.
 
   The server says exactly when it will be back, and the plugin threw that away. `refresh_access_token()`, against the very same host, has always knocked three times before giving up; the data path knocked once. That asymmetry was the bug — Netatmo's hiccup is not something this plugin can fix, but treating it as a final answer was. A transient answer is now repeated up to three times, waiting as long as `Retry-After` asks. Nothing is invented: a server asking for longer than fifteen seconds is not shortened to fit but left to the next cycle, and an expired token still takes the refresh path rather than eating a retry.

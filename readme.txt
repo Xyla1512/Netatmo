@@ -26,7 +26,7 @@ Connects to the Netatmo API, stores all sensor data locally and displays live da
 * **Encrypted Storage** – All credentials (OAuth tokens, client secret, API keys) are AES-256-GCM encrypted at rest
 * **Configurable Units** – C/F, mm/inch, mbar/inHg/mmHg, km/h/m/s/mph/kn
 * **Multilingual** – Full German, English and Norwegian interface
-* **5 Shortcodes** – Live widget, infobar, single value, history charts, forecast
+* **10 Shortcodes** – Dashboard, current readings, infobar, single value, computed value, history charts, forecast, table, widget, weather icon
 * **Export / Import** – Full backup and restore of weather data, modules and settings
 * **Mobile-First Responsive** – All views optimized for smartphones, tablets and desktops
 * **130+ Configurable Colors** – Full appearance customization with live preview
@@ -43,11 +43,15 @@ Connects to the Netatmo API, stores all sensor data locally and displays live da
 = Shortcodes =
 
 * `[naws_live]` – Live sensor tiles with 24h trend charts and forecast
+* `[naws_current]` – Current readings of one or all modules as tiles or a list (`module_id`, `parameters`, `layout`, `title`)
 * `[naws_infobar]` – Astronomy bar with sunrise, moon phase, felt temperature
 * `[naws_value]` – Single inline sensor value
 * `[naws_calc]` – Single computed value (dew point, felt temperature, sunrise, moon phase, …); full list on the Shortcodes page in the backend
 * `[naws_history]` – Year-over-year comparison charts (supports `year` parameter)
 * `[naws_forecast]` – Multi-day weather forecast
+* `[naws_table]` – Readings as a table over a period, grouped by hour or day (`period`, `group_by`, `limit`, `parameters`)
+* `[naws_weather_widget]` – Compact forecast widget for a sidebar (`days` 3 or 5, `width` 250–500)
+* `[naws_weather_icon]` – Just the animated icon for the current weather state (`size`); renders nothing when the state is unknown
 
 == Installation ==
 
