@@ -4,7 +4,9 @@ All notable changes to the XTX Netatmo plugin are documented here.
 
 ## [Unreleased]
 
-Work finished and merged, waiting for the release it will ship in. The version number is deliberately still 1.9.6: more is coming, and it belongs in the same release.
+Work finished and merged, waiting for the release it will ship in. All of it is scheduled for 1.9.7.
+
+The state of this section is testable as `1.9.7-beta.1`: a GitHub pre-release, and only that. It is not published at WordPress.org, where the stable tag stays at 1.9.6 until 1.9.7 is final, and it installs by hand from the attached ZIP. The version carries the `-beta.1` suffix so that `version_compare()` orders it above 1.9.6 and below the finished 1.9.7 — a tester is neither offered a downgrade nor left stranded on the beta.
 
 ### Added
 - **The encryption speaks up when it does not work.** `NAWS_Crypto::encrypt()` returned the plaintext on failure so the credentials would not be lost — the caller could not tell that from the return value and wrote an unencrypted secret into `wp_options`, which only `error_log()` ever heard about. That was precisely the one outcome the class exists to prevent: its key lives in `wp-config.php`, its ciphertext in the database, so a dump on its own is not enough.
