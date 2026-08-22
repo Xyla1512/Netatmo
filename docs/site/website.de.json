@@ -1,0 +1,33 @@
+{
+  "aktualisiert": "2026-08-22",
+  "vorhaben": [
+    {
+      "id": "naws-calc",
+      "titel": "Ein Kurzbefehl für 27 berechnete Werte",
+      "satz": "Taupunkt, gefühlte Temperatur, Frost- und Sommertage, Wärmesummen und der Dürreindex SPI — alle über einen einzigen Shortcode, ohne dass eine Zahl von Hand gerechnet werden muss.",
+      "ab": "1.9.7",
+      "bild": "calc-tabelle"
+    },
+    {
+      "id": "api-retry",
+      "titel": "Kurze Störungen bei Netatmo kosten keine Messung mehr",
+      "satz": "Meldet der Netatmo-Dienst eine vorübergehende Überlastung, wartet das Plugin genau so lange, wie der Server verlangt, und fragt erneut — statt eine Lücke in die Messreihe zu schreiben.",
+      "ab": "1.9.7",
+      "bild": null
+    },
+    {
+      "id": "krypto-sichtbar",
+      "titel": "Die Verschlüsselung sagt Bescheid, wenn sie nicht arbeitet",
+      "satz": "Ein neuer Statusbereich zeigt, ob die Zugangsdaten wirklich verschlüsselt liegen — und benennt die vier Ursachen, aus denen das schiefgehen kann.",
+      "ab": "1.9.7",
+      "bild": null
+    },
+    {
+      "id": "kopfleiste-schrift",
+      "titel": "Kopfleisten-Farbe und Schriftart sind Einstellungen",
+      "satz": "Die dunklen Kopfleisten und die verwendete Schrift lassen sich im Erscheinungsbild wählen, statt im Stylesheet gesucht werden zu müssen.",
+      "ab": "1.9.7",
+      "bild": "erscheinungsbild"
+    }
+  ]
+}
