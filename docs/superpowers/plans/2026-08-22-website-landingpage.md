@@ -19,7 +19,7 @@ Diese Vorgaben gelten für **jede** Aufgabe und werden nicht wiederholt.
 - **Serverseitiges Rendern.** Kein Inhalt, der erst durch JavaScript entsteht. Was nicht im ausgelieferten HTML steht, sehen weder Google noch ein Sprachmodell.
 - **Keine externen HTTP-Aufrufe außer diesen zwei:** `https://api.github.com/repos/Xyla1512/Netatmo/releases` und `https://raw.githubusercontent.com/Xyla1512/Netatmo/main/docs/site/website.de.json`.
 - **Letzter guter Stand gewinnt.** Ein fehlgeschlagener Abruf darf nie zu leerem oder halbem Inhalt führen.
-- **Sichtbarer Text ist Deutsch.** Code, Bezeichner und Kommentare sind Englisch, wie im Produkt-Plugin.
+- **Sichtbarer Text ist Deutsch.** Code und Kommentare sind Englisch, wie im Produkt-Plugin. **Ausnahme, bewusst:** Bezeichner, die das Schema von `website.de.json` spiegeln, bleiben deutsch (`vorhaben`, `titel`, `satz`, `ab`, `bild`) — ebenso die davon abgeleiteten Eimer `arbeit`, `neu`, `bestand`. Die Spec legt die Schluessel dieser Datei deutsch fest; eine Uebersetzungsschicht zwischen Datei und Code nuetzte niemandem.
 - **Ausgabe wird escaped.** `esc_html()`, `esc_url()`, `esc_attr()` an jeder Stelle, an der Fremddaten in HTML landen — die Daten kommen von GitHub, nicht aus dem eigenen Haus.
 - **Farbanker `#2d5252`**, das Petrol der Plugin-Kopfleisten.
 - **Kein Screenshot mit Secret, API-Schlüssel oder Modul-MAC** wird hochgeladen.
