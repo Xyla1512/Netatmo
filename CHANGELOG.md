@@ -2,6 +2,18 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [1.9.6.2] – 2026-08-23
+
+The upload of 1.9.6.1 was rejected by the automated scan at WordPress.org with a
+single error: `Tested up to: 7.0` is behind the current WordPress release, and a
+plugin that lags there is excluded from search results. This release is 1.9.6.1
+with that one header corrected. No code changed.
+
+### Fixed
+- **`Tested up to` now reads 7.1**, in `readme.txt` and in the plugin header. The
+  1.9.6 tag this maintenance line was cut from still said 7.0; the value had
+  already been raised on `main` after 1.9.6 was submitted, so the correction
+  existed but had never reached the package under review.
 ## [1.9.6.1] – 2026-08-23
 
 A single security fix on top of 1.9.6, cut from the 1.9.6 tag so that the

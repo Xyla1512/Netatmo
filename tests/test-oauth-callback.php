@@ -31,7 +31,7 @@
  */
 
 define( 'ABSPATH', __DIR__ );
-define( 'NAWS_VERSION', '1.9.6.1' );
+define( 'NAWS_VERSION', '1.9.6.2' );
 
 $GLOBALS['naws_test_options']  = [];
 $GLOBALS['naws_test_caps']     = true;

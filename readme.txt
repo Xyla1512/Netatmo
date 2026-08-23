@@ -2,8 +2,8 @@
 Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
-Tested up to: 7.0
-Stable tag: 1.9.6.1
+Tested up to: 7.1
+Stable tag: 1.9.6.2
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -104,6 +104,9 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 7. Export / Import page for backups
 
 == Changelog ==
+
+= 1.9.6.2 =
+* Fix: the "Tested up to" header now names WordPress 7.1, in readme.txt and in the plugin header. No code changed from 1.9.6.1.
 
 = 1.9.6.1 =
 * Security: the OAuth return route verified the OAuth state but not the caller's permission. `NAWS_Admin::handle_oauth_callback()` runs on `admin_init`, receives Netatmo's redirect and exchanged the code for an access and a refresh token — for whoever happened to be logged in. The state proves that the request belongs to a flow started on this site; it says nothing about who follows the redirect, and Netatmo returns the code to one fixed URL. `current_user_can( 'manage_options' )` now runs at the top of the method, before the state is read, so a request without the permission cannot consume the pending authorization either. Reported by the WordPress plugin review team.
@@ -331,6 +334,9 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 * Historical data importer with batch processing
 
 == Upgrade Notice ==
+
+= 1.9.6.2 =
+Header correction only: compatibility is now declared against WordPress 7.1. Identical in code to 1.9.6.1.
 
 = 1.9.6.1 =
 Security release. The OAuth return route now requires the manage_options capability before it exchanges an authorization code for tokens. Reported by the WordPress plugin review team. Updating is recommended for every installation.
