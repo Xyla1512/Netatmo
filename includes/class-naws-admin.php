@@ -245,26 +245,41 @@ class NAWS_Admin {
     // ----------------------------------------------------------------
     public function handle_oauth_callback() {
         if ( ! isset( $_GET['page'] ) || $_GET['page'] !== 'naws-settings' ) return; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- OAuth state used instead
-        if ( ! isset( $_GET['code'] ) ) return;
+        if ( ! isset( $_GET['code'] ) ) return; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- origin proven by the OAuth state below, permission by current_user_can() beneath this line
+
+        // Who may connect an account is a question the OAuth state cannot
+        // answer. The state proves the request belongs to a flow started on
+        // this site; it says nothing about who is following the redirect.
+        // Netatmo returns the code to one fixed URL, so until now anyone
+        // logged in who reached that URL stored credentials and triggered a
+        // sync.
+        //
+        // This stands before the state is read, not after: a request without
+        // the capability must not consume the pending authorization either,
+        // or a subscriber could make every connection attempt fail.
+        if ( ! current_user_can( 'manage_options' ) ) return;
 
         // Validate state token against stored option
         $state          = sanitize_text_field( wp_unslash( $_GET['state'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $expected_state = get_option( 'naws_oauth_state', '' );
         $state_time     = (int) get_option( 'naws_oauth_state_time', 0 );
 
-        // State must match AND not be older than 10 minutes
+        // Every part is required and none of it optional: a state came back,
+        // one was stored, the two are the same, and the flow is younger than
+        // ten minutes. A second way in used to sit below this - the value was
+        // also accepted as wp_verify_nonce( $state, 'naws_oauth' ). Nothing in
+        // the plugin ever created that nonce, so it was an acceptance path
+        // without a producer, and it turned one plain condition into a
+        // compound one whose failing branch still let the request through.
         $state_valid = ! empty( $state )
                     && ! empty( $expected_state )
                     && hash_equals( $expected_state, $state )
                     && ( time() - $state_time ) < 600;
 
         if ( ! $state_valid ) {
-            // Fallback: also accept valid wp nonce for backwards compat
-            if ( ! wp_verify_nonce( $state, 'naws_oauth' ) ) {
-                add_settings_error( 'naws', 'naws_oauth_invalid',
-                    'Invalid OAuth state. Please try connecting again.' );
-                return;
-            }
+            add_settings_error( 'naws', 'naws_oauth_invalid',
+                'Invalid OAuth state. Please try connecting again.' );
+            return;
         }
 
         delete_option( 'naws_oauth_state' );
@@ -272,7 +287,7 @@ class NAWS_Admin {
 
         $api      = new NAWS_API();
         $redirect = admin_url( 'admin.php?page=naws-settings' );
-        $result   = $api->exchange_code( sanitize_text_field( wp_unslash( $_GET['code']  ) ), $redirect );
+        $result   = $api->exchange_code( sanitize_text_field( wp_unslash( $_GET['code']  ) ), $redirect ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- the OAuth state was verified above and consumed; a nonce cannot ride along on Netatmo's redirect
 
         if ( is_wp_error( $result ) ) {
             add_settings_error( 'naws', 'naws_oauth_error', $result->get_error_message() );

@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.0
-Stable tag: 1.9.6
+Stable tag: 1.9.6.1
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -105,6 +105,9 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 
 == Changelog ==
 
+= 1.9.6.1 =
+* Security: the OAuth return route verified the OAuth state but not the caller's permission. `NAWS_Admin::handle_oauth_callback()` runs on `admin_init`, receives Netatmo's redirect and exchanged the code for an access and a refresh token — for whoever happened to be logged in. The state proves that the request belongs to a flow started on this site; it says nothing about who follows the redirect, and Netatmo returns the code to one fixed URL. `current_user_can( 'manage_options' )` now runs at the top of the method, before the state is read, so a request without the permission cannot consume the pending authorization either. Reported by the WordPress plugin review team.
+* Security: removed a second acceptance path in the same check. A state that did not match was also accepted as `wp_verify_nonce( $state, 'naws_oauth' )` — a nonce that no code in the plugin ever created. The check is a single condition now, and a state that does not match ends the request.
 = 1.9.6 =
 * Changed: the plugin no longer outputs any inline script. The boot code for the live dashboard and the history charts now ships as two ordinary JavaScript files that are enqueued the WordPress way. This also removes the reason the 1.9.3 workaround existed: an enqueued file cannot be silently dropped the way an inline fragment can. The JavaScript itself is unchanged, and several shortcodes on one page now share a single copy of it.
 
@@ -328,6 +331,9 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 * Historical data importer with batch processing
 
 == Upgrade Notice ==
+
+= 1.9.6.1 =
+Security release. The OAuth return route now requires the manage_options capability before it exchanges an authorization code for tokens. Reported by the WordPress plugin review team. Updating is recommended for every installation.
 
 = 1.6.3 =
 WordPress.org compliance release. All file-scope ob_start() patterns replaced with wp_add_inline_script(). PHP values passed to JS via wp_json_encode() instead of direct echoing.

@@ -2,6 +2,25 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [1.9.6.1] – 2026-08-23
+
+A single security fix on top of 1.9.6, cut from the 1.9.6 tag so that the
+package under review at WordPress.org changes by as little as possible.
+Everything else in progress stays on `main` and ships with 1.9.7.
+
+### Security
+
+- **The OAuth return route ran without a permission check.** `NAWS_Admin::handle_oauth_callback()` hangs on `admin_init` and takes Netatmo's redirect — `?page=naws-settings&code=…&state=…`. It exchanged the code for an access and a refresh token, wrote both into `wp_options` and started a synchronization, and it did all of that for whoever happened to be logged in.
+
+  The OAuth state was verified, and it does what a state is for: it proves the request belongs to a flow started on this site. It says nothing about *who* is following the redirect, and Netatmo returns the code to one fixed URL. `current_user_can( 'manage_options' )` now stands at the top of the method — before the state is read, not after, so a request without the capability cannot consume the pending authorization and make the administrator's own attempt fail.
+
+  Reported by the WordPress plugin review team.
+
+- **The state check had a second way in that nothing produced.** When the state did not match, the value was also accepted as `wp_verify_nonce( $state, 'naws_oauth' )`. No line in the plugin ever created that nonce — an acceptance path without a producer, left behind as backwards compatibility. Its cost was structural rather than exploitable: it turned one plain condition into a compound one whose failing branch let the request continue instead of ending it. The check is a single conjunction now.
+
+  What replaces it for the scanner is a `phpcs:ignore` on the two `$_GET['code']` reads that names the OAuth state as the origin proof — a nonce cannot ride along on a redirect that a third party sends.
+
+- **`tests/test-oauth-callback.php`** covers both: a call without `manage_options` exchanges nothing, syncs nothing and leaves the stored state in place; an expired, a mismatched and a legacy-nonce state are each rejected; and the ordinary flow still connects. Eleven checks, six of which passed before the fix.
 ## [1.9.6] – 2026-08-17
 
 ### Changed
