@@ -958,7 +958,10 @@
 /* ============================================================
    Live settings page
    ============================================================ */
-.naws-ls-layout{display:grid;grid-template-columns:1fr 280px;gap:1.5rem;align-items:start;max-width:980px;}
+/* 980px reichten, solange links nur die Modulliste stand. Die beiden
+   Reihenfolge-Listen wollen nebeneinander stehen, und dafuer braucht die
+   Hauptspalte Platz — bei 980px blieben ihnen je 330px. */
+.naws-ls-layout{display:grid;grid-template-columns:1fr 280px;gap:1.5rem;align-items:start;max-width:1360px;}
 @media(max-width:860px){.naws-ls-layout{grid-template-columns:1fr;}}
 .naws-ls-hint{font-size:.77rem;color:#646970;margin:0 0 .85rem;line-height:1.55;}
 .naws-ls-accordion{border:1px solid #e2e4e7;border-radius:10px;overflow:hidden;background:#fff;}
@@ -1022,6 +1025,37 @@
 .naws-ls-hc-toggle.is-off{opacity:.65;}
 .naws-ls-hc-toggle .naws-ls-tgl-info{flex:1;}
 .naws-ls-hc-toggle .naws-ls-sw{flex-shrink:0;}
+
+/* Die beiden Reihenfolge-Listen stehen nebeneinander — untereinander waeren
+   es rund dreissig Zeilen am Stueck. Unter 1100px passt das nicht mehr, dann
+   wieder gestapelt. */
+.naws-ls-sortcols{display:grid;grid-template-columns:1fr 1fr;gap:0 1.4rem;align-items:start;}
+/* Erst wenn selbst umbrochene Beschriftungen nicht mehr taugen, gestapelt —
+   nebeneinander ist der Sinn der Sache, enge Spalten sind das kleinere Uebel
+   als dreissig Zeilen am Stueck. */
+@media(max-width:1000px){.naws-ls-sortcols{grid-template-columns:1fr;}}
+.naws-ls-sortcol{min-width:0;}
+.naws-ls-sortcol .naws-section-label{margin-top:1.4rem;}
+
+/* Sortierbare Zeilen: die ganze Zeile laesst sich anfassen, die sechs Punkte
+   im Feld sagen es an */
+.naws-ls-sortrow{display:flex;background:#fff;border-radius:8px;cursor:grab;}
+/* Eine ausgeblendete Kachel bleibt im Formular stehen und behaelt damit ihren
+   Platz in der Reihenfolge — display:flex wuerde [hidden] sonst ueberstimmen */
+.naws-ls-sortrow[hidden]{display:none;}
+.naws-ls-cards-empty[hidden]{display:none;}
+.naws-ls-sortrow:active{cursor:grabbing;}
+.naws-ls-sortrow>.naws-ls-hc-toggle{flex:1;min-width:0;padding-left:7px;}
+.naws-ls-sortrow.is-dragging{opacity:.4;}
+.naws-ls-grip{flex-shrink:0;width:16px;display:flex;align-items:center;justify-content:center;color:#c3c4c7;user-select:none;cursor:grab;transition:color .13s;}
+.naws-ls-sortrow:hover .naws-ls-grip{color:#2271b1;}
+.naws-ls-grip:focus-visible{outline:2px solid #2271b1;outline-offset:2px;border-radius:3px;color:#2271b1;}
+/* Bei schmaler Spalte darf der Text umbrechen statt das Feld zu sprengen */
+.naws-ls-tgl-label{overflow-wrap:anywhere;}
+/* Reine Sortierzeile ohne Schalter — Live-Kacheln schaltet das Akkordeon */
+.naws-ls-card-row{cursor:default;}
+.naws-ls-card-row:hover{border-color:#e2e4e7;background:#fff;}
+.naws-ls-card-group{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:9px;background:#eef2f5;color:#5a7a8a;font-size:.66rem;font-weight:600;vertical-align:1px;}
 
 /* ============================================================
    Appearance page

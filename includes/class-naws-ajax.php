@@ -264,6 +264,24 @@ class NAWS_Ajax {
             }
         }
 
+        // Sort order of the yearly charts and of the live cards. Both arrive
+        // as a plain list of ids in the order the rows now stand in. Nothing
+        // here has to check that the ids still exist — NAWS_Helpers matches
+        // the saved order against what is actually there every time it reads
+        // it, which is what keeps a renamed module from emptying the page.
+        foreach ( [
+            'history_chart_order' => 'naws_history_chart_order',
+            'live_card_order'     => 'naws_live_card_order',
+        ] as $field => $option ) {
+            if ( ! isset( $_POST[ $field ] ) ) {
+                continue;
+            }
+            $order = NAWS_Helpers::sanitize_order( (array) wp_unslash( $_POST[ $field ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitize_order() filters every entry to [A-Za-z0-9_-]
+            if ( ! update_option( $option, $order ) && get_option( $option ) !== $order ) {
+                $errors[] = $field;
+            }
+        }
+
         if ( ! empty( $errors ) ) {
             NAWS_Logger::error( 'ajax', 'save_live_settings: failed to save options', [ 'keys' => $errors ] );
             wp_send_json_error( [ 'message' => 'Failed to save: ' . implode( ', ', $errors ) ] );

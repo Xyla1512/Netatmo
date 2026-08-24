@@ -36,6 +36,7 @@ var HIDE=document.getElementById(WID).dataset.hidden?document.getElementById(WID
 var MODULE4_SLUGS=JSON.parse(document.getElementById(WID).dataset.module4||'{}');
 var MODULE4_INFO=NAWS_LIVE.MODULE4_INFO;
 var NAWS_I18N=NAWS_LIVE.I18N;
+var CARD_ORDER=NAWS_LIVE.CARD_ORDER||[];
 var PRESS_TREND_HTML=NAWS_LIVE.PRESS_TREND_HTML;
 var liveEl=document.getElementById(WID+'-live');
 var chartsEl=document.getElementById(WID+'-charts');
@@ -194,8 +195,11 @@ function indexReadings(rows){
 }
 
 /* ── CARD HTML ───────────────────────── */
-function mkCard(cls,icoKey,lbl,param,val,unit,ts,subs,extra){
-  var h='<div class="naws-card '+cls+'">'
+/* cardId defaults to param. It differs only where a card can be fed by more
+   than one reading: the pressure card falls back to AbsolutePressure, but it
+   is still the Pressure card, and the sort order knows it under that name. */
+function mkCard(cls,icoKey,lbl,param,val,unit,ts,subs,extra,cardId){
+  var h='<div class="naws-card '+cls+'" data-card="'+esc(cardId||param)+'">'
     +'<div class="naws-ico">'+ICO[icoKey]+'</div>'
     +'<div class="naws-lbl">'+lbl+'</div>'
     +'<div class="naws-val" data-param="'+esc(param)+'">'+esc(String(val??'—'))+'</div>'
@@ -244,7 +248,7 @@ function buildLive(rows){
   // ── Luftdruck (NAMain) ─────────────────────────────────────────────────
   var pr=p.Pressure||p.AbsolutePressure;
   if(HIDE.indexOf('Pressure')<0&&pr)
-    h+=mkCard('c-press','press',NAWS_I18N.card_pressure,pr.parameter,pr.value,pr.unit||'hPa',pr.recorded_at,[],PRESS_TREND_HTML);
+    h+=mkCard('c-press','press',NAWS_I18N.card_pressure,pr.parameter,pr.value,pr.unit||'hPa',pr.recorded_at,[],PRESS_TREND_HTML,'Pressure');
 
   // ── CO₂ Basis (NAMain) ────────────────────────────────────────────────
   if(HIDE.indexOf('CO2')<0&&p.CO2)
@@ -274,7 +278,7 @@ function buildLive(rows){
 
   // ── Wind-Gauge (NAModule2) ────────────────────────────────────────────
   if(HIDE.indexOf('WindStrength')<0&&(p.WindStrength||p.GustStrength)){
-    h+='<div class="naws-card c-wind">'
+    h+='<div class="naws-card c-wind" data-card="WindStrength">'
       +'<div class="naws-ico">'+ICO.wind+'</div>'
       +'<div class="naws-lbl">'+NAWS_I18N.card_wind_gusts+'</div>'
       +'<div id="'+WID+'-gauge" style="width:100%;display:flex;justify-content:center">'+gaugeSVG(wv,gv)+'</div>'
@@ -289,7 +293,7 @@ function buildLive(rows){
 
   // ── Windrichtung / Kompass (NAModule2) ────────────────────────────────
   if(HIDE.indexOf('WindAngle')<0&&p.WindAngle){
-    h+='<div class="naws-card c-wind">'
+    h+='<div class="naws-card c-wind" data-card="WindAngle">'
       +'<div class="naws-ico"><svg viewBox="0 0 24 24" style="width:23px;height:23px;stroke:var(--ca,var(--ink));fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="10"/><polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88" stroke="none" fill="var(--ca,var(--ink))"/></svg></div>'
       +'<div class="naws-lbl">'+NAWS_I18N.card_wind_dir+'</div>'
       +'<div class="naws-rose-wrap" id="'+WID+'-rose">'+ROSE+arrowSVG(wDeg)+'</div>'
@@ -320,6 +324,24 @@ function buildLive(rows){
 
   h+='</div>';
   return h;
+}
+
+/* ── CARD ORDER ──────────────────────────
+   buildLive() prints the cards in the order it always has. Rather than tear
+   that apart, the grid is told where to put them: .naws-grid is a CSS grid,
+   so an order property on each card decides the position and nothing else
+   about the layout changes.
+
+   A card whose id is not in the list keeps order 0 and therefore stays in
+   front of the arranged ones — that is the visible signal that something new
+   arrived and has never been placed. Hidden cards were never printed, so
+   they leave no gap. */
+function applyCardOrder(){
+  if(!CARD_ORDER.length) return;
+  document.querySelectorAll('#'+WID+' .naws-card[data-card]').forEach(function(card){
+    var pos=CARD_ORDER.indexOf(card.dataset.card);
+    if(pos>=0) card.style.order=pos+1;
+  });
 }
 
 /* ── SOFT UPDATE ─────────────────────── */
@@ -564,6 +586,7 @@ function loadLive(){
       }
       if(!built){
         liveEl.innerHTML=buildLive(rows);
+        applyCardOrder();
         built=true;
         loadCharts();
       } else {

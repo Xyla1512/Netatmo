@@ -431,6 +431,8 @@ class NAWS_Export {
                     'naws_live_hidden_modules',
                     'naws_live_hidden_charts',
                     'naws_history_hidden_charts',
+                    'naws_history_chart_order',
+                    'naws_live_card_order',
                 ];
                 foreach ( $display_keys as $key ) {
                     if ( isset( $data['display_settings'][ $key ] ) && is_array( $data['display_settings'][ $key ] ) ) {
@@ -601,6 +603,8 @@ class NAWS_Export {
             'naws_live_hidden_modules'   => get_option( 'naws_live_hidden_modules', [] ),
             'naws_live_hidden_charts'    => get_option( 'naws_live_hidden_charts', [] ),
             'naws_history_hidden_charts' => get_option( 'naws_history_hidden_charts', [] ),
+            'naws_history_chart_order'   => get_option( 'naws_history_chart_order', [] ),
+            'naws_live_card_order'       => get_option( 'naws_live_card_order', [] ),
             NAWS_Colors::OPTION_KEY      => get_option( NAWS_Colors::OPTION_KEY, [] ),
         ];
     }

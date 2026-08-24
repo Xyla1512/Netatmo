@@ -8,23 +8,34 @@ $hidden_history_charts = (array) get_option( 'naws_history_hidden_charts',      
 
 $all_modules    = NAWS_Database::get_modules( true );
 
-// Available yearly comparison charts
-$history_chart_defs = [
-    'temp_minmax' => [ 'label' => naws__( 'hc_temp_minmax' ), 'icon' => '🌡️' ],
-    'temp_avg'    => [ 'label' => naws__( 'hc_temp_avg' ),    'icon' => '🌡️' ],
-    'pressure'    => [ 'label' => naws__( 'hc_pressure' ),    'icon' => '🔵' ],
-    'rain'        => [ 'label' => naws__( 'hc_rain' ),        'icon' => '🌧️' ],
-    'humidity'    => [ 'label' => naws__( 'hc_humidity' ),    'icon' => '💧' ],
-];
-// Dynamic: two toggles per NAModule4 indoor module — temperature and
-// humidity. The list comes from NAWS_Helpers so these switches and the
-// charts they switch can never disagree about ids or labels.
-foreach ( NAWS_Helpers::indoor_chart_defs() as $_def ) {
-    $history_chart_defs[ $_def['id'] ] = [
-        'label' => $_def['label'],
-        'icon'  => $_def['icon'],
-    ];
+// Available yearly comparison charts, already in the saved order. Both this
+// screen and templates/history.php read the same list from NAWS_Helpers, so
+// the switches here and the charts they switch can never disagree about ids,
+// labels or order.
+$history_chart_defs = NAWS_Helpers::history_chart_defs();
+
+// The live dashboard cards, likewise in their saved order. These have no
+// switch of their own — a card is shown or hidden by its parameter toggle in
+// the accordion above, and offering a second switch here would just be two
+// controls for one thing.
+$live_card_defs = NAWS_Helpers::live_card_defs();
+
+// ── Sort handle, shared by both sortable lists ─────────────────────────────
+// The whole row is draggable; the six dots say so. They are also the keyboard
+// route: the handle takes focus and the arrow keys move the row, so the lists
+// stay usable without a mouse without spending a pair of buttons per row on it
+// — at thirty rows that column of arrows was most of the screen.
+if ( ! function_exists( 'naws_ls_grip' ) ) :
+function naws_ls_grip() {
+    ?>
+    <span class="naws-ls-grip" tabindex="0" role="button"
+          title="<?php echo esc_attr( naws__( 'ls_sort_drag' ) ); ?>"
+          aria-label="<?php echo esc_attr( naws__( 'ls_sort_drag' ) ); ?>">
+        <svg width="12" height="16" viewBox="0 0 12 16" fill="currentColor" aria-hidden="true"><circle cx="3" cy="3" r="1.4"/><circle cx="9" cy="3" r="1.4"/><circle cx="3" cy="8" r="1.4"/><circle cx="9" cy="8" r="1.4"/><circle cx="3" cy="13" r="1.4"/><circle cx="9" cy="13" r="1.4"/></svg>
+    </span>
+    <?php
 }
+endif;
 
 // Build a lookup: type → first module of that type
 $mod_by_type = [];
@@ -238,28 +249,92 @@ $module_defs = array_merge( $module_defs, $extra_module4_defs );
             <?php endforeach; ?>
             </div><!-- /.naws-ls-accordion -->
 
-            <!-- ── Jahresvergleich: Chart-Schalter ─────────────────────────── -->
+            <!-- ── Reihenfolgen: Jahresvergleiche links, Live-Kacheln rechts ──
+                 Zwei Listen mit derselben Bedienung, nebeneinander statt
+                 untereinander — zusammen sind es schnell dreissig Zeilen, und
+                 die will niemand am Stueck herunterscrollen. -->
+            <div class="naws-ls-sortcols">
+            <div class="naws-ls-sortcol">
+
             <div class="naws-section-label" style="margin:1.4rem 0 .5rem;">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
                 <?php naws_e( 'ls_year_charts' ); ?>
             </div>
             <p class="naws-ls-hint"><?php NAWS_Lang::r( 'ls_year_hint' ); ?></p>
-            <div class="naws-ls-history-charts">
-            <?php foreach ( $history_chart_defs as $chart_key => $cdef ) :
-                $hc_on = ! in_array( $chart_key, $hidden_history_charts, true );
+            <div class="naws-ls-history-charts naws-ls-sortable" data-order-field="history_chart_order">
+            <?php foreach ( $history_chart_defs as $cdef ) :
+                $chart_key = $cdef['id'];
+                $hc_on     = ! in_array( $chart_key, $hidden_history_charts, true );
             ?>
-            <label class="naws-ls-hc-toggle <?php echo $hc_on ? 'is-on' : 'is-off'; ?>"
-                   data-hc="<?php echo esc_attr($chart_key); ?>">
-                <div class="naws-ls-tgl-info">
-                    <span class="naws-ls-tgl-label"><?php echo esc_html($cdef['label']); ?></span>
-                    <span class="naws-ls-tgl-meta"><code><?php echo esc_html($chart_key); ?></code></span>
-                </div>
-                <span class="naws-ls-sw"><span class="naws-ls-sw-knob"></span></span>
-                <input type="checkbox" class="naws-hc-cb" value="<?php echo esc_attr($chart_key); ?>"
-                       <?php checked($hc_on); ?> style="display:none">
-            </label>
+            <div class="naws-ls-sortrow" data-key="<?php echo esc_attr($chart_key); ?>" draggable="true">
+                <label class="naws-ls-hc-toggle <?php echo $hc_on ? 'is-on' : 'is-off'; ?>"
+                       data-hc="<?php echo esc_attr($chart_key); ?>">
+                    <?php naws_ls_grip(); ?>
+                    <div class="naws-ls-tgl-info">
+                        <span class="naws-ls-tgl-label"><?php echo esc_html($cdef['label']); ?></span>
+                        <span class="naws-ls-tgl-meta"><code><?php echo esc_html($chart_key); ?></code></span>
+                    </div>
+                    <span class="naws-ls-sw"><span class="naws-ls-sw-knob"></span></span>
+                    <input type="checkbox" class="naws-hc-cb" value="<?php echo esc_attr($chart_key); ?>"
+                           <?php checked($hc_on); ?> style="display:none">
+                </label>
+            </div>
             <?php endforeach; ?>
             </div>
+
+            </div><!-- /.naws-ls-sortcol -->
+            <div class="naws-ls-sortcol">
+
+            <!-- ── Live-Dashboard: Reihenfolge der Kacheln ─────────────────── -->
+            <div class="naws-section-label" style="margin:1.4rem 0 .5rem;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                <?php naws_e( 'ls_live_cards' ); ?>
+            </div>
+            <p class="naws-ls-hint"><?php NAWS_Lang::r( 'ls_live_cards_hint' ); ?></p>
+            <div class="naws-ls-history-charts naws-ls-sortable" data-order-field="live_card_order">
+            <?php
+            $lc_sichtbar = 0;
+            foreach ( $live_card_defs as $cdef ) :
+                // A card the dashboard does not draw has no place to be sorted
+                // to, so it is not shown here either — not dropped, though:
+                // the row stays in the form, keeping its position for the day
+                // the switch goes back on. Switching a module off takes all of
+                // its cards with it, exactly as the dashboard does.
+                $lc_hidden = in_array( $cdef['id'], $hidden_params, true )
+                          || in_array( $cdef['module'], $hidden_modules, true )
+                          // Min und Max stehen in der Temperaturkachel und
+                          // werden mit ihr verschoben. Eigene Zeilen bekommen
+                          // sie erst, wenn es die Temperaturkachel nicht gibt.
+                          || ( ( $cdef['stands_in_for'] ?? '' ) !== ''
+                               && ! in_array( $cdef['stands_in_for'], $hidden_params, true ) );
+                if ( ! $lc_hidden ) {
+                    $lc_sichtbar++;
+                }
+            ?>
+            <div class="naws-ls-sortrow" data-key="<?php echo esc_attr($cdef['id']); ?>"
+                 data-module="<?php echo esc_attr($cdef['module']); ?>"
+                 data-standsin="<?php echo esc_attr($cdef['stands_in_for'] ?? ''); ?>"
+                 draggable="true" <?php echo $lc_hidden ? 'hidden' : ''; ?>>
+                <div class="naws-ls-hc-toggle naws-ls-card-row">
+                    <?php naws_ls_grip(); ?>
+                    <div class="naws-ls-tgl-info">
+                        <span class="naws-ls-tgl-label"><?php echo esc_html($cdef['label']); ?>
+                            <?php if ( $cdef['group'] !== '' ) : ?>
+                            <span class="naws-ls-card-group"><?php echo esc_html($cdef['group']); ?></span>
+                            <?php endif; ?>
+                        </span>
+                        <span class="naws-ls-tgl-meta"><code><?php echo esc_html($cdef['id']); ?></code></span>
+                    </div>
+                </div>
+            </div>
+            <?php endforeach; ?>
+            <p class="naws-ls-hint naws-ls-cards-empty" <?php echo $lc_sichtbar ? 'hidden' : ''; ?>>
+                <?php naws_e( 'ls_cards_all_off' ); ?>
+            </p>
+            </div>
+
+            </div><!-- /.naws-ls-sortcol -->
+            </div><!-- /.naws-ls-sortcols -->
 
             <div class="naws-ls-actions">
                 <button id="naws-save-live" class="button button-primary naws-ls-save-btn">
@@ -335,6 +410,7 @@ document.querySelectorAll('.naws-ls-mod-toggle').forEach(function(btn){
         mod.classList.toggle('is-mod-off',!isOn);
         this.title=isOn?nawsAdmin.strings.ls_mod_deactivate:nawsAdmin.strings.ls_mod_activate;
         refreshCount(mod);
+        nawsSyncKachelListe(); // Modul aus heisst: alle seine Kacheln raus
     });
 });
 
@@ -346,6 +422,7 @@ document.querySelectorAll('.naws-ls-toggle').forEach(function(lbl){
         this.classList.toggle('is-on',on);
         this.classList.toggle('is-off',!on);
         refreshCount(this.closest('.naws-ls-mod'));
+        nawsSyncKachelListe();
     });
 });
 
@@ -379,6 +456,116 @@ document.querySelectorAll('.naws-ls-hc-toggle').forEach(function(lbl){
     });
 });
 
+/* Sortierbare Listen — die ganze Zeile laesst sich anfassen und schieben.
+   Der Zug beginnt erst, wenn die Maus sich bewegt: ein Klick auf den
+   Schalter bleibt darum ein Klick. Gespeichert wird nichts anderes als die
+   Reihenfolge der Zeilen im DOM. */
+document.querySelectorAll('.naws-ls-sortable').forEach(function(list){
+    var dragged=null;
+
+    list.querySelectorAll('.naws-ls-grip').forEach(function(grip){
+        /* Der Griff sitzt im Schalterfeld. Ein Klick darauf soll anfassen
+           heissen, nicht umschalten — also hier abfangen. */
+        grip.addEventListener('click',function(e){
+            e.preventDefault();
+            e.stopPropagation();
+        });
+
+        /* Ohne Maus: der Griff nimmt den Fokus, die Pfeiltasten schieben. */
+        grip.addEventListener('keydown',function(e){
+            var dir=e.key==='ArrowUp'?-1:(e.key==='ArrowDown'?1:0);
+            if(!dir){return;}
+            e.preventDefault();
+            var row=grip.closest('.naws-ls-sortrow');
+            var sib=dir<0?row.previousElementSibling:row.nextElementSibling;
+            if(!sib){return;}
+            if(dir<0){list.insertBefore(row,sib);}
+            else{list.insertBefore(sib,row);}
+            grip.focus();
+        });
+    });
+
+    list.addEventListener('dragstart',function(e){
+        dragged=e.target.closest('.naws-ls-sortrow');
+        if(!dragged){return;}
+        dragged.classList.add('is-dragging');
+        e.dataTransfer.effectAllowed='move';
+        // Firefox startet den Zug nur, wenn etwas gesetzt wurde.
+        e.dataTransfer.setData('text/plain','');
+    });
+
+    list.addEventListener('dragend',function(){
+        if(dragged){dragged.classList.remove('is-dragging');}
+        dragged=null;
+    });
+
+    /* Das Ziel kann auch eine Luecke neben den Zeilen sein — dann haengt die
+       gezogene Zeile ans Ende, statt dass der Zug ins Leere laeuft. */
+    list.addEventListener('drop',function(e){
+        if(dragged){e.preventDefault();}
+    });
+
+    list.addEventListener('dragover',function(e){
+        if(!dragged){return;}
+        e.preventDefault();
+        var over=e.target.closest('.naws-ls-sortrow');
+        if(!over||over===dragged){return;}
+        // Ueber der oberen Haelfte einfuegen heisst davor, sonst dahinter.
+        var box=over.getBoundingClientRect();
+        var before=(e.clientY-box.top)<(box.height/2);
+        list.insertBefore(dragged,before?over:over.nextSibling);
+    });
+
+});
+
+/* Die Kachelliste folgt den Schaltern oben, ohne Neuladen.
+
+   Sichtbar ist eine Kachel, wenn ihr Parameter an ist UND ihr Modul an ist —
+   dieselbe Regel, nach der das Dashboard sie zeichnet. Ausgeblendete Zeilen
+   bleiben im Formular stehen: sie behalten so ihren Platz in der
+   Reihenfolge, statt beim naechsten Einschalten hinten wieder aufzutauchen. */
+function nawsSyncKachelListe(){
+    var liste=document.querySelector('.naws-ls-sortable[data-order-field="live_card_order"]');
+    if(!liste){return;}
+
+    var paramAus={}, modulAus={};
+    // Parameterschalter: nicht angehakt heisst verborgen
+    document.querySelectorAll('.naws-ls-toggle input[type=checkbox]').forEach(function(cb){
+        if(!cb.checked){paramAus[cb.value]=true;}
+    });
+    // Modulschalter: andersherum, angehakt heisst verborgen
+    document.querySelectorAll('.naws-mod-cb').forEach(function(cb){
+        if(cb.checked){modulAus[cb.value]=true;}
+    });
+
+    var sichtbar=0;
+    liste.querySelectorAll('.naws-ls-sortrow').forEach(function(row){
+        var aus=!!(paramAus[row.dataset.key]||modulAus[row.dataset.module]);
+        // Min und Max stehen in der Temperaturkachel; eine eigene Zeile
+        // bekommen sie nur, solange es die Temperaturkachel nicht gibt.
+        var vertritt=row.dataset.standsin;
+        if(vertritt&&!paramAus[vertritt]){aus=true;}
+        row.hidden=aus;
+        if(!aus){sichtbar++;}
+    });
+
+    var leer=liste.querySelector('.naws-ls-cards-empty');
+    if(leer){leer.hidden=sichtbar>0;}
+}
+
+nawsSyncKachelListe();
+
+/** Liest die Reihenfolge einer Liste als Feld fuer den POST. */
+function nawsCollectOrder(field){
+    var list=document.querySelector('.naws-ls-sortable[data-order-field="'+field+'"]');
+    if(!list){return '';}
+    var body='';
+    list.querySelectorAll('.naws-ls-sortrow').forEach(function(row){
+        body+='&'+field+'[]='+encodeURIComponent(row.dataset.key);
+    });
+    return body;
+}
+
 /* Save */
 document.getElementById('naws-save-live').addEventListener('click',function(){
     var btn=this, status=document.getElementById('naws-ls-status');
@@ -406,6 +593,9 @@ document.getElementById('naws-save-live').addEventListener('click',function(){
         if(!cb.checked) hHistCharts.push(cb.value);
     });
     hHistCharts.forEach(function(c){body+='&hidden_history_charts[]='+encodeURIComponent(c);});
+    // Reihenfolge beider Listen, so wie sie gerade dastehen
+    body+=nawsCollectOrder('history_chart_order');
+    body+=nawsCollectOrder('live_card_order');
 
     var xhr=new XMLHttpRequest();
     xhr.open('POST',nawsAdmin.ajax_url);

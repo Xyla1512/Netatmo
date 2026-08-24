@@ -137,6 +137,257 @@ class NAWS_Helpers {
     }
 
     /**
+     * Puts a list of ids into a saved order.
+     *
+     * The order comes from an option the user arranged by hand; the ids come
+     * from what actually exists right now. The two drift apart on their own:
+     * an indoor module gets renamed or removed and takes its ids with it, a
+     * new one appears, an update adds a card that was not there at the last
+     * save. So the order decides position only — never membership. Ids the
+     * order does not mention keep their original relative order at the end,
+     * which is what makes a new module show up instead of quietly vanishing.
+     *
+     * @param array<int,string> $ids   Ids that exist, in their default order.
+     * @param array<int,string> $order Saved order; unknown entries ignored.
+     * @return array<int,string> Every id from $ids exactly once.
+     */
+    public static function apply_order( array $ids, array $order ): array {
+        $sorted = [];
+        foreach ( $order as $id ) {
+            if ( in_array( $id, $ids, true ) && ! in_array( $id, $sorted, true ) ) {
+                $sorted[] = $id;
+            }
+        }
+        foreach ( $ids as $id ) {
+            if ( ! in_array( $id, $sorted, true ) ) {
+                $sorted[] = $id;
+            }
+        }
+        return $sorted;
+    }
+
+    /**
+     * Cleans a submitted sort order before it is stored.
+     *
+     * Deliberately not sanitize_key(): that lowercases, and half of these ids
+     * are Netatmo parameter names — Temperature, WindStrength, CO2. Folded to
+     * lowercase they would never match a card again, and sorting would
+     * silently stop working. Letters, digits, underscore and hyphen are
+     * exactly what an id is made of, so everything else goes.
+     *
+     * @param array<mixed> $order Raw ids as submitted.
+     * @return array<int,string>
+     */
+    public static function sanitize_order( array $order ): array {
+        $clean = [];
+
+        foreach ( $order as $id ) {
+            if ( ! is_scalar( $id ) ) {
+                continue;
+            }
+            $id = preg_replace( '/[^A-Za-z0-9_-]/', '', (string) $id );
+            if ( $id !== '' ) {
+                $clean[] = $id;
+            }
+        }
+
+        return $clean;
+    }
+
+    /**
+     * Reorders a list of definitions by the order stored in an option.
+     *
+     * @param array<int,array<string,mixed>> $defs   Definitions with an id key.
+     * @param string                         $option Option holding the order.
+     * @return array<int,array<string,mixed>>
+     */
+    private static function ordered_by_option( array $defs, string $option ): array {
+        $by_id = array_column( $defs, null, 'id' );
+        $order = self::apply_order( array_keys( $by_id ), (array) get_option( $option, [] ) );
+
+        return array_values( array_map(
+            static function ( $id ) use ( $by_id ) { return $by_id[ $id ]; },
+            $order
+        ) );
+    }
+
+    /**
+     * Every yearly-comparison chart, in the order the front end draws it.
+     *
+     * Five fixed charts for the station itself, then two per indoor module.
+     * The history template and the settings screen read this one list, so
+     * the switches there and the charts here can never disagree about which
+     * charts exist or what they are called.
+     *
+     * @return array<int,array<string,string>> id, label, icon.
+     */
+    public static function history_chart_defs(): array {
+        $defs = [
+            [ 'id' => 'temp_minmax', 'label' => naws__( 'hc_temp_minmax' ), 'icon' => '🌡️' ],
+            [ 'id' => 'temp_avg',    'label' => naws__( 'hc_temp_avg' ),    'icon' => '🌡️' ],
+            [ 'id' => 'pressure',    'label' => naws__( 'hc_pressure' ),    'icon' => '🔵' ],
+            [ 'id' => 'rain',        'label' => naws__( 'hc_rain' ),        'icon' => '🌧️' ],
+            [ 'id' => 'humidity',    'label' => naws__( 'hc_humidity' ),    'icon' => '💧' ],
+        ];
+
+        foreach ( self::indoor_chart_defs() as $indoor ) {
+            $defs[] = [
+                'id'    => $indoor['id'],
+                'label' => $indoor['label'],
+                'icon'  => $indoor['icon'],
+            ];
+        }
+
+        return self::ordered_by_option( $defs, 'naws_history_chart_order' );
+    }
+
+    /**
+     * Which readings belong to which module.
+     *
+     * Switching a module off hides everything it measures, so this is what
+     * the master toggle expands to. The live template used to carry its own
+     * copy of this list, and that copy was missing Humidity_indoor: turning
+     * the base station off hid all of its readings except that one, which
+     * stayed on the dashboard with nothing around it.
+     *
+     * Not every entry is a card — AbsolutePressure and the gust readings
+     * feed cards rather than being one. They belong here anyway: this maps
+     * readings, and hiding a module has to hide the readings a card falls
+     * back to as well.
+     *
+     * @return array<string,array<int,string>> module type => parameter keys.
+     */
+    public static function module_param_map(): array {
+        $map = [
+            'NAMain'    => [ 'Temperature_indoor', 'Humidity_indoor', 'Pressure', 'AbsolutePressure', 'CO2', 'Noise' ],
+            'NAModule1' => [ 'Temperature', 'min_temp', 'max_temp', 'Humidity' ],
+            'NAModule2' => [ 'WindStrength', 'GustStrength', 'WindAngle', 'GustAngle' ],
+            'NAModule3' => [ 'Rain', 'sum_rain_1', 'sum_rain_24' ],
+        ];
+
+        foreach ( self::indoor_module_slugs() as $module ) {
+            $slug = $module['slug'];
+            $map[ 'NAModule4_' . $slug ] = [
+                'Temperature_' . $slug,
+                'Humidity_' . $slug,
+                'CO2_' . $slug,
+                'Noise_' . $slug,
+            ];
+        }
+
+        return $map;
+    }
+
+    /**
+     * Every card the live dashboard draws, in the order it draws them.
+     *
+     * A card is not the same thing as a reading. The absolute pressure only
+     * stands in when the relative one is missing, the gust lives inside the
+     * wind gauge, and the rain sums are sub-rows of the rain card — none of
+     * them is a box of its own, so none of them can be dragged. Listing them
+     * would offer the user positions that do not exist on the page.
+     *
+     * Label and group stay apart: the label is what the card is called in
+     * the front end, the group says where it comes from. Temperature exists
+     * outdoors, in the base station and in every indoor module, and the
+     * sorting list has to tell those three apart.
+     *
+     * `stands_in_for` names a card this one only appears in place of. The
+     * daily minimum and maximum are sub-rows of the temperature card and move
+     * with it; buildLive() promotes them to cards of their own only when the
+     * temperature card is switched off. Listing them alongside it would offer
+     * two positions for one box.
+     *
+     * @return array<int,array<string,string>> id, stands_in_for, module,
+     *         label, group.
+     */
+    public static function live_card_defs(): array {
+        $defs = [
+            [ 'id' => 'Temperature',        'stands_in_for' => '', 'module' => 'NAModule1', 'label' => naws__( 'card_temperature' ), 'group' => naws__( 'lbl_outdoor' ) ],
+            [ 'id' => 'min_temp',           'stands_in_for' => 'Temperature', 'module' => 'NAModule1', 'label' => naws__( 'card_temp_min' ),    'group' => naws__( 'lbl_outdoor' ) ],
+            [ 'id' => 'max_temp',           'stands_in_for' => 'Temperature', 'module' => 'NAModule1', 'label' => naws__( 'card_temp_max' ),    'group' => naws__( 'lbl_outdoor' ) ],
+            [ 'id' => 'Humidity',           'stands_in_for' => '', 'module' => 'NAModule1', 'label' => naws__( 'card_humidity' ),    'group' => naws__( 'lbl_outdoor' ) ],
+            [ 'id' => 'Pressure',           'stands_in_for' => '', 'module' => 'NAMain',    'label' => naws__( 'card_pressure' ),    'group' => naws__( 'lbl_base' ) ],
+            [ 'id' => 'CO2',                'stands_in_for' => '', 'module' => 'NAMain',    'label' => naws__( 'card_co2' ),         'group' => naws__( 'lbl_base' ) ],
+            [ 'id' => 'Noise',              'stands_in_for' => '', 'module' => 'NAMain',    'label' => naws__( 'card_noise' ),       'group' => naws__( 'lbl_base' ) ],
+            [ 'id' => 'Temperature_indoor', 'stands_in_for' => '', 'module' => 'NAMain',    'label' => naws__( 'card_temperature' ), 'group' => naws__( 'lbl_base' ) ],
+            [ 'id' => 'Humidity_indoor',    'stands_in_for' => '', 'module' => 'NAMain',    'label' => naws__( 'card_humidity' ),    'group' => naws__( 'lbl_base' ) ],
+            [ 'id' => 'Rain',               'stands_in_for' => '', 'module' => 'NAModule3', 'label' => naws__( 'card_rain' ),        'group' => '' ],
+            [ 'id' => 'WindStrength',       'stands_in_for' => '', 'module' => 'NAModule2', 'label' => naws__( 'card_wind_gusts' ),  'group' => '' ],
+            [ 'id' => 'WindAngle',          'stands_in_for' => '', 'module' => 'NAModule2', 'label' => naws__( 'card_wind_dir' ),    'group' => '' ],
+        ];
+
+        // Four cards per indoor module, keyed the way buildLive() keys them.
+        foreach ( self::indoor_module_slugs() as $module ) {
+            [ 'slug' => $slug, 'name' => $name ] = $module;
+            foreach ( [
+                [ 'Temperature_', 'card_temperature' ],
+                [ 'Humidity_',    'card_humidity' ],
+                [ 'CO2_',         'card_co2' ],
+                [ 'Noise_',       'card_noise' ],
+            ] as [ $prefix, $lang_key ] ) {
+                $defs[] = [
+                    'id'            => $prefix . $slug,
+                    'stands_in_for' => '',
+                    'module'        => 'NAModule4_' . $slug,
+                    'label'         => naws__( $lang_key ),
+                    'group'         => $name,
+                ];
+            }
+        }
+
+        // The front end puts these labels into markup, so some carry an HTML
+        // entity. The settings screen escapes on its own and would show the
+        // entity twice over; hand it plain text and let it do that.
+        foreach ( $defs as &$def ) {
+            $def['label'] = html_entity_decode( $def['label'], ENT_QUOTES, 'UTF-8' );
+        }
+        unset( $def );
+
+        return self::ordered_by_option( $defs, 'naws_live_card_order' );
+    }
+
+    /**
+     * The indoor modules, keyed by the slug their ids are built from.
+     *
+     * The slug turns a module name into something that survives being part
+     * of an id and a param key: lowercase, letters and digits only, capped
+     * at sixteen characters, falling back to the tail of the MAC when a name
+     * has nothing usable in it at all. Every place that names an indoor
+     * module — charts, live cards, param keys — has to derive it the same
+     * way, or the switches stop matching the things they switch.
+     *
+     * Two modules sharing a name is a configuration mistake on the user's
+     * side, and it does collapse their ids. This returns a list rather than
+     * a map so it does not quietly drop the second one on top of that —
+     * whatever the callers make of the collision, they see both modules.
+     *
+     * @return array<int,array<string,string>> slug, name, module_id.
+     */
+    public static function indoor_module_slugs(): array {
+        $slugs = [];
+
+        foreach ( NAWS_Database::get_modules( true ) as $module ) {
+            if ( $module['module_type'] !== 'NAModule4' ) {
+                continue;
+            }
+
+            $slug = preg_replace( '/[^a-z0-9]/', '', strtolower( $module['module_name'] ) );
+            if ( $slug === '' ) {
+                $slug = 'indoor' . substr( str_replace( ':', '', $module['module_id'] ), -4 );
+            }
+
+            $slugs[] = [
+                'slug'      => substr( $slug, 0, 16 ),
+                'name'      => $module['module_name'],
+                'module_id' => $module['module_id'],
+            ];
+        }
+
+        return $slugs;
+    }
+
+    /**
      * Yearly-comparison chart definitions for the indoor modules.
      *
      * An NAModule4 does not store its readings in the temp_* columns — those
@@ -156,28 +407,18 @@ class NAWS_Helpers {
     public static function indoor_chart_defs(): array {
         $defs = [];
 
-        foreach ( NAWS_Database::get_modules( true ) as $module ) {
-            if ( $module['module_type'] !== 'NAModule4' ) {
-                continue;
-            }
-
-            $slug = preg_replace( '/[^a-z0-9]/', '', strtolower( $module['module_name'] ) );
-            if ( $slug === '' ) {
-                $slug = 'indoor' . substr( str_replace( ':', '', $module['module_id'] ), -4 );
-            }
-            $slug = substr( $slug, 0, 16 );
-
+        foreach ( self::indoor_module_slugs() as $module ) {
             foreach ( [
                 [ 'indoor_temp_',     'indoor_temp_avg',     'Temperature', 'param_temperature', '🌡️' ],
                 [ 'indoor_humidity_', 'indoor_humidity_avg', 'Humidity',    'param_humidity',    '💧' ],
             ] as [ $prefix, $field, $param, $lang_key, $icon ] ) {
                 $defs[] = [
-                    'id'          => $prefix . $slug,
+                    'id'          => $prefix . $module['slug'],
                     'module_id'   => $module['module_id'],
-                    'module_name' => $module['module_name'],
+                    'module_name' => $module['name'],
                     'field'       => $field,
                     'param'       => $param,
-                    'label'       => $module['module_name'] . ' – ' . naws__( $lang_key ),
+                    'label'       => $module['name'] . ' – ' . naws__( $lang_key ),
                     'icon'        => $icon,
                     'unit'        => self::get_unit( $param ),
                 ];

@@ -40,16 +40,12 @@ foreach ( $all_modules as $m ) {
 }
 
 // ── Hidden-params expansion: module toggle → hide all its params ─────────────
-$module_param_map = [
-    'NAMain'    => [ 'Temperature_indoor', 'Pressure', 'AbsolutePressure', 'CO2', 'Noise' ],
-    'NAModule1' => [ 'Temperature', 'min_temp', 'max_temp', 'Humidity' ],
-    'NAModule2' => [ 'WindStrength', 'GustStrength', 'WindAngle', 'GustAngle' ],
-    'NAModule3' => [ 'Rain', 'sum_rain_1', 'sum_rain_24' ],
-];
-// Add NAModule4 slugs dynamically
-foreach ( $module4_info as $slug => $info ) {
-    $module_param_map[ "NAModule4_{$slug}" ] = $info['params'];
-}
+// The list lives in NAWS_Helpers because the settings screen needs the same
+// one: it shows which cards a module switch takes with it, and a second copy
+// here would drift. The copy that used to stand here had already drifted —
+// it left Humidity_indoor out, so switching the base station off hid all of
+// its readings but that one.
+$module_param_map = NAWS_Helpers::module_param_map();
 foreach ( $hidden_modules as $hmod ) {
     if ( isset( $module_param_map[ $hmod ] ) ) {
         $hidden = array_unique( array_merge( $hidden, $module_param_map[ $hmod ] ) );
@@ -407,6 +403,11 @@ echo '<script type="application/json" data-naws="live" id="' . esc_attr( $widget
         'CHART_CONFIGS'    => $chart_configs,
         'ICO'              => $_naws_icons_safe,
         'ICON_SET'         => NAWS_Icons::get_current_set(),
+        // Card order as arranged in the settings screen. buildLive() keeps
+        // printing the cards in its own fixed order; the grid then lays them
+        // out along this list. Ids the list does not mention keep their
+        // place at the end, so a new indoor module simply appears.
+        'CARD_ORDER'       => array_column( NAWS_Helpers::live_card_defs(), 'id' ),
     ] )
     . '</script>';
 

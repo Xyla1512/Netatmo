@@ -212,10 +212,30 @@ class NAWS_Admin {
         return max( $min, min( $max, (float) $value ) );
     }
 
+    /**
+     * Cache-busting version for an asset: its modification time, falling
+     * back to the plugin version.
+     *
+     * NAWS_VERSION alone is not enough between releases. A stylesheet that
+     * changes while the version number stays put keeps its URL, so the
+     * browser serves the copy it already has — the change is on the server
+     * and nowhere to be seen. Every release ships new files with new
+     * timestamps, so this is at least as fresh as the version was.
+     *
+     * @param string $rel Path relative to the plugin directory.
+     * @return string
+     */
+    private static function asset_version( string $rel ): string {
+        $path = NAWS_PLUGIN_DIR . $rel;
+        $time = file_exists( $path ) ? filemtime( $path ) : false;
+
+        return $time ? NAWS_VERSION . '.' . $time : NAWS_VERSION;
+    }
+
     public function enqueue_assets( $hook ) {
         if ( strpos( $hook, 'naws-' ) === false ) return;
 
-        wp_enqueue_style( 'naws-admin', NAWS_PLUGIN_URL . 'assets/css/admin.css', [], NAWS_VERSION );
+        wp_enqueue_style( 'naws-admin', NAWS_PLUGIN_URL . 'assets/css/admin.css', [], self::asset_version( 'assets/css/admin.css' ) );
 
         $js_deps = [ 'jquery' ];
         // Load WP Color Picker on appearance page
@@ -233,7 +253,7 @@ class NAWS_Admin {
             wp_enqueue_style( 'naws-weather-icon', NAWS_PLUGIN_URL . 'assets/css/frontend.css', [], NAWS_VERSION );
         }
 
-        wp_enqueue_script( 'naws-admin', NAWS_PLUGIN_URL . 'assets/js/admin.js', $js_deps, NAWS_VERSION, true );
+        wp_enqueue_script( 'naws-admin', NAWS_PLUGIN_URL . 'assets/js/admin.js', $js_deps, self::asset_version( 'assets/js/admin.js' ), true );
 
         wp_localize_script( 'naws-admin', 'nawsAdmin', [
             'ajax_url' => admin_url( 'admin-ajax.php' ),
