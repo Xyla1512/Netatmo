@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 1.9.6
+Stable tag: 1.9.7
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -110,6 +110,27 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 
 == Changelog ==
 
+= 1.9.7 =
+* New: the order of the live cards and of the yearly comparison charts is a setting. Both lists on the Live-Dashboard screen are sortable by drag and drop, and the front end follows. A saved order decides position, never membership: an id left over from a renamed module is passed over, and a chart the order has never heard of takes its place at the end instead of disappearing.
+* New: `[naws_calc]` — one shortcode for twenty-seven computed values in four kinds. Fourteen instant values (dew point, apparent temperature, wet-bulb temperature, heat index, thermal sensation, CO2 rating, wind compass, sunrise, sunset, day length, moon phase and illumination, next supermoon, next lunar eclipse), seven day classes with `mode="count|streak|max_streak"` (ice days, frost days, summer days, hot days, tropical nights, heating and cooling days), five sums (heating and cooling degree days, growing degree days, the grassland temperature sum and the date the growing season started) and the Standardized Precipitation Index.
+* New: the admin shows the state of the encryption — a missing openssl extension, a missing aes-256-gcm, an `AUTH_KEY` still set to the sample value from wp-config-sample.php, and changed WordPress salts. A fingerprint of the key sits beside the ciphertext so a salt change is recognizable as one instead of looking like a broken plugin.
+* New: the header bar and the font are settings now. The font list offers only fonts your page already serves — the plugin loads no font file of its own.
+* New: three settings for the degree-day limits: heating limit, room temperature and cooling limit.
+* Changed: **breaking** — the REST API accepts its key in the `X-NAWS-Key` header only. A secret in the address line is written down by access logs, the Referer header, the browser history and every cache in between. Calls of the form `?api_key=...` now answer 401. If you use the API, switch before you update.
+* Changed: the cron settings and the cron log now say what WP-Cron does not do. WP-Cron is triggered by page views, not by a clock, so on a quiet night no sync happens at all.
+* Fix: a five-second hiccup at Netatmo cost a whole ten-minute polling cycle. Requests are retried now, and an error without an error code is no longer handed back as an empty result.
+* Fix: a server without the openssl extension died on the first read of a token, and an unauthenticated REST request could turn a 401 into a fatal 500.
+* Fix: the apparent temperature ignored wind chill, and the heat index was computed outside the range it is defined for.
+* Fix: the next supermoon, the next lunar eclipse and the next full moon were dated in German whatever the site language was.
+* Fix: an uppercase MAC address in `[naws_value module="..."]` matched nothing, and an emptied degree-day limit field silently stored 0 degrees.
+* Fix: this readme advertised five shortcodes and documented six. Ten are registered; all ten are listed now.
+* Security: the REST API key page created and revoked keys on POST with a nonce check but no capability check of its own. The page is reachable only with `manage_options`, so nothing stood open — it is the pattern the review team warned about, and the check now runs before the nonce is spent.
+= 1.9.6.2 =
+* Fix: the "Tested up to" header now names WordPress 7.1, in readme.txt and in the plugin header. No code changed from 1.9.6.1.
+
+= 1.9.6.1 =
+* Security: the OAuth return route verified the OAuth state but not the caller's permission. `NAWS_Admin::handle_oauth_callback()` runs on `admin_init`, receives Netatmo's redirect and exchanged the code for an access and a refresh token — for whoever happened to be logged in. The state proves that the request belongs to a flow started on this site; it says nothing about who follows the redirect, and Netatmo returns the code to one fixed URL. `current_user_can( 'manage_options' )` now runs at the top of the method, before the state is read, so a request without the permission cannot consume the pending authorization either. Reported by the WordPress plugin review team.
+* Security: removed a second acceptance path in the same check. A state that did not match was also accepted as `wp_verify_nonce( $state, 'naws_oauth' )` — a nonce that no code in the plugin ever created. The check is a single condition now, and a state that does not match ends the request.
 = 1.9.6 =
 * Changed: the plugin no longer outputs any inline script. The boot code for the live dashboard and the history charts now ships as two ordinary JavaScript files that are enqueued the WordPress way. This also removes the reason the 1.9.3 workaround existed: an enqueued file cannot be silently dropped the way an inline fragment can. The JavaScript itself is unchanged, and several shortcodes on one page now share a single copy of it.
 
@@ -334,6 +355,14 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 
 == Upgrade Notice ==
 
+= 1.9.7 =
+First release published through the WordPress.org directory. Breaking change for REST API users: the key is accepted in the X-NAWS-Key header only, and ?api_key=... now answers 401. Everything else is new features and fixes.
+
+= 1.9.6.2 =
+Header correction only: compatibility is now declared against WordPress 7.1. Identical in code to 1.9.6.1.
+
+= 1.9.6.1 =
+Security release. The OAuth return route now requires the manage_options capability before it exchanges an authorization code for tokens. Reported by the WordPress plugin review team. Updating is recommended for every installation.
 = 1.6.3 =
 WordPress.org compliance release. All file-scope ob_start() patterns replaced with wp_add_inline_script(). PHP values passed to JS via wp_json_encode() instead of direct echoing.
 

@@ -2,12 +2,11 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
-## [Unreleased]
+## [1.9.7] – 2026-08-29
 
-Work finished and merged, waiting for the release it will ship in. All of it is scheduled for 1.9.7.
+The first release published through the WordPress.org plugin directory. Everything the two `1.9.7-beta` pre-releases carried is in here, plus one permission check written after `beta.2` was cut. Anyone testing a beta is offered this as an ordinary update — `version_compare()` orders `1.9.7-beta.2` below `1.9.7`, so nobody is left stranded on a pre-release.
 
-The state of this section is testable as `1.9.7-beta.2`: a GitHub pre-release, and only that. It adds the sortable chart and card lists to what `1.9.7-beta.1` already carried; that pre-release stays where it is, so anyone testing it keeps the code they downloaded. It is not published at WordPress.org, where the stable tag stays at 1.9.6 until 1.9.7 is final, and it installs by hand from the attached ZIP. The version carries the `-beta.2` suffix so that `version_compare()` orders it above 1.9.6 and below the finished 1.9.7 — a tester is neither offered a downgrade nor left stranded on the beta.
-
+If you use the REST API, read **Changed** before updating: the key is accepted in the `X-NAWS-Key` header only from here on, and the old query-string form answers 401.
 ### Added
 - **The order of the charts and of the live cards is a setting now.** The yearly comparisons came out in the order the template happened to print them — temperature, pressure, rain, humidity, then whatever indoor modules exist — and there was no way to say that rain matters more here than pressure. Both lists on *Live-Dashboard* are sortable now: pick a row up anywhere and drop it where it belongs, and the front end follows. The two lists sit side by side, because stacked they run to some thirty rows and nobody wants to scroll that far to reach the second one. Without a mouse the six dots take focus and the arrow keys move the row — the same reordering, at no cost in screen space.
 
@@ -125,6 +124,38 @@ The state of this section is testable as `1.9.7-beta.2`: a GitHub pre-release, a
 - **The REST API key page handled its form without asking who was sending it.** `admin/views/rest-api-docs.php` creates and revokes API keys and saves the rate limit on POST, and it verified the nonce for that — but a nonce says the form came from this site, not that whoever submitted it may act. Nobody without `manage_options` could reach the page: it is registered through `add_submenu_page()` under that capability, and the view is only ever `include`d from that locked callback. So this closed nothing that stood open. It is the pattern the review team's finding warns about all the same, and the check now stands in the condition ahead of `check_admin_referer()`, where a request without the capability neither acts nor spends the nonce.
 
 - **`tests/test-oauth-callback.php`** covers both: a call without `manage_options` exchanges nothing, syncs nothing and leaves the stored state in place; an expired, a mismatched and a legacy-nonce state are each rejected; and the ordinary flow still connects.
+## [1.9.6.2] – 2026-08-23
+
+The upload of 1.9.6.1 was rejected by the automated scan at WordPress.org with a
+single error: `Tested up to: 7.0` is behind the current WordPress release, and a
+plugin that lags there is excluded from search results. This release is 1.9.6.1
+with that one header corrected. No code changed.
+
+### Fixed
+- **`Tested up to` now reads 7.1**, in `readme.txt` and in the plugin header. The
+  1.9.6 tag this maintenance line was cut from still said 7.0; the value had
+  already been raised on `main` after 1.9.6 was submitted, so the correction
+  existed but had never reached the package under review.
+## [1.9.6.1] – 2026-08-23
+
+A single security fix on top of 1.9.6, cut from the 1.9.6 tag so that the
+package under review at WordPress.org changes by as little as possible.
+Everything else in progress stays on `main` and ships with 1.9.7.
+
+### Security
+
+- **The OAuth return route ran without a permission check.** `NAWS_Admin::handle_oauth_callback()` hangs on `admin_init` and takes Netatmo's redirect — `?page=naws-settings&code=…&state=…`. It exchanged the code for an access and a refresh token, wrote both into `wp_options` and started a synchronization, and it did all of that for whoever happened to be logged in.
+
+  The OAuth state was verified, and it does what a state is for: it proves the request belongs to a flow started on this site. It says nothing about *who* is following the redirect, and Netatmo returns the code to one fixed URL. `current_user_can( 'manage_options' )` now stands at the top of the method — before the state is read, not after, so a request without the capability cannot consume the pending authorization and make the administrator's own attempt fail.
+
+  Reported by the WordPress plugin review team.
+
+- **The state check had a second way in that nothing produced.** When the state did not match, the value was also accepted as `wp_verify_nonce( $state, 'naws_oauth' )`. No line in the plugin ever created that nonce — an acceptance path without a producer, left behind as backwards compatibility. Its cost was structural rather than exploitable: it turned one plain condition into a compound one whose failing branch let the request continue instead of ending it. The check is a single conjunction now.
+
+  What replaces it for the scanner is a `phpcs:ignore` on the two `$_GET['code']` reads that names the OAuth state as the origin proof — a nonce cannot ride along on a redirect that a third party sends.
+
+- **`tests/test-oauth-callback.php`** covers both: a call without `manage_options` exchanges nothing, syncs nothing and leaves the stored state in place; an expired, a mismatched and a legacy-nonce state are each rejected; and the ordinary flow still connects. Eleven checks, six of which passed before the fix.
+
 ## [1.9.6] – 2026-08-17
 
 ### Changed
