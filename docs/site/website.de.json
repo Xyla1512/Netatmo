@@ -1,5 +1,5 @@
 {
-    "aktualisiert": "2026-08-22",
+    "aktualisiert": "2026-08-24",
     "vorhaben": [
         {
             "id": "naws-calc",
@@ -33,6 +33,13 @@
             "id": "api-schluessel-kopf",
             "titel": "Der API-Schlüssel gehört in den Kopf, nicht in die Adresszeile",
             "satz": "Die REST-API nimmt den Schlüssel künftig nur noch im Kopf X-NAWS-Key an. Ein Geheimnis in der Adresszeile schreiben Zugriffsprotokolle, der Referer-Kopf, der Browserverlauf und jeder Zwischenspeicher unterwegs mit. Aufrufe mit ?api_key= antworten dann mit 401 — wer die API nutzt, stellt am besten vorher um.",
+            "ab": "1.9.7",
+            "bild": null
+        },
+        {
+            "id": "reihenfolge",
+            "titel": "Die Reihenfolge bestimmst du",
+            "satz": "Live-Kacheln und Jahresvergleiche lassen sich in den Einstellungen mit der Maus an ihren Platz schieben — und die Liste zeigt dabei nur, was auf deiner Seite wirklich steht: ein abgeschaltetes Modul nimmt seine Kacheln mit.",
             "ab": "1.9.7",
             "bild": null
         }
