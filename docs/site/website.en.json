@@ -1,0 +1,47 @@
+{
+    "aktualisiert": "2026-08-29",
+    "vorhaben": [
+        {
+            "id": "naws-calc",
+            "titel": "One shortcode for twenty-seven computed values",
+            "satz": "Dew point, apparent temperature, frost days and summer days, degree-day sums and the SPI drought index — all through a single shortcode, with not one figure worked out by hand.",
+            "ab": "1.9.7",
+            "bild": "calc-tabelle"
+        },
+        {
+            "id": "api-retry",
+            "titel": "A short outage at Netatmo no longer costs a reading",
+            "satz": "When the Netatmo service reports that it is busy, the plugin waits exactly as long as the server asks and then asks again — instead of writing a gap into the series.",
+            "ab": "1.9.7",
+            "bild": null
+        },
+        {
+            "id": "krypto-sichtbar",
+            "titel": "The encryption speaks up when it is not working",
+            "satz": "A new status panel shows whether your credentials really are stored encrypted — and names the four reasons that can stop it from happening.",
+            "ab": "1.9.7",
+            "bild": null
+        },
+        {
+            "id": "kopfleiste-schrift",
+            "titel": "Header colour and typeface are settings now",
+            "satz": "The dark header bars and the font in use are picked on the appearance screen, instead of having to be hunted down in a stylesheet.",
+            "ab": "1.9.7",
+            "bild": "erscheinungsbild"
+        },
+        {
+            "id": "api-schluessel-kopf",
+            "titel": "The API key belongs in the header, not in the address bar",
+            "satz": "The REST API accepts the key in the X-NAWS-Key header only. A secret in the address bar is written down by access logs, the Referer header, the browser history and every cache along the way. Calls using ?api_key= answer 401 from now on — if you use the API, switch over before you update.",
+            "ab": "1.9.7",
+            "bild": null
+        },
+        {
+            "id": "reihenfolge",
+            "titel": "You decide the order",
+            "satz": "Live cards and yearly comparisons can be dragged into place in the settings — and the list shows only what your page actually carries: switch a module off and its cards go with it.",
+            "ab": "1.9.7",
+            "bild": null
+        }
+    ]
+}
