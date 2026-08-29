@@ -11,6 +11,19 @@ Merged and waiting for the release it will ship in. Nothing here is published ye
 - **`Plugin URI` points at the plugin's own page now.** It named `www.frank-neumann.de/netatmo-wetter-plugin/`, which is a weather page carrying a short section about the plugin — the readings for Leipzig, a six-day forecast, a button. The plugin's actual home is `netatmo.frank-neumann.de`: what it does, how to install it, the shortcodes, the roadmap and a live dashboard to look at before installing anything. That is what the header is for, and it is what the "Visit plugin site" link in the plugins list opens.
 
   The directory page is deliberately not what it points to. WordPress.org asks that `Plugin URI` name the plugin's own site rather than its listing, and a header that points back at the directory tells a reader nothing they did not already have.
+### Fixed
+
+- **A schema change would never have reached anyone who updates through WordPress.** `NAWS_Database::install()` — which carries `dbDelta()` and the column migrations in `maybe_migrate()` — hung on `register_activation_hook()` alone, and that hook does not fire on an update. WordPress reactivates the plugin silently and says so in as many words in core: *"If a plugin is silently activated (such as during an update), this hook does not fire."*
+
+  Until 1.9.7 that was almost harmless, because the plugin was installed by hand from a downloaded archive and everyone who did that also activated it. From 1.9.7 on it is in the directory, and the update button is the ordinary way to get a new version — which is precisely the path that skipped the migration. The next time `NAWS_DB_VERSION` moves, existing installations would have run new code against an old schema: a query against a column that is not there yet, failing loudly in one place and quietly returning nothing in another.
+
+  `init()` now compares the stored schema version against the constant and runs the install routine when they differ. The comparison costs nothing — `naws_db_version` is an autoloaded option, it is in memory anyway.
+
+  It sits at the top of `init()` because every line below it queries those tables. And it is deliberately **not** inside the `is_admin()` branch that the crypto migration lives in: a site whose admin nobody opens still renders shortcodes, and a shortcode reading a column that does not exist is exactly the failure this prevents. `upgrader_process_complete` would have been the other candidate and covers less — it never fires for WP-CLI or for a file swap on the server.
+
+  Two simultaneous requests can both enter the branch. That is accepted rather than locked: `dbDelta()` and `maybe_migrate()` are repeatable, and a lock that got stuck would block the migration for good, which is the worse failure.
+
+  The cron half of this was never at risk. The watchdog in `init()` already reschedules a missing or stale event on its own, so `NAWS_Cron::schedule()` not running on an update changed nothing.
 ## [1.9.7] – 2026-08-29
 
 The first release published through the WordPress.org plugin directory. Everything the two `1.9.7-beta` pre-releases carried is in here, plus one permission check written after `beta.2` was cut. Anyone testing a beta is offered this as an ordinary update — `version_compare()` orders `1.9.7-beta.2` below `1.9.7`, so nobody is left stranded on a pre-release.

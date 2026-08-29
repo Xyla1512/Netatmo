@@ -100,6 +100,32 @@ final class NAWS_Plugin {
     }
 
     public function init() {
+        // ── Schema: die eine Migration, die ausserhalb des Backends laufen muss ──
+        //
+        // register_activation_hook() feuert bei einem Update NICHT. WordPress
+        // reaktiviert das Plugin stumm, und der Kern sagt das in eigenen Worten:
+        // "If a plugin is silently activated (such as during an update), this
+        // hook does not fire." NAWS_Database::install() - und darin dbDelta()
+        // und maybe_migrate() - laeuft also fuer niemanden, der ueber das
+        // Verzeichnis aktualisiert. Seit das Plugin dort liegt, ist genau das
+        // der gewoehnliche Weg.
+        //
+        // Die Pruefung kostet einen Vergleich gegen eine autogeladene Option.
+        // Sie steht vor allem anderen in dieser Methode, weil jede Zeile
+        // darunter die Tabellen abfragt, und sie steht bewusst NICHT in einem
+        // is_admin()-Zweig: eine Seite, deren Backend niemand aufruft, zeigt
+        // trotzdem Shortcodes an, und ein Shortcode, der eine noch nicht
+        // existierende Spalte liest, ist genau der Fehler, den das hier
+        // verhindert.
+        //
+        // Zwei gleichzeitige Anfragen koennen beide hineinlaufen. Das ist
+        // hingenommen: dbDelta() und maybe_migrate() sind wiederholbar, und
+        // eine Sperre haette den schlechteren Ausfall - eine haengengebliebene
+        // Sperre verhinderte die Migration dauerhaft.
+        if ( get_option( 'naws_db_version' ) !== NAWS_DB_VERSION ) {
+            NAWS_Database::install();
+        }
+
         // Increase cURL connect timeout for Netatmo API calls.
         // Some hosting DNS resolvers are slow; the default 10s connect timeout
         // causes "Resolving timed out" errors during cron syncs.
