@@ -122,6 +122,8 @@ The state of this section is testable as `1.9.7-beta.2`: a GitHub pre-release, a
 
   What replaces it for the scanner is a `phpcs:ignore` on the two `$_GET['code']` reads that names the OAuth state as the origin proof — a nonce cannot ride along on a redirect that a third party sends.
 
+- **The REST API key page handled its form without asking who was sending it.** `admin/views/rest-api-docs.php` creates and revokes API keys and saves the rate limit on POST, and it verified the nonce for that — but a nonce says the form came from this site, not that whoever submitted it may act. Nobody without `manage_options` could reach the page: it is registered through `add_submenu_page()` under that capability, and the view is only ever `include`d from that locked callback. So this closed nothing that stood open. It is the pattern the review team's finding warns about all the same, and the check now stands in the condition ahead of `check_admin_referer()`, where a request without the capability neither acts nor spends the nonce.
+
 - **`tests/test-oauth-callback.php`** covers both: a call without `manage_options` exchanges nothing, syncs nothing and leaves the stored state in place; an expired, a mismatched and a legacy-nonce state are each rejected; and the ordinary flow still connects.
 ## [1.9.6] – 2026-08-17
 

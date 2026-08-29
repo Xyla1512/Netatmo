@@ -8,7 +8,7 @@ $cfg     = NAWS_Rest_API::get_config();
 $message = '';
 $msg_type = 'updated';
 
-if ( isset( $_POST['naws_rest_action'] ) && check_admin_referer( 'naws_rest_api_settings' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by check_admin_referer
+if ( isset( $_POST['naws_rest_action'] ) && current_user_can( 'manage_options' ) && check_admin_referer( 'naws_rest_api_settings' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce checked by check_admin_referer
     $action = sanitize_key( wp_unslash( $_POST['naws_rest_action']  ) );
 
     if ( $action === 'save_settings' ) {
