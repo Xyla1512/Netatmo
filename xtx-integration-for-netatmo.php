@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: XTX Integration for Netatmo
- * Plugin URI: https://www.frank-neumann.de/netatmo-wetter-plugin/
+ * Plugin URI: https://netatmo.frank-neumann.de/
  * Description: Connects to the Netatmo API, stores all sensor data locally and displays live dashboards, charts, history and forecasts via shortcodes.
  * Version: 1.9.7
  * Author: Frank Neumann

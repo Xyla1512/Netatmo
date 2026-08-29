@@ -2,6 +2,15 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [Unreleased]
+
+Merged and waiting for the release it will ship in. Nothing here is published yet.
+
+### Changed
+
+- **`Plugin URI` points at the plugin's own page now.** It named `www.frank-neumann.de/netatmo-wetter-plugin/`, which is a weather page carrying a short section about the plugin — the readings for Leipzig, a six-day forecast, a button. The plugin's actual home is `netatmo.frank-neumann.de`: what it does, how to install it, the shortcodes, the roadmap and a live dashboard to look at before installing anything. That is what the header is for, and it is what the "Visit plugin site" link in the plugins list opens.
+
+  The directory page is deliberately not what it points to. WordPress.org asks that `Plugin URI` name the plugin's own site rather than its listing, and a header that points back at the directory tells a reader nothing they did not already have.
 ## [1.9.7] – 2026-08-29
 
 The first release published through the WordPress.org plugin directory. Everything the two `1.9.7-beta` pre-releases carried is in here, plus one permission check written after `beta.2` was cut. Anyone testing a beta is offered this as an ordinary update — `version_compare()` orders `1.9.7-beta.2` below `1.9.7`, so nobody is left stranded on a pre-release.
