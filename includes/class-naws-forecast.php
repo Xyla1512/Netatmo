@@ -633,7 +633,7 @@ class NAWS_Forecast {
                 ];
             }
         }
-        return [ 'error' => naws__( 'forecast_no_coords' ) ];
+        return [ 'error' => __( 'Station coordinates not available. Please sync your station first.', 'xtx-integration-for-netatmo' ) ];
     }
 
     private static function resolve_manual_location( array $opts ): array {
@@ -641,7 +641,7 @@ class NAWS_Forecast {
         $country = trim( $opts['forecast_country'] ?? '' );
 
         if ( $city === '' ) {
-            return [ 'error' => naws__( 'forecast_no_city' ) ];
+            return [ 'error' => __( 'No city specified. Please enter a city in the forecast settings.', 'xtx-integration-for-netatmo' ) ];
         }
 
         // Clean up city input: strip postcodes, slashes, commas
@@ -671,7 +671,7 @@ class NAWS_Forecast {
         $geo_url = add_query_arg( [
             'name'     => $search,
             'count'    => 5,
-            'language' => NAWS_Lang::lang(),
+            'language' => strtolower( substr( determine_locale(), 0, 2 ) ),
             'format'   => 'json',
         ], self::GEOCODE_URL );
 
@@ -688,7 +688,7 @@ class NAWS_Forecast {
         $results = $json['results'] ?? [];
 
         if ( empty( $results ) ) {
-            return [ 'error' => naws__( 'forecast_geocode_fail' ) ];
+            return [ 'error' => __( 'Location not found. Please check city name and country code.', 'xtx-integration-for-netatmo' ) ];
         }
 
         // Prefer matching country code
@@ -771,12 +771,12 @@ class NAWS_Forecast {
             }
         }
 
-        return naws__( 'forecast_station_location' );
+        return __( 'Station Location', 'xtx-integration-for-netatmo' );
     }
 
     public static function get_location_name(): string {
         $location = self::resolve_location();
-        return $location['name'] ?? naws__( 'forecast_station_location' );
+        return $location['name'] ?? __( 'Station Location', 'xtx-integration-for-netatmo' );
     }
 
     /* ==================================================================
@@ -834,37 +834,43 @@ class NAWS_Forecast {
      * 'label' half is still live. Do not treat 'icon' as authoritative.
      */
     public static function wmo_description( int $code, string $lang = '' ): array {
-        if ( $lang === '' ) $lang = NAWS_Lang::lang();
+        // $lang is ignored since 2.0.0: these labels translate through the
+        // WordPress locale like the rest of the plugin. The parameter stays so
+        // that a theme snippet calling this with two arguments keeps working.
+        unset( $lang );
 
-        $de = [
-            0=>['Klar','clear'],1=>['Überwiegend klar','partly'],2=>['Teilweise bewölkt','partly'],
-            3=>['Bedeckt','cloudy'],45=>['Nebel','fog'],48=>['Raureif-Nebel','fog'],
-            51=>['Leichter Nieselregen','drizzle'],53=>['Nieselregen','drizzle'],55=>['Starker Nieselregen','drizzle'],
-            56=>['Gefrierender Niesel','freezing'],57=>['Starker gefr. Niesel','freezing'],
-            61=>['Leichter Regen','rain-light'],63=>['Regen','rain'],65=>['Starker Regen','rain-heavy'],
-            66=>['Gefrierender Regen','freezing'],67=>['Starker gefr. Regen','freezing'],
-            71=>['Leichter Schneefall','snow-light'],73=>['Schneefall','snow'],75=>['Starker Schneefall','snow-heavy'],
-            77=>['Schneegriesel','snow-light'],
-            80=>['Leichte Regenschauer','shower'],81=>['Regenschauer','shower'],82=>['Starke Regenschauer','shower-heavy'],
-            85=>['Schneeschauer','snow'],86=>['Starke Schneeschauer','snow-heavy'],
-            95=>['Gewitter','thunder'],96=>['Gewitter mit Hagel','thunder'],99=>['Starkes Gewitter/Hagel','thunder'],
-        ];
-        $en = [
-            0=>['Clear sky','clear'],1=>['Mainly clear','partly'],2=>['Partly cloudy','partly'],
-            3=>['Overcast','cloudy'],45=>['Fog','fog'],48=>['Depositing rime fog','fog'],
-            51=>['Light drizzle','drizzle'],53=>['Drizzle','drizzle'],55=>['Dense drizzle','drizzle'],
-            56=>['Light freezing drizzle','freezing'],57=>['Dense freezing drizzle','freezing'],
-            61=>['Light rain','rain-light'],63=>['Rain','rain'],65=>['Heavy rain','rain-heavy'],
-            66=>['Light freezing rain','freezing'],67=>['Heavy freezing rain','freezing'],
-            71=>['Light snow','snow-light'],73=>['Snow','snow'],75=>['Heavy snow','snow-heavy'],
-            77=>['Snow grains','snow-light'],
-            80=>['Light rain showers','shower'],81=>['Rain showers','shower'],82=>['Heavy rain showers','shower-heavy'],
-            85=>['Snow showers','snow'],86=>['Heavy snow showers','snow-heavy'],
-            95=>['Thunderstorm','thunder'],96=>['Thunderstorm with hail','thunder'],99=>['Heavy thunderstorm','thunder'],
+        $map = [
+            0    => [ __( 'Clear sky', 'xtx-integration-for-netatmo' ), 'clear' ],
+            1    => [ __( 'Mainly clear', 'xtx-integration-for-netatmo' ), 'partly' ],
+            2    => [ __( 'Partly cloudy', 'xtx-integration-for-netatmo' ), 'partly' ],
+            3    => [ __( 'Overcast', 'xtx-integration-for-netatmo' ), 'cloudy' ],
+            45   => [ __( 'Fog', 'xtx-integration-for-netatmo' ), 'fog' ],
+            48   => [ __( 'Depositing rime fog', 'xtx-integration-for-netatmo' ), 'fog' ],
+            51   => [ __( 'Light drizzle', 'xtx-integration-for-netatmo' ), 'drizzle' ],
+            53   => [ __( 'Drizzle', 'xtx-integration-for-netatmo' ), 'drizzle' ],
+            55   => [ __( 'Dense drizzle', 'xtx-integration-for-netatmo' ), 'drizzle' ],
+            56   => [ __( 'Light freezing drizzle', 'xtx-integration-for-netatmo' ), 'freezing' ],
+            57   => [ __( 'Dense freezing drizzle', 'xtx-integration-for-netatmo' ), 'freezing' ],
+            61   => [ __( 'Light rain', 'xtx-integration-for-netatmo' ), 'rain-light' ],
+            63   => [ __( 'Rain', 'xtx-integration-for-netatmo' ), 'rain' ],
+            65   => [ __( 'Heavy rain', 'xtx-integration-for-netatmo' ), 'rain-heavy' ],
+            66   => [ __( 'Light freezing rain', 'xtx-integration-for-netatmo' ), 'freezing' ],
+            67   => [ __( 'Heavy freezing rain', 'xtx-integration-for-netatmo' ), 'freezing' ],
+            71   => [ __( 'Light snow', 'xtx-integration-for-netatmo' ), 'snow-light' ],
+            73   => [ __( 'Snow', 'xtx-integration-for-netatmo' ), 'snow' ],
+            75   => [ __( 'Heavy snow', 'xtx-integration-for-netatmo' ), 'snow-heavy' ],
+            77   => [ __( 'Snow grains', 'xtx-integration-for-netatmo' ), 'snow-light' ],
+            80   => [ __( 'Light rain showers', 'xtx-integration-for-netatmo' ), 'shower' ],
+            81   => [ __( 'Rain showers', 'xtx-integration-for-netatmo' ), 'shower' ],
+            82   => [ __( 'Heavy rain showers', 'xtx-integration-for-netatmo' ), 'shower-heavy' ],
+            85   => [ __( 'Snow showers', 'xtx-integration-for-netatmo' ), 'snow' ],
+            86   => [ __( 'Heavy snow showers', 'xtx-integration-for-netatmo' ), 'snow-heavy' ],
+            95   => [ __( 'Thunderstorm', 'xtx-integration-for-netatmo' ), 'thunder' ],
+            96   => [ __( 'Thunderstorm with hail', 'xtx-integration-for-netatmo' ), 'thunder' ],
+            99   => [ __( 'Heavy thunderstorm', 'xtx-integration-for-netatmo' ), 'thunder' ],
         ];
 
-        $map  = ( $lang === 'de' ) ? $de : $en;
-        $info = $map[$code] ?? (($lang==='de') ? ['Unbekannt','clear'] : ['Unknown','clear']);
+        $info = $map[ $code ] ?? [ __( 'Unknown', 'xtx-integration-for-netatmo' ), 'clear' ];
         return [ 'label' => $info[0], 'icon' => $info[1] ];
     }
 
@@ -903,25 +909,30 @@ class NAWS_Forecast {
 
     public static function weekday_short( string $date ): string {
         $dow = (int) gmdate( 'w', strtotime( $date ) );
-        $de  = [ 'So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa' ];
-        $en  = [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ];
-        return ( NAWS_Lang::lang() === 'de' ) ? $de[$dow] : $en[$dow];
+        $days = [
+            __( 'Sun', 'xtx-integration-for-netatmo' ), __( 'Mon', 'xtx-integration-for-netatmo' ), __( 'Tue', 'xtx-integration-for-netatmo' ), __( 'Wed', 'xtx-integration-for-netatmo' ), __( 'Thu', 'xtx-integration-for-netatmo' ), __( 'Fri', 'xtx-integration-for-netatmo' ), __( 'Sat', 'xtx-integration-for-netatmo' ),
+        ];
+        return $days[ $dow ];
     }
 
     public static function weekday_full( string $date ): string {
         $dow = (int) gmdate( 'w', strtotime( $date ) );
-        $de  = [ 'Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag' ];
-        $en  = [ 'Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday' ];
-        return ( NAWS_Lang::lang() === 'de' ) ? $de[$dow] : $en[$dow];
+        $days = [
+            __( 'Sunday', 'xtx-integration-for-netatmo' ), __( 'Monday', 'xtx-integration-for-netatmo' ), __( 'Tuesday', 'xtx-integration-for-netatmo' ), __( 'Wednesday', 'xtx-integration-for-netatmo' ), __( 'Thursday', 'xtx-integration-for-netatmo' ), __( 'Friday', 'xtx-integration-for-netatmo' ), __( 'Saturday', 'xtx-integration-for-netatmo' ),
+        ];
+        return $days[ $dow ];
     }
 
     public static function date_short( string $date ): string {
         $ts = strtotime( $date );
-        if ( NAWS_Lang::lang() === 'de' ) {
-            $m = ['','Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
-            return gmdate( 'd',$ts).'. '.$m[(int)gmdate( 'n',$ts)];
-        }
-        return wp_date( 'M d', $ts );
+        $m  = [ '', __( 'Jan', 'xtx-integration-for-netatmo' ), __( 'Feb', 'xtx-integration-for-netatmo' ), __( 'Mar', 'xtx-integration-for-netatmo' ), __( 'Apr', 'xtx-integration-for-netatmo' ), __( 'May', 'xtx-integration-for-netatmo' ), __( 'Jun', 'xtx-integration-for-netatmo' ), __( 'Jul', 'xtx-integration-for-netatmo' ), __( 'Aug', 'xtx-integration-for-netatmo' ), __( 'Sep', 'xtx-integration-for-netatmo' ), __( 'Oct', 'xtx-integration-for-netatmo' ), __( 'Nov', 'xtx-integration-for-netatmo' ), __( 'Dec', 'xtx-integration-for-netatmo' ) ];
+
+        return sprintf(
+            /* translators: 1: day of the month, 2: abbreviated month name. */
+            _x( '%2$s %1$s', 'short date', 'xtx-integration-for-netatmo' ),
+            gmdate( 'd', $ts ),
+            $m[ (int) gmdate( 'n', $ts ) ]
+        );
     }
 
     public static function is_today( string $date ): bool {

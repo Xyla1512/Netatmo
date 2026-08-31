@@ -53,7 +53,7 @@ $naws_wgt_max = NAWS_Widget_Data::normalise_width( $naws_wgt_width ?? null );
     <div class="naws-wgt-chips">
       <?php foreach ( $naws_wgt['tiles'] as $naws_wgt_tile ) : ?>
         <div class="naws-wgt-chip">
-          <span class="naws-wgt-k"><?php echo esc_html( naws__( 'wgt_' . $naws_wgt_tile['key'] ) ); ?></span>
+          <span class="naws-wgt-k"><?php echo esc_html( naws_label( 'wgt_' . $naws_wgt_tile['key'] ) ); ?></span>
           <span class="naws-wgt-v"><?php echo esc_html( $naws_wgt_tile['value'] ); ?><span class="naws-wgt-sub"> <?php echo esc_html( $naws_wgt_tile['unit'] ); ?></span></span>
         </div>
       <?php endforeach; ?>

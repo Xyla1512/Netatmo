@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 1.9.8
+Stable tag: 1.9.9
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -109,6 +109,12 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 7. Export / Import page for backups
 
 == Changelog ==
+
+= 1.9.9 =
+* Changed: **breaking** — the plugin no longer has its own language setting; the WordPress locale decides. The old setting was a single site-wide value for the front end and the back end at once, and it read the site language rather than your own, so it could never give you a back end in one language and your visitors another. Site Language plus the per-user Language in your profile do exactly that, and for your theme and every other plugin at the same time. If you had the plugin set to a language other than your site's, set the site language instead — or your own user language, if you meant only your own screen.
+* Changed: the interface translates through WordPress now instead of through the plugin's own language files. Until now translate.wordpress.org saw six strings of this plugin; it sees all 649. That means anyone can contribute a language without touching the code, and every language gets a proper WordPress language pack.
+* Changed: weekday, month and weather-condition names are translatable. They used to be two hardcoded lists, German and English, so a Norwegian reader got English with no way to change it.
+* New: German and Norwegian ship with this release as a bridge. Language packs do not exist the moment an update goes out, and an installation that had a German interface yesterday should not find an English one today. A pack always takes precedence once it is built.
 
 = 1.9.8 =
 * Fix: `[naws_table]` produced nothing at all. The shortcode was registered, documented in the reference and listed in this readme, and its stylesheet was written — but the template it includes, `templates/table.php`, had never been committed. Every use of the shortcode output an empty string and left two PHP warnings in the log. The template is there now, and a test fails if it goes missing again.

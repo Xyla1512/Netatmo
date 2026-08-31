@@ -6,35 +6,35 @@ $modules = NAWS_Database::get_modules( false );
 <div class="wrap naws-admin-wrap">
     <h1 class="naws-admin-page-title">
         <span class="naws-title-icon">📡</span>
-        <?php naws_e( 'modules_title' ); ?>
+        <?php esc_html_e( 'Modules', 'xtx-integration-for-netatmo' ); ?>
     </h1>
 
     <div class="naws-admin-panel">
         <div class="naws-panel-header">
-            <h2><?php naws_e( 'all_modules' ); ?></h2>
+            <h2><?php esc_html_e( 'All Modules', 'xtx-integration-for-netatmo' ); ?></h2>
             <p class="description" style="margin:0;">
-                <?php naws_e( 'module_active_desc' ); ?>
+                <?php esc_html_e( 'Deactivated modules are excluded from all frontend displays, charts and cron sync.', 'xtx-integration-for-netatmo' ); ?>
             </p>
         </div>
 
         <?php if ( empty( $modules ) ) : ?>
             <div style="padding:2rem 1.25rem;">
-                <p><?php naws_e( 'no_modules' ); ?></p>
+                <p><?php esc_html_e( 'No modules found yet. Sync data first.', 'xtx-integration-for-netatmo' ); ?></p>
                 <a href="<?php echo esc_url( admin_url( 'admin.php?page=naws-dashboard' ) ); ?>" class="button button-primary">
-                    <?php naws_e( 'go_to_dashboard' ); ?>
+                    <?php esc_html_e( 'Go to Dashboard', 'xtx-integration-for-netatmo' ); ?>
                 </a>
             </div>
         <?php else : ?>
         <table class="wp-list-table widefat striped naws-list-table">
             <thead>
                 <tr>
-                    <th style="width:60px;"><?php naws_e( 'active' ); ?></th>
-                    <th><?php naws_e( 'name' ); ?></th>
-                    <th><?php naws_e( 'type' ); ?></th>
-                    <th><?php naws_e( 'module_id_mac' ); ?></th>
-                    <th><?php naws_e( 'data_types' ); ?></th>
-                    <th><?php naws_e( 'battery' ); ?></th>
-                    <th><?php naws_e( 'last_seen' ); ?></th>
+                    <th style="width:60px;"><?php esc_html_e( 'Active', 'xtx-integration-for-netatmo' ); ?></th>
+                    <th><?php esc_html_e( 'Name', 'xtx-integration-for-netatmo' ); ?></th>
+                    <th><?php esc_html_e( 'Type', 'xtx-integration-for-netatmo' ); ?></th>
+                    <th><?php esc_html_e( 'Module ID (MAC)', 'xtx-integration-for-netatmo' ); ?></th>
+                    <th><?php esc_html_e( 'Data Types', 'xtx-integration-for-netatmo' ); ?></th>
+                    <th><?php esc_html_e( 'Battery', 'xtx-integration-for-netatmo' ); ?></th>
+                    <th><?php esc_html_e( 'Last Seen', 'xtx-integration-for-netatmo' ); ?></th>
                 </tr>
             </thead>
             <tbody id="naws-modules-tbody">

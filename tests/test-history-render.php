@@ -31,8 +31,7 @@ $GLOBALS['mods'] = [
 function get_option( $k, $d = false ) { return $GLOBALS['opts'][ $k ] ?? $d; }
 function esc_attr( $s ) { return htmlspecialchars( (string) $s, ENT_QUOTES ); }
 function esc_html( $s ) { return htmlspecialchars( (string) $s, ENT_QUOTES ); }
-function naws__( $k ) { return $k; }
-function naws_e( $k ) { echo naws__( $k ); }
+require_once __DIR__ . '/i18n-stubs.php';
 function wp_unique_id() { static $n = 0; return ++$n; }
 function wp_create_nonce( $a ) { return 'nonce'; }
 function admin_url( $p ) { return '/wp-admin/' . $p; }
@@ -89,7 +88,7 @@ check( 'jeder Chart bekommt sein Canvas',
 check( 'und seine Legende',
     substr_count( $html, '-leg-indoor_temp_gast"' ), 1 );
 check( 'die Beschriftung steht im Kopf',
-    (bool) strpos( $html, '<div class="naws-hc-title">hc_rain</div>' ), true );
+    (bool) strpos( $html, '<div class="naws-hc-title">Annual Precipitation</div>' ), true );
 
 $html = render( [ 'naws_history_chart_order' => [ 'rain', 'indoor_temp_gast' ] ] );
 check( 'die gespeicherte Reihenfolge zieht Regen nach vorn',

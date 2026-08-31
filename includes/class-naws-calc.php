@@ -414,7 +414,7 @@ class NAWS_Calc {
                     return null;
                 }
                 $felt = NAWS_Astro::feels_like( $temp, $hum, self::wind_kmh() );
-                return naws__( NAWS_Astro::thermal_sensation( $felt ) );
+                return naws_label( NAWS_Astro::thermal_sensation( $felt ) );
 
             case 'wind_compass':
                 $angle = self::reading( self::module_id( 'wind' ), 'WindAngle' );
@@ -677,7 +677,7 @@ class NAWS_Calc {
                 // A sum below 200 is a correct value, not a missing one — say
                 // so in words rather than showing an empty field.
                 return $date === null
-                    ? naws__( 'calc_glts_pending' )
+                    ? __( 'not yet reached', 'xtx-integration-for-netatmo' )
                     : wp_date( get_option( 'date_format', 'd.m.Y' ), strtotime( $date . ' 12:00:00' ) );
         }
 

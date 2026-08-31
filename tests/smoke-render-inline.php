@@ -3,7 +3,7 @@ define( 'ABSPATH', __DIR__ );
 define( 'NAWS_PLUGIN_DIR', dirname( __DIR__ ) . '/' );
 function esc_attr( $s ) { return htmlspecialchars( (string) $s, ENT_QUOTES ); }
 function absint( $n ) { return abs( (int) $n ); }
-function naws__( $k ) { return $k; }
+require_once __DIR__ . '/i18n-stubs.php';
 function add_action( ...$a ) {}
 function is_admin() { return false; }
 require_once NAWS_PLUGIN_DIR . 'includes/class-naws-astro.php';

@@ -29,8 +29,8 @@ if ( ! function_exists( 'naws_ls_grip' ) ) :
 function naws_ls_grip() {
     ?>
     <span class="naws-ls-grip" tabindex="0" role="button"
-          title="<?php echo esc_attr( naws__( 'ls_sort_drag' ) ); ?>"
-          aria-label="<?php echo esc_attr( naws__( 'ls_sort_drag' ) ); ?>">
+          title="<?php echo esc_attr( __( 'Drag to reorder, or move with the arrow keys', 'xtx-integration-for-netatmo' ) ); ?>"
+          aria-label="<?php echo esc_attr( __( 'Drag to reorder, or move with the arrow keys', 'xtx-integration-for-netatmo' ) ); ?>">
         <svg width="12" height="16" viewBox="0 0 12 16" fill="currentColor" aria-hidden="true"><circle cx="3" cy="3" r="1.4"/><circle cx="9" cy="3" r="1.4"/><circle cx="3" cy="8" r="1.4"/><circle cx="9" cy="8" r="1.4"/><circle cx="3" cy="13" r="1.4"/><circle cx="9" cy="13" r="1.4"/></svg>
     </span>
     <?php
@@ -59,13 +59,13 @@ foreach ( $all_modules as $m ) {
     $extra_module4_defs[] = [
         'type'      => 'NAModule4_' . $slug,
         'label'     => $m['module_name'],
-        'sub'       => naws__( 'mod_indoor4_sub' ),
+        'sub'       => __( 'Indoor module (NAModule4)', 'xtx-integration-for-netatmo' ),
         'color'     => $color,
         'db_module' => $m,
         'params'    => [
-            "Temperature_{$slug}" => [ 'label' => naws__( 'param_temperature' ), 'unit' => '°C'  ],
-            "Humidity_{$slug}"    => [ 'label' => naws__( 'param_humidity' ), 'unit' => '%'   ],
-            "CO2_{$slug}"         => [ 'label' => naws__( 'param_co2' ), 'unit' => 'ppm' ],
+            "Temperature_{$slug}" => [ 'label' => __( 'Temperature', 'xtx-integration-for-netatmo' ), 'unit' => '°C'  ],
+            "Humidity_{$slug}"    => [ 'label' => _x( 'Humidity', 'param_humidity', 'xtx-integration-for-netatmo' ), 'unit' => '%'   ],
+            "CO2_{$slug}"         => [ 'label' => __( 'CO₂ Concentration', 'xtx-integration-for-netatmo' ), 'unit' => 'ppm' ],
         ],
     ];
 }
@@ -74,50 +74,50 @@ foreach ( $all_modules as $m ) {
 $module_defs = [
     [
         'type'   => 'NAMain',
-        'label'  => naws__( 'mod_base' ),
-        'sub'    => naws__( 'mod_base_sub' ),
+        'label'  => __( 'Base', 'xtx-integration-for-netatmo' ),
+        'sub'    => __( 'Base station (Indoor)', 'xtx-integration-for-netatmo' ),
         'color'  => '#2271b1',
         'params' => [
-            'Temperature_indoor' => [ 'label' => naws__( 'param_temp_indoor' ), 'unit' => '°C'  ],
-            'Humidity_indoor'    => [ 'label' => naws__( 'param_humidity' ),    'unit' => '%'   ],
+            'Temperature_indoor' => [ 'label' => __( 'Indoor Temperature', 'xtx-integration-for-netatmo' ), 'unit' => '°C'  ],
+            'Humidity_indoor'    => [ 'label' => _x( 'Humidity', 'param_humidity', 'xtx-integration-for-netatmo' ),    'unit' => '%'   ],
             'Pressure'           => [ 'label' => 'Luftdruck relativ',      'unit' => 'hPa' ],
             'AbsolutePressure'   => [ 'label' => 'Luftdruck absolut',      'unit' => 'hPa' ],
             'CO2'                => [ 'label' => 'CO₂-Konzentration',      'unit' => 'ppm' ],
-            'Noise'              => [ 'label' => naws__( 'param_noise' ), 'unit' => 'dB'  ],
+            'Noise'              => [ 'label' => __( 'Noise Level', 'xtx-integration-for-netatmo' ), 'unit' => 'dB'  ],
         ],
     ],
     [
         'type'   => 'NAModule1',
-        'label'  => naws__( 'mod_outdoor' ),
-        'sub'    => naws__( 'mod_outdoor_sub' ),
+        'label'  => __( 'Outdoor Module', 'xtx-integration-for-netatmo' ),
+        'sub'    => __( 'Outdoor sensor', 'xtx-integration-for-netatmo' ),
         'color'  => '#d4541a',
         'params' => [
-            'Temperature'  => [ 'label' => naws__( 'param_temp_out' ), 'unit' => '°C' ],
+            'Temperature'  => [ 'label' => __( 'Outdoor Temperature (current)', 'xtx-integration-for-netatmo' ), 'unit' => '°C' ],
             'min_temp'     => [ 'label' => 'Min-Temperatur (Tag)',       'unit' => '°C' ],
             'max_temp'     => [ 'label' => 'Max-Temperatur (Tag)',       'unit' => '°C' ],
-            'Humidity'     => [ 'label' => naws__( 'param_humidity' ), 'unit' => '%'  ],
+            'Humidity'     => [ 'label' => _x( 'Humidity', 'param_humidity', 'xtx-integration-for-netatmo' ), 'unit' => '%'  ],
         ],
     ],
     [
         'type'   => 'NAModule2',
-        'label'  => naws__( 'mod_wind' ),
+        'label'  => __( 'Wind Gauge', 'xtx-integration-for-netatmo' ),
         'sub'    => 'Wind-Modul',
         'color'  => '#0a9272',
         'params' => [
             'WindStrength' => [ 'label' => 'Windgeschwindigkeit',   'unit' => 'km/h' ],
-            'GustStrength' => [ 'label' => naws__( 'param_gust_speed' ), 'unit' => 'km/h' ],
-            'WindAngle'    => [ 'label' => naws__( 'param_wind_dir' ), 'unit' => '°'    ],
-            'GustAngle'    => [ 'label' => naws__( 'param_gust_dir' ), 'unit' => '°'    ],
+            'GustStrength' => [ 'label' => __( 'Gust Speed', 'xtx-integration-for-netatmo' ), 'unit' => 'km/h' ],
+            'WindAngle'    => [ 'label' => __( 'Wind Direction (compass)', 'xtx-integration-for-netatmo' ), 'unit' => '°'    ],
+            'GustAngle'    => [ 'label' => __( 'Gust Direction', 'xtx-integration-for-netatmo' ), 'unit' => '°'    ],
         ],
     ],
     [
         'type'   => 'NAModule3',
         'label'  => 'Regenmesser',
-        'sub'    => naws__( 'mod_rain_sub' ),
+        'sub'    => __( 'Precipitation module', 'xtx-integration-for-netatmo' ),
         'color'  => '#0579b0',
         'params' => [
             'Rain'         => [ 'label' => 'Regen aktuell',       'unit' => 'mm' ],
-            'sum_rain_1'   => [ 'label' => naws__( 'param_rain_1h' ), 'unit' => 'mm' ],
+            'sum_rain_1'   => [ 'label' => __( 'Total last hour', 'xtx-integration-for-netatmo' ), 'unit' => 'mm' ],
             'sum_rain_24'  => [ 'label' => 'Summe letzte 24h',     'unit' => 'mm' ],
         ],
     ],
@@ -137,7 +137,7 @@ $module_defs = array_merge( $module_defs, $extra_module4_defs );
 <div class="wrap naws-admin-wrap">
     <h1 class="naws-admin-page-title">
         <span class="naws-title-icon">🖥️</span>
-        <?php naws_e( 'live_settings_title' ); ?>
+        <?php esc_html_e( 'Live-Dashboard — Display Settings', 'xtx-integration-for-netatmo' ); ?>
     </h1>
 
     <div class="naws-ls-layout">
@@ -147,9 +147,9 @@ $module_defs = array_merge( $module_defs, $extra_module4_defs );
 
             <div class="naws-section-label" style="margin-bottom:.5rem;">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                <?php naws_e( 'ls_modules_sensors' ); ?>
+                <?php esc_html_e( 'Modules & Sensors', 'xtx-integration-for-netatmo' ); ?>
             </div>
-            <p class="naws-ls-hint"><?php NAWS_Lang::r( 'ls_hint_toggles' ); ?></p>
+            <p class="naws-ls-hint"><?php echo wp_kses_post( __( 'The <strong>left toggle</strong> activates/deactivates the entire module. The <strong>middle toggle</strong> shows/hides the tile in the dashboard. The <strong>📈 icon</strong> toggles the 24h chart. Click the module name to expand/collapse.', 'xtx-integration-for-netatmo' ) ); ?></p>
 
             <div class="naws-ls-accordion">
             <?php foreach ( $module_defs as $idx => $md ) :
@@ -171,7 +171,7 @@ $module_defs = array_merge( $module_defs, $extra_module4_defs );
                     <!-- Master toggle -->
                     <button type="button"
                             class="naws-ls-mod-toggle <?php echo $mod_hidden ? '' : 'is-on'; ?>"
-                            title="<?php echo $mod_hidden ? esc_attr( naws__( 'ls_mod_activate' ) ) : esc_attr( naws__( 'ls_mod_deactivate' ) ); ?>">
+                            title="<?php echo $mod_hidden ? esc_attr( __( 'Activate module', 'xtx-integration-for-netatmo' ) ) : esc_attr( __( 'Deactivate module', 'xtx-integration-for-netatmo' ) ); ?>">
                         <span class="naws-ls-mod-knob"></span>
                         <input type="checkbox" class="naws-mod-cb"
                                value="<?php echo esc_attr($mod_type); ?>"
@@ -191,7 +191,7 @@ $module_defs = array_merge( $module_defs, $extra_module4_defs );
                             <span class="naws-ls-mod-sub">
                                 <?php echo esc_html($md['sub']); ?>
                                 <?php if ( $has_params ) : ?>
-                                &nbsp;·&nbsp;<span class="naws-ls-mod-count"><?php echo esc_html( $enabled . '/' . $total ); ?> <?php naws_e( 'ls_count_active' ); ?></span>
+                                &nbsp;·&nbsp;<span class="naws-ls-mod-count"><?php echo esc_html( $enabled . '/' . $total ); ?> <?php esc_html_e( 'active', 'xtx-integration-for-netatmo' ); ?></span>
                                 <?php endif; ?>
                             </span>
                         </div>
@@ -205,7 +205,7 @@ $module_defs = array_merge( $module_defs, $extra_module4_defs );
                     <?php if ( ! $has_params ) : ?>
                         <div class="naws-ls-empty">
                             <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                            <?php naws_e( 'ls_no_data_module' ); ?>
+                            <?php esc_html_e( 'No data yet — module has not delivered any readings.', 'xtx-integration-for-netatmo' ); ?>
                         </div>
                     <?php else : ?>
                         <div class="naws-ls-params">
@@ -258,9 +258,9 @@ $module_defs = array_merge( $module_defs, $extra_module4_defs );
 
             <div class="naws-section-label" style="margin:1.4rem 0 .5rem;">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                <?php naws_e( 'ls_year_charts' ); ?>
+                <?php esc_html_e( 'Year Comparison — Charts', 'xtx-integration-for-netatmo' ); ?>
             </div>
-            <p class="naws-ls-hint"><?php NAWS_Lang::r( 'ls_year_hint' ); ?></p>
+            <p class="naws-ls-hint"><?php echo wp_kses_post( __( 'Enables/disables the individual charts in the <code>[naws_history]</code> widget. Pick a row up with the mouse and move it — that is the order the front end uses.', 'xtx-integration-for-netatmo' ) ); ?></p>
             <div class="naws-ls-history-charts naws-ls-sortable" data-order-field="history_chart_order">
             <?php foreach ( $history_chart_defs as $cdef ) :
                 $chart_key = $cdef['id'];
@@ -288,9 +288,9 @@ $module_defs = array_merge( $module_defs, $extra_module4_defs );
             <!-- ── Live-Dashboard: Reihenfolge der Kacheln ─────────────────── -->
             <div class="naws-section-label" style="margin:1.4rem 0 .5rem;">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                <?php naws_e( 'ls_live_cards' ); ?>
+                <?php esc_html_e( 'Live Dashboard — Card Order', 'xtx-integration-for-netatmo' ); ?>
             </div>
-            <p class="naws-ls-hint"><?php NAWS_Lang::r( 'ls_live_cards_hint' ); ?></p>
+            <p class="naws-ls-hint"><?php echo wp_kses_post( __( 'Sets the order the cards appear in within the <code>[naws_live]</code> widget. Showing and hiding them happens above, with the modules.', 'xtx-integration-for-netatmo' ) ); ?></p>
             <div class="naws-ls-history-charts naws-ls-sortable" data-order-field="live_card_order">
             <?php
             $lc_sichtbar = 0;
@@ -329,7 +329,7 @@ $module_defs = array_merge( $module_defs, $extra_module4_defs );
             </div>
             <?php endforeach; ?>
             <p class="naws-ls-hint naws-ls-cards-empty" <?php echo $lc_sichtbar ? 'hidden' : ''; ?>>
-                <?php naws_e( 'ls_cards_all_off' ); ?>
+                <?php esc_html_e( 'No card is switched on at the moment — turn one on above, with the modules.', 'xtx-integration-for-netatmo' ); ?>
             </p>
             </div>
 
@@ -349,27 +349,27 @@ $module_defs = array_merge( $module_defs, $extra_module4_defs );
         <div class="naws-ls-side">
             <div class="naws-section-label" style="margin-bottom:.5rem;">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-                <?php naws_e( 'ls_shortcode' ); ?>
+                <?php echo esc_html( _x( 'Shortcode', 'ls_shortcode', 'xtx-integration-for-netatmo' ) ); ?>
             </div>
             <div class="naws-admin-panel">
                 <div style="padding:1rem 1.1rem;">
                     <code class="naws-ls-sc">[naws_live title="Meine Wetterstation" refresh="60"]</code>
                     <p class="naws-ls-sc-desc">
-                        <strong>title</strong> – <?php naws_e( 'ls_sc_title_desc' ); ?><br>
-                        <strong>refresh</strong> – <?php naws_e( 'ls_sc_refresh_desc' ); ?>
+                        <strong>title</strong> – <?php esc_html_e( 'Station name', 'xtx-integration-for-netatmo' ); ?><br>
+                        <strong>refresh</strong> – <?php esc_html_e( 'Seconds (default: 60)', 'xtx-integration-for-netatmo' ); ?>
                     </p>
                 </div>
             </div>
 
             <div class="naws-section-label" style="margin-top:1.1rem; margin-bottom:.5rem;">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                <?php naws_e( 'ls_notes' ); ?>
+                <?php esc_html_e( 'Notes', 'xtx-integration-for-netatmo' ); ?>
             </div>
             <div class="naws-admin-panel">
                 <div style="padding:.85rem 1rem; font-size:.78rem; color:#4a5568; line-height:1.6;">
-                    <p style="margin:0 0 .5rem;"><?php NAWS_Lang::r( 'ls_mod_note_master' ); ?></p>
-                    <p style="margin:0 0 .5rem;"><?php NAWS_Lang::r( 'ls_mod_note_sensor' ); ?></p>
-                    <p style="margin:0;"><?php NAWS_Lang::r( 'ls_mod_note_wind' ); ?></p>
+                    <p style="margin:0 0 .5rem;"><?php echo wp_kses_post( __( '<strong>Module toggle (left):</strong> Hides the entire module. Individual settings are preserved.', 'xtx-integration-for-netatmo' ) ); ?></p>
+                    <p style="margin:0 0 .5rem;"><?php echo wp_kses_post( __( '<strong>Sensor toggle (right):</strong> Hides individual readings.', 'xtx-integration-for-netatmo' ) ); ?></p>
+                    <p style="margin:0;"><?php echo wp_kses_post( __( '<strong>Wind gauge:</strong> Wind, gusts and compass are always displayed as a unit.', 'xtx-integration-for-netatmo' ) ); ?></p>
                 </div>
             </div>
         </div>

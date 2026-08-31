@@ -507,7 +507,7 @@ class NAWS_Cron {
         if ( $state['last_success'] === 0 ) {
             return [
                 'status'  => 'warning',
-                'message' => naws__( 'health_no_sync_yet' ),
+                'message' => __( 'No successful sync yet', 'xtx-integration-for-netatmo' ),
             ];
         }
 
@@ -518,7 +518,7 @@ class NAWS_Cron {
             return [
                 'status'  => 'error',
                 'message' => sprintf(
-                    naws__( 'health_error_backoff' ),
+                    /* translators: 1: number of consecutive errors, 2: minutes since the last sync. */ __( 'Error backoff: %1$d consecutive errors, last sync %2$d min ago', 'xtx-integration-for-netatmo' ),
                     $state['consecutive_errors'],
                     intval( $since_last / 60 )
                 ),
@@ -532,7 +532,7 @@ class NAWS_Cron {
         if ( $since_last > $base * $stale_factor ) {
             return [
                 'status'  => 'warning',
-                'message' => sprintf( naws__( 'health_stale_sync' ), intval( $since_last / 60 ) ),
+                'message' => sprintf( /* translators: %d: minutes since the last sync. */ __( 'Warning: last sync %d minutes ago', 'xtx-integration-for-netatmo' ), intval( $since_last / 60 ) ),
             ];
         }
 
@@ -540,13 +540,13 @@ class NAWS_Cron {
         if ( self::is_night_mode() ) {
             return [
                 'status'  => 'ok',
-                'message' => naws__( 'health_night_mode' ),
+                'message' => __( 'Night mode active (reduced polling)', 'xtx-integration-for-netatmo' ),
             ];
         }
 
         return [
             'status'  => 'ok',
-            'message' => sprintf( naws__( 'health_ok' ), intval( $since_last / 60 ) ),
+            'message' => sprintf( /* translators: %d: minutes since the last sync. */ __( 'Sync OK (%d min ago)', 'xtx-integration-for-netatmo' ), intval( $since_last / 60 ) ),
         ];
     }
 

@@ -46,7 +46,7 @@ function get_posts( $args = [] ) {
 function get_the_title( $id = 0 ) {
     return $GLOBALS['naws_test_font_posts'][ $id ] ?? '';
 }
-function naws__( $k ) { return $k; }
+require_once __DIR__ . '/i18n-stubs.php';
 function sanitize_text_field( $s ) { return trim( wp_strip_all_tags( $s ) ); }
 function wp_strip_all_tags( $s ) { return strip_tags( (string) $s ); }
 

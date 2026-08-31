@@ -32,17 +32,18 @@ function get_option( $key, $default = false ) {
         ? $GLOBALS['naws_test_options'][ $key ]
         : $default;
 }
-// Uebersetzungen geben ihren Schluessel zurueck, damit die Erwartungen
-// lesbar bleiben. Einzige Ausnahme ist card_wind_gusts: dieser Text traegt
-// in de.php eine HTML-Entity, weil das Frontend ihn als Markup einsetzt.
-// Die Sortierliste im Backend escaped dagegen selbst — kaeme die Entity
-// dort roh an, stuende in der Liste "Wind &amp;amp; Boeen".
-function naws__( $k ) {
-    return $k === 'card_wind_gusts' ? 'Wind &amp; Böen' : $k;
+// Uebersetzungen geben ihren englischen Text zurueck, damit die Erwartungen
+// lesbar bleiben. Einzige Ausnahme ist "Wind &amp; Gusts": dieser Text traegt
+// eine HTML-Entity, weil das Frontend ihn als Markup einsetzt. Die
+// Sortierliste im Backend escaped dagegen selbst — kaeme die Entity dort roh
+// an, stuende in der Liste "Wind &amp;amp; Boeen". Er wird hier uebersetzt,
+// damit der Fall so aussieht wie auf einer deutschen Seite.
+function __( $s, $d = null ) {
+    return $s === 'Wind &amp; Gusts' ? 'Wind &amp; Böen' : $s;
 }
 function esc_html( $s ) { return $s; }
 function esc_attr( $s ) { return $s; }
-function __( $s, $d = null ) { return $s; }
+require_once __DIR__ . '/i18n-stubs.php';
 
 class NAWS_Database {
     public static function get_modules( $active_only = false ): array {
@@ -156,7 +157,7 @@ check( 'fuenf feste Charts in ihrer angestammten Reihenfolge',
     array_column( $defs, 'id' ),
     [ 'temp_minmax', 'temp_avg', 'pressure', 'rain', 'humidity' ] );
 check( 'jeder Chart bringt seine Beschriftung mit',
-    $defs[0]['label'], 'hc_temp_minmax' );
+    $defs[0]['label'], 'Temperature Min / Max' );
 check( 'und sein Symbol — die Sortierliste zeigt beides',
     $defs[3]['icon'], '🌧️' );
 
@@ -222,13 +223,13 @@ check( 'die Regensumme ist keine eigene Kachel',
 // ist von der anderen zu unterscheiden.
 $defs = NAWS_Helpers::live_card_defs();
 check( 'die Kachel heisst wie im Frontend',
-    $defs[0]['label'], 'card_temperature' );
+    $defs[0]['label'], 'Temperature' );
 check( 'ihre Herkunft steht daneben, nicht im Namen',
-    $defs[0]['group'], 'lbl_outdoor' );
+    $defs[0]['group'], 'Outdoor' );
 check( 'dieselbe Kachel aus der Basis traegt denselben Namen',
-    $defs[7]['label'], 'card_temperature' );
+    $defs[7]['label'], 'Temperature' );
 check( 'unterschieden werden die beiden allein ueber die Herkunft',
-    $defs[7]['group'], 'lbl_base' );
+    $defs[7]['group'], 'Base' );
 check( 'der Regenmesser hat nur ein Modul und braucht keinen Zusatz',
     $defs[9]['group'], '' );
 check( 'kaufmaennische Und-Zeichen kommen als Text, nicht als Entity',
@@ -244,7 +245,7 @@ check( 'das Innenmodul haengt vier Kacheln hinten an',
     array_slice( array_column( $defs, 'id' ), -4 ),
     [ 'Temperature_gast', 'Humidity_gast', 'CO2_gast', 'Noise_gast' ] );
 check( 'die Kachel des Innenmoduls traegt den Modulnamen als Herkunft',
-    [ $defs[12]['label'], $defs[12]['group'] ], [ 'card_temperature', 'Gast' ] );
+    [ $defs[12]['label'], $defs[12]['group'] ], [ 'Temperature', 'Gast' ] );
 
 // ── Min und Max stehen normalerweise in der Temperaturkachel ─────────────
 // buildLive() haengt sie als Unterzeilen an die Temperaturkachel und zeichnet

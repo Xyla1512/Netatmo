@@ -200,7 +200,7 @@ class NAWS_Shortcodes {
             'date_from'         => '',
             'date_to'           => '',
             'group_by'          => 'day',
-            'title'             => naws__( 'hc_history_title' ),
+            'title'             => __( 'Historical Weather Data', 'xtx-integration-for-netatmo' ),
             'height'            => '420',
             'show_range_picker' => 'true',
             'year'              => '',
@@ -401,7 +401,7 @@ class NAWS_Shortcodes {
                 'year'    => sanitize_text_field( $atts['year'] ),
             ] );
             if ( $cov !== null && $cov['days'] > 0 ) {
-                $output .= ' ' . esc_html( sprintf( naws__( 'calc_note' ), $cov['rows'], $cov['days'] ) );
+                $output .= ' ' . esc_html( sprintf( /* translators: 1: number of days with data, 2: number of days in the period. */ __( '(from %1$d of %2$d days)', 'xtx-integration-for-netatmo' ), $cov['rows'], $cov['days'] ) );
             }
         }
 
@@ -432,7 +432,7 @@ class NAWS_Shortcodes {
 
         // Dynamic default title: "5-Tage-Vorhersage" / "5-Day Forecast"
         if ( $atts['title'] === '' ) {
-            $atts['title'] = sprintf( naws__( 'forecast_title' ), $days );
+            $atts['title'] = sprintf( /* translators: %d: number of forecast days. */ __( '%d-Day Forecast', 'xtx-integration-for-netatmo' ), $days );
         }
 
         $forecast = NAWS_Forecast::get_forecast( $days );

@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 <div class="wrap naws-admin-wrap">
 <h1 class="naws-admin-page-title">
     <span class="naws-title-icon">📦</span>
-    <?php naws_e( 'export_title' ); ?>
+    <?php esc_html_e( 'Export & Import', 'xtx-integration-for-netatmo' ); ?>
 </h1>
 
 <?php
@@ -19,7 +19,7 @@ if ( isset( $_GET['import_error'] ) && isset( $_GET['_wpnonce'] ) && wp_verify_n
 <?php endif; ?>
 
 <?php if ( isset( $_GET['import_done'] ) && isset( $_GET['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'naws_notice' ) ) : ?>
-    <div class="notice notice-success is-dismissible"><p><?php echo esc_html( naws__( 'import_complete' ) ); ?></p></div>
+    <div class="notice notice-success is-dismissible"><p><?php echo esc_html( __( 'Import chunk complete!', 'xtx-integration-for-netatmo' ) ); ?></p></div>
 <?php endif; ?>
 
 <div class="naws-admin-two-col">
@@ -30,22 +30,22 @@ if ( isset( $_GET['import_error'] ) && isset( $_GET['_wpnonce'] ) && wp_verify_n
   <!-- Weather Data Export -->
   <div class="naws-admin-panel" style="margin-bottom:1.5rem;">
     <div class="naws-panel-header">
-        <h2>📊 <?php naws_e( 'export_weather_title' ); ?></h2>
+        <h2>📊 <?php esc_html_e( 'Export Weather Data', 'xtx-integration-for-netatmo' ); ?></h2>
     </div>
     <div class="naws-panel-body">
         <p style="font-size:0.85rem; color:#94a3b8; margin:0 0 0.75rem;">
-            <?php naws_e( 'export_weather_desc' ); ?>
+            <?php esc_html_e( 'Export all daily summary data as a JSON file. Includes temperature, pressure, precipitation and other aggregated values.', 'xtx-integration-for-netatmo' ); ?>
         </p>
 
         <?php if ( $daily_count > 0 ) : ?>
             <table class="naws-info-table" style="margin-bottom:1rem;">
                 <tr>
-                    <td><?php naws_e( 'daily_table' ); ?>:</td>
-                    <td><strong><?php echo esc_html( number_format( $daily_count ) ); ?></strong> <?php echo esc_html( naws__( 'export_rows', [ number_format( $daily_count ) ] ) ); ?></td>
+                    <td><?php esc_html_e( 'Daily summaries', 'xtx-integration-for-netatmo' ); ?>:</td>
+                    <td><strong><?php echo esc_html( number_format( $daily_count ) ); ?></strong> <?php echo esc_html( sprintf( /* translators: %s: number of rows, already formatted. */ __( '%s rows', 'xtx-integration-for-netatmo' ), number_format( $daily_count ) ) ); ?></td>
                 </tr>
                 <?php if ( $daily_range && $daily_range['date_begin'] ) : ?>
                 <tr>
-                    <td><?php naws_e( 'import_date_range' ); ?>:</td>
+                    <td><?php esc_html_e( 'Date Range', 'xtx-integration-for-netatmo' ); ?>:</td>
                     <td><?php echo esc_html( $daily_range['date_begin'] . ' — ' . $daily_range['date_end'] ); ?></td>
                 </tr>
                 <?php endif; ?>
@@ -55,11 +55,11 @@ if ( isset( $_GET['import_error'] ) && isset( $_GET['_wpnonce'] ) && wp_verify_n
                 <?php wp_nonce_field( 'naws_export_weather' ); ?>
                 <input type="hidden" name="action" value="naws_export_weather">
                 <button type="submit" class="button button-primary">
-                    📥 <?php naws_e( 'export_btn_weather' ); ?>
+                    📥 <?php esc_html_e( 'Download Weather Data', 'xtx-integration-for-netatmo' ); ?>
                 </button>
             </form>
         <?php else : ?>
-            <p style="color:#64748b;"><?php naws_e( 'export_no_data' ); ?></p>
+            <p style="color:#64748b;"><?php esc_html_e( 'No data to export. Import historical data first.', 'xtx-integration-for-netatmo' ); ?></p>
         <?php endif; ?>
     </div>
   </div>
@@ -67,25 +67,25 @@ if ( isset( $_GET['import_error'] ) && isset( $_GET['_wpnonce'] ) && wp_verify_n
   <!-- Full Backup Export -->
   <div class="naws-admin-panel">
     <div class="naws-panel-header">
-        <h2>💾 <?php naws_e( 'export_full_title' ); ?></h2>
+        <h2>💾 <?php esc_html_e( 'Full Backup', 'xtx-integration-for-netatmo' ); ?></h2>
     </div>
     <div class="naws-panel-body">
         <p style="font-size:0.85rem; color:#94a3b8; margin:0 0 0.75rem;">
-            <?php naws_e( 'export_full_desc' ); ?>
+            <?php esc_html_e( 'Export weather data, module configuration and all plugin settings. Useful for migrating to a new WordPress installation.', 'xtx-integration-for-netatmo' ); ?>
         </p>
 
         <div class="naws-info-box naws-info-box-info" style="margin:0 0 1rem;">
-            <strong>🔒</strong> <?php naws_e( 'export_full_note' ); ?>
+            <strong>🔒</strong> <?php esc_html_e( 'API tokens and keys are never included in exports for security reasons.', 'xtx-integration-for-netatmo' ); ?>
         </div>
 
         <table class="naws-info-table" style="margin-bottom:1rem;">
             <tr>
-                <td><?php naws_e( 'menu_modules' ); ?>:</td>
-                <td><strong><?php echo esc_html( count( $modules ) ); ?></strong> <?php echo esc_html( naws__( 'export_modules_count', [ count( $modules ) ] ) ); ?></td>
+                <td><?php esc_html_e( 'Modules', 'xtx-integration-for-netatmo' ); ?>:</td>
+                <td><strong><?php echo esc_html( count( $modules ) ); ?></strong> <?php echo esc_html( sprintf( /* translators: %d: number of modules. */ __( '%d modules', 'xtx-integration-for-netatmo' ), count( $modules ) ) ); ?></td>
             </tr>
             <tr>
-                <td><?php naws_e( 'daily_table' ); ?>:</td>
-                <td><strong><?php echo esc_html( number_format( $daily_count ) ); ?></strong> <?php naws_e( 'export_rows_label' ); ?></td>
+                <td><?php esc_html_e( 'Daily summaries', 'xtx-integration-for-netatmo' ); ?>:</td>
+                <td><strong><?php echo esc_html( number_format( $daily_count ) ); ?></strong> <?php esc_html_e( 'rows', 'xtx-integration-for-netatmo' ); ?></td>
             </tr>
         </table>
 
@@ -93,7 +93,7 @@ if ( isset( $_GET['import_error'] ) && isset( $_GET['_wpnonce'] ) && wp_verify_n
             <?php wp_nonce_field( 'naws_export_full' ); ?>
             <input type="hidden" name="action" value="naws_export_full">
             <button type="submit" class="button button-primary">
-                💾 <?php naws_e( 'export_btn_full' ); ?>
+                💾 <?php esc_html_e( 'Download Full Backup', 'xtx-integration-for-netatmo' ); ?>
             </button>
         </form>
     </div>
@@ -106,15 +106,15 @@ if ( isset( $_GET['import_error'] ) && isset( $_GET['_wpnonce'] ) && wp_verify_n
 
   <div class="naws-admin-panel" style="margin-bottom:1.5rem;">
     <div class="naws-panel-header">
-        <h2>📤 <?php naws_e( 'import_file_title' ); ?></h2>
+        <h2>📤 <?php esc_html_e( 'Import from File', 'xtx-integration-for-netatmo' ); ?></h2>
     </div>
     <div class="naws-panel-body">
         <p style="font-size:0.85rem; color:#94a3b8; margin:0 0 0.75rem;">
-            <?php naws_e( 'import_file_desc' ); ?>
+            <?php esc_html_e( 'Upload a previously exported JSON file to restore weather data or a full backup.', 'xtx-integration-for-netatmo' ); ?>
         </p>
 
         <div class="naws-info-box" style="margin:0 0 1rem; border-color:rgba(245,158,11,0.4); background:rgba(245,158,11,0.05);">
-            <strong>⚠️</strong> <?php naws_e( 'import_overwrite_warn' ); ?>
+            <strong>⚠️</strong> <?php esc_html_e( 'Importing will overwrite existing daily data for matching dates.', 'xtx-integration-for-netatmo' ); ?>
         </div>
 
         <form id="naws-import-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" enctype="multipart/form-data">
@@ -123,7 +123,7 @@ if ( isset( $_GET['import_error'] ) && isset( $_GET['_wpnonce'] ) && wp_verify_n
 
             <div style="margin-bottom:1rem;">
                 <label for="naws-import-file" style="display:block; font-size:0.85rem; font-weight:500; margin-bottom:0.4rem;">
-                    <?php naws_e( 'import_file_label' ); ?>
+                    <?php esc_html_e( 'Select JSON file', 'xtx-integration-for-netatmo' ); ?>
                 </label>
                 <input type="file" id="naws-import-file" name="naws_import_file" accept=".json"
                        style="font-size:0.85rem;">
@@ -132,12 +132,12 @@ if ( isset( $_GET['import_error'] ) && isset( $_GET['_wpnonce'] ) && wp_verify_n
             <div style="margin-bottom:1rem;">
                 <label style="font-size:0.85rem;">
                     <input type="checkbox" name="naws_overwrite_settings" value="1">
-                    <?php naws_e( 'import_overwrite_settings' ); ?>
+                    <?php esc_html_e( 'Overwrite existing settings (full backup only)', 'xtx-integration-for-netatmo' ); ?>
                 </label>
             </div>
 
             <button type="submit" class="button button-primary" id="naws-import-btn">
-                📤 <?php naws_e( 'import_file_btn' ); ?>
+                📤 <?php esc_html_e( 'Upload & Import', 'xtx-integration-for-netatmo' ); ?>
             </button>
         </form>
     </div>
@@ -146,7 +146,7 @@ if ( isset( $_GET['import_error'] ) && isset( $_GET['_wpnonce'] ) && wp_verify_n
   <!-- Import Progress (hidden until import starts) -->
   <div id="naws-import-progress-panel" class="naws-admin-panel" style="display:none;">
     <div class="naws-panel-header">
-        <h2>⏳ <?php naws_e( 'import_processing' ); ?></h2>
+        <h2>⏳ <?php esc_html_e( 'Processing import...', 'xtx-integration-for-netatmo' ); ?></h2>
     </div>
     <div class="naws-panel-body">
         <!-- Progress bar -->

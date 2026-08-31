@@ -37,7 +37,7 @@ function get_option( $key, $default = false ) {
     return $key === 'naws_settings' ? [] : $default;
 }
 function sanitize_text_field( $s ) { return trim( strip_tags( (string) $s ) ); }
-function naws__( $k ) { return $k; }
+require_once __DIR__ . '/i18n-stubs.php';
 
 /**
  * The daily table, as rows keyed by day.

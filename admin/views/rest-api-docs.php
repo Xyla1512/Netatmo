@@ -15,9 +15,9 @@ if ( isset( $_POST['naws_rest_action'] ) && current_user_can( 'manage_options' )
         $cfg['enabled']    = ! empty( $_POST['rest_enabled'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- boolean check
         $cfg['rate_limit'] = max( 1, min( 600, intval( $_POST['rate_limit'] ?? 60 ) ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- cast to int
         if ( NAWS_Rest_API::save_config( $cfg ) ) {
-            $message = naws__( 'rest_saved' );
+            $message = __( 'Settings saved.', 'xtx-integration-for-netatmo' );
         } else {
-            $message  = naws__( 'crypto_save_failed' );
+            $message  = __( 'The credentials were NOT saved: they could not be stored encrypted. The previously stored value is unchanged.', 'xtx-integration-for-netatmo' );
             $msg_type = 'notice-error';
         }
     }
@@ -25,9 +25,9 @@ if ( isset( $_POST['naws_rest_action'] ) && current_user_can( 'manage_options' )
     if ( $action === 'generate_key' ) {
         $cfg['api_key'] = NAWS_Rest_API::generate_api_key();
         if ( NAWS_Rest_API::save_config( $cfg ) ) {
-            $message = naws__( 'rest_key_generated' );
+            $message = __( 'New API key generated.', 'xtx-integration-for-netatmo' );
         } else {
-            $message  = naws__( 'crypto_save_failed' );
+            $message  = __( 'The credentials were NOT saved: they could not be stored encrypted. The previously stored value is unchanged.', 'xtx-integration-for-netatmo' );
             $msg_type = 'notice-error';
         }
     }
@@ -35,7 +35,7 @@ if ( isset( $_POST['naws_rest_action'] ) && current_user_can( 'manage_options' )
     if ( $action === 'revoke_key' ) {
         $cfg['api_key'] = '';
         NAWS_Rest_API::save_config( $cfg );
-        $message  = naws__( 'rest_key_revoked' );
+        $message  = __( 'API key revoked. The API is no longer accessible.', 'xtx-integration-for-netatmo' );
         $msg_type = 'notice-warning';
     }
 }
@@ -48,7 +48,7 @@ $base_url   = rest_url( 'naws/v1' );
 <?php // Styles moved to assets/css/admin.css ?>
 
 <div class="wrap naws-admin-wrap naws-api-wrap">
-<h1 class="naws-admin-page-title"><span class="naws-title-icon">🔌</span> <?php naws_e( 'rest_page_title' ); ?></h1>
+<h1 class="naws-admin-page-title"><span class="naws-title-icon">🔌</span> <?php esc_html_e( 'REST API', 'xtx-integration-for-netatmo' ); ?></h1>
 
 <?php if ( $message ): ?>
 <div class="notice <?php echo esc_attr( $msg_type ); ?> is-dismissible"><p><?php echo esc_html( $message ); ?></p></div>
@@ -56,7 +56,7 @@ $base_url   = rest_url( 'naws/v1' );
 
 <!-- ━━ Configuration ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
 <div class="naws-api-panel">
-<h2>⚙️ <?php naws_e( 'rest_config_title' ); ?></h2>
+<h2>⚙️ <?php esc_html_e( 'Configuration', 'xtx-integration-for-netatmo' ); ?></h2>
 
 <form method="post">
 <?php wp_nonce_field( 'naws_rest_api_settings' ); ?>
@@ -64,28 +64,28 @@ $base_url   = rest_url( 'naws/v1' );
 
 <table class="form-table">
 <tr>
-    <th scope="row"><?php naws_e( 'rest_status' ); ?></th>
+    <th scope="row"><?php esc_html_e( 'Status', 'xtx-integration-for-netatmo' ); ?></th>
     <td>
         <label>
             <input type="checkbox" name="rest_enabled" value="1" <?php checked( $is_enabled ); ?>>
-            <?php naws_e( 'rest_enable_label' ); ?>
+            <?php esc_html_e( 'Enable REST API', 'xtx-integration-for-netatmo' ); ?>
         </label>
         <span class="naws-status <?php echo $is_enabled ? 'naws-status-on' : 'naws-status-off'; ?>" style="margin-left:12px">
             <span class="naws-dot <?php echo $is_enabled ? 'naws-dot-on' : 'naws-dot-off'; ?>"></span>
-            <?php echo esc_html( $is_enabled ? naws__( 'rest_active' ) : naws__( 'rest_inactive' ) ); ?>
+            <?php echo esc_html( $is_enabled ? __( 'Active', 'xtx-integration-for-netatmo' ) : __( 'Inactive', 'xtx-integration-for-netatmo' ) ); ?>
         </span>
     </td>
 </tr>
 <tr>
-    <th scope="row"><?php naws_e( 'rest_rate_limit' ); ?></th>
+    <th scope="row"><?php esc_html_e( 'Rate Limit', 'xtx-integration-for-netatmo' ); ?></th>
     <td>
         <input type="number" name="rate_limit" value="<?php echo esc_attr( $rate_limit ); ?>" min="1" max="600" style="width:80px">
-        <span class="description"><?php naws_e( 'rest_rate_limit_desc' ); ?></span>
+        <span class="description"><?php esc_html_e( 'Requests per minute per API key', 'xtx-integration-for-netatmo' ); ?></span>
     </td>
 </tr>
 </table>
 
-<?php submit_button( naws__( 'rest_save' ), 'primary', 'submit', false ); ?>
+<?php submit_button( __( 'Save Settings', 'xtx-integration-for-netatmo' ), 'primary', 'submit', false ); ?>
 </form>
 
 <hr style="margin:20px 0;border-color:#e2e8f0">
@@ -95,33 +95,33 @@ $base_url   = rest_url( 'naws/v1' );
 <?php if ( $api_key ): ?>
 <div class="naws-key-box">
     <input type="text" value="<?php echo esc_attr( $api_key ); ?>" readonly id="naws-api-key-display">
-    <button type="button" class="button" onclick="nawsCopyKey()"><?php naws_e( 'rest_copy' ); ?></button>
+    <button type="button" class="button" onclick="nawsCopyKey()"><?php echo esc_html( _x( 'Copy', 'rest_copy', 'xtx-integration-for-netatmo' ) ); ?></button>
 </div>
-<p class="naws-hint">⚠️ <?php naws_e( 'rest_key_warning' ); ?></p>
+<p class="naws-hint">⚠️ <?php esc_html_e( 'Keep this key secret! Anyone with the key can read your weather data.', 'xtx-integration-for-netatmo' ); ?></p>
 
 <div style="display:flex;gap:8px;margin-top:12px">
     <form method="post" style="margin:0">
         <?php wp_nonce_field( 'naws_rest_api_settings' ); ?>
         <input type="hidden" name="naws_rest_action" value="generate_key">
-        <button type="submit" class="button" onclick="return confirm('<?php echo esc_js( naws__( 'rest_regenerate_confirm' ) ); ?>')">
-            🔄 <?php naws_e( 'rest_regenerate' ); ?>
+        <button type="submit" class="button" onclick="return confirm('<?php echo esc_js( __( 'Generate a new key? The old key will stop working immediately.', 'xtx-integration-for-netatmo' ) ); ?>')">
+            🔄 <?php esc_html_e( 'Regenerate Key', 'xtx-integration-for-netatmo' ); ?>
         </button>
     </form>
     <form method="post" style="margin:0">
         <?php wp_nonce_field( 'naws_rest_api_settings' ); ?>
         <input type="hidden" name="naws_rest_action" value="revoke_key">
-        <button type="submit" class="button button-link-delete" onclick="return confirm('<?php echo esc_js( naws__( 'rest_revoke_confirm' ) ); ?>')">
-            🗑️ <?php naws_e( 'rest_revoke' ); ?>
+        <button type="submit" class="button button-link-delete" onclick="return confirm('<?php echo esc_js( __( 'Revoke the key? All external integrations will lose access.', 'xtx-integration-for-netatmo' ) ); ?>')">
+            🗑️ <?php esc_html_e( 'Revoke Key', 'xtx-integration-for-netatmo' ); ?>
         </button>
     </form>
 </div>
 
 <?php else: ?>
-<p class="naws-hint"><?php naws_e( 'rest_no_key' ); ?></p>
+<p class="naws-hint"><?php esc_html_e( 'No API key has been generated yet. Create one to enable access.', 'xtx-integration-for-netatmo' ); ?></p>
 <form method="post" style="margin:8px 0 0">
     <?php wp_nonce_field( 'naws_rest_api_settings' ); ?>
     <input type="hidden" name="naws_rest_action" value="generate_key">
-    <button type="submit" class="button button-primary">🔑 <?php naws_e( 'rest_generate' ); ?></button>
+    <button type="submit" class="button button-primary">🔑 <?php esc_html_e( 'Generate API Key', 'xtx-integration-for-netatmo' ); ?></button>
 </form>
 <?php endif; ?>
 
@@ -132,26 +132,26 @@ $base_url   = rest_url( 'naws/v1' );
 <div class="naws-api-panel">
 <h2>🌐 Base-URL</h2>
 <div class="naws-code-block" id="naws-base-url"><?php echo esc_html( $base_url ); ?></div>
-<p class="naws-hint"><?php naws_e( 'rest_base_url_hint' ); ?></p>
+<p class="naws-hint"><?php esc_html_e( 'All endpoints are relative to this base URL. Add your API key as header or query parameter.', 'xtx-integration-for-netatmo' ); ?></p>
 </div>
 
 
 <!-- ━━ Authentication ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
 <div class="naws-api-panel">
-<h2>🔐 <?php naws_e( 'rest_auth_title' ); ?></h2>
-<p style="color:#475569;font-size:13px;margin:0 0 12px"><?php naws_e( 'rest_auth_intro' ); ?></p>
+<h2>🔐 <?php esc_html_e( 'Authentication', 'xtx-integration-for-netatmo' ); ?></h2>
+<p style="color:#475569;font-size:13px;margin:0 0 12px"><?php esc_html_e( 'Every request must carry a valid API key — in the HTTP header, and nowhere else:', 'xtx-integration-for-netatmo' ); ?></p>
 
-<h3><?php naws_e( 'rest_auth_header_only' ); ?></h3>
+<h3><?php esc_html_e( 'HTTP header', 'xtx-integration-for-netatmo' ); ?></h3>
 <div class="naws-code-block">X-NAWS-Key: <?php echo esc_html( $api_key ?: 'naws_xxxxxxxxxxxx' ); ?></div>
 
-<p class="naws-hint">💡 <?php naws_e( 'rest_auth_header_hint' ); ?></p>
-<p class="naws-hint">⚠️ <?php naws_e( 'rest_auth_no_query' ); ?></p>
+<p class="naws-hint">💡 <?php esc_html_e( 'The key belongs in the header so it never shows up in server logs or browser history.', 'xtx-integration-for-netatmo' ); ?></p>
+<p class="naws-hint">⚠️ <?php esc_html_e( 'A key in the query string is no longer accepted: it would be written down by access logs, the Referer header, browser history and every proxy in between. Older calls of the form ?api_key=… now answer with 401.', 'xtx-integration-for-netatmo' ); ?></p>
 </div>
 
 
 <!-- ━━ Endpoint Reference ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
 <div class="naws-api-panel">
-<h2>📖 <?php naws_e( 'rest_endpoints_title' ); ?></h2>
+<h2>📖 <?php esc_html_e( 'Endpoint Reference', 'xtx-integration-for-netatmo' ); ?></h2>
 
 <div class="naws-tab-bar">
     <button class="naws-tab active" data-tab="ep-overview">Übersicht</button>
@@ -167,20 +167,20 @@ $base_url   = rest_url( 'naws/v1' );
 <table class="naws-ep-table">
 <thead><tr><th style="width:80px">Methode</th><th>Endpunkt</th><th>Beschreibung</th></tr></thead>
 <tbody>
-<tr><td><span class="naws-method">GET</span></td><td><code>/station</code></td><td><?php naws_e( 'rest_ep_station_desc' ); ?></td></tr>
-<tr><td><span class="naws-method">GET</span></td><td><code>/modules</code></td><td><?php naws_e( 'rest_ep_modules_desc' ); ?></td></tr>
-<tr><td><span class="naws-method">GET</span></td><td><code>/current</code></td><td><?php naws_e( 'rest_ep_current_desc' ); ?></td></tr>
-<tr><td><span class="naws-method">GET</span></td><td><code>/readings</code></td><td><?php naws_e( 'rest_ep_readings_desc' ); ?></td></tr>
-<tr><td><span class="naws-method">GET</span></td><td><code>/daily</code></td><td><?php naws_e( 'rest_ep_daily_desc' ); ?></td></tr>
+<tr><td><span class="naws-method">GET</span></td><td><code>/station</code></td><td><?php esc_html_e( 'Station metadata, location and unit settings', 'xtx-integration-for-netatmo' ); ?></td></tr>
+<tr><td><span class="naws-method">GET</span></td><td><code>/modules</code></td><td><?php esc_html_e( 'List of active modules with type and capabilities', 'xtx-integration-for-netatmo' ); ?></td></tr>
+<tr><td><span class="naws-method">GET</span></td><td><code>/current</code></td><td><?php esc_html_e( 'Latest sensor reading per module/parameter', 'xtx-integration-for-netatmo' ); ?></td></tr>
+<tr><td><span class="naws-method">GET</span></td><td><code>/readings</code></td><td><?php esc_html_e( 'Raw sensor readings with time range, grouping and filtering', 'xtx-integration-for-netatmo' ); ?></td></tr>
+<tr><td><span class="naws-method">GET</span></td><td><code>/daily</code></td><td><?php esc_html_e( 'Daily summary data (temperature, rain, pressure etc.)', 'xtx-integration-for-netatmo' ); ?></td></tr>
 </tbody>
 </table>
-<p class="naws-hint"><?php naws_e( 'rest_all_readonly' ); ?></p>
+<p class="naws-hint"><?php esc_html_e( 'All endpoints are read-only (GET). No data can be modified via the API.', 'xtx-integration-for-netatmo' ); ?></p>
 </div>
 
 <!-- Tab: Station -->
 <div class="naws-tab-content" id="ep-station">
 <h3><span class="naws-method">GET</span> <code>/station</code></h3>
-<p style="color:#475569;font-size:13px"><?php naws_e( 'rest_ep_station_detail' ); ?></p>
+<p style="color:#475569;font-size:13px"><?php esc_html_e( 'Returns station location, timezone, active module count and the unit configuration.', 'xtx-integration-for-netatmo' ); ?></p>
 <p style="color:#64748b;font-size:12.5px"><strong>Parameter:</strong> —</p>
 <h3>Beispiel-Antwort</h3>
 <div class="naws-code-block">{
@@ -203,7 +203,7 @@ $base_url   = rest_url( 'naws/v1' );
 <!-- Tab: Modules -->
 <div class="naws-tab-content" id="ep-modules">
 <h3><span class="naws-method">GET</span> <code>/modules</code></h3>
-<p style="color:#475569;font-size:13px"><?php naws_e( 'rest_ep_modules_detail' ); ?></p>
+<p style="color:#475569;font-size:13px"><?php esc_html_e( 'Returns all active modules with their Netatmo type, supported data types, firmware version and battery status.', 'xtx-integration-for-netatmo' ); ?></p>
 <h3>Beispiel-Antwort</h3>
 <div class="naws-code-block">{
   "<span class="s">modules</span>": [
@@ -234,12 +234,12 @@ $base_url   = rest_url( 'naws/v1' );
 <!-- Tab: Current -->
 <div class="naws-tab-content" id="ep-current">
 <h3><span class="naws-method">GET</span> <code>/current</code></h3>
-<p style="color:#475569;font-size:13px"><?php naws_e( 'rest_ep_current_detail' ); ?></p>
+<p style="color:#475569;font-size:13px"><?php esc_html_e( 'Returns the most recent reading for every parameter of every active module. Optionally filter by module_id.', 'xtx-integration-for-netatmo' ); ?></p>
 
 <table class="naws-ep-table">
 <thead><tr><th>Parameter</th><th>Typ</th><th>Beschreibung</th></tr></thead>
 <tbody>
-<tr><td><span class="naws-param-tag naws-opt-tag">module_id</span></td><td>string</td><td><?php naws_e( 'rest_param_module_id' ); ?></td></tr>
+<tr><td><span class="naws-param-tag naws-opt-tag">module_id</span></td><td>string</td><td><?php esc_html_e( 'Filter by specific module ID (optional)', 'xtx-integration-for-netatmo' ); ?></td></tr>
 </tbody>
 </table>
 
@@ -266,18 +266,18 @@ $base_url   = rest_url( 'naws/v1' );
 <!-- Tab: Readings -->
 <div class="naws-tab-content" id="ep-readings">
 <h3><span class="naws-method">GET</span> <code>/readings</code></h3>
-<p style="color:#475569;font-size:13px"><?php naws_e( 'rest_ep_readings_detail' ); ?></p>
+<p style="color:#475569;font-size:13px"><?php esc_html_e( 'Returns raw sensor readings from the rolling storage (typically last 90 days). Supports filtering by module, parameter and time range. Results can be grouped by hour, day, week or month.', 'xtx-integration-for-netatmo' ); ?></p>
 
 <table class="naws-ep-table">
 <thead><tr><th>Parameter</th><th>Typ</th><th>Standard</th><th>Beschreibung</th></tr></thead>
 <tbody>
-<tr><td><span class="naws-param-tag naws-opt-tag">module_id</span></td><td>string</td><td>—</td><td><?php naws_e( 'rest_param_module_id' ); ?></td></tr>
-<tr><td><span class="naws-param-tag naws-opt-tag">parameter</span></td><td>string</td><td>—</td><td><?php naws_e( 'rest_param_parameter' ); ?></td></tr>
-<tr><td><span class="naws-param-tag naws-opt-tag">from</span></td><td>string</td><td>-24h</td><td><?php naws_e( 'rest_param_from' ); ?></td></tr>
-<tr><td><span class="naws-param-tag naws-opt-tag">to</span></td><td>string</td><td>jetzt</td><td><?php naws_e( 'rest_param_to' ); ?></td></tr>
-<tr><td><span class="naws-param-tag naws-opt-tag">group_by</span></td><td>string</td><td>raw</td><td><?php naws_e( 'rest_param_group_by' ); ?></td></tr>
-<tr><td><span class="naws-param-tag naws-opt-tag">limit</span></td><td>integer</td><td>1000</td><td><?php naws_e( 'rest_param_limit' ); ?></td></tr>
-<tr><td><span class="naws-param-tag naws-opt-tag">convert</span></td><td>boolean</td><td>true</td><td><?php naws_e( 'rest_param_convert' ); ?></td></tr>
+<tr><td><span class="naws-param-tag naws-opt-tag">module_id</span></td><td>string</td><td>—</td><td><?php esc_html_e( 'Filter by specific module ID (optional)', 'xtx-integration-for-netatmo' ); ?></td></tr>
+<tr><td><span class="naws-param-tag naws-opt-tag">parameter</span></td><td>string</td><td>—</td><td><?php esc_html_e( 'Filter by parameter(s), comma-separated: Temperature, Humidity, CO2, Pressure, Rain, etc.', 'xtx-integration-for-netatmo' ); ?></td></tr>
+<tr><td><span class="naws-param-tag naws-opt-tag">from</span></td><td>string</td><td>-24h</td><td><?php esc_html_e( 'Start time – ISO 8601 (2025-03-01T00:00:00Z) or Unix timestamp', 'xtx-integration-for-netatmo' ); ?></td></tr>
+<tr><td><span class="naws-param-tag naws-opt-tag">to</span></td><td>string</td><td>jetzt</td><td><?php esc_html_e( 'End time – ISO 8601 or Unix timestamp', 'xtx-integration-for-netatmo' ); ?></td></tr>
+<tr><td><span class="naws-param-tag naws-opt-tag">group_by</span></td><td>string</td><td>raw</td><td><?php esc_html_e( 'Grouping: raw (no grouping), hour, day, week, month', 'xtx-integration-for-netatmo' ); ?></td></tr>
+<tr><td><span class="naws-param-tag naws-opt-tag">limit</span></td><td>integer</td><td>1000</td><td><?php esc_html_e( 'Max results (1–5000)', 'xtx-integration-for-netatmo' ); ?></td></tr>
+<tr><td><span class="naws-param-tag naws-opt-tag">convert</span></td><td>boolean</td><td>true</td><td><?php esc_html_e( 'true = convert to user units (°F, inHg etc.), false = raw metric values', 'xtx-integration-for-netatmo' ); ?></td></tr>
 </tbody>
 </table>
 
@@ -292,7 +292,7 @@ $base_url   = rest_url( 'naws/v1' );
 <span class="k">GET</span> /readings?parameter=Temperature&amp;convert=false</div>
 
 <h3>Gruppierte Antwort</h3>
-<p class="naws-hint"><?php naws_e( 'rest_grouped_hint' ); ?></p>
+<p class="naws-hint"><?php esc_html_e( 'When grouping is active, each entry additionally contains min_value, max_value and data_points.', 'xtx-integration-for-netatmo' ); ?></p>
 <div class="naws-code-block">{
   "<span class="s">count</span>": <span class="n">168</span>,
   "<span class="s">from</span>": "<span class="n">2025-03-01T00:00:00+00:00</span>",
@@ -317,16 +317,16 @@ $base_url   = rest_url( 'naws/v1' );
 <!-- Tab: Daily -->
 <div class="naws-tab-content" id="ep-daily">
 <h3><span class="naws-method">GET</span> <code>/daily</code></h3>
-<p style="color:#475569;font-size:13px"><?php naws_e( 'rest_ep_daily_detail' ); ?></p>
+<p style="color:#475569;font-size:13px"><?php esc_html_e( 'Returns aggregated daily summary data from permanent storage. Supports grouping by day, week, month or year. Ideal for long-term charts and analysis.', 'xtx-integration-for-netatmo' ); ?></p>
 
 <table class="naws-ep-table">
 <thead><tr><th>Parameter</th><th>Typ</th><th>Standard</th><th>Beschreibung</th></tr></thead>
 <tbody>
 <tr><td><span class="naws-param-tag naws-opt-tag">from</span></td><td>string</td><td>-30 Tage</td><td>Startdatum (YYYY-MM-DD)</td></tr>
 <tr><td><span class="naws-param-tag naws-opt-tag">to</span></td><td>string</td><td>heute</td><td>Enddatum (YYYY-MM-DD)</td></tr>
-<tr><td><span class="naws-param-tag naws-opt-tag">fields</span></td><td>string</td><td>temp_min, temp_max, temp_avg, pressure_avg, rain_sum</td><td><?php naws_e( 'rest_param_fields' ); ?></td></tr>
+<tr><td><span class="naws-param-tag naws-opt-tag">fields</span></td><td>string</td><td>temp_min, temp_max, temp_avg, pressure_avg, rain_sum</td><td><?php esc_html_e( 'Comma-separated list of fields to return', 'xtx-integration-for-netatmo' ); ?></td></tr>
 <tr><td><span class="naws-param-tag naws-opt-tag">group_by</span></td><td>string</td><td>day</td><td>day, week, month, year</td></tr>
-<tr><td><span class="naws-param-tag naws-opt-tag">convert</span></td><td>boolean</td><td>true</td><td><?php naws_e( 'rest_param_convert' ); ?></td></tr>
+<tr><td><span class="naws-param-tag naws-opt-tag">convert</span></td><td>boolean</td><td>true</td><td><?php esc_html_e( 'true = convert to user units (°F, inHg etc.), false = raw metric values', 'xtx-integration-for-netatmo' ); ?></td></tr>
 </tbody>
 </table>
 
@@ -365,7 +365,7 @@ $base_url   = rest_url( 'naws/v1' );
 
 <!-- ━━ Examples ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
 <div class="naws-api-panel">
-<h2>🧪 <?php naws_e( 'rest_examples_title' ); ?></h2>
+<h2>🧪 <?php esc_html_e( 'Usage Examples', 'xtx-integration-for-netatmo' ); ?></h2>
 
 <div class="naws-tab-bar">
     <button class="naws-tab active" data-tab="ex-curl">cURL</button>
@@ -519,14 +519,14 @@ df['date'] = pd.to_datetime(df['date'])
 
 <!-- ━━ Error Codes ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
 <div class="naws-api-panel">
-<h2>⚠️ <?php naws_e( 'rest_errors_title' ); ?></h2>
+<h2>⚠️ <?php esc_html_e( 'Error Codes', 'xtx-integration-for-netatmo' ); ?></h2>
 <table class="naws-ep-table">
 <thead><tr><th style="width:80px">Code</th><th style="width:200px">Fehler</th><th>Beschreibung</th></tr></thead>
 <tbody>
-<tr><td><code>401</code></td><td><code>naws_unauthorized</code></td><td><?php naws_e( 'rest_err_401' ); ?></td></tr>
-<tr><td><code>400</code></td><td><code>naws_invalid_date</code></td><td><?php naws_e( 'rest_err_400' ); ?></td></tr>
-<tr><td><code>429</code></td><td><code>naws_rate_limited</code></td><td><?php naws_e( 'rest_err_429' ); ?></td></tr>
-<tr><td><code>503</code></td><td><code>naws_api_not_configured</code></td><td><?php naws_e( 'rest_err_503' ); ?></td></tr>
+<tr><td><code>401</code></td><td><code>naws_unauthorized</code></td><td><?php esc_html_e( 'Invalid or missing API key.', 'xtx-integration-for-netatmo' ); ?></td></tr>
+<tr><td><code>400</code></td><td><code>naws_invalid_date</code></td><td><?php esc_html_e( 'Invalid date format or parameters.', 'xtx-integration-for-netatmo' ); ?></td></tr>
+<tr><td><code>429</code></td><td><code>naws_rate_limited</code></td><td><?php esc_html_e( 'Rate limit exceeded. Wait 60 seconds.', 'xtx-integration-for-netatmo' ); ?></td></tr>
+<tr><td><code>503</code></td><td><code>naws_api_not_configured</code></td><td><?php esc_html_e( 'API not configured – no key has been generated.', 'xtx-integration-for-netatmo' ); ?></td></tr>
 </tbody>
 </table>
 </div>

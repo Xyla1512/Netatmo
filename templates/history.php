@@ -68,7 +68,7 @@ $_naws_total_history_charts = count( $_naws_history_charts );
     <?php else : ?>
     <div class="naws-hist-all-hidden">
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-      <?php naws_e( 'hc_all_hidden' ); ?>
+      <?php esc_html_e( 'All annual comparisons are currently disabled.', 'xtx-integration-for-netatmo' ); ?>
     </div>
     <?php endif; ?>
 
@@ -85,7 +85,7 @@ $_naws_total_history_charts = count( $_naws_history_charts );
       <div class="naws-hc-wrap" data-chart="<?php echo esc_attr( $_hc['id'] ); ?>">
         <div class="naws-hc-bar">
           <div class="naws-hc-title"><?php echo esc_html( $_hc['label'] ); ?></div>
-          <button class="naws-hc-expand" data-target="<?php echo esc_attr( $_hc['id'] ); ?>" title="<?php echo esc_attr( naws__( 'expand_chart' ) ); ?>">
+          <button class="naws-hc-expand" data-target="<?php echo esc_attr( $_hc['id'] ); ?>" title="<?php echo esc_attr( __( 'Expand', 'xtx-integration-for-netatmo' ) ); ?>">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
           </button>
         </div>
@@ -134,20 +134,20 @@ echo '<script type="application/json" data-naws="history" id="' . esc_attr( $wid
         'AJAX'        => $ajax_url,
         'PALETTE'     => NAWS_Colors::get_history_palette(),
         'MONTHS'      => [
-            naws__( 'month_jan' ), naws__( 'month_feb' ), naws__( 'month_mar' ), naws__( 'month_apr' ),
-            naws__( 'month_may' ), naws__( 'month_jun' ), naws__( 'month_jul' ), naws__( 'month_aug' ),
-            naws__( 'month_sep' ), naws__( 'month_oct' ), naws__( 'month_nov' ), naws__( 'month_dec' ),
+            __( 'Jan', 'xtx-integration-for-netatmo' ), __( 'Feb', 'xtx-integration-for-netatmo' ), __( 'Mar', 'xtx-integration-for-netatmo' ), __( 'Apr', 'xtx-integration-for-netatmo' ),
+            __( 'May', 'xtx-integration-for-netatmo' ), __( 'Jun', 'xtx-integration-for-netatmo' ), __( 'Jul', 'xtx-integration-for-netatmo' ), __( 'Aug', 'xtx-integration-for-netatmo' ),
+            __( 'Sep', 'xtx-integration-for-netatmo' ), __( 'Oct', 'xtx-integration-for-netatmo' ), __( 'Nov', 'xtx-integration-for-netatmo' ), __( 'Dec', 'xtx-integration-for-netatmo' ),
         ],
         'CHART_THEME' => NAWS_Colors::get_chart_theme(),
-        'LBL_MIN'     => naws__( 'lbl_min' ),
-        'LBL_MAX'     => naws__( 'lbl_max' ),
+        'LBL_MIN'     => __( 'Min', 'xtx-integration-for-netatmo' ),
+        'LBL_MAX'     => __( 'Max', 'xtx-integration-for-netatmo' ),
         // One chart definition per canvas (5 static + one per NAModule4 module)
         'DEFS'        => [
-            [ 'id' => 'temp_minmax', 'title' => naws__( 'hc_temp_minmax' ), 'type' => 'line', 'unit' => $_naws_hist_temp_unit, 'fields' => [ 'temp_min', 'temp_max' ], 'moduleId' => '' ],
-            [ 'id' => 'temp_avg',    'title' => naws__( 'hc_temp_avg' ),    'type' => 'line', 'unit' => $_naws_hist_temp_unit, 'fields' => [ 'temp_avg' ],             'moduleId' => '' ],
-            [ 'id' => 'pressure',    'title' => naws__( 'hc_pressure' ),    'type' => 'line', 'unit' => $_naws_hist_pres_unit, 'fields' => [ 'pressure_avg' ],         'moduleId' => '' ],
-            [ 'id' => 'rain',        'title' => naws__( 'hc_rain' ),        'type' => 'bar',  'unit' => $_naws_hist_rain_unit, 'fields' => [ 'rain_sum' ],             'moduleId' => '' ],
-            [ 'id' => 'humidity',    'title' => naws__( 'hc_humidity' ),    'type' => 'line', 'unit' => '%',                   'fields' => [ 'humidity_avg' ],         'moduleId' => '' ],
+            [ 'id' => 'temp_minmax', 'title' => __( 'Temperature Min / Max', 'xtx-integration-for-netatmo' ), 'type' => 'line', 'unit' => $_naws_hist_temp_unit, 'fields' => [ 'temp_min', 'temp_max' ], 'moduleId' => '' ],
+            [ 'id' => 'temp_avg',    'title' => __( 'Annual Average Temperature', 'xtx-integration-for-netatmo' ),    'type' => 'line', 'unit' => $_naws_hist_temp_unit, 'fields' => [ 'temp_avg' ],             'moduleId' => '' ],
+            [ 'id' => 'pressure',    'title' => __( 'Pressure (Annual Mean)', 'xtx-integration-for-netatmo' ),    'type' => 'line', 'unit' => $_naws_hist_pres_unit, 'fields' => [ 'pressure_avg' ],         'moduleId' => '' ],
+            [ 'id' => 'rain',        'title' => __( 'Annual Precipitation', 'xtx-integration-for-netatmo' ),        'type' => 'bar',  'unit' => $_naws_hist_rain_unit, 'fields' => [ 'rain_sum' ],             'moduleId' => '' ],
+            [ 'id' => 'humidity',    'title' => __( 'Outdoor Humidity (Annual Mean)', 'xtx-integration-for-netatmo' ),    'type' => 'line', 'unit' => '%',                   'fields' => [ 'humidity_avg' ],         'moduleId' => '' ],
             ...array_map( function( $_m4c ) {
                 // Unit and field come from the definition now: the pair is
                 // temperature and humidity, and only one of them is a percent.

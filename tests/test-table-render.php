@@ -30,8 +30,7 @@ $GLOBALS['mods'] = [
 function get_option( $k, $d = false ) { return $GLOBALS['opts'][ $k ] ?? $d; }
 function esc_attr( $s ) { return htmlspecialchars( (string) $s, ENT_QUOTES ); }
 function esc_html( $s ) { return htmlspecialchars( (string) $s, ENT_QUOTES ); }
-function naws__( $k ) { return $k; }
-function naws_e( $k ) { echo naws__( $k ); }
+require_once __DIR__ . '/i18n-stubs.php';
 function wp_date( $fmt, $ts ) { return gmdate( $fmt, $ts ); }
 
 class NAWS_Database {
@@ -94,8 +93,8 @@ $html = render( [ grouped_row( 'Temperature', 21.34, 18.2, 24.9 ) ] );
 
 check( 'die Tabelle wird in ihren Wrapper gesetzt', substr_count( $html, 'naws-table-wrap' ), 1 );
 check( 'eine Datenzeile im tbody',                  substr_count( $html, '<tr>' ), 2 );
-check( 'gruppiert erscheinen Min und Max',          substr_count( $html, 'lbl_min' ) === 1 && substr_count( $html, 'lbl_max' ) === 1, true );
-check( 'der Mittelwert bekommt seine Ueberschrift', str_contains( $html, 'table_col_avg' ), true );
+check( 'gruppiert erscheinen Min und Max',          substr_count( $html, '<th>Min</th>' ) === 1 && substr_count( $html, '<th>Max</th>' ) === 1, true );
+check( 'der Mittelwert bekommt seine Ueberschrift', str_contains( $html, '<th>Average</th>' ), true );
 check( 'der Modulname statt der MAC',               str_contains( $html, 'Aussen' ), true );
 check( 'die MAC steht nicht in der Zeile',          str_contains( $html, '02:00:00:a9:5a:08' ), false );
 check( 'der Wert traegt seine Einheit',             str_contains( $html, '21.3 Â°C' ), true );
@@ -103,8 +102,8 @@ check( 'Min und Max ebenso',                        str_contains( $html, '18.2 Â
 
 $raw = render( [ raw_row( 'Temperature', 21.34 ) ], [ 'group_by' => 'raw' ] );
 
-check( 'ungruppiert entfallen Min und Max',   str_contains( $raw, 'lbl_min' ) || str_contains( $raw, 'lbl_max' ), false );
-check( 'und die Spalte heisst schlicht Wert', str_contains( $raw, 'table_col_avg' ), false );
+check( 'ungruppiert entfallen Min und Max',   str_contains( $raw, '<th>Min</th>' ) || str_contains( $raw, '<th>Max</th>' ), false );
+check( 'und die Spalte heisst schlicht Wert', str_contains( $raw, '<th>Average</th>' ), false );
 check( 'vier Spalten statt sechs',            substr_count( $raw, '<th>' ), 4 );
 
 $day = render( [ grouped_row( 'Temperature', 21.34, 18.2, 24.9 ) ], [ 'group_by' => 'day' ] );
@@ -116,7 +115,7 @@ check( 'der Titel wird ausgegeben, wenn einer gesetzt ist', str_contains( $title
 check( 'ohne Titel keine leere Kopfzeile',                  str_contains( $raw, 'naws-header' ), false );
 
 $empty = render( [] );
-check( 'ohne Daten der Hinweis statt der Tabelle', str_contains( $empty, 'no_data' ) && ! str_contains( $empty, '<table' ), true );
+check( 'ohne Daten der Hinweis statt der Tabelle', str_contains( $empty, 'No data available yet.' ) && ! str_contains( $empty, '<table' ), true );
 
 $xss = render( [ array_merge( raw_row( 'Temperature', 1.0 ), [ 'module_id' => '<script>x</script>' ] ) ], [ 'group_by' => 'raw' ] );
 check( 'ein unbekannter Modulbezeichner wird escaped', str_contains( $xss, '<script>' ), false );

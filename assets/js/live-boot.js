@@ -28,7 +28,8 @@
 var NAWS_FONT=getComputedStyle(document.getElementById(WID)).fontFamily
             ||getComputedStyle(document.body).fontFamily
             ||'sans-serif';
-var TIME_SUFFIX=NAWS_LIVE.TIME_SUFFIX;
+var TIME_FMT=NAWS_LIVE.TIME_FMT||'%s';
+function fmtTime(t){return TIME_FMT.replace('%s',t);}
 var AJAX=NAWS_LIVE.AJAX;
 var NONCE=document.getElementById(WID).dataset.nonce;
 var RFSH=(parseInt(document.getElementById(WID).dataset.refresh,10)||60)*1000;
@@ -52,14 +53,14 @@ function fmt(v){
   var d=/^\d+$/.test(String(v))?new Date(+v*1000):new Date(String(v).replace(' ','T'));
   if(isNaN(d)) return String(v);
   var p=function(n){return String(n).padStart(2,'0');};
-  return p(d.getDate())+'.'+p(d.getMonth()+1)+'.'+d.getFullYear()+' · '+p(d.getHours())+':'+p(d.getMinutes())+(TIME_SUFFIX?' '+TIME_SUFFIX:'');
+  return p(d.getDate())+'.'+p(d.getMonth()+1)+'.'+d.getFullYear()+' · '+fmtTime(p(d.getHours())+':'+p(d.getMinutes()));
 }
 function sfmt(v){
   if(!v) return '';
   var d=/^\d+$/.test(String(v))?new Date(+v*1000):new Date(String(v).replace(' ','T'));
   if(isNaN(d)) return '';
   var p=function(n){return String(n).padStart(2,'0');};
-  return p(d.getHours())+':'+p(d.getMinutes())+(TIME_SUFFIX?' '+TIME_SUFFIX:'');
+  return fmtTime(p(d.getHours())+':'+p(d.getMinutes()));
 }
 function hhmm(ms){
   var d=new Date(ms); var p=function(n){return String(n).padStart(2,'0');};

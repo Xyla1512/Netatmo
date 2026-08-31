@@ -40,19 +40,21 @@ $naws_param_labels = NAWS_Helpers::get_all_parameters();
     <?php endif; ?>
 
     <?php if ( empty( $readings ) ) : ?>
-        <p style="color:var(--naws-text-muted)"><?php naws_e( 'no_data' ); ?></p>
+        <p style="color:var(--naws-text-muted)"><?php esc_html_e( 'No data available yet.', 'xtx-integration-for-netatmo' ); ?></p>
     <?php else : ?>
     <div class="naws-table-wrap">
         <table class="naws-table">
             <thead>
                 <tr>
-                    <th><?php naws_e( 'table_col_time' ); ?></th>
-                    <th><?php naws_e( 'table_col_module' ); ?></th>
-                    <th><?php naws_e( 'table_col_parameter' ); ?></th>
-                    <th><?php naws_e( $naws_grouped ? 'table_col_avg' : 'value' ); ?></th>
+                    <th><?php echo esc_html( _x( 'Time', 'table_col_time', 'xtx-integration-for-netatmo' ) ); ?></th>
+                    <th><?php esc_html_e( 'Module', 'xtx-integration-for-netatmo' ); ?></th>
+                    <th><?php esc_html_e( 'Parameter', 'xtx-integration-for-netatmo' ); ?></th>
+                    <th><?php echo esc_html( $naws_grouped
+                        ? __( 'Average', 'xtx-integration-for-netatmo' )
+                        : __( 'Value', 'xtx-integration-for-netatmo' ) ); ?></th>
                     <?php if ( $naws_grouped ) : ?>
-                        <th><?php naws_e( 'lbl_min' ); ?></th>
-                        <th><?php naws_e( 'lbl_max' ); ?></th>
+                        <th><?php esc_html_e( 'Min', 'xtx-integration-for-netatmo' ); ?></th>
+                        <th><?php esc_html_e( 'Max', 'xtx-integration-for-netatmo' ); ?></th>
                     <?php endif; ?>
                 </tr>
             </thead>

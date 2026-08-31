@@ -4,7 +4,7 @@
  *
  * The settings screen is split across several forms and each posts only the
  * fields it owns. Before 1.7.0 the callback rebuilt the options array from
- * scratch, so saving the credentials form reset language, units, cron
+ * scratch, so saving the credentials form reset the units, the cron
  * interval and every forecast setting to their defaults.
  *
  * These cases pin the merge behaviour down, including the hidden-zero
@@ -23,7 +23,6 @@ $GLOBALS['naws_stored'] = [
     'client_id'        => 'ENC:abc',
     'client_secret'    => 'ENC:xyz',
     'cron_interval'    => 15,
-    'language'         => 'de',
     'temperature_unit' => 'F',
     'wind_unit'        => 'ms',
     'pressure_unit'    => 'inHg',
@@ -56,16 +55,12 @@ function do_action( ...$a ) {}
 function add_action( ...$a ) {}
 function add_filter( ...$a ) {}
 function esc_html( ...$a ) {}
-function naws__( $k ) { return $k; }
+require_once __DIR__ . '/i18n-stubs.php';
 
 class NAWS_Crypto {
     public static function is_encrypted( $s ) { return str_starts_with( (string) $s, 'ENC:' ); }
     public static function encrypt( $s ) { return 'ENC:' . $s; }
     public static function migrate() {}
-}
-class NAWS_Lang {
-    public static function get_available_languages() { return [ 'de' => 'D', 'en' => 'E', 'no' => 'N' ]; }
-    public static function reset() {}
 }
 class NAWS_Forecast {
     public static function flush_cache() {}
@@ -125,7 +120,7 @@ scenario(
         'wx_show_on_dashboard' => '1', 'wx_rain_heavy' => 6.5, 'wx_snow_tw' => 0.5,
         'wx_fog_rh' => 98.0, 'wx_fog_spread' => 0.4, 'wx_storm_wind' => 90.0,
     ],
-    [ 'cron_interval', 'language', 'temperature_unit', 'wind_unit', 'pressure_unit',
+    [ 'cron_interval', 'temperature_unit', 'wind_unit', 'pressure_unit',
       'rain_unit', 'station_name', 'night_mode', 'forecast_provider', 'forecast_days',
       'forecast_city', 'wx_snow_tw' ],
     [ 'client_id' => 'ENC:newid' ]
@@ -135,13 +130,13 @@ scenario(
 scenario(
     'Allgemein speichern laesst Forecast + wx stehen',
     [
-        'language' => 'en', 'temperature_unit' => 'C', 'wind_unit' => 'kmh',
+        'temperature_unit' => 'C', 'wind_unit' => 'kmh',
         'pressure_unit' => 'mbar', 'rain_unit' => 'mm', 'cron_interval' => 10,
         'night_mode' => '0', 'data_retention' => 365,
     ],
     [ 'forecast_provider', 'forecast_days', 'forecast_city', 'wx_snow_tw',
       'wx_storm_wind', 'client_id' ],
-    [ 'language' => 'en', 'night_mode' => 0 ]
+    [ 'night_mode' => 0 ]
 );
 
 // The hidden-zero pattern: an unchecked box must actually switch off.
@@ -153,7 +148,7 @@ scenario(
         'forecast_provider' => 'yr_no', 'forecast_days' => 7, 'forecast_location' => 'manual',
         'forecast_city' => 'Muenster', 'forecast_country' => 'DE',
     ],
-    [ 'language', 'station_name', 'client_id' ],
+    [ 'station_name', 'client_id' ],
     [ 'wx_show_on_dashboard' => '0' ]
 );
 
@@ -161,20 +156,20 @@ scenario(
 scenario(
     'Schwellen werden weiter geklemmt',
     [ 'wx_rain_heavy' => 999, 'wx_snow_tw' => -99, 'wx_storm_wind' => 5 ],
-    [ 'language', 'forecast_city' ],
+    [ 'station_name', 'forecast_city' ],
     [ 'wx_rain_heavy' => 50.0, 'wx_snow_tw' => -20.0, 'wx_storm_wind' => 20.0 ]
 );
 
 scenario(
     'Widget-Tage werden auf 3 oder 5 gezogen',
     [ 'wgt_days' => 4 ],
-    [ 'language', 'forecast_city' ],
+    [ 'station_name', 'forecast_city' ],
     [ 'wgt_days' => 5 ]
 );
 scenario(
     'Widget-Tage 2 wird zu 3',
     [ 'wgt_days' => 2 ],
-    [ 'language' ],
+    [ 'station_name' ],
     [ 'wgt_days' => 3 ]
 );
 
@@ -188,7 +183,7 @@ scenario(
 scenario(
     'Zugangsdaten-Formular postet nur noch die Zugangsdaten',
     [ 'client_id' => 'newid', 'client_secret' => 'newsecret' ],
-    [ 'cron_interval', 'language', 'temperature_unit', 'wind_unit', 'pressure_unit',
+    [ 'cron_interval', 'temperature_unit', 'wind_unit', 'pressure_unit',
       'rain_unit', 'station_name', 'night_mode', 'forecast_provider', 'forecast_days',
       'forecast_location', 'forecast_city', 'forecast_country',
       'wx_rain_heavy', 'wx_snow_tw', 'wx_fog_rh', 'wx_fog_spread', 'wx_storm_wind',
@@ -199,7 +194,7 @@ scenario(
 scenario(
     'Einstellungs-Formular fasst die Zugangsdaten nicht an',
     [
-        'language' => 'en', 'station_name' => 'Balkon',
+        'station_name' => 'Balkon',
         'cron_interval' => 10, 'night_mode' => '0',
         'temperature_unit' => 'C', 'wind_unit' => 'kmh',
         'pressure_unit' => 'mbar', 'rain_unit' => 'mm',
@@ -209,20 +204,20 @@ scenario(
         'wx_fog_rh' => 97.0, 'wx_fog_spread' => 0.5, 'wx_storm_wind' => 75.0,
     ],
     [ 'client_id', 'client_secret' ],
-    [ 'language' => 'en', 'station_name' => 'Balkon', 'forecast_days' => 5 ]
+    [ 'station_name' => 'Balkon', 'forecast_days' => 5 ]
 );
 
 // The point of dropping the mirrors: a key absent from the POST must keep
 // its stored value rather than being rewritten from a stale hidden field.
 scenario(
     'Nicht gepostete Schluessel bleiben unangetastet',
-    [ 'language' => 'no' ],
-    [ 'client_id', 'client_secret', 'cron_interval', 'night_mode', 'station_name',
+    [ 'station_name' => 'Nordseite' ],
+    [ 'client_id', 'client_secret', 'cron_interval', 'night_mode',
       'temperature_unit', 'wind_unit', 'pressure_unit', 'rain_unit',
       'forecast_provider', 'forecast_days', 'forecast_location', 'forecast_city',
       'forecast_country', 'wx_rain_heavy', 'wx_snow_tw', 'wx_fog_rh',
       'wx_fog_spread', 'wx_storm_wind', 'wx_show_on_dashboard' ],
-    [ 'language' => 'no' ]
+    [ 'station_name' => 'Nordseite' ]
 );
 
 // ── Stufe 2: die drei neuen Limit-Einstellungen ─────────────────────────

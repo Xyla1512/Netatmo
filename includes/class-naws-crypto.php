@@ -416,9 +416,9 @@ class NAWS_Crypto {
      * What is wrong with the environment, if anything.
      *
      * Returns codes rather than sentences: NAWS_Crypto runs at plugin load
-     * through migrate(), and making it depend on NAWS_Lang's load order for
-     * a statement that has nothing to do with translation would be a
-     * needless coupling. The views do the wording.
+     * through migrate(), which is before translations are available. Calling
+     * __() at that point is too early and WordPress says so, so the codes
+     * travel and the views do the wording through naws_label().
      *
      * @return array{status:string,issues:string[]}
      */

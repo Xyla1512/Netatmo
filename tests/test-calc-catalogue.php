@@ -6,10 +6,12 @@
  * WordPress bootstrap. What this guards:
  *
  *   – every entry declares kind, decimals and a label key
- *   – every label key exists in ALL THREE language files
+ *   – every label key is known to naws_label()
  *
- * The second point is the reason this file exists. With this many entries,
- * "forgot to translate it into Norwegian" is not a risk, it is a certainty.
+ * The second point is the reason this file exists. The translations themselves
+ * live on translate.wordpress.org now, but the lookup table is still code: a
+ * label key missing from it makes the interface fall back to an empty string
+ * without saying anything.
  *
  *   php tests/test-calc-catalogue.php
  *
@@ -61,23 +63,20 @@ foreach ( $catalogue as $key => $entry ) {
 
 check( 'has() weist Unbekanntes ab', NAWS_Calc::has( 'gibt_es_nicht' ), false );
 
-echo "\nSprachschluessel in allen drei Dateien\n" . str_repeat( '-', 74 ) . "\n";
+echo "\nJeder Label-Schluessel ist naws_label() bekannt\n" . str_repeat( '-', 74 ) . "\n";
 
 $sens_keys = [
     'sens_very_cold', 'sens_cold', 'sens_cool', 'sens_pleasantly_cool',
     'sens_pleasant', 'sens_warm', 'sens_hot', 'sens_extremely_hot',
 ];
 
-foreach ( [ 'de', 'en', 'no' ] as $lang ) {
-    $strings = include __DIR__ . '/../languages/' . $lang . '.php';
-    check( "$lang.php liefert ein Array", is_array( $strings ), true );
+require_once __DIR__ . '/i18n-stubs.php';
 
-    foreach ( $catalogue as $key => $entry ) {
-        check( "$lang: {$entry['label']}", isset( $strings[ $entry['label'] ] ) && $strings[ $entry['label'] ] !== '', true );
-    }
-    foreach ( $sens_keys as $sk ) {
-        check( "$lang: $sk", isset( $strings[ $sk ] ) && $strings[ $sk ] !== '', true );
-    }
+foreach ( $catalogue as $key => $entry ) {
+    check( "naws_label( {$entry['label']} )", naws_label( $entry['label'] ) !== '', true );
+}
+foreach ( $sens_keys as $sk ) {
+    check( "naws_label( $sk )", naws_label( $sk ) !== '', true );
 }
 
 echo "\n" . str_repeat( '-', 74 ) . "\n";

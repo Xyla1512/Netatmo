@@ -913,11 +913,11 @@ class NAWS_Database {
         $mod_map = array_column( $modules, 'module_name', 'module_id' );
 
         $field_labels = [
-            'temp_min'     => naws__( 'param_temp_min' ),
-            'temp_max'     => naws__( 'param_temp_max' ),
-            'temp_avg'     => naws__( 'param_temp_avg' ),
-            'pressure_avg' => naws__( 'param_pressure_avg' ),
-            'rain_sum'     => naws__( 'param_rain_24h' ),
+            'temp_min'     => __( 'Min Temperature (day)', 'xtx-integration-for-netatmo' ),
+            'temp_max'     => __( 'Max Temperature (day)', 'xtx-integration-for-netatmo' ),
+            'temp_avg'     => __( 'Temp Ø (°C)', 'xtx-integration-for-netatmo' ),
+            'pressure_avg' => __( 'Pressure Ø (hPa)', 'xtx-integration-for-netatmo' ),
+            'rain_sum'     => __( 'Total last 24h', 'xtx-integration-for-netatmo' ),
         ];
 
         $colors = [

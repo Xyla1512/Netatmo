@@ -36,8 +36,8 @@ class NAWS_Admin {
         $icon = 'data:image/svg+xml;base64,' . base64_encode( '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>' ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- menu icon data URI, literal SVG visible above
 
         add_menu_page(
-            naws__( 'plugin_name' ),
-            naws__( 'plugin_name' ),
+            __( 'XTX Netatmo', 'xtx-integration-for-netatmo' ),
+            __( 'XTX Netatmo', 'xtx-integration-for-netatmo' ),
             'manage_options',
             'naws-dashboard',
             [ $this, 'page_dashboard' ],
@@ -45,14 +45,14 @@ class NAWS_Admin {
             30
         );
 
-        add_submenu_page( 'naws-dashboard', naws__( 'menu_dashboard' ), naws__( 'menu_dashboard' ), 'manage_options', 'naws-dashboard',      [ $this, 'page_dashboard' ] );
-        add_submenu_page( 'naws-dashboard', naws__( 'menu_settings' ),  naws__( 'menu_settings' ),  'manage_options', 'naws-settings',       [ $this, 'page_settings' ] );
-        add_submenu_page( 'naws-dashboard', naws__( 'menu_import' ),    naws__( 'menu_import' ),    'manage_options', 'naws-import',         [ $this, 'page_import' ] );
-        add_submenu_page( 'naws-dashboard', naws__( 'menu_export' ),    naws__( 'menu_export' ),    'manage_options', 'naws-export',         [ $this, 'page_export' ] );
-        add_submenu_page( 'naws-dashboard', naws__( 'menu_modules' ),   naws__( 'menu_modules' ),   'manage_options', 'naws-modules',        [ $this, 'page_modules' ] );
-        add_submenu_page( 'naws-dashboard', naws__( 'menu_cron_log' ),  naws__( 'menu_cron_log' ),  'manage_options', 'naws-cron-log',       [ $this, 'page_cron_log' ] );
-        add_submenu_page( 'naws-dashboard', naws__( 'menu_live' ),      naws__( 'menu_live' ),      'manage_options', 'naws-live-settings',  [ $this, 'page_live_settings' ] );
-        add_submenu_page( 'naws-dashboard', naws__( 'menu_appearance' ),  naws__( 'menu_appearance' ), 'manage_options', 'naws-appearance',     [ $this, 'page_appearance' ] );
+        add_submenu_page( 'naws-dashboard', __( 'Dashboard', 'xtx-integration-for-netatmo' ), __( 'Dashboard', 'xtx-integration-for-netatmo' ), 'manage_options', 'naws-dashboard',      [ $this, 'page_dashboard' ] );
+        add_submenu_page( 'naws-dashboard', __( 'Settings', 'xtx-integration-for-netatmo' ),  __( 'Settings', 'xtx-integration-for-netatmo' ),  'manage_options', 'naws-settings',       [ $this, 'page_settings' ] );
+        add_submenu_page( 'naws-dashboard', __( 'History Import', 'xtx-integration-for-netatmo' ),    __( 'History Import', 'xtx-integration-for-netatmo' ),    'manage_options', 'naws-import',         [ $this, 'page_import' ] );
+        add_submenu_page( 'naws-dashboard', __( 'Export / Import', 'xtx-integration-for-netatmo' ),    __( 'Export / Import', 'xtx-integration-for-netatmo' ),    'manage_options', 'naws-export',         [ $this, 'page_export' ] );
+        add_submenu_page( 'naws-dashboard', __( 'Modules', 'xtx-integration-for-netatmo' ),   __( 'Modules', 'xtx-integration-for-netatmo' ),   'manage_options', 'naws-modules',        [ $this, 'page_modules' ] );
+        add_submenu_page( 'naws-dashboard', __( 'Cron Log', 'xtx-integration-for-netatmo' ),  __( 'Cron Log', 'xtx-integration-for-netatmo' ),  'manage_options', 'naws-cron-log',       [ $this, 'page_cron_log' ] );
+        add_submenu_page( 'naws-dashboard', __( '🖥️ Live-Dashboard', 'xtx-integration-for-netatmo' ),      __( '🖥️ Live-Dashboard', 'xtx-integration-for-netatmo' ),      'manage_options', 'naws-live-settings',  [ $this, 'page_live_settings' ] );
+        add_submenu_page( 'naws-dashboard', __( 'Appearance', 'xtx-integration-for-netatmo' ),  __( 'Appearance', 'xtx-integration-for-netatmo' ), 'manage_options', 'naws-appearance',     [ $this, 'page_appearance' ] );
         add_submenu_page( 'naws-dashboard', 'Shortcodes',               'Shortcodes',               'manage_options', 'naws-shortcodes',     [ $this, 'page_shortcodes' ] );
         add_submenu_page( 'naws-dashboard', 'REST API',                  'REST API',                 'manage_options', 'naws-rest-api',       [ $this, 'page_rest_api' ] );
     }
@@ -104,7 +104,7 @@ class NAWS_Admin {
             if ( $raw !== '' && ! NAWS_Crypto::is_encrypted( $raw ) ) {
                 $encrypted = NAWS_Crypto::encrypt( $raw );
                 if ( $encrypted === null ) {
-                    add_settings_error( 'naws', 'naws_crypto_failed', naws__( 'crypto_save_failed' ) );
+                    add_settings_error( 'naws', 'naws_crypto_failed', __( 'The credentials were NOT saved: they could not be stored encrypted. The previously stored value is unchanged.', 'xtx-integration-for-netatmo' ) );
                 } else {
                     $clean['client_id'] = $encrypted;
                 }
@@ -117,7 +117,7 @@ class NAWS_Admin {
             if ( $raw !== '' && ! NAWS_Crypto::is_encrypted( $raw ) ) {
                 $encrypted = NAWS_Crypto::encrypt( $raw );
                 if ( $encrypted === null ) {
-                    add_settings_error( 'naws', 'naws_crypto_failed_secret', naws__( 'crypto_save_failed' ) );
+                    add_settings_error( 'naws', 'naws_crypto_failed_secret', __( 'The credentials were NOT saved: they could not be stored encrypted. The previously stored value is unchanged.', 'xtx-integration-for-netatmo' ) );
                 } else {
                     $clean['client_secret'] = $encrypted;
                 }
@@ -131,10 +131,6 @@ class NAWS_Admin {
         if ( $sent( 'cron_interval' ) )  $clean['cron_interval']  = NAWS_Cron::normalise_interval( $input['cron_interval'] );
         if ( $sent( 'data_retention' ) ) $clean['data_retention'] = max( 30, intval( $input['data_retention'] ) );
 
-        if ( $sent( 'language' ) ) {
-            $valid_langs       = array_merge( [ 'auto' ], array_keys( NAWS_Lang::get_available_languages() ) );
-            $clean['language'] = in_array( $input['language'], $valid_langs, true ) ? $input['language'] : 'auto';
-        }
         if ( $sent( 'temperature_unit' ) ) $clean['temperature_unit'] = in_array( $input['temperature_unit'], ['C','F'], true ) ? $input['temperature_unit'] : 'C';
         if ( $sent( 'wind_unit' ) )        $clean['wind_unit']        = in_array( $input['wind_unit'], ['kmh','ms','mph','kn'], true ) ? $input['wind_unit'] : 'kmh';
         if ( $sent( 'pressure_unit' ) )    $clean['pressure_unit']    = in_array( $input['pressure_unit'], ['mbar','inHg','mmHg'], true ) ? $input['pressure_unit'] : 'mbar';
@@ -195,7 +191,6 @@ class NAWS_Admin {
         }
 
         do_action( 'naws_settings_saved' );
-        NAWS_Lang::reset();
         return $clean;
     }
 
@@ -259,25 +254,25 @@ class NAWS_Admin {
             'ajax_url' => admin_url( 'admin-ajax.php' ),
             'nonce'    => wp_create_nonce( 'naws_admin_nonce' ),
             'strings'  => [
-                'syncing'          => naws__( 'syncing' ),
-                'sync_done'        => naws__( 'sync_complete' ),
-                'importing'        => naws__( 'importing' ),
-                'import_done'      => naws__( 'import_complete' ),
-                'error'            => naws__( 'error_occurred' ),
-                'inactive'         => naws__( 'inactive' ),
-                'toggle_error'     => naws__( 'toggle_error' ),
-                'request_failed'   => naws__( 'request_failed' ),
-                'sc_copy'          => naws__( 'sc_copy' ),
-                'sc_copied'        => naws__( 'sc_copied' ),
-                'daily_summary'    => naws__( 'daily_summary' ),
-                'ls_mod_deactivate'=> naws__( 'ls_mod_deactivate' ),
-                'ls_mod_activate'  => naws__( 'ls_mod_activate' ),
-                'ls_count_active'  => naws__( 'ls_count_active' ),
-                'ls_chart_disable' => naws__( 'ls_chart_disable' ),
-                'ls_chart_enable'  => naws__( 'ls_chart_enable' ),
-                'ls_saving'        => naws__( 'ls_saving' ),
-                'ls_saved'         => naws__( 'ls_saved' ),
-                'ls_error'         => naws__( 'ls_error' ),
+                'syncing'          => __( 'Syncing…', 'xtx-integration-for-netatmo' ),
+                'sync_done'        => __( 'Sync complete!', 'xtx-integration-for-netatmo' ),
+                'importing'        => __( 'Importing…', 'xtx-integration-for-netatmo' ),
+                'import_done'      => __( 'Import chunk complete!', 'xtx-integration-for-netatmo' ),
+                'error'            => __( 'Error occurred.', 'xtx-integration-for-netatmo' ),
+                'inactive'         => __( 'Inactive', 'xtx-integration-for-netatmo' ),
+                'toggle_error'     => __( 'Error toggling module. Please try again.', 'xtx-integration-for-netatmo' ),
+                'request_failed'   => __( 'Request failed.', 'xtx-integration-for-netatmo' ),
+                'sc_copy'          => _x( 'Copy', 'sc_copy', 'xtx-integration-for-netatmo' ),
+                'sc_copied'        => __( '✓ Copied', 'xtx-integration-for-netatmo' ),
+                'daily_summary'    => __( 'Daily Summary', 'xtx-integration-for-netatmo' ),
+                'ls_mod_deactivate'=> __( 'Deactivate module', 'xtx-integration-for-netatmo' ),
+                'ls_mod_activate'  => __( 'Activate module', 'xtx-integration-for-netatmo' ),
+                'ls_count_active'  => __( 'active', 'xtx-integration-for-netatmo' ),
+                'ls_chart_disable' => __( 'Disable 24h chart', 'xtx-integration-for-netatmo' ),
+                'ls_chart_enable'  => __( 'Enable 24h chart', 'xtx-integration-for-netatmo' ),
+                'ls_saving'        => __( 'Saving…', 'xtx-integration-for-netatmo' ),
+                'ls_saved'         => __( '✅ Saved!', 'xtx-integration-for-netatmo' ),
+                'ls_error'         => __( '❌ Error.', 'xtx-integration-for-netatmo' ),
             ],
         ] );
     }
@@ -589,7 +584,7 @@ class NAWS_Admin {
 
         // Validate file upload
         if ( empty( $_FILES['naws_import_file'] ) || ( $_FILES['naws_import_file']['error'] ?? -1 ) !== UPLOAD_ERR_OK ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- error code is integer, not user-controlled string
-            wp_safe_redirect( $nonce_url( $redirect_url . '&import_error=' . rawurlencode( naws__( 'import_file_invalid' ) ) ) );
+            wp_safe_redirect( $nonce_url( $redirect_url . '&import_error=' . rawurlencode( __( 'Invalid file. Please select a valid NAWS export file (.json).', 'xtx-integration-for-netatmo' ) ) ) );
             exit;
         }
 
@@ -604,13 +599,13 @@ class NAWS_Admin {
         // Check extension
         $ext = strtolower( pathinfo( $safe_name, PATHINFO_EXTENSION ) );
         if ( 'json' !== $ext ) {
-            wp_safe_redirect( $nonce_url( $redirect_url . '&import_error=' . rawurlencode( naws__( 'import_file_invalid' ) ) ) );
+            wp_safe_redirect( $nonce_url( $redirect_url . '&import_error=' . rawurlencode( __( 'Invalid file. Please select a valid NAWS export file (.json).', 'xtx-integration-for-netatmo' ) ) ) );
             exit;
         }
 
         // Check file size (max 100 MB)
         if ( intval( $file['size'] ?? 0 ) > 100 * MB_IN_BYTES ) {
-            wp_safe_redirect( $nonce_url( $redirect_url . '&import_error=' . rawurlencode( naws__( 'import_file_too_large' ) ) ) );
+            wp_safe_redirect( $nonce_url( $redirect_url . '&import_error=' . rawurlencode( __( 'File too large. Maximum size: 100 MB.', 'xtx-integration-for-netatmo' ) ) ) );
             exit;
         }
 

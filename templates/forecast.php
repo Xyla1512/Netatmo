@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 $days      = $forecast['days'] ?? [];
 $has_error = isset( $forecast['error'] );
-$title     = $atts['title'] ?: sprintf( naws__( 'forecast_title' ), count( $forecast['days'] ?? [] ) );
+$title     = $atts['title'] ?: sprintf( /* translators: %d: number of forecast days. */ __( '%d-Day Forecast', 'xtx-integration-for-netatmo' ), count( $forecast['days'] ?? [] ) );
 $loc_name  = $forecast['location_name'] ?? '';
 
 // Unit settings
@@ -36,7 +36,7 @@ $fc_id = 'naws-fc-' . wp_unique_id();
       <?php endif; ?>
       <?php if ( ! empty( $forecast['fetched_at'] ) ) : ?>
         <span class="naws-fc-hdr-time">
-          <?php printf( esc_html( naws__( 'forecast_updated' ) ), esc_html( wp_date( get_option( 'time_format', 'H:i' ), $forecast['fetched_at'] ) ) ); ?>
+          <?php printf( esc_html( /* translators: %s: time the forecast was last fetched. */ __( 'Updated: %s', 'xtx-integration-for-netatmo' ) ), esc_html( wp_date( get_option( 'time_format', 'H:i' ), $forecast['fetched_at'] ) ) ); ?>
         </span>
       <?php endif; ?>
     </div>
@@ -47,14 +47,14 @@ $fc_id = 'naws-fc-' . wp_unique_id();
     <?php if ( $has_error ) : ?>
       <div class="naws-fc-error"><?php echo esc_html( $forecast['error'] ); ?></div>
     <?php elseif ( empty( $days ) ) : ?>
-      <div class="naws-fc-error"><?php echo esc_html( naws__( 'forecast_no_data' ) ); ?></div>
+      <div class="naws-fc-error"><?php echo esc_html( __( 'No forecast data available.', 'xtx-integration-for-netatmo' ) ); ?></div>
     <?php else : ?>
 
       <div class="naws-fc-grid" style="--naws-fc-days:<?php echo count( $days ); ?>">
         <?php foreach ( $days as $day ) :
             $wmo      = NAWS_Forecast::wmo_description( $day['weathercode'] );
             $is_today = NAWS_Forecast::is_today( $day['date'] );
-            $weekday  = $is_today ? naws__( 'forecast_today' ) : NAWS_Forecast::weekday_short( $day['date'] );
+            $weekday  = $is_today ? __( 'Today', 'xtx-integration-for-netatmo' ) : NAWS_Forecast::weekday_short( $day['date'] );
             $date_str = NAWS_Forecast::date_short( $day['date'] );
 
             $t_max = $day['temp_max'];
@@ -98,13 +98,13 @@ $fc_id = 'naws-fc-' . wp_unique_id();
             <span class="naws-fc-tunit"><?php echo esc_html( $temp_unit ); ?></span>
           </div>
           <div class="naws-fc-meta">
-            <span title="<?php echo esc_attr( naws__( 'forecast_precip' ) ); ?>">🌧️ <?php echo $precip !== null ? esc_html( $precip . ' ' . $rain_unit ) : '0 ' . esc_html( $rain_unit ); ?></span>
-            <span title="<?php echo esc_attr( naws__( 'forecast_precip_prob' ) ); ?>">💧 <?php echo esc_html( $day['precip_prob'] . '%' ); ?></span>
-            <span title="<?php echo esc_attr( naws__( 'forecast_wind' ) ); ?>">🌬️ <?php echo $w_max !== null ? esc_html( $w_max . ' ' . $wind_unit ) : '--'; ?></span>
-            <span title="<?php echo esc_attr( naws__( 'forecast_wind_dir' ) ); ?>">🧭 <?php echo esc_html( $compass ); ?></span>
+            <span title="<?php echo esc_attr( __( 'Precipitation', 'xtx-integration-for-netatmo' ) ); ?>">🌧️ <?php echo $precip !== null ? esc_html( $precip . ' ' . $rain_unit ) : '0 ' . esc_html( $rain_unit ); ?></span>
+            <span title="<?php echo esc_attr( __( 'Precipitation probability', 'xtx-integration-for-netatmo' ) ); ?>">💧 <?php echo esc_html( $day['precip_prob'] . '%' ); ?></span>
+            <span title="<?php echo esc_attr( __( 'Max. wind speed', 'xtx-integration-for-netatmo' ) ); ?>">🌬️ <?php echo $w_max !== null ? esc_html( $w_max . ' ' . $wind_unit ) : '--'; ?></span>
+            <span title="<?php echo esc_attr( __( 'Wind direction', 'xtx-integration-for-netatmo' ) ); ?>">🧭 <?php echo esc_html( $compass ); ?></span>
           </div>
           <?php if ( $g_max !== null && $g_max > 0 ) : ?>
-          <div class="naws-fc-gust">🌪️ <?php echo esc_html( naws__( 'forecast_gusts' ) . ': ' . $g_max . ' ' . $wind_unit ); ?></div>
+          <div class="naws-fc-gust">🌪️ <?php echo esc_html( __( 'Gusts', 'xtx-integration-for-netatmo' ) . ': ' . $g_max . ' ' . $wind_unit ); ?></div>
           <?php endif; ?>
         </div>
         <?php endforeach; ?>
@@ -115,7 +115,7 @@ $fc_id = 'naws-fc-' . wp_unique_id();
         $provider_label = ( $forecast['provider'] ?? 'open_meteo' ) === 'yr_no'
             ? 'Yr.no / MET Norway'
             : 'Open-Meteo.com (DWD ICON, ECMWF)';
-        echo esc_html( naws__( 'forecast_source' ) ) . ': ' . esc_html( $provider_label );
+        echo esc_html( __( 'Source', 'xtx-integration-for-netatmo' ) ) . ': ' . esc_html( $provider_label );
         ?>
       </div>
 

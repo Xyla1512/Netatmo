@@ -33,7 +33,7 @@ function get_option( $key, $default = false ) {
 function get_post_meta( $post_id, $key = '', $single = false ) { return ''; }
 function post_type_exists( $type ) { return false; }
 function wp_get_global_settings() { return $GLOBALS['naws_test_global_settings']; }
-function naws__( $k ) { return $k; }
+require_once __DIR__ . '/i18n-stubs.php';
 function sanitize_text_field( $s ) { return trim( strip_tags( (string) $s ) ); }
 
 require_once __DIR__ . '/../includes/class-naws-fonts.php';

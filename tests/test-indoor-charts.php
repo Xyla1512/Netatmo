@@ -29,7 +29,7 @@ $GLOBALS['naws_test_settings'] = [];
 function get_option( $key, $default = false ) {
     return $key === 'naws_settings' ? $GLOBALS['naws_test_settings'] : $default;
 }
-function naws__( $k ) { return $k; }
+require_once __DIR__ . '/i18n-stubs.php';
 function esc_html( $s ) { return $s; }
 function esc_attr( $s ) { return $s; }
 function __( $s, $d = null ) { return $s; }
@@ -91,8 +91,8 @@ check( 'Feuchte-Kennung unveraendert gegenueber frueher', $defs[1]['id'], 'indoo
 check( 'beide zeigen auf dasselbe Modul',
     [ $defs[0]['module_id'], $defs[1]['module_id'] ],
     [ '03:00:00:0e:21:72', '03:00:00:0e:21:72' ] );
-check( 'die Beschriftung nennt Modul und Groesse', $defs[0]['label'], 'Sleeping – param_temperature' );
-check( 'ebenso bei der Feuchte',                   $defs[1]['label'], 'Sleeping – param_humidity' );
+check( 'die Beschriftung nennt Modul und Groesse', $defs[0]['label'], 'Sleeping – Temperature' );
+check( 'ebenso bei der Feuchte',                   $defs[1]['label'], 'Sleeping – Humidity' );
 
 // Die Einheit kommt aus den Einstellungen, nicht aus einem festen String —
 // genau der Fehler, den die alte Fassung hatte: sie schrieb '%' fuer jede
@@ -116,7 +116,7 @@ $defs = NAWS_Helpers::indoor_chart_defs();
 check( 'Umlaute, Bindestrich und Leerzeichen fallen aus der Kennung',
     $defs[0]['id'], 'indoor_temp_gstezimmer2' );
 check( 'der Name selbst bleibt in der Beschriftung erhalten',
-    $defs[0]['label'], 'Gäste-Zimmer 2 – param_temperature' );
+    $defs[0]['label'], 'Gäste-Zimmer 2 – Temperature' );
 
 modules( [ [ '03:00:00:0d:aa:ca', 'NAModule4', 'Schlafzimmer im Dachgeschoss' ] ] );
 $defs = NAWS_Helpers::indoor_chart_defs();

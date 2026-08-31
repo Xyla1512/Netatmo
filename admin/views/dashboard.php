@@ -27,8 +27,8 @@ $module_type_colors = [
         <div class="naws-dashboard-title">
             <span class="naws-title-icon">🌤️</span>
             <div>
-                <h1><?php naws_e( 'plugin_name' ); ?></h1>
-                <p class="naws-subtitle"><?php naws_e( 'dashboard_subtitle' ); ?></p>
+                <h1><?php esc_html_e( 'XTX Netatmo', 'xtx-integration-for-netatmo' ); ?></h1>
+                <p class="naws-subtitle"><?php esc_html_e( 'Dashboard — Live Overview & System Status', 'xtx-integration-for-netatmo' ); ?></p>
             </div>
         </div>
         <form method="post" action="<?php echo esc_url( admin_url('admin-post.php') ); ?>">
@@ -36,13 +36,13 @@ $module_type_colors = [
             <input type="hidden" name="action" value="naws_manual_sync">
             <button type="submit" class="naws-btn-sync">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
-                <?php naws_e( 'sync_now' ); ?>
+                <?php esc_html_e( 'Sync Now', 'xtx-integration-for-netatmo' ); ?>
             </button>
         </form>
     </div>
 
     <?php if ( isset( $_GET['synced'] ) && isset( $_GET['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'naws_notice' ) ) : ?>
-        <div class="notice notice-success is-dismissible"><p><?php naws_e( 'synced_ok' ); ?></p></div>
+        <div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Data synced successfully!', 'xtx-integration-for-netatmo' ); ?></p></div>
     <?php endif; ?>
     <?php if ( isset( $_GET['error'] ) && isset( $_GET['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'naws_notice' ) ) : ?>
         <div class="notice notice-error is-dismissible"><p><?php echo esc_html( sanitize_text_field( wp_unslash( $_GET['error'] ) ) ); ?></p></div>
@@ -76,7 +76,7 @@ $module_type_colors = [
             <div class="naws-stat-icon-wrap naws-stat-color-blue"><?php echo wp_kses( $svg['modules'], naws_svg_kses_args() ); ?></div>
             <div class="naws-stat-body">
                 <div class="naws-stat-value"><?php echo esc_html( count($modules) ); ?></div>
-                <div class="naws-stat-label"><?php naws_e( 'menu_modules' ); ?></div>
+                <div class="naws-stat-label"><?php esc_html_e( 'Modules', 'xtx-integration-for-netatmo' ); ?></div>
             </div>
         </div>
 
@@ -84,7 +84,7 @@ $module_type_colors = [
             <div class="naws-stat-icon-wrap naws-stat-color-green"><?php echo wp_kses( $svg['readings'], naws_svg_kses_args() ); ?></div>
             <div class="naws-stat-body">
                 <div class="naws-stat-value"><?php echo esc_html( number_format($total, 0, ',', '.') ); ?></div>
-                <div class="naws-stat-label"><?php naws_e( 'current_readings' ); ?></div>
+                <div class="naws-stat-label"><?php esc_html_e( 'Current Readings', 'xtx-integration-for-netatmo' ); ?></div>
             </div>
         </div>
 
@@ -101,7 +101,7 @@ $module_type_colors = [
             <div class="naws-stat-icon-wrap naws-stat-color-teal"><?php echo wp_kses( $svg['daily'], naws_svg_kses_args() ); ?></div>
             <div class="naws-stat-body">
                 <div class="naws-stat-value"><?php echo esc_html( number_format($daily_count, 0, ',', '.') ); ?></div>
-                <div class="naws-stat-label"><?php naws_e( 'daily_summary' ); ?></div>
+                <div class="naws-stat-label"><?php esc_html_e( 'Daily Summary', 'xtx-integration-for-netatmo' ); ?></div>
             </div>
         </div>
 
@@ -110,7 +110,7 @@ $module_type_colors = [
             <div class="naws-stat-icon-wrap naws-stat-color-slate"><?php echo wp_kses( $svg['oldest'], naws_svg_kses_args() ); ?></div>
             <div class="naws-stat-body">
                 <div class="naws-stat-value naws-stat-value--date"><?php echo esc_html( wp_date('d.m.Y', $range['date_begin']) ); ?></div>
-                <div class="naws-stat-label"><?php naws_e( 'date' ); ?></div>
+                <div class="naws-stat-label"><?php esc_html_e( 'Date', 'xtx-integration-for-netatmo' ); ?></div>
             </div>
         </div>
         <?php endif; ?>
@@ -120,7 +120,7 @@ $module_type_colors = [
             <div class="naws-stat-icon-wrap naws-stat-color-slate"><?php echo wp_kses( $svg['history'], naws_svg_kses_args() ); ?></div>
             <div class="naws-stat-body">
                 <div class="naws-stat-value naws-stat-value--date"><?php echo esc_html( $daily_range['date_begin'] ); ?></div>
-                <div class="naws-stat-label"><?php naws_e( 'history' ); ?></div>
+                <div class="naws-stat-label"><?php esc_html_e( 'History', 'xtx-integration-for-netatmo' ); ?></div>
             </div>
         </div>
         <?php endif; ?>
@@ -129,7 +129,7 @@ $module_type_colors = [
             <div class="naws-stat-icon-wrap naws-stat-color-orange"><?php echo wp_kses( $svg['lastsync'], naws_svg_kses_args() ); ?></div>
             <div class="naws-stat-body">
                 <div class="naws-stat-value naws-stat-value--date"><?php echo $last_sync ? esc_html( wp_date('H:i', $last_sync) ) : '—'; ?></div>
-                <div class="naws-stat-label"><?php naws_e( 'recent_sync' ); ?></div>
+                <div class="naws-stat-label"><?php esc_html_e( 'Recent Sync Events', 'xtx-integration-for-netatmo' ); ?></div>
                 <div class="naws-stat-sub"><?php echo $last_sync ? esc_html( human_time_diff($last_sync) ) : ''; ?></div>
             </div>
         </div>
@@ -138,7 +138,7 @@ $module_type_colors = [
             <div class="naws-stat-icon-wrap naws-stat-color-blue"><?php echo wp_kses( $svg['nextsync'], naws_svg_kses_args() ); ?></div>
             <div class="naws-stat-body">
                 <div class="naws-stat-value naws-stat-value--date"><?php echo $next_run ? esc_html( wp_date('H:i', $next_run) ) : '—'; ?></div>
-                <div class="naws-stat-label"><?php naws_e( 'next_run' ); ?></div>
+                <div class="naws-stat-label"><?php esc_html_e( 'Next run:', 'xtx-integration-for-netatmo' ); ?></div>
                 <div class="naws-stat-sub"><?php echo $next_run ? esc_html( 'in ' . human_time_diff($next_run) ) : ''; ?></div>
             </div>
         </div>
@@ -165,7 +165,7 @@ $module_type_colors = [
                 <div class="naws-stat-value naws-stat-value--date" style="font-size:0.8rem;"><?php echo esc_html( $health['message'] ); ?></div>
                 <div class="naws-stat-label">Health</div>
                 <?php if ( $recent_errors > 0 ) : ?>
-                <div class="naws-stat-sub" style="color:#ef4444;"><?php echo esc_html( sprintf( naws__( 'errors_last_hour' ), $recent_errors ) ); ?></div>
+                <div class="naws-stat-sub" style="color:#ef4444;"><?php echo esc_html( sprintf( /* translators: %d: number of errors. */ __( '%d error(s) in the last hour', 'xtx-integration-for-netatmo' ), $recent_errors ) ); ?></div>
                 <?php endif; ?>
             </div>
         </div>
@@ -182,10 +182,10 @@ $module_type_colors = [
         <div class="naws-stat-card">
             <div class="naws-stat-icon-wrap naws-stat-color-<?php echo esc_attr( $crypto_color ); ?>"><?php echo wp_kses( $crypto_icon, naws_svg_kses_args() ); ?></div>
             <div class="naws-stat-body">
-                <div class="naws-stat-value naws-stat-value--date" style="font-size:0.8rem;"><?php echo esc_html( $crypto_ok ? naws__( 'crypto_state_ok' ) : naws__( 'crypto_state_warn' ) ); ?></div>
-                <div class="naws-stat-label"><?php naws_e( 'crypto_state_label' ); ?></div>
+                <div class="naws-stat-value naws-stat-value--date" style="font-size:0.8rem;"><?php echo esc_html( $crypto_ok ? __( 'Stored encrypted', 'xtx-integration-for-netatmo' ) : __( 'Needs attention', 'xtx-integration-for-netatmo' ) ); ?></div>
+                <div class="naws-stat-label"><?php esc_html_e( 'Credentials', 'xtx-integration-for-netatmo' ); ?></div>
                 <?php if ( ! $crypto_ok ) : ?>
-                <div class="naws-stat-sub" style="color:#f59e0b;"><?php echo esc_html( naws__( 'crypto_' . $crypto['issues'][0] ) ); ?></div>
+                <div class="naws-stat-sub" style="color:#f59e0b;"><?php echo esc_html( naws_label( 'crypto_' . $crypto['issues'][0] ) ); ?></div>
                 <?php endif; ?>
             </div>
         </div>
@@ -199,7 +199,7 @@ $module_type_colors = [
         <div>
             <div class="naws-section-label">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                <?php naws_e( 'current_readings' ); ?>
+                <?php esc_html_e( 'Current Readings', 'xtx-integration-for-netatmo' ); ?>
                 <span class="naws-live-dot"></span>
                 <span style="font-size:0.7rem; color:#646970;"><?php echo $last_sync ? esc_html( 'Live · ' . wp_date('H:i', $last_sync) ) : ''; ?></span>
             </div>
@@ -208,9 +208,9 @@ $module_type_colors = [
                 <div class="naws-admin-panel">
                     <div class="naws-empty-state">
                         <div style="font-size:2.5rem; margin-bottom:0.75rem;">📡</div>
-                        <p style="margin:0 0 1rem;"><?php naws_e( 'no_modules' ); ?></p>
+                        <p style="margin:0 0 1rem;"><?php esc_html_e( 'No modules found yet. Sync data first.', 'xtx-integration-for-netatmo' ); ?></p>
                         <a href="<?php echo esc_url( admin_url('admin.php?page=naws-settings') ); ?>" class="button button-primary">
-                            <?php naws_e( 'go_to_settings' ); ?>
+                            <?php esc_html_e( 'Go to Settings', 'xtx-integration-for-netatmo' ); ?>
                         </a>
                     </div>
                 </div>
@@ -269,15 +269,15 @@ $module_type_colors = [
                                 <?php if ( ! $has_data ) : ?>
                                     <div class="naws-no-data-row">
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                                        <?php naws_e( 'no_data' ); ?>
+                                        <?php esc_html_e( 'No data available yet.', 'xtx-integration-for-netatmo' ); ?>
                                     </div>
                                 <?php else : ?>
                                     <table class="naws-readings-table">
                                         <thead>
                                             <tr>
-                                                <th><?php naws_e( 'value' ); ?></th>
-                                                <th><?php naws_e( 'value' ); ?></th>
-                                                <th><?php naws_e( 'unit' ); ?></th>
+                                                <th><?php esc_html_e( 'Value', 'xtx-integration-for-netatmo' ); ?></th>
+                                                <th><?php esc_html_e( 'Value', 'xtx-integration-for-netatmo' ); ?></th>
+                                                <th><?php esc_html_e( 'Unit', 'xtx-integration-for-netatmo' ); ?></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -311,27 +311,27 @@ $module_type_colors = [
 
             <?php if ( ! empty( $last_error ) ) : ?>
                 <div class="notice notice-error" style="margin-top:1rem;">
-                    <p><strong><?php naws_e( 'error_occurred' ); ?></strong> <?php echo esc_html( $last_error ); ?></p>
+                    <p><strong><?php esc_html_e( 'Error occurred.', 'xtx-integration-for-netatmo' ); ?></strong> <?php echo esc_html( $last_error ); ?></p>
                 </div>
             <?php endif; ?>
 
             <!-- Daily Summary (below accordion) -->
             <div class="naws-section-label" style="margin-top:1.5rem;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                <?php naws_e( 'daily_summary' ); ?>
+                <?php esc_html_e( 'Daily Summary', 'xtx-integration-for-netatmo' ); ?>
             </div>
             <div class="naws-admin-panel">
                 <div class="naws-daily-summary-body">
                     <div class="naws-daily-info">
-                        <p><?php naws_e( 'cron_daily_desc' ); ?></p>
+                        <p><?php esc_html_e( 'The daily cron runs at 00:01 and computes daily summaries for temperature, pressure and precipitation.', 'xtx-integration-for-netatmo' ); ?></p>
                         <p class="naws-daily-next">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                            <strong><?php naws_e( 'next_run' ); ?></strong>
+                            <strong><?php esc_html_e( 'Next run:', 'xtx-integration-for-netatmo' ); ?></strong>
                             <?php
                             $next_daily = NAWS_Cron::get_next_daily_run();
                             echo $next_daily
                                  ? esc_html( wp_date('d.m.Y H:i', $next_daily) . ' — in ' . human_time_diff($next_daily) )
-                                 : esc_html( naws__( 'not_scheduled' ) );
+                                 : esc_html( __( 'Not scheduled', 'xtx-integration-for-netatmo' ) );
                             ?>
                         </p>
                     </div>
@@ -341,7 +341,7 @@ $module_type_colors = [
                                max="<?php echo esc_attr(wp_date('Y-m-d', strtotime('yesterday'))); ?>"
                                class="naws-date-input">
                         <button id="naws-run-daily-btn" class="button button-primary">
-                            <?php naws_e( 'daily_summary' ); ?>
+                            <?php esc_html_e( 'Daily Summary', 'xtx-integration-for-netatmo' ); ?>
                         </button>
                         <span id="naws-daily-result" class="naws-daily-result"></span>
                     </div>
@@ -355,24 +355,24 @@ $module_type_colors = [
             <!-- Quick Actions -->
             <div class="naws-section-label">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                <?php naws_e( 'menu_dashboard' ); ?>
+                <?php esc_html_e( 'Dashboard', 'xtx-integration-for-netatmo' ); ?>
             </div>
             <div class="naws-admin-panel" style="margin-bottom:1.5rem;">
                 <div class="naws-quick-links">
                     <a href="<?php echo esc_url( admin_url('admin.php?page=naws-settings') ); ?>" class="naws-quick-link">
                         <span class="naws-ql-icon" style="background:#eff6ff; color:#2563eb;">⚙️</span>
-                        <span><?php naws_e( 'settings_oauth' ); ?></span>
+                        <span><?php esc_html_e( 'Settings & OAuth', 'xtx-integration-for-netatmo' ); ?></span>
                         <svg class="naws-ql-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
                     </a>
                     <a href="<?php echo esc_url( admin_url('admin.php?page=naws-import') ); ?>" class="naws-quick-link">
                         <span class="naws-ql-icon" style="background:#f0fdf4; color:#16a34a;">📥</span>
-                        <span><?php naws_e( 'menu_import' ); ?></span>
+                        <span><?php esc_html_e( 'History Import', 'xtx-integration-for-netatmo' ); ?></span>
                         <svg class="naws-ql-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
                     </a>
 
                     <a href="<?php echo esc_url( admin_url('admin.php?page=naws-cron-log') ); ?>" class="naws-quick-link">
                         <span class="naws-ql-icon" style="background:#fff7ed; color:#ea580c;">📋</span>
-                        <span><?php naws_e( 'menu_cron_log' ); ?></span>
+                        <span><?php esc_html_e( 'Cron Log', 'xtx-integration-for-netatmo' ); ?></span>
                         <svg class="naws-ql-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
                     </a>
                 </div>
@@ -381,26 +381,26 @@ $module_type_colors = [
             <!-- Cron Status -->
             <div class="naws-section-label">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                <?php naws_e( 'cron_status' ); ?>
+                <?php esc_html_e( 'Cron Status', 'xtx-integration-for-netatmo' ); ?>
             </div>
             <div class="naws-admin-panel">
                 <div class="naws-cron-grid">
                     <div class="naws-cron-item">
-                        <span class="naws-cron-label"><?php naws_e( 'cron_interval' ); ?></span>
+                        <span class="naws-cron-label"><?php esc_html_e( 'Cron Interval (minutes)', 'xtx-integration-for-netatmo' ); ?></span>
                         <span class="naws-cron-value">
                             <span class="naws-badge naws-badge-info"><?php echo esc_html( $options['cron_interval'] ?? 10 ); ?> min</span>
                         </span>
                     </div>
                     <div class="naws-cron-item">
-                        <span class="naws-cron-label"><?php naws_e( 'next_run' ); ?></span>
+                        <span class="naws-cron-label"><?php esc_html_e( 'Next run:', 'xtx-integration-for-netatmo' ); ?></span>
                         <span class="naws-cron-value"><?php echo $next_run ? esc_html( wp_date('Y-m-d H:i:s', $next_run) ) : '—'; ?></span>
                     </div>
                     <div class="naws-cron-item">
-                        <span class="naws-cron-label"><?php naws_e( 'recent_sync' ); ?></span>
+                        <span class="naws-cron-label"><?php esc_html_e( 'Recent Sync Events', 'xtx-integration-for-netatmo' ); ?></span>
                         <span class="naws-cron-value"><?php echo $last_sync ? esc_html( wp_date('Y-m-d H:i:s', $last_sync) ) : '—'; ?></span>
                     </div>
                     <div class="naws-cron-item">
-                        <span class="naws-cron-label"><?php naws_e( 'data_retention' ); ?></span>
+                        <span class="naws-cron-label"><?php esc_html_e( 'Data Retention', 'xtx-integration-for-netatmo' ); ?></span>
                         <span class="naws-cron-value"><?php echo esc_html( ( $options['data_retention'] ?? 365 )  ); ?></span>
                     </div>
                 </div>

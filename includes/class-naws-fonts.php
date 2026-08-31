@@ -187,7 +187,7 @@ class NAWS_Fonts {
 
         $fonts = [
             'inherit' => [
-                'label'  => naws__( 'appearance_font_inherit' ),
+                'label'  => __( 'Inherit the theme font', 'xtx-integration-for-netatmo' ),
                 'stack'  => 'inherit',
                 'origin' => 'inherit',
             ],

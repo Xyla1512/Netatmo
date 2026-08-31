@@ -38,7 +38,7 @@ function update_option( $key, $value, $autoload = true ) {
     $GLOBALS['naws_test_options'][ $key ] = $value;
     return true;
 }
-function naws__( $k ) { return $k; }
+require_once __DIR__ . '/i18n-stubs.php';
 function sanitize_text_field( $s ) { return is_string( $s ) ? trim( wp_strip_all_tags( $s ) ) : ''; }
 function wp_strip_all_tags( $s ) { return strip_tags( (string) $s ); }
 

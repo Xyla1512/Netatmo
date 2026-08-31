@@ -72,32 +72,32 @@ $sensor_chart_configs = [];
 
 // NAModule1 – outdoor
 if ( $outdoor_id ) {
-    $sensor_chart_configs[] = [ 'key'=>'Temperature',    'param'=>'Temperature', 'module_id'=>$outdoor_id, 'label'=>naws__( 'chart_temp_out' ),        'unit'=>NAWS_Helpers::get_unit('Temperature'),   'type'=>'line', 'color'=>NAWS_Colors::get('chart_temp_outdoor') ];
-    $sensor_chart_configs[] = [ 'key'=>'Humidity',       'param'=>'Humidity',    'module_id'=>$outdoor_id, 'label'=>naws__( 'chart_humid_out' ),       'unit'=>'%',                                    'type'=>'line', 'color'=>NAWS_Colors::get('chart_humidity_outdoor') ];
+    $sensor_chart_configs[] = [ 'key'=>'Temperature',    'param'=>'Temperature', 'module_id'=>$outdoor_id, 'label'=>__( 'Temp. Outdoor', 'xtx-integration-for-netatmo' ),        'unit'=>NAWS_Helpers::get_unit('Temperature'),   'type'=>'line', 'color'=>NAWS_Colors::get('chart_temp_outdoor') ];
+    $sensor_chart_configs[] = [ 'key'=>'Humidity',       'param'=>'Humidity',    'module_id'=>$outdoor_id, 'label'=>__( 'Humidity Outdoor', 'xtx-integration-for-netatmo' ),       'unit'=>'%',                                    'type'=>'line', 'color'=>NAWS_Colors::get('chart_humidity_outdoor') ];
 }
 // NAMain – indoor base
 if ( $indoor_id ) {
-    $sensor_chart_configs[] = [ 'key'=>'Temperature_indoor', 'param'=>'Temperature', 'module_id'=>$indoor_id, 'label'=>naws__( 'chart_temp_base' ),   'unit'=>NAWS_Helpers::get_unit('Temperature'),   'type'=>'line', 'color'=>NAWS_Colors::get('chart_temp_indoor') ];
-    $sensor_chart_configs[] = [ 'key'=>'Pressure',           'param'=>'Pressure',    'module_id'=>$indoor_id, 'label'=>naws__( 'chart_pressure' ),     'unit'=>NAWS_Helpers::get_unit('Pressure'),      'type'=>'line', 'color'=>NAWS_Colors::get('chart_pressure') ];
-    $sensor_chart_configs[] = [ 'key'=>'CO2',                'param'=>'CO2',         'module_id'=>$indoor_id, 'label'=>naws__( 'chart_co2_base' ),     'unit'=>'ppm',                                  'type'=>'line', 'color'=>NAWS_Colors::get('chart_co2') ];
-    $sensor_chart_configs[] = [ 'key'=>'Noise',              'param'=>'Noise',       'module_id'=>$indoor_id, 'label'=>naws__( 'chart_noise_base' ),   'unit'=>'dB',                                   'type'=>'line', 'color'=>NAWS_Colors::get('chart_noise') ];
+    $sensor_chart_configs[] = [ 'key'=>'Temperature_indoor', 'param'=>'Temperature', 'module_id'=>$indoor_id, 'label'=>__( 'Temp. Base', 'xtx-integration-for-netatmo' ),   'unit'=>NAWS_Helpers::get_unit('Temperature'),   'type'=>'line', 'color'=>NAWS_Colors::get('chart_temp_indoor') ];
+    $sensor_chart_configs[] = [ 'key'=>'Pressure',           'param'=>'Pressure',    'module_id'=>$indoor_id, 'label'=>__( 'Pressure', 'xtx-integration-for-netatmo' ),     'unit'=>NAWS_Helpers::get_unit('Pressure'),      'type'=>'line', 'color'=>NAWS_Colors::get('chart_pressure') ];
+    $sensor_chart_configs[] = [ 'key'=>'CO2',                'param'=>'CO2',         'module_id'=>$indoor_id, 'label'=>__( 'CO₂ Base', 'xtx-integration-for-netatmo' ),     'unit'=>'ppm',                                  'type'=>'line', 'color'=>NAWS_Colors::get('chart_co2') ];
+    $sensor_chart_configs[] = [ 'key'=>'Noise',              'param'=>'Noise',       'module_id'=>$indoor_id, 'label'=>__( 'Noise Base', 'xtx-integration-for-netatmo' ),   'unit'=>'dB',                                   'type'=>'line', 'color'=>NAWS_Colors::get('chart_noise') ];
 }
 // NAModule2 – wind
 if ( $wind_id ) {
-    $sensor_chart_configs[] = [ 'key'=>'WindStrength', 'param'=>'WindStrength', 'module_id'=>$wind_id, 'label'=>naws__( 'chart_wind' ),  'unit'=>NAWS_Helpers::get_unit('WindStrength'), 'type'=>'line', 'color'=>NAWS_Colors::get('chart_wind') ];
-    $sensor_chart_configs[] = [ 'key'=>'GustStrength', 'param'=>'GustStrength', 'module_id'=>$wind_id, 'label'=>naws__( 'chart_gusts' ), 'unit'=>NAWS_Helpers::get_unit('GustStrength'), 'type'=>'line', 'color'=>NAWS_Colors::get('chart_gusts') ];
+    $sensor_chart_configs[] = [ 'key'=>'WindStrength', 'param'=>'WindStrength', 'module_id'=>$wind_id, 'label'=>__( 'Wind', 'xtx-integration-for-netatmo' ),  'unit'=>NAWS_Helpers::get_unit('WindStrength'), 'type'=>'line', 'color'=>NAWS_Colors::get('chart_wind') ];
+    $sensor_chart_configs[] = [ 'key'=>'GustStrength', 'param'=>'GustStrength', 'module_id'=>$wind_id, 'label'=>__( 'Gusts', 'xtx-integration-for-netatmo' ), 'unit'=>NAWS_Helpers::get_unit('GustStrength'), 'type'=>'line', 'color'=>NAWS_Colors::get('chart_gusts') ];
 }
 // NAModule3 – rain
 if ( $rain_id ) {
-    $sensor_chart_configs[] = [ 'key'=>'Rain', 'param'=>'sum_rain_1', 'module_id'=>$rain_id, 'label'=>naws__( 'chart_rain_hourly' ), 'unit'=>NAWS_Helpers::get_unit('Rain'), 'type'=>'bar', 'color'=>NAWS_Colors::get('chart_rain') ];
+    $sensor_chart_configs[] = [ 'key'=>'Rain', 'param'=>'sum_rain_1', 'module_id'=>$rain_id, 'label'=>__( 'Rain (hourly)', 'xtx-integration-for-netatmo' ), 'unit'=>NAWS_Helpers::get_unit('Rain'), 'type'=>'bar', 'color'=>NAWS_Colors::get('chart_rain') ];
 }
 // NAModule4 – dynamic
 foreach ( $module4_info as $slug => $info ) {
     $mid = $info['id'];
     $name = $info['name'];
-    $sensor_chart_configs[] = [ 'key'=>"Temperature_{$slug}", 'param'=>'Temperature', 'module_id'=>$mid, 'label'=>naws__( 'chart_temp_prefix' )." {$name}",   'unit'=>NAWS_Helpers::get_unit('Temperature'), 'type'=>'line', 'color'=>NAWS_Colors::get('chart_module4_temp') ];
-    $sensor_chart_configs[] = [ 'key'=>"Humidity_{$slug}",    'param'=>'Humidity',    'module_id'=>$mid, 'label'=>naws__( 'chart_humid_prefix' )." {$name}", 'unit'=>'%',                                   'type'=>'line', 'color'=>NAWS_Colors::get('chart_module4_humidity') ];
-    $sensor_chart_configs[] = [ 'key'=>"CO2_{$slug}",         'param'=>'CO2',         'module_id'=>$mid, 'label'=>naws__( 'chart_co2_prefix' )." {$name}",   'unit'=>'ppm',                                 'type'=>'line', 'color'=>NAWS_Colors::get('chart_module4_co2') ];
+    $sensor_chart_configs[] = [ 'key'=>"Temperature_{$slug}", 'param'=>'Temperature', 'module_id'=>$mid, 'label'=>__( 'Temp.', 'xtx-integration-for-netatmo' )." {$name}",   'unit'=>NAWS_Helpers::get_unit('Temperature'), 'type'=>'line', 'color'=>NAWS_Colors::get('chart_module4_temp') ];
+    $sensor_chart_configs[] = [ 'key'=>"Humidity_{$slug}",    'param'=>'Humidity',    'module_id'=>$mid, 'label'=>_x( 'Humidity', 'chart_humid_prefix', 'xtx-integration-for-netatmo' )." {$name}", 'unit'=>'%',                                   'type'=>'line', 'color'=>NAWS_Colors::get('chart_module4_humidity') ];
+    $sensor_chart_configs[] = [ 'key'=>"CO2_{$slug}",         'param'=>'CO2',         'module_id'=>$mid, 'label'=>__( 'CO₂', 'xtx-integration-for-netatmo' )." {$name}",   'unit'=>'ppm',                                 'type'=>'line', 'color'=>NAWS_Colors::get('chart_module4_co2') ];
 }
 
 // Filter: only sensors that are visible (not hidden_params) AND chart is active (not hidden_charts)
@@ -184,9 +184,9 @@ $pressure_diff  = $_pt['diff'];
             <?php if ( get_option('naws_auth_required') || empty(get_option('naws_access_token')) ) echo 'style="background:#e57373;animation:none;"'; ?>
       ></span><?php
         if ( get_option('naws_auth_required') || empty(get_option('naws_access_token')) ) {
-            echo '<span style="color:#e57373;font-size:11px;font-weight:600;">'.esc_html( naws__( 'live_disconnected' ) ).'</span>';
+            echo '<span style="color:#e57373;font-size:11px;font-weight:600;">'.esc_html( __( 'Disconnected', 'xtx-integration-for-netatmo' ) ).'</span>';
         } else {
-            echo esc_html( naws__( 'live_connected' ) );
+            echo esc_html( __( 'Live', 'xtx-integration-for-netatmo' ) );
         }
       ?>&nbsp;·&nbsp; <span class="naws-ts">—</span>
     </div>
@@ -219,7 +219,7 @@ $pressure_diff  = $_pt['diff'];
 
     <?php if ( ! empty($chart_configs) ) : ?>
     <div id="<?php echo esc_attr($widget_id); ?>-charts" style="display:none">
-      <div class="naws-section-title"><?php naws_e( 'daily_range_title' ); ?></div>
+      <div class="naws-section-title"><?php esc_html_e( 'Daily trend (last 24h)', 'xtx-integration-for-netatmo' ); ?></div>
       <div class="naws-charts-grid">
         <?php foreach ($chart_configs as $cfg) :
             $cid = esc_attr( $widget_id . '-' . preg_replace('/[^a-z0-9]/i','-',$cfg['key']) );
@@ -227,7 +227,7 @@ $pressure_diff  = $_pt['diff'];
         <div class="naws-chart-card" data-chart-id="<?php echo esc_attr( $cid ); ?>" data-chart-label="<?php echo esc_attr($cfg['label']); ?>">
           <div class="naws-chart-hdr">
             <div class="naws-chart-lbl"><?php echo esc_html($cfg['label']); ?></div>
-            <button class="naws-chart-expand" aria-label="<?php echo esc_attr( naws__( 'expand_chart' ) ); ?>" data-chart-id="<?php echo esc_attr( $cid ); ?>" data-label="<?php echo esc_attr($cfg['label']); ?>">
+            <button class="naws-chart-expand" aria-label="<?php echo esc_attr( __( 'Expand', 'xtx-integration-for-netatmo' ) ); ?>" data-chart-id="<?php echo esc_attr( $cid ); ?>" data-label="<?php echo esc_attr($cfg['label']); ?>">
               <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
             </button>
           </div>
@@ -249,7 +249,7 @@ $pressure_diff  = $_pt['diff'];
         $fc_rain_unit  = ( $fc_options['rain_unit'] ?? 'mm' ) === 'in' ? 'in' : 'mm';
         $fc_loc_name   = $forecast['location_name'] ?? '';
         $fc_day_count  = count( $forecast['days'] );
-        $fc_title      = sprintf( naws__( 'forecast_title' ), $fc_day_count );
+        $fc_title      = sprintf( /* translators: %d: number of forecast days. */ __( '%d-Day Forecast', 'xtx-integration-for-netatmo' ), $fc_day_count );
     ?>
     <div style="margin-top:16px;">
       <!-- Forecast Header -->
@@ -260,7 +260,7 @@ $pressure_diff  = $_pt['diff'];
             <span>📍 <?php echo esc_html( $fc_loc_name ); ?></span>
           <?php endif; ?>
           <?php if ( ! empty( $forecast['fetched_at'] ) ) : ?>
-            <span><?php printf( esc_html( naws__( 'forecast_updated' ) ), esc_html( wp_date( 'H:i', $forecast['fetched_at'] ) ) ); ?></span>
+            <span><?php printf( esc_html( /* translators: %s: time the forecast was last fetched. */ __( 'Updated: %s', 'xtx-integration-for-netatmo' ) ), esc_html( wp_date( 'H:i', $forecast['fetched_at'] ) ) ); ?></span>
           <?php endif; ?>
         </div>
       </div>
@@ -270,7 +270,7 @@ $pressure_diff  = $_pt['diff'];
           <?php foreach ( $forecast['days'] as $fc_day ) :
               $fc_wmo    = NAWS_Forecast::wmo_description( $fc_day['weathercode'] );
               $fc_today  = NAWS_Forecast::is_today( $fc_day['date'] );
-              $fc_wd     = $fc_today ? naws__( 'forecast_today' ) : NAWS_Forecast::weekday_short( $fc_day['date'] );
+              $fc_wd     = $fc_today ? __( 'Today', 'xtx-integration-for-netatmo' ) : NAWS_Forecast::weekday_short( $fc_day['date'] );
               $fc_dt     = NAWS_Forecast::date_short( $fc_day['date'] );
               $fc_tmax   = $fc_day['temp_max'];
               $fc_tmin   = $fc_day['temp_min'];
@@ -305,10 +305,10 @@ $pressure_diff  = $_pt['diff'];
               <span class="naws-fcc-tunit"><?php echo esc_html( $fc_temp_unit ); ?></span>
             </div>
             <div class="naws-fcc-meta">
-              <span title="<?php echo esc_attr( naws__( 'forecast_precip' ) ); ?>">🌧️ <?php echo $fc_precip !== null ? esc_html( $fc_precip . ' ' . $fc_rain_unit ) : '0'; ?></span>
-              <span title="<?php echo esc_attr( naws__( 'forecast_precip_prob' ) ); ?>">💧 <?php echo esc_html( $fc_day['precip_prob'] . '%' ); ?></span>
-              <span title="<?php echo esc_attr( naws__( 'forecast_wind' ) ); ?>">🌬️ <?php echo $fc_wmax !== null ? esc_html( $fc_wmax . ' ' . $fc_wind_label ) : '--'; ?></span>
-              <span title="<?php echo esc_attr( naws__( 'forecast_wind_dir' ) ); ?>">🧭 <?php echo esc_html( $fc_compass ); ?></span>
+              <span title="<?php echo esc_attr( __( 'Precipitation', 'xtx-integration-for-netatmo' ) ); ?>">🌧️ <?php echo $fc_precip !== null ? esc_html( $fc_precip . ' ' . $fc_rain_unit ) : '0'; ?></span>
+              <span title="<?php echo esc_attr( __( 'Precipitation probability', 'xtx-integration-for-netatmo' ) ); ?>">💧 <?php echo esc_html( $fc_day['precip_prob'] . '%' ); ?></span>
+              <span title="<?php echo esc_attr( __( 'Max. wind speed', 'xtx-integration-for-netatmo' ) ); ?>">🌬️ <?php echo $fc_wmax !== null ? esc_html( $fc_wmax . ' ' . $fc_wind_label ) : '--'; ?></span>
+              <span title="<?php echo esc_attr( __( 'Wind direction', 'xtx-integration-for-netatmo' ) ); ?>">🧭 <?php echo esc_html( $fc_compass ); ?></span>
             </div>
           </div>
           <?php endforeach; ?>
@@ -318,7 +318,7 @@ $pressure_diff  = $_pt['diff'];
           $provider_label = ( $forecast['provider'] ?? 'open_meteo' ) === 'yr_no'
               ? 'Yr.no / MET Norway'
               : 'Open-Meteo.com';
-          echo esc_html( naws__( 'forecast_source' ) ) . ': ' . esc_html( $provider_label );
+          echo esc_html( __( 'Source', 'xtx-integration-for-netatmo' ) ) . ': ' . esc_html( $provider_label );
           ?>
         </div>
       </div>
@@ -331,7 +331,7 @@ $pressure_diff  = $_pt['diff'];
     <div class="naws-modal-box">
       <div class="naws-modal-hdr">
         <span class="naws-modal-title"></span>
-        <button class="naws-modal-close" aria-label="<?php echo esc_attr( naws__( 'close_modal' ) ); ?>">
+        <button class="naws-modal-close" aria-label="<?php echo esc_attr( __( 'Close', 'xtx-integration-for-netatmo' ) ); ?>">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
@@ -353,27 +353,27 @@ $t_icons = [
     'down'   => '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>',
     'stable' => '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>',
 ];
-$t_labels  = [ 'up' => naws__( 'trend_up' ), 'down' => naws__( 'trend_down' ), 'stable' => naws__( 'trend_stable' ) ];
+$t_labels  = [ 'up' => __( 'rising', 'xtx-integration-for-netatmo' ), 'down' => __( 'falling', 'xtx-integration-for-netatmo' ), 'stable' => __( 'stable', 'xtx-integration-for-netatmo' ) ];
 
 // ── i18n strings for JavaScript ──────────────────────────────────────────────
 $_i18n = [
-    'lbl_outdoor'     => naws__( 'lbl_outdoor' ),
-    'lbl_base'        => naws__( 'lbl_base' ),
-    'card_temperature'=> naws__( 'card_temperature' ),
-    'card_humidity'   => naws__( 'card_humidity' ),
-    'card_pressure'   => naws__( 'card_pressure' ),
-    'card_co2'        => naws__( 'card_co2' ),
-    'card_noise'      => naws__( 'card_noise' ),
-    'card_rain'       => naws__( 'card_rain' ),
-    'card_wind_gusts' => naws__( 'card_wind_gusts' ),
-    'card_wind'       => naws__( 'card_wind' ),
-    'card_gusts'      => naws__( 'card_gusts' ),
-    'card_wind_dir'   => naws__( 'card_wind_dir' ),
-    'card_temp_min'   => naws__( 'card_temp_min' ),
-    'card_temp_max'   => naws__( 'card_temp_max' ),
-    'stale_data'      => naws__( 'stale_data' ),
-    'no_live_data'    => naws__( 'no_live_data' ),
-    'sync_inactive'   => naws__( 'sync_inactive_hint' ),
+    'lbl_outdoor'     => __( 'Outdoor', 'xtx-integration-for-netatmo' ),
+    'lbl_base'        => __( 'Base', 'xtx-integration-for-netatmo' ),
+    'card_temperature'=> __( 'Temperature', 'xtx-integration-for-netatmo' ),
+    'card_humidity'   => _x( 'Humidity', 'card_humidity', 'xtx-integration-for-netatmo' ),
+    'card_pressure'   => __( 'Air Pressure', 'xtx-integration-for-netatmo' ),
+    'card_co2'        => __( 'CO₂', 'xtx-integration-for-netatmo' ),
+    'card_noise'      => _x( 'Noise', 'card_noise', 'xtx-integration-for-netatmo' ),
+    'card_rain'       => __( 'Precipitation', 'xtx-integration-for-netatmo' ),
+    'card_wind_gusts' => __( 'Wind &amp; Gusts', 'xtx-integration-for-netatmo' ),
+    'card_wind'       => __( 'Wind', 'xtx-integration-for-netatmo' ),
+    'card_gusts'      => __( 'Gusts', 'xtx-integration-for-netatmo' ),
+    'card_wind_dir'   => __( 'Wind Direction', 'xtx-integration-for-netatmo' ),
+    'card_temp_min'   => __( 'Temp. Min', 'xtx-integration-for-netatmo' ),
+    'card_temp_max'   => __( 'Temp. Max', 'xtx-integration-for-netatmo' ),
+    'stale_data'      => /* translators: %d: age of the data in minutes. */ __( 'Data outdated (%d min.)', 'xtx-integration-for-netatmo' ),
+    'no_live_data'    => __( 'No live data available.', 'xtx-integration-for-netatmo' ),
+    'sync_inactive'   => __( 'Make sure the sync function is active.', 'xtx-integration-for-netatmo' ),
 ];
 $t_sign     = $pressure_diff > 0 ? '+' : '';
 $t_diff_str = $pressure_diff !== 0.0 ? " ({$t_sign}{$pressure_diff} hPa)" : '';
@@ -395,7 +395,7 @@ $_naws_icons_safe = array_map(
 echo '<script type="application/json" data-naws="live" id="' . esc_attr( $widget_id ) . '-data">'
     . wp_json_encode( [
         'WID'              => $widget_id,
-        'TIME_SUFFIX'      => naws__( 'time_suffix' ),
+        'TIME_FMT'         => NAWS_Helpers::clock_format(),
         'AJAX'             => $ajax_url,
         'MODULE4_INFO'     => $module4_info,
         'I18N'             => $_i18n,

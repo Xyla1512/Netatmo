@@ -119,11 +119,10 @@ class NAWS_Weather_Icons {
      * screen readers.
      */
     public static function label( string $state ): string {
-        $key = 'wx_state_' . $state;
-        $out = function_exists( 'naws__' ) ? naws__( $key ) : $key;
+        $out = function_exists( 'naws_label' ) ? naws_label( 'wx_state_' . $state ) : '';
 
-        // naws__() echoes the key back when a translation is missing.
-        return $out === $key ? ucfirst( str_replace( '_', ' ', $state ) ) : $out;
+        // naws_label() returns an empty string for a state it does not know.
+        return $out !== '' ? $out : ucfirst( str_replace( '_', ' ', $state ) );
     }
 
     /**

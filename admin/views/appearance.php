@@ -10,39 +10,39 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 // Labels for all non-sensor color keys
 $color_labels = [
     // Theme
-    'theme_bg'            => naws__( 'appearance_theme_bg' ),
-    'theme_surface'       => naws__( 'appearance_theme_surface' ),
-    'theme_surface_alt'   => naws__( 'appearance_theme_surface_alt' ),
-    'theme_text'          => naws__( 'appearance_theme_text' ),
-    'theme_text_dark'     => naws__( 'appearance_theme_text_dark' ),
-    'theme_text_darkest'  => naws__( 'appearance_theme_text_darkest' ),
-    'theme_text_muted'    => naws__( 'appearance_theme_text_muted' ),
-    'theme_text_light'    => naws__( 'appearance_theme_text_light' ),
-    'theme_border'        => naws__( 'appearance_theme_border' ),
-    'theme_shadow'        => naws__( 'appearance_theme_shadow' ),
-    'theme_compass_needle'=> naws__( 'appearance_theme_compass_needle' ),
-    'header_bg'           => naws__( 'appearance_header_bg' ),
-    'header_text'         => naws__( 'appearance_header_text' ),
+    'theme_bg'            => __( 'Background', 'xtx-integration-for-netatmo' ),
+    'theme_surface'       => __( 'Card Background', 'xtx-integration-for-netatmo' ),
+    'theme_surface_alt'   => __( 'Alternate Background', 'xtx-integration-for-netatmo' ),
+    'theme_text'          => __( 'Text', 'xtx-integration-for-netatmo' ),
+    'theme_text_dark'     => __( 'Text (Dark)', 'xtx-integration-for-netatmo' ),
+    'theme_text_darkest'  => __( 'Text (Darkest)', 'xtx-integration-for-netatmo' ),
+    'theme_text_muted'    => __( 'Text (Muted)', 'xtx-integration-for-netatmo' ),
+    'theme_text_light'    => __( 'Text (Light)', 'xtx-integration-for-netatmo' ),
+    'theme_border'        => __( 'Border', 'xtx-integration-for-netatmo' ),
+    'theme_shadow'        => __( 'Shadow', 'xtx-integration-for-netatmo' ),
+    'theme_compass_needle'=> __( 'Compass Needle (Wind Rose)', 'xtx-integration-for-netatmo' ),
+    'header_bg'           => __( 'Header Bar – Background', 'xtx-integration-for-netatmo' ),
+    'header_text'         => __( 'Header Bar – Text', 'xtx-integration-for-netatmo' ),
     // Chart 24h
-    'chart_temp_outdoor'     => naws__( 'appearance_chart_temp_outdoor' ),
-    'chart_humidity_outdoor'  => naws__( 'appearance_chart_humidity_outdoor' ),
-    'chart_temp_indoor'      => naws__( 'appearance_chart_temp_indoor' ),
-    'chart_pressure'         => naws__( 'appearance_chart_pressure' ),
-    'chart_co2'              => naws__( 'appearance_chart_co2' ),
-    'chart_noise'            => naws__( 'appearance_chart_noise' ),
-    'chart_wind'             => naws__( 'appearance_chart_wind' ),
-    'chart_gusts'            => naws__( 'appearance_chart_gusts' ),
-    'chart_rain'             => naws__( 'appearance_chart_rain' ),
-    'chart_module4_temp'     => naws__( 'appearance_chart_module4_temp' ),
-    'chart_module4_humidity' => naws__( 'appearance_chart_module4_humidity' ),
-    'chart_module4_co2'      => naws__( 'appearance_chart_module4_co2' ),
+    'chart_temp_outdoor'     => __( 'Outdoor Temperature', 'xtx-integration-for-netatmo' ),
+    'chart_humidity_outdoor'  => __( 'Outdoor Humidity', 'xtx-integration-for-netatmo' ),
+    'chart_temp_indoor'      => __( 'Indoor Temperature', 'xtx-integration-for-netatmo' ),
+    'chart_pressure'         => __( 'Pressure', 'xtx-integration-for-netatmo' ),
+    'chart_co2'              => __( 'CO2', 'xtx-integration-for-netatmo' ),
+    'chart_noise'            => _x( 'Noise', 'appearance_chart_noise', 'xtx-integration-for-netatmo' ),
+    'chart_wind'             => __( 'Wind', 'xtx-integration-for-netatmo' ),
+    'chart_gusts'            => __( 'Gusts', 'xtx-integration-for-netatmo' ),
+    'chart_rain'             => _x( 'Rain', 'appearance_chart_rain', 'xtx-integration-for-netatmo' ),
+    'chart_module4_temp'     => __( 'Module4 Temperature', 'xtx-integration-for-netatmo' ),
+    'chart_module4_humidity' => __( 'Module4 Humidity', 'xtx-integration-for-netatmo' ),
+    'chart_module4_co2'      => __( 'Module4 CO2', 'xtx-integration-for-netatmo' ),
     // Chart theme
-    'chart_grid'           => naws__( 'appearance_chart_grid' ),
-    'chart_tick'           => naws__( 'appearance_chart_tick' ),
-    'chart_tooltip_bg'     => naws__( 'appearance_chart_tooltip_bg' ),
-    'chart_tooltip_title'  => naws__( 'appearance_chart_tooltip_title' ),
-    'chart_tooltip_text'   => naws__( 'appearance_chart_tooltip_text' ),
-    'chart_axis_title'     => naws__( 'appearance_chart_axis_title' ),
+    'chart_grid'           => __( 'Grid Lines', 'xtx-integration-for-netatmo' ),
+    'chart_tick'           => __( 'Axis Labels', 'xtx-integration-for-netatmo' ),
+    'chart_tooltip_bg'     => __( 'Tooltip Background', 'xtx-integration-for-netatmo' ),
+    'chart_tooltip_title'  => __( 'Tooltip Title', 'xtx-integration-for-netatmo' ),
+    'chart_tooltip_text'   => __( 'Tooltip Text', 'xtx-integration-for-netatmo' ),
+    'chart_axis_title'     => __( 'Axis Title', 'xtx-integration-for-netatmo' ),
 ];
 
 // Short labels for 24h chart preview legend
@@ -63,47 +63,47 @@ $chart_short_labels = [
 
 // Tab definitions
 $tabs = [
-    'theme'     => naws__( 'appearance_group_theme' ),
-    'icons'     => naws__( 'appearance_group_icons' ),
-    'chart24h'  => naws__( 'appearance_group_chart_24h' ),
-    'charttheme'=> naws__( 'appearance_group_chart_theme' ),
-    'history'   => naws__( 'appearance_group_history' ),
+    'theme'     => __( 'Base Theme', 'xtx-integration-for-netatmo' ),
+    'icons'     => __( 'Icons', 'xtx-integration-for-netatmo' ),
+    'chart24h'  => __( '24h Chart Colors', 'xtx-integration-for-netatmo' ),
+    'charttheme'=> __( 'Chart Theming', 'xtx-integration-for-netatmo' ),
+    'history'   => __( 'Year Comparison Palette', 'xtx-integration-for-netatmo' ),
 ];
 
 // Icon sets data
 $icon_sets     = NAWS_Icons::get_all_sets();
 $current_set   = NAWS_Icons::get_current_set();
 $icon_color_keys = [
-    'icon_color_temp'  => naws__( 'appearance_sensor_temp' ),
-    'icon_color_humid' => naws__( 'appearance_sensor_humidity' ),
-    'icon_color_press' => naws__( 'appearance_sensor_pressure' ),
-    'icon_color_wind'  => naws__( 'appearance_sensor_wind' ),
-    'icon_color_rain'  => naws__( 'appearance_sensor_rain' ),
-    'icon_color_co2'   => naws__( 'appearance_sensor_co2' ),
-    'icon_color_noise' => naws__( 'appearance_sensor_noise' ),
+    'icon_color_temp'  => __( 'Temperature', 'xtx-integration-for-netatmo' ),
+    'icon_color_humid' => _x( 'Humidity', 'appearance_sensor_humidity', 'xtx-integration-for-netatmo' ),
+    'icon_color_press' => __( 'Pressure', 'xtx-integration-for-netatmo' ),
+    'icon_color_wind'  => __( 'Wind', 'xtx-integration-for-netatmo' ),
+    'icon_color_rain'  => _x( 'Rain', 'appearance_sensor_rain', 'xtx-integration-for-netatmo' ),
+    'icon_color_co2'   => __( 'CO2', 'xtx-integration-for-netatmo' ),
+    'icon_color_noise' => _x( 'Noise', 'appearance_sensor_noise', 'xtx-integration-for-netatmo' ),
 ];
 ?>
 
 <div class="wrap naws-admin-wrap">
     <h1 class="naws-admin-page-title">
         <span class="naws-title-icon">🎨</span>
-        <?php naws_e( 'appearance_title' ); ?>
+        <?php esc_html_e( 'Appearance', 'xtx-integration-for-netatmo' ); ?>
     </h1>
 
     <?php if ( isset( $_GET['updated'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
-        <div class="notice notice-success is-dismissible"><p><?php naws_e( 'settings_saved' ); ?></p></div>
+        <div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Settings saved.', 'xtx-integration-for-netatmo' ); ?></p></div>
     <?php endif; ?>
 
     <?php if ( isset( $_GET['reset'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
-        <div class="notice notice-info is-dismissible"><p><?php naws_e( 'appearance_reset_done' ); ?></p></div>
+        <div class="notice notice-info is-dismissible"><p><?php esc_html_e( 'All colors have been reset to defaults.', 'xtx-integration-for-netatmo' ); ?></p></div>
     <?php endif; ?>
 
     <!-- Global Reset Button -->
     <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="display:inline; float:right; margin-top:-2.5rem;">
         <?php wp_nonce_field( 'naws_reset_appearance' ); ?>
         <input type="hidden" name="action" value="naws_reset_appearance">
-        <button type="submit" class="button" onclick="return confirm('<?php echo esc_js( naws__( 'appearance_reset_confirm' ) ); ?>');">
-            <?php naws_e( 'appearance_reset_all' ); ?>
+        <button type="submit" class="button" onclick="return confirm('<?php echo esc_js( __( 'Reset all colors to defaults?', 'xtx-integration-for-netatmo' ) ); ?>');">
+            <?php esc_html_e( 'Reset All', 'xtx-integration-for-netatmo' ); ?>
         </button>
     </form>
 
@@ -124,7 +124,7 @@ $icon_color_keys = [
              Tab 1: Basis-Theme
              ============================================================ -->
         <div class="naws-appearance-pane active" data-pane="theme">
-            <p class="description"><?php naws_e( 'appearance_group_theme_desc' ); ?></p>
+            <p class="description"><?php esc_html_e( 'Base colors for background, surfaces, text and borders. Applied to all shortcodes.', 'xtx-integration-for-netatmo' ); ?></p>
             <div class="naws-appearance-row">
                 <div class="naws-appearance-controls">
                     <table class="form-table naws-color-table">
@@ -147,12 +147,12 @@ $icon_color_keys = [
                         </tbody>
                     </table>
 
-                    <h3 style="margin:1.5rem 0 0.5rem;"><?php naws_e( 'appearance_font_label' ); ?></h3>
-                    <p class="description" style="margin-bottom:0.75rem;"><?php naws_e( 'appearance_font_desc' ); ?></p>
+                    <h3 style="margin:1.5rem 0 0.5rem;"><?php esc_html_e( 'Font', 'xtx-integration-for-netatmo' ); ?></h3>
+                    <p class="description" style="margin-bottom:0.75rem;"><?php esc_html_e( 'Applies to every part of the plugin, charts included. Only fonts your site already serves are offered – the plugin loads no font file of its own.', 'xtx-integration-for-netatmo' ); ?></p>
                     <table class="form-table naws-color-table">
                         <tbody>
                         <tr>
-                            <th><label for="naws-font-family"><?php naws_e( 'appearance_font_family' ); ?></label></th>
+                            <th><label for="naws-font-family"><?php esc_html_e( 'Font Family', 'xtx-integration-for-netatmo' ); ?></label></th>
                             <td>
                                 <select id="naws-font-family" name="naws_appearance[font_family]">
                                     <?php foreach ( NAWS_Fonts::grouped() as $origin => $items ) : ?>
@@ -161,25 +161,25 @@ $icon_color_keys = [
                                                 <option value="<?php echo esc_attr( $slug ); ?>" <?php selected( $colors['font_family'], $slug ); ?> data-stack="inherit"><?php echo esc_html( $label ); ?></option>
                                             <?php endforeach; ?>
                                         <?php else : ?>
-                                            <optgroup label="<?php echo esc_attr( naws__( 'appearance_font_group_' . $origin ) ); ?>">
+                                            <optgroup label="<?php echo esc_attr( naws_label( 'appearance_font_group_' . $origin ) ); ?>">
                                                 <?php foreach ( $items as $slug => $label ) : ?>
                                                     <option value="<?php echo esc_attr( $slug ); ?>" <?php selected( $colors['font_family'], $slug ); ?> data-stack="<?php echo esc_attr( NAWS_Fonts::stack( $slug ) ); ?>"><?php echo esc_html( $label ); ?></option>
                                                 <?php endforeach; ?>
                                             </optgroup>
                                         <?php endif; ?>
                                     <?php endforeach; ?>
-                                    <option value="custom" <?php selected( $colors['font_family'], 'custom' ); ?>><?php naws_e( 'appearance_font_own' ); ?></option>
+                                    <option value="custom" <?php selected( $colors['font_family'], 'custom' ); ?>><?php esc_html_e( 'Own font family', 'xtx-integration-for-netatmo' ); ?></option>
                                 </select>
                             </td>
                         </tr>
                         <tr id="naws-font-custom-row"<?php echo 'custom' === $colors['font_family'] ? '' : ' style="display:none;"'; ?>>
-                            <th><label for="naws-font-custom"><?php naws_e( 'appearance_font_own' ); ?></label></th>
+                            <th><label for="naws-font-custom"><?php esc_html_e( 'Own font family', 'xtx-integration-for-netatmo' ); ?></label></th>
                             <td>
                                 <input type="text" class="regular-text" id="naws-font-custom"
                                        name="naws_appearance[font_custom]"
                                        value="<?php echo esc_attr( $colors['font_custom'] ); ?>"
                                        placeholder="&quot;PT Sans&quot;, Arial, sans-serif">
-                                <p class="description"><?php naws_e( 'appearance_font_own_desc' ); ?></p>
+                                <p class="description"><?php esc_html_e( 'Only needed when your font is not listed above. Write it as in CSS, e.g. "PT Sans", Arial, sans-serif. Your theme or page builder has to load it, otherwise the fallback applies.', 'xtx-integration-for-netatmo' ); ?></p>
                             </td>
                         </tr>
                         </tbody>
@@ -193,7 +193,7 @@ $icon_color_keys = [
                         <!-- Kopfleiste: dieselbe Leiste wie ueber Live-Ansicht, Vorhersage und Historie -->
                         <div id="naws-pv-header" class="naws-pv-header"
                              style="background:<?php echo esc_attr( $colors['header_bg'] ); ?>;">
-                            <span class="naws-pv-header-title" style="color:<?php echo esc_attr( $colors['header_text'] ); ?>;"><?php naws_e( 'appearance_header_preview_title' ); ?></span>
+                            <span class="naws-pv-header-title" style="color:<?php echo esc_attr( $colors['header_text'] ); ?>;"><?php esc_html_e( 'Header Bar', 'xtx-integration-for-netatmo' ); ?></span>
                             <span class="naws-pv-header-meta" style="color:<?php echo esc_attr( $colors['header_text'] ); ?>; opacity:.75;">Live · 14:23</span>
                         </div>
 
@@ -276,9 +276,9 @@ $icon_color_keys = [
              Tab 2: Icon-Sets & Icon-Farben
              ============================================================ -->
         <div class="naws-appearance-pane" data-pane="icons">
-            <p class="description"><?php naws_e( 'appearance_group_icons_desc' ); ?></p>
+            <p class="description"><?php esc_html_e( 'Choose an icon set for the frontend and customize colors per sensor.', 'xtx-integration-for-netatmo' ); ?></p>
 
-            <h3 style="margin:0 0 0.75rem;"><?php naws_e( 'appearance_icon_set_label' ); ?></h3>
+            <h3 style="margin:0 0 0.75rem;"><?php esc_html_e( 'Choose Icon Set', 'xtx-integration-for-netatmo' ); ?></h3>
             <div class="naws-icon-set-grid">
                 <?php foreach ( $icon_sets as $set_key => $set_data ) : ?>
                 <label class="naws-icon-set-card<?php echo $set_key === $current_set ? ' active' : ''; ?>">
@@ -299,8 +299,8 @@ $icon_color_keys = [
                 <?php endforeach; ?>
             </div>
 
-            <h3 style="margin:1.5rem 0 0.5rem;"><?php naws_e( 'appearance_icon_colors_label' ); ?></h3>
-            <p class="description" style="margin-bottom:0.75rem;"><?php naws_e( 'appearance_icon_colors_desc' ); ?></p>
+            <h3 style="margin:1.5rem 0 0.5rem;"><?php esc_html_e( 'Icon Colors', 'xtx-integration-for-netatmo' ); ?></h3>
+            <p class="description" style="margin-bottom:0.75rem;"><?php esc_html_e( 'Individual colors for each sensor icon. These colors are also used for the tile accent bar.', 'xtx-integration-for-netatmo' ); ?></p>
             <div class="naws-appearance-row">
                 <div class="naws-appearance-controls">
                     <table class="form-table naws-color-table">
@@ -324,7 +324,7 @@ $icon_color_keys = [
                     </table>
                 </div>
                 <div class="naws-appearance-preview naws-preview-sticky">
-                    <div class="naws-preview-label"><?php naws_e( 'appearance_icon_preview' ); ?></div>
+                    <div class="naws-preview-label"><?php esc_html_e( 'Preview — Icon Colors', 'xtx-integration-for-netatmo' ); ?></div>
                     <div id="naws-preview-icons" class="naws-pv-icon-preview">
                         <?php
                         $preview_icons = NAWS_Icons::get_set( 'outline' );
@@ -349,7 +349,7 @@ $icon_color_keys = [
              Tab 3: 24h-Chart-Farben
              ============================================================ -->
         <div class="naws-appearance-pane" data-pane="chart24h">
-            <p class="description"><?php naws_e( 'appearance_group_chart_24h_desc' ); ?></p>
+            <p class="description"><?php esc_html_e( 'Line color per sensor in the 24-hour charts.', 'xtx-integration-for-netatmo' ); ?></p>
             <div class="naws-appearance-row">
                 <div class="naws-appearance-controls">
                     <table class="form-table naws-color-table">
@@ -399,7 +399,7 @@ $icon_color_keys = [
              Tab 3: Chart-Theming
              ============================================================ -->
         <div class="naws-appearance-pane" data-pane="charttheme">
-            <p class="description"><?php naws_e( 'appearance_group_chart_theme_desc' ); ?></p>
+            <p class="description"><?php esc_html_e( 'Grid, axis and tooltip colors for all charts.', 'xtx-integration-for-netatmo' ); ?></p>
             <div class="naws-appearance-row">
                 <div class="naws-appearance-controls">
                     <table class="form-table naws-color-table">
@@ -458,7 +458,7 @@ $icon_color_keys = [
              Tab 4: Jahresvergleich-Palette
              ============================================================ -->
         <div class="naws-appearance-pane" data-pane="history">
-            <p class="description"><?php naws_e( 'appearance_group_history_desc' ); ?></p>
+            <p class="description"><?php esc_html_e( '15 colors for the year lines in the history chart.', 'xtx-integration-for-netatmo' ); ?></p>
 
             <div class="naws-preview-label">Live-Vorschau — Jahresvergleich</div>
             <div id="naws-preview-history" class="naws-pv-history-bars">
@@ -478,7 +478,7 @@ $icon_color_keys = [
                     $key = "history_year_{$i}";
                 ?>
                     <div class="naws-palette-item">
-                        <label for="naws-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( sprintf( naws__( 'appearance_year_n' ), $i ) ); ?></label>
+                        <label for="naws-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( sprintf( /* translators: %d: a calendar year, e.g. 2026. */ __( 'Year %d', 'xtx-integration-for-netatmo' ), $i ) ); ?></label>
                         <input type="text"
                                id="naws-<?php echo esc_attr( $key ); ?>"
                                name="naws_appearance[<?php echo esc_attr( $key ); ?>]"
@@ -493,7 +493,7 @@ $icon_color_keys = [
         </div>
 
         <p class="submit">
-            <button type="submit" class="button button-primary"><?php naws_e( 'save_settings' ); ?></button>
+            <button type="submit" class="button button-primary"><?php esc_html_e( 'Save Settings', 'xtx-integration-for-netatmo' ); ?></button>
         </p>
     </form>
 
@@ -509,8 +509,8 @@ $icon_color_keys = [
          ============================================================ -->
     <div class="naws-admin-panel">
         <div class="naws-panel-body">
-            <h3><?php naws_e( 'wgt_heading' ); ?></h3>
-            <p class="description" style="margin-bottom:1rem;"><?php naws_e( 'wgt_desc' ); ?></p>
+            <h3><?php esc_html_e( 'Sidebar widget', 'xtx-integration-for-netatmo' ); ?></h3>
+            <p class="description" style="margin-bottom:1rem;"><?php esc_html_e( 'Compact weather widget for narrow columns. Shows the icon and outdoor temperature, rain and wind below that, then the forecast. Placed with the [naws_weather_widget] shortcode.', 'xtx-integration-for-netatmo' ); ?></p>
 
             <?php $naws_wgt_opts = get_option( 'naws_settings', [] ); ?>
 
@@ -520,24 +520,24 @@ $icon_color_keys = [
 
                 <table class="form-table naws-form-table">
                     <tr>
-                        <th><?php naws_e( 'wgt_days_label' ); ?></th>
+                        <th><?php echo esc_html( _x( 'Forecast days', 'wgt_days_label', 'xtx-integration-for-netatmo' ) ); ?></th>
                         <td>
                             <select name="naws_settings[wgt_days]">
-                                <option value="3" <?php selected( intval( $naws_wgt_opts['wgt_days'] ?? 5 ), 3 ); ?>><?php naws_e( 'wgt_days_3' ); ?></option>
-                                <option value="5" <?php selected( intval( $naws_wgt_opts['wgt_days'] ?? 5 ), 5 ); ?>><?php naws_e( 'wgt_days_5' ); ?></option>
+                                <option value="3" <?php selected( intval( $naws_wgt_opts['wgt_days'] ?? 5 ), 3 ); ?>><?php esc_html_e( '3 days', 'xtx-integration-for-netatmo' ); ?></option>
+                                <option value="5" <?php selected( intval( $naws_wgt_opts['wgt_days'] ?? 5 ), 5 ); ?>><?php esc_html_e( '5 days', 'xtx-integration-for-netatmo' ); ?></option>
                             </select>
-                            <p class="description"><?php naws_e( 'wgt_days_desc' ); ?></p>
+                            <p class="description"><?php esc_html_e( 'Three days gives each column 77 pixels, five gives only 46. On narrow sidebars three reads considerably better.', 'xtx-integration-for-netatmo' ); ?></p>
                         </td>
                     </tr>
                     <tr>
-                        <th><?php naws_e( 'wgt_width_label' ); ?></th>
+                        <th><?php esc_html_e( 'Width', 'xtx-integration-for-netatmo' ); ?></th>
                         <td>
                             <input type="number" name="naws_settings[wgt_width]"
                                    value="<?php echo esc_attr( NAWS_Widget_Data::normalise_width( $naws_wgt_opts['wgt_width'] ?? null ) ); ?>"
                                    min="<?php echo esc_attr( NAWS_Widget_Data::MIN_WIDTH ); ?>"
                                    max="<?php echo esc_attr( NAWS_Widget_Data::MAX_WIDTH ); ?>"
                                    step="10" class="small-text"> px
-                            <p class="description"><?php naws_e( 'wgt_width_desc' ); ?></p>
+                            <p class="description"><?php esc_html_e( 'Between 250 and 500 pixels. Icon, figures and spacing grow with it — at 500 pixels the weather icon is 96 pixels instead of 64. Where the column is narrower than the setting, the widget shrinks with it rather than overflowing.', 'xtx-integration-for-netatmo' ); ?></p>
                         </td>
                     </tr>
                 </table>
@@ -570,7 +570,7 @@ $icon_color_keys = [
                 <div style="max-width:<?php echo absint( $naws_prev_width + 24 ); ?>px;padding:14px 12px;background:#fbfcfe;border:1px solid #cbd4e0;border-radius:12px;margin:0 0 1rem;">
                     <?php
                     if ( $naws_wgt['empty'] ) {
-                        echo '<small style="color:#64748b">' . esc_html( naws__( 'wgt_preview_none' ) ) . '</small>';
+                        echo '<small style="color:#64748b">' . esc_html( __( 'Nothing displayable right now — neither station readings nor forecast are available. The widget would output nothing.', 'xtx-integration-for-netatmo' ) ) . '</small>';
                     } else {
                         $naws_wgt_state = $naws_prev_state['state'];
                         $naws_wgt_width = $naws_prev_width;
@@ -582,7 +582,7 @@ $icon_color_keys = [
                 </div>
 
                 <p class="submit">
-                    <button type="submit" class="button button-primary"><?php naws_e( 'save_settings' ); ?></button>
+                    <button type="submit" class="button button-primary"><?php esc_html_e( 'Save Settings', 'xtx-integration-for-netatmo' ); ?></button>
                 </p>
             </form>
         </div>

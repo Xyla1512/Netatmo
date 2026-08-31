@@ -3,7 +3,7 @@
  * Plugin Name: XTX Integration for Netatmo
  * Plugin URI: https://netatmo.frank-neumann.de/
  * Description: Connects to the Netatmo API, stores all sensor data locally and displays live dashboards, charts, history and forecasts via shortcodes.
- * Version: 1.9.8
+ * Version: 1.9.9
  * Author: Frank Neumann
  * Author URI: https://frank-neumann.de
  * License: GPL v2 or later
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'NAWS_VERSION',        '1.9.8' );
+define( 'NAWS_VERSION',        '1.9.9' );
 define( 'NAWS_PLUGIN_FILE',    __FILE__ );
 define( 'NAWS_PLUGIN_DIR',     plugin_dir_path( __FILE__ ) );
 define( 'NAWS_PLUGIN_URL',     plugin_dir_url( __FILE__ ) );
@@ -41,7 +41,7 @@ function naws_require( $file ) {
 
 // ── Core classes (always needed) ──────────────────────────────────────────
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-logger.php' );
-naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-lang.php' );
+naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-labels.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-crypto.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-helpers.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-database.php' );
@@ -97,6 +97,38 @@ final class NAWS_Plugin {
         register_deactivation_hook( NAWS_PLUGIN_FILE, [ 'NAWS_Cron', 'deactivate' ] );
 
         add_action( 'plugins_loaded', [ $this, 'init' ] );
+
+        add_action( 'init', [ $this, 'load_textdomain' ] );
+    }
+
+    /**
+     * Load translations: the language pack first, the shipped copies after.
+     *
+     * Both are loaded, and the order is the whole point.
+     *
+     * WordPress.org builds a pack for every locale, and it is the one that
+     * should win — it carries what translators approved most recently. But on
+     * the day this release goes out that pack holds almost nothing: the
+     * strings are new and nobody has translated them yet. A German site would
+     * find an English interface where it had a German one yesterday.
+     *
+     * load_plugin_textdomain() stops as soon as it finds a pack and never
+     * looks at the plugin's own directory, so it cannot bridge that on its
+     * own. Loading the shipped copy afterwards does: load_textdomain() keeps
+     * the entries already in memory, so every string the pack carries stays
+     * exactly as the pack has it, and the bundled file answers only where the
+     * pack is silent. As the packs fill up, these files stop being consulted
+     * and can eventually go.
+     */
+    public function load_textdomain() {
+        $domain = 'xtx-integration-for-netatmo';
+
+        load_plugin_textdomain( $domain, false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+
+        $mofile = NAWS_PLUGIN_DIR . 'languages/' . $domain . '-' . determine_locale() . '.mo';
+        if ( is_readable( $mofile ) ) {
+            load_textdomain( $domain, $mofile );
+        }
     }
 
     public function init() {

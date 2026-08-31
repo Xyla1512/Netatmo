@@ -58,23 +58,23 @@ class NAWS_Helpers {
 
     public static function get_label( $parameter ) {
         $labels = [
-            'Temperature'       => naws__( 'param_temperature' ),
-            'CO2'               => naws__( 'param_co2' ),
-            'Humidity'          => naws__( 'param_humidity' ),
-            'Noise'             => naws__( 'param_noise' ),
-            'Pressure'          => naws__( 'param_pressure_rel' ),
-            'AbsolutePressure'  => naws__( 'param_pressure_abs' ),
-            'Rain'              => naws__( 'param_rain_1h' ),
-            'sum_rain_1'        => naws__( 'param_rain_1h' ),
-            'sum_rain_24'       => naws__( 'param_rain_24h' ),
-            'WindStrength'      => naws__( 'param_wind_speed' ),
-            'WindAngle'         => naws__( 'param_wind_dir' ),
-            'GustStrength'      => naws__( 'param_gust_speed' ),
-            'GustAngle'         => naws__( 'param_gust_dir' ),
-            'min_temp'          => naws__( 'param_temp_min' ),
-            'max_temp'          => naws__( 'param_temp_max' ),
-            'date_min_temp'     => naws__( 'param_temp_min' ),
-            'date_max_temp'     => naws__( 'param_temp_max' ),
+            'Temperature'       => __( 'Temperature', 'xtx-integration-for-netatmo' ),
+            'CO2'               => __( 'CO₂ Concentration', 'xtx-integration-for-netatmo' ),
+            'Humidity'          => _x( 'Humidity', 'param_humidity', 'xtx-integration-for-netatmo' ),
+            'Noise'             => __( 'Noise Level', 'xtx-integration-for-netatmo' ),
+            'Pressure'          => __( 'Pressure (relative)', 'xtx-integration-for-netatmo' ),
+            'AbsolutePressure'  => __( 'Pressure (absolute)', 'xtx-integration-for-netatmo' ),
+            'Rain'              => __( 'Total last hour', 'xtx-integration-for-netatmo' ),
+            'sum_rain_1'        => __( 'Total last hour', 'xtx-integration-for-netatmo' ),
+            'sum_rain_24'       => __( 'Total last 24h', 'xtx-integration-for-netatmo' ),
+            'WindStrength'      => __( 'Wind Speed', 'xtx-integration-for-netatmo' ),
+            'WindAngle'         => __( 'Wind Direction (compass)', 'xtx-integration-for-netatmo' ),
+            'GustStrength'      => __( 'Gust Speed', 'xtx-integration-for-netatmo' ),
+            'GustAngle'         => __( 'Gust Direction', 'xtx-integration-for-netatmo' ),
+            'min_temp'          => __( 'Min Temperature (day)', 'xtx-integration-for-netatmo' ),
+            'max_temp'          => __( 'Max Temperature (day)', 'xtx-integration-for-netatmo' ),
+            'date_min_temp'     => __( 'Min Temperature (day)', 'xtx-integration-for-netatmo' ),
+            'date_max_temp'     => __( 'Max Temperature (day)', 'xtx-integration-for-netatmo' ),
             'health_idx'        => 'Health Index',
         ];
         return $labels[ $parameter ] ?? ucfirst( str_replace( '_', ' ', $parameter ) );
@@ -223,11 +223,11 @@ class NAWS_Helpers {
      */
     public static function history_chart_defs(): array {
         $defs = [
-            [ 'id' => 'temp_minmax', 'label' => naws__( 'hc_temp_minmax' ), 'icon' => '🌡️' ],
-            [ 'id' => 'temp_avg',    'label' => naws__( 'hc_temp_avg' ),    'icon' => '🌡️' ],
-            [ 'id' => 'pressure',    'label' => naws__( 'hc_pressure' ),    'icon' => '🔵' ],
-            [ 'id' => 'rain',        'label' => naws__( 'hc_rain' ),        'icon' => '🌧️' ],
-            [ 'id' => 'humidity',    'label' => naws__( 'hc_humidity' ),    'icon' => '💧' ],
+            [ 'id' => 'temp_minmax', 'label' => __( 'Temperature Min / Max', 'xtx-integration-for-netatmo' ), 'icon' => '🌡️' ],
+            [ 'id' => 'temp_avg',    'label' => __( 'Annual Average Temperature', 'xtx-integration-for-netatmo' ),    'icon' => '🌡️' ],
+            [ 'id' => 'pressure',    'label' => __( 'Pressure (Annual Mean)', 'xtx-integration-for-netatmo' ),    'icon' => '🔵' ],
+            [ 'id' => 'rain',        'label' => __( 'Annual Precipitation', 'xtx-integration-for-netatmo' ),        'icon' => '🌧️' ],
+            [ 'id' => 'humidity',    'label' => __( 'Outdoor Humidity (Annual Mean)', 'xtx-integration-for-netatmo' ),    'icon' => '💧' ],
         ];
 
         foreach ( self::indoor_chart_defs() as $indoor ) {
@@ -303,18 +303,18 @@ class NAWS_Helpers {
      */
     public static function live_card_defs(): array {
         $defs = [
-            [ 'id' => 'Temperature',        'stands_in_for' => '', 'module' => 'NAModule1', 'label' => naws__( 'card_temperature' ), 'group' => naws__( 'lbl_outdoor' ) ],
-            [ 'id' => 'min_temp',           'stands_in_for' => 'Temperature', 'module' => 'NAModule1', 'label' => naws__( 'card_temp_min' ),    'group' => naws__( 'lbl_outdoor' ) ],
-            [ 'id' => 'max_temp',           'stands_in_for' => 'Temperature', 'module' => 'NAModule1', 'label' => naws__( 'card_temp_max' ),    'group' => naws__( 'lbl_outdoor' ) ],
-            [ 'id' => 'Humidity',           'stands_in_for' => '', 'module' => 'NAModule1', 'label' => naws__( 'card_humidity' ),    'group' => naws__( 'lbl_outdoor' ) ],
-            [ 'id' => 'Pressure',           'stands_in_for' => '', 'module' => 'NAMain',    'label' => naws__( 'card_pressure' ),    'group' => naws__( 'lbl_base' ) ],
-            [ 'id' => 'CO2',                'stands_in_for' => '', 'module' => 'NAMain',    'label' => naws__( 'card_co2' ),         'group' => naws__( 'lbl_base' ) ],
-            [ 'id' => 'Noise',              'stands_in_for' => '', 'module' => 'NAMain',    'label' => naws__( 'card_noise' ),       'group' => naws__( 'lbl_base' ) ],
-            [ 'id' => 'Temperature_indoor', 'stands_in_for' => '', 'module' => 'NAMain',    'label' => naws__( 'card_temperature' ), 'group' => naws__( 'lbl_base' ) ],
-            [ 'id' => 'Humidity_indoor',    'stands_in_for' => '', 'module' => 'NAMain',    'label' => naws__( 'card_humidity' ),    'group' => naws__( 'lbl_base' ) ],
-            [ 'id' => 'Rain',               'stands_in_for' => '', 'module' => 'NAModule3', 'label' => naws__( 'card_rain' ),        'group' => '' ],
-            [ 'id' => 'WindStrength',       'stands_in_for' => '', 'module' => 'NAModule2', 'label' => naws__( 'card_wind_gusts' ),  'group' => '' ],
-            [ 'id' => 'WindAngle',          'stands_in_for' => '', 'module' => 'NAModule2', 'label' => naws__( 'card_wind_dir' ),    'group' => '' ],
+            [ 'id' => 'Temperature',        'stands_in_for' => '', 'module' => 'NAModule1', 'label' => __( 'Temperature', 'xtx-integration-for-netatmo' ), 'group' => __( 'Outdoor', 'xtx-integration-for-netatmo' ) ],
+            [ 'id' => 'min_temp',           'stands_in_for' => 'Temperature', 'module' => 'NAModule1', 'label' => __( 'Temp. Min', 'xtx-integration-for-netatmo' ),    'group' => __( 'Outdoor', 'xtx-integration-for-netatmo' ) ],
+            [ 'id' => 'max_temp',           'stands_in_for' => 'Temperature', 'module' => 'NAModule1', 'label' => __( 'Temp. Max', 'xtx-integration-for-netatmo' ),    'group' => __( 'Outdoor', 'xtx-integration-for-netatmo' ) ],
+            [ 'id' => 'Humidity',           'stands_in_for' => '', 'module' => 'NAModule1', 'label' => _x( 'Humidity', 'card_humidity', 'xtx-integration-for-netatmo' ),    'group' => __( 'Outdoor', 'xtx-integration-for-netatmo' ) ],
+            [ 'id' => 'Pressure',           'stands_in_for' => '', 'module' => 'NAMain',    'label' => __( 'Air Pressure', 'xtx-integration-for-netatmo' ),    'group' => __( 'Base', 'xtx-integration-for-netatmo' ) ],
+            [ 'id' => 'CO2',                'stands_in_for' => '', 'module' => 'NAMain',    'label' => __( 'CO₂', 'xtx-integration-for-netatmo' ),         'group' => __( 'Base', 'xtx-integration-for-netatmo' ) ],
+            [ 'id' => 'Noise',              'stands_in_for' => '', 'module' => 'NAMain',    'label' => _x( 'Noise', 'card_noise', 'xtx-integration-for-netatmo' ),       'group' => __( 'Base', 'xtx-integration-for-netatmo' ) ],
+            [ 'id' => 'Temperature_indoor', 'stands_in_for' => '', 'module' => 'NAMain',    'label' => __( 'Temperature', 'xtx-integration-for-netatmo' ), 'group' => __( 'Base', 'xtx-integration-for-netatmo' ) ],
+            [ 'id' => 'Humidity_indoor',    'stands_in_for' => '', 'module' => 'NAMain',    'label' => _x( 'Humidity', 'card_humidity', 'xtx-integration-for-netatmo' ),    'group' => __( 'Base', 'xtx-integration-for-netatmo' ) ],
+            [ 'id' => 'Rain',               'stands_in_for' => '', 'module' => 'NAModule3', 'label' => __( 'Precipitation', 'xtx-integration-for-netatmo' ),        'group' => '' ],
+            [ 'id' => 'WindStrength',       'stands_in_for' => '', 'module' => 'NAModule2', 'label' => __( 'Wind &amp; Gusts', 'xtx-integration-for-netatmo' ),  'group' => '' ],
+            [ 'id' => 'WindAngle',          'stands_in_for' => '', 'module' => 'NAModule2', 'label' => __( 'Wind Direction', 'xtx-integration-for-netatmo' ),    'group' => '' ],
         ];
 
         // Four cards per indoor module, keyed the way buildLive() keys them.
@@ -330,7 +330,7 @@ class NAWS_Helpers {
                     'id'            => $prefix . $slug,
                     'stands_in_for' => '',
                     'module'        => 'NAModule4_' . $slug,
-                    'label'         => naws__( $lang_key ),
+                    'label'         => naws_label( $lang_key ),
                     'group'         => $name,
                 ];
             }
@@ -418,7 +418,7 @@ class NAWS_Helpers {
                     'module_name' => $module['name'],
                     'field'       => $field,
                     'param'       => $param,
-                    'label'       => $module['name'] . ' – ' . naws__( $lang_key ),
+                    'label'       => $module['name'] . ' – ' . naws_label( $lang_key ),
                     'icon'        => $icon,
                     'unit'        => self::get_unit( $param ),
                 ];
@@ -509,11 +509,11 @@ class NAWS_Helpers {
     }
 
     public static function get_co2_level( $ppm ) {
-        if ( $ppm < 800 )  return [ 'level' => 'excellent', 'color' => '#10b981', 'label' => naws__( 'co2_excellent' ) ];
-        if ( $ppm < 1000 ) return [ 'level' => 'good',      'color' => '#84cc16', 'label' => naws__( 'co2_good' ) ];
-        if ( $ppm < 1500 ) return [ 'level' => 'fair',      'color' => '#f59e0b', 'label' => naws__( 'co2_fair' ) ];
-        if ( $ppm < 2000 ) return [ 'level' => 'poor',      'color' => '#f97316', 'label' => naws__( 'co2_poor' ) ];
-        return                    [ 'level' => 'unhealthy',  'color' => '#ef4444', 'label' => naws__( 'co2_unhealthy' ) ];
+        if ( $ppm < 800 )  return [ 'level' => 'excellent', 'color' => '#10b981', 'label' => __( 'Excellent', 'xtx-integration-for-netatmo' ) ];
+        if ( $ppm < 1000 ) return [ 'level' => 'good',      'color' => '#84cc16', 'label' => __( 'Good', 'xtx-integration-for-netatmo' ) ];
+        if ( $ppm < 1500 ) return [ 'level' => 'fair',      'color' => '#f59e0b', 'label' => _x( 'Fair', 'co2_fair', 'xtx-integration-for-netatmo' ) ];
+        if ( $ppm < 2000 ) return [ 'level' => 'poor',      'color' => '#f97316', 'label' => __( 'Poor', 'xtx-integration-for-netatmo' ) ];
+        return                    [ 'level' => 'unhealthy',  'color' => '#ef4444', 'label' => __( 'Unhealthy', 'xtx-integration-for-netatmo' ) ];
     }
 
     public static function degrees_to_compass( $deg ) {
@@ -523,32 +523,32 @@ class NAWS_Helpers {
 
     public static function get_all_parameters() {
         return [
-            'Temperature'      => naws__( 'param_temperature' ),
-            'CO2'              => naws__( 'param_co2' ),
-            'Humidity'         => naws__( 'param_humidity' ),
-            'Noise'            => naws__( 'param_noise' ),
-            'Pressure'         => naws__( 'param_pressure_rel' ),
-            'AbsolutePressure' => naws__( 'param_pressure_abs' ),
-            'Rain'             => naws__( 'param_rain_1h' ),
-            'sum_rain_1'       => naws__( 'param_rain_1h' ),
-            'sum_rain_24'      => naws__( 'param_rain_24h' ),
-            'min_temp'         => naws__( 'param_temp_min' ),
-            'max_temp'         => naws__( 'param_temp_max' ),
-            'WindStrength'     => naws__( 'param_wind_speed' ),
-            'WindAngle'        => naws__( 'param_wind_dir' ),
-            'GustStrength'     => naws__( 'param_gust_speed' ),
-            'GustAngle'        => naws__( 'param_gust_dir' ),
+            'Temperature'      => __( 'Temperature', 'xtx-integration-for-netatmo' ),
+            'CO2'              => __( 'CO₂ Concentration', 'xtx-integration-for-netatmo' ),
+            'Humidity'         => _x( 'Humidity', 'param_humidity', 'xtx-integration-for-netatmo' ),
+            'Noise'            => __( 'Noise Level', 'xtx-integration-for-netatmo' ),
+            'Pressure'         => __( 'Pressure (relative)', 'xtx-integration-for-netatmo' ),
+            'AbsolutePressure' => __( 'Pressure (absolute)', 'xtx-integration-for-netatmo' ),
+            'Rain'             => __( 'Total last hour', 'xtx-integration-for-netatmo' ),
+            'sum_rain_1'       => __( 'Total last hour', 'xtx-integration-for-netatmo' ),
+            'sum_rain_24'      => __( 'Total last 24h', 'xtx-integration-for-netatmo' ),
+            'min_temp'         => __( 'Min Temperature (day)', 'xtx-integration-for-netatmo' ),
+            'max_temp'         => __( 'Max Temperature (day)', 'xtx-integration-for-netatmo' ),
+            'WindStrength'     => __( 'Wind Speed', 'xtx-integration-for-netatmo' ),
+            'WindAngle'        => __( 'Wind Direction (compass)', 'xtx-integration-for-netatmo' ),
+            'GustStrength'     => __( 'Gust Speed', 'xtx-integration-for-netatmo' ),
+            'GustAngle'        => __( 'Gust Direction', 'xtx-integration-for-netatmo' ),
             'health_idx'       => 'Health Index',
         ];
     }
 
     public static function module_type_label( $type ) {
         $labels = [
-            'NAMain'    => naws__( 'mod_base_sub' ),
-            'NAModule1' => naws__( 'mod_outdoor' ),
-            'NAModule2' => naws__( 'mod_wind' ),
-            'NAModule3' => naws__( 'mod_rain' ),
-            'NAModule4' => naws__( 'mod_indoor4_sub' ),
+            'NAMain'    => __( 'Base station (Indoor)', 'xtx-integration-for-netatmo' ),
+            'NAModule1' => __( 'Outdoor Module', 'xtx-integration-for-netatmo' ),
+            'NAModule2' => __( 'Wind Gauge', 'xtx-integration-for-netatmo' ),
+            'NAModule3' => __( 'Rain Gauge', 'xtx-integration-for-netatmo' ),
+            'NAModule4' => __( 'Indoor module (NAModule4)', 'xtx-integration-for-netatmo' ),
             'NHC'       => 'Home Coach',
         ];
         return $labels[ $type ] ?? $type;
@@ -593,5 +593,22 @@ class NAWS_Helpers {
         if ( $ts !== false && $ts <= $now ) return $ts;
 
         return (int) strtotime( '-24 hours', $now );
+    }
+    /**
+     * The format a locale writes a clock time in.
+     *
+     * German appends "Uhr" after the time, English appends nothing — which
+     * leaves the English format as the bare placeholder. There is no English
+     * word here to translate, so the string has to look like this, and the
+     * i18n sniff is answered once here instead of at every call site.
+     */
+    public static function clock_format(): string {
+        /* translators: %s is a clock time such as 06:12. Add a suffix if your language uses one; German renders "06:12 Uhr". */
+        return _x( '%s', 'clock time', 'xtx-integration-for-netatmo' ); // phpcs:ignore WordPress.WP.I18n.NoEmptyStrings -- the English format is a bare placeholder by nature, see the docblock above.
+    }
+
+    /** A clock time rendered the way the locale writes it. */
+    public static function clock_time( string $time ): string {
+        return sprintf( self::clock_format(), $time );
     }
 }

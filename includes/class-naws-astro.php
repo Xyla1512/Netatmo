@@ -274,14 +274,14 @@ class NAWS_Astro {
 
     private static function _moon_name( float $phase ): array {
         // phase 0–1
-        if ( $phase < 0.0625 || $phase >= 0.9375 ) return [ naws__( 'moon_new' ),            '🌑' ];
-        if ( $phase < 0.1875 )                      return [ naws__( 'moon_waxing_crescent' ), '🌒' ];
-        if ( $phase < 0.3125 )                      return [ naws__( 'moon_first_quarter' ),  '🌓' ];
-        if ( $phase < 0.4375 )                      return [ naws__( 'moon_waxing_gibbous' ), '🌔' ];
-        if ( $phase < 0.5625 )                      return [ naws__( 'moon_full' ),            '🌕' ];
-        if ( $phase < 0.6875 )                      return [ naws__( 'moon_waning_gibbous' ), '🌖' ];
-        if ( $phase < 0.8125 )                      return [ naws__( 'moon_last_quarter' ),   '🌗' ];
-        return                                             [ naws__( 'moon_waning_crescent' ), '🌘' ];
+        if ( $phase < 0.0625 || $phase >= 0.9375 ) return [ __( 'New Moon', 'xtx-integration-for-netatmo' ),            '🌑' ];
+        if ( $phase < 0.1875 )                      return [ __( 'Waxing Crescent', 'xtx-integration-for-netatmo' ), '🌒' ];
+        if ( $phase < 0.3125 )                      return [ __( 'First Quarter', 'xtx-integration-for-netatmo' ),  '🌓' ];
+        if ( $phase < 0.4375 )                      return [ __( 'Waxing Gibbous', 'xtx-integration-for-netatmo' ), '🌔' ];
+        if ( $phase < 0.5625 )                      return [ __( 'Full Moon', 'xtx-integration-for-netatmo' ),            '🌕' ];
+        if ( $phase < 0.6875 )                      return [ __( 'Waning Gibbous', 'xtx-integration-for-netatmo' ), '🌖' ];
+        if ( $phase < 0.8125 )                      return [ __( 'Last Quarter', 'xtx-integration-for-netatmo' ),   '🌗' ];
+        return                                             [ __( 'Waning Crescent', 'xtx-integration-for-netatmo' ), '🌘' ];
     }
 
     // ── Moonrise / Moonset ───────────────────────────────────────────────────

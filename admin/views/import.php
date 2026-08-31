@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 <div class="wrap naws-admin-wrap">
 <h1 class="naws-admin-page-title">
     <span class="naws-title-icon">📥</span>
-    <?php naws_e( 'import_title' ); ?>
+    <?php esc_html_e( 'Import Historical Data', 'xtx-integration-for-netatmo' ); ?>
 </h1>
 
 <div class="naws-admin-two-col">
@@ -14,24 +14,24 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 <div>
   <div class="naws-admin-panel">
     <div class="naws-panel-header">
-        <h2><?php naws_e( 'import_config' ); ?></h2>
+        <h2><?php esc_html_e( 'Import Configuration', 'xtx-integration-for-netatmo' ); ?></h2>
     </div>
 
     <div class="naws-panel-body" style="padding-bottom:0"><div class="naws-info-box naws-info-box-info" style="margin:0;">
-        <strong>ℹ️ <?php naws_e( 'import_what' ); ?></strong>
+        <strong>ℹ️ <?php esc_html_e( 'What is imported', 'xtx-integration-for-netatmo' ); ?></strong>
         <ul style="margin:0.4rem 0 0 1rem; padding:0; font-size:0.85rem;">
-            <li>🌡️ <strong><?php naws_e( 'mod_outdoor' ); ?> (NAModule1)</strong> → Temp Min/Max</li>
-            <li>🔵 <strong><?php naws_e( 'mod_base_sub' ); ?> (NAMain)</strong> → <?php naws_e( 'param_pressure_rel' ); ?></li>
-            <li>🌧️ <strong><?php naws_e( 'mod_rain' ); ?> (NAModule3)</strong> → <?php naws_e( 'param_rain_24h' ); ?></li>
-            <li>💨 <strong><?php naws_e( 'mod_wind' ); ?> (NAModule2)</strong> → <?php naws_e( 'param_wind_speed' ); ?></li>
+            <li>🌡️ <strong><?php esc_html_e( 'Outdoor Module', 'xtx-integration-for-netatmo' ); ?> (NAModule1)</strong> → Temp Min/Max</li>
+            <li>🔵 <strong><?php esc_html_e( 'Base station (Indoor)', 'xtx-integration-for-netatmo' ); ?> (NAMain)</strong> → <?php esc_html_e( 'Pressure (relative)', 'xtx-integration-for-netatmo' ); ?></li>
+            <li>🌧️ <strong><?php esc_html_e( 'Rain Gauge', 'xtx-integration-for-netatmo' ); ?> (NAModule3)</strong> → <?php esc_html_e( 'Total last 24h', 'xtx-integration-for-netatmo' ); ?></li>
+            <li>💨 <strong><?php esc_html_e( 'Wind Gauge', 'xtx-integration-for-netatmo' ); ?> (NAModule2)</strong> → <?php esc_html_e( 'Wind Speed', 'xtx-integration-for-netatmo' ); ?></li>
         </ul>
         <p style="margin:0.4rem 0 0; color:#94a3b8; font-size:0.78rem;">
-            <?php naws_e( 'import_date_hint' ); ?>
+            <?php esc_html_e( 'Leave empty to import all available data', 'xtx-integration-for-netatmo' ); ?>
         </p>
     </div></div>
 
     <?php if ( empty($modules) ) : ?>
-        <p class="naws-panel-body"><?php naws_e( 'import_no_modules' ); ?></p>
+        <p class="naws-panel-body"><?php esc_html_e( 'No modules found.', 'xtx-integration-for-netatmo' ); ?></p>
     <?php else : ?>
 
     <!-- Module badges -->
@@ -57,7 +57,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
     <div class="naws-panel-body" style="padding-top:0.5rem; padding-bottom:0;">
     <table class="form-table naws-form-table">
         <tr>
-            <th><label for="naws-import-from"><?php naws_e( 'import_date_from' ); ?></label></th>
+            <th><label for="naws-import-from"><?php esc_html_e( 'From', 'xtx-integration-for-netatmo' ); ?></label></th>
             <td>
                 <input type="date" id="naws-import-from" class="regular-text"
                     value="<?php echo esc_attr(gmdate( 'Y-01-01', strtotime('-2 years'))); ?>"
@@ -65,7 +65,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
             </td>
         </tr>
         <tr>
-            <th><label for="naws-import-to"><?php naws_e( 'import_date_to' ); ?></label></th>
+            <th><label for="naws-import-to"><?php esc_html_e( 'To', 'xtx-integration-for-netatmo' ); ?></label></th>
             <td>
                 <input type="date" id="naws-import-to" class="regular-text"
                     value="<?php echo esc_attr(gmdate( 'Y-m-d', strtotime('-1 day'))); ?>"
@@ -90,7 +90,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
     <!-- Buttons -->
     <div class="naws-panel-body" style="display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap;">
         <button id="naws-start-import" class="button button-primary button-large">
-            ⬇️ <?php naws_e( 'import_btn' ); ?>
+            ⬇️ <?php esc_html_e( 'Import Data', 'xtx-integration-for-netatmo' ); ?>
         </button>
         <button id="naws-stop-import"  class="button button-large" style="display:none;">
             ⏹ Abbrechen
@@ -115,7 +115,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 <div>
     <!-- Stats -->
     <div class="naws-admin-panel" style="margin-bottom:1.5rem;">
-        <div class="naws-panel-header"><h2>📆 <?php naws_e( 'existing_data' ); ?></h2></div>
+        <div class="naws-panel-header"><h2>📆 <?php esc_html_e( 'Existing Data', 'xtx-integration-for-netatmo' ); ?></h2></div>
         <?php
 // phpcs:disable PluginCheck.CodeAnalysis.VariableAnalysis.NonPrefixedVariableFound
             $dc = NAWS_Database::count_daily_summaries();
@@ -123,12 +123,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
         ?>
         <div class="naws-panel-body">
         <table class="naws-info-table">
-            <tr><td><?php naws_e( 'daily_table' ); ?>:</td><td><strong><?php echo number_format($dc); ?></strong></td></tr>
+            <tr><td><?php esc_html_e( 'Daily summaries', 'xtx-integration-for-netatmo' ); ?>:</td><td><strong><?php echo number_format($dc); ?></strong></td></tr>
             <?php if($dr && $dr['date_begin']): ?>
-            <tr><td><?php naws_e( 'date' ); ?>:</td><td><?php echo esc_html($dr['date_begin']); ?></td></tr>
-            <tr><td><?php naws_e( 'date' ); ?>:</td><td><?php echo esc_html($dr['date_end']); ?></td></tr>
+            <tr><td><?php esc_html_e( 'Date', 'xtx-integration-for-netatmo' ); ?>:</td><td><?php echo esc_html($dr['date_begin']); ?></td></tr>
+            <tr><td><?php esc_html_e( 'Date', 'xtx-integration-for-netatmo' ); ?>:</td><td><?php echo esc_html($dr['date_end']); ?></td></tr>
             <?php else: ?>
-            <tr><td colspan="2" style="color:#64748b;"><?php naws_e( 'no_data_yet' ); ?></td></tr>
+            <tr><td colspan="2" style="color:#64748b;"><?php esc_html_e( 'No data yet', 'xtx-integration-for-netatmo' ); ?></td></tr>
             <?php endif; ?>
         </table>
         </div>

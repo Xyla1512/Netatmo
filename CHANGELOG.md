@@ -2,6 +2,37 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [1.9.9]
+
+Breaking, and marked as such — the way 1.9.7 marked the REST API key.
+
+### Changed
+- **The interface translates through WordPress now, not through the plugin.** Since 1.5.6 it went through `NAWS_Lang` and one PHP file per language — 720 key-string pairs that WordPress could not see. translate.wordpress.org counted six strings for this plugin: four `__()` calls and two headers. Nobody outside this repository could translate the interface, and no language pack was ever built for it.
+
+  Every call site says what it means now: `naws__( 'sc_copy' )` became `__( 'Copy', 'xtx-integration-for-netatmo' )`, 774 of them across 25 files. The English text is the one that was already shipping — it was taken from `en.php` rather than rewritten, so nothing changes for a reader of the English interface.
+
+  German and Norwegian are not lost. They were converted to PO files and go to translate.wordpress.org, where anyone can now add a language without touching the code.
+
+- **A hundred and eight strings could not move to their call site.** Their key is assembled at runtime — `'crypto_' . $issue`, the label of a `[naws_calc]` entry, a weather state — so the scanner that builds the `.pot` would never find them there. They live in `naws_label()` in `includes/class-naws-labels.php`, one literal `__()` per key, which keeps them extractable and the lookup a closed set. A key it does not know returns an empty string, and each caller decides what to fall back to.
+
+- **Twenty-four strings needed a context.** Five keys read "Rain" in English but not in German: `unit_rain` is *Niederschlag*, the weather state is *Regen*. Gettext keys on the English text alone, so both would have collapsed into whichever translation came first. `_x()` with the old key as its context keeps a distinction the key names used to carry for free.
+
+- **<strong>Breaking</strong> — the plugin no longer has its own language setting.** The WordPress locale decides.
+
+  It is worth saying what that costs and what it buys, because it is not a straight loss. The old setting was a single site-wide value for the front end and the back end at once, and in `auto` mode it read `get_locale()` rather than the reader's own language — so it could never give an editor a back end in one language and visitors another. A Norwegian running a site for English-speaking guests had to pick one.
+
+  Site Language plus the per-user Language in the profile do exactly that, and for the theme and every other plugin at the same time rather than for this one. If you had the plugin set to a language other than your site's, set the site language instead, or your own user language if you meant only your own screen. The stored value is ignored, not migrated; nothing else in the settings is touched.
+
+- **Weekday, month and weather-condition names are translatable.** They were two hardcoded arrays, German and English, chosen by an `if` — a Norwegian reader got English with no way to change that. They are ordinary translatable strings now, and the short date is a format string rather than a branch, so a locale that writes its dates the other way round can say so.
+
+### Added
+- **German and Norwegian travel with this release**, as `languages/*.mo` next to the new `.pot`. They are a bridge, not the destination: translations belong on translate.wordpress.org now, and WordPress.org builds the packs from there. But the pack for these strings holds almost nothing the day the update goes out — they are new and nobody has translated them yet — and an installation that had a German interface yesterday should not find an English one today.
+
+  Shipping the files is not enough on its own, which is worth writing down because it looks like it should be: `load_plugin_textdomain()` stops at the first pack it finds and never looks in the plugin's own directory. This plugin already has a de_DE pack — the two header strings are translated — so that pack would win and carry nothing else. Both are loaded now, pack first: `load_textdomain()` keeps what is already in memory, so every string the pack carries stays as the pack has it, and the shipped copy answers only where the pack is silent. As the packs fill up these files stop being consulted, and a later release can drop them.
+
+### Removed
+- `includes/class-naws-lang.php` and `languages/{de,en,no}.php`. `NAWS_Lang::js_strings()` went with them: it had no callers. The JavaScript needs no separate arrangement — its strings were always handed over by `wp_localize_script()` from PHP, so migrating the PHP moved them too.
+
 ## [1.9.8]
 
 ### Fixed

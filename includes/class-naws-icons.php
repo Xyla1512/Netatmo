@@ -58,23 +58,23 @@ class NAWS_Icons {
     public static function get_all_sets() {
         return [
             'emoji'   => [
-                'label' => naws__( 'icon_set_emoji' ),
-                'desc'  => naws__( 'icon_set_emoji_desc' ),
+                'label' => __( 'Emoji', 'xtx-integration-for-netatmo' ),
+                'desc'  => __( 'Native system emojis — appearance varies by device.', 'xtx-integration-for-netatmo' ),
                 'icons' => self::set_emoji(),
             ],
             'outline' => [
-                'label' => naws__( 'icon_set_outline' ),
-                'desc'  => naws__( 'icon_set_outline_desc' ),
+                'label' => __( 'Outline', 'xtx-integration-for-netatmo' ),
+                'desc'  => __( 'Clean line icons with thin strokes — the classic look.', 'xtx-integration-for-netatmo' ),
                 'icons' => self::set_outline(),
             ],
             'filled'  => [
-                'label' => naws__( 'icon_set_filled' ),
-                'desc'  => naws__( 'icon_set_filled_desc' ),
+                'label' => __( 'Filled', 'xtx-integration-for-netatmo' ),
+                'desc'  => __( 'Solid filled icons for a bolder, modern look.', 'xtx-integration-for-netatmo' ),
                 'icons' => self::set_filled(),
             ],
             'minimal' => [
-                'label' => naws__( 'icon_set_minimal' ),
-                'desc'  => naws__( 'icon_set_minimal_desc' ),
+                'label' => __( 'Minimal', 'xtx-integration-for-netatmo' ),
+                'desc'  => __( 'Ultra-thin, geometric icons for a reduced style.', 'xtx-integration-for-netatmo' ),
                 'icons' => self::set_minimal(),
             ],
         ];
