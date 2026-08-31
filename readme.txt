@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 1.9.7
+Stable tag: 1.9.8
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -49,7 +49,7 @@ Connects to the Netatmo API, stores all sensor data locally and displays live da
 * `[naws_calc]` – Single computed value (dew point, felt temperature, sunrise, moon phase, …); full list on the Shortcodes page in the backend
 * `[naws_history]` – Year-over-year comparison charts (supports `year` parameter)
 * `[naws_forecast]` – Multi-day weather forecast
-* `[naws_table]` – Readings as a table over a period, grouped by hour or day (`period`, `group_by`, `limit`, `parameters`)
+* `[naws_table]` – Readings as a table over a period, grouped by hour, day, week, month or year (`module_id`, `parameters`, `period`, `limit`, `group_by`, `title`)
 * `[naws_weather_widget]` – Compact forecast widget for a sidebar (`days` 3 or 5, `width` 250–500)
 * `[naws_weather_icon]` – Just the animated icon for the current weather state (`size`); renders nothing when the state is unknown
 
@@ -109,6 +109,12 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 7. Export / Import page for backups
 
 == Changelog ==
+
+= 1.9.8 =
+* Fix: `[naws_table]` produced nothing at all. The shortcode was registered, documented in the reference and listed in this readme, and its stylesheet was written — but the template it includes, `templates/table.php`, had never been committed. Every use of the shortcode output an empty string and left two PHP warnings in the log. The template is there now, and a test fails if it goes missing again.
+* Fix: `[naws_table]` listed the bookkeeping values Netatmo stores alongside the readings. `max_wind_angle` and `max_wind_str` have neither a name nor a unit in the plugin, so they appeared as a raw key next to a bare number. The table now asks only for parameters it can present; naming one explicitly in `parameters` still returns it. The daily minimum and maximum temperature and the hourly rain total were in the same position for the opposite reason — they are meaningful and were simply unnamed, so they have their labels now instead of being hidden.
+* Fix: `[naws_table]` found nothing for the periods its own reference recommends. `period="24h"` asked for a range that starts tomorrow — PHP does not read `24h` as a duration, and `strtotime('-24h')` returns a point in the future rather than yesterday. `365d` failed to parse altogether. The start of the range therefore sat behind its end and the query returned nothing, which looked exactly like a station with no readings. The shorthand is spelled out before it reaches the parser now, and a period that cannot be read falls back to the documented 24 hours instead of to 1970.
+* Fix: the reference gave the grouping of `[naws_table]` as hour, day, week or month. `year` works as well, and any other value lists single readings instead of averages. The readme named four of the shortcode's six attributes.
 
 = 1.9.7 =
 * New: the order of the live cards and of the yearly comparison charts is a setting. Both lists on the Live-Dashboard screen are sortable by drag and drop, and the front end follows. A saved order decides position, never membership: an id left over from a renamed module is passed over, and a chart the order has never heard of takes its place at the end instead of disappearing.

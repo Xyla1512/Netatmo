@@ -530,7 +530,10 @@ class NAWS_Helpers {
             'Pressure'         => naws__( 'param_pressure_rel' ),
             'AbsolutePressure' => naws__( 'param_pressure_abs' ),
             'Rain'             => naws__( 'param_rain_1h' ),
+            'sum_rain_1'       => naws__( 'param_rain_1h' ),
             'sum_rain_24'      => naws__( 'param_rain_24h' ),
+            'min_temp'         => naws__( 'param_temp_min' ),
+            'max_temp'         => naws__( 'param_temp_max' ),
             'WindStrength'     => naws__( 'param_wind_speed' ),
             'WindAngle'        => naws__( 'param_wind_dir' ),
             'GustStrength'     => naws__( 'param_gust_speed' ),
@@ -549,5 +552,46 @@ class NAWS_Helpers {
             'NHC'       => 'Home Coach',
         ];
         return $labels[ $type ] ?? $type;
+    }
+    /**
+     * Start of a period written the way the shortcodes document it.
+     *
+     * The reference tells people to write 24h, 7d, 30d, and PHP does not
+     * read those as durations at all: strtotime( '-24h' ) lands tomorrow
+     * rather than yesterday and strtotime( '-365d' ) fails outright. Both
+     * put the start of the range behind its end, which returns nothing and
+     * looks like a station with no data. The shorthand is therefore spelled
+     * out here before it reaches the parser.
+     *
+     * A bare "m" is deliberately not a unit: it reads as either minutes or
+     * months depending on who is looking, and neither guess is safe. Write
+     * "months" for months.
+     *
+     * Anything strtotime does understand still works. A value it cannot
+     * place, or one that would start in the future, falls back to the
+     * documented default of 24 hours rather than to the epoch: a range
+     * beginning at 0 quietly returns the oldest rows instead of the newest.
+     */
+    public static function period_start( string $period, ?int $now = null ): int {
+        $now    = $now ?? time();
+        $period = strtolower( trim( ltrim( trim( $period ), '-' ) ) );
+
+        $units = [
+            'h' => 'hours',  'hour'  => 'hours',  'hours'  => 'hours',
+            'd' => 'days',   'day'   => 'days',   'days'   => 'days',
+            'w' => 'weeks',  'week'  => 'weeks',  'weeks'  => 'weeks',
+            'y' => 'years',  'year'  => 'years',  'years'  => 'years',
+            'month' => 'months', 'months' => 'months',
+        ];
+
+        if ( preg_match( '/^(\d+)\s*([a-z]+)$/', $period, $parts ) && isset( $units[ $parts[2] ] ) ) {
+            $ts = strtotime( '-' . $parts[1] . ' ' . $units[ $parts[2] ], $now );
+            if ( $ts !== false && $ts <= $now ) return $ts;
+        }
+
+        $ts = strtotime( '-' . $period, $now );
+        if ( $ts !== false && $ts <= $now ) return $ts;
+
+        return (int) strtotime( '-24 hours', $now );
     }
 }

@@ -236,6 +236,12 @@ return [
     'lbl_min'   => 'Min',
     'lbl_max'   => 'Maks',
 
+    // ── [naws_table] column headings ──────────────────────────────────
+    'table_col_time'        => 'Tidspunkt',
+    'table_col_module'      => 'Modul',
+    'table_col_parameter'   => 'Parameter',
+    'table_col_avg'         => 'Snitt',
+
     // ── Frontend live widget ──────────────────────────────────────────
     'live_connected'        => 'Live',
     'live_disconnected'     => 'Frakoblet',
@@ -311,7 +317,7 @@ return [
     'sc_table_attr_params' => 'Kommaseparerte parametere å filtrere på',
     'sc_table_attr_period' => 'Tidsrom, f.eks. 24h, 7d, 30d',
     'sc_table_attr_limit' => 'Maks. antall poster',
-    'sc_table_attr_group_by' => 'Gruppering: hour, day, week, month',
+    'sc_table_attr_group_by' => 'Gruppering: hour, day, week, month, year. Enhver annen verdi viser enkeltmålinger.',
     'sc_table_attr_title' => 'Valgfri tabelltittel',
 
     'sc_infobar_desc' => 'Kompakt infolinje med beregnede verdier (følt temperatur, duggpunkt) og astronomiske data (opp-/nedgang, månefase, supermåne, måneformørkelse).',

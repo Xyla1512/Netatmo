@@ -2,6 +2,31 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [1.9.8]
+
+### Fixed
+- **`[naws_table]` never worked.** The shortcode has been registered since 1.0, it is documented in the backend reference with all six attributes, the readme lists it among the ten shortcodes, and `frontend.css` carries the `.naws-table-wrap` and `.naws-table` rules it was styled with. The one thing missing was the file it includes: `templates/table.php` was never committed — `git log --all` has no record of it. Anyone who used the shortcode got an empty string back and two `include(): Failed to open stream` warnings in the log.
+
+  The template renders what `NAWS_Database::get_readings()` actually returns rather than what one might assume: time, module, parameter and value, plus min and max when `group_by` names a bucket and the query therefore aggregates. With `group_by="raw"` there is nothing to average, so those two columns stay away instead of showing the value three times. Buckets of a day or longer drop the time of day from the timestamp.
+
+  Found by rendering every shortcode against a live installation. It had been shipping broken for the whole life of the plugin, which is a good argument for the test that now renders it.
+
+- **The table listed values that were never meant to be read.** Netatmo stores bookkeeping fields next to the measurements. `max_wind_angle` and `max_wind_str` have neither a name nor a unit in the plugin, so the table showed the raw key beside a bare number — `max_wind_angle | 226.59` says nothing to anyone.
+
+  Without an explicit `parameters` list the shortcode now asks only for what it can present. The boundary is drawn by `get_all_parameters()` rather than by a list of exclusions in the template, which means one place decides, and it is the same place that supplies the labels. Restricting the query rather than the output also keeps `limit` honest — it counts rows the reader actually gets. Asking for one of these by name still returns it: an explicit request beats a default.
+
+  Three parameters sat in the same position for the opposite reason. The daily minimum and maximum temperature and the hourly rain total are perfectly meaningful and were merely unnamed, so they are labelled now rather than filtered out.
+
+- **The periods the reference recommends returned nothing.** `sc_table()` built its range with `strtotime( '-' . $period )`, and PHP does not read `24h` as a duration. `strtotime( '-24h' )` does not land yesterday — it lands *tomorrow*; `strtotime( '-30d' )` lands tomorrow as well, and `strtotime( '-365d' )` returns false. The start of the range thus sat behind its end, `BETWEEN` matched nothing, and the shortcode reported an empty station.
+
+  The irony is that only the broken parse produced output: `365d` failed, `false` became `0`, and the range opened to everything — so the one example that appeared to work was returning the *oldest* hundred rows, not the newest.
+
+  `NAWS_Helpers::period_start()` now expands the documented shorthand before the parser sees it, still accepts anything `strtotime()` understands, and refuses a start in the future. A period it cannot read falls back to the documented default of 24 hours rather than to the epoch — a range beginning at 0 silently answers with the wrong end of the data.
+
+  A bare `m` is not a unit: it reads as minutes or months depending on who is looking. Write `months`.
+
+- **The reference described a grouping the code has outgrown.** `year` is a valid bucket and was not listed, and any value that is not a bucket lists single readings rather than failing — worth saying, because that is how you ask for ungrouped output. The readme named four of the six attributes.
+
 ## [Unreleased]
 
 Merged and waiting for the release it will ship in. Nothing here is published yet.

@@ -236,6 +236,12 @@ return [
     'lbl_min'   => 'Min',
     'lbl_max'   => 'Max',
 
+    // ── [naws_table] column headings ──────────────────────────────────
+    'table_col_time'        => 'Zeitpunkt',
+    'table_col_module'      => 'Modul',
+    'table_col_parameter'   => 'Parameter',
+    'table_col_avg'         => 'Mittel',
+
     // ── Frontend live widget ──────────────────────────────────────────
     'live_connected'        => 'Live',
     'live_disconnected'     => 'Getrennt',
@@ -311,7 +317,7 @@ return [
     'sc_table_attr_params' => 'Kommagetrennte Parameter zum Filtern',
     'sc_table_attr_period' => 'Zeitraum, z.B. 24h, 7d, 30d',
     'sc_table_attr_limit' => 'Max. Anzahl Datensätze',
-    'sc_table_attr_group_by' => 'Gruppierung: hour, day, week, month',
+    'sc_table_attr_group_by' => 'Gruppierung: hour, day, week, month, year. Jeder andere Wert listet Einzelmesswerte.',
     'sc_table_attr_title' => 'Optionaler Tabellen-Titel',
 
     'sc_infobar_desc' => 'Kompakte Infoleiste mit berechneten Werten (Gefühlte Temp., Taupunkt) und astronomischen Daten (Auf-/Untergang, Mondphase, Supermond, Mondfinsternis).',

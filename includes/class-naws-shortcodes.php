@@ -158,8 +158,17 @@ class NAWS_Shortcodes {
             'title'      => '',
         ], $atts, 'naws_table' );
 
-        $date_from = strtotime( '-' . ltrim( $atts['period'], '-' ) );
-        $filter    = $atts['parameters'] ? explode( ',', str_replace( ' ', '', $atts['parameters'] ) ) : null;
+        $date_from = NAWS_Helpers::period_start( $atts['period'] );
+        // Without an explicit list, ask only for what the table can present.
+        // Netatmo also stores bookkeeping values — max_wind_angle and
+        // max_wind_str carry neither a name nor a unit — and those would sit
+        // in the table as raw keys next to a bare number. Restricting the
+        // query rather than the output also keeps 'limit' honest: it counts
+        // rows the reader actually gets. Naming one explicitly still returns
+        // it, because an explicit request beats a default.
+        $filter = $atts['parameters']
+            ? explode( ',', str_replace( ' ', '', $atts['parameters'] ) )
+            : array_keys( NAWS_Helpers::get_all_parameters() );
 
         $readings = NAWS_Database::get_readings( [
             'module_id' => $atts['module_id'] ?: null,

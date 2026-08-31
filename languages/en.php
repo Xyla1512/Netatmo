@@ -236,6 +236,12 @@ return [
     'lbl_min'   => 'Min',
     'lbl_max'   => 'Max',
 
+    // ── [naws_table] column headings ──────────────────────────────────
+    'table_col_time'        => 'Time',
+    'table_col_module'      => 'Module',
+    'table_col_parameter'   => 'Parameter',
+    'table_col_avg'         => 'Average',
+
     // ── Frontend live widget ──────────────────────────────────────────
     'live_connected'        => 'Live',
     'live_disconnected'     => 'Disconnected',
@@ -311,7 +317,7 @@ return [
     'sc_table_attr_params' => 'Comma-separated parameters to filter',
     'sc_table_attr_period' => 'Time period, e.g. 24h, 7d, 30d',
     'sc_table_attr_limit' => 'Max. number of records',
-    'sc_table_attr_group_by' => 'Grouping: hour, day, week, month',
+    'sc_table_attr_group_by' => 'Grouping: hour, day, week, month, year. Any other value lists single readings.',
     'sc_table_attr_title' => 'Optional table title',
 
     'sc_infobar_desc' => 'Compact info bar with calculated values (feels like, dew point) and astronomical data (rise/set, moon phase, supermoon, lunar eclipse).',
