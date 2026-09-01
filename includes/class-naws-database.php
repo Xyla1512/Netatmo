@@ -946,7 +946,10 @@ class NAWS_Database {
         $i = 0;
         foreach ( $by_key as $key => $points ) {
             [ $mid, $field ] = explode( '||', $key, 2 );
-            $mod_name = $mod_map[$mid] ?? $mid;
+            // Not the module_id as a stand-in: naws_get_daily_data is a
+            // public endpoint and this label is drawn into a chart legend,
+            // while the id is the module's MAC address.
+            $mod_name = $mod_map[$mid] ?? '';
             $label    = count($by_key) > count($fields)
                 ? $mod_name . ' – ' . ( $field_labels[$field] ?? $field )
                 : ( $field_labels[$field] ?? $field );

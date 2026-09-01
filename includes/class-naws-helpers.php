@@ -372,19 +372,175 @@ class NAWS_Helpers {
                 continue;
             }
 
-            $slug = preg_replace( '/[^a-z0-9]/', '', strtolower( $module['module_name'] ) );
-            if ( $slug === '' ) {
-                $slug = 'indoor' . substr( str_replace( ':', '', $module['module_id'] ), -4 );
-            }
-
             $slugs[] = [
-                'slug'      => substr( $slug, 0, 16 ),
+                'slug'      => self::module_slug( $module['module_name'], $module['module_id'] ),
                 'name'      => $module['module_name'],
                 'module_id' => $module['module_id'],
             ];
         }
 
         return $slugs;
+    }
+
+    /**
+     * The slug rule itself, in one place.
+     *
+     * Three callers derived it separately before — indoor_module_slugs(),
+     * the live template and the settings screen — which is how the alias
+     * table drifted apart, twice. A slug that differs by one character
+     * between two of them silently unhooks a visibility switch from the
+     * card it switches.
+     *
+     * @param string $name      Module name as Netatmo reports it.
+     * @param string $module_id The module's MAC, used only when the name
+     *                          has no usable character at all.
+     */
+    public static function module_slug( string $name, string $module_id ): string {
+        $slug = preg_replace( '/[^a-z0-9]/', '', strtolower( $name ) );
+        if ( $slug === '' ) {
+            $slug = 'indoor' . substr( str_replace( ':', '', $module_id ), -4 );
+        }
+
+        return substr( $slug, 0, 16 );
+    }
+
+    /**
+     * Module type behind each of the four fixed aliases.
+     *
+     * [naws_value module="outdoor"] has spoken this vocabulary since the
+     * beginning; NAWS_Calc::module_id() resolves it, and the public
+     * references below reuse it rather than inventing a second set of
+     * names for the same four modules.
+     *
+     * @return array<string,string> alias => module type.
+     */
+    public static function module_type_aliases(): array {
+        return [
+            'outdoor' => 'NAModule1',
+            'indoor'  => 'NAMain',
+            'wind'    => 'NAModule2',
+            'rain'    => 'NAModule3',
+        ];
+    }
+
+    /**
+     * Public reference for every module: the name the front end may see.
+     *
+     * A module_id is a MAC address. The browser has no use for it — it only
+     * needs to say which module a chart or a reading belongs to — so what
+     * travels into the markup and back through admin-ajax.php is this
+     * reference instead, and the server turns it back into a module_id.
+     *
+     * References are built from the module type and, for indoor modules,
+     * the same slug the cards and charts already carry in their ids, so
+     * nothing is exposed that the page does not show anyway.
+     *
+     * Two modules cannot share a reference. Two modules sharing a *name*
+     * is a user's configuration mistake and it does collapse chart ids
+     * (see indoor_chart_defs()) — but a shared reference would send one
+     * module's chart the other module's readings, so the second one is
+     * numbered off.
+     *
+     * That numbering follows the module_id, not the position in the list.
+     * get_modules() sorts by `is_active DESC, module_type, module_name`,
+     * and for two modules of the same type carrying the same name all
+     * three keys are equal — so switching one of them off moves the other
+     * to the front. Numbering by position would hand the two references to
+     * the opposite modules at that moment, and a page cached before it
+     * would go on to ask for the wrong one.
+     *
+     * Inactive modules are listed too: their readings stay in the database,
+     * and a reference that shifted when some other module was switched off
+     * would invalidate every cached page on the site.
+     *
+     * @return array<string,string> reference => module_id.
+     */
+    public static function module_ref_map(): array {
+        $modules = NAWS_Database::get_modules( false );
+
+        // Which modules lay claim to the same name, in an order that only
+        // depends on the modules themselves.
+        $claims = [];
+        foreach ( $modules as $module ) {
+            $claims[ self::module_ref_base( $module ) ][] = $module['module_id'];
+        }
+        foreach ( $claims as &$ids ) {
+            sort( $ids );
+        }
+        unset( $ids );
+
+        $map = [];
+        foreach ( $modules as $module ) {
+            $base     = self::module_ref_base( $module );
+            $position = (int) array_search( $module['module_id'], $claims[ $base ], true );
+            $ref      = $position === 0 ? $base : $base . '-' . ( $position + 1 );
+
+            $map[ $ref ] = $module['module_id'];
+        }
+
+        return $map;
+    }
+
+    /**
+     * The name a module claims before collisions are settled.
+     *
+     * @param array<string,string> $module Row from the modules table.
+     */
+    private static function module_ref_base( array $module ): string {
+        $type = $module['module_type'] ?? '';
+        if ( $type === 'NAModule4' ) {
+            return 'in-' . self::module_slug( $module['module_name'], $module['module_id'] );
+        }
+
+        // 'module' catches NAOldModule and anything Netatmo adds later:
+        // a module without a reference could not be charted at all.
+        return array_flip( self::module_type_aliases() )[ $type ] ?? 'module';
+    }
+
+    /**
+     * The reference for one module, '' when the station has no such module.
+     */
+    public static function module_ref( string $module_id ): string {
+        $ref = array_search( $module_id, self::module_ref_map(), true );
+
+        return $ref === false ? '' : $ref;
+    }
+
+    /**
+     * Resolve what the front end sent back to a module_id.
+     *
+     * Returns null rather than an empty string when nothing matches, and
+     * the callers have to tell the two apart: an unresolvable reference
+     * that fell through as "no filter" would answer with every module's
+     * readings instead of a refusal.
+     *
+     * A raw module_id is still accepted. Pages cached before an update
+     * carry one, and so does the documented NAWS_Chart JS interface, which
+     * takes a module_id from whoever calls it. Case-insensitively, because
+     * that was a real bug once: a hand-written uppercase MAC matched
+     * nothing at all.
+     *
+     * @return string|null The module_id, or null when the reference names
+     *                     no module of this station.
+     */
+    public static function resolve_module_ref( string $ref ): ?string {
+        if ( $ref === '' ) {
+            return null;
+        }
+
+        $map = self::module_ref_map();
+        $key = strtolower( $ref );
+        if ( isset( $map[ $key ] ) ) {
+            return $map[ $key ];
+        }
+
+        foreach ( $map as $module_id ) {
+            if ( strcasecmp( $module_id, $ref ) === 0 ) {
+                return $module_id;
+            }
+        }
+
+        return null;
     }
 
     /**

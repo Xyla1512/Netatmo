@@ -30,8 +30,6 @@ var NAWS_FONT = getComputedStyle(document.getElementById(WID)).fontFamily
              || 'sans-serif';
 var AJAX    = NAWS_HIST.AJAX;
 var NONCE   = document.getElementById(WID).dataset.nonce;
-var OUTDOOR = document.getElementById(WID).dataset.outdoor;
-var INDOOR  = document.getElementById(WID).dataset.indoor;
 var YEARS   = document.getElementById(WID).dataset.years.split(',').map(Number).filter(Boolean);
 
 var chartsEl = document.getElementById(WID+'-charts');
@@ -408,7 +406,8 @@ CHART_DEFS.forEach(function(def){
     +'&year_from='+YEARS[0]
     +'&year_to='+YEARS[YEARS.length-1];
   def.fields.forEach(function(f){ body+='&fields[]='+encodeURIComponent(f); });
-  if(def.moduleId) body+='&module_id='+encodeURIComponent(def.moduleId);
+  // moduleId is the public module reference, not the module's MAC address.
+  if(def.moduleId) body+='&module_ref='+encodeURIComponent(def.moduleId);
 
   var xhr=new XMLHttpRequest();
   xhr.open('POST',AJAX);

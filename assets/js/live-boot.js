@@ -185,8 +185,10 @@ function indexReadings(rows){
       if(r.parameter==='min_temp')    key='min_temp_indoor';
       if(r.parameter==='max_temp')    key='max_temp_indoor';
     } else if(isModule4(r)){
-      // NAModule4: append slug so Gast/Sleeping params are unique
-      var slug=MODULE4_SLUGS[r.module_id]||('m4_'+String(r.module_id).replace(/:/g,'').slice(-4));
+      // NAModule4: append slug so Gast/Sleeping params are unique.
+      // The reading names its module by the public reference the server
+      // issued — never by module_id, which is the module's MAC address.
+      var slug=MODULE4_SLUGS[r.module_ref]||('m4_'+String(r.module_ref||'').replace(/[^a-z0-9]/gi,''));
       key=r.parameter+'_'+slug;
     }
     if(!p[key]) p[key]=Object.assign({},r,{_key:key});
@@ -470,7 +472,12 @@ function loadCharts(){
 
   CHART_CONFIGS.forEach(function(cfg){
     var params={action:'naws_get_chart_data',date_from:dayStart,date_to:now,parameter:[cfg.param],group_by:'hour'};
-    if(cfg.module_id) params.module_id=cfg.module_id;
+    // cfg.module_id only appears in markup that was cached before the
+    // update; the server resolves the old value just as well. Without the
+    // fallback such a page would send no module filter at all and get every
+    // module's readings drawn into one chart.
+    var ref=cfg.module_ref||cfg.module_id;
+    if(ref) params.module_ref=ref;
     post(params,function(r){
       if(!r||!r.success||!r.data||!r.data.datasets||!r.data.datasets.length) return;
       var ds=r.data.datasets[0]; if(!ds||!ds.data||!ds.data.length) return;

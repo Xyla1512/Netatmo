@@ -11,32 +11,23 @@ $widget_id      = 'naws-live-' . wp_unique_id();
 $hidden         = (array) get_option( 'naws_live_hidden_params',  [] );
 $hidden_modules = (array) get_option( 'naws_live_hidden_modules', [] );
 
-// Resolve all active modules
-$all_modules = NAWS_Database::get_modules( true );
-$outdoor_id  = '';
-$indoor_id   = '';
-foreach ( $all_modules as $m ) {
-    if ( $m['module_type'] === 'NAModule1' ) { $outdoor_id = $m['module_id']; }
-    if ( $m['module_type'] === 'NAMain'    ) { $indoor_id  = $m['module_id']; }
-}
-$humidity_id = $outdoor_id ?: $indoor_id;
+// ── Public module references ────────────────────────────────────────────────
+// A module_id is the module's MAC address, and nothing in the browser needs
+// to know it: a chart only has to say which module it means. So what goes
+// into the markup — and comes back with every AJAX call — is the reference
+// NAWS_Helpers builds, and the AJAX handlers resolve it back.
+$module_refs = NAWS_Helpers::module_ref_map();
 
-// ── NAModule4 slug map: module_id → slug (e.g. "gast", "sleeping") ──────────
-// Slug is derived from module_name: lowercase, only [a-z0-9], max 16 chars.
+// ── NAModule4 slug map: reference → slug (e.g. "gast", "sleeping") ──────────
 // Passed to JS so indexReadings() can namespace their parameters correctly.
-$module4_slugs = []; // [ module_id => slug ]
-$module4_info  = []; // [ slug => ['id'=>…, 'name'=>…, 'params'=>[…]] ]
-foreach ( $all_modules as $m ) {
-    if ( $m['module_type'] !== 'NAModule4' ) continue;
-    $slug = preg_replace( '/[^a-z0-9]/', '', strtolower( $m['module_name'] ) );
-    if ( $slug === '' ) $slug = 'indoor' . substr( str_replace( ':', '', $m['module_id'] ), -4 );
-    $slug = substr( $slug, 0, 16 );
-    $module4_slugs[ $m['module_id'] ] = $slug;
-    $module4_info[ $slug ] = [
-        'id'     => $m['module_id'],
-        'name'   => $m['module_name'],
-        'params' => [ "Temperature_{$slug}", "Humidity_{$slug}", "CO2_{$slug}", "Noise_{$slug}" ],
-    ];
+// The slug rule lives in NAWS_Helpers; this template used to carry its own
+// copy of it, which is how such rules drift apart.
+$module4_slugs = []; // [ reference => slug ]
+$module4_info  = []; // [ slug => ['name'=>…] ]
+$module4_list  = NAWS_Helpers::indoor_module_slugs();
+foreach ( $module4_list as $m4 ) {
+    $module4_slugs[ NAWS_Helpers::module_ref( $m4['module_id'] ) ] = $m4['slug'];
+    $module4_info[ $m4['slug'] ] = [ 'name' => $m4['name'] ];
 }
 
 // ── Hidden-params expansion: module toggle → hide all its params ─────────────
@@ -58,46 +49,39 @@ $ajax_url = admin_url( 'admin-ajax.php' );
 // ── Charts: which sensors get a 24h graph? ───────────────────────────────────
 $hidden_charts = (array) get_option( 'naws_live_hidden_charts', [] );
 
-// Resolve module IDs we need for chart queries
-$wind_id = '';
-$rain_id = '';
-foreach ( $all_modules as $m ) {
-    if ( $m['module_type'] === 'NAModule2' ) $wind_id = $m['module_id'];
-    if ( $m['module_type'] === 'NAModule3' ) $rain_id = $m['module_id'];
-}
-
-// Master sensor→chart config: display_key, db_param, module_id, label, unit, type, color
+// Master sensor→chart config: display_key, db_param, module reference, label, unit, type, color
 // Units are always read from settings via NAWS_Helpers::get_unit()
 $sensor_chart_configs = [];
 
 // NAModule1 – outdoor
-if ( $outdoor_id ) {
-    $sensor_chart_configs[] = [ 'key'=>'Temperature',    'param'=>'Temperature', 'module_id'=>$outdoor_id, 'label'=>__( 'Temp. Outdoor', 'xtx-integration-for-netatmo' ),        'unit'=>NAWS_Helpers::get_unit('Temperature'),   'type'=>'line', 'color'=>NAWS_Colors::get('chart_temp_outdoor') ];
-    $sensor_chart_configs[] = [ 'key'=>'Humidity',       'param'=>'Humidity',    'module_id'=>$outdoor_id, 'label'=>__( 'Humidity Outdoor', 'xtx-integration-for-netatmo' ),       'unit'=>'%',                                    'type'=>'line', 'color'=>NAWS_Colors::get('chart_humidity_outdoor') ];
+if ( isset( $module_refs['outdoor'] ) ) {
+    $sensor_chart_configs[] = [ 'key'=>'Temperature',    'param'=>'Temperature', 'module_ref'=>'outdoor', 'label'=>__( 'Temp. Outdoor', 'xtx-integration-for-netatmo' ),        'unit'=>NAWS_Helpers::get_unit('Temperature'),   'type'=>'line', 'color'=>NAWS_Colors::get('chart_temp_outdoor') ];
+    $sensor_chart_configs[] = [ 'key'=>'Humidity',       'param'=>'Humidity',    'module_ref'=>'outdoor', 'label'=>__( 'Humidity Outdoor', 'xtx-integration-for-netatmo' ),       'unit'=>'%',                                    'type'=>'line', 'color'=>NAWS_Colors::get('chart_humidity_outdoor') ];
 }
 // NAMain – indoor base
-if ( $indoor_id ) {
-    $sensor_chart_configs[] = [ 'key'=>'Temperature_indoor', 'param'=>'Temperature', 'module_id'=>$indoor_id, 'label'=>__( 'Temp. Base', 'xtx-integration-for-netatmo' ),   'unit'=>NAWS_Helpers::get_unit('Temperature'),   'type'=>'line', 'color'=>NAWS_Colors::get('chart_temp_indoor') ];
-    $sensor_chart_configs[] = [ 'key'=>'Pressure',           'param'=>'Pressure',    'module_id'=>$indoor_id, 'label'=>__( 'Pressure', 'xtx-integration-for-netatmo' ),     'unit'=>NAWS_Helpers::get_unit('Pressure'),      'type'=>'line', 'color'=>NAWS_Colors::get('chart_pressure') ];
-    $sensor_chart_configs[] = [ 'key'=>'CO2',                'param'=>'CO2',         'module_id'=>$indoor_id, 'label'=>__( 'CO₂ Base', 'xtx-integration-for-netatmo' ),     'unit'=>'ppm',                                  'type'=>'line', 'color'=>NAWS_Colors::get('chart_co2') ];
-    $sensor_chart_configs[] = [ 'key'=>'Noise',              'param'=>'Noise',       'module_id'=>$indoor_id, 'label'=>__( 'Noise Base', 'xtx-integration-for-netatmo' ),   'unit'=>'dB',                                   'type'=>'line', 'color'=>NAWS_Colors::get('chart_noise') ];
+if ( isset( $module_refs['indoor'] ) ) {
+    $sensor_chart_configs[] = [ 'key'=>'Temperature_indoor', 'param'=>'Temperature', 'module_ref'=>'indoor', 'label'=>__( 'Temp. Base', 'xtx-integration-for-netatmo' ),   'unit'=>NAWS_Helpers::get_unit('Temperature'),   'type'=>'line', 'color'=>NAWS_Colors::get('chart_temp_indoor') ];
+    $sensor_chart_configs[] = [ 'key'=>'Pressure',           'param'=>'Pressure',    'module_ref'=>'indoor', 'label'=>__( 'Pressure', 'xtx-integration-for-netatmo' ),     'unit'=>NAWS_Helpers::get_unit('Pressure'),      'type'=>'line', 'color'=>NAWS_Colors::get('chart_pressure') ];
+    $sensor_chart_configs[] = [ 'key'=>'CO2',                'param'=>'CO2',         'module_ref'=>'indoor', 'label'=>__( 'CO₂ Base', 'xtx-integration-for-netatmo' ),     'unit'=>'ppm',                                  'type'=>'line', 'color'=>NAWS_Colors::get('chart_co2') ];
+    $sensor_chart_configs[] = [ 'key'=>'Noise',              'param'=>'Noise',       'module_ref'=>'indoor', 'label'=>__( 'Noise Base', 'xtx-integration-for-netatmo' ),   'unit'=>'dB',                                   'type'=>'line', 'color'=>NAWS_Colors::get('chart_noise') ];
 }
 // NAModule2 – wind
-if ( $wind_id ) {
-    $sensor_chart_configs[] = [ 'key'=>'WindStrength', 'param'=>'WindStrength', 'module_id'=>$wind_id, 'label'=>__( 'Wind', 'xtx-integration-for-netatmo' ),  'unit'=>NAWS_Helpers::get_unit('WindStrength'), 'type'=>'line', 'color'=>NAWS_Colors::get('chart_wind') ];
-    $sensor_chart_configs[] = [ 'key'=>'GustStrength', 'param'=>'GustStrength', 'module_id'=>$wind_id, 'label'=>__( 'Gusts', 'xtx-integration-for-netatmo' ), 'unit'=>NAWS_Helpers::get_unit('GustStrength'), 'type'=>'line', 'color'=>NAWS_Colors::get('chart_gusts') ];
+if ( isset( $module_refs['wind'] ) ) {
+    $sensor_chart_configs[] = [ 'key'=>'WindStrength', 'param'=>'WindStrength', 'module_ref'=>'wind', 'label'=>__( 'Wind', 'xtx-integration-for-netatmo' ),  'unit'=>NAWS_Helpers::get_unit('WindStrength'), 'type'=>'line', 'color'=>NAWS_Colors::get('chart_wind') ];
+    $sensor_chart_configs[] = [ 'key'=>'GustStrength', 'param'=>'GustStrength', 'module_ref'=>'wind', 'label'=>__( 'Gusts', 'xtx-integration-for-netatmo' ), 'unit'=>NAWS_Helpers::get_unit('GustStrength'), 'type'=>'line', 'color'=>NAWS_Colors::get('chart_gusts') ];
 }
 // NAModule3 – rain
-if ( $rain_id ) {
-    $sensor_chart_configs[] = [ 'key'=>'Rain', 'param'=>'sum_rain_1', 'module_id'=>$rain_id, 'label'=>__( 'Rain (hourly)', 'xtx-integration-for-netatmo' ), 'unit'=>NAWS_Helpers::get_unit('Rain'), 'type'=>'bar', 'color'=>NAWS_Colors::get('chart_rain') ];
+if ( isset( $module_refs['rain'] ) ) {
+    $sensor_chart_configs[] = [ 'key'=>'Rain', 'param'=>'sum_rain_1', 'module_ref'=>'rain', 'label'=>__( 'Rain (hourly)', 'xtx-integration-for-netatmo' ), 'unit'=>NAWS_Helpers::get_unit('Rain'), 'type'=>'bar', 'color'=>NAWS_Colors::get('chart_rain') ];
 }
 // NAModule4 – dynamic
-foreach ( $module4_info as $slug => $info ) {
-    $mid = $info['id'];
-    $name = $info['name'];
-    $sensor_chart_configs[] = [ 'key'=>"Temperature_{$slug}", 'param'=>'Temperature', 'module_id'=>$mid, 'label'=>__( 'Temp.', 'xtx-integration-for-netatmo' )." {$name}",   'unit'=>NAWS_Helpers::get_unit('Temperature'), 'type'=>'line', 'color'=>NAWS_Colors::get('chart_module4_temp') ];
-    $sensor_chart_configs[] = [ 'key'=>"Humidity_{$slug}",    'param'=>'Humidity',    'module_id'=>$mid, 'label'=>_x( 'Humidity', 'chart_humid_prefix', 'xtx-integration-for-netatmo' )." {$name}", 'unit'=>'%',                                   'type'=>'line', 'color'=>NAWS_Colors::get('chart_module4_humidity') ];
-    $sensor_chart_configs[] = [ 'key'=>"CO2_{$slug}",         'param'=>'CO2',         'module_id'=>$mid, 'label'=>__( 'CO₂', 'xtx-integration-for-netatmo' )." {$name}",   'unit'=>'ppm',                                 'type'=>'line', 'color'=>NAWS_Colors::get('chart_module4_co2') ];
+foreach ( $module4_list as $m4 ) {
+    $slug = $m4['slug'];
+    $name = $m4['name'];
+    $ref  = NAWS_Helpers::module_ref( $m4['module_id'] );
+    $sensor_chart_configs[] = [ 'key'=>"Temperature_{$slug}", 'param'=>'Temperature', 'module_ref'=>$ref, 'label'=>__( 'Temp.', 'xtx-integration-for-netatmo' )." {$name}",   'unit'=>NAWS_Helpers::get_unit('Temperature'), 'type'=>'line', 'color'=>NAWS_Colors::get('chart_module4_temp') ];
+    $sensor_chart_configs[] = [ 'key'=>"Humidity_{$slug}",    'param'=>'Humidity',    'module_ref'=>$ref, 'label'=>_x( 'Humidity', 'chart_humid_prefix', 'xtx-integration-for-netatmo' )." {$name}", 'unit'=>'%',                                   'type'=>'line', 'color'=>NAWS_Colors::get('chart_module4_humidity') ];
+    $sensor_chart_configs[] = [ 'key'=>"CO2_{$slug}",         'param'=>'CO2',         'module_ref'=>$ref, 'label'=>__( 'CO₂', 'xtx-integration-for-netatmo' )." {$name}",   'unit'=>'ppm',                                 'type'=>'line', 'color'=>NAWS_Colors::get('chart_module4_co2') ];
 }
 
 // Filter: only sensors that are visible (not hidden_params) AND chart is active (not hidden_charts)
@@ -167,7 +151,6 @@ $pressure_diff  = $_pt['diff'];
      data-ajax="<?php echo esc_attr($ajax_url); ?>"
      data-refresh="<?php echo esc_attr($atts['refresh'] ?? '60'); ?>"
      data-hidden="<?php echo esc_attr(implode(',', $hidden)); ?>"
-     data-indoor="<?php echo esc_attr($indoor_id); ?>"
      data-module4="<?php echo esc_attr(wp_json_encode($module4_slugs)); ?>">
 
   <div class="naws-hdr">

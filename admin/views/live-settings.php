@@ -44,15 +44,16 @@ foreach ( $all_modules as $m ) {
 }
 
 // ── NAModule4: generate slug + namespaced params from actual DB modules ──────
-// Slug: module_name lowercased, only [a-z0-9], max 16 chars
+// The slug rule lives in NAWS_Helpers::module_slug(). This screen decides
+// which cards a switch turns off, and the cards are named after the slug the
+// front end built — a private copy of the rule that drifts by one character
+// unhooks the switch from the card it is supposed to switch.
 $extra_module4_defs = [];
 $m4_colors = [ '#7c3aed', '#d97706', '#059669', '#dc2626', '#0891b2' ];
 $m4_color_idx = 0;
 foreach ( $all_modules as $m ) {
     if ( $m['module_type'] !== 'NAModule4' ) continue;
-    $slug  = preg_replace( '/[^a-z0-9]/', '', strtolower( $m['module_name'] ) );
-    if ( $slug === '' ) $slug = 'indoor' . substr( str_replace( ':', '', $m['module_id'] ), -4 );
-    $slug  = substr( $slug, 0, 16 );
+    $slug  = NAWS_Helpers::module_slug( $m['module_name'], $m['module_id'] );
     $color = $m4_colors[ $m4_color_idx % count( $m4_colors ) ];
     $m4_color_idx++;
     // Param keys are namespaced: Temperature_gast, Humidity_gast, etc.

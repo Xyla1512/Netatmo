@@ -133,33 +133,26 @@ class NAWS_Calc {
     }
 
     /**
-     * Module type behind each alias, same mapping [naws_value] uses.
-     */
-    private const TYPE_MAP = [
-        'outdoor' => 'NAModule1',
-        'indoor'  => 'NAMain',
-        'wind'    => 'NAModule2',
-        'rain'    => 'NAModule3',
-    ];
-
-    /**
      * Resolve a module alias or MAC address to a module_id.
      *
      * Public because [naws_value] resolves the same four aliases and used to
      * carry its own copy of the table. Two copies of "what outdoor means" is
      * one too many — and they had already drifted: the copy in sc_value()
      * lower-cased the alias for the lookup but handed a MAC address on with
-     * its original case, so an uppercase MAC matched nothing.
+     * its original case, so an uppercase MAC matched nothing. The table
+     * itself now lives in NAWS_Helpers, where the public module references
+     * read it too.
      *
      * @return string|null null when the station has no such module.
      */
     public static function module_id( string $alias ): ?string {
         $alias = strtolower( $alias );
-        if ( ! isset( self::TYPE_MAP[ $alias ] ) ) {
+        $types = NAWS_Helpers::module_type_aliases();
+        if ( ! isset( $types[ $alias ] ) ) {
             return $alias; // treated as a direct MAC address
         }
         foreach ( NAWS_Database::get_modules( true ) as $m ) {
-            if ( $m['module_type'] === self::TYPE_MAP[ $alias ] ) {
+            if ( $m['module_type'] === $types[ $alias ] ) {
                 return $m['module_id'];
             }
         }

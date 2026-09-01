@@ -467,22 +467,61 @@ class NAWS_Ajax {
         wp_send_json_success( [ 'deleted' => $deleted ] );
     }
 
+    /**
+     * Which module the request is about, resolved from what the page sent.
+     *
+     * The front end names a module by its public reference (see
+     * NAWS_Helpers::module_ref_map()) — a module_id is a MAC address and
+     * has no business travelling through the browser. Pages cached before
+     * the update still send module_id, and so does the documented
+     * NAWS_Chart JS interface, so both are accepted.
+     *
+     * An unresolvable reference must not fall through as "no module": an
+     * empty filter means *every* module in all four queries below, so the
+     * request would be answered with the whole station's readings instead
+     * of being refused. It gets its own answer here, and the caller stops.
+     *
+     * @return string|null|false module_id, null for "no filter", or false
+     *                           when the error response has been sent.
+     */
+    private function requested_module_id() {
+        $ref = sanitize_text_field( wp_unslash( $_POST['module_ref'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- callers verify the nonce first
+        if ( $ref === '' ) {
+            $ref = sanitize_text_field( wp_unslash( $_POST['module_id'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- callers verify the nonce first
+        }
+        if ( $ref === '' ) {
+            return null;
+        }
+
+        $module_id = NAWS_Helpers::resolve_module_ref( $ref );
+        if ( $module_id === null ) {
+            wp_send_json_error( [ 'message' => 'Unknown module reference.' ], 400 );
+            return false;
+        }
+
+        return $module_id;
+    }
+
     public function get_daily_data() {
         check_ajax_referer( 'naws_public_nonce', 'nonce' );
         nocache_headers();
 
-        $module_id  = sanitize_text_field( wp_unslash( $_POST['module_id'] ?? ''  ) );
+        $module_id = $this->requested_module_id();
+        if ( $module_id === false ) {
+            return;
+        }
+
         $date_from  = sanitize_text_field( wp_unslash( $_POST['date_from'] ?? gmdate(  'Y-m-d', strtotime('-365 days' ) ) ) );
         $date_to    = sanitize_text_field( wp_unslash( $_POST['date_to']   ?? gmdate(  'Y-m-d'  ) ) );
         $group_by   = in_array( $_POST['group_by'] ?? 'day', [ 'day','week','month','year' ], true ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-                    ? sanitize_key( wp_unslash( $_POST['group_by']  ) ) : 'day';
+                    ? sanitize_key( wp_unslash( $_POST['group_by'] ?? 'day' ) ) : 'day';
 
         $raw_fields = isset( $_POST['fields'] )
             ? array_map( 'sanitize_key', (array) wp_unslash( $_POST['fields'] ) )
             : [ 'temp_min','temp_max','temp_avg','pressure_avg','rain_sum' ];
 
         $result = NAWS_Database::get_daily_chart_data( [
-            'module_id' => $module_id ?: null,
+            'module_id' => $module_id,
             'date_from' => $date_from,
             'date_to'   => $date_to,
             'group_by'  => $group_by,
@@ -510,10 +549,11 @@ class NAWS_Ajax {
         $year_from = intval( $_POST['year_from'] ?? gmdate( 'Y') ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         $year_to   = intval( $_POST['year_to']   ?? gmdate( 'Y') ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
-        // Optional: filter by specific module_id (NAModule4 rows keyed by module_id, not station_id)
-        $filter_module_id = isset( $_POST['module_id'] )
-            ? sanitize_text_field( wp_unslash( $_POST['module_id'] ) )
-            : null;
+        // Optional: filter by specific module (NAModule4 rows keyed by module_id, not station_id)
+        $filter_module_id = $this->requested_module_id();
+        if ( $filter_module_id === false ) {
+            return;
+        }
 
         // ── Single query for all years (replaces N+1 per-year loop) ──────
         // %i placeholders for field identifiers (WP 6.2+); field args come before WHERE args
@@ -676,7 +716,10 @@ class NAWS_Ajax {
         check_ajax_referer( 'naws_public_nonce', 'nonce' );
         nocache_headers();
 
-        $module_id = sanitize_text_field( wp_unslash( $_POST['module_id'] ?? ''  ) );
+        $module_id = $this->requested_module_id();
+        if ( $module_id === false ) {
+            return;
+        }
         $parameter = isset( $_POST['parameter'] )
             ? array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['parameter'] ) )
             : [];
@@ -685,10 +728,10 @@ class NAWS_Ajax {
         $group_by  = in_array( // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
             $_POST['group_by'] ?? 'raw',
             [ 'raw', 'hour', 'day', 'week', 'month', 'year' ], true
-        ) ? sanitize_key( wp_unslash( $_POST['group_by']  ) ) : 'raw';
+        ) ? sanitize_key( wp_unslash( $_POST['group_by'] ?? 'raw' ) ) : 'raw';
 
         $readings = NAWS_Database::get_readings( [
-            'module_id' => $module_id ?: null,
+            'module_id' => $module_id,
             'parameter' => $parameter ?: null,
             'date_from' => $date_from,
             'date_to'   => $date_to,
@@ -738,7 +781,9 @@ class NAWS_Ajax {
         $i        = 0;
         foreach ( $data_by_key as $key => $points ) {
             [ $mod_id, $param ] = explode( '||', $key, 2 );
-            $mod_name = $module_map[ $mod_id ] ?? $mod_id;
+            // Never the module_id as a stand-in: the label is drawn into the
+            // chart legend, and the id is the module's MAC address.
+            $mod_name = $module_map[ $mod_id ] ?? '';
             $label    = count( $data_by_key ) > 1
                 ? $mod_name . ' – ' . NAWS_Helpers::get_label( $param )
                 : NAWS_Helpers::get_label( $param );
@@ -764,7 +809,9 @@ class NAWS_Ajax {
                 'date_from'  => wp_date(  'Y-m-d H:i', $date_from ),
                 'date_to'    => wp_date(  'Y-m-d H:i', $date_to ),
                 'group_by'   => $group_by,
-                'module_id'  => $module_id,
+                // The reference, not the module_id it resolved to: this block
+                // is echoed straight back into the browser.
+                'module'     => $module_id === null ? '' : NAWS_Helpers::module_ref( $module_id ),
                 'parameters' => $parameter,
                 'rows_found' => count( $readings ),
             ],
@@ -775,8 +822,11 @@ class NAWS_Ajax {
         check_ajax_referer( 'naws_public_nonce', 'nonce' );
         nocache_headers();
 
-        $module_id = sanitize_text_field( wp_unslash( $_POST['module_id'] ?? ''  ) );
-        $readings  = NAWS_Database::get_latest_readings( $module_id ?: null );
+        $module_id = $this->requested_module_id();
+        if ( $module_id === false ) {
+            return;
+        }
+        $readings  = NAWS_Database::get_latest_readings( $module_id );
         $modules   = NAWS_Database::get_modules();
 
         // Enrich with module names
@@ -785,15 +835,30 @@ class NAWS_Ajax {
             $module_map[ $m['module_id'] ] = $m;
         }
 
+        // Every reading says which module it came from, and live-boot.js
+        // needs that to tell two indoor modules apart. It says it with the
+        // public reference: the module_id is a MAC address, and this
+        // response goes straight to the browser.
+        $refs = array_flip( NAWS_Helpers::module_ref_map() ); // module_id => reference
+
+        // Named field by field, not merged from the row. A reading in the
+        // database also carries its primary key, the time it was inserted
+        // and the station_id — and that last one is the base station's MAC
+        // address, which used to travel to the browser on every single
+        // measurement because the whole row was passed straight through.
         $formatted = [];
         foreach ( $readings as $row ) {
-            $formatted[] = array_merge( $row, [
-                'module_name' => $module_map[ $row['module_id'] ]['module_name'] ?? $row['module_id'],
-                'module_type' => $module_map[ $row['module_id'] ]['module_type'] ?? '',
+            $mid = $row['module_id'];
+            $formatted[] = [
+                'parameter'   => $row['parameter'],
                 'value'       => NAWS_Helpers::format_value( $row['parameter'], floatval( $row['value'] ) ),
                 'unit'        => NAWS_Helpers::get_unit( $row['parameter'] ),
                 'icon'        => NAWS_Helpers::get_icon( $row['parameter'] ),
-            ] );
+                'recorded_at' => $row['recorded_at'],
+                'module_ref'  => $refs[ $mid ] ?? '',
+                'module_name' => $module_map[ $mid ]['module_name'] ?? '',
+                'module_type' => $module_map[ $mid ]['module_type'] ?? '',
+            ];
         }
 
         // Compute rolling 24h rain sum from our own readings (Netatmo's sum_rain_24 resets at midnight)
@@ -808,7 +873,7 @@ class NAWS_Ajax {
             $rolling = NAWS_Database::get_rain_rolling_24h( $rain_module );
             if ( $rolling !== null ) {
                 $formatted[] = [
-                    'module_id'   => $rain_module,
+                    'module_ref'  => $refs[ $rain_module ] ?? '',
                     'module_type' => 'NAModule3',
                     'parameter'   => 'rain_rolling_24h',
                     'value'       => NAWS_Helpers::format_value( 'Rain', $rolling ),

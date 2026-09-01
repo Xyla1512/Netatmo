@@ -11,12 +11,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 $widget_id  = 'naws-hist-' . wp_unique_id();
 $nonce      = wp_create_nonce('naws_public_nonce');
 $ajax_url   = admin_url('admin-ajax.php');
-$outdoor_id = '';
-$indoor_id  = '';
-foreach ( NAWS_Database::get_modules( true ) as $m ) {
-    if ( $m['module_type'] === 'NAModule1' ) $outdoor_id = $m['module_id'];
-    if ( $m['module_type'] === 'NAMain'    ) $indoor_id  = $m['module_id'];
-}
 // MIN()/MAX() always return a row – on an empty table both columns are NULL,
 // so check the values, not just the row (passing null to substr() is
 // deprecated as of PHP 8.1).
@@ -53,8 +47,6 @@ $_naws_total_history_charts = count( $_naws_history_charts );
 <div id="<?php echo esc_attr($widget_id); ?>" class="naws-hist"
      data-nonce="<?php echo esc_attr($nonce); ?>"
      data-ajax="<?php echo esc_attr($ajax_url); ?>"
-     data-outdoor="<?php echo esc_attr($outdoor_id); ?>"
-     data-indoor="<?php echo esc_attr($indoor_id); ?>"
      data-years="<?php echo esc_attr(implode(',', $years)); ?>">
 
   <div class="naws-hist-hdr">
@@ -151,7 +143,9 @@ echo '<script type="application/json" data-naws="history" id="' . esc_attr( $wid
             ...array_map( function( $_m4c ) {
                 // Unit and field come from the definition now: the pair is
                 // temperature and humidity, and only one of them is a percent.
-                return [ 'id' => $_m4c['id'], 'title' => $_m4c['label'], 'type' => 'line', 'unit' => $_m4c['unit'], 'fields' => [ $_m4c['field'] ], 'moduleId' => $_m4c['module_id'] ];
+                // moduleId travels as the public reference, not as the MAC:
+                // it goes into the page and back out with every AJAX call.
+                return [ 'id' => $_m4c['id'], 'title' => $_m4c['label'], 'type' => 'line', 'unit' => $_m4c['unit'], 'fields' => [ $_m4c['field'] ], 'moduleId' => NAWS_Helpers::module_ref( $_m4c['module_id'] ) ];
             }, $_naws_m4_charts ),
         ],
     ] )

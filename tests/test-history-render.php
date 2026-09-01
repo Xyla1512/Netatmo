@@ -113,6 +113,43 @@ check( 'sind alle aus, erscheint der Hinweis statt des Laders',
     [ charts( $html ), (bool) strpos( $html, 'naws-hist-all-hidden' ) ],
     [ [], true ] );
 
+// ── Keine MAC-Adresse im oeffentlichen Quelltext ─────────────────────────
+// Die module_id eines Netatmo-Moduls ist seine MAC. Sie stand hier in drei
+// Formen: als data-outdoor und data-indoor am Container — beide las nie
+// jemand — und als moduleId an jedem Innenmodul-Chart, von wo aus sie in
+// jedem AJAX-Aufruf zurueckging. Der Browser bekommt jetzt die Referenz.
+/** Findet jede MAC-Adresse im Markup. */
+function macs( string $html ): array {
+    preg_match_all( '/(?:[0-9a-f]{2}:){5}[0-9a-f]{2}/i', $html, $m );
+    return array_values( array_unique( $m[0] ) );
+}
+
+/** Liest den JSON-Datenblock, aus dem history-boot.js bootet. */
+function payload( string $html ): array {
+    preg_match( '/data-naws="history"[^>]*>(.*?)<\/script>/s', $html, $m );
+    return json_decode( html_entity_decode( $m[1] ?? '{}', ENT_QUOTES ), true ) ?: [];
+}
+
+$html = render( [] );
+check( 'keine MAC-Adresse im gerenderten Markup', macs( $html ), [] );
+
+$defs = payload( $html )['DEFS'] ?? [];
+check( 'der Innenmodul-Chart traegt die Referenz statt der MAC',
+    array_values( array_filter( array_column( $defs, 'moduleId' ) ) ),
+    [ 'in-gast', 'in-gast' ] );
+check( 'die Stationscharts filtern weiter ueber kein Modul',
+    array_column( array_slice( $defs, 0, 5 ), 'moduleId' ),
+    [ '', '', '', '', '' ] );
+
+// ── Und das Skript, das diesen Block liest ───────────────────────────────
+// Kommentarzeilen zaehlen nicht mit.
+$js = (string) preg_replace( '/^\s*\/\/.*$/m', '',
+    (string) file_get_contents( $PLUGIN . 'assets/js/history-boot.js' ) );
+check( 'history-boot.js kennt keine module_id mehr',
+    str_contains( $js, 'module_id' ), false );
+check( 'es fragt die Jahresreihen mit der Referenz an',
+    str_contains( $js, '&module_ref=' ), true );
+
 echo str_repeat( '-', 70 ) . "\n";
 echo $fail ? "$fail fehlgeschlagen\n\n" : "alles bestanden\n\n";
 exit( $fail ? 1 : 0 );
