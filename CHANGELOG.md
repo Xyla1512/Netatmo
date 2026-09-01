@@ -2,6 +2,38 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [Unreleased]
+
+Merged and waiting for the release it will ship in. Nothing here is published yet.
+
+### Changed
+
+- **The modules' MAC addresses are gone from the public page.** A `module_id` in this plugin is the MAC address of a Netatmo module, and it used to be written into every page that carries `[naws_live]` or `[naws_history]`: in the JSON data block as `MODULE4_INFO.id`, on every chart configuration, in the `data-module4`, `data-indoor` and `data-outdoor` attributes — and it came back out with every `admin-ajax.php` call the dashboard made. The reply carried it too: `naws_get_latest` passed each reading's whole database row to the browser, which included the row's `station_id`, the base station's MAC, on all thirty-odd readings per cycle.
+
+  What travels now is a public reference: `outdoor`, `indoor`, `wind`, `rain` and `in-<slug>` per indoor module, built by `NAWS_Helpers::module_ref_map()` and resolved back on the server. The four fixed names are the vocabulary `[naws_value module="outdoor"]` has always spoken — `NAWS_Calc::module_id()` reads that table from `NAWS_Helpers` now instead of keeping a second copy of it, which is a duplication this plugin has already had to repair twice.
+
+  `naws_get_chart_data`, `naws_get_daily_data`, `naws_get_history_data` and `naws_get_latest` still accept a `module_id`, so a page cached from before the update and the documented `NAWS_Chart` JavaScript interface both keep working; an uppercase MAC resolves too, which it did not always do. A reference that matches no module is now refused with a 400 rather than passed on as an empty filter — an empty filter means *every* module, so the request would otherwise have been answered with the whole station's readings.
+
+  A reading in the reply is assembled field by field now instead of being merged from its database row, so the primary key, the insert timestamp and the `station_id` stay on the server. `tests/test-module-refs.php`, `tests/test-live-render.php` and `tests/test-ajax-module-ref.php` are new; the render tests fail on any MAC address appearing in the markup at all, whatever puts it there.
+
+### Fixed
+
+- **Three sentences in the chart script were German whatever language WordPress was set to.** `assets/js/frontend.js` carried them as literals — the chart that failed to render, the period with no readings, the request that came back with an error code. Moving the interface to gettext in 1.9.9 did not reach them, because they were never in the PHP: an installation running in English or Norwegian showed them in German, and no setting changed that.
+
+  They travel with the `nawsFrontend` config the script already receives on exactly the pages that load it. The HTTP status is substituted into a placeholder rather than appended, because where the number belongs in the sentence is a question of language: German puts it in brackets at the end, another language may not.
+
+  The script keeps English defaults for the case where the payload does not arrive — a cached inline script from before this change, or the DOM fallback that runs when `wp_add_inline_script` was bypassed. They are filled in per key, so a payload carrying two of the three does not lose the third.
+
+  `tests/test-frontend-i18n.php` is new and checks the mechanism rather than these three sentences: any string literal in `frontend.js` carrying a German umlaut fails it, so a fourth one added later fails too. It reads the shipped `.mo` files as well, because a translation that quietly failed to travel looks exactly like a translation that was never written.
+
+- **`[naws_table]` printed a MAC address when it did not know the module.** The module column fell back to the `module_id` for a reading whose module is no longer in the modules table. Readings outlive the module they came from — removing a module leaves its rows in the database — so this was reachable, not theoretical. The cell stays empty now, the way the chart legend does.
+
+- **A chart request without `group_by` wrote a PHP notice into the log.** `naws_get_chart_data` and `naws_get_daily_data` checked `$_POST['group_by'] ?? 'raw'` against the list of allowed values and then read `$_POST['group_by']` again without the fallback — so a request that left the parameter out passed the check and tripped over the second read. The plugin's own scripts always send it; anything else calling the endpoint did not have to.
+
+- **Fourteen German and thirteen Norwegian strings had lost their translation in 1.9.9.** The table columns from 1.9.8 — time, module, parameter, average — and the card-order screen came through the migration with an empty `msgstr`, and three more had their English text reworded in 1.9.8, which makes them new strings that no old translation matches. A German reader saw English column headings in a German interface. The texts were taken from the 1.9.8 language files rather than written afresh, so nothing changed wording that a reader had already got used to. German is complete again; Norwegian is at 612 of 652, the rest being the weekday, month and weather-condition names that first became translatable in 1.9.9.
+
+  The tooling that builds the catalogue lives in the repository now, in `docs/i18n/` — it was outside it, which is why the gap was invisible. `merge_po.php` is new and does what `msgmerge` would: it carries the `.pot` into a translation, and it names what is still open and what fell away.
+
 ## [1.9.9]
 
 Breaking, and marked as such — the way 1.9.7 marked the REST API key.
@@ -35,6 +67,12 @@ Breaking, and marked as such — the way 1.9.7 marked the REST API key.
 
 ## [1.9.8]
 
+### Changed
+
+- **`Plugin URI` points at the plugin's own page now.** It named `www.frank-neumann.de/netatmo-wetter-plugin/`, which is a weather page carrying a short section about the plugin — the readings for Leipzig, a six-day forecast, a button. The plugin's actual home is `netatmo.frank-neumann.de`: what it does, how to install it, the shortcodes, the roadmap and a live dashboard to look at before installing anything. That is what the header is for, and it is what the "Visit plugin site" link in the plugins list opens.
+
+  The directory page is deliberately not what it points to. WordPress.org asks that `Plugin URI` name the plugin's own site rather than its listing, and a header that points back at the directory tells a reader nothing they did not already have.
+
 ### Fixed
 - **`[naws_table]` never worked.** The shortcode has been registered since 1.0, it is documented in the backend reference with all six attributes, the readme lists it among the ten shortcodes, and `frontend.css` carries the `.naws-table-wrap` and `.naws-table` rules it was styled with. The one thing missing was the file it includes: `templates/table.php` was never committed — `git log --all` has no record of it. Anyone who used the shortcode got an empty string back and two `include(): Failed to open stream` warnings in the log.
 
@@ -58,17 +96,6 @@ Breaking, and marked as such — the way 1.9.7 marked the REST API key.
 
 - **The reference described a grouping the code has outgrown.** `year` is a valid bucket and was not listed, and any value that is not a bucket lists single readings rather than failing — worth saying, because that is how you ask for ungrouped output. The readme named four of the six attributes.
 
-## [Unreleased]
-
-Merged and waiting for the release it will ship in. Nothing here is published yet.
-
-### Changed
-
-- **`Plugin URI` points at the plugin's own page now.** It named `www.frank-neumann.de/netatmo-wetter-plugin/`, which is a weather page carrying a short section about the plugin — the readings for Leipzig, a six-day forecast, a button. The plugin's actual home is `netatmo.frank-neumann.de`: what it does, how to install it, the shortcodes, the roadmap and a live dashboard to look at before installing anything. That is what the header is for, and it is what the "Visit plugin site" link in the plugins list opens.
-
-  The directory page is deliberately not what it points to. WordPress.org asks that `Plugin URI` name the plugin's own site rather than its listing, and a header that points back at the directory tells a reader nothing they did not already have.
-### Fixed
-
 - **A schema change would never have reached anyone who updates through WordPress.** `NAWS_Database::install()` — which carries `dbDelta()` and the column migrations in `maybe_migrate()` — hung on `register_activation_hook()` alone, and that hook does not fire on an update. WordPress reactivates the plugin silently and says so in as many words in core: *"If a plugin is silently activated (such as during an update), this hook does not fire."*
 
   Until 1.9.7 that was almost harmless, because the plugin was installed by hand from a downloaded archive and everyone who did that also activated it. From 1.9.7 on it is in the directory, and the update button is the ordinary way to get a new version — which is precisely the path that skipped the migration. The next time `NAWS_DB_VERSION` moves, existing installations would have run new code against an old schema: a query against a column that is not there yet, failing loudly in one place and quietly returning nothing in another.
@@ -80,6 +107,7 @@ Merged and waiting for the release it will ship in. Nothing here is published ye
   Two simultaneous requests can both enter the branch. That is accepted rather than locked: `dbDelta()` and `maybe_migrate()` are repeatable, and a lock that got stuck would block the migration for good, which is the worse failure.
 
   The cron half of this was never at risk. The watchdog in `init()` already reschedules a missing or stale event on its own, so `NAWS_Cron::schedule()` not running on an update changed nothing.
+
 ## [1.9.7] – 2026-08-29
 
 The first release published through the WordPress.org plugin directory. Everything the two `1.9.7-beta` pre-releases carried is in here, plus one permission check written after `beta.2` was cut. Anyone testing a beta is offered this as an ordinary update — `version_compare()` orders `1.9.7-beta.2` below `1.9.7`, so nobody is left stranded on a pre-release.
