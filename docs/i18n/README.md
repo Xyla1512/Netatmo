@@ -29,12 +29,37 @@ auf diesem Rechner), `merge_po.php` ersetzt `msgmerge`, `make_mo.php`
 ersetzt `msgfmt`. `merge_po.php` sagt am Ende, was offen und was weggefallen
 ist — die Liste ist die eigentliche Ausgabe, nicht nur ein Protokoll.
 
-Stand zuletzt: **de_DE vollständig**, **nb_NO 612 von 652**. Die vierzig
-offenen sind die Wochentags-, Monats- und Wetterlagennamen, die erst mit
-1.9.9 übersetzbar wurden und nie eine norwegische Fassung hatten.
+Stand 01.09.2026: **de_DE und nb_NO je 652 von 652.**
 
-Drei Dinge, an denen es schiefgeht:
+### Was von translate.wordpress.org zurückkommt
 
+Seit 1.9.9 übersetzen auch andere. Was dort entsteht, erreicht die Nutzer
+über die Sprachpakete — aber **nicht** die mitgelieferte `.mo`, und die ist
+es, die eine Installation liest, bis ihr Paket da ist. Deshalb regelmäßig
+zurückholen:
+
+```bash
+curl -o /tmp/nb.po 'https://translate.wordpress.org/projects/wp-plugins/xtx-integration-for-netatmo/stable/nb/default/export-translations/?format=po'
+php docs/i18n/catalog/pull_glotpress.php nb_NO /tmp/nb.po
+php docs/i18n/catalog/make_mo.php docs/i18n/catalog/xtx-integration-for-netatmo-nb_NO.po languages/xtx-integration-for-netatmo-nb_NO.mo
+```
+
+Gefüllt werden nur **leere** `msgstr`. Wo beide Seiten etwas stehen haben und
+es sich unterscheidet, meldet das Werkzeug den Unterschied und ändert nichts:
+welche Fassung die richtige ist, entscheidet ein Mensch. Eine stille
+Übernahme ist genau der Weg, auf dem am 31.08. **199 norwegische Sätze in den
+deutschen Katalog** gerieten.
+
+### Vier Dinge, an denen es schiefgeht
+
+- **Der `.mo`-Kopf.** `MO::import_from_reader()` in WordPress prüft, ob die
+  Adresse der Hashtabelle direkt hinter der zweiten Indextabelle liegt
+  (`hash_addr - translations_addr === total * 8`). Stimmt das nicht, gibt es
+  ein **stilles `false`** — kein Log, keine Warnung, nur englischer Text.
+  1.9.9 hat auf diese Weise zwei `.mo` ausgeliefert, die nie gelesen wurden.
+  `tests/test-mo-files.php` rechnet seither mit **derselben** Formel nach;
+  einen Katalog nie mit einem eigenen, nachsichtigen Leser prüfen — genau der
+  verdeckt so etwas.
 - **Ein leeres `msgstr` ist kein Mangel.** `make_mo.php` lässt solche
   Einträge weg, und gettext antwortet dann mit dem englischen Original.
   Ein leerer Eintrag *in* der `.mo` würde den Text durch nichts ersetzen.
@@ -55,49 +80,53 @@ auf; das Plugin lädt deshalb beides, Paket zuerst.
 Der Hinweis „Dieses Plugin wurde noch nicht auf Deutsch übersetzt" auf
 wordpress.org ist **nicht** über SVN zu beheben. Diese Übersetzungen
 entstehen ausschließlich auf translate.wordpress.org (GlotPress), und der
-Import braucht Franks eigenen wordpress.org-Login. Ohne PTE-Rechte für das
-eigene Plugin landen die Beiträge auf „Waiting", bis ein deutscher Editor
-sie freigibt.
+Import braucht Franks eigenen wordpress.org-Login. Er ist **PTE für Deutsch
+und Englisch**, seine Importe sind damit sofort „current".
 
-| Datei | Projekt | Strings |
-|---|---|---|
-| `xtx-integration-for-netatmo-de_DE-readme.po` | Stable Readme (latest release) → German | 106 von 273 |
-| `code-import-de_DE.po` | Stable (latest release) → German | historisch, siehe unten |
+**Stand 01.09.2026: das deutsche Readme ist zu 281 von 281 übersetzt**, die
+Changelog-Zeilen eingeschlossen. `readme-de.po` ist der **aktuelle Export**
+und dient als Vergleichsstand für das nächste Mal. Eine eigene Importdatei
+liegt nicht mehr hier: sie war für die 106 Einträge gedacht, die damals
+fehlten, und eine veraltete Importdatei ist eine Falle.
 
-Die 167 Changelog-Einträge des Readme sind bewusst nicht übersetzt:
-GlotPress führt sie selbst als `gp-priority: low`, sie machen zwei Drittel
-der Arbeit aus, und mit jedem Release kommen neue dazu. Nicht übersetzte
-Strings fallen auf das englische Original zurück.
+`code-de.po` und `code-import-de_DE.po` sind **überholt**. Sie entstanden,
+als das Code-Projekt auf GlotPress aus sechs Strings bestand — Plugin-Header
+und ein Satz aus dem WordPress-Kern. Seit 1.9.9 stehen dort über 650, und
+die deutsche Fassung davon liegt in `catalog/`. `build-code.php` gehört zu
+dieser alten Rechnung und ist aus demselben Grund nur noch Beleg.
 
-`code-import-de_DE.po` ist **überholt**. Es entstand, als das Code-Projekt
-auf GlotPress aus sechs Strings bestand — Plugin-Header und ein Satz aus
-dem WordPress-Kern. Seit 1.9.9 stehen dort über 650, und die deutsche
-Fassung davon liegt fertig in `catalog/`. `build-code.php` gehört zu dieser
-alten Rechnung und ist aus demselben Grund nur noch Beleg.
+### Nach einem Release
 
-Neu erzeugen:
+Das Projekt heißt „Stable Readme (*latest release*)": ändert sich
+`readme.txt`, sind die geänderten Abschnitte **neue** Strings und brauchen
+eine Übersetzung, unveränderte behalten ihre.
 
 ```bash
 cd docs/i18n/glotpress
-curl -o readme-de.po 'https://translate.wordpress.org/projects/wp-plugins/xtx-integration-for-netatmo/stable-readme/de/default/export-translations/?format=po'
-php dump.php readme-de.po    # die 106 Originale zum Übersetzen auflisten
-php build.php                # de.php + Export -> readme-.po, mit Prüfungen
+curl -o neu.po 'https://translate.wordpress.org/projects/wp-plugins/xtx-integration-for-netatmo/stable-readme/de/default/export-translations/?format=po'
+diff <(grep '^msgid' readme-de.po) <(grep '^msgid' neu.po)   # was ist dazugekommen
+php dump.php neu.po          # die offenen Originale auflisten
+php build.php                # de.php + Export -> Importdatei, mit Prüfungen
 php verify.php               # jede msgid gegen den Export
 ```
 
-`de.php` trägt die Übersetzungen, nummeriert wie die Ausgabe von `dump.php`.
-
 **Die msgid wird nie neu getippt, sondern immer aus dem Export übernommen.**
 GlotPress ordnet einen Import über sie zu; weicht ein Zeichen ab, landet der
-Eintrag als unbekannter String im Nichts — **ohne Fehlermeldung**. Genau
-dagegen prüfen `build.php` (Stichproben gegen eine Verschiebung, HTML-Tags,
-Linkziele, Shortcodes, 150-Zeichen-Grenze) und `verify.php` (jede erzeugte
-`msgid` muss buchstabengleich im Export stehen).
+Eintrag als unbekannter String im Nichts — **ohne Fehlermeldung**. Genau so
+ist die `[naws_table]`-Zeile aus der alten Vorlage ins Leere gelaufen,
+nachdem 1.9.8 ihren englischen Text umformuliert hatte.
 
 **Anrede:** `de_DE` (Standard) wird geduzt. Die Sie-Form ist ein eigenes
 Locale (`de_DE_formal`) mit eigenem Satz; diese Dateien passen dort nicht
 hinein.
 
-**Nach einem Release** heißt das Projekt weiter „Stable Readme (*latest
-release*)": geänderte `readme.txt`-Abschnitte sind neue Strings und
-brauchen eine Übersetzung, unveränderte behalten ihre.
+**Sprachpakete werden nicht sofort gebaut.** Ob WP.org den neuen Stand schon
+hat, sagt:
+
+```bash
+curl -s "https://api.wordpress.org/translations/plugins/1.0/?slug=xtx-integration-for-netatmo&version=1.9.9"
+```
+
+Das `updated` je Locale ist das Revisionsdatum, aus dem das Paket gebaut
+wurde — steht dort noch ein älteres Datum als das eigene `PO-Revision-Date`,
+läuft der Bau noch.

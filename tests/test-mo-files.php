@@ -129,6 +129,34 @@ foreach ( $de as $k => $t ) {
 }
 check( 'de_DE: keine norwegischen Sonderzeichen', $nordisch, [] );
 
+// Ein Platzhalter, der beim Uebersetzen verlorengeht, wird zur Luecke im
+// Satz — aus "(HTTP %s)" wird "(HTTP)" und die Zahl fehlt ersatzlos. Die
+// Reihenfolge darf sich aendern, dafuer gibt es %1$s und %2$s; die Menge
+// nicht. Geprueft wird beides, was ausgeliefert wird.
+/** Die Platzhalter einer Zeichenkette, als Menge. */
+function platzhalter( string $s ): array {
+    preg_match_all( '/%(?:\d+\$)?[sd]/', $s, $m );
+    $p = array_map( fn( $x ) => preg_replace( '/\d+\$/', '', $x ), $m[0] );
+    sort( $p );
+    return $p;
+}
+
+foreach ( [ 'de_DE', 'nb_NO' ] as $locale ) {
+    $katalog = mo_lesen( $wurzel . '/languages/xtx-integration-for-netatmo-' . $locale . '.mo' );
+    $verloren = [];
+    foreach ( $katalog as $k => $t ) {
+        if ( '' === $k || '' === $t ) {
+            continue;
+        }
+        // Der Schluessel kann einen Kontext tragen; der zaehlt nicht mit.
+        $msgid = str_contains( $k, "\x04" ) ? substr( $k, strpos( $k, "\x04" ) + 1 ) : $k;
+        if ( platzhalter( $msgid ) !== platzhalter( $t ) ) {
+            $verloren[] = $msgid;
+        }
+    }
+    check( "$locale: jede Uebersetzung behaelt ihre Platzhalter", $verloren, [] );
+}
+
 echo "\n" . str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );

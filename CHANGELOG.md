@@ -8,6 +8,10 @@ Merged and waiting for the release it will ship in. Nothing here is published ye
 
 ### Changed
 
+- **The Norwegian that ships with the plugin is complete again.** Forty strings — the weekday, month and weather-condition names that first became translatable in 1.9.9 — were translated on translate.wordpress.org after the release and existed only there. A language pack carries them to installations that have one, but not to the `.mo` the plugin ships, and that file is what an installation reads until its pack arrives. Both catalogues now stand at 652 of 652.
+
+  `docs/i18n/catalog/pull_glotpress.php` is new and does that round trip. It fills empty translations only: where both sides have a text and they differ it reports the difference and changes nothing, because a silent merge is exactly how 199 Norwegian sentences ended up in the German catalogue on wordpress.org.
+
 - **The modules' MAC addresses are gone from the public page.** A `module_id` in this plugin is the MAC address of a Netatmo module, and it used to be written into every page that carries `[naws_live]` or `[naws_history]`: in the JSON data block as `MODULE4_INFO.id`, on every chart configuration, in the `data-module4`, `data-indoor` and `data-outdoor` attributes — and it came back out with every `admin-ajax.php` call the dashboard made. The reply carried it too: `naws_get_latest` passed each reading's whole database row to the browser, which included the row's `station_id`, the base station's MAC, on all thirty-odd readings per cycle.
 
   What travels now is a public reference: `outdoor`, `indoor`, `wind`, `rain` and `in-<slug>` per indoor module, built by `NAWS_Helpers::module_ref_map()` and resolved back on the server. The four fixed names are the vocabulary `[naws_value module="outdoor"]` has always spoken — `NAWS_Calc::module_id()` reads that table from `NAWS_Helpers` now instead of keeping a second copy of it, which is a duplication this plugin has already had to repair twice.

@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Plugins - XTX Integration for Netatmo - Stable Readme (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: +0000\n"
+"PO-Revision-Date: 2026-09-01 15:30:20+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,1260 +14,1300 @@ msgstr ""
 #. Short description.
 #, gp-priority: high
 msgid "Connects to the Netatmo API, stores all sensor data locally and displays live dashboards, animated charts, history and weather forecasts."
-msgstr ""
+msgstr "Verbindet sich mit der Netatmo-API, speichert alle Sensordaten lokal und zeigt Live-Dashboards, animierte Diagramme, Verlauf und Vorhersagen."
 
 #. Plugin name.
 #, gp-priority: high
 msgid "XTX Integration for Netatmo"
-msgstr ""
+msgstr "XTX Integration for Netatmo"
+
+#. Found in description list item.
+msgid "<code>[naws_table]</code> – Readings as a table over a period, grouped by hour, day, week, month or year (<code>module_id</code>, <code>parameters</code>, <code>period</code>, <code>limit</code>, <code>group_by</code>, <code>title</code>)"
+msgstr "<code>[naws_table]</code> – Messwerte als Tabelle über einen Zeitraum, gruppiert nach Stunde, Tag, Woche, Monat oder Jahr (<code>module_id</code>, <code>parameters</code>, <code>period</code>, <code>limit</code>, <code>group_by</code>, <code>title</code>)"
 
 #. Found in faq paragraph.
 msgid "Yes. Every endpoint is read-only, rate-limited, and requires an API key generated in the admin panel. The key is accepted in the X-NAWS-Key header only — never as a query parameter, so it cannot end up in access logs, the Referer header, browser history or a proxy along the way."
-msgstr ""
+msgstr "Ja. Jeder Endpunkt ist nur lesend, ratenbegrenzt und verlangt einen API-Schlüssel, den du im Backend erzeugst. Der Schlüssel wird ausschließlich im Header X-NAWS-Key angenommen — nie als Query-Parameter, damit er nicht in Zugriffsprotokollen, im Referer-Header, im Browserverlauf oder in einem Proxy dazwischen landet."
 
 #. Found in description list item.
 msgid "<code>[naws_weather_icon]</code> – Just the animated icon for the current weather state (<code>size</code>); renders nothing when the state is unknown"
-msgstr ""
+msgstr "<code>[naws_weather_icon]</code> – Nur das animierte Symbol für den aktuellen Wetterzustand (<code>size</code>); gibt nichts aus, wenn der Zustand unbekannt ist"
 
 #. Found in description list item.
 msgid "<code>[naws_weather_widget]</code> – Compact forecast widget for a sidebar (<code>days</code> 3 or 5, <code>width</code> 250–500)"
-msgstr ""
-
-#. Found in description list item.
-msgid "<code>[naws_table]</code> – Readings as a table over a period, grouped by hour or day (<code>period</code>, <code>group_by</code>, <code>limit</code>, <code>parameters</code>)"
-msgstr ""
+msgstr "<code>[naws_weather_widget]</code> – Kompaktes Vorhersage-Widget für eine Seitenleiste (<code>days</code> 3 oder 5, <code>width</code> 250–500)"
 
 #. Found in description list item.
 msgid "<code>[naws_calc]</code> – Single computed value (dew point, felt temperature, sunrise, moon phase, …); full list on the Shortcodes page in the backend"
-msgstr ""
+msgstr "<code>[naws_calc]</code> – Einzelner berechneter Wert (Taupunkt, gefühlte Temperatur, Sonnenaufgang, Mondphase, …); vollständige Liste auf der Shortcode-Seite im Backend"
 
 #. Found in description list item.
 msgid "<code>[naws_current]</code> – Current readings of one or all modules as tiles or a list (<code>module_id</code>, <code>parameters</code>, <code>layout</code>, <code>title</code>)"
-msgstr ""
+msgstr "<code>[naws_current]</code> – Aktuelle Messwerte eines oder aller Module als Kacheln oder Liste (<code>module_id</code>, <code>parameters</code>, <code>layout</code>, <code>title</code>)"
 
 #. Found in description list item.
 msgid "<strong>10 Shortcodes</strong> – Dashboard, current readings, infobar, single value, computed value, history charts, forecast, table, widget, weather icon"
-msgstr ""
+msgstr "<strong>10 Shortcodes</strong> – Dashboard, aktuelle Messwerte, Infoleiste, Einzelwert, berechneter Wert, Verlaufsdiagramme, Vorhersage, Tabelle, Widget, Wettersymbol"
 
 #. Found in faq paragraph.
 msgid "Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Europe). Both are free and require no API key."
-msgstr ""
+msgstr "Open-Meteo (weltweit, Standard) und Yr.no / MET Norway (auf Nordeuropa optimiert). Beide sind kostenlos und brauchen keinen API-Schlüssel."
 
 #. Found in faq paragraph.
 msgid "Yes. The Export/Import feature lets you download weather data, module configs and all settings as JSON. Ideal for migrating to a new WordPress installation."
-msgstr ""
+msgstr "Ja. Über Export/Import lädst du Wetterdaten, Modulkonfiguration und alle Einstellungen als JSON herunter. Ideal für den Umzug auf eine neue WordPress-Installation."
 
 #. Found in faq paragraph.
 msgid "Yes. The Appearance page offers 130+ configurable colors with live preview, 4 icon sets, per-sensor colors, chart theming and year comparison palettes."
-msgstr ""
+msgstr "Ja. Die Darstellungsseite bietet über 130 einstellbare Farben mit Live-Vorschau, 4 Symbolsätze, Farben je Sensor, Diagramm-Themes und Paletten für den Jahresvergleich."
 
 #. Found in faq paragraph.
 msgid "All sensitive data (OAuth tokens, client ID, client secret, API keys) is encrypted with AES-256-GCM before being stored in the database."
-msgstr ""
+msgstr "Alle sensiblen Daten (OAuth-Token, Client-ID, Client-Secret, API-Schlüssel) werden vor dem Speichern in der Datenbank mit AES-256-GCM verschlüsselt."
 
 #. Found in faq paragraph.
 msgid "Yes. The plugin includes a chunk-based historical importer that fetches data from the Netatmo getmeasure API without hitting rate limits."
-msgstr ""
+msgstr "Ja. Das Plugin bringt einen abschnittsweise arbeitenden Importer für historische Daten mit, der die getmeasure-API von Netatmo abfragt, ohne an die Ratenbegrenzung zu stoßen."
 
 #. Found in faq paragraph.
 msgid "Netatmo sensors transmit every 5 minutes. The plugin sync interval is configurable (5–1440 minutes). Night mode reduces polling between 23:00–06:00."
-msgstr ""
+msgstr "Netatmo-Sensoren senden alle 5 Minuten. Das Abrufintervall des Plugins ist einstellbar (5–1440 Minuten). Der Nachtmodus reduziert die Abfragen zwischen 23:00 und 06:00 Uhr."
 
 #. Found in faq paragraph.
 msgid "Visit <a href=\"https://dev.netatmo.com\">dev.netatmo.com</a>, log in with your Netatmo account, create a new application and copy the Client ID and Client Secret."
-msgstr ""
+msgstr "Öffne <a href=\"https://dev.netatmo.com\">dev.netatmo.com</a>, melde dich mit deinem Netatmo-Konto an, erstelle eine neue Anwendung und kopiere Client-ID und Client-Secret."
 
 #. Found in faq header.
 msgid "Which forecast providers are supported?"
-msgstr ""
+msgstr "Welche Vorhersage-Anbieter werden unterstützt?"
 
 #. Found in faq header.
 msgid "Can I back up my weather data?"
-msgstr ""
+msgstr "Kann ich meine Wetterdaten sichern?"
 
 #. Found in faq header.
 msgid "Can I customize the appearance?"
-msgstr ""
+msgstr "Kann ich das Aussehen anpassen?"
 
 #. Found in faq header.
 msgid "Are my Netatmo credentials safe?"
-msgstr ""
+msgstr "Sind meine Netatmo-Zugangsdaten sicher?"
 
 #. Found in faq header.
 msgid "Is the REST API secure?"
-msgstr ""
+msgstr "Ist die REST-API sicher?"
 
 #. Found in faq header.
 msgid "Can I import historical data?"
-msgstr ""
+msgstr "Kann ich historische Daten importieren?"
 
 #. Found in faq header.
 msgid "How often does data update?"
-msgstr ""
+msgstr "Wie oft werden die Daten aktualisiert?"
 
 #. Found in faq header.
 msgid "How do I get Netatmo API credentials?"
-msgstr ""
+msgstr "Wie bekomme ich Netatmo-API-Zugangsdaten?"
 
 #. Found in installation list item.
 msgid "Data syncs automatically – add shortcodes to any page"
-msgstr ""
+msgstr "Die Daten werden ab jetzt automatisch abgeglichen – füge Shortcodes in eine beliebige Seite ein"
 
 #. Found in installation list item.
 msgid "Click \"Connect to Netatmo\" and authorize"
-msgstr ""
+msgstr "Klicke auf „Mit Netatmo verbinden“ und erteile die Berechtigung"
 
 #. Found in installation list item.
 msgid "Set the Redirect URI in your Netatmo app to: <code>https://yoursite.com/wp-admin/admin.php?page=naws-settings</code>"
-msgstr ""
+msgstr "Trage in deiner Netatmo-Anwendung als Redirect-URI ein: <code>https://yoursite.com/wp-admin/admin.php?page=naws-settings</code>"
 
 #. Found in installation list item.
 msgid "Enter your Client ID and Client Secret"
-msgstr ""
+msgstr "Trage Client-ID und Client-Secret ein"
 
 #. Found in installation list item.
 msgid "Create a Netatmo developer app at <a href=\"https://dev.netatmo.com\">dev.netatmo.com</a>"
-msgstr ""
+msgstr "Erstelle unter <a href=\"https://dev.netatmo.com\">dev.netatmo.com</a> eine Netatmo-Entwickleranwendung"
 
 #. Found in installation list item.
 msgid "Go to <strong>XTX Netatmo &gt; Settings</strong>"
-msgstr ""
+msgstr "Gehe zu <strong>XTX Netatmo &gt; Einstellungen</strong>"
 
 #. Found in installation list item.
 msgid "Activate the plugin in WordPress Admin &gt; Plugins"
-msgstr ""
+msgstr "Aktiviere das Plugin im WordPress-Adminbereich unter &gt; Plugins"
 
 #. Found in installation list item.
 msgid "Upload the <code>xtx-integration-for-netatmo</code> folder to <code>/wp-content/plugins/</code>"
-msgstr ""
+msgstr "Lade den Ordner <code>xtx-integration-for-netatmo</code> nach <code>/wp-content/plugins/</code> hoch"
 
 #. Found in description paragraph.
 msgid "No other third-party code is included. No library is loaded from a CDN; everything is served from your own installation. Libraries that ship with WordPress itself are used from WordPress and are not bundled."
-msgstr ""
+msgstr "Weiterer Fremdcode ist nicht enthalten. Keine Bibliothek wird von einem CDN geladen; alles kommt von deiner eigenen Installation. Bibliotheken, die WordPress selbst mitbringt, werden von WordPress bezogen und nicht mitgeliefert."
 
 #. Found in description paragraph.
 msgid "Two JavaScript libraries are bundled with this plugin, both under the MIT license, which is GPL-compatible. They ship in their minified distribution builds; the unminified source and the build tooling for each are available at the links below."
-msgstr ""
+msgstr "Diesem Plugin liegen zwei JavaScript-Bibliotheken bei, beide unter der MIT-Lizenz, die GPL-kompatibel ist. Sie werden als minifizierte Distributions-Builds ausgeliefert; der unminifizierte Quellcode und die Build-Werkzeuge sind jeweils über die Links unten erreichbar."
 
 #. Found in description paragraph.
 msgid "No personal user data (names, emails, IP addresses) is collected or transmitted by this plugin. All sensor data is stored exclusively in your local WordPress database."
-msgstr ""
+msgstr "Dieses Plugin erhebt und übermittelt keine personenbezogenen Daten (Namen, E-Mail-Adressen, IP-Adressen). Alle Sensordaten liegen ausschließlich in deiner lokalen WordPress-Datenbank."
 
 #. Found in description paragraph.
 msgid "This plugin connects to the following external services:"
-msgstr ""
+msgstr "Dieses Plugin verbindet sich mit den folgenden externen Diensten:"
 
 #. Found in description paragraph.
 msgid "<strong>XTX Integration for Netatmo</strong> connects your Netatmo hardware to WordPress. It reads all sensor data via the official Netatmo API, stores readings in your local database and displays them with beautiful live dashboards, animated charts and weather forecasts."
-msgstr ""
+msgstr "<strong>XTX Integration for Netatmo</strong> verbindet deine Netatmo-Hardware mit WordPress. Es liest alle Sensordaten über die offizielle Netatmo-API, speichert die Messwerte in deiner lokalen Datenbank und zeigt sie in ansehnlichen Live-Dashboards, animierten Diagrammen und Wettervorhersagen."
 
 #. Found in description list item.
 msgid "<strong>Used for:</strong> Time axis formatting in the charts. This is the bundled build, which includes date-fns (also MIT)."
-msgstr ""
+msgstr "<strong>Verwendet für:</strong> Formatierung der Zeitachse in den Diagrammen. Dies ist der gebündelte Build, der date-fns enthält (ebenfalls MIT)."
 
 #. Found in description list item.
 msgid "<strong>Source and build tools:</strong> <a href=\"https://github.com/chartjs/chartjs-adapter-date-fns\">https://github.com/chartjs/chartjs-adapter-date-fns</a> — the exact release bundled here is <a href=\"https://github.com/chartjs/chartjs-adapter-date-fns/releases/tag/v3.0.0\">v3.0.0</a>"
-msgstr ""
+msgstr "<strong>Quellcode und Build-Werkzeuge:</strong> <a href=\"https://github.com/chartjs/chartjs-adapter-date-fns\">https://github.com/chartjs/chartjs-adapter-date-fns</a> — mitgeliefert ist genau die Fassung <a href=\"https://github.com/chartjs/chartjs-adapter-date-fns/releases/tag/v3.0.0\">v3.0.0</a>"
 
 #. Found in description list item.
 msgid "<strong>File:</strong> <code>assets/vendor/chartjs-adapter-date-fns.bundle.min.js</code>"
-msgstr ""
+msgstr "<strong>Datei:</strong> <code>assets/vendor/chartjs-adapter-date-fns.bundle.min.js</code>"
 
 #. Found in description list item.
 msgid "<strong>Used for:</strong> All charts — 24h trend lines on the live dashboard and the year-over-year history charts"
-msgstr ""
+msgstr "<strong>Verwendet für:</strong> Alle Diagramme — die 24-Stunden-Verläufe auf dem Live-Dashboard und die Jahresvergleiche im Verlauf"
 
 #. Found in description list item.
 msgid "<strong>Source and build tools:</strong> <a href=\"https://github.com/chartjs/Chart.js\">https://github.com/chartjs/Chart.js</a> — the exact release bundled here is <a href=\"https://github.com/chartjs/Chart.js/releases/tag/v4.5.1\">v4.5.1</a>"
-msgstr ""
+msgstr "<strong>Quellcode und Build-Werkzeuge:</strong> <a href=\"https://github.com/chartjs/Chart.js\">https://github.com/chartjs/Chart.js</a> — mitgeliefert ist genau die Fassung <a href=\"https://github.com/chartjs/Chart.js/releases/tag/v4.5.1\">v4.5.1</a>"
 
 #. Found in description list item.
 msgid "<strong>Homepage:</strong> <a href=\"https://www.chartjs.org\">https://www.chartjs.org</a>"
-msgstr ""
+msgstr "<strong>Website:</strong> <a href=\"https://www.chartjs.org\">https://www.chartjs.org</a>"
 
 #. Found in description list item.
 msgid "<strong>License:</strong> MIT"
-msgstr ""
+msgstr "<strong>Lizenz:</strong> MIT"
 
 #. Found in description list item.
 msgid "<strong>File:</strong> <code>assets/vendor/chart.umd.min.js</code>"
-msgstr ""
+msgstr "<strong>Datei:</strong> <code>assets/vendor/chart.umd.min.js</code>"
 
 #. Found in description list item.
 msgid "<strong>Note:</strong> Free API, no API key needed. MET Norway's terms require every client to identify itself, so requests to this service carry a User-Agent naming the plugin, its version and your site address — that address is how MET Norway would reach you before restricting a misbehaving client. This is sent to api.met.no only, and only while Yr.no is the selected provider."
-msgstr ""
+msgstr "<strong>Hinweis:</strong> Kostenlose API, kein API-Schlüssel nötig. Die Nutzungsbedingungen von MET Norway verlangen, dass sich jeder Client zu erkennen gibt; Anfragen an diesen Dienst tragen deshalb einen User-Agent mit dem Namen des Plugins, seiner Version und deiner Seitenadresse — über diese Adresse würde MET Norway dich erreichen, bevor ein auffälliger Client eingeschränkt wird. Das geht ausschließlich an api.met.no und nur, solange Yr.no als Anbieter ausgewählt ist."
 
 #. Found in description list item.
 msgid "<strong>Terms:</strong> <a href=\"https://developer.yr.no/doc/TermsOfService/\">https://developer.yr.no/doc/TermsOfService/</a>"
-msgstr ""
+msgstr "<strong>Nutzungsbedingungen:</strong> <a href=\"https://developer.yr.no/doc/TermsOfService/\">https://developer.yr.no/doc/TermsOfService/</a>"
 
 #. Found in description list item.
 msgid "<strong>Privacy policy:</strong> <a href=\"https://www.met.no/en/About-us/privacy\">https://www.met.no/en/About-us/privacy</a>"
-msgstr ""
+msgstr "<strong>Datenschutzerklärung:</strong> <a href=\"https://www.met.no/en/About-us/privacy\">https://www.met.no/en/About-us/privacy</a>"
 
 #. Found in description list item.
 msgid "<strong>When:</strong> When the forecast shortcode is displayed and Yr.no is selected as provider (cached for 3 hours)"
-msgstr ""
+msgstr "<strong>Wann:</strong> Wenn der Vorhersage-Shortcode angezeigt wird und Yr.no als Anbieter ausgewählt ist (3 Stunden zwischengespeichert)"
 
 #. Found in description list item.
 msgid "<strong>Purpose:</strong> Fetch weather forecast data (optional provider, selectable in settings)"
-msgstr ""
+msgstr "<strong>Zweck:</strong> Wettervorhersagedaten abrufen (optionaler Anbieter, in den Einstellungen wählbar)"
 
 #. Found in description list item.
 msgid "<strong>Documentation:</strong> <a href=\"https://open-meteo.com/en/docs/geocoding-api\">https://open-meteo.com/en/docs/geocoding-api</a>"
-msgstr ""
+msgstr "<strong>Dokumentation:</strong> <a href=\"https://open-meteo.com/en/docs/geocoding-api\">https://open-meteo.com/en/docs/geocoding-api</a>"
 
 #. Found in description list item.
 msgid "<strong>When:</strong> In manual mode whenever no cached result exists (cached for 7 days). In automatic mode exactly once — the resolved name is stored in the plugin settings and never looked up again."
-msgstr ""
+msgstr "<strong>Wann:</strong> Im manuellen Modus immer dann, wenn kein zwischengespeichertes Ergebnis vorliegt (7 Tage zwischengespeichert). Im automatischen Modus genau einmal — der ermittelte Name wird in den Plugin-Einstellungen gespeichert und nie wieder nachgeschlagen."
 
 #. Found in description list item.
 msgid "<strong>Data sent:</strong> In \"manual\" location mode, the city name or postal code entered in the plugin settings. In \"automatic\" mode, the latitude and longitude of your weather station, rounded to two decimal places, in order to look up the name of the nearest place."
-msgstr ""
+msgstr "<strong>Übermittelte Daten:</strong> Im Standortmodus „manuell“ der Ortsname oder die Postleitzahl, die in den Plugin-Einstellungen eingetragen sind. Im Modus „automatisch“ Breiten- und Längengrad deiner Wetterstation, auf zwei Nachkommastellen gerundet, um den Namen des nächstgelegenen Ortes nachzuschlagen."
 
 #. Found in description list item.
 msgid "<strong>Purpose:</strong> Turn a place into coordinates, and coordinates into a place name for the forecast heading"
-msgstr ""
+msgstr "<strong>Zweck:</strong> Einen Ort in Koordinaten übersetzen und Koordinaten in einen Ortsnamen für die Überschrift der Vorhersage"
 
 #. Found in description list item.
 msgid "<strong>Note:</strong> Open-Meteo is a free, open-source weather API. No API key or registration required."
-msgstr ""
+msgstr "<strong>Hinweis:</strong> Open-Meteo ist eine kostenlose, quelloffene Wetter-API. Weder API-Schlüssel noch Registrierung sind nötig."
 
 #. Found in description list item.
 msgid "<strong>Terms and privacy:</strong> <a href=\"https://open-meteo.com/en/terms\">https://open-meteo.com/en/terms</a>"
-msgstr ""
+msgstr "<strong>Bedingungen und Datenschutz:</strong> <a href=\"https://open-meteo.com/en/terms\">https://open-meteo.com/en/terms</a>"
 
 #. Found in description list item.
 msgid "<strong>When:</strong> When the forecast shortcode is displayed (cached for 3 hours)"
-msgstr ""
+msgstr "<strong>Wann:</strong> Wenn der Vorhersage-Shortcode angezeigt wird (3 Stunden zwischengespeichert)"
 
 #. Found in description list item.
 msgid "<strong>Data sent:</strong> Latitude and longitude of your weather station"
-msgstr ""
+msgstr "<strong>Übermittelte Daten:</strong> Breiten- und Längengrad deiner Wetterstation"
 
 #. Found in description list item.
 msgid "<strong>Purpose:</strong> Fetch weather forecast data based on station coordinates (default provider)"
-msgstr ""
+msgstr "<strong>Zweck:</strong> Wettervorhersagedaten anhand der Stationskoordinaten abrufen (Standardanbieter)"
 
 #. Found in description list item.
 msgid "<strong>Privacy policy:</strong> <a href=\"https://legals.netatmo.com/?goto=privacy\">https://legals.netatmo.com/?goto=privacy</a>"
-msgstr ""
+msgstr "<strong>Datenschutzerklärung:</strong> <a href=\"https://legals.netatmo.com/?goto=privacy\">https://legals.netatmo.com/?goto=privacy</a>"
 
 #. Found in description list item.
 msgid "<strong>Terms of service:</strong> <a href=\"https://dev.netatmo.com/legal\">https://dev.netatmo.com/legal</a>"
-msgstr ""
+msgstr "<strong>Nutzungsbedingungen:</strong> <a href=\"https://dev.netatmo.com/legal\">https://dev.netatmo.com/legal</a>"
 
 #. Found in description list item.
 msgid "<strong>When:</strong> During initial authentication, on every automatic sync cycle, on every token refresh, and while a historical import is running"
-msgstr ""
+msgstr "<strong>Wann:</strong> Bei der ersten Anmeldung, bei jedem automatischen Abgleich, bei jeder Token-Erneuerung und während ein historischer Import läuft"
 
 #. Found in description list item.
 msgid "<strong>Data sent:</strong> The Client ID and Client Secret of the Netatmo application you created, in exchange for an access token; afterwards the access or refresh token with every request, plus the station and module IDs whose measurements are being requested"
-msgstr ""
+msgstr "<strong>Übermittelte Daten:</strong> Client-ID und Client-Secret der von dir erstellten Netatmo-Anwendung, im Austausch gegen ein Access-Token; danach mit jeder Anfrage das Access- oder Refresh-Token sowie die Stations- und Modul-IDs, deren Messwerte angefragt werden"
 
 #. Found in description list item.
 msgid "<strong>Purpose:</strong> Authenticate via OAuth2, fetch sensor readings and station data"
-msgstr ""
+msgstr "<strong>Zweck:</strong> Authentifizierung über OAuth2, Abruf von Sensormesswerten und Stationsdaten"
 
 #. Found in description list item.
 msgid "<code>[naws_forecast]</code> – Multi-day weather forecast"
-msgstr ""
+msgstr "<code>[naws_forecast]</code> – Mehrtägige Wettervorhersage"
 
 #. Found in description list item.
 msgid "<code>[naws_history]</code> – Year-over-year comparison charts (supports <code>year</code> parameter)"
-msgstr ""
+msgstr "<code>[naws_history]</code> – Jahresvergleichsdiagramme (unterstützt den Parameter <code>year</code>)"
 
 #. Found in description list item.
 msgid "<code>[naws_value]</code> – Single inline sensor value"
-msgstr ""
+msgstr "<code>[naws_value]</code> – Einzelner Sensorwert im Fließtext"
 
 #. Found in description list item.
 msgid "<code>[naws_infobar]</code> – Astronomy bar with sunrise, moon phase, felt temperature"
-msgstr ""
+msgstr "<code>[naws_infobar]</code> – Astronomieleiste mit Sonnenaufgang, Mondphase und gefühlter Temperatur"
 
 #. Found in description list item.
 msgid "<code>[naws_live]</code> – Live sensor tiles with 24h trend charts and forecast"
-msgstr ""
+msgstr "<code>[naws_live]</code> – Live-Sensorkacheln mit 24-Stunden-Verläufen und Vorhersage"
 
 #. Found in description list item.
 msgid "<strong>NAModule4</strong> – Additional Indoor (Temperature, Humidity, CO2)"
-msgstr ""
+msgstr "<strong>NAModule4</strong> – Zusätzliches Innenmodul (Temperatur, Luftfeuchte, CO2)"
 
 #. Found in description list item.
 msgid "<strong>NAModule3</strong> – Rain Gauge (Hourly, Daily, Rolling 24h)"
-msgstr ""
+msgstr "<strong>NAModule3</strong> – Regenmesser (stündlich, täglich, rollende 24 Stunden)"
 
 #. Found in description list item.
 msgid "<strong>NAModule2</strong> – Wind (Speed, Direction, Gusts)"
-msgstr ""
+msgstr "<strong>NAModule2</strong> – Wind (Geschwindigkeit, Richtung, Böen)"
 
 #. Found in description list item.
 msgid "<strong>NAModule1</strong> – Outdoor (Temperature, Humidity)"
-msgstr ""
+msgstr "<strong>NAModule1</strong> – Außenmodul (Temperatur, Luftfeuchte)"
 
 #. Found in description list item.
 msgid "<strong>NAMain</strong> – Base Station (Temperature, Humidity, CO2, Noise, Pressure)"
-msgstr ""
+msgstr "<strong>NAMain</strong> – Basisstation (Temperatur, Luftfeuchte, CO2, Lärm, Luftdruck)"
 
 #. Found in description list item.
 msgid "<strong>4 Icon Sets</strong> – Emoji, Outline, Filled, Minimal with per-sensor color control"
-msgstr ""
+msgstr "<strong>4 Symbolsätze</strong> – Emoji, Outline, Filled und Minimal, mit Farbsteuerung je Sensor"
 
 #. Found in description list item.
 msgid "<strong>130+ Configurable Colors</strong> – Full appearance customization with live preview"
-msgstr ""
+msgstr "<strong>Über 130 einstellbare Farben</strong> – Vollständige Anpassung der Darstellung mit Live-Vorschau"
 
 #. Found in description list item.
 msgid "<strong>Mobile-First Responsive</strong> – All views optimized for smartphones, tablets and desktops"
-msgstr ""
+msgstr "<strong>Mobile First und responsiv</strong> – Alle Ansichten für Smartphone, Tablet und Desktop optimiert"
 
 #. Found in description list item.
 msgid "<strong>Export / Import</strong> – Full backup and restore of weather data, modules and settings"
-msgstr ""
+msgstr "<strong>Export / Import</strong> – Vollständige Sicherung und Wiederherstellung von Wetterdaten, Modulen und Einstellungen"
 
 #. Found in description list item.
 msgid "<strong>Multilingual</strong> – Full German, English and Norwegian interface"
-msgstr ""
+msgstr "<strong>Mehrsprachig</strong> – Vollständige Oberfläche auf Deutsch, Englisch und Norwegisch"
 
 #. Found in description list item.
 msgid "<strong>Configurable Units</strong> – C/F, mm/inch, mbar/inHg/mmHg, km/h/m/s/mph/kn"
-msgstr ""
+msgstr "<strong>Einstellbare Einheiten</strong> – C/F, mm/Zoll, mbar/inHg/mmHg, km/h/m/s/mph/kn"
 
 #. Found in description list item.
 msgid "<strong>Encrypted Storage</strong> – All credentials (OAuth tokens, client secret, API keys) are AES-256-GCM encrypted at rest"
-msgstr ""
+msgstr "<strong>Verschlüsselte Speicherung</strong> – Alle Zugangsdaten (OAuth-Token, Client-Secret, API-Schlüssel) liegen AES-256-GCM-verschlüsselt in der Datenbank"
 
 #. Found in description list item.
 msgid "<strong>REST API</strong> – Read-only JSON API with key authentication and rate limiting for external tools (Google Charts, Grafana, etc.)"
-msgstr ""
+msgstr "<strong>REST-API</strong> – Nur lesende JSON-API mit Schlüssel-Authentifizierung und Ratenbegrenzung für externe Werkzeuge (Google Charts, Grafana usw.)"
 
 #. Found in description list item.
 msgid "<strong>Weather Forecast</strong> – 5-day forecast based on station coordinates via Open-Meteo or Yr.no"
-msgstr ""
+msgstr "<strong>Wettervorhersage</strong> – 5-Tage-Vorhersage anhand der Stationskoordinaten über Open-Meteo oder Yr.no"
 
 #. Found in description list item.
 msgid "<strong>Historical Charts</strong> – Year-over-year comparison for temperature, pressure and rainfall with interactive legend"
-msgstr ""
+msgstr "<strong>Verlaufsdiagramme</strong> – Jahresvergleich für Temperatur, Luftdruck und Niederschlag mit interaktiver Legende"
 
 #. Found in description list item.
 msgid "<strong>Derived Weather Data</strong> – Feels-like temperature, heat index, dew point, wind chill"
-msgstr ""
+msgstr "<strong>Abgeleitete Wetterdaten</strong> – Gefühlte Temperatur, Hitzeindex, Taupunkt, Windchill"
 
 #. Found in description list item.
 msgid "<strong>Astronomy</strong> – Sunrise/sunset, moon phase with illumination, next full moon"
-msgstr ""
+msgstr "<strong>Astronomie</strong> – Sonnenauf- und -untergang, Mondphase mit Beleuchtungsgrad, nächster Vollmond"
 
 #. Found in description list item.
 msgid "<strong>Live Dashboard</strong> – Real-time sensor cards with animated counters, 24h trend charts, pressure trend indicator, wind compass, CO2 air quality levels"
-msgstr ""
+msgstr "<strong>Live-Dashboard</strong> – Sensorkacheln in Echtzeit mit animierten Zählern, 24-Stunden-Verläufen, Luftdrucktendenz, Windkompass und CO2-Luftqualitätsstufen"
 
 #. Found in description list item.
 msgid "<strong>Full Netatmo Integration</strong> – OAuth2 authentication, automatic sync, all module types supported (Base, Outdoor, Wind, Rain, Indoor)"
-msgstr ""
+msgstr "<strong>Vollständige Netatmo-Integration</strong> – OAuth2-Anmeldung, automatischer Abgleich, alle Modultypen unterstützt (Basis, Außen, Wind, Regen, Innen)"
 
 #. Found in description header.
 msgid "chartjs-adapter-date-fns 3.0.0"
-msgstr ""
+msgstr "chartjs-adapter-date-fns 3.0.0"
 
 #. Found in description header.
 msgid "Chart.js 4.5.1"
-msgstr ""
+msgstr "Chart.js 4.5.1"
 
 #. Found in description header.
 msgid "Third-Party Libraries"
-msgstr ""
+msgstr "Bibliotheken von Drittanbietern"
 
 #. Found in description header.
 msgid "Yr.no / MET Norway API (api.met.no)"
-msgstr ""
+msgstr "Yr.no / MET Norway API (api.met.no)"
 
 #. Found in description header.
 msgid "Open-Meteo Geocoding API (geocoding-api.open-meteo.com)"
-msgstr ""
+msgstr "Open-Meteo Geocoding API (geocoding-api.open-meteo.com)"
 
 #. Found in description header.
 msgid "Open-Meteo API (api.open-meteo.com)"
-msgstr ""
+msgstr "Open-Meteo API (api.open-meteo.com)"
 
 #. Found in description header.
 msgid "Netatmo API (api.netatmo.com)"
-msgstr ""
+msgstr "Netatmo API (api.netatmo.com)"
 
 #. Found in description header.
 msgid "Privacy &amp; External Services"
-msgstr ""
+msgstr "Datenschutz &amp; externe Dienste"
 
 #. Found in description header.
 msgid "Shortcodes"
-msgstr ""
+msgstr "Shortcodes"
 
 #. Found in description header.
 msgid "Supported Modules"
-msgstr ""
+msgstr "Unterstützte Module"
 
 #. Found in description header.
 msgid "Key Features"
-msgstr ""
+msgstr "Wichtigste Funktionen"
 
 #. Screenshot description.
 msgid "Export / Import page for backups"
-msgstr ""
+msgstr "Export-/Import-Seite für Sicherungen"
 
 #. Screenshot description.
 msgid "Appearance page with live color preview"
-msgstr ""
+msgstr "Darstellungsseite mit Live-Vorschau der Farben"
 
 #. Screenshot description.
 msgid "Weather forecast widget"
-msgstr ""
+msgstr "Wettervorhersage-Widget"
 
 #. Screenshot description.
 msgid "REST API documentation in the admin panel"
-msgstr ""
+msgstr "REST-API-Dokumentation im Adminbereich"
 
 #. Screenshot description.
 msgid "Admin settings page with Netatmo connection status"
-msgstr ""
+msgstr "Admin-Einstellungsseite mit Status der Netatmo-Verbindung"
 
 #. Screenshot description.
 msgid "Year-over-year comparison charts for temperature and rainfall"
-msgstr ""
+msgstr "Jahresvergleichsdiagramme für Temperatur und Niederschlag"
 
 #. Screenshot description.
 msgid "Live dashboard with sensor cards and 24h trend charts"
-msgstr ""
+msgstr "Live-Dashboard mit Sensorkacheln und 24-Stunden-Verläufen"
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: the reference gave the grouping of <code>[naws_table]</code> as hour, day, week or month. <code>year</code> works as well, and any other value lists single readings instead of averages. The readme named four of the shortcode's six attributes."
+msgstr "Fix: Die Referenz gab die Gruppierung von <code>[naws_table]</code> als Stunde, Tag, Woche oder Monat an. <code>year</code> geht auch, und jeder andere Wert listet Einzelmesswerte statt Mittelwerte. Die readme nannte vier der sechs Angaben des Kurzbefehls."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: <code>[naws_table]</code> found nothing for the periods its own reference recommends. <code>period=\"24h\"</code> asked for a range that starts tomorrow — PHP does not read <code>24h</code> as a duration, and <code>strtotime('-24h')</code> returns a point in the future rather than yesterday. <code>365d</code> failed to parse altogether. The start of the range therefore sat behind its end and the query returned nothing, which looked exactly like a station with no readings. The shorthand is spelled out before it reaches the parser now, and a period that cannot be read falls back to the documented 24 hours instead of to 1970."
+msgstr "Fix: <code>[naws_table]</code> fand nichts für die Zeiträume, die seine eigene Referenz empfiehlt. <code>period=\"24h\"</code> fragte einen Zeitraum ab, der morgen beginnt — PHP liest <code>24h</code> nicht als Dauer, und <code>strtotime('-24h')</code> liefert einen Punkt in der Zukunft statt gestern. <code>365d</code> ließ sich überhaupt nicht lesen. Der Anfang des Zeitraums lag damit hinter seinem Ende, die Abfrage traf nichts, und das sah genauso aus wie eine Station ohne Messwerte. Die Kurzform wird jetzt ausgeschrieben, bevor sie den Parser erreicht, und ein Zeitraum, der sich nicht lesen lässt, fällt auf die dokumentierten 24 Stunden zurück statt auf 1970."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: <code>[naws_table]</code> listed the bookkeeping values Netatmo stores alongside the readings. <code>max_wind_angle</code> and <code>max_wind_str</code> have neither a name nor a unit in the plugin, so they appeared as a raw key next to a bare number. The table now asks only for parameters it can present; naming one explicitly in <code>parameters</code> still returns it. The daily minimum and maximum temperature and the hourly rain total were in the same position for the opposite reason — they are meaningful and were simply unnamed, so they have their labels now instead of being hidden."
+msgstr "Fix: <code>[naws_table]</code> listete die Verwaltungsgrößen auf, die Netatmo neben den Messwerten ablegt. <code>max_wind_angle</code> und <code>max_wind_str</code> haben im Plugin weder Namen noch Einheit und standen als roher Schlüssel neben einer nackten Zahl. Die Tabelle fragt jetzt nur noch ab, was sie darstellen kann; wer einen dieser Werte in <code>parameters</code> ausdrücklich anfordert, bekommt ihn weiterhin. Tagesminimum und -maximum der Temperatur und die Regensumme der letzten Stunde standen aus dem umgekehrten Grund dort — sie sind sinnvoll und waren bloß unbenannt, also tragen sie jetzt ihre Namen, statt versteckt zu werden."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: <code>[naws_table]</code> produced nothing at all. The shortcode was registered, documented in the reference and listed in this readme, and its stylesheet was written — but the template it includes, <code>templates/table.php</code>, had never been committed. Every use of the shortcode output an empty string and left two PHP warnings in the log. The template is there now, and a test fails if it goes missing again."
+msgstr "Fix: <code>[naws_table]</code> gab überhaupt nichts aus. Der Kurzbefehl war angemeldet, in der Referenz beschrieben und in dieser readme aufgeführt, und sein Stylesheet war geschrieben — nur die Datei, die er einbindet, <code>templates/table.php</code>, war nie committet worden. Jede Verwendung gab eine leere Zeichenkette zurück und hinterließ zwei PHP-Warnungen im Protokoll. Das Template ist jetzt da, und ein Test schlägt fehl, falls es wieder verschwindet."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: German and Norwegian ship with this release as a bridge. Language packs do not exist the moment an update goes out, and an installation that had a German interface yesterday should not find an English one today. A pack always takes precedence once it is built."
+msgstr "Neu: Deutsch und Norwegisch liegen dieser Version als Übergang bei. Im Moment einer Veröffentlichung gibt es noch keine Sprachpakete, und eine Installation, die gestern eine deutsche Oberfläche hatte, soll heute keine englische vorfinden. Sobald ein Paket gebaut ist, hat es Vorrang."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Changed: weekday, month and weather-condition names are translatable. They used to be two hardcoded lists, German and English, so a Norwegian reader got English with no way to change it."
+msgstr "Geändert: Wochentage, Monatsnamen und Wetterlagen sind übersetzbar. Sie standen bisher als zwei fest verdrahtete Listen im Code, Deutsch und Englisch — wer norwegisch las, bekam Englisch und konnte nichts daran ändern."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Changed: the interface translates through WordPress now instead of through the plugin's own language files. Until now translate.wordpress.org saw six strings of this plugin; it sees all 649. That means anyone can contribute a language without touching the code, and every language gets a proper WordPress language pack."
+msgstr "Geändert: Die Oberfläche übersetzt jetzt über WordPress statt über die plugin-eigenen Sprachdateien. Bisher sah translate.wordpress.org sechs Strings dieses Plugins; jetzt sind es alle 649. Damit kann jeder eine Sprache beitragen, ohne den Code anzufassen, und jede Sprache bekommt ein richtiges WordPress-Sprachpaket."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Changed: <strong>breaking</strong> — the plugin no longer has its own language setting; the WordPress locale decides. The old setting was a single site-wide value for the front end and the back end at once, and it read the site language rather than your own, so it could never give you a back end in one language and your visitors another. Site Language plus the per-user Language in your profile do exactly that, and for your theme and every other plugin at the same time. If you had the plugin set to a language other than your site's, set the site language instead — or your own user language, if you meant only your own screen."
+msgstr "Geändert: <strong>breaking</strong> — das Plugin hat keine eigene Spracheinstellung mehr, die WordPress-Locale entscheidet. Die alte Einstellung war ein einziger seitenweiter Wert für Frontend und Backend zusammen, und sie las die Sprache der Website statt deiner eigenen — sie konnte dir also nie ein Backend in einer Sprache und den Besuchern eine andere geben. Die Sprache der Website plus die Sprache in deinem Benutzerprofil tun genau das, und zwar für dein Theme und jedes andere Plugin gleich mit. Wenn du das Plugin auf eine andere Sprache als deine Website eingestellt hattest, stell stattdessen die Sprache der Website um — oder deine Benutzersprache, wenn du nur deinen eigenen Bildschirm gemeint hast."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Security: the REST API key page created and revoked keys on POST with a nonce check but no capability check of its own. The page is reachable only with <code>manage_options</code>, so nothing stood open — it is the pattern the review team warned about, and the check now runs before the nonce is spent."
-msgstr ""
+msgstr "Sicherheit: Die Seite für die REST-API-Schlüssel legte Schlüssel per POST an und widerrief sie mit Nonce-Prüfung, aber ohne eigene Capability-Prüfung. Die Seite ist nur mit <code>manage_options</code> erreichbar, es stand also nichts offen — es ist das Muster, vor dem das Review-Team gewarnt hat, und die Prüfung läuft jetzt, bevor die Nonce verbraucht wird."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: this readme advertised five shortcodes and documented six. Ten are registered; all ten are listed now."
-msgstr ""
+msgstr "Fix: Diese Readme warb mit fünf Shortcodes und dokumentierte sechs. Registriert sind zehn; alle zehn sind jetzt aufgeführt."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: an uppercase MAC address in <code>[naws_value module=\"...\"]</code> matched nothing, and an emptied degree-day limit field silently stored 0 degrees."
-msgstr ""
+msgstr "Fix: Eine MAC-Adresse in Großbuchstaben in <code>[naws_value module=\"...\"]</code> traf auf nichts, und ein geleertes Feld für die Gradtaggrenze speicherte stillschweigend 0 Grad."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: the next supermoon, the next lunar eclipse and the next full moon were dated in German whatever the site language was."
-msgstr ""
+msgstr "Fix: Der nächste Supermond, die nächste Mondfinsternis und der nächste Vollmond wurden auf Deutsch datiert, egal welche Sprache die Website hatte."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: the apparent temperature ignored wind chill, and the heat index was computed outside the range it is defined for."
-msgstr ""
+msgstr "Fix: Die gefühlte Temperatur ließ den Windchill außer Acht, und der Hitzeindex wurde außerhalb des Bereichs berechnet, für den er definiert ist."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: a server without the openssl extension died on the first read of a token, and an unauthenticated REST request could turn a 401 into a fatal 500."
-msgstr ""
+msgstr "Fix: Ein Server ohne die openssl-Erweiterung starb beim ersten Lesen eines Tokens, und eine nicht authentifizierte REST-Anfrage konnte aus einem 401 einen fatalen 500 machen."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: a five-second hiccup at Netatmo cost a whole ten-minute polling cycle. Requests are retried now, and an error without an error code is no longer handed back as an empty result."
-msgstr ""
+msgstr "Fix: Ein Aussetzer von fünf Sekunden bei Netatmo kostete einen kompletten zehnminütigen Abfragezyklus. Anfragen werden jetzt wiederholt, und ein Fehler ohne Fehlercode wird nicht mehr als leeres Ergebnis zurückgegeben."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Changed: the cron settings and the cron log now say what WP-Cron does not do. WP-Cron is triggered by page views, not by a clock, so on a quiet night no sync happens at all."
-msgstr ""
+msgstr "Geändert: Die Cron-Einstellungen und das Cron-Log sagen jetzt, was WP-Cron nicht leistet. WP-Cron wird von Seitenaufrufen ausgelöst, nicht von einer Uhr — in einer ruhigen Nacht findet also gar keine Synchronisation statt."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Changed: <strong>breaking</strong> — the REST API accepts its key in the <code>X-NAWS-Key</code> header only. A secret in the address line is written down by access logs, the Referer header, the browser history and every cache in between. Calls of the form <code>?api_key=...</code> now answer 401. If you use the API, switch before you update."
-msgstr ""
+msgstr "Geändert: <strong>breaking</strong> — die REST-API nimmt ihren Schlüssel nur noch im Header <code>X-NAWS-Key</code> entgegen. Ein Geheimnis in der Adresszeile schreiben Zugriffsprotokolle, der Referer-Header, der Browserverlauf und jeder Cache dazwischen mit. Aufrufe der Form <code>?api_key=...</code> antworten jetzt mit 401. Wenn du die API nutzt, stell um, bevor du aktualisierst."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: three settings for the degree-day limits: heating limit, room temperature and cooling limit."
-msgstr ""
+msgstr "Neu: drei Einstellungen für die Gradtaggrenzen: Heizgrenze, Raumtemperatur und Kühlgrenze."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: the header bar and the font are settings now. The font list offers only fonts your page already serves — the plugin loads no font file of its own."
-msgstr ""
+msgstr "Neu: Die Kopfleiste und die Schrift sind jetzt Einstellungen. Die Schriftliste bietet nur Schriften an, die deine Seite ohnehin ausliefert — das Plugin lädt keine eigene Schriftdatei."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: the admin shows the state of the encryption — a missing openssl extension, a missing aes-256-gcm, an <code>AUTH_KEY</code> still set to the sample value from wp-config-sample.php, and changed WordPress salts. A fingerprint of the key sits beside the ciphertext so a salt change is recognizable as one instead of looking like a broken plugin."
-msgstr ""
+msgstr "Neu: Das Backend zeigt den Zustand der Verschlüsselung — eine fehlende openssl-Erweiterung, ein fehlendes aes-256-gcm, einen <code>AUTH_KEY</code>, der noch auf dem Beispielwert aus wp-config-sample.php steht, und geänderte WordPress-Salts. Ein Fingerabdruck des Schlüssels liegt neben dem Chiffrat, damit eine geänderte Salt als solche erkennbar ist und nicht wie ein kaputtes Plugin aussieht."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: <code>[naws_calc]</code> — one shortcode for twenty-seven computed values in four kinds. Fourteen instant values (dew point, apparent temperature, wet-bulb temperature, heat index, thermal sensation, CO2 rating, wind compass, sunrise, sunset, day length, moon phase and illumination, next supermoon, next lunar eclipse), seven day classes with <code>mode=\"count|streak|max_streak\"</code> (ice days, frost days, summer days, hot days, tropical nights, heating and cooling days), five sums (heating and cooling degree days, growing degree days, the grassland temperature sum and the date the growing season started) and the Standardized Precipitation Index."
-msgstr ""
+msgstr "Neu: <code>[naws_calc]</code> — ein Shortcode für siebenundzwanzig berechnete Werte in vier Arten. Vierzehn Momentanwerte (Taupunkt, gefühlte Temperatur, Feuchtkugeltemperatur, Hitzeindex, Temperaturempfinden, CO2-Bewertung, Windrose, Sonnenaufgang, Sonnenuntergang, Tageslänge, Mondphase und Beleuchtung, nächster Supermond, nächste Mondfinsternis), sieben Tagesklassen mit <code>mode=\"count|streak|max_streak\"</code> (Eistage, Frosttage, Sommertage, heiße Tage, Tropennächte, Heiz- und Kühltage), fünf Summen (Heiz- und Kühlgradtage, Wachstumsgradtage, die Grünlandtemperatursumme und das Datum, an dem die Vegetationsperiode begonnen hat) und der Standardisierte Niederschlagsindex."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: the order of the live cards and of the yearly comparison charts is a setting. Both lists on the Live-Dashboard screen are sortable by drag and drop, and the front end follows. A saved order decides position, never membership: an id left over from a renamed module is passed over, and a chart the order has never heard of takes its place at the end instead of disappearing."
-msgstr ""
+msgstr "Neu: Die Reihenfolge der Live-Karten und der Jahresvergleichsdiagramme ist eine Einstellung. Beide Listen auf der Seite „Live-Dashboard“ lassen sich per Drag and Drop sortieren, und das Frontend folgt. Eine gespeicherte Reihenfolge entscheidet über die Position, nie über die Zugehörigkeit: eine ID, die von einem umbenannten Modul übrig ist, wird übergangen, und ein Diagramm, von dem die Reihenfolge noch nie gehört hat, landet am Ende statt zu verschwinden."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Historical data importer with batch processing"
-msgstr ""
+msgstr "Importer für historische Daten mit Stapelverarbeitung"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Cron watchdog with self-healing for stuck sync jobs"
-msgstr ""
+msgstr "Cron-Watchdog mit Selbstheilung für hängengebliebene Sync-Jobs"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Configurable units (temperature, rain, wind, pressure)"
-msgstr ""
+msgstr "Konfigurierbare Einheiten (Temperatur, Regen, Wind, Luftdruck)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Full German and English localization"
-msgstr ""
+msgstr "Vollständige deutsche und englische Lokalisierung"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "AES-256-GCM encryption for all stored credentials"
-msgstr ""
+msgstr "AES-256-GCM-Verschlüsselung für alle gespeicherten Zugangsdaten"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "REST API with API key authentication and rate limiting"
-msgstr ""
+msgstr "REST-API mit API-Schlüssel-Authentifizierung und Ratenbegrenzung"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "5-day weather forecast via Open-Meteo"
-msgstr ""
+msgstr "5-Tages-Wettervorhersage über Open-Meteo"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Year-over-year history charts (temperature, pressure, monthly rainfall)"
-msgstr ""
+msgstr "Jahresvergleichsdiagramme (Temperatur, Luftdruck, monatlicher Niederschlag)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Derived weather: feels-like temperature, heat index, dew point"
-msgstr ""
+msgstr "Abgeleitete Wetterwerte: gefühlte Temperatur, Hitzeindex, Taupunkt"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Astronomy: sunrise/sunset, moon phase, next full moon"
-msgstr ""
+msgstr "Astronomie: Sonnenauf- und -untergang, Mondphase, nächster Vollmond"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Live dashboard with animated sensor cards and 24h charts"
-msgstr ""
+msgstr "Live-Dashboard mit animierten Sensorkarten und 24-Stunden-Diagrammen"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Full Netatmo OAuth2 integration with all module types"
-msgstr ""
+msgstr "Vollständige Netatmo-OAuth2-Integration mit allen Modultypen"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Initial public release"
-msgstr ""
+msgstr "Erste öffentliche Veröffentlichung"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Improved: Vendor JS files bundled in ZIP"
-msgstr ""
+msgstr "Verbessert: Vendor-JS-Dateien im ZIP gebündelt"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Improved: Plugin Check compliance (126 errors to 0)"
-msgstr ""
+msgstr "Verbessert: Plugin-Check-Konformität (von 126 Fehlern auf 0)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: SVG weather icons stripped by <code>wp_kses_post()</code>"
-msgstr ""
+msgstr "Fix: SVG-Wettersymbole, die von <code>wp_kses_post()</code> entfernt wurden"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: Cron stops after plugin update (activation hook + watchdog fix)"
-msgstr ""
+msgstr "Fix: Cron stoppt nach einem Plugin-Update (Aktivierungs-Hook und Watchdog korrigiert)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: OAuth state validation with <code>hash_equals()</code> and 10-min expiry"
-msgstr ""
+msgstr "Fix: OAuth-State-Prüfung mit <code>hash_equals()</code> und 10 Minuten Gültigkeit"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: OAuth flow broken by encryption (auto-migration)"
-msgstr ""
+msgstr "Fix: OAuth-Ablauf durch die Verschlüsselung zerstört (automatische Migration)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: Configurable station name in Settings"
-msgstr ""
+msgstr "Neu: Konfigurierbarer Stationsname in den Einstellungen"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: File-based language system (one PHP file per language, auto-discovered)"
-msgstr ""
+msgstr "Neu: Dateibasiertes Sprachsystem (eine PHP-Datei pro Sprache, automatisch erkannt)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: Norwegian (Bokmal) language with 326 translated keys"
-msgstr ""
+msgstr "Neu: Norwegisch (Bokmål) mit 326 übersetzten Schlüsseln"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: Forecast provider selection (Open-Meteo + Yr.no / MET Norway)"
-msgstr ""
+msgstr "Neu: Auswahl des Vorhersageanbieters (Open-Meteo und Yr.no / MET Norway)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: Fatal error on activation (<code>spawn_cron()</code> called too early)"
-msgstr ""
+msgstr "Fix: Fataler Fehler bei der Aktivierung (<code>spawn_cron()</code> zu früh aufgerufen)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Removed: gauge.min.js vendor library and unused templates"
-msgstr ""
+msgstr "Entfernt: Vendor-Bibliothek gauge.min.js und ungenutzte Templates"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Removed shortcodes: <code>[naws_chart]</code>, <code>[naws_gauge]</code>, <code>[naws_dashboard]</code>, <code>[naws_card]</code> – use <code>[naws_live]</code> and <code>[naws_history]</code> instead"
-msgstr ""
+msgstr "Entfernte Shortcodes: <code>[naws_chart]</code>, <code>[naws_gauge]</code>, <code>[naws_dashboard]</code>, <code>[naws_card]</code> – nutze stattdessen <code>[naws_live]</code> und <code>[naws_history]</code>"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: Chart.js blank page prevented with try/catch"
-msgstr ""
+msgstr "Fix: Leere Seite durch Chart.js mit try/catch verhindert"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: Silent DB errors now logged"
-msgstr ""
+msgstr "Fix: Stille Datenbankfehler werden jetzt protokolliert"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: N+1 query in history data replaced with single query"
-msgstr ""
+msgstr "Fix: N+1-Abfrage bei den Verlaufsdaten durch eine einzelne Abfrage ersetzt"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: <code>naws_data_synced</code> action hook for extensibility"
-msgstr ""
+msgstr "Neu: Action-Hook <code>naws_data_synced</code> zur Erweiterbarkeit"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: Frontend error UI and AJAX retry logic with exponential backoff"
-msgstr ""
+msgstr "Neu: Fehleranzeige im Frontend und AJAX-Wiederholung mit exponentiellem Backoff"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: Health status indicator in admin dashboard (green/yellow/red)"
-msgstr ""
+msgstr "Neu: Statusanzeige im Backend-Dashboard (grün/gelb/rot)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: Night mode with reduced polling between 23:00–06:00"
-msgstr ""
+msgstr "Neu: Nachtmodus mit reduzierter Abfrage zwischen 23:00 und 06:00 Uhr"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: Adaptive polling with error backoff (doubles interval after 3 failures)"
-msgstr ""
+msgstr "Neu: Adaptive Abfrage mit Fehler-Backoff (verdoppelt das Intervall nach drei Fehlschlägen)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: Transient caching layer for database queries (modules, readings, daily summaries)"
-msgstr ""
+msgstr "Neu: Transient-Caching für Datenbankabfragen (Module, Messwerte, Tageszusammenfassungen)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: Central error logging (<code>NAWS_Logger</code>) with severity levels and sensitive data redaction"
-msgstr ""
+msgstr "Neu: Zentrale Fehlerprotokollierung (<code>NAWS_Logger</code>) mit Schweregraden und Schwärzung sensibler Daten"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Improved: ID selectors replaced with reusable class selectors"
-msgstr ""
+msgstr "Verbessert: ID-Selektoren durch wiederverwendbare Klassenselektoren ersetzt"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Improved: ~400 lines of inline styles extracted to centralized <code>frontend.css</code>"
-msgstr ""
+msgstr "Verbessert: rund 400 Zeilen Inline-Styles in eine zentrale <code>frontend.css</code> ausgelagert"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: Dynamic chart font sizing based on viewport"
-msgstr ""
+msgstr "Neu: Dynamische Schriftgröße in Diagrammen abhängig vom Viewport"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: Responsive wind compass with <code>clamp()</code> sizing"
-msgstr ""
+msgstr "Neu: Responsive Windrose mit <code>clamp()</code>-Größen"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: Touch-friendly targets meeting WCAG 44x44px minimum"
-msgstr ""
+msgstr "Neu: Touch-Ziele, die die WCAG-Mindestgröße von 44x44 px erfüllen"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: Mobile-first responsive redesign with standardized breakpoints (480/600/768/1024px)"
-msgstr ""
+msgstr "Neu: Mobile-First-Redesign mit einheitlichen Breakpoints (480/600/768/1024 px)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: Debug endpoint sanitized (truncated responses, stripped tokens)"
-msgstr ""
+msgstr "Fix: Debug-Endpunkt bereinigt (gekürzte Antworten, entfernte Tokens)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: Deprecated <code>date_i18n()</code> replaced with <code>wp_date()</code>"
-msgstr ""
+msgstr "Fix: Veraltetes <code>date_i18n()</code> durch <code>wp_date()</code> ersetzt"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: <code>TRUNCATE</code> replaced with <code>DELETE FROM</code> for WordPress compatibility"
-msgstr ""
+msgstr "Fix: <code>TRUNCATE</code> zugunsten der WordPress-Kompatibilität durch <code>DELETE FROM</code> ersetzt"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: SQL injection hardening with <code>$wpdb-&gt;prepare()</code> for DELETE queries"
-msgstr ""
+msgstr "Fix: SQL-Injection-Härtung mit <code>$wpdb-&gt;prepare()</code> für DELETE-Abfragen"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: All <code>json_encode()</code> replaced with <code>wp_json_encode()</code> (Plugin Check compliance)"
-msgstr ""
+msgstr "Fix: Alle <code>json_encode()</code> durch <code>wp_json_encode()</code> ersetzt (Plugin-Check-Konformität)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: <code>NAWS_Export</code> class with streaming export for large datasets"
-msgstr ""
+msgstr "Neu: Klasse <code>NAWS_Export</code> mit Streaming-Export für große Datenmengen"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Security: API tokens are never included in exports"
-msgstr ""
+msgstr "Sicherheit: API-Tokens sind nie Teil eines Exports"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: File import with chunked AJAX processing and real-time progress"
-msgstr ""
+msgstr "Neu: Dateiimport mit stückweiser AJAX-Verarbeitung und Fortschrittsanzeige in Echtzeit"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: Weather data export as JSON, full backup export (data + modules + settings)"
-msgstr ""
+msgstr "Neu: Export der Wetterdaten als JSON, vollständiger Backup-Export (Daten, Module und Einstellungen)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: Export / Import feature with full backup and restore"
-msgstr ""
+msgstr "Neu: Export/Import mit vollständiger Sicherung und Wiederherstellung"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Improved: All frontend colors use CSS custom properties"
-msgstr ""
+msgstr "Verbessert: Alle Frontend-Farben nutzen CSS-Custom-Properties"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: 60+ translation strings for color settings"
-msgstr ""
+msgstr "Neu: über 60 Übersetzungsstrings für die Farbeinstellungen"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: Reset-to-defaults functionality"
-msgstr ""
+msgstr "Neu: Zurücksetzen auf die Standardwerte"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: Theme colors, accent colors, sensor tile gradients, chart theming, year palette"
-msgstr ""
+msgstr "Neu: Themefarben, Akzentfarben, Verläufe der Sensorkacheln, Diagramm-Theming, Jahrespalette"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: <code>NAWS_Colors</code> class with centralized color management and caching"
-msgstr ""
+msgstr "Neu: Klasse <code>NAWS_Colors</code> mit zentraler Farbverwaltung und Caching"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: Appearance page with 130+ configurable colors and WordPress Color Picker"
-msgstr ""
+msgstr "Neu: Seite „Darstellung“ mit über 130 konfigurierbaren Farben und dem WordPress-Farbwähler"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Improved: Appearance page redesigned with live previews for all color groups"
-msgstr ""
+msgstr "Verbessert: Seite „Darstellung“ neu gestaltet, mit Live-Vorschau für alle Farbgruppen"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: 24h chart gradient fill restored (hex-to-RGBA conversion with canvas gradient)"
-msgstr ""
+msgstr "Fix: Verlaufsfüllung im 24-Stunden-Diagramm wiederhergestellt (Hex-nach-RGBA-Umwandlung mit Canvas-Verlauf)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Improved: Appearance admin page streamlined, unused sections removed"
-msgstr ""
+msgstr "Verbessert: Backend-Seite „Darstellung“ verschlankt, ungenutzte Abschnitte entfernt"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: History shortcode <code>year</code> parameter (<code>[naws_history year=\"2025\"]</code>)"
-msgstr ""
+msgstr "Neu: Parameter <code>year</code> im Verlaufs-Shortcode (<code>[naws_history year=\"2025\"]</code>)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: Forecast source label dynamically shows correct provider name"
-msgstr ""
+msgstr "Fix: Das Label der Vorhersagequelle zeigt jetzt dynamisch den richtigen Anbieternamen"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: Forecast provider selection now works correctly (provider-aware cache keys)"
-msgstr ""
+msgstr "Fix: Die Auswahl des Vorhersageanbieters funktioniert jetzt korrekt (anbieterabhängige Cache-Schlüssel)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: Dynamic icon rendering via <code>NAWS_Icons</code> class"
-msgstr ""
+msgstr "Neu: Dynamisches Rendern der Symbole über die Klasse <code>NAWS_Icons</code>"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: Per-sensor icon colors with live preview (7 configurable colors)"
-msgstr ""
+msgstr "Neu: Symbolfarben je Sensor mit Live-Vorschau (7 konfigurierbare Farben)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: 4 frontend icon sets (Emoji, Outline, Filled, Minimal) selectable in Appearance"
-msgstr ""
+msgstr "Neu: 4 Symbolsätze im Frontend (Emoji, Outline, Filled, Minimal), wählbar unter „Darstellung“"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Plugin renamed: \"Netatmo Weather Station\" to \"XTX Netatmo\""
-msgstr ""
+msgstr "Plugin umbenannt: von „Netatmo Weather Station“ zu „XTX Netatmo“"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: GitHub Auto-Updater via <code>NAWS_Updater</code> class (later removed in 1.5.7 for WordPress.org compliance)"
-msgstr ""
+msgstr "Neu: GitHub-Auto-Updater über die Klasse <code>NAWS_Updater</code> (in 1.5.7 zugunsten der WordPress.org-Konformität wieder entfernt)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: Dashboard SVG icons no longer rendered as raw source code"
-msgstr ""
+msgstr "Fix: SVG-Symbole im Dashboard werden nicht mehr als roher Quelltext ausgegeben"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: Plugin URI corrected to <code>https://www.frank-neumann.de/netatmo-wetter-plugin/</code>"
-msgstr ""
+msgstr "Fix: Plugin-URI korrigiert auf <code>https://www.frank-neumann.de/netatmo-wetter-plugin/</code>"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: Auto-update toggle now visible in WordPress plugin list (registered in <code>$transient-&gt;no_update</code>)"
-msgstr ""
+msgstr "Fix: Der Schalter für automatische Updates ist jetzt in der WordPress-Pluginliste sichtbar (in <code>$transient-&gt;no_update</code> registriert)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: 24h chart modal overlay positioned correctly inside <code>.naws-wx</code> wrapper"
-msgstr ""
+msgstr "Fix: Das Overlay des 24-Stunden-Diagramms sitzt jetzt korrekt innerhalb des <code>.naws-wx</code>-Wrappers"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: History chart year buttons now wrap on mobile instead of overflowing"
-msgstr ""
+msgstr "Fix: Die Jahresschalter im Verlaufsdiagramm brechen auf Mobilgeräten jetzt um, statt überzulaufen"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: Option name inconsistency <code>naws_token_expires</code> unified to <code>naws_token_expiry</code>"
-msgstr ""
+msgstr "Fix: Uneinheitlicher Optionsname <code>naws_token_expires</code> zu <code>naws_token_expiry</code> vereinheitlicht"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: readme.txt stable tag synchronized with plugin header version"
-msgstr ""
+msgstr "Fix: Stable-Tag in readme.txt mit der Version im Plugin-Header abgeglichen"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: Escaping fixes for admin views (<code>esc_attr()</code> in modules.php, cron-log.php)"
-msgstr ""
+msgstr "Fix: Escaping in den Backend-Ansichten korrigiert (<code>esc_attr()</code> in modules.php und cron-log.php)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Removed legacy plaintext-enforcement from init"
-msgstr ""
+msgstr "Alte Klartext-Erzwingung aus der Initialisierung entfernt"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Migration updated to encrypt plaintext credentials instead of forcing plaintext"
-msgstr ""
+msgstr "Migration angepasst: Klartext-Zugangsdaten werden jetzt verschlüsselt, statt Klartext zu erzwingen"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Security: Client ID and Client Secret now AES-256-GCM encrypted at rest (all 5 secrets fully encrypted)"
-msgstr ""
+msgstr "Sicherheit: Client-ID und Client-Secret werden jetzt im Ruhezustand mit AES-256-GCM verschlüsselt (alle 5 Geheimnisse vollständig verschlüsselt)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: 361 NonPrefixedVariableFound warnings resolved with scoped phpcs disable"
-msgstr ""
+msgstr "Fix: 361 Warnungen „NonPrefixedVariableFound“ mit begrenztem phpcs-disable behoben"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: SVG output escaping documented with <code>phpcs:ignore</code>"
-msgstr ""
+msgstr "Fix: Escaping der SVG-Ausgabe mit <code>phpcs:ignore</code> dokumentiert"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: <code>rand()</code> replaced with <code>wp_rand()</code>"
-msgstr ""
+msgstr "Fix: <code>rand()</code> durch <code>wp_rand()</code> ersetzt"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: <code>move_uploaded_file()</code> replaced with <code>copy()</code> (WordPress Coding Standards)"
-msgstr ""
+msgstr "Fix: <code>move_uploaded_file()</code> durch <code>copy()</code> ersetzt (WordPress Coding Standards)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Removed GitHub Auto-Updater (WordPress.org compliance – hosted plugins must not include custom updaters)"
-msgstr ""
+msgstr "GitHub-Auto-Updater entfernt (WordPress.org-Konformität – gehostete Plugins dürfen keinen eigenen Updater mitbringen)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: privacy policy URL in readme.txt corrected"
-msgstr ""
+msgstr "Fix: URL der Datenschutzerklärung in readme.txt korrigiert"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: AJAX capability-check failures now return proper JSON 403 instead of plain <code>wp_die()</code>"
-msgstr ""
+msgstr "Fix: Fehlgeschlagene Capability-Prüfungen bei AJAX geben jetzt ein sauberes JSON mit 403 zurück statt eines schlichten <code>wp_die()</code>"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "REST API docs: replaced Google Charts CDN example with bundled Chart.js example"
-msgstr ""
+msgstr "REST-API-Dokumentation: Beispiel mit Google-Charts-CDN durch ein Beispiel mit dem mitgelieferten Chart.js ersetzt"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Updated Chart.js vendor from 4.4.0 to 4.5.1"
-msgstr ""
+msgstr "Chart.js von 4.4.0 auf 4.5.1 aktualisiert"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "WordPress.org compliance: removed direct <code>&lt;script src&gt;</code> for Chart.js in frontend templates"
-msgstr ""
+msgstr "WordPress.org-Konformität: direktes <code>&lt;script src&gt;</code> für Chart.js aus den Frontend-Templates entfernt"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "WordPress.org compliance: plugin renamed to \"XTX Integration for Netatmo\" (trademark)"
-msgstr ""
+msgstr "WordPress.org-Konformität: Plugin in „XTX Integration for Netatmo“ umbenannt (Markenrecht)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "WordPress.org compliance: all inline <code>&lt;style&gt;</code> blocks moved to enqueued stylesheet"
-msgstr ""
+msgstr "WordPress.org-Konformität: alle Inline-<code>&lt;style&gt;</code>-Blöcke in ein eingebundenes Stylesheet verschoben"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "WordPress.org compliance: all inline <code>&lt;script&gt;</code> blocks converted to <code>wp_add_inline_script()</code>"
-msgstr ""
+msgstr "WordPress.org-Konformität: alle Inline-<code>&lt;script&gt;</code>-Blöcke auf <code>wp_add_inline_script()</code> umgestellt"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: <code>phpcs</code> annotation for <code>naws_appearance</code> input sanitization made explicit (sanitized via <code>NAWS_Colors::sanitize()</code>)"
-msgstr ""
+msgstr "Fix: <code>phpcs</code>-Annotation für die Eingabebereinigung von <code>naws_appearance</code> explizit gemacht (bereinigt über <code>NAWS_Colors::sanitize()</code>)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "WordPress.org compliance: dynamic SQL column names validated against explicit whitelist before query execution"
-msgstr ""
+msgstr "WordPress.org-Konformität: dynamische SQL-Spaltennamen werden vor der Ausführung gegen eine explizite Whitelist geprüft"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "WordPress.org compliance: all remaining inline <code>&lt;script&gt;</code>/<code>&lt;style&gt;</code> blocks converted to <code>wp_add_inline_script()</code> / <code>wp_add_inline_style()</code>"
-msgstr ""
+msgstr "WordPress.org-Konformität: alle verbliebenen Inline-<code>&lt;script&gt;</code>- und <code>&lt;style&gt;</code>-Blöcke auf <code>wp_add_inline_script()</code> bzw. <code>wp_add_inline_style()</code> umgestellt"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "WordPress.org compliance: all <code>ob_start()</code> blocks closed with <code>ob_get_clean()</code> in same scope"
-msgstr ""
+msgstr "WordPress.org-Konformität: alle <code>ob_start()</code>-Blöcke werden im selben Gültigkeitsbereich mit <code>ob_get_clean()</code> geschlossen"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "WordPress.org compliance: file upload sanitized with <code>sanitize_file_name()</code> and <code>move_uploaded_file()</code>"
-msgstr ""
+msgstr "WordPress.org-Konformität: Datei-Uploads mit <code>sanitize_file_name()</code> und <code>move_uploaded_file()</code> bereinigt"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Added <code>ls_saving</code>, <code>ls_saved</code>, <code>ls_error</code> strings to <code>nawsAdmin</code> localization (live-settings page)"
-msgstr ""
+msgstr "Strings <code>ls_saving</code>, <code>ls_saved</code> und <code>ls_error</code> zur Lokalisierung <code>nawsAdmin</code> hinzugefügt (Seite „Live-Einstellungen“)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "WordPress.org compliance: icon SVGs sanitized with <code>wp_kses()</code> before JSON-encoding; <code>NAWS_Icons::get_js_object()</code> (raw JS literal) replaced by <code>wp_json_encode( NAWS_Icons::get_set() )</code>"
-msgstr ""
+msgstr "WordPress.org-Konformität: Symbol-SVGs werden vor dem JSON-Encoding mit <code>wp_kses()</code> bereinigt; <code>NAWS_Icons::get_js_object()</code> (rohes JS-Literal) durch <code>wp_json_encode( NAWS_Icons::get_set() )</code> ersetzt"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "WordPress.org compliance: all JS strings previously echoed from PHP now served via <code>nawsAdmin.strings</code> (localized with <code>wp_localize_script</code>) – eliminates PHP interpolation in JavaScript"
-msgstr ""
+msgstr "WordPress.org-Konformität: alle JS-Strings, die bisher aus PHP ausgegeben wurden, kommen jetzt über <code>nawsAdmin.strings</code> (lokalisiert mit <code>wp_localize_script</code>) – damit entfällt jede PHP-Interpolation in JavaScript"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "WordPress.org compliance: PHP values injected into inline scripts via <code>wp_add_inline_script( $handle, $data, 'before' )</code> with <code>wp_json_encode()</code> instead of echoing PHP inside JS blocks"
-msgstr ""
+msgstr "WordPress.org-Konformität: PHP-Werte werden über <code>wp_add_inline_script( $handle, $data, 'before' )</code> mit <code>wp_json_encode()</code> in Inline-Skripte gegeben, statt PHP innerhalb von JS-Blöcken auszugeben"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "WordPress.org compliance: all file-scope <code>ob_start()</code> / <code>ob_get_clean()</code> patterns removed from admin views and frontend templates"
-msgstr ""
+msgstr "WordPress.org-Konformität: alle <code>ob_start()</code>/<code>ob_get_clean()</code>-Muster auf Dateiebene aus den Backend-Ansichten und Frontend-Templates entfernt"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: <code>naws_svg_kses_args()</code> helper properly available at plugin load time; resolves fatal error on admin dashboard when function was called before class-naws-helpers.php was loaded"
-msgstr ""
+msgstr "Fix: Die Hilfsfunktion <code>naws_svg_kses_args()</code> steht jetzt schon beim Laden des Plugins bereit; das behebt den fatalen Fehler im Backend-Dashboard, wenn die Funktion aufgerufen wurde, bevor class-naws-helpers.php geladen war"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: <code>SHOW COLUMNS</code> query in <code>class-naws-astro.php</code> now uses <code>$wpdb-&gt;prepare()</code> consistently with the rest of the codebase"
-msgstr ""
+msgstr "Fix: Die <code>SHOW COLUMNS</code>-Abfrage in <code>class-naws-astro.php</code> nutzt jetzt <code>$wpdb-&gt;prepare()</code>, einheitlich mit dem übrigen Code"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: <code>$file['size']</code> in import handler now wrapped in <code>intval()</code> for explicit sanitization (WordPress.org compliance)"
-msgstr ""
+msgstr "Fix: <code>$file['size']</code> im Import-Handler wird jetzt zur ausdrücklichen Bereinigung in <code>intval()</code> gefasst (WordPress.org-Konformität)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: history chart no longer emits a PHP 8.1 deprecation notice (<code>substr(): Passing null</code>) when the daily-summary table is still empty — the year range now falls back to the current year instead of year 0"
-msgstr ""
+msgstr "Fix: Das Verlaufsdiagramm erzeugt keinen PHP-8.1-Deprecation-Hinweis mehr (<code>substr(): Passing null</code>), solange die Tabelle mit den Tageszusammenfassungen noch leer ist — der Jahresbereich fällt jetzt auf das laufende Jahr zurück statt auf das Jahr 0"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Compatibility: minimum PHP requirement raised to 8.0 (<code>Requires PHP: 8.0</code>)"
-msgstr ""
+msgstr "Kompatibilität: Mindestanforderung an PHP auf 8.0 angehoben (<code>Requires PHP: 8.0</code>)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Compatibility: tested against WordPress 7.0"
-msgstr ""
+msgstr "Kompatibilität: gegen WordPress 7.0 getestet"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: REST API routes were not running their authentication callback — with the REST API enabled the endpoints, including station coordinates, were reachable without an API key"
-msgstr ""
+msgstr "Fix: Die REST-API-Routen führten ihren Authentifizierungs-Callback nicht aus — bei aktivierter REST-API waren die Endpunkte, einschließlich der Stationskoordinaten, ohne API-Schlüssel erreichbar"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: saving one settings form no longer resets the others — saving your Netatmo credentials used to silently reset language, units, sync interval and all forecast settings back to their defaults"
-msgstr ""
+msgstr "Fix: Das Speichern eines Einstellungsformulars setzt die anderen nicht mehr zurück — beim Speichern der Netatmo-Zugangsdaten wurden Sprache, Einheiten, Synchronisationsintervall und sämtliche Vorhersageeinstellungen stillschweigend auf die Standardwerte zurückgesetzt"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: current conditions are fetched separately from the daily forecast, on a 30-minute cache, so the icon reflects the weather now instead of a whole-day summary"
-msgstr ""
+msgstr "Neu: Die aktuellen Bedingungen werden getrennt von der Tagesvorhersage geholt, mit 30 Minuten Cache, damit das Symbol das Wetter jetzt zeigt statt einer Zusammenfassung des ganzen Tages"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: six thresholds in the settings (heavy rain, snow, fog humidity and spread, storm wind, dashboard placement)"
-msgstr ""
+msgstr "Neu: sechs Schwellenwerte in den Einstellungen (Starkregen, Schnee, Nebel-Luftfeuchte und -Spread, Sturmwind, Platzierung im Dashboard)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: rain-versus-snow is decided by wet-bulb temperature rather than air temperature, so snow is still recognised at 3–4 °C in dry air"
-msgstr ""
+msgstr "Neu: Ob es regnet oder schneit, entscheidet die Feuchtkugeltemperatur statt der Lufttemperatur — so wird Schnee auch bei 3–4 °C in trockener Luft noch erkannt"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: the icon combines station readings with the forecast — your own measurements win, the forecast only fills in what the station cannot measure (cloud cover, thunderstorms, and precipitation if you have no rain gauge)"
-msgstr ""
+msgstr "Neu: Das Symbol verbindet die Messwerte der Station mit der Vorhersage — deine eigenen Messungen gewinnen, die Vorhersage füllt nur, was die Station nicht messen kann (Bewölkung, Gewitter und, wenn du keinen Regenmesser hast, den Niederschlag)"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: animated weather icon with twelve states — shortcode <code>[naws_weather_icon size=\"96\"]</code> and, switchable in the backend, above the live dashboard"
-msgstr ""
+msgstr "Neu: Animiertes Wettersymbol mit zwölf Zuständen — Shortcode <code>[naws_weather_icon size=\"96\"]</code> und, im Backend umschaltbar, über dem Live-Dashboard"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: saving settings on the Appearance page no longer redirects to Settings — forms now return to the page they were submitted from"
-msgstr ""
+msgstr "Fix: Das Speichern auf der Seite „Darstellung“ leitet nicht mehr zu den Einstellungen um — Formulare kehren jetzt auf die Seite zurück, von der sie abgeschickt wurden"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Changed: the colourful weather icons introduced in 1.7.0 are now used everywhere, including the forecast shortcode and the dashboard forecast strip"
-msgstr ""
+msgstr "Geändert: Die in 1.7.0 eingeführten farbigen Wettersymbole werden jetzt überall verwendet, auch im Vorhersage-Shortcode und im Vorhersagestreifen des Dashboards"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: forecast length selectable in the backend, with a live preview at the real width"
-msgstr ""
+msgstr "Neu: Die Länge der Vorhersage ist im Backend wählbar, mit einer Live-Vorschau in der tatsächlichen Breite"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: sidebar widget <code>[naws_weather_widget]</code> — weather icon, outdoor temperature, rain and wind, plus a three- or five-day forecast, built for narrow columns"
-msgstr ""
+msgstr "Neu: Sidebar-Widget <code>[naws_weather_widget]</code> — Wettersymbol, Außentemperatur, Regen und Wind sowie eine Drei- oder Fünf-Tages-Vorhersage, gebaut für schmale Spalten"
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: the corrected cloud figures are also kept as the last known reading, so an outage of the forecast API no longer brings the old behaviour back."
-msgstr ""
+msgstr "Fix: Die korrigierten Bewölkungswerte werden auch als letzter bekannter Messwert behalten, damit ein Ausfall der Vorhersage-API nicht das alte Verhalten zurückholt."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: the weather icon showed \"overcast\" under a cloudless sky. The forecast provider's weather code lumps all cloud layers together, so a thin veil of cirrus counted the same as a low, closed deck. Cloudiness is now read from the cover percentage per layer, with high cloud weighted down — a cirrus sky reads as fair, not overcast."
-msgstr ""
+msgstr "Fix: Das Wettersymbol zeigte „bedeckt“ unter wolkenlosem Himmel. Der Wettercode des Vorhersageanbieters wirft alle Wolkenschichten zusammen, ein dünner Cirrusschleier zählte also genauso wie eine tiefe, geschlossene Decke. Die Bewölkung wird jetzt aus dem Bedeckungsgrad je Schicht gelesen, hohe Wolken schwächer gewichtet — ein Cirrushimmel gilt als heiter, nicht als bedeckt."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Changed: redirect URLs are built with RFC 3986 encoding."
-msgstr ""
+msgstr "Geändert: Redirect-URLs werden mit RFC-3986-Kodierung gebaut."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Security: input sanitization on the appearance settings form is now applied directly to the submitted data instead of through an intermediate variable, so automated review tools can see it. The data was sanitized before as well; only the form of the code changed."
-msgstr ""
+msgstr "Sicherheit: Die Eingabebereinigung im Formular der Darstellungseinstellungen wird jetzt direkt auf die abgeschickten Daten angewendet statt über eine Zwischenvariable, damit automatische Prüfwerkzeuge sie sehen. Die Daten wurden auch vorher bereinigt; geändert hat sich nur die Form des Codes."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: the shortcode reference in the backend showed the wrong descriptions. A leftover block of duplicate entries in the language files overrode the detailed ones, and the entry for <code>[naws_history]</code> actually described <code>[naws_table]</code>."
-msgstr ""
+msgstr "Fix: Die Shortcode-Referenz im Backend zeigte die falschen Beschreibungen. Ein übrig gebliebener Block doppelter Einträge in den Sprachdateien überschrieb die ausführlichen, und der Eintrag zu <code>[naws_history]</code> beschrieb in Wahrheit <code>[naws_table]</code>."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: the Norwegian interface was only half translated. Norwegian arrived with 326 keys and the plugin has since grown to 612, so everything added later — the forecast, the REST API documentation, the shortcode reference and the live dashboard settings — stayed in English. All 272 missing strings are now translated into Bokmal."
-msgstr ""
+msgstr "Fix: Die norwegische Oberfläche war nur halb übersetzt. Norwegisch kam mit 326 Schlüsseln, und das Plugin ist seitdem auf 612 gewachsen — alles später Hinzugekommene, also die Vorhersage, die REST-API-Dokumentation, die Shortcode-Referenz und die Einstellungen des Live-Dashboards, blieb englisch. Alle 272 fehlenden Strings sind jetzt auf Bokmål übersetzt."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: the weather icon at the head of the sidebar widget was frozen. It was rendered through the same call as the small forecast icons, which are deliberately still, and inherited their frozen state. It now animates, while the forecast icons stay still as intended."
-msgstr ""
+msgstr "Fix: Das Wettersymbol im Kopf des Sidebar-Widgets war eingefroren. Es wurde über denselben Aufruf gerendert wie die kleinen Vorhersagesymbole, die absichtlich still stehen, und erbte deren Starre. Es animiert jetzt, während die Vorhersagesymbole wie vorgesehen still bleiben."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: the sidebar widget's width can be set between 250 and 500 pixels, in Appearance or per placement with <code>[naws_weather_widget width=\"400\"]</code>. Icon, figures and spacing scale with it — at 500 pixels the weather icon is 96 pixels instead of 64. The width acts as a maximum, so the widget still shrinks to fit a narrower column."
-msgstr ""
+msgstr "Neu: Die Breite des Sidebar-Widgets lässt sich zwischen 250 und 500 Pixeln einstellen, unter „Darstellung“ oder je Platzierung mit <code>[naws_weather_widget width=\"400\"]</code>. Symbol, Zahlen und Abstände skalieren mit — bei 500 Pixeln ist das Wettersymbol 96 statt 64 Pixel groß. Die Breite wirkt als Maximum, das Widget schrumpft also weiterhin in eine schmalere Spalte."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: the decrypted client secret was written into the page three times instead of once, and was submitted when saving unrelated settings."
-msgstr ""
+msgstr "Fix: Das entschlüsselte Client-Secret wurde dreimal statt einmal in die Seite geschrieben und beim Speichern unbeteiligter Einstellungen mitgeschickt."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: every save rewrote every setting. Each form carried hidden copies of the fields it did not own, a leftover from before the merge behaviour added in 1.7.0. Saving the units also rewrote the forecast settings and credentials from stale values, so edits made in a second browser tab could be lost. A save now only touches the fields shown in that form."
-msgstr ""
+msgstr "Fix: Jedes Speichern schrieb jede Einstellung neu. Jedes Formular trug versteckte Kopien der Felder mit sich, die ihm nicht gehörten — ein Überbleibsel aus der Zeit vor dem Merge-Verhalten aus 1.7.0. Beim Speichern der Einheiten wurden also auch Vorhersageeinstellungen und Zugangsdaten aus veralteten Werten neu geschrieben, sodass Änderungen aus einem zweiten Browser-Tab verloren gehen konnten. Ein Speichern berührt jetzt nur noch die Felder, die in diesem Formular zu sehen sind."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Changed: one save button for all settings instead of three. The API credentials keep their own form and button."
-msgstr ""
+msgstr "Geändert: ein Speicherknopf für alle Einstellungen statt dreier. Die API-Zugangsdaten behalten ihr eigenes Formular und ihren eigenen Knopf."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Changed: the settings screen has been reorganised. The connection card now spans the full width and the settings below sit in two balanced columns, so the forecast settings are visible near the top instead of at the bottom. The page is around 600 pixels shorter and no longer has a large empty area beside the connection card."
-msgstr ""
+msgstr "Geändert: Die Einstellungsseite ist neu geordnet. Die Verbindungskarte nimmt jetzt die volle Breite ein, und die Einstellungen darunter stehen in zwei ausgewogenen Spalten, sodass die Vorhersageeinstellungen weit oben statt ganz unten sichtbar sind. Die Seite ist rund 600 Pixel kürzer und hat neben der Verbindungskarte keine große leere Fläche mehr."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Changed: the error backoff is described under the interval setting rather than on the night mode checkbox. It applies regardless of night mode."
-msgstr ""
+msgstr "Geändert: Das Fehler-Backoff wird bei der Intervalleinstellung beschrieben statt beim Häkchen für den Nachtmodus. Es gilt unabhängig vom Nachtmodus."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Changed: night mode, daily summaries and the history importer now use the timezone configured in WordPress instead of Europe/Berlin. On sites in other timezones the night window fell on the wrong hours and daily boundaries could be cut at the wrong midnight."
-msgstr ""
+msgstr "Geändert: Nachtmodus, Tageszusammenfassungen und der Verlaufsimporter nutzen jetzt die in WordPress eingestellte Zeitzone statt Europe/Berlin. Auf Seiten in anderen Zeitzonen lag das Nachtfenster auf den falschen Stunden, und Tagesgrenzen konnten an der falschen Mitternacht geschnitten werden."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: the dashboard warned about a stale sync during normal night operation. The warning threshold now accounts for the doubled night interval."
-msgstr ""
+msgstr "Fix: Das Dashboard warnte im normalen Nachtbetrieb vor einer veralteten Synchronisation. Die Warnschwelle berücksichtigt jetzt das verdoppelte Nachtintervall."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: night mode stopped reducing polling as soon as the API had trouble, because it measured from the last successful sync rather than the last attempt."
-msgstr ""
+msgstr "Fix: Der Nachtmodus reduzierte die Abfrage nicht mehr, sobald die API Schwierigkeiten hatte, weil er von der letzten erfolgreichen Synchronisation aus maß statt vom letzten Versuch."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: a cron interval that is not one of the available schedules stopped polling completely. The field accepted any value from 5 to 1440 minutes while only seven of them exist as schedules, and an unlisted value such as 45 left the site with no fetch cron. The interval is a dropdown now, and stored values are snapped to the nearest schedule."
-msgstr ""
+msgstr "Fix: Ein Cron-Intervall, das keinem der verfügbaren Zeitpläne entspricht, brachte die Abfrage komplett zum Erliegen. Das Feld nahm jeden Wert von 5 bis 1440 Minuten an, während es nur sieben davon als Zeitplan gibt, und ein nicht gelisteter Wert wie 45 ließ die Seite ohne Abruf-Cron zurück. Das Intervall ist jetzt ein Auswahlfeld, und gespeicherte Werte werden auf den nächstgelegenen Zeitplan gerundet."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: repeated API errors made the plugin poll harder rather than easing off. The interval is meant to double after three failures, but the ceiling on that calculation sat below the longest intervals the settings offer, so a 120-minute interval was halved and a 60-minute one never changed at all."
-msgstr ""
+msgstr "Fix: Wiederholte API-Fehler ließen das Plugin härter abfragen, statt zurückzustecken. Das Intervall soll sich nach drei Fehlschlägen verdoppeln, aber die Obergrenze dieser Rechnung lag unter den längsten Intervallen, die die Einstellungen anbieten — ein Intervall von 120 Minuten wurde dadurch halbiert, und eines von 60 Minuten änderte sich nie."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: hiding a year from the enlarged chart view left the corresponding button in the small chart looking active, even though the chart below had already dropped that year. Both legends are refreshed together now."
-msgstr ""
+msgstr "Fix: Wer ein Jahr in der vergrößerten Diagrammansicht ausblendete, sah den zugehörigen Knopf im kleinen Diagramm weiterhin aktiv, obwohl das Diagramm darunter das Jahr längst fallen gelassen hatte. Beide Legenden werden jetzt gemeinsam aktualisiert."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Changed: the year buttons in the history charts sit below their chart instead of beside the title. They now use the full chart width and wrap over as many rows as needed, so stations with ten or more years of records no longer push the buttons out to the right. The enlarged chart view follows the same layout."
-msgstr ""
+msgstr "Geändert: Die Jahresschalter in den Verlaufsdiagrammen sitzen unter ihrem Diagramm statt neben dem Titel. Sie nutzen jetzt die volle Diagrammbreite und brechen über so viele Zeilen um, wie nötig sind, sodass Stationen mit zehn und mehr Jahren an Aufzeichnungen die Schalter nicht mehr nach rechts hinausdrücken. Die vergrößerte Diagrammansicht folgt demselben Layout."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: the history charts stayed empty on some setups. The chart data and the chart script were injected with wp_add_inline_script(), which is silently dropped on those installations, so nothing at all was rendered. Both now use the same reliable pattern the live dashboard already used: a plain JSON data element plus a footer script block."
-msgstr ""
+msgstr "Fix: Die Verlaufsdiagramme blieben auf manchen Installationen leer. Die Diagrammdaten und das Diagrammskript wurden mit wp_add_inline_script() eingefügt, was auf diesen Installationen stillschweigend verworfen wird, sodass überhaupt nichts gerendert wurde. Beide nutzen jetzt dasselbe verlässliche Muster wie schon das Live-Dashboard: ein schlichtes JSON-Datenelement plus ein Skriptblock im Footer."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Changed: that migration checked for each of its eight columns with a separate query. It reads the column list once now. The migration only runs on activation and upgrade, so this changes nothing you would notice."
-msgstr ""
+msgstr "Geändert: Diese Migration fragte jede ihrer acht Spalten einzeln ab. Sie liest die Spaltenliste jetzt einmal. Die Migration läuft nur bei Aktivierung und Upgrade, es ändert sich also nichts, was auffallen würde."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Changed: the database migration that adds the v1.4 sensor columns no longer assembles its SQL from variables. The column names came from a hardcoded list and were never user input, but Plugin Check's security scanner cannot verify that and flagged the query. Every ALTER TABLE statement is now written out in full, which leaves nothing to flag."
-msgstr ""
+msgstr "Geändert: Die Datenbankmigration, die die Sensorspalten aus 1.4 anlegt, setzt ihr SQL nicht mehr aus Variablen zusammen. Die Spaltennamen stammten aus einer fest hinterlegten Liste und waren nie Benutzereingabe, aber der Sicherheitsscanner von Plugin Check kann das nicht nachprüfen und markierte die Abfrage. Jedes ALTER TABLE steht jetzt vollständig ausgeschrieben da, damit nichts mehr zu markieren bleibt."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Changed: removed a source map reference at the end of the bundled Chart.js file that pointed at a file the package never contained."
-msgstr ""
+msgstr "Geändert: Am Ende des mitgelieferten Chart.js einen Verweis auf eine Source Map entfernt, die auf eine Datei zeigte, die dem Paket nie beilag."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Changed: the shipped LICENSE file is now GPL v2, matching the \"GPLv2 or later\" stated in the plugin header and this readme. The license itself is unchanged."
-msgstr ""
+msgstr "Geändert: Die mitgelieferte LICENSE-Datei ist jetzt die GPL v2, passend zu dem „GPLv2 or later“, das im Plugin-Header und in dieser Readme steht. Die Lizenz selbst ist unverändert."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: the Open-Meteo geocoding service is now documented separately from the forecast service. It is a different host and had no entry of its own."
-msgstr ""
+msgstr "Neu: Der Geokodierungsdienst von Open-Meteo ist jetzt getrennt vom Vorhersagedienst dokumentiert. Es ist ein anderer Host und hatte keinen eigenen Eintrag."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "New: a Third-Party Libraries section documenting the two bundled JavaScript libraries (Chart.js and chartjs-adapter-date-fns), their MIT licenses and where to get their unminified source."
-msgstr ""
+msgstr "Neu: Ein Abschnitt zu Fremdbibliotheken, der die beiden mitgelieferten JavaScript-Bibliotheken (Chart.js und chartjs-adapter-date-fns), ihre MIT-Lizenzen und die Bezugsquelle ihres unminifizierten Quellcodes dokumentiert."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: the Netatmo privacy policy link in this readme was dead and has been replaced. The Netatmo entry also gained a terms of service link and now states that the Client ID and Client Secret are sent to the token endpoint."
-msgstr ""
+msgstr "Fix: Der Link zur Netatmo-Datenschutzerklärung in dieser Readme war tot und wurde ersetzt. Der Netatmo-Eintrag hat außerdem einen Link zu den Nutzungsbedingungen bekommen und nennt jetzt, dass Client-ID und Client-Secret an den Token-Endpunkt gesendet werden."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: the User-Agent sent to the Yr.no / MET Norway forecast API named a repository that does not exist, and three other outgoing requests named no contact at all. MET Norway's terms require every client to identify itself with a reachable contact. All requests now send the plugin name, its version and your site address."
-msgstr ""
+msgstr "Fix: Der User-Agent an die Vorhersage-API von Yr.no / MET Norway nannte ein Repository, das es nicht gibt, und drei weitere ausgehende Anfragen nannten überhaupt keinen Kontakt. Die Nutzungsbedingungen von MET Norway verlangen, dass sich jeder Client mit einem erreichbaren Kontakt zu erkennen gibt. Alle Anfragen senden jetzt den Namen des Plugins, seine Version und deine Seitenadresse."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Changed: the plugin no longer outputs any inline script. The boot code for the live dashboard and the history charts now ships as two ordinary JavaScript files that are enqueued the WordPress way. This also removes the reason the 1.9.3 workaround existed: an enqueued file cannot be silently dropped the way an inline fragment can. The JavaScript itself is unchanged, and several shortcodes on one page now share a single copy of it."
-msgstr ""
+msgstr "Geändert: Das Plugin gibt kein Inline-Skript mehr aus. Der Startcode für das Live-Dashboard und die Verlaufsdiagramme kommt jetzt als zwei gewöhnliche JavaScript-Dateien, die auf WordPress-Art eingebunden werden. Damit entfällt auch der Grund für den Behelf aus 1.9.3: eine eingebundene Datei kann nicht stillschweigend verworfen werden wie ein Inline-Fragment. Das JavaScript selbst ist unverändert, und mehrere Shortcodes auf einer Seite teilen sich jetzt eine einzige Kopie davon."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Security: removed a second acceptance path in the same check. A state that did not match was also accepted as <code>wp_verify_nonce( $state, 'naws_oauth' )</code> — a nonce that no code in the plugin ever created. The check is a single condition now, and a state that does not match ends the request."
-msgstr ""
+msgstr "Sicherheit: Einen zweiten Annahmepfad in derselben Prüfung entfernt. Ein State, der nicht übereinstimmte, wurde auch als <code>wp_verify_nonce( $state, 'naws_oauth' )</code> akzeptiert — eine Nonce, die kein Code im Plugin je erzeugt hat. Die Prüfung ist jetzt eine einzige Bedingung, und ein State, der nicht übereinstimmt, beendet die Anfrage."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Security: the OAuth return route verified the OAuth state but not the caller's permission. <code>NAWS_Admin::handle_oauth_callback()</code> runs on <code>admin_init</code>, receives Netatmo's redirect and exchanged the code for an access and a refresh token — for whoever happened to be logged in. The state proves that the request belongs to a flow started on this site; it says nothing about who follows the redirect, and Netatmo returns the code to one fixed URL. <code>current_user_can( 'manage_options' )</code> now runs at the top of the method, before the state is read, so a request without the permission cannot consume the pending authorization either. Reported by the WordPress plugin review team."
-msgstr ""
+msgstr "Sicherheit: Die OAuth-Rückkehrroute prüfte den OAuth-State, aber nicht die Berechtigung des Aufrufers. <code>NAWS_Admin::handle_oauth_callback()</code> läuft auf <code>admin_init</code>, nimmt die Weiterleitung von Netatmo entgegen und tauschte den Code gegen ein Access- und ein Refresh-Token — für wen auch immer gerade angemeldet war. Der State beweist, dass die Anfrage zu einem auf dieser Seite begonnenen Ablauf gehört; über den, der der Weiterleitung folgt, sagt er nichts, und Netatmo gibt den Code an genau eine feste URL zurück. <code>current_user_can( 'manage_options' )</code> läuft jetzt ganz oben in der Methode, bevor der State gelesen wird, sodass eine Anfrage ohne die Berechtigung auch die ausstehende Autorisierung nicht verbrauchen kann. Gemeldet vom WordPress-Plugin-Review-Team."
 
 #. Found in changelog list item.
 #, gp-priority: low
 msgid "Fix: the \"Tested up to\" header now names WordPress 7.1, in readme.txt and in the plugin header. No code changed from 1.9.6.1."
-msgstr ""
+msgstr "Fix: Der Header „Tested up to“ nennt jetzt WordPress 7.1, in readme.txt und im Plugin-Header. Am Code hat sich gegenüber 1.9.6.1 nichts geändert."
