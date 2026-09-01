@@ -176,6 +176,18 @@ check( 'Unsinn faellt auf die 24 Stunden der Vorgabe zurueck', ago( 'quatsch', $
 check( 'und nicht auf 1970',                                   NAWS_Helpers::period_start( 'quatsch', $now ) > 0, true );
 check( 'ein leeres period ebenso',                             ago( '', $now ), 24 * 3600 );
 
+
+// ── Ein Messwert, dessen Modul es nicht mehr gibt ────────────────────────
+// Die Messwerte ueberleben das Modul: wird eines entfernt, bleiben seine
+// Zeilen in der Datenbank. Die Zelle fiel dann auf die module_id zurueck,
+// und die ist die MAC-Adresse des Moduls.
+$fremd = raw_row( 'Temperature', 21.34 );
+$fremd['module_id'] = '03:00:00:0d:aa:ca';
+$html = render( [ $fremd ] );
+check( 'ein unbekanntes Modul bringt keine MAC in die Tabelle',
+    str_contains( $html, '03:00:00:0d:aa:ca' ), false );
+check( 'seine Zelle bleibt schlicht leer', substr_count( $html, '<td></td>' ), 1 );
+check( 'der Messwert selbst steht weiter da', str_contains( $html, '21.3 °C' ), true );
 echo "\n" . str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );

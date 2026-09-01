@@ -24,6 +24,9 @@ $naws_fmt = $naws_date_only
     ? get_option( 'date_format', 'Y-m-d' )
     : get_option( 'date_format', 'Y-m-d' ) . ' ' . get_option( 'time_format', 'H:i' );
 
+// A reading whose module is gone from the modules table keeps its cell
+// empty rather than falling back to the module_id: that id is the
+// module's MAC address, and readings outlive the module they came from.
 $naws_module_names = [];
 foreach ( NAWS_Database::get_modules() as $naws_mod ) {
     $naws_module_names[ $naws_mod['module_id'] ] = $naws_mod['module_name'];
@@ -65,7 +68,7 @@ $naws_param_labels = NAWS_Helpers::get_all_parameters();
             ?>
                 <tr>
                     <td><?php echo esc_html( wp_date( $naws_fmt, intval( $naws_row['recorded_at'] ) ) ); ?></td>
-                    <td><?php echo esc_html( $naws_module_names[ $naws_row['module_id'] ] ?? $naws_row['module_id'] ); ?></td>
+                    <td><?php echo esc_html( $naws_module_names[ $naws_row['module_id'] ] ?? '' ); ?></td>
                     <td><?php echo esc_html( $naws_param_labels[ $naws_param ] ?? $naws_param ); ?></td>
                     <td><?php echo esc_html( NAWS_Helpers::format_value( $naws_param, $naws_row['value'] ) . ' ' . $naws_unit ); ?></td>
                     <?php if ( $naws_grouped ) : ?>
