@@ -1,0 +1,1273 @@
+# Translation of Plugins - XTX Integration for Netatmo - Stable Readme (latest release) in German
+# This file is distributed under the same license as the Plugins - XTX Integration for Netatmo - Stable Readme (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: +0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/4.1.0\n"
+"Language: de\n"
+"Project-Id-Version: Plugins - XTX Integration for Netatmo - Stable Readme (latest release)\n"
+
+#. Short description.
+#, gp-priority: high
+msgid "Connects to the Netatmo API, stores all sensor data locally and displays live dashboards, animated charts, history and weather forecasts."
+msgstr ""
+
+#. Plugin name.
+#, gp-priority: high
+msgid "XTX Integration for Netatmo"
+msgstr ""
+
+#. Found in faq paragraph.
+msgid "Yes. Every endpoint is read-only, rate-limited, and requires an API key generated in the admin panel. The key is accepted in the X-NAWS-Key header only — never as a query parameter, so it cannot end up in access logs, the Referer header, browser history or a proxy along the way."
+msgstr ""
+
+#. Found in description list item.
+msgid "<code>[naws_weather_icon]</code> – Just the animated icon for the current weather state (<code>size</code>); renders nothing when the state is unknown"
+msgstr ""
+
+#. Found in description list item.
+msgid "<code>[naws_weather_widget]</code> – Compact forecast widget for a sidebar (<code>days</code> 3 or 5, <code>width</code> 250–500)"
+msgstr ""
+
+#. Found in description list item.
+msgid "<code>[naws_table]</code> – Readings as a table over a period, grouped by hour or day (<code>period</code>, <code>group_by</code>, <code>limit</code>, <code>parameters</code>)"
+msgstr ""
+
+#. Found in description list item.
+msgid "<code>[naws_calc]</code> – Single computed value (dew point, felt temperature, sunrise, moon phase, …); full list on the Shortcodes page in the backend"
+msgstr ""
+
+#. Found in description list item.
+msgid "<code>[naws_current]</code> – Current readings of one or all modules as tiles or a list (<code>module_id</code>, <code>parameters</code>, <code>layout</code>, <code>title</code>)"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>10 Shortcodes</strong> – Dashboard, current readings, infobar, single value, computed value, history charts, forecast, table, widget, weather icon"
+msgstr ""
+
+#. Found in faq paragraph.
+msgid "Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Europe). Both are free and require no API key."
+msgstr ""
+
+#. Found in faq paragraph.
+msgid "Yes. The Export/Import feature lets you download weather data, module configs and all settings as JSON. Ideal for migrating to a new WordPress installation."
+msgstr ""
+
+#. Found in faq paragraph.
+msgid "Yes. The Appearance page offers 130+ configurable colors with live preview, 4 icon sets, per-sensor colors, chart theming and year comparison palettes."
+msgstr ""
+
+#. Found in faq paragraph.
+msgid "All sensitive data (OAuth tokens, client ID, client secret, API keys) is encrypted with AES-256-GCM before being stored in the database."
+msgstr ""
+
+#. Found in faq paragraph.
+msgid "Yes. The plugin includes a chunk-based historical importer that fetches data from the Netatmo getmeasure API without hitting rate limits."
+msgstr ""
+
+#. Found in faq paragraph.
+msgid "Netatmo sensors transmit every 5 minutes. The plugin sync interval is configurable (5–1440 minutes). Night mode reduces polling between 23:00–06:00."
+msgstr ""
+
+#. Found in faq paragraph.
+msgid "Visit <a href=\"https://dev.netatmo.com\">dev.netatmo.com</a>, log in with your Netatmo account, create a new application and copy the Client ID and Client Secret."
+msgstr ""
+
+#. Found in faq header.
+msgid "Which forecast providers are supported?"
+msgstr ""
+
+#. Found in faq header.
+msgid "Can I back up my weather data?"
+msgstr ""
+
+#. Found in faq header.
+msgid "Can I customize the appearance?"
+msgstr ""
+
+#. Found in faq header.
+msgid "Are my Netatmo credentials safe?"
+msgstr ""
+
+#. Found in faq header.
+msgid "Is the REST API secure?"
+msgstr ""
+
+#. Found in faq header.
+msgid "Can I import historical data?"
+msgstr ""
+
+#. Found in faq header.
+msgid "How often does data update?"
+msgstr ""
+
+#. Found in faq header.
+msgid "How do I get Netatmo API credentials?"
+msgstr ""
+
+#. Found in installation list item.
+msgid "Data syncs automatically – add shortcodes to any page"
+msgstr ""
+
+#. Found in installation list item.
+msgid "Click \"Connect to Netatmo\" and authorize"
+msgstr ""
+
+#. Found in installation list item.
+msgid "Set the Redirect URI in your Netatmo app to: <code>https://yoursite.com/wp-admin/admin.php?page=naws-settings</code>"
+msgstr ""
+
+#. Found in installation list item.
+msgid "Enter your Client ID and Client Secret"
+msgstr ""
+
+#. Found in installation list item.
+msgid "Create a Netatmo developer app at <a href=\"https://dev.netatmo.com\">dev.netatmo.com</a>"
+msgstr ""
+
+#. Found in installation list item.
+msgid "Go to <strong>XTX Netatmo &gt; Settings</strong>"
+msgstr ""
+
+#. Found in installation list item.
+msgid "Activate the plugin in WordPress Admin &gt; Plugins"
+msgstr ""
+
+#. Found in installation list item.
+msgid "Upload the <code>xtx-integration-for-netatmo</code> folder to <code>/wp-content/plugins/</code>"
+msgstr ""
+
+#. Found in description paragraph.
+msgid "No other third-party code is included. No library is loaded from a CDN; everything is served from your own installation. Libraries that ship with WordPress itself are used from WordPress and are not bundled."
+msgstr ""
+
+#. Found in description paragraph.
+msgid "Two JavaScript libraries are bundled with this plugin, both under the MIT license, which is GPL-compatible. They ship in their minified distribution builds; the unminified source and the build tooling for each are available at the links below."
+msgstr ""
+
+#. Found in description paragraph.
+msgid "No personal user data (names, emails, IP addresses) is collected or transmitted by this plugin. All sensor data is stored exclusively in your local WordPress database."
+msgstr ""
+
+#. Found in description paragraph.
+msgid "This plugin connects to the following external services:"
+msgstr ""
+
+#. Found in description paragraph.
+msgid "<strong>XTX Integration for Netatmo</strong> connects your Netatmo hardware to WordPress. It reads all sensor data via the official Netatmo API, stores readings in your local database and displays them with beautiful live dashboards, animated charts and weather forecasts."
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Used for:</strong> Time axis formatting in the charts. This is the bundled build, which includes date-fns (also MIT)."
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Source and build tools:</strong> <a href=\"https://github.com/chartjs/chartjs-adapter-date-fns\">https://github.com/chartjs/chartjs-adapter-date-fns</a> — the exact release bundled here is <a href=\"https://github.com/chartjs/chartjs-adapter-date-fns/releases/tag/v3.0.0\">v3.0.0</a>"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>File:</strong> <code>assets/vendor/chartjs-adapter-date-fns.bundle.min.js</code>"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Used for:</strong> All charts — 24h trend lines on the live dashboard and the year-over-year history charts"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Source and build tools:</strong> <a href=\"https://github.com/chartjs/Chart.js\">https://github.com/chartjs/Chart.js</a> — the exact release bundled here is <a href=\"https://github.com/chartjs/Chart.js/releases/tag/v4.5.1\">v4.5.1</a>"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Homepage:</strong> <a href=\"https://www.chartjs.org\">https://www.chartjs.org</a>"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>License:</strong> MIT"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>File:</strong> <code>assets/vendor/chart.umd.min.js</code>"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Note:</strong> Free API, no API key needed. MET Norway's terms require every client to identify itself, so requests to this service carry a User-Agent naming the plugin, its version and your site address — that address is how MET Norway would reach you before restricting a misbehaving client. This is sent to api.met.no only, and only while Yr.no is the selected provider."
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Terms:</strong> <a href=\"https://developer.yr.no/doc/TermsOfService/\">https://developer.yr.no/doc/TermsOfService/</a>"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Privacy policy:</strong> <a href=\"https://www.met.no/en/About-us/privacy\">https://www.met.no/en/About-us/privacy</a>"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>When:</strong> When the forecast shortcode is displayed and Yr.no is selected as provider (cached for 3 hours)"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Purpose:</strong> Fetch weather forecast data (optional provider, selectable in settings)"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Documentation:</strong> <a href=\"https://open-meteo.com/en/docs/geocoding-api\">https://open-meteo.com/en/docs/geocoding-api</a>"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>When:</strong> In manual mode whenever no cached result exists (cached for 7 days). In automatic mode exactly once — the resolved name is stored in the plugin settings and never looked up again."
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Data sent:</strong> In \"manual\" location mode, the city name or postal code entered in the plugin settings. In \"automatic\" mode, the latitude and longitude of your weather station, rounded to two decimal places, in order to look up the name of the nearest place."
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Purpose:</strong> Turn a place into coordinates, and coordinates into a place name for the forecast heading"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Note:</strong> Open-Meteo is a free, open-source weather API. No API key or registration required."
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Terms and privacy:</strong> <a href=\"https://open-meteo.com/en/terms\">https://open-meteo.com/en/terms</a>"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>When:</strong> When the forecast shortcode is displayed (cached for 3 hours)"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Data sent:</strong> Latitude and longitude of your weather station"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Purpose:</strong> Fetch weather forecast data based on station coordinates (default provider)"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Privacy policy:</strong> <a href=\"https://legals.netatmo.com/?goto=privacy\">https://legals.netatmo.com/?goto=privacy</a>"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Terms of service:</strong> <a href=\"https://dev.netatmo.com/legal\">https://dev.netatmo.com/legal</a>"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>When:</strong> During initial authentication, on every automatic sync cycle, on every token refresh, and while a historical import is running"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Data sent:</strong> The Client ID and Client Secret of the Netatmo application you created, in exchange for an access token; afterwards the access or refresh token with every request, plus the station and module IDs whose measurements are being requested"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Purpose:</strong> Authenticate via OAuth2, fetch sensor readings and station data"
+msgstr ""
+
+#. Found in description list item.
+msgid "<code>[naws_forecast]</code> – Multi-day weather forecast"
+msgstr ""
+
+#. Found in description list item.
+msgid "<code>[naws_history]</code> – Year-over-year comparison charts (supports <code>year</code> parameter)"
+msgstr ""
+
+#. Found in description list item.
+msgid "<code>[naws_value]</code> – Single inline sensor value"
+msgstr ""
+
+#. Found in description list item.
+msgid "<code>[naws_infobar]</code> – Astronomy bar with sunrise, moon phase, felt temperature"
+msgstr ""
+
+#. Found in description list item.
+msgid "<code>[naws_live]</code> – Live sensor tiles with 24h trend charts and forecast"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>NAModule4</strong> – Additional Indoor (Temperature, Humidity, CO2)"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>NAModule3</strong> – Rain Gauge (Hourly, Daily, Rolling 24h)"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>NAModule2</strong> – Wind (Speed, Direction, Gusts)"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>NAModule1</strong> – Outdoor (Temperature, Humidity)"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>NAMain</strong> – Base Station (Temperature, Humidity, CO2, Noise, Pressure)"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>4 Icon Sets</strong> – Emoji, Outline, Filled, Minimal with per-sensor color control"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>130+ Configurable Colors</strong> – Full appearance customization with live preview"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Mobile-First Responsive</strong> – All views optimized for smartphones, tablets and desktops"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Export / Import</strong> – Full backup and restore of weather data, modules and settings"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Multilingual</strong> – Full German, English and Norwegian interface"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Configurable Units</strong> – C/F, mm/inch, mbar/inHg/mmHg, km/h/m/s/mph/kn"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Encrypted Storage</strong> – All credentials (OAuth tokens, client secret, API keys) are AES-256-GCM encrypted at rest"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>REST API</strong> – Read-only JSON API with key authentication and rate limiting for external tools (Google Charts, Grafana, etc.)"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Weather Forecast</strong> – 5-day forecast based on station coordinates via Open-Meteo or Yr.no"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Historical Charts</strong> – Year-over-year comparison for temperature, pressure and rainfall with interactive legend"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Derived Weather Data</strong> – Feels-like temperature, heat index, dew point, wind chill"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Astronomy</strong> – Sunrise/sunset, moon phase with illumination, next full moon"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Live Dashboard</strong> – Real-time sensor cards with animated counters, 24h trend charts, pressure trend indicator, wind compass, CO2 air quality levels"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>Full Netatmo Integration</strong> – OAuth2 authentication, automatic sync, all module types supported (Base, Outdoor, Wind, Rain, Indoor)"
+msgstr ""
+
+#. Found in description header.
+msgid "chartjs-adapter-date-fns 3.0.0"
+msgstr ""
+
+#. Found in description header.
+msgid "Chart.js 4.5.1"
+msgstr ""
+
+#. Found in description header.
+msgid "Third-Party Libraries"
+msgstr ""
+
+#. Found in description header.
+msgid "Yr.no / MET Norway API (api.met.no)"
+msgstr ""
+
+#. Found in description header.
+msgid "Open-Meteo Geocoding API (geocoding-api.open-meteo.com)"
+msgstr ""
+
+#. Found in description header.
+msgid "Open-Meteo API (api.open-meteo.com)"
+msgstr ""
+
+#. Found in description header.
+msgid "Netatmo API (api.netatmo.com)"
+msgstr ""
+
+#. Found in description header.
+msgid "Privacy &amp; External Services"
+msgstr ""
+
+#. Found in description header.
+msgid "Shortcodes"
+msgstr ""
+
+#. Found in description header.
+msgid "Supported Modules"
+msgstr ""
+
+#. Found in description header.
+msgid "Key Features"
+msgstr ""
+
+#. Screenshot description.
+msgid "Export / Import page for backups"
+msgstr ""
+
+#. Screenshot description.
+msgid "Appearance page with live color preview"
+msgstr ""
+
+#. Screenshot description.
+msgid "Weather forecast widget"
+msgstr ""
+
+#. Screenshot description.
+msgid "REST API documentation in the admin panel"
+msgstr ""
+
+#. Screenshot description.
+msgid "Admin settings page with Netatmo connection status"
+msgstr ""
+
+#. Screenshot description.
+msgid "Year-over-year comparison charts for temperature and rainfall"
+msgstr ""
+
+#. Screenshot description.
+msgid "Live dashboard with sensor cards and 24h trend charts"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Security: the REST API key page created and revoked keys on POST with a nonce check but no capability check of its own. The page is reachable only with <code>manage_options</code>, so nothing stood open — it is the pattern the review team warned about, and the check now runs before the nonce is spent."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: this readme advertised five shortcodes and documented six. Ten are registered; all ten are listed now."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: an uppercase MAC address in <code>[naws_value module=\"...\"]</code> matched nothing, and an emptied degree-day limit field silently stored 0 degrees."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: the next supermoon, the next lunar eclipse and the next full moon were dated in German whatever the site language was."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: the apparent temperature ignored wind chill, and the heat index was computed outside the range it is defined for."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: a server without the openssl extension died on the first read of a token, and an unauthenticated REST request could turn a 401 into a fatal 500."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: a five-second hiccup at Netatmo cost a whole ten-minute polling cycle. Requests are retried now, and an error without an error code is no longer handed back as an empty result."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Changed: the cron settings and the cron log now say what WP-Cron does not do. WP-Cron is triggered by page views, not by a clock, so on a quiet night no sync happens at all."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Changed: <strong>breaking</strong> — the REST API accepts its key in the <code>X-NAWS-Key</code> header only. A secret in the address line is written down by access logs, the Referer header, the browser history and every cache in between. Calls of the form <code>?api_key=...</code> now answer 401. If you use the API, switch before you update."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: three settings for the degree-day limits: heating limit, room temperature and cooling limit."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: the header bar and the font are settings now. The font list offers only fonts your page already serves — the plugin loads no font file of its own."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: the admin shows the state of the encryption — a missing openssl extension, a missing aes-256-gcm, an <code>AUTH_KEY</code> still set to the sample value from wp-config-sample.php, and changed WordPress salts. A fingerprint of the key sits beside the ciphertext so a salt change is recognizable as one instead of looking like a broken plugin."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: <code>[naws_calc]</code> — one shortcode for twenty-seven computed values in four kinds. Fourteen instant values (dew point, apparent temperature, wet-bulb temperature, heat index, thermal sensation, CO2 rating, wind compass, sunrise, sunset, day length, moon phase and illumination, next supermoon, next lunar eclipse), seven day classes with <code>mode=\"count|streak|max_streak\"</code> (ice days, frost days, summer days, hot days, tropical nights, heating and cooling days), five sums (heating and cooling degree days, growing degree days, the grassland temperature sum and the date the growing season started) and the Standardized Precipitation Index."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: the order of the live cards and of the yearly comparison charts is a setting. Both lists on the Live-Dashboard screen are sortable by drag and drop, and the front end follows. A saved order decides position, never membership: an id left over from a renamed module is passed over, and a chart the order has never heard of takes its place at the end instead of disappearing."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Historical data importer with batch processing"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Cron watchdog with self-healing for stuck sync jobs"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Configurable units (temperature, rain, wind, pressure)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Full German and English localization"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "AES-256-GCM encryption for all stored credentials"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "REST API with API key authentication and rate limiting"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "5-day weather forecast via Open-Meteo"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Year-over-year history charts (temperature, pressure, monthly rainfall)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Derived weather: feels-like temperature, heat index, dew point"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Astronomy: sunrise/sunset, moon phase, next full moon"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Live dashboard with animated sensor cards and 24h charts"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Full Netatmo OAuth2 integration with all module types"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Initial public release"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Improved: Vendor JS files bundled in ZIP"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Improved: Plugin Check compliance (126 errors to 0)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: SVG weather icons stripped by <code>wp_kses_post()</code>"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: Cron stops after plugin update (activation hook + watchdog fix)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: OAuth state validation with <code>hash_equals()</code> and 10-min expiry"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: OAuth flow broken by encryption (auto-migration)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: Configurable station name in Settings"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: File-based language system (one PHP file per language, auto-discovered)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: Norwegian (Bokmal) language with 326 translated keys"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: Forecast provider selection (Open-Meteo + Yr.no / MET Norway)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: Fatal error on activation (<code>spawn_cron()</code> called too early)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Removed: gauge.min.js vendor library and unused templates"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Removed shortcodes: <code>[naws_chart]</code>, <code>[naws_gauge]</code>, <code>[naws_dashboard]</code>, <code>[naws_card]</code> – use <code>[naws_live]</code> and <code>[naws_history]</code> instead"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: Chart.js blank page prevented with try/catch"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: Silent DB errors now logged"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: N+1 query in history data replaced with single query"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: <code>naws_data_synced</code> action hook for extensibility"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: Frontend error UI and AJAX retry logic with exponential backoff"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: Health status indicator in admin dashboard (green/yellow/red)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: Night mode with reduced polling between 23:00–06:00"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: Adaptive polling with error backoff (doubles interval after 3 failures)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: Transient caching layer for database queries (modules, readings, daily summaries)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: Central error logging (<code>NAWS_Logger</code>) with severity levels and sensitive data redaction"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Improved: ID selectors replaced with reusable class selectors"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Improved: ~400 lines of inline styles extracted to centralized <code>frontend.css</code>"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: Dynamic chart font sizing based on viewport"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: Responsive wind compass with <code>clamp()</code> sizing"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: Touch-friendly targets meeting WCAG 44x44px minimum"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: Mobile-first responsive redesign with standardized breakpoints (480/600/768/1024px)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: Debug endpoint sanitized (truncated responses, stripped tokens)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: Deprecated <code>date_i18n()</code> replaced with <code>wp_date()</code>"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: <code>TRUNCATE</code> replaced with <code>DELETE FROM</code> for WordPress compatibility"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: SQL injection hardening with <code>$wpdb-&gt;prepare()</code> for DELETE queries"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: All <code>json_encode()</code> replaced with <code>wp_json_encode()</code> (Plugin Check compliance)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: <code>NAWS_Export</code> class with streaming export for large datasets"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Security: API tokens are never included in exports"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: File import with chunked AJAX processing and real-time progress"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: Weather data export as JSON, full backup export (data + modules + settings)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: Export / Import feature with full backup and restore"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Improved: All frontend colors use CSS custom properties"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: 60+ translation strings for color settings"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: Reset-to-defaults functionality"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: Theme colors, accent colors, sensor tile gradients, chart theming, year palette"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: <code>NAWS_Colors</code> class with centralized color management and caching"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: Appearance page with 130+ configurable colors and WordPress Color Picker"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Improved: Appearance page redesigned with live previews for all color groups"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: 24h chart gradient fill restored (hex-to-RGBA conversion with canvas gradient)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Improved: Appearance admin page streamlined, unused sections removed"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: History shortcode <code>year</code> parameter (<code>[naws_history year=\"2025\"]</code>)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: Forecast source label dynamically shows correct provider name"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: Forecast provider selection now works correctly (provider-aware cache keys)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: Dynamic icon rendering via <code>NAWS_Icons</code> class"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: Per-sensor icon colors with live preview (7 configurable colors)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: 4 frontend icon sets (Emoji, Outline, Filled, Minimal) selectable in Appearance"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Plugin renamed: \"Netatmo Weather Station\" to \"XTX Netatmo\""
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: GitHub Auto-Updater via <code>NAWS_Updater</code> class (later removed in 1.5.7 for WordPress.org compliance)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: Dashboard SVG icons no longer rendered as raw source code"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: Plugin URI corrected to <code>https://www.frank-neumann.de/netatmo-wetter-plugin/</code>"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: Auto-update toggle now visible in WordPress plugin list (registered in <code>$transient-&gt;no_update</code>)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: 24h chart modal overlay positioned correctly inside <code>.naws-wx</code> wrapper"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: History chart year buttons now wrap on mobile instead of overflowing"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: Option name inconsistency <code>naws_token_expires</code> unified to <code>naws_token_expiry</code>"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: readme.txt stable tag synchronized with plugin header version"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: Escaping fixes for admin views (<code>esc_attr()</code> in modules.php, cron-log.php)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Removed legacy plaintext-enforcement from init"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Migration updated to encrypt plaintext credentials instead of forcing plaintext"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Security: Client ID and Client Secret now AES-256-GCM encrypted at rest (all 5 secrets fully encrypted)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: 361 NonPrefixedVariableFound warnings resolved with scoped phpcs disable"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: SVG output escaping documented with <code>phpcs:ignore</code>"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: <code>rand()</code> replaced with <code>wp_rand()</code>"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: <code>move_uploaded_file()</code> replaced with <code>copy()</code> (WordPress Coding Standards)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Removed GitHub Auto-Updater (WordPress.org compliance – hosted plugins must not include custom updaters)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: privacy policy URL in readme.txt corrected"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: AJAX capability-check failures now return proper JSON 403 instead of plain <code>wp_die()</code>"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "REST API docs: replaced Google Charts CDN example with bundled Chart.js example"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Updated Chart.js vendor from 4.4.0 to 4.5.1"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "WordPress.org compliance: removed direct <code>&lt;script src&gt;</code> for Chart.js in frontend templates"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "WordPress.org compliance: plugin renamed to \"XTX Integration for Netatmo\" (trademark)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "WordPress.org compliance: all inline <code>&lt;style&gt;</code> blocks moved to enqueued stylesheet"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "WordPress.org compliance: all inline <code>&lt;script&gt;</code> blocks converted to <code>wp_add_inline_script()</code>"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: <code>phpcs</code> annotation for <code>naws_appearance</code> input sanitization made explicit (sanitized via <code>NAWS_Colors::sanitize()</code>)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "WordPress.org compliance: dynamic SQL column names validated against explicit whitelist before query execution"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "WordPress.org compliance: all remaining inline <code>&lt;script&gt;</code>/<code>&lt;style&gt;</code> blocks converted to <code>wp_add_inline_script()</code> / <code>wp_add_inline_style()</code>"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "WordPress.org compliance: all <code>ob_start()</code> blocks closed with <code>ob_get_clean()</code> in same scope"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "WordPress.org compliance: file upload sanitized with <code>sanitize_file_name()</code> and <code>move_uploaded_file()</code>"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Added <code>ls_saving</code>, <code>ls_saved</code>, <code>ls_error</code> strings to <code>nawsAdmin</code> localization (live-settings page)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "WordPress.org compliance: icon SVGs sanitized with <code>wp_kses()</code> before JSON-encoding; <code>NAWS_Icons::get_js_object()</code> (raw JS literal) replaced by <code>wp_json_encode( NAWS_Icons::get_set() )</code>"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "WordPress.org compliance: all JS strings previously echoed from PHP now served via <code>nawsAdmin.strings</code> (localized with <code>wp_localize_script</code>) – eliminates PHP interpolation in JavaScript"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "WordPress.org compliance: PHP values injected into inline scripts via <code>wp_add_inline_script( $handle, $data, 'before' )</code> with <code>wp_json_encode()</code> instead of echoing PHP inside JS blocks"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "WordPress.org compliance: all file-scope <code>ob_start()</code> / <code>ob_get_clean()</code> patterns removed from admin views and frontend templates"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: <code>naws_svg_kses_args()</code> helper properly available at plugin load time; resolves fatal error on admin dashboard when function was called before class-naws-helpers.php was loaded"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: <code>SHOW COLUMNS</code> query in <code>class-naws-astro.php</code> now uses <code>$wpdb-&gt;prepare()</code> consistently with the rest of the codebase"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: <code>$file['size']</code> in import handler now wrapped in <code>intval()</code> for explicit sanitization (WordPress.org compliance)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: history chart no longer emits a PHP 8.1 deprecation notice (<code>substr(): Passing null</code>) when the daily-summary table is still empty — the year range now falls back to the current year instead of year 0"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Compatibility: minimum PHP requirement raised to 8.0 (<code>Requires PHP: 8.0</code>)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Compatibility: tested against WordPress 7.0"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: REST API routes were not running their authentication callback — with the REST API enabled the endpoints, including station coordinates, were reachable without an API key"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: saving one settings form no longer resets the others — saving your Netatmo credentials used to silently reset language, units, sync interval and all forecast settings back to their defaults"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: current conditions are fetched separately from the daily forecast, on a 30-minute cache, so the icon reflects the weather now instead of a whole-day summary"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: six thresholds in the settings (heavy rain, snow, fog humidity and spread, storm wind, dashboard placement)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: rain-versus-snow is decided by wet-bulb temperature rather than air temperature, so snow is still recognised at 3–4 °C in dry air"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: the icon combines station readings with the forecast — your own measurements win, the forecast only fills in what the station cannot measure (cloud cover, thunderstorms, and precipitation if you have no rain gauge)"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: animated weather icon with twelve states — shortcode <code>[naws_weather_icon size=\"96\"]</code> and, switchable in the backend, above the live dashboard"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: saving settings on the Appearance page no longer redirects to Settings — forms now return to the page they were submitted from"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Changed: the colourful weather icons introduced in 1.7.0 are now used everywhere, including the forecast shortcode and the dashboard forecast strip"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: forecast length selectable in the backend, with a live preview at the real width"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: sidebar widget <code>[naws_weather_widget]</code> — weather icon, outdoor temperature, rain and wind, plus a three- or five-day forecast, built for narrow columns"
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: the corrected cloud figures are also kept as the last known reading, so an outage of the forecast API no longer brings the old behaviour back."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: the weather icon showed \"overcast\" under a cloudless sky. The forecast provider's weather code lumps all cloud layers together, so a thin veil of cirrus counted the same as a low, closed deck. Cloudiness is now read from the cover percentage per layer, with high cloud weighted down — a cirrus sky reads as fair, not overcast."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Changed: redirect URLs are built with RFC 3986 encoding."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Security: input sanitization on the appearance settings form is now applied directly to the submitted data instead of through an intermediate variable, so automated review tools can see it. The data was sanitized before as well; only the form of the code changed."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: the shortcode reference in the backend showed the wrong descriptions. A leftover block of duplicate entries in the language files overrode the detailed ones, and the entry for <code>[naws_history]</code> actually described <code>[naws_table]</code>."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: the Norwegian interface was only half translated. Norwegian arrived with 326 keys and the plugin has since grown to 612, so everything added later — the forecast, the REST API documentation, the shortcode reference and the live dashboard settings — stayed in English. All 272 missing strings are now translated into Bokmal."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: the weather icon at the head of the sidebar widget was frozen. It was rendered through the same call as the small forecast icons, which are deliberately still, and inherited their frozen state. It now animates, while the forecast icons stay still as intended."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: the sidebar widget's width can be set between 250 and 500 pixels, in Appearance or per placement with <code>[naws_weather_widget width=\"400\"]</code>. Icon, figures and spacing scale with it — at 500 pixels the weather icon is 96 pixels instead of 64. The width acts as a maximum, so the widget still shrinks to fit a narrower column."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: the decrypted client secret was written into the page three times instead of once, and was submitted when saving unrelated settings."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: every save rewrote every setting. Each form carried hidden copies of the fields it did not own, a leftover from before the merge behaviour added in 1.7.0. Saving the units also rewrote the forecast settings and credentials from stale values, so edits made in a second browser tab could be lost. A save now only touches the fields shown in that form."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Changed: one save button for all settings instead of three. The API credentials keep their own form and button."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Changed: the settings screen has been reorganised. The connection card now spans the full width and the settings below sit in two balanced columns, so the forecast settings are visible near the top instead of at the bottom. The page is around 600 pixels shorter and no longer has a large empty area beside the connection card."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Changed: the error backoff is described under the interval setting rather than on the night mode checkbox. It applies regardless of night mode."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Changed: night mode, daily summaries and the history importer now use the timezone configured in WordPress instead of Europe/Berlin. On sites in other timezones the night window fell on the wrong hours and daily boundaries could be cut at the wrong midnight."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: the dashboard warned about a stale sync during normal night operation. The warning threshold now accounts for the doubled night interval."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: night mode stopped reducing polling as soon as the API had trouble, because it measured from the last successful sync rather than the last attempt."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: a cron interval that is not one of the available schedules stopped polling completely. The field accepted any value from 5 to 1440 minutes while only seven of them exist as schedules, and an unlisted value such as 45 left the site with no fetch cron. The interval is a dropdown now, and stored values are snapped to the nearest schedule."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: repeated API errors made the plugin poll harder rather than easing off. The interval is meant to double after three failures, but the ceiling on that calculation sat below the longest intervals the settings offer, so a 120-minute interval was halved and a 60-minute one never changed at all."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: hiding a year from the enlarged chart view left the corresponding button in the small chart looking active, even though the chart below had already dropped that year. Both legends are refreshed together now."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Changed: the year buttons in the history charts sit below their chart instead of beside the title. They now use the full chart width and wrap over as many rows as needed, so stations with ten or more years of records no longer push the buttons out to the right. The enlarged chart view follows the same layout."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: the history charts stayed empty on some setups. The chart data and the chart script were injected with wp_add_inline_script(), which is silently dropped on those installations, so nothing at all was rendered. Both now use the same reliable pattern the live dashboard already used: a plain JSON data element plus a footer script block."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Changed: that migration checked for each of its eight columns with a separate query. It reads the column list once now. The migration only runs on activation and upgrade, so this changes nothing you would notice."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Changed: the database migration that adds the v1.4 sensor columns no longer assembles its SQL from variables. The column names came from a hardcoded list and were never user input, but Plugin Check's security scanner cannot verify that and flagged the query. Every ALTER TABLE statement is now written out in full, which leaves nothing to flag."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Changed: removed a source map reference at the end of the bundled Chart.js file that pointed at a file the package never contained."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Changed: the shipped LICENSE file is now GPL v2, matching the \"GPLv2 or later\" stated in the plugin header and this readme. The license itself is unchanged."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: the Open-Meteo geocoding service is now documented separately from the forecast service. It is a different host and had no entry of its own."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "New: a Third-Party Libraries section documenting the two bundled JavaScript libraries (Chart.js and chartjs-adapter-date-fns), their MIT licenses and where to get their unminified source."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: the Netatmo privacy policy link in this readme was dead and has been replaced. The Netatmo entry also gained a terms of service link and now states that the Client ID and Client Secret are sent to the token endpoint."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: the User-Agent sent to the Yr.no / MET Norway forecast API named a repository that does not exist, and three other outgoing requests named no contact at all. MET Norway's terms require every client to identify itself with a reachable contact. All requests now send the plugin name, its version and your site address."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Changed: the plugin no longer outputs any inline script. The boot code for the live dashboard and the history charts now ships as two ordinary JavaScript files that are enqueued the WordPress way. This also removes the reason the 1.9.3 workaround existed: an enqueued file cannot be silently dropped the way an inline fragment can. The JavaScript itself is unchanged, and several shortcodes on one page now share a single copy of it."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Security: removed a second acceptance path in the same check. A state that did not match was also accepted as <code>wp_verify_nonce( $state, 'naws_oauth' )</code> — a nonce that no code in the plugin ever created. The check is a single condition now, and a state that does not match ends the request."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Security: the OAuth return route verified the OAuth state but not the caller's permission. <code>NAWS_Admin::handle_oauth_callback()</code> runs on <code>admin_init</code>, receives Netatmo's redirect and exchanged the code for an access and a refresh token — for whoever happened to be logged in. The state proves that the request belongs to a flow started on this site; it says nothing about who follows the redirect, and Netatmo returns the code to one fixed URL. <code>current_user_can( 'manage_options' )</code> now runs at the top of the method, before the state is read, so a request without the permission cannot consume the pending authorization either. Reported by the WordPress plugin review team."
+msgstr ""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: the \"Tested up to\" header now names WordPress 7.1, in readme.txt and in the plugin header. No code changed from 1.9.6.1."
+msgstr ""

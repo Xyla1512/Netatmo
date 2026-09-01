@@ -15,6 +15,26 @@
         };
     }
 
+    // The failure messages arrive translated with the config above. These
+    // defaults are what is left when they do not arrive at all: the
+    // fallback branch built no i18n, or a cached inline script predates it.
+    // English rather than German, because English is the language this file
+    // is written in and the one a missing translation falls back to
+    // everywhere else in the plugin.
+    //
+    // Filled in per key, not replaced wholesale — a payload carrying two of
+    // the three would otherwise lose the third.
+    nawsFrontend.i18n = nawsFrontend.i18n || {};
+    [
+        ['js_chart_failed',   'Chart could not be rendered.'],
+        ['js_no_data_period', 'No data for this period.'],
+        ['js_load_failed',    'Could not load data (HTTP %s)']
+    ].forEach(function (pair) {
+        if (!nawsFrontend.i18n[pair[0]]) {
+            nawsFrontend.i18n[pair[0]] = pair[1];
+        }
+    });
+
     /* ============================================================
        Responsive chart font size helper
        ============================================================ */
@@ -178,20 +198,23 @@
                         self.render(resp.data.datasets);
                     } catch (e) {
                         console.error('NAWS Chart render error:', e);
-                        nawsShowError(wrap, 'Chart konnte nicht gerendert werden.');
+                        nawsShowError(wrap, nawsFrontend.i18n.js_chart_failed);
                     }
                 } else {
                     // Server returned an error response
                     if (resp && !resp.success && resp.data && resp.data.message) {
                         nawsShowError(wrap, resp.data.message);
                     } else {
-                        nawsShowError(wrap, 'Keine Daten für diesen Zeitraum.');
+                        nawsShowError(wrap, nawsFrontend.i18n.js_no_data_period);
                     }
                 }
             }, function(xhr) {
                 if (self.loadingEl) self.loadingEl.style.display = 'none';
                 console.error('NAWS AJAX error:', xhr.status, xhr.responseText);
-                nawsShowError(wrap, 'Daten konnten nicht geladen werden (HTTP ' + xhr.status + ')');
+                // The placeholder is substituted rather than appended:
+                // where the status number belongs in the sentence is a
+                // question of language.
+                nawsShowError(wrap, nawsFrontend.i18n.js_load_failed.replace('%s', xhr.status));
             });
         },
 
@@ -278,7 +301,7 @@
                 console.error('NAWS Chart.js error:', e);
                 nawsShowError(
                     this.el?.closest('.naws-chart-canvas-wrap'),
-                    'Chart konnte nicht gerendert werden.'
+                    nawsFrontend.i18n.js_chart_failed
                 );
             }
         }
@@ -576,7 +599,7 @@ window.NAWS_YearCompare.prototype = {
             if (wrap) {
                 var msg = document.createElement('div');
                 msg.className = 'naws-no-data-msg naws-error-msg';
-                msg.textContent = 'Chart konnte nicht gerendert werden.';
+                msg.textContent = nawsFrontend.i18n.js_chart_failed;
                 wrap.appendChild(msg);
             }
         }

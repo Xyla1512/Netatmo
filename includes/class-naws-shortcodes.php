@@ -71,6 +71,23 @@ class NAWS_Shortcodes {
                     'ajax_url' => admin_url( 'admin-ajax.php' ),
                     'nonce'    => wp_create_nonce( 'naws_public_nonce' ),
                     'options'  => get_option( 'naws_settings', [] ),
+                    // The three sentences frontend.js shows when something
+                    // fails. They stood in the script itself, in German,
+                    // which made them the only strings in the plugin that no
+                    // translation could reach - an English visitor read them
+                    // in German and no setting changed that. Migrating the
+                    // PHP to gettext did not move them, because they were
+                    // never in the PHP.
+                    //
+                    // They travel with this config rather than through a
+                    // second mechanism, because it is already injected on
+                    // exactly the pages that load the script.
+                    'i18n'     => [
+                        'js_chart_failed'   => __( 'Chart could not be rendered.', 'xtx-integration-for-netatmo' ),
+                        'js_no_data_period' => __( 'No data for this period.', 'xtx-integration-for-netatmo' ),
+                        /* translators: %s is the HTTP status code the request came back with. */
+                        'js_load_failed'    => __( 'Could not load data (HTTP %s)', 'xtx-integration-for-netatmo' ),
+                    ],
                 ] ) . ';',
                 'before'
             );

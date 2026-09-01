@@ -1,0 +1,40 @@
+# Translation of Plugins - XTX Integration for Netatmo - Stable (latest release) in German
+# This file is distributed under the same license as the Plugins - XTX Integration for Netatmo - Stable (latest release) package.
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: de\n"
+"Project-Id-Version: Plugins - XTX Integration for Netatmo - Stable (latest release)\n"
+
+#: includes/class-naws-crypto.php:462
+msgid "put your unique phrase here"
+msgstr "füge hier deine einmalig genutzte Zeichenfolge ein"
+
+#. Author URI of the plugin
+#: xtx-integration-for-netatmo.php
+msgid "https://frank-neumann.de"
+msgstr "https://frank-neumann.de"
+
+#. Author of the plugin
+#: xtx-integration-for-netatmo.php
+msgid "Frank Neumann"
+msgstr "Frank Neumann"
+
+#. Description of the plugin
+#: xtx-integration-for-netatmo.php
+msgid "Connects to the Netatmo API, stores all sensor data locally and displays live dashboards, charts, history and forecasts via shortcodes."
+msgstr "Verbindet sich mit der Netatmo-API, speichert alle Sensordaten lokal und zeigt per Shortcode Live-Dashboards, Diagramme, Verlauf und Vorhersagen."
+
+#. Plugin URI of the plugin
+#: xtx-integration-for-netatmo.php
+msgid "https://www.frank-neumann.de/netatmo-wetter-plugin/"
+msgstr "https://www.frank-neumann.de/netatmo-wetter-plugin/"
+
+#. Plugin Name of the plugin
+#: xtx-integration-for-netatmo.php
+msgid "XTX Integration for Netatmo"
+msgstr "XTX Integration for Netatmo"
+

@@ -1,2670 +1,2668 @@
-# Copyright (C) 2026 Frank Neumann
-# This file is distributed under the same license as the XTX Integration for Netatmo plugin.
+# German translation carried over from the plugin's own language files.
 msgid ""
 msgstr ""
 "Project-Id-Version: XTX Integration for Netatmo\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/xtx-integration-for-netatmo\n"
-"POT-Creation-Date: 2026-09-01 14:53+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: de_DE\n"
 "X-Domain: xtx-integration-for-netatmo\n"
 
 #: admin/views/dashboard.php:168
 msgid "%d error(s) in the last hour"
-msgstr ""
+msgstr "%d Fehler in der letzten Stunde"
 
 #: admin/views/export.php:84
 msgid "%d modules"
-msgstr ""
+msgstr "%d Module"
 
 #: admin/views/shortcodes.php:287 includes/class-naws-shortcodes.php:452 templates/forecast.php:14 templates/live.php:235
 msgid "%d-Day Forecast"
-msgstr ""
+msgstr "%d-Tage-Vorhersage"
 
 #: admin/views/export.php:44
 msgid "%s rows"
-msgstr ""
+msgstr "%s Zeilen"
 
 #: includes/class-naws-labels.php:105 includes/class-naws-shortcodes.php:421
 msgid "(from %1$d of %2$d days)"
-msgstr ""
+msgstr "(bei %1$d von %2$d Tagen)"
 
 #: admin/views/shortcodes.php:71 admin/views/shortcodes.php:157
 msgid "0 · 1 · 2 · -1 = default"
-msgstr ""
+msgstr "0 · 1 · 2 · -1 = Standard"
 
 #: admin/views/shortcodes.php:70 admin/views/shortcodes.php:156
 msgid "1 = yes · 0 = number only"
-msgstr ""
+msgstr "1 = ja · 0 = nur Zahl"
 
 #: admin/views/appearance.php:461
 msgid "15 colors for the year lines in the history chart."
-msgstr ""
+msgstr "15 Farben für die Jahreslinien im Historien-Chart."
 
 #: admin/views/appearance.php:68
 msgid "24h Chart Colors"
-msgstr ""
+msgstr "24h-Chart-Farben"
 
 #: admin/views/appearance.php:526 includes/class-naws-labels.php:48
 msgid "3 days"
-msgstr ""
+msgstr "3 Tage"
 
 #: admin/views/appearance.php:527 includes/class-naws-labels.php:49
 msgid "5 days"
-msgstr ""
+msgstr "5 Tage"
 
 #: admin/views/shortcodes.php:308
 msgid "96 px, centred"
-msgstr ""
+msgstr "96 px, zentriert"
 
 #: admin/views/live-settings.php:371
 msgid "<strong>Module toggle (left):</strong> Hides the entire module. Individual settings are preserved."
-msgstr ""
+msgstr "<strong>Modul-Schalter (links):</strong> Blendet das gesamte Modul aus. Einzel-Einstellungen bleiben erhalten."
 
 #: admin/views/live-settings.php:372
 msgid "<strong>Sensor toggle (right):</strong> Hides individual readings."
-msgstr ""
+msgstr "<strong>Sensor-Schalter (rechts):</strong> Blendet einzelne Messwerte aus."
 
 #: admin/views/live-settings.php:373
 msgid "<strong>Wind gauge:</strong> Wind, gusts and compass are always displayed as a unit."
-msgstr ""
+msgstr "<strong>Windmesser:</strong> Wind, Böen und Kompass werden immer als Einheit angezeigt."
 
 #: admin/views/settings.php:235
 msgid "A backoff kicks in automatically on trouble: after 3 consecutive errors the interval doubles (up to 120 minutes) and resets on the first success. This applies whether or not night mode is on."
-msgstr ""
+msgstr "Bei Störungen greift automatisch ein Backoff: nach 3 Fehlern in Folge wird das Intervall verdoppelt (höchstens 120 Minuten) und beim ersten Erfolg sofort wieder zurückgesetzt. Das gilt unabhängig vom Nachtmodus."
 
 #: admin/views/settings.php:273
 msgid "A day counts as a cooling day when its mean rises above this. There is no single standard here — 18 °C and 21 °C are both in common use."
-msgstr ""
+msgstr "Oberhalb dieses Tagesmittels gilt ein Tag als Kühltag. Hier gibt es keinen einheitlichen Standard — 18 °C und 21 °C sind beide gebräuchlich."
 
 #: admin/views/settings.php:261
 msgid "A day counts as a heating day when its mean falls below this. Germany 15 °C (VDI 2067), Austria and Switzerland 12 °C."
-msgstr ""
+msgstr "Unterhalb dieses Tagesmittels gilt ein Tag als Heiztag. Deutschland 15 °C (VDI 2067), Österreich und Schweiz 12 °C."
 
 #: admin/views/rest-api-docs.php:148
 msgid "A key in the query string is no longer accepted: it would be written down by access logs, the Referer header, browser history and every proxy in between. Older calls of the form ?api_key=… now answer with 401."
-msgstr ""
+msgstr "Ein Key im Query-String wird nicht mehr angenommen: er stünde in Zugriffslogs, im Referer-Header, im Browser-Verlauf und in jedem Proxy dazwischen. Ältere Aufrufe der Form ?api_key=… antworten mit 401."
 
 #: admin/views/shortcodes.php:150
 msgid "A single calendar year; overrides period when set."
-msgstr ""
+msgstr "Ein einzelnes Kalenderjahr; überschreibt period, wenn gesetzt."
 
 #: admin/views/rest-api-docs.php:38
 msgid "API key revoked. The API is no longer accessible."
-msgstr ""
+msgstr "API-Key widerrufen. Die API ist nicht mehr erreichbar."
 
 #: admin/views/rest-api-docs.php:529
 msgid "API not configured – no key has been generated."
-msgstr ""
+msgstr "API nicht konfiguriert – es wurde noch kein Key generiert."
 
 #: admin/views/export.php:78
 msgid "API tokens and keys are never included in exports for security reasons."
-msgstr ""
+msgstr "API-Tokens und Schlüssel werden aus Sicherheitsgründen nie exportiert."
 
 #: includes/class-naws-labels.php:31
 msgid "AUTH_KEY in wp-config.php is the sample value or too short. Your credentials are encrypted, but with a key anyone can reconstruct."
-msgstr ""
+msgstr "AUTH_KEY in der wp-config.php ist der Beispielwert oder zu kurz. Die Zugangsdaten sind zwar verschlüsselt, aber mit einem Schlüssel, den jeder nachrechnen kann."
 
 #: admin/views/settings.php:441
 msgid "Above the dashboard"
-msgstr ""
+msgstr "Über dem Dashboard"
 
 #: admin/views/settings.php:108
 msgid "Access Token expired – will be renewed automatically on next sync."
-msgstr ""
+msgstr "Access Token abgelaufen – wird beim nächsten Sync automatisch erneuert."
 
 #: admin/views/settings.php:106
 msgid "Access Token valid until: %s"
-msgstr ""
+msgstr "Access Token gültig bis: %s"
 
 #: admin/views/live-settings.php:175 includes/class-naws-admin.php:269
 msgid "Activate module"
-msgstr ""
+msgstr "Modul aktivieren"
 
 #: admin/views/modules.php:31 admin/views/rest-api-docs.php:75 admin/views/shortcodes.php:380
 msgid "Active"
-msgstr ""
+msgstr "Aktiv"
 
 #: admin/views/shortcodes.php:139
 msgid "Additional attributes"
-msgstr ""
+msgstr "Weitere Attribute"
 
 #: admin/views/settings.php:164
 msgid "After saving your Client ID and Secret, click the button below to authorize:"
-msgstr ""
+msgstr "Speichere Client ID und Secret, dann klicke auf den Button:"
 
 #: includes/class-naws-helpers.php:310 includes/class-naws-labels.php:135 templates/live.php:347
 msgid "Air Pressure"
-msgstr ""
+msgstr "Luftdruck"
 
 #: admin/views/shortcodes.php:378
 msgid "Alias"
-msgstr ""
+msgstr "Alias"
 
 #: admin/views/modules.php:14
 msgid "All Modules"
-msgstr ""
+msgstr "Alle Module"
 
 #: templates/history.php:63
 msgid "All annual comparisons are currently disabled."
-msgstr ""
+msgstr "Alle Jahresvergleiche sind momentan deaktiviert."
 
 #: admin/views/shortcodes.php:85
 msgid "All available parameters for [naws_value]"
-msgstr ""
+msgstr "Alle verfügbaren Parameter für [naws_value]"
 
 #: admin/views/appearance.php:98
 msgid "All colors have been reset to defaults."
-msgstr ""
+msgstr "Alle Farben wurden auf die Standardwerte zurückgesetzt."
 
 #: admin/views/rest-api-docs.php:177
 msgid "All endpoints are read-only (GET). No data can be modified via the API."
-msgstr ""
+msgstr "Alle Endpunkte sind schreibgeschützt (GET). Über die API können keine Daten verändert werden."
 
 #: admin/views/rest-api-docs.php:135
 msgid "All endpoints are relative to this base URL. Add your API key as header or query parameter."
-msgstr ""
+msgstr "Alle Endpunkte sind relativ zu dieser Basis-URL. Füge deinen API-Key als Header oder Query-Parameter hinzu."
 
 #: admin/views/appearance.php:15
 msgid "Alternate Background"
-msgstr ""
+msgstr "Alternativer Hintergrund"
 
 #: includes/class-naws-helpers.php:227 templates/history.php:139
 msgid "Annual Average Temperature"
-msgstr ""
+msgstr "Jahresdurchschnittstemperatur"
 
 #: includes/class-naws-helpers.php:229 templates/history.php:141
 msgid "Annual Precipitation"
-msgstr ""
+msgstr "Jahresniederschlag"
 
 #: admin/views/shortcodes.php:74 admin/views/shortcodes.php:160
 msgid "Any CSS class(es)"
-msgstr ""
+msgstr "Beliebige CSS-Klasse(n)"
 
 #: admin/views/shortcodes.php:72 admin/views/shortcodes.php:158
 msgid "Any text"
-msgstr ""
+msgstr "Beliebiger Text"
 
 #: admin/views/appearance.php:90 includes/class-naws-admin.php:55
 msgid "Appearance"
-msgstr ""
+msgstr "Darstellung"
 
 #: admin/views/shortcodes.php:70 admin/views/shortcodes.php:156
 msgid "Append unit"
-msgstr ""
+msgstr "Einheit anhängen"
 
 #: admin/views/shortcodes.php:151
 msgid "Appends a note stating how many days of the period actually carry data."
-msgstr ""
+msgstr "Hängt einen Hinweis an, an wie vielen Tagen des Zeitraums tatsächlich Daten vorliegen."
 
 #: admin/views/shortcodes.php:145
 msgid "Applies to"
-msgstr ""
+msgstr "Gilt für"
 
 #: admin/views/appearance.php:151
 msgid "Applies to every part of the plugin, charts included. Only fonts your site already serves are offered – the plugin loads no font file of its own."
-msgstr ""
+msgstr "Gilt für alle Bausteine des Plugins, Diagramme eingeschlossen. Zur Wahl stehen nur Schriften, die deine Seite ohnehin ausliefert – das Plugin lädt selbst keine Schriftdatei nach."
 
 #: includes/class-naws-forecast.php:928 templates/history.php:129
 msgid "Apr"
-msgstr ""
+msgstr "Apr"
 
 #: admin/views/settings.php:460
 msgid "At or above this rain rate the icon shows heavy rain instead of rain."
-msgstr ""
+msgstr "Ab dieser Regenrate zeigt das Icon Starkregen statt Regen."
 
 #: admin/views/shortcodes.php:63 admin/views/shortcodes.php:142 admin/views/shortcodes.php:206 admin/views/shortcodes.php:217
 #: admin/views/shortcodes.php:238 admin/views/shortcodes.php:256 admin/views/shortcodes.php:282 admin/views/shortcodes.php:301
 #: admin/views/shortcodes.php:352
 msgid "Attribute"
-msgstr ""
+msgstr "Attribut"
 
 #: includes/class-naws-forecast.php:928 templates/history.php:130
 msgid "Aug"
-msgstr ""
+msgstr "Aug"
 
 #: admin/views/rest-api-docs.php:141
 msgid "Authentication"
-msgstr ""
+msgstr "Authentifizierung"
 
 #: admin/views/shortcodes.php:208
 msgid "Auto-refresh in seconds (0 = disabled)"
-msgstr ""
+msgstr "Auto-Refresh in Sekunden (0 = deaktiviert)"
 
 #: admin/views/settings.php:383
 msgid "Automatic (from Netatmo station coordinates)"
-msgstr ""
+msgstr "Automatisch (aus Netatmo-Stationskoordinaten)"
 
 #: templates/table.php:56
 msgid "Average"
-msgstr ""
+msgstr "Mittel"
 
 #: admin/views/appearance.php:41
 msgid "Axis Labels"
-msgstr ""
+msgstr "Achsen-Beschriftung"
 
 #: admin/views/appearance.php:45
 msgid "Axis Title"
-msgstr ""
+msgstr "Achsen-Titel"
 
 #: admin/views/appearance.php:13
 msgid "Background"
-msgstr ""
+msgstr "Hintergrund"
 
 #: admin/views/live-settings.php:78 includes/class-naws-helpers.php:310 includes/class-naws-helpers.php:311 includes/class-naws-helpers.php:312
 #: includes/class-naws-helpers.php:313 includes/class-naws-helpers.php:314 templates/live.php:344
 msgid "Base"
-msgstr ""
+msgstr "Basis"
 
 #: admin/views/appearance.php:66
 msgid "Base Theme"
-msgstr ""
+msgstr "Basis-Theme"
 
 #: admin/views/appearance.php:127
 msgid "Base colors for background, surfaces, text and borders. Applied to all shortcodes."
-msgstr ""
+msgstr "Grundfarben für Hintergrund, Oberflächen, Text und Rahmen. Diese gelten für alle Shortcodes."
 
 #: admin/views/import.php:24 admin/views/live-settings.php:79 includes/class-naws-helpers.php:703
 msgid "Base station (Indoor)"
-msgstr ""
+msgstr "Basisstation (Indoor)"
 
 #: admin/views/modules.php:36
 msgid "Battery"
-msgstr ""
+msgstr "Batterie"
 
 #: admin/views/appearance.php:540 includes/class-naws-labels.php:52
 msgid "Between 250 and 500 pixels. Icon, figures and spacing grow with it — at 500 pixels the weather icon is 96 pixels instead of 64. Where the column is narrower than the setting, the widget shrinks with it rather than overflowing."
-msgstr ""
+msgstr "Zwischen 250 und 500 Pixel. Icon, Zahlen und Abstände wachsen stufenlos mit — bei 500 Pixel ist das Wetter-Icon 96 statt 64 Pixel groß. Ist die Spalte schmaler als der eingestellte Wert, schrumpft das Widget mit, statt überzulaufen."
 
 #: admin/views/appearance.php:21
 msgid "Border"
-msgstr ""
+msgstr "Rahmen"
 
 #: admin/views/settings.php:482
 msgid "Both conditions must hold. The dew-point spread is the difference between air temperature and dew point — the smaller it is, the closer the air is to saturation."
-msgstr ""
+msgstr "Beide Bedingungen müssen zutreffen. Der Taupunkt-Abstand ist die Differenz zwischen Lufttemperatur und Taupunkt — je kleiner, desto näher ist die Luft an der Sättigung."
 
 #: admin/views/appearance.php:31 admin/views/appearance.php:82
 msgid "CO2"
-msgstr ""
+msgstr "CO₂"
 
 #: includes/class-naws-helpers.php:311 includes/class-naws-labels.php:136 templates/live.php:84 templates/live.php:348
 msgid "CO₂"
-msgstr ""
+msgstr "CO₂"
 
 #: templates/live.php:65
 msgid "CO₂ Base"
-msgstr ""
+msgstr "CO₂ Basis"
 
 #: admin/views/live-settings.php:69 includes/class-naws-helpers.php:62 includes/class-naws-helpers.php:683 includes/class-naws-labels.php:59
 #: includes/class-naws-labels.php:75
 msgid "CO₂ Concentration"
-msgstr ""
+msgstr "CO₂-Konzentration"
 
 #: includes/class-naws-labels.php:84
 msgid "CO₂ rating"
-msgstr ""
+msgstr "CO₂-Bewertung"
 
 #: admin/views/shortcodes.php:74 admin/views/shortcodes.php:160
 msgid "CSS class on wrapper"
-msgstr ""
+msgstr "CSS-Klasse auf Wrapper"
 
 #: admin/views/appearance.php:14
 msgid "Card Background"
-msgstr ""
+msgstr "Karten-Hintergrund"
 
 #: admin/views/appearance.php:69
 msgid "Chart Theming"
-msgstr ""
+msgstr "Chart-Theming"
 
 #: includes/class-naws-shortcodes.php:86
 msgid "Chart could not be rendered."
-msgstr ""
+msgstr "Chart konnte nicht gerendert werden."
 
 #: admin/views/shortcodes.php:223
 msgid "Chart height in px"
-msgstr ""
+msgstr "Diagramm-Höhe in px"
 
 #: admin/views/appearance.php:281
 msgid "Choose Icon Set"
-msgstr ""
+msgstr "Icon-Set wählen"
 
 #: admin/views/appearance.php:279
 msgid "Choose an icon set for the frontend and customize colors per sensor."
-msgstr ""
+msgstr "Wähle ein Icon-Set für das Frontend und passe die Farben pro Sensor an."
 
 #: admin/views/settings.php:395
 msgid "City / Postal code"
-msgstr ""
+msgstr "Stadt / PLZ"
 
 #: includes/class-naws-icons.php:67
 msgid "Clean line icons with thin strokes — the classic look."
-msgstr ""
+msgstr "Klare Linien-Icons mit feinen Strichen — der klassische Look."
 
 #: includes/class-naws-labels.php:119
 msgid "Clear"
-msgstr ""
+msgstr "Klar"
 
 #: includes/class-naws-labels.php:120
 msgid "Clear night"
-msgstr ""
+msgstr "Klare Nacht"
 
 #: includes/class-naws-forecast.php:843
 msgid "Clear sky"
-msgstr ""
+msgstr "Klar"
 
 #: admin/views/settings.php:140
 msgid "Client ID"
-msgstr ""
+msgstr "Client ID"
 
 #: admin/views/settings.php:147
 msgid "Client Secret"
-msgstr ""
+msgstr "Client Secret"
 
 #: templates/live.php:317
 msgid "Close"
-msgstr ""
+msgstr "Schließen"
 
 #: admin/views/shortcodes.php:220
 msgid "Comma-separated fields: temp_min, temp_max, temp_avg, pressure_avg, rain_sum"
-msgstr ""
+msgstr "Kommagetrennte Felder: temp_min, temp_max, temp_avg, pressure_avg, rain_sum"
 
 #: admin/views/rest-api-docs.php:327
 msgid "Comma-separated list of fields to return"
-msgstr ""
+msgstr "Kommagetrennte Liste der gewünschten Felder"
 
 #: admin/views/shortcodes.php:240 admin/views/shortcodes.php:258
 msgid "Comma-separated parameters to filter"
-msgstr ""
+msgstr "Kommagetrennte Parameter zum Filtern"
 
 #: admin/views/shortcodes.php:272
 msgid "Compact info bar with calculated values (feels like, dew point) and astronomical data (rise/set, moon phase, supermoon, lunar eclipse)."
-msgstr ""
+msgstr "Kompakte Infoleiste mit berechneten Werten (Gefühlte Temp., Taupunkt) und astronomischen Daten (Auf-/Untergang, Mondphase, Supermond, Mondfinsternis)."
 
 #: admin/views/appearance.php:513 includes/class-naws-labels.php:46
 msgid "Compact weather widget for narrow columns. Shows the icon and outdoor temperature, rain and wind below that, then the forecast. Placed with the [naws_weather_widget] shortcode."
-msgstr ""
+msgstr "Kompaktes Wetter-Widget für schmale Spalten. Zeigt Icon und Außentemperatur, darunter Regen und Wind, darunter die Vorhersage. Einzufügen über den Shortcode [naws_weather_widget]."
 
 #: admin/views/shortcodes.php:347
 msgid "Compact weather widget for sidebars"
-msgstr ""
+msgstr "Kompaktes Wetter-Widget für Seitenleisten"
 
 #: admin/views/appearance.php:23
 msgid "Compass Needle (Wind Rose)"
-msgstr ""
+msgstr "Kompassnadel (Windrose)"
 
 #: admin/views/shortcodes.php:134
 msgid "Computed values"
-msgstr ""
+msgstr "Berechnete Werte"
 
 #: admin/views/rest-api-docs.php:59
 msgid "Configuration"
-msgstr ""
+msgstr "Konfiguration"
 
 #: admin/views/settings.php:172
 msgid "Connect to Netatmo"
-msgstr ""
+msgstr "Mit Netatmo verbinden"
 
 #: admin/views/settings.php:163
 msgid "Connect via OAuth2"
-msgstr ""
+msgstr "Verbindung über OAuth2"
 
 #: admin/views/settings.php:119
 msgid "Connected"
-msgstr ""
+msgstr "Verbunden"
 
 #: includes/class-naws-labels.php:98
 msgid "Cooling days"
-msgstr ""
+msgstr "Kühltage"
 
 #: includes/class-naws-labels.php:100
 msgid "Cooling degree days"
-msgstr ""
+msgstr "Kühlgradtage"
 
 #: admin/views/settings.php:269
 msgid "Cooling limit (°C)"
-msgstr ""
+msgstr "Kühlgrenztemperatur (°C)"
 
 #: includes/class-naws-shortcodes.php:89
 msgid "Could not load data (HTTP %s)"
-msgstr ""
+msgstr "Daten konnten nicht geladen werden (HTTP %s)"
 
 #: admin/views/settings.php:405
 msgid "Country code"
-msgstr ""
+msgstr "Ländercode"
 
 #: admin/views/dashboard.php:186 includes/class-naws-labels.php:26
 msgid "Credentials"
-msgstr ""
+msgstr "Zugangsdaten"
 
 #: admin/views/dashboard.php:389 admin/views/settings.php:224
 msgid "Cron Interval (minutes)"
-msgstr ""
+msgstr "Cron-Intervall (Minuten)"
 
 #: admin/views/cron-log.php:6 admin/views/dashboard.php:375 includes/class-naws-admin.php:53
 msgid "Cron Log"
-msgstr ""
+msgstr "Cron-Log"
 
 #: admin/views/dashboard.php:384
 msgid "Cron Status"
-msgstr ""
+msgstr "Cron-Status"
 
 #: admin/views/dashboard.php:87 admin/views/dashboard.php:202
 msgid "Current Readings"
-msgstr ""
+msgstr "Aktuelle Messwerte"
 
 #: admin/views/shortcodes.php:296
 msgid "Current weather as an animated icon"
-msgstr ""
+msgstr "Aktuelles Wetter als animiertes Icon"
 
 #: admin/views/shortcodes.php:287
 msgid "Custom title for the forecast header."
-msgstr ""
+msgstr "Eigener Titel für den Vorhersage-Header."
 
 #: admin/views/cron-log.php:49
 msgid "Daily Evaluation"
-msgstr ""
+msgstr "Tagesauswertung"
 
 #: admin/views/dashboard.php:104 admin/views/dashboard.php:321 admin/views/dashboard.php:344 includes/class-naws-admin.php:267
 msgid "Daily Summary"
-msgstr ""
+msgstr "Tagesauswertung"
 
 #: admin/views/export.php:43 admin/views/export.php:87 admin/views/import.php:126
 msgid "Daily summaries"
-msgstr ""
+msgstr "Tagesauswertungen"
 
 #: admin/views/rest-api-docs.php:174
 msgid "Daily summary data (temperature, rain, pressure etc.)"
-msgstr ""
+msgstr "Tägliche Zusammenfassungsdaten (Temperatur, Regen, Luftdruck etc.)"
 
 #: templates/live.php:205
 msgid "Daily trend (last 24h)"
-msgstr ""
+msgstr "Tagesverlauf (letzte 24h)"
 
 #: admin/views/dashboard.php:358 includes/class-naws-admin.php:48
 msgid "Dashboard"
-msgstr ""
+msgstr "Dashboard"
 
 #: admin/views/dashboard.php:31
 msgid "Dashboard — Live Overview & System Status"
-msgstr ""
+msgstr "Dashboard — Live-Übersicht & Systemstatus"
 
 #: admin/views/dashboard.php:403 admin/views/settings.php:277
 msgid "Data Retention"
-msgstr ""
+msgstr "Datenhaltung"
 
 #: admin/views/modules.php:35
 msgid "Data Types"
-msgstr ""
+msgstr "Datentypen"
 
 #: templates/live.php:357
 msgid "Data outdated (%d min.)"
-msgstr ""
+msgstr "Daten veraltet (%d Min.)"
 
 #: admin/views/dashboard.php:45
 msgid "Data synced successfully!"
-msgstr ""
+msgstr "Daten erfolgreich synchronisiert!"
 
 #: admin/views/dashboard.php:113 admin/views/import.php:128 admin/views/import.php:129
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #: admin/views/export.php:48
 msgid "Date Range"
-msgstr ""
+msgstr "Zeitraum"
 
 #: admin/views/settings.php:369
 msgid "Day"
-msgstr ""
+msgstr "Tag"
 
 #: admin/views/settings.php:285 admin/views/settings.php:369
 msgid "Days"
-msgstr ""
+msgstr "Tage"
 
 #: admin/views/live-settings.php:175 includes/class-naws-admin.php:268
 msgid "Deactivate module"
-msgstr ""
+msgstr "Modul deaktivieren"
 
 #: admin/views/modules.php:16
 msgid "Deactivated modules are excluded from all frontend displays, charts and cron sync."
-msgstr ""
+msgstr "Deaktivierte Module werden aus allen Frontend-Anzeigen, Charts und dem Cron-Sync ausgeschlossen."
 
 #: includes/class-naws-forecast.php:928 templates/history.php:131
 msgid "Dec"
-msgstr ""
+msgstr "Dez"
 
 #: admin/views/shortcodes.php:71 admin/views/shortcodes.php:157
 msgid "Decimal places"
-msgstr ""
+msgstr "Nachkommastellen"
 
 #: admin/views/shortcodes.php:66 admin/views/shortcodes.php:206 admin/views/shortcodes.php:217 admin/views/shortcodes.php:238
 #: admin/views/shortcodes.php:256 admin/views/shortcodes.php:284 admin/views/shortcodes.php:303 admin/views/shortcodes.php:354
 msgid "Default"
-msgstr ""
+msgstr "Standard"
 
 #: admin/views/settings.php:284
 msgid "Delete entries older than:"
-msgstr ""
+msgstr "Einträge älter als:"
 
 #: includes/class-naws-forecast.php:851
 msgid "Dense drizzle"
-msgstr ""
+msgstr "Starker Nieselregen"
 
 #: includes/class-naws-forecast.php:853
 msgid "Dense freezing drizzle"
-msgstr ""
+msgstr "Starker gefr. Niesel"
 
 #: includes/class-naws-forecast.php:848
 msgid "Depositing rime fog"
-msgstr ""
+msgstr "Raureif-Nebel"
 
 #: admin/views/shortcodes.php:64 admin/views/shortcodes.php:91 admin/views/shortcodes.php:143 admin/views/shortcodes.php:206
 #: admin/views/shortcodes.php:217 admin/views/shortcodes.php:238 admin/views/shortcodes.php:256 admin/views/shortcodes.php:283
 #: admin/views/shortcodes.php:302 admin/views/shortcodes.php:353
 msgid "Description"
-msgstr ""
+msgstr "Beschreibung"
 
 #: templates/infobar.php:79
 msgid "Dew Point"
-msgstr ""
+msgstr "Taupunkt"
 
 #: includes/class-naws-labels.php:78
 msgid "Dew point"
-msgstr ""
+msgstr "Taupunkt"
 
 #: includes/class-naws-admin.php:271
 msgid "Disable 24h chart"
-msgstr ""
+msgstr "24h-Verlauf deaktivieren"
 
 #: admin/views/settings.php:184
 msgid "Disconnect"
-msgstr ""
+msgstr "Trennen"
 
 #: admin/views/settings.php:183
 msgid "Disconnect from Netatmo?"
-msgstr ""
+msgstr "Verbindung zu Netatmo trennen?"
 
 #: templates/live.php:170
 msgid "Disconnected"
-msgstr ""
+msgstr "Getrennt"
 
 #: admin/views/settings.php:43
 msgid "Disconnected. You can now reconnect."
-msgstr ""
+msgstr "Verbindung getrennt. Du kannst die App jetzt neu verbinden."
 
 #: admin/views/settings.php:212
 msgid "Displayed as default title in the live dashboard and shortcodes. Leave empty to use the WordPress site title."
-msgstr ""
+msgstr "Wird als Standard-Titel im Live-Dashboard und in Shortcodes angezeigt. Leer lassen, um den WordPress-Seitentitel zu verwenden."
 
 #: admin/views/shortcodes.php:278
 msgid "Displays a multi-day weather forecast with temperature, precipitation, wind and weather condition. The number of days and location are configurable in the plugin settings."
-msgstr ""
+msgstr "Zeigt eine mehrtägige Wettervorhersage mit Temperatur, Niederschlag, Wind und Wetterlage. Anzahl der Tage und Standort sind in den Plugin-Einstellungen konfigurierbar."
 
 #: admin/views/export.php:96
 msgid "Download Full Backup"
-msgstr ""
+msgstr "Komplettes Backup herunterladen"
 
 #: admin/views/export.php:58
 msgid "Download Weather Data"
-msgstr ""
+msgstr "Wetterdaten herunterladen"
 
 #: admin/views/live-settings.php:32 admin/views/live-settings.php:33
 msgid "Drag to reorder, or move with the arrow keys"
-msgstr ""
+msgstr "Ziehen zum Sortieren, oder mit den Pfeiltasten verschieben"
 
 #: includes/class-naws-forecast.php:850
 msgid "Drizzle"
-msgstr ""
+msgstr "Nieselregen"
 
 #: admin/views/settings.php:250
 msgid "During night hours every second fetch is skipped, doubling the interval. The window follows the timezone configured in WordPress."
-msgstr ""
+msgstr "In den Nachtstunden wird jede zweite Abfrage übersprungen, das Intervall also verdoppelt. Maßgeblich ist die in WordPress eingestellte Zeitzone."
 
 #: admin/views/shortcodes.php:305
 msgid "Edge length in pixels. Values below 64 are raised to 64; below that the states are no longer distinguishable."
-msgstr ""
+msgstr "Kantenlänge in Pixeln. Kleinere Werte als 64 werden auf 64 angehoben, darunter sind die Zustände nicht mehr unterscheidbar."
 
 #: includes/class-naws-icons.php:61
 msgid "Emoji"
-msgstr ""
+msgstr "Emoji"
 
 #: includes/class-naws-admin.php:272
 msgid "Enable 24h chart"
-msgstr ""
+msgstr "24h-Verlauf aktivieren"
 
 #: admin/views/rest-api-docs.php:71
 msgid "Enable REST API"
-msgstr ""
+msgstr "REST API aktivieren"
 
 #: admin/views/shortcodes.php:243
 msgid "Enable animation (true/false)"
-msgstr ""
+msgstr "Animation aktivieren (true/false)"
 
 #: admin/views/settings.php:248
 msgid "Enable reduced polling between 23:00 and 06:00"
-msgstr ""
+msgstr "Reduziertes Polling zwischen 23:00 und 06:00 Uhr aktivieren"
 
 #: admin/views/live-settings.php:264
 msgid "Enables/disables the individual charts in the <code>[naws_history]</code> widget. Pick a row up with the mouse and move it — that is the order the front end uses."
-msgstr ""
+msgstr "Aktiviert / deaktiviert die einzelnen Graphen im <code>[naws_history]</code>-Widget. Die Zeilen lassen sich mit der Maus anfassen und verschieben — das ändert die Reihenfolge im Frontend."
 
 #: admin/views/rest-api-docs.php:277
 msgid "End time – ISO 8601 or Unix timestamp"
-msgstr ""
+msgstr "Endzeitpunkt – ISO 8601 oder Unix-Timestamp"
 
 #: admin/views/rest-api-docs.php:154
 msgid "Endpoint Reference"
-msgstr ""
+msgstr "Endpunkt-Referenz"
 
 #: admin/views/settings.php:90
 msgid "Enter Client ID and Secret and click \"Connect to Netatmo\"."
-msgstr ""
+msgstr "Trage Client ID und Secret ein und klicke auf \"Mit Netatmo verbinden\"."
 
 #: admin/views/settings.php:401
 msgid "Enter a city name, optionally with postal code for better accuracy."
-msgstr ""
+msgstr "Geben Sie einen Stadtnamen ein, optional mit PLZ für bessere Genauigkeit."
 
 #: admin/views/rest-api-docs.php:522
 msgid "Error Codes"
-msgstr ""
+msgstr "Fehlercodes"
 
 #: includes/class-naws-cron.php:521
 msgid "Error backoff: %1$d consecutive errors, last sync %2$d min ago"
-msgstr ""
+msgstr "Error-Backoff: %1$d Fehler in Folge, letzter Sync vor %2$d Min."
 
 #: admin/views/dashboard.php:314 includes/class-naws-admin.php:261
 msgid "Error occurred."
-msgstr ""
+msgstr "Ein Fehler ist aufgetreten."
 
 #: includes/class-naws-admin.php:263
 msgid "Error toggling module. Please try again."
-msgstr ""
+msgstr "Fehler beim Umschalten des Moduls. Bitte erneut versuchen."
 
 #: admin/views/settings.php:230
 msgid "Every %d minutes"
-msgstr ""
+msgstr "Alle %d Minuten"
 
 #: admin/views/rest-api-docs.php:142
 msgid "Every request must carry a valid API key — in the HTTP header, and nowhere else:"
-msgstr ""
+msgstr "Jede Anfrage muss einen gültigen API-Key tragen — ausschließlich im HTTP-Header:"
 
 #: admin/views/shortcodes.php:94
 msgid "Example shortcode"
-msgstr ""
+msgstr "Beispiel-Shortcode"
 
 #: includes/class-naws-helpers.php:668
 msgid "Excellent"
-msgstr ""
+msgstr "Ausgezeichnet"
 
 #: admin/views/import.php:118
 msgid "Existing Data"
-msgstr ""
+msgstr "Vorhandene Daten"
 
 #: templates/history.php:80 templates/live.php:213
 msgid "Expand"
-msgstr ""
+msgstr "Vergrößern"
 
 #: admin/views/export.php:8
 msgid "Export & Import"
-msgstr ""
+msgstr "Export & Import"
 
 #: includes/class-naws-admin.php:51
 msgid "Export / Import"
-msgstr ""
+msgstr "Export / Import"
 
 #: admin/views/export.php:33
 msgid "Export Weather Data"
-msgstr ""
+msgstr "Wetterdaten exportieren"
 
 #: admin/views/export.php:37
 msgid "Export all daily summary data as a JSON file. Includes temperature, pressure, precipitation and other aggregated values."
-msgstr ""
+msgstr "Alle Tagesdaten als JSON-Datei exportieren. Enthält Temperatur, Druck, Niederschlag und weitere aggregierte Werte."
 
 #: admin/views/export.php:74
 msgid "Export weather data, module configuration and all plugin settings. Useful for migrating to a new WordPress installation."
-msgstr ""
+msgstr "Wetterdaten, Modul-Konfiguration und alle Plugin-Einstellungen exportieren. Ideal für die Migration auf eine neue WordPress-Installation."
 
 #: includes/class-naws-forecast.php:928 templates/history.php:129
 msgid "Feb"
-msgstr ""
+msgstr "Feb"
 
 #: includes/class-naws-admin.php:608
 msgid "File too large. Maximum size: 100 MB."
-msgstr ""
+msgstr "Datei zu groß. Maximale Größe: 100 MB."
 
 #: includes/class-naws-icons.php:71
 msgid "Filled"
-msgstr ""
+msgstr "Filled"
 
 #: admin/views/rest-api-docs.php:275
 msgid "Filter by parameter(s), comma-separated: Temperature, Humidity, CO2, Pressure, Rain, etc."
-msgstr ""
+msgstr "Nach Parameter(n) filtern, kommagetrennt: Temperature, Humidity, CO2, Pressure, Rain, etc."
 
 #: admin/views/rest-api-docs.php:242 admin/views/rest-api-docs.php:274
 msgid "Filter by specific module ID (optional)"
-msgstr ""
+msgstr "Nach bestimmter Modul-ID filtern (optional)"
 
 #: includes/class-naws-astro.php:279
 msgid "First Quarter"
-msgstr ""
+msgstr "Erstes Viertel"
 
 #: includes/class-naws-forecast.php:847 includes/class-naws-labels.php:124
 msgid "Fog"
-msgstr ""
+msgstr "Nebel"
 
 #: admin/views/settings.php:473
 msgid "Fog from humidity"
-msgstr ""
+msgstr "Nebel ab Luftfeuchte"
 
 #: admin/views/appearance.php:150
 msgid "Font"
-msgstr ""
+msgstr "Schrift"
 
 #: admin/views/appearance.php:155
 msgid "Font Family"
-msgstr ""
+msgstr "Schriftfamilie"
 
 #: admin/views/settings.php:354
 msgid "Forecast Provider"
-msgstr ""
+msgstr "Vorhersage-Anbieter"
 
 #: admin/views/shortcodes.php:356
 msgid "Forecast length. Only 3 or 5; other values are pulled to the nearer one."
-msgstr ""
+msgstr "Länge der Vorhersage. Nur 3 oder 5; andere Werte werden auf den nächstliegenden gezogen."
 
 #: includes/class-naws-forecast.php:913
 msgid "Fri"
-msgstr ""
+msgstr "Fr"
 
 #: includes/class-naws-forecast.php:921
 msgid "Friday"
-msgstr ""
+msgstr "Freitag"
 
 #: admin/views/import.php:60
 msgid "From"
-msgstr ""
+msgstr "Von"
 
 #: includes/class-naws-labels.php:93
 msgid "Frost days"
-msgstr ""
+msgstr "Frosttage"
 
 #: admin/views/export.php:70
 msgid "Full Backup"
-msgstr ""
+msgstr "Komplettes Backup"
 
 #: includes/class-naws-astro.php:281
 msgid "Full Moon"
-msgstr ""
+msgstr "Vollmond"
 
 #: admin/views/shortcodes.php:203
 msgid "Full live dashboard with tiles, daily charts and wind rose. Automatic AJAX refresh."
-msgstr ""
+msgstr "Vollständiges Live-Dashboard mit Kacheln, Tagesverlauf-Charts und Windrose. Automatischer Refresh per AJAX."
 
 #: admin/views/rest-api-docs.php:124
 msgid "Generate API Key"
-msgstr ""
+msgstr "API-Key generieren"
 
 #: admin/views/rest-api-docs.php:106
 msgid "Generate a new key? The old key will stop working immediately."
-msgstr ""
+msgstr "Neuen Key generieren? Der alte Key funktioniert sofort nicht mehr."
 
 #: admin/views/settings.php:54 includes/class-naws-labels.php:35
 msgid "Generate new salts"
-msgstr ""
+msgstr "Neue Salts erzeugen"
 
 #: admin/views/modules.php:24
 msgid "Go to Dashboard"
-msgstr ""
+msgstr "Zum Dashboard"
 
 #: admin/views/dashboard.php:213
 msgid "Go to Settings"
-msgstr ""
+msgstr "Zu den Einstellungen"
 
 #: includes/class-naws-helpers.php:669
 msgid "Good"
-msgstr ""
+msgstr "Gut"
 
 #: includes/class-naws-labels.php:102
 msgid "Grassland temperature sum"
-msgstr ""
+msgstr "Grünlandtemperatursumme"
 
 #: admin/views/appearance.php:40
 msgid "Grid Lines"
-msgstr ""
+msgstr "Grid-Linien"
 
 #: admin/views/appearance.php:402
 msgid "Grid, axis and tooltip colors for all charts."
-msgstr ""
+msgstr "Grid, Achsen und Tooltip-Farben für alle Charts."
 
 #: admin/views/shortcodes.php:221
 msgid "Grouping: day, week, month, year"
-msgstr ""
+msgstr "Gruppierung: day, week, month, year"
 
 #: admin/views/shortcodes.php:261
 msgid "Grouping: hour, day, week, month, year. Any other value lists single readings."
-msgstr ""
+msgstr "Gruppierung: hour, day, week, month, year. Jeder andere Wert listet Einzelmesswerte."
 
 #: admin/views/rest-api-docs.php:278
 msgid "Grouping: raw (no grouping), hour, day, week, month"
-msgstr ""
+msgstr "Gruppierung: raw (keine), hour, day, week, month"
 
 #: includes/class-naws-labels.php:101
 msgid "Growing degree days"
-msgstr ""
+msgstr "Wachstumsgradtage"
 
 #: admin/views/live-settings.php:111 includes/class-naws-helpers.php:73 includes/class-naws-helpers.php:696 includes/class-naws-labels.php:70
 msgid "Gust Direction"
-msgstr ""
+msgstr "Böenrichtung"
 
 #: admin/views/live-settings.php:109 includes/class-naws-helpers.php:72 includes/class-naws-helpers.php:695 includes/class-naws-labels.php:68
 msgid "Gust Speed"
-msgstr ""
+msgstr "Böengeschwindigkeit"
 
 #: admin/views/appearance.php:34 includes/class-naws-labels.php:141 templates/forecast.php:107 templates/live.php:71
 #: templates/live.php:353
 msgid "Gusts"
-msgstr ""
+msgstr "Böen"
 
 #: admin/views/shortcodes.php:73 admin/views/shortcodes.php:159
 msgid "HTML wrapper tag"
-msgstr ""
+msgstr "HTML-Wrapper-Tag"
 
 #: admin/views/rest-api-docs.php:144
 msgid "HTTP header"
-msgstr ""
+msgstr "HTTP-Header"
 
 #: admin/views/appearance.php:196
 msgid "Header Bar"
-msgstr ""
+msgstr "Kopfleiste"
 
 #: admin/views/appearance.php:24
 msgid "Header Bar – Background"
-msgstr ""
+msgstr "Kopfleiste – Hintergrund"
 
 #: admin/views/appearance.php:25
 msgid "Header Bar – Text"
-msgstr ""
+msgstr "Kopfleiste – Schrift"
 
 #: templates/infobar.php:88
 msgid "Heat Index"
-msgstr ""
+msgstr "Hitzeindex"
 
 #: includes/class-naws-labels.php:80
 msgid "Heat index"
-msgstr ""
+msgstr "Hitzeindex"
 
 #: includes/class-naws-labels.php:97
 msgid "Heating days"
-msgstr ""
+msgstr "Heiztage"
 
 #: includes/class-naws-labels.php:99
 msgid "Heating degree days"
-msgstr ""
+msgstr "Heizgradtage"
 
 #: admin/views/settings.php:257
 msgid "Heating limit (°C)"
-msgstr ""
+msgstr "Heizgrenztemperatur (°C)"
 
 #: includes/class-naws-forecast.php:858
 msgid "Heavy freezing rain"
-msgstr ""
+msgstr "Starker gefr. Regen"
 
 #: includes/class-naws-forecast.php:856 includes/class-naws-labels.php:126
 msgid "Heavy rain"
-msgstr ""
+msgstr "Starkregen"
 
 #: admin/views/settings.php:455
 msgid "Heavy rain from"
-msgstr ""
+msgstr "Starkregen ab"
 
 #: includes/class-naws-forecast.php:865
 msgid "Heavy rain showers"
-msgstr ""
+msgstr "Starke Regenschauer"
 
 #: includes/class-naws-forecast.php:861
 msgid "Heavy snow"
-msgstr ""
+msgstr "Starker Schneefall"
 
 #: includes/class-naws-forecast.php:867
 msgid "Heavy snow showers"
-msgstr ""
+msgstr "Starke Schneeschauer"
 
 #: includes/class-naws-forecast.php:870
 msgid "Heavy thunderstorm"
-msgstr ""
+msgstr "Starkes Gewitter/Hagel"
 
 #: admin/views/shortcodes.php:222 includes/class-naws-shortcodes.php:220
 msgid "Historical Weather Data"
-msgstr ""
+msgstr "Historical Weather Data"
 
 #: admin/views/dashboard.php:123
 msgid "History"
-msgstr ""
+msgstr "Verlauf"
 
 #: admin/views/dashboard.php:369 includes/class-naws-admin.php:50
 msgid "History Import"
-msgstr ""
+msgstr "Historien Import"
 
 #: includes/class-naws-labels.php:95
 msgid "Hot days"
-msgstr ""
+msgstr "Heiße Tage"
 
 #: admin/views/shortcodes.php:152
 msgid "How day classes are counted."
-msgstr ""
+msgstr "Wie Tagesklassen gezählt werden."
 
 #: admin/views/settings.php:373
 msgid "How many days the forecast should display (1–7). This is the default for the shortcode and live dashboard."
-msgstr ""
+msgstr "Wie viele Tage die Vorhersage anzeigen soll (1–7). Dies ist der Standard für den Shortcode und das Live-Dashboard."
 
 #: templates/live.php:59
 msgid "Humidity Outdoor"
-msgstr ""
+msgstr "Luftfeuchte"
 
 #: admin/views/settings.php:411
 msgid "ISO 3166 code (e.g. DE, AT, CH, US, GB)"
-msgstr ""
+msgstr "ISO 3166 Code (z.B. DE, AT, CH, US, GB)"
 
 #: includes/class-naws-labels.php:92
 msgid "Ice days"
-msgstr ""
+msgstr "Eistage"
 
 #: admin/views/appearance.php:302
 msgid "Icon Colors"
-msgstr ""
+msgstr "Icon-Farben"
 
 #: admin/views/shortcodes.php:348
 msgid "Icon and outdoor temperature, rain and wind below that, then the forecast. Width adjustable between 250 and 500 pixels, with the contents scaling to match. A missing add-on module drops its value entirely. Rendered on page load and does not refresh by itself — the time in the footer shows its age."
-msgstr ""
+msgstr "Icon und Außentemperatur, darunter Regen und Wind, darunter die Vorhersage. Breite zwischen 250 und 500 Pixel einstellbar; der Inhalt skaliert mit. Fehlt ein Zusatzmodul, entfällt der zugehörige Wert ersatzlos. Wird beim Seitenaufbau erzeugt und aktualisiert sich nicht von selbst — die Uhrzeit in der Fußzeile zeigt das Alter."
 
 #: admin/views/appearance.php:67
 msgid "Icons"
-msgstr ""
+msgstr "Icons"
 
 #: admin/views/import.php:17
 msgid "Import Configuration"
-msgstr ""
+msgstr "Import-Konfiguration"
 
 #: admin/views/import.php:93
 msgid "Import Data"
-msgstr ""
+msgstr "Daten importieren"
 
 #: admin/views/import.php:8
 msgid "Import Historical Data"
-msgstr ""
+msgstr "Verlaufsdaten importieren"
 
 #: admin/views/export.php:22 includes/class-naws-admin.php:260
 msgid "Import chunk complete!"
-msgstr ""
+msgstr "Import-Abschnitt abgeschlossen!"
 
 #: admin/views/export.php:109
 msgid "Import from File"
-msgstr ""
+msgstr "Aus Datei importieren"
 
 #: admin/views/export.php:117
 msgid "Importing will overwrite existing daily data for matching dates."
-msgstr ""
+msgstr "Beim Import werden vorhandene Tagesdaten für übereinstimmende Daten überschrieben."
 
 #: includes/class-naws-admin.php:259
 msgid "Importing…"
-msgstr ""
+msgstr "Importiere…"
 
 #: admin/views/rest-api-docs.php:75 includes/class-naws-admin.php:262
 msgid "Inactive"
-msgstr ""
+msgstr "Inaktiv"
 
 #: admin/views/appearance.php:303
 msgid "Individual colors for each sensor icon. These colors are also used for the tile accent bar."
-msgstr ""
+msgstr "Individuelle Farben für jedes Sensor-Icon. Diese Farben werden auch für den Akzent-Balken der Kacheln verwendet."
 
 #: admin/views/appearance.php:29 admin/views/live-settings.php:82 includes/class-naws-labels.php:56
 msgid "Indoor Temperature"
-msgstr ""
+msgstr "Innentemperatur"
 
 #: admin/views/live-settings.php:63 includes/class-naws-helpers.php:707
 msgid "Indoor module (NAModule4)"
-msgstr ""
+msgstr "Indoor-Modul (NAModule4)"
 
 #: includes/class-naws-fonts.php:190
 msgid "Inherit the theme font"
-msgstr ""
+msgstr "Schrift des Themes übernehmen"
 
 #: admin/views/shortcodes.php:214
 msgid "Interactive annual comparison charts for temperature, pressure and precipitation."
-msgstr ""
+msgstr "Interaktive Jahresvergleichs-Diagramme für Temperatur, Luftdruck und Niederschlag mit Jahresauswahl."
 
 #: admin/views/rest-api-docs.php:527
 msgid "Invalid date format or parameters."
-msgstr ""
+msgstr "Ungültiges Datumsformat oder Parameter."
 
 #: includes/class-naws-admin.php:587 includes/class-naws-admin.php:602
 msgid "Invalid file. Please select a valid NAWS export file (.json)."
-msgstr ""
+msgstr "Ungültige Datei. Bitte eine gültige NAWS-Export-Datei (.json) auswählen."
 
 #: admin/views/rest-api-docs.php:526
 msgid "Invalid or missing API key."
-msgstr ""
+msgstr "Ungültiger oder fehlender API-Key."
 
 #: includes/class-naws-forecast.php:928 templates/history.php:129
 msgid "Jan"
-msgstr ""
+msgstr "Jan"
 
 #: includes/class-naws-forecast.php:928 templates/history.php:130
 msgid "Jul"
-msgstr ""
+msgstr "Jul"
 
 #: includes/class-naws-forecast.php:928 templates/history.php:130
 msgid "Jun"
-msgstr ""
+msgstr "Jun"
 
 #: admin/views/rest-api-docs.php:100
 msgid "Keep this key secret! Anyone with the key can read your weather data."
-msgstr ""
+msgstr "Halte diesen Key geheim! Jeder mit dem Key kann deine Wetterdaten lesen."
 
 #: admin/views/settings.php:316
 msgid "Knots"
-msgstr ""
+msgstr "Knoten"
 
 #: admin/views/settings.php:202
 msgid "Language & station"
-msgstr ""
+msgstr "Sprache & Station"
 
 #: includes/class-naws-astro.php:283
 msgid "Last Quarter"
-msgstr ""
+msgstr "Letztes Viertel"
 
 #: admin/views/modules.php:37
 msgid "Last Seen"
-msgstr ""
+msgstr "Zuletzt gesehen"
 
 #: admin/views/rest-api-docs.php:172
 msgid "Latest sensor reading per module/parameter"
-msgstr ""
+msgstr "Aktuellster Messwert pro Modul/Parameter"
 
 #: admin/views/shortcodes.php:241
 msgid "Layout: grid or list"
-msgstr ""
+msgstr "Layout: grid oder list"
 
 #: admin/views/import.php:29
 msgid "Leave empty to import all available data"
-msgstr ""
+msgstr "Leer lassen, um alle verfügbaren Daten zu importieren"
 
 #: includes/class-naws-labels.php:87
 msgid "Length of day"
-msgstr ""
+msgstr "Tageslänge"
 
 #: includes/class-naws-forecast.php:849
 msgid "Light drizzle"
-msgstr ""
+msgstr "Leichter Nieselregen"
 
 #: includes/class-naws-forecast.php:852
 msgid "Light freezing drizzle"
-msgstr ""
+msgstr "Gefrierender Niesel"
 
 #: includes/class-naws-forecast.php:857
 msgid "Light freezing rain"
-msgstr ""
+msgstr "Gefrierender Regen"
 
 #: includes/class-naws-forecast.php:854
 msgid "Light rain"
-msgstr ""
+msgstr "Leichter Regen"
 
 #: includes/class-naws-forecast.php:863
 msgid "Light rain showers"
-msgstr ""
+msgstr "Leichte Regenschauer"
 
 #: includes/class-naws-forecast.php:859
 msgid "Light snow"
-msgstr ""
+msgstr "Leichter Schneefall"
 
 #: admin/views/settings.php:254
 msgid "Limit temperatures"
-msgstr ""
+msgstr "Grenztemperaturen"
 
 #: admin/views/appearance.php:352
 msgid "Line color per sensor in the 24-hour charts."
-msgstr ""
+msgstr "Linienfarbe pro Sensor in den 24-Stunden-Charts."
 
 #: admin/views/rest-api-docs.php:171
 msgid "List of active modules with type and capabilities"
-msgstr ""
+msgstr "Liste der aktiven Module mit Typ und Messmöglichkeiten"
 
 #: templates/live.php:172
 msgid "Live"
-msgstr ""
+msgstr "Live"
 
 #: admin/views/live-settings.php:292
 msgid "Live Dashboard — Card Order"
-msgstr ""
+msgstr "Live-Dashboard — Reihenfolge der Kacheln"
 
 #: admin/views/shortcodes.php:93
 msgid "Live value now"
-msgstr ""
+msgstr "Live-Wert jetzt"
 
 #: admin/views/live-settings.php:141
 msgid "Live-Dashboard — Display Settings"
-msgstr ""
+msgstr "Live-Dashboard — Anzeige-Einstellungen"
 
 #: includes/class-naws-labels.php:22
 msgid "Loaded by Elementor"
-msgstr ""
+msgstr "Von Elementor geladen"
 
 #: includes/class-naws-forecast.php:691
 msgid "Location not found. Please check city name and country code."
-msgstr ""
+msgstr "Ort nicht gefunden. Bitte prüfen Sie Stadtname und Ländercode."
 
 #: admin/views/settings.php:377
 msgid "Location source"
-msgstr ""
+msgstr "Standort-Quelle"
 
 #: templates/infobar.php:150
 msgid "Lunar Eclipse"
-msgstr ""
+msgstr "Mondfinsternis"
 
 #: includes/class-naws-forecast.php:844
 msgid "Mainly clear"
-msgstr ""
+msgstr "Überwiegend klar"
 
 #: templates/live.php:359
 msgid "Make sure the sync function is active."
-msgstr ""
+msgstr "Stelle sicher, dass die Sync-Funktion aktiv ist."
 
 #: admin/views/settings.php:388
 msgid "Manual (enter city / postal code)"
-msgstr ""
+msgstr "Manuell (Stadt / PLZ eingeben)"
 
 #: includes/class-naws-forecast.php:928 templates/history.php:129
 msgid "Mar"
-msgstr ""
+msgstr "Mär"
 
 #: templates/history.php:135 templates/table.php:60
 msgid "Max"
-msgstr ""
+msgstr "Max"
 
 #: includes/class-naws-database.php:917 includes/class-naws-helpers.php:75 includes/class-naws-helpers.php:77 includes/class-naws-helpers.php:692
 #: includes/class-naws-labels.php:65
 msgid "Max Temperature (day)"
-msgstr ""
+msgstr "Max-Temperatur (Tag)"
 
 #: admin/views/rest-api-docs.php:279
 msgid "Max results (1–5000)"
-msgstr ""
+msgstr "Max. Ergebnisse (1–5000)"
 
 #: admin/views/shortcodes.php:260
 msgid "Max. number of records"
-msgstr ""
+msgstr "Max. Anzahl Datensätze"
 
 #: templates/forecast.php:103 templates/live.php:293
 msgid "Max. wind speed"
-msgstr ""
+msgstr "Max. Windgeschwindigkeit"
 
 #: includes/class-naws-forecast.php:928 templates/history.php:130
 msgid "May"
-msgstr ""
+msgstr "Mai"
 
 #: admin/views/shortcodes.php:168
 msgid "Meaning"
-msgstr ""
+msgstr "Bedeutung"
 
 #: admin/views/settings.php:491
 msgid "Measured on the wind gauge gust peak. Without a wind module the rule is skipped, with no substitute."
-msgstr ""
+msgstr "Gemessen an der Böenspitze des Windmessers. Ohne Windmodul entfällt die Regel ersatzlos."
 
 #: admin/views/cron-log.php:24
 msgid "Message"
-msgstr ""
+msgstr "Meldung"
 
 #: templates/history.php:134 templates/table.php:59
 msgid "Min"
-msgstr ""
+msgstr "Min"
 
 #: includes/class-naws-database.php:916 includes/class-naws-helpers.php:74 includes/class-naws-helpers.php:76 includes/class-naws-helpers.php:691
 #: includes/class-naws-labels.php:62
 msgid "Min Temperature (day)"
-msgstr ""
+msgstr "Min-Temperatur (Tag)"
 
 #: includes/class-naws-icons.php:76
 msgid "Minimal"
-msgstr ""
+msgstr "Minimal"
 
 #: admin/views/settings.php:234
 msgid "Minimum: 5 minutes. Note: Netatmo updates sensors every 5 minutes."
-msgstr ""
+msgstr "Minimum: 5 Minuten. Hinweis: Netatmo aktualisiert Sensoren alle 5 Minuten."
 
 #: templates/table.php:53
 msgid "Module"
-msgstr ""
+msgstr "Modul"
 
 #: admin/views/modules.php:34
 msgid "Module ID (MAC)"
-msgstr ""
+msgstr "Modul-ID (MAC)"
 
 #: admin/views/shortcodes.php:239 admin/views/shortcodes.php:257
 msgid "Module MAC (empty = all modules)"
-msgstr ""
+msgstr "Modul-MAC (leer = alle Module)"
 
 #: admin/views/appearance.php:38
 msgid "Module4 CO2"
-msgstr ""
+msgstr "Modul4 CO₂"
 
 #: admin/views/appearance.php:37
 msgid "Module4 Humidity"
-msgstr ""
+msgstr "Modul4 Feuchte"
 
 #: admin/views/appearance.php:36
 msgid "Module4 Temperature"
-msgstr ""
+msgstr "Modul4 Temperatur"
 
 #: admin/views/dashboard.php:79 admin/views/export.php:83 admin/views/modules.php:9 admin/views/shortcodes.php:376
 #: includes/class-naws-admin.php:52
 msgid "Modules"
-msgstr ""
+msgstr "Module"
 
 #: admin/views/live-settings.php:151
 msgid "Modules & Sensors"
-msgstr ""
+msgstr "Module &amp; Sensoren"
 
 #: includes/class-naws-forecast.php:913
 msgid "Mon"
-msgstr ""
+msgstr "Mo"
 
 #: includes/class-naws-forecast.php:921
 msgid "Monday"
-msgstr ""
+msgstr "Montag"
 
 #: templates/infobar.php:111
 msgid "Moon Phase"
-msgstr ""
+msgstr "Mondphase"
 
 #: includes/class-naws-labels.php:89
 msgid "Moon illumination"
-msgstr ""
+msgstr "Beleuchtungsgrad des Mondes"
 
 #: includes/class-naws-labels.php:88
 msgid "Moon phase"
-msgstr ""
+msgstr "Mondphase"
 
 #: templates/infobar.php:126
 msgid "Moonrise"
-msgstr ""
+msgstr "Mondaufgang"
 
 #: templates/infobar.php:132
 msgid "Moonset"
-msgstr ""
+msgstr "Monduntergang"
 
 #: admin/views/modules.php:32
 msgid "Name"
-msgstr ""
+msgstr "Name"
 
 #: includes/class-naws-icons.php:62
 msgid "Native system emojis — appearance varies by device."
-msgstr ""
+msgstr "Native System-Emojis — sehen auf jedem Gerät etwas anders aus."
 
 #: admin/views/dashboard.php:185 includes/class-naws-labels.php:28
 msgid "Needs attention"
-msgstr ""
+msgstr "Prüfen"
 
 #: admin/views/settings.php:117
 msgid "Netatmo API Connection"
-msgstr ""
+msgstr "Netatmo API-Verbindung"
 
 #: admin/views/settings.php:69
 msgid "Netatmo Refresh Token expired!"
-msgstr ""
+msgstr "Netatmo Refresh Token abgelaufen!"
 
 #: admin/views/rest-api-docs.php:28
 msgid "New API key generated."
-msgstr ""
+msgstr "Neuer API-Key wurde generiert."
 
 #: includes/class-naws-astro.php:277
 msgid "New Moon"
-msgstr ""
+msgstr "Neumond"
 
 #: templates/infobar.php:118
 msgid "Next Full Moon"
-msgstr ""
+msgstr "Nächster Vollmond"
 
 #: templates/infobar.php:141
 msgid "Next Supermoon"
-msgstr ""
+msgstr "Nächster Supermond"
 
 #: includes/class-naws-labels.php:91
 msgid "Next lunar eclipse"
-msgstr ""
+msgstr "Nächste Mondfinsternis"
 
 #: admin/views/cron-log.php:11 admin/views/dashboard.php:141 admin/views/dashboard.php:329 admin/views/dashboard.php:395
 msgid "Next run:"
-msgstr ""
+msgstr "Nächste Ausführung:"
 
 #: includes/class-naws-labels.php:90
 msgid "Next supermoon"
-msgstr ""
+msgstr "Nächster Supermond"
 
 #: admin/views/settings.php:241
 msgid "Night Mode"
-msgstr ""
+msgstr "Nachtmodus"
 
 #: includes/class-naws-cron.php:543
 msgid "Night mode active (reduced polling)"
-msgstr ""
+msgstr "Nachtmodus aktiv (reduziertes Polling)"
 
 #: admin/views/rest-api-docs.php:120
 msgid "No API key has been generated yet. Create one to enable access."
-msgstr ""
+msgstr "Es wurde noch kein API-Key generiert. Erstelle einen, um den Zugriff zu aktivieren."
 
 #: admin/views/settings.php:84
 msgid "No Refresh Token – this is causing the cron error!"
-msgstr ""
+msgstr "Kein Refresh Token – das verursacht den Cron-Fehler!"
 
 #: admin/views/settings.php:280
 msgid "No automatic deletion. You can manually purge old data below if needed."
-msgstr ""
+msgstr "Es findet keine automatische Löschung statt. Du kannst unten manuell eine Bereinigung durchführen falls nötig."
 
 #: admin/views/live-settings.php:333
 msgid "No card is switched on at the moment — turn one on above, with the modules."
-msgstr ""
+msgstr "Zurzeit ist keine Kachel aktiv — oben bei den Modulen einschalten."
 
 #: includes/class-naws-forecast.php:644
 msgid "No city specified. Please enter a city in the forecast settings."
-msgstr ""
+msgstr "Kein Ort angegeben. Bitte tragen Sie eine Stadt in den Vorhersage-Einstellungen ein."
 
 #: admin/views/dashboard.php:272 templates/table.php:46
 msgid "No data available yet."
-msgstr ""
+msgstr "Noch keine Daten vorhanden."
 
 #: includes/class-naws-shortcodes.php:87
 msgid "No data for this period."
-msgstr ""
+msgstr "Keine Daten für diesen Zeitraum."
 
 #: admin/views/export.php:62
 msgid "No data to export. Import historical data first."
-msgstr ""
+msgstr "Keine Daten zum Exportieren. Importiere zuerst historische Daten."
 
 #: admin/views/import.php:131
 msgid "No data yet"
-msgstr ""
+msgstr "Noch keine Daten"
 
 #: admin/views/live-settings.php:209
 msgid "No data yet — module has not delivered any readings."
-msgstr ""
+msgstr "Noch keine Daten — Modul hat noch keine Messwerte geliefert."
 
 #: templates/forecast.php:50
 msgid "No forecast data available."
-msgstr ""
+msgstr "Keine Vorhersagedaten verfügbar."
 
 #: templates/live.php:358
 msgid "No live data available."
-msgstr ""
+msgstr "Keine Live-Daten verfügbar."
 
 #: admin/views/cron-log.php:17
 msgid "No log entries yet."
-msgstr ""
+msgstr "Noch keine Log-Einträge vorhanden."
 
 #: admin/views/dashboard.php:211 admin/views/modules.php:22
 msgid "No modules found yet. Sync data first."
-msgstr ""
+msgstr "Noch keine Module gefunden. Bitte zuerst synchronisieren."
 
 #: admin/views/import.php:34
 msgid "No modules found."
-msgstr ""
+msgstr "Keine Module gefunden."
 
 #: admin/views/shortcodes.php:340
 msgid "No state determinable right now — neither station readings nor forecast are available. Nothing would be output."
-msgstr ""
+msgstr "Zurzeit kein Zustand bestimmbar — weder Stationswerte noch Vorhersage liegen vor. Es würde nichts ausgegeben."
 
 #: includes/class-naws-cron.php:510
 msgid "No successful sync yet"
-msgstr ""
+msgstr "Noch kein erfolgreicher Sync"
 
 #: templates/live.php:66
 msgid "Noise Base"
-msgstr ""
+msgstr "Lärm Basis"
 
 #: admin/views/live-settings.php:87 includes/class-naws-helpers.php:64 includes/class-naws-helpers.php:685 includes/class-naws-labels.php:60
 msgid "Noise Level"
-msgstr ""
+msgstr "Lautstärke / Lärmpegel"
 
 #: admin/views/settings.php:121
 msgid "Not connected"
-msgstr ""
+msgstr "Nicht verbunden"
 
 #: admin/views/dashboard.php:334
 msgid "Not scheduled"
-msgstr ""
+msgstr "Nicht geplant"
 
 #: admin/views/settings.php:89
 msgid "Not yet connected to Netatmo."
-msgstr ""
+msgstr "Noch nicht mit Netatmo verbunden."
 
 #: admin/views/live-settings.php:367
 msgid "Notes"
-msgstr ""
+msgstr "Hinweise"
 
 #: admin/views/appearance.php:573 includes/class-naws-labels.php:53
 msgid "Nothing displayable right now — neither station readings nor forecast are available. The widget would output nothing."
-msgstr ""
+msgstr "Zurzeit nichts darstellbar — weder Stationswerte noch Vorhersage liegen vor. Das Widget würde nichts ausgeben."
 
 #: includes/class-naws-forecast.php:928 templates/history.php:131
 msgid "Nov"
-msgstr ""
+msgstr "Nov"
 
 #: admin/views/shortcodes.php:218
 msgid "Number of comparison years"
-msgstr ""
+msgstr "Anzahl Vergleichsjahre"
 
 #: admin/views/shortcodes.php:286
 msgid "Number of forecast days (1–7). Defaults to value from settings."
-msgstr ""
+msgstr "Anzahl der Vorhersage-Tage (1–7). Standard aus den Einstellungen."
 
 #: admin/views/settings.php:96
 msgid "OAuth Debug"
-msgstr ""
+msgstr "OAuth-Debug"
 
 #: includes/class-naws-forecast.php:928 templates/history.php:131
 msgid "Oct"
-msgstr ""
+msgstr "Okt"
 
 #: admin/views/shortcodes.php:136
 msgid "One shortcode for every computed value. The value goes in the <code>value</code> attribute — which of the other attributes apply depends on its kind (instant value, day class, sum or index); see the table below."
-msgstr ""
+msgstr "Ein Shortcode für alle berechneten Werte. Der Wert steckt im Attribut <code>value</code> — welche der übrigen Attribute gelten, hängt von seiner Art ab (Momentanwert, Tagesklasse, Summe oder Index); siehe Tabelle unten."
 
 #: admin/views/appearance.php:182
 msgid "Only needed when your font is not listed above. Write it as in CSS, e.g. \"PT Sans\", Arial, sans-serif. Your theme or page builder has to load it, otherwise the fallback applies."
-msgstr ""
+msgstr "Nur nötig, wenn deine Schrift oben nicht auftaucht. Wie in CSS notieren, z. B. \"PT Sans\", Arial, sans-serif. Geladen werden muss sie von Theme oder Seitenbaukasten – sonst greift die Ersatzschrift."
 
 #: admin/views/settings.php:357
 msgid "Open-Meteo (global, open-source)"
-msgstr ""
+msgstr "Open-Meteo (weltweit, Open-Source)"
 
 #: admin/views/settings.php:220
 msgid "Operation"
-msgstr ""
+msgstr "Betrieb"
 
 #: admin/views/shortcodes.php:262
 msgid "Optional table title"
-msgstr ""
+msgstr "Optionaler Tabellen-Titel"
 
 #: admin/views/shortcodes.php:242
 msgid "Optional title"
-msgstr ""
+msgstr "Optionaler Titel"
 
 #: includes/class-naws-helpers.php:306 includes/class-naws-helpers.php:307 includes/class-naws-helpers.php:308 includes/class-naws-helpers.php:309
 #: templates/live.php:343
 msgid "Outdoor"
-msgstr ""
+msgstr "Außen"
 
 #: admin/views/appearance.php:28
 msgid "Outdoor Humidity"
-msgstr ""
+msgstr "Außenfeuchte"
 
 #: includes/class-naws-helpers.php:230 templates/history.php:142
 msgid "Outdoor Humidity (Annual Mean)"
-msgstr ""
+msgstr "Außenluftfeuchte (Jahresmittel)"
 
 #: admin/views/import.php:23 admin/views/live-settings.php:92 includes/class-naws-helpers.php:704
 msgid "Outdoor Module"
-msgstr ""
+msgstr "Außenmodul"
 
 #: admin/views/appearance.php:27
 msgid "Outdoor Temperature"
-msgstr ""
+msgstr "Außentemperatur"
 
 #: admin/views/live-settings.php:96 includes/class-naws-labels.php:61
 msgid "Outdoor Temperature (current)"
-msgstr ""
+msgstr "Außentemperatur (aktuell)"
 
 #: admin/views/live-settings.php:93
 msgid "Outdoor sensor"
-msgstr ""
+msgstr "Außensensor"
 
 #: includes/class-naws-icons.php:66
 msgid "Outline"
-msgstr ""
+msgstr "Outline"
 
 #: includes/class-naws-forecast.php:846 includes/class-naws-labels.php:123
 msgid "Overcast"
-msgstr ""
+msgstr "Bedeckt"
 
 #: admin/views/export.php:135
 msgid "Overwrite existing settings (full backup only)"
-msgstr ""
+msgstr "Bestehende Einstellungen überschreiben (nur bei Komplett-Backup)"
 
 #: admin/views/appearance.php:171 admin/views/appearance.php:176
 msgid "Own font family"
-msgstr ""
+msgstr "Eigene Schriftfamilie"
 
 #: templates/table.php:54
 msgid "Parameter"
-msgstr ""
+msgstr "Parameter"
 
 #: includes/class-naws-labels.php:39
 msgid "Partial"
-msgstr ""
+msgstr "Partiell"
 
 #: includes/class-naws-forecast.php:845 includes/class-naws-labels.php:122
 msgid "Partly cloudy"
-msgstr ""
+msgstr "Teilweise bewölkt"
 
 #: includes/class-naws-labels.php:40
 msgid "Penumbral"
-msgstr ""
+msgstr "Halbschatten"
 
 #: admin/views/settings.php:85
 msgid "Please click \"Connect to Netatmo\" below and reauthorize the app. This one-time step saves the refresh token permanently."
-msgstr ""
+msgstr "Bitte klicke auf \"Mit Netatmo verbinden\" und autorisiere die App erneut. Dieser einmalige Schritt speichert den Refresh Token dauerhaft."
 
 #: includes/class-naws-helpers.php:671
 msgid "Poor"
-msgstr ""
+msgstr "Schlecht"
 
 #: admin/views/shortcodes.php:65 admin/views/shortcodes.php:144
 msgid "Possible values"
-msgstr ""
+msgstr "Mögliche Werte"
 
 #: includes/class-naws-helpers.php:315 includes/class-naws-labels.php:138 templates/forecast.php:101 templates/live.php:291
 #: templates/live.php:350
 msgid "Precipitation"
-msgstr ""
+msgstr "Niederschlag"
 
 #: admin/views/live-settings.php:117
 msgid "Precipitation module"
-msgstr ""
+msgstr "Niederschlags-Modul"
 
 #: templates/forecast.php:102 templates/live.php:292
 msgid "Precipitation probability"
-msgstr ""
+msgstr "Regenwahrscheinlichkeit"
 
 #: admin/views/appearance.php:30 admin/views/appearance.php:79 admin/views/settings.php:321 templates/live.php:64
 msgid "Pressure"
-msgstr ""
+msgstr "Luftdruck"
 
 #: includes/class-naws-helpers.php:228 templates/history.php:140
 msgid "Pressure (Annual Mean)"
-msgstr ""
+msgstr "Luftdruck (Jahresmittel)"
 
 #: includes/class-naws-helpers.php:66 includes/class-naws-helpers.php:687 includes/class-naws-labels.php:58
 msgid "Pressure (absolute)"
-msgstr ""
+msgstr "Luftdruck absolut"
 
 #: admin/views/import.php:24 includes/class-naws-helpers.php:65 includes/class-naws-helpers.php:686 includes/class-naws-labels.php:57
 msgid "Pressure (relative)"
-msgstr ""
+msgstr "Luftdruck relativ"
 
 #: includes/class-naws-database.php:919 includes/class-naws-labels.php:64
 msgid "Pressure Ø (hPa)"
-msgstr ""
+msgstr "Pressure Ø (hPa)"
 
 #: admin/views/appearance.php:327
 msgid "Preview — Icon Colors"
-msgstr ""
+msgstr "Vorschau — Icon-Farben"
 
 #: admin/views/export.php:149
 msgid "Processing import..."
-msgstr ""
+msgstr "Import wird verarbeitet..."
 
 #: admin/views/settings.php:286
 msgid "Purge now"
-msgstr ""
+msgstr "Jetzt bereinigen"
 
 #: admin/views/rest-api-docs.php:51
 msgid "REST API"
-msgstr ""
+msgstr "REST API"
 
 #: includes/class-naws-forecast.php:855
 msgid "Rain"
-msgstr ""
+msgstr "Regen"
 
 #: includes/class-naws-labels.php:71
 msgid "Rain (current)"
-msgstr ""
+msgstr "Regen aktuell"
 
 #: templates/live.php:75
 msgid "Rain (hourly)"
-msgstr ""
+msgstr "Regen (stündl.)"
 
 #: admin/views/import.php:25 includes/class-naws-helpers.php:706
 msgid "Rain Gauge"
-msgstr ""
+msgstr "Regenmesser"
 
 #: includes/class-naws-forecast.php:864
 msgid "Rain showers"
-msgstr ""
+msgstr "Regenschauer"
 
 #: admin/views/rest-api-docs.php:80
 msgid "Rate Limit"
-msgstr ""
+msgstr "Rate Limit"
 
 #: admin/views/rest-api-docs.php:528
 msgid "Rate limit exceeded. Wait 60 seconds."
-msgstr ""
+msgstr "Rate Limit überschritten. 60 Sekunden warten."
 
 #: admin/views/rest-api-docs.php:173
 msgid "Raw sensor readings with time range, grouping and filtering"
-msgstr ""
+msgstr "Rohe Sensordaten mit Zeitraum, Gruppierung und Filterung"
 
 #: admin/views/shortcodes.php:199
 msgid "Ready-made, complete widgets with Chart.js visualizations and automatic data refresh."
-msgstr ""
+msgstr "Fertige, vollständige Widgets mit Chart.js-Visualisierungen und automatischem Daten-Refresh."
 
 #: admin/views/cron-log.php:9 admin/views/dashboard.php:132 admin/views/dashboard.php:399
 msgid "Recent Sync Events"
-msgstr ""
+msgstr "Letzte Synchronisierungen"
 
 #: admin/views/settings.php:129
 msgid "Redirect URI to add in your Netatmo App:"
-msgstr ""
+msgstr "Redirect URI (in deiner Netatmo-App eintragen):"
 
 #: admin/views/settings.php:267
 msgid "Reference temperature for heating degree days. 20 °C in every standard named here."
-msgstr ""
+msgstr "Bezugstemperatur der Heizgradtage. In allen genannten Normen 20 °C."
 
 #: admin/views/settings.php:104
 msgid "Refresh Token present."
-msgstr ""
+msgstr "Refresh Token vorhanden."
 
 #: admin/views/rest-api-docs.php:107
 msgid "Regenerate Key"
-msgstr ""
+msgstr "Key neu generieren"
 
 #: includes/class-naws-admin.php:264
 msgid "Request failed."
-msgstr ""
+msgstr "Anfrage fehlgeschlagen."
 
 #: admin/views/rest-api-docs.php:83
 msgid "Requests per minute per API key"
-msgstr ""
+msgstr "Anfragen pro Minute pro API-Key"
 
 #: admin/views/appearance.php:106
 msgid "Reset All"
-msgstr ""
+msgstr "Alle zurücksetzen"
 
 #: admin/views/appearance.php:105
 msgid "Reset all colors to defaults?"
-msgstr ""
+msgstr "Alle Farben auf Standardwerte zurücksetzen?"
 
 #: admin/views/settings.php:422
 msgid "Resolved location"
-msgstr ""
+msgstr "Aufgelöster Standort"
 
 #: admin/views/shortcodes.php:57
 msgid "Returns a single sensor value — ideal for embedding readings directly in text, headings or custom HTML layouts."
-msgstr ""
+msgstr "Gibt einen einzelnen Sensorwert zurück – ideal um Messwerte direkt in Fließtext, Überschriften oder eigene HTML-Layouts einzubauen."
 
 #: admin/views/rest-api-docs.php:320
 msgid "Returns aggregated daily summary data from permanent storage. Supports grouping by day, week, month or year. Ideal for long-term charts and analysis."
-msgstr ""
+msgstr "Gibt aggregierte Tages-Zusammenfassungsdaten aus dem permanenten Speicher zurück. Unterstützt Gruppierung nach Tag, Woche, Monat oder Jahr. Ideal für Langzeit-Charts und Analysen."
 
 #: admin/views/rest-api-docs.php:206
 msgid "Returns all active modules with their Netatmo type, supported data types, firmware version and battery status."
-msgstr ""
+msgstr "Gibt alle aktiven Module mit ihrem Netatmo-Typ, unterstützten Datentypen, Firmware-Version und Batteriestatus zurück."
 
 #: admin/views/rest-api-docs.php:269
 msgid "Returns raw sensor readings from the rolling storage (typically last 90 days). Supports filtering by module, parameter and time range. Results can be grouped by hour, day, week or month."
-msgstr ""
+msgstr "Gibt rohe Sensordaten aus dem rollierenden Speicher (typischerweise letzte 90 Tage) zurück. Unterstützt Filterung nach Modul, Parameter und Zeitraum. Ergebnisse können nach Stunde, Tag, Woche oder Monat gruppiert werden."
 
 #: admin/views/rest-api-docs.php:183
 msgid "Returns station location, timezone, active module count and the unit configuration."
-msgstr ""
+msgstr "Gibt Standort, Zeitzone, Anzahl aktiver Module und die Einheiten-Konfiguration zurück."
 
 #: admin/views/rest-api-docs.php:237
 msgid "Returns the most recent reading for every parameter of every active module. Optionally filter by module_id."
-msgstr ""
+msgstr "Gibt den neuesten Messwert für jeden Parameter jedes aktiven Moduls zurück. Optional filterbar nach module_id."
 
 #: admin/views/rest-api-docs.php:114
 msgid "Revoke Key"
-msgstr ""
+msgstr "Key widerrufen"
 
 #: admin/views/rest-api-docs.php:113
 msgid "Revoke the key? All external integrations will lose access."
-msgstr ""
+msgstr "Key widerrufen? Alle externen Integrationen verlieren den Zugriff."
 
 #: admin/views/shortcodes.php:169
 msgid "Right now"
-msgstr ""
+msgstr "Aktuell bei dir"
 
 #: admin/views/settings.php:263
 msgid "Room temperature (°C)"
-msgstr ""
+msgstr "Raumtemperatur (°C)"
 
 #: admin/views/shortcodes.php:188
 msgid "SPI data basis: %1$d complete months of gap-free rain measurement (%2$d full years). It computes from 24 months on; the customary reference is about 30 years — below that the index is a tendency rather than a measurement."
-msgstr ""
+msgstr "Datengrundlage des SPI: %1$d vollständige Monate lückenloser Regenmessung (%2$d volle Jahre). Gerechnet wird ab 24 Monaten; üblich sind rund 30 Jahre — darunter ist der Index eher Tendenz als Messgröße."
 
 #: includes/class-naws-forecast.php:913
 msgid "Sat"
-msgstr ""
+msgstr "Sa"
 
 #: includes/class-naws-forecast.php:921
 msgid "Saturday"
-msgstr ""
+msgstr "Samstag"
 
 #: admin/views/settings.php:175
 msgid "Save Client ID and Secret first."
-msgstr ""
+msgstr "Bitte zuerst Client ID und Secret speichern."
 
 #: admin/views/settings.php:157
 msgid "Save Credentials"
-msgstr ""
+msgstr "Zugangsdaten speichern"
 
 #: admin/views/appearance.php:496 admin/views/appearance.php:585 admin/views/rest-api-docs.php:88 admin/views/settings.php:501
 msgid "Save Settings"
-msgstr ""
+msgstr "Einstellungen speichern"
 
 #: includes/class-naws-admin.php:273
 msgid "Saving…"
-msgstr ""
+msgstr "Speichern…"
 
 #: admin/views/live-settings.php:360
 msgid "Seconds (default: 60)"
-msgstr ""
+msgstr "Sekunden (Standard: 60)"
 
 #: admin/views/shortcodes.php:68
 msgid "See table below"
-msgstr ""
+msgstr "Siehe Tabelle unten"
 
 #: admin/views/export.php:126
 msgid "Select JSON file"
-msgstr ""
+msgstr "JSON-Datei auswählen"
 
 #: admin/views/settings.php:360
 msgid "Select the weather API for the forecast. All providers are free and do not require an API key."
-msgstr ""
+msgstr "Wähle die Wetter-API für die Vorhersage. Alle Anbieter sind kostenlos und erfordern keinen API-Key."
 
 #: includes/class-naws-forecast.php:928 templates/history.php:131
 msgid "Sep"
-msgstr ""
+msgstr "Sep"
 
 #: admin/views/live-settings.php:294
 msgid "Sets the order the cards appear in within the <code>[naws_live]</code> widget. Showing and hiding them happens above, with the modules."
-msgstr ""
+msgstr "Legt fest, in welcher Reihenfolge die Kacheln im <code>[naws_live]</code>-Widget stehen. Ein- und ausgeblendet werden sie oben bei den Modulen."
 
 #: includes/class-naws-admin.php:49
 msgid "Settings"
-msgstr ""
+msgstr "Einstellungen"
 
 #: admin/views/dashboard.php:364
 msgid "Settings & OAuth"
-msgstr ""
+msgstr "Einstellungen & OAuth"
 
 #: admin/views/appearance.php:94 admin/views/rest-api-docs.php:18 admin/views/settings.php:39
 msgid "Settings saved."
-msgstr ""
+msgstr "Einstellungen gespeichert."
 
 #: admin/views/appearance.php:22
 msgid "Shadow"
-msgstr ""
+msgstr "Schatten"
 
 #: admin/views/shortcodes.php:51
 msgid "Shortcode Reference"
-msgstr ""
+msgstr "Shortcode Referenz"
 
 #: admin/views/settings.php:151
 msgid "Show"
-msgstr ""
+msgstr "Anzeigen"
 
 #: admin/views/shortcodes.php:224
 msgid "Show range picker (true/false)"
-msgstr ""
+msgstr "Zeitraum-Auswahl anzeigen (true/false)"
 
 #: admin/views/settings.php:450
 msgid "Show the icon above the live dashboard. The [naws_weather_icon] shortcode is unaffected by this."
-msgstr ""
+msgstr "Icon über dem Live-Dashboard anzeigen. Der Shortcode [naws_weather_icon] bleibt davon unberührt."
 
 #: admin/views/shortcodes.php:277
 msgid "Shows a weather forecast based on station location."
-msgstr ""
+msgstr "Zeigt eine Wettervorhersage basierend auf dem Stationsstandort."
 
 #: admin/views/shortcodes.php:235
 msgid "Shows animated metric cards with the latest sensor values from all or specific modules."
-msgstr ""
+msgstr "Zeigt animierte Messkarten mit den aktuellen Sensorwerten aller oder einzelner Module."
 
 #: admin/views/shortcodes.php:297
 msgid "Shows the current weather state as an animated icon. Deliberately without a visible caption — the state is carried by the aria-label for screen readers. If the icon sits on the same page as the live dashboard it refreshes along with that page's polling cycle. When no state can be determined, nothing is output."
-msgstr ""
+msgstr "Zeigt den aktuellen Wetterzustand als animiertes Icon. Bewusst ohne sichtbare Beschriftung — der Zustand steckt im aria-label für Screenreader. Steht das Icon auf derselben Seite wie das Live-Dashboard, aktualisiert es sich über dessen Abfragezyklus mit. Lässt sich kein Zustand bestimmen, wird nichts ausgegeben."
 
 #: admin/views/appearance.php:512 includes/class-naws-labels.php:45
 msgid "Sidebar widget"
-msgstr ""
+msgstr "Seitenleisten-Widget"
 
 #: includes/class-naws-labels.php:128
 msgid "Sleet or hail"
-msgstr ""
+msgstr "Graupel oder Hagel"
 
 #: includes/class-naws-forecast.php:860 includes/class-naws-labels.php:127
 msgid "Snow"
-msgstr ""
+msgstr "Schnee"
 
 #: admin/views/settings.php:464
 msgid "Snow below"
-msgstr ""
+msgstr "Schnee unter"
 
 #: includes/class-naws-forecast.php:862
 msgid "Snow grains"
-msgstr ""
+msgstr "Schneegriesel"
 
 #: includes/class-naws-forecast.php:866
 msgid "Snow showers"
-msgstr ""
+msgstr "Schneeschauer"
 
 #: includes/class-naws-icons.php:72
 msgid "Solid filled icons for a bolder, modern look."
-msgstr ""
+msgstr "Ausgefüllte Icons für einen kräftigeren, modernen Look."
 
 #: admin/views/shortcodes.php:329 templates/forecast.php:118 templates/live.php:304
 msgid "Source"
-msgstr ""
+msgstr "Quelle"
 
 #: admin/views/shortcodes.php:219
 msgid "Specific year(s), e.g. \"2025\" or \"2023,2025\". Empty = all available years."
-msgstr ""
+msgstr "Bestimmte(s) Jahr(e), z.B. \"2025\" oder \"2023,2025\". Leer = alle verfügbaren Jahre."
 
 #: includes/class-naws-labels.php:23
 msgid "Standard fonts"
-msgstr ""
+msgstr "Standardschriften"
 
 #: includes/class-naws-labels.php:106
 msgid "Standardized Precipitation Index (SPI)"
-msgstr ""
+msgstr "Standardisierter Niederschlagsindex (SPI)"
 
 #: includes/class-naws-labels.php:103
 msgid "Start of the growing season"
-msgstr ""
+msgstr "Vegetationsbeginn"
 
 #: admin/views/rest-api-docs.php:276
 msgid "Start time – ISO 8601 (2025-03-01T00:00:00Z) or Unix timestamp"
-msgstr ""
+msgstr "Startzeitpunkt – ISO 8601 (2025-03-01T00:00:00Z) oder Unix-Timestamp"
 
 #: includes/class-naws-forecast.php:774 includes/class-naws-forecast.php:779
 msgid "Station Location"
-msgstr ""
+msgstr "Stationsstandort"
 
 #: admin/views/settings.php:206
 msgid "Station Name"
-msgstr ""
+msgstr "Stationsname"
 
 #: includes/class-naws-forecast.php:636
 msgid "Station coordinates not available. Please sync your station first."
-msgstr ""
+msgstr "Stationskoordinaten nicht verfügbar. Bitte synchronisieren Sie zuerst Ihre Station."
 
 #: admin/views/rest-api-docs.php:170
 msgid "Station metadata, location and unit settings"
-msgstr ""
+msgstr "Stations-Metadaten, Standort und Einheiten-Konfiguration"
 
 #: admin/views/live-settings.php:359
 msgid "Station name"
-msgstr ""
+msgstr "Stationsname"
 
 #: admin/views/shortcodes.php:207
 msgid "Station name from Netatmo"
-msgstr ""
+msgstr "Stationsname aus Netatmo"
 
 #: admin/views/shortcodes.php:207
 msgid "Station title"
-msgstr ""
+msgstr "Titel der Station"
 
 #: admin/views/cron-log.php:23 admin/views/rest-api-docs.php:67
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #: admin/views/dashboard.php:185 includes/class-naws-labels.php:27
 msgid "Stored encrypted"
-msgstr ""
+msgstr "Verschlüsselt gespeichert"
 
 #: includes/class-naws-labels.php:130
 msgid "Storm"
-msgstr ""
+msgstr "Sturm"
 
 #: admin/views/settings.php:486
 msgid "Storm from"
-msgstr ""
+msgstr "Sturm ab"
 
 #: includes/class-naws-labels.php:94
 msgid "Summer days"
-msgstr ""
+msgstr "Sommertage"
 
 #: includes/class-naws-forecast.php:913
 msgid "Sun"
-msgstr ""
+msgstr "So"
 
 #: includes/class-naws-forecast.php:921
 msgid "Sunday"
-msgstr ""
+msgstr "Sonntag"
 
 #: includes/class-naws-labels.php:85 templates/infobar.php:97
 msgid "Sunrise"
-msgstr ""
+msgstr "Sonnenaufgang"
 
 #: includes/class-naws-labels.php:86 templates/infobar.php:103
 msgid "Sunset"
-msgstr ""
+msgstr "Sonnenuntergang"
 
 #: admin/views/dashboard.php:39
 msgid "Sync Now"
-msgstr ""
+msgstr "Jetzt synchronisieren"
 
 #: includes/class-naws-cron.php:549
 msgid "Sync OK (%d min ago)"
-msgstr ""
+msgstr "Sync OK (vor %d Min.)"
 
 #: includes/class-naws-admin.php:258
 msgid "Sync complete!"
-msgstr ""
+msgstr "Synchronisation abgeschlossen!"
 
 #: includes/class-naws-admin.php:257
 msgid "Syncing…"
-msgstr ""
+msgstr "Synchronisiere…"
 
 #: admin/views/shortcodes.php:253
 msgid "Tabular view of historical readings with configurable time period and grouping."
-msgstr ""
+msgstr "Tabellarische Ansicht der historischen Messwerte mit konfigurierbarem Zeitraum und Gruppierung."
 
 #: includes/class-naws-database.php:918 includes/class-naws-labels.php:63
 msgid "Temp Ø (°C)"
-msgstr ""
+msgstr "Temp Ø (°C)"
 
 #: templates/live.php:82
 msgid "Temp."
-msgstr ""
+msgstr "Temp."
 
 #: templates/live.php:63
 msgid "Temp. Base"
-msgstr ""
+msgstr "Temp. Basis"
 
 #: includes/class-naws-helpers.php:308 includes/class-naws-labels.php:144 templates/live.php:356
 msgid "Temp. Max"
-msgstr ""
+msgstr "Temp. Max"
 
 #: includes/class-naws-helpers.php:307 includes/class-naws-labels.php:143 templates/live.php:355
 msgid "Temp. Min"
-msgstr ""
+msgstr "Temp. Min"
 
 #: templates/live.php:58
 msgid "Temp. Outdoor"
-msgstr ""
+msgstr "Temp. Außen"
 
 #: admin/views/appearance.php:77 admin/views/live-settings.php:67 admin/views/settings.php:301 includes/class-naws-helpers.php:61
 #: includes/class-naws-helpers.php:306 includes/class-naws-helpers.php:313 includes/class-naws-helpers.php:682 includes/class-naws-labels.php:74
 #: includes/class-naws-labels.php:133 templates/live.php:345
 msgid "Temperature"
-msgstr ""
+msgstr "Temperatur"
 
 #: includes/class-naws-helpers.php:226 templates/history.php:138
 msgid "Temperature Min / Max"
-msgstr ""
+msgstr "Temperatur Min / Max"
 
 #: admin/views/appearance.php:16
 msgid "Text"
-msgstr ""
+msgstr "Text"
 
 #: admin/views/appearance.php:17
 msgid "Text (Dark)"
-msgstr ""
+msgstr "Text (dunkel)"
 
 #: admin/views/appearance.php:18
 msgid "Text (Darkest)"
-msgstr ""
+msgstr "Text (am dunkelsten)"
 
 #: admin/views/appearance.php:20
 msgid "Text (Light)"
-msgstr ""
+msgstr "Text (leicht)"
 
 #: admin/views/appearance.php:19
 msgid "Text (Muted)"
-msgstr ""
+msgstr "Text (gedämpft)"
 
 #: admin/views/shortcodes.php:72 admin/views/shortcodes.php:158
 msgid "Text when no value available"
-msgstr ""
+msgstr "Text wenn kein Wert verfügbar"
 
 #: admin/views/settings.php:350
 msgid "The 5-day forecast uses the free Open-Meteo API. Choose whether the location is determined automatically from your Netatmo station or entered manually."
-msgstr ""
+msgstr "Die 5-Tage-Vorhersage nutzt die kostenlose Open-Meteo API. Wählen Sie, ob der Standort automatisch von Ihrer Netatmo-Station ermittelt oder manuell eingegeben wird."
 
 #: admin/views/live-settings.php:153
 msgid "The <strong>left toggle</strong> activates/deactivates the entire module. The <strong>middle toggle</strong> shows/hides the tile in the dashboard. The <strong>📈 icon</strong> toggles the 24h chart. Click the module name to expand/collapse."
-msgstr ""
+msgstr "Der <strong>linke Schalter</strong> aktiviert/deaktiviert das gesamte Modul. Der <strong>mittlere Schalter</strong> zeigt/verbirgt die Kachel im Dashboard. Das <strong>📈-Symbol</strong> schaltet den 24h-Verlaufsgraph. Zum Auf-/Zuklappen auf den Modulnamen klicken."
 
 #: includes/class-naws-labels.php:29
 msgid "The PHP openssl extension is missing on this server. Credentials cannot be stored encrypted, so they are not stored at all."
-msgstr ""
+msgstr "Die PHP-Erweiterung openssl fehlt auf diesem Server. Zugangsdaten können nicht verschlüsselt gespeichert werden — sie werden deshalb gar nicht gespeichert."
 
 #: includes/class-naws-labels.php:32
 msgid "The WordPress salts have changed since the credentials were stored, so they can no longer be read. Please connect to Netatmo again."
-msgstr ""
+msgstr "Die WordPress-Salts wurden geändert, seit die Zugangsdaten gespeichert wurden. Sie sind damit nicht mehr lesbar — bitte einmal neu mit Netatmo verbinden."
 
 #: admin/views/settings.php:63 includes/class-naws-labels.php:34
 msgid "The connection could not be stored securely. See the notices above for the reason."
-msgstr ""
+msgstr "Die Verbindung ließ sich nicht sicher speichern. Ursache siehe Hinweise oben."
 
 #: admin/views/rest-api-docs.php:20 admin/views/rest-api-docs.php:30 admin/views/settings.php:35 includes/class-naws-admin.php:107
 #: includes/class-naws-admin.php:120 includes/class-naws-labels.php:33
 msgid "The credentials were NOT saved: they could not be stored encrypted. The previously stored value is unchanged."
-msgstr ""
+msgstr "Die Zugangsdaten wurden NICHT übernommen: Sie ließen sich nicht verschlüsselt speichern. Der bisher gespeicherte Wert bleibt unverändert."
 
 #: admin/views/cron-log.php:51 admin/views/dashboard.php:326
 msgid "The daily cron runs at 00:01 and computes daily summaries for temperature, pressure and precipitation."
-msgstr ""
+msgstr "Der Tages-Cron läuft um 00:01 Uhr und berechnet automatisch Tageszusammenfassungen für Temperatur, Luftdruck und Niederschlag."
 
 #: admin/views/shortcodes.php:149
 msgid "The date range to count or sum over."
-msgstr ""
+msgstr "Der Zeitraum, über den gezählt oder summiert wird."
 
 #: admin/views/settings.php:437
 msgid "The icon shows current weather. Station readings take precedence over the forecast; the forecast only fills in where the station cannot measure — cloud cover, thunderstorms, and precipitation when no rain gauge is present."
-msgstr ""
+msgstr "Das Icon zeigt das aktuelle Wetter. Die Messwerte der Station haben Vorrang vor der Vorhersage; die Vorhersage springt nur dort ein, wo die Station nichts messen kann — Bewölkung, Gewitter und Niederschlag ohne Regenmesser."
 
 #: admin/views/rest-api-docs.php:147
 msgid "The key belongs in the header so it never shows up in server logs or browser history."
-msgstr ""
+msgstr "Der Key gehört in den Header, damit er nicht in Server-Logs oder im Browser-Verlauf erscheint."
 
 #: admin/views/settings.php:70
 msgid "The refresh token has been revoked or expired. Cron sync is paused until reconnected. Please click \"Connect to Netatmo\" below."
-msgstr ""
+msgstr "Der Refresh Token wurde von Netatmo widerrufen oder ist abgelaufen. Der Cron-Sync ist bis zur erneuten Verbindung gestoppt. Bitte klicke unten auf \"Mit Netatmo verbinden\"."
 
 #: admin/views/shortcodes.php:153
 msgid "The threshold temperature the sum is measured against."
-msgstr ""
+msgstr "Die Schwellentemperatur, gegen die die Summe gerechnet wird."
 
 #: admin/views/shortcodes.php:154
 msgid "The upper temperature the sum is capped at."
-msgstr ""
+msgstr "Die obere Temperatur, bei der die Summe gedeckelt wird."
 
 #: admin/views/shortcodes.php:155
 msgid "The window length of the index, in months."
-msgstr ""
+msgstr "Die Fensterlänge des Index in Monaten."
 
 #: includes/class-naws-labels.php:21
 msgid "Theme fonts"
-msgstr ""
+msgstr "Schriften des Themes"
 
 #: includes/class-naws-labels.php:82
 msgid "Thermal sensation"
-msgstr ""
+msgstr "Bioklimatisches Empfinden"
 
 #: admin/views/shortcodes.php:372
 msgid "These module IDs can be used directly in shortcodes as module_id= or module=\"MAC-address\"."
-msgstr ""
+msgstr "Diese Modul-IDs können direkt in Shortcodes als module_id= oder module=\"MAC-Adresse\" verwendet werden."
 
 #: includes/class-naws-labels.php:30
 msgid "This server does not know the aes-256-gcm cipher. Credentials cannot be stored encrypted, so they are not stored at all."
-msgstr ""
+msgstr "Dieser Server kennt das Verfahren aes-256-gcm nicht. Zugangsdaten können nicht verschlüsselt gespeichert werden — sie werden deshalb gar nicht gespeichert."
 
 #: admin/views/appearance.php:529 includes/class-naws-labels.php:50
 msgid "Three days gives each column 77 pixels, five gives only 46. On narrow sidebars three reads considerably better."
-msgstr ""
+msgstr "Bei drei Tagen ist jede Spalte 77 Pixel breit, bei fünf nur 46. Auf schmalen Seitenleisten sind drei deutlich besser lesbar."
 
 #: includes/class-naws-forecast.php:913
 msgid "Thu"
-msgstr ""
+msgstr "Do"
 
 #: includes/class-naws-forecast.php:868 includes/class-naws-labels.php:129
 msgid "Thunderstorm"
-msgstr ""
+msgstr "Gewitter"
 
 #: includes/class-naws-forecast.php:869
 msgid "Thunderstorm with hail"
-msgstr ""
+msgstr "Gewitter mit Hagel"
 
 #: includes/class-naws-forecast.php:921
 msgid "Thursday"
-msgstr ""
+msgstr "Donnerstag"
 
 #: admin/views/shortcodes.php:259
 msgid "Time period, e.g. 24h, 7d, 30d"
-msgstr ""
+msgstr "Zeitraum, z.B. 24h, 7d, 30d"
 
 #: admin/views/shortcodes.php:222
 msgid "Title above the chart"
-msgstr ""
+msgstr "Titel über dem Diagramm"
 
 #: admin/views/import.php:68
 msgid "To"
-msgstr ""
+msgstr "Bis"
 
 #: admin/views/settings.php:127
 msgid "To connect, you need a Netatmo Developer account. Create an app at"
-msgstr ""
+msgstr "Für die Verbindung benötigst du ein Netatmo-Entwicklerkonto. Erstelle eine App auf"
 
 #: templates/forecast.php:57 templates/live.php:256
 msgid "Today"
-msgstr ""
+msgstr "Heute"
 
 #: admin/views/appearance.php:42
 msgid "Tooltip Background"
-msgstr ""
+msgstr "Tooltip Hintergrund"
 
 #: admin/views/appearance.php:44
 msgid "Tooltip Text"
-msgstr ""
+msgstr "Tooltip Text"
 
 #: admin/views/appearance.php:43
 msgid "Tooltip Title"
-msgstr ""
+msgstr "Tooltip Titel"
 
 #: includes/class-naws-labels.php:38
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #: admin/views/import.php:25 includes/class-naws-database.php:920 includes/class-naws-helpers.php:69 includes/class-naws-helpers.php:690
 #: includes/class-naws-labels.php:73
 msgid "Total last 24h"
-msgstr ""
+msgstr "Summe letzte 24h"
 
 #: admin/views/live-settings.php:121 includes/class-naws-helpers.php:67 includes/class-naws-helpers.php:68 includes/class-naws-helpers.php:688
 #: includes/class-naws-helpers.php:689 includes/class-naws-labels.php:72
 msgid "Total last hour"
-msgstr ""
+msgstr "Summe letzte Stunde"
 
 #: includes/class-naws-labels.php:96
 msgid "Tropical nights"
-msgstr ""
+msgstr "Tropennächte"
 
 #: includes/class-naws-forecast.php:913
 msgid "Tue"
-msgstr ""
+msgstr "Di"
 
 #: includes/class-naws-forecast.php:921
 msgid "Tuesday"
-msgstr ""
+msgstr "Dienstag"
 
 #: admin/views/modules.php:33 admin/views/shortcodes.php:377
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #: includes/class-naws-icons.php:77
 msgid "Ultra-thin, geometric icons for a reduced style."
-msgstr ""
+msgstr "Ultra-dünne, geometrische Icons für einen reduzierten Stil."
 
 #: includes/class-naws-helpers.php:672
 msgid "Unhealthy"
-msgstr ""
+msgstr "Ungesund"
 
 #: admin/views/dashboard.php:280 admin/views/shortcodes.php:92
 msgid "Unit"
-msgstr ""
+msgstr "Einheit"
 
 #: admin/views/settings.php:297
 msgid "Units"
-msgstr ""
+msgstr "Einheiten"
 
 #: includes/class-naws-forecast.php:873
 msgid "Unknown"
-msgstr ""
+msgstr "Unbekannt"
 
 #: templates/forecast.php:39 templates/live.php:246
 msgid "Updated: %s"
-msgstr ""
+msgstr "Aktualisiert: %s"
 
 #: admin/views/export.php:140
 msgid "Upload & Import"
-msgstr ""
+msgstr "Hochladen & Importieren"
 
 #: admin/views/export.php:113
 msgid "Upload a previously exported JSON file to restore weather data or a full backup."
-msgstr ""
+msgstr "Eine zuvor exportierte JSON-Datei hochladen, um Wetterdaten oder ein komplettes Backup wiederherzustellen."
 
 #: admin/views/rest-api-docs.php:368
 msgid "Usage Examples"
-msgstr ""
+msgstr "Verwendungsbeispiele"
 
 #: admin/views/dashboard.php:278 admin/views/dashboard.php:279 templates/table.php:57
 msgid "Value"
-msgstr ""
+msgstr "Wert"
 
 #: admin/views/cron-log.php:44 admin/views/settings.php:237
 msgid "WP-Cron is triggered by page views, not by a clock: if nobody opens the site, no fetch happens — during quiet nights possibly for hours. Night mode then has nothing left to slow down, and a gap appears in the readings; the daily summary retrieves the missing values from the Netatmo API later. The schedule only becomes reliable once <code>define( 'DISABLE_WP_CRON', true );</code> is set in <code>wp-config.php</code> and a real server cron calls <code>wp-cron.php</code> at the interval you want."
-msgstr ""
+msgstr "WP-Cron wird von Seitenaufrufen ausgelöst, nicht von einer Uhr: Ruft niemand die Seite auf, findet auch keine Abfrage statt — in besucherarmen Nächten unter Umständen stundenlang nicht. Der Nachtmodus bleibt dann wirkungslos, und in den Messwerten entsteht eine Lücke; die Tageszusammenfassung holt die fehlenden Werte später über die Netatmo-API nach. Verlässlich wird der Takt erst, wenn <code>define( 'DISABLE_WP_CRON', true );</code> in der <code>wp-config.php</code> steht und ein echter Server-Cron <code>wp-cron.php</code> im gewünschten Intervall aufruft."
 
 #: includes/class-naws-astro.php:284
 msgid "Waning Crescent"
-msgstr ""
+msgstr "Abnehmende Sichel"
 
 #: includes/class-naws-astro.php:282
 msgid "Waning Gibbous"
-msgstr ""
+msgstr "Abnehmend"
 
 #: includes/class-naws-cron.php:535
 msgid "Warning: last sync %d minutes ago"
-msgstr ""
+msgstr "Warnung: Letzter Sync vor %d Minuten"
 
 #: includes/class-naws-astro.php:278
 msgid "Waxing Crescent"
-msgstr ""
+msgstr "Zunehmende Sichel"
 
 #: includes/class-naws-astro.php:280
 msgid "Waxing Gibbous"
-msgstr ""
+msgstr "Zunehmend"
 
 #: admin/views/settings.php:348
 msgid "Weather Forecast"
-msgstr ""
+msgstr "Wettervorhersage"
 
 #: admin/views/settings.php:435
 msgid "Weather icon"
-msgstr ""
+msgstr "Wetter-Icon"
 
 #: includes/class-naws-forecast.php:913
 msgid "Wed"
-msgstr ""
+msgstr "Mi"
 
 #: includes/class-naws-forecast.php:921
 msgid "Wednesday"
-msgstr ""
+msgstr "Mittwoch"
 
 #: includes/class-naws-labels.php:81
 msgid "Wet-bulb temperature"
-msgstr ""
+msgstr "Feuchtkugeltemperatur"
 
 #: admin/views/settings.php:469
 msgid "Wet-bulb temperature, not air temperature. It decides whether precipitation arrives as rain or snow: in dry air it still snows at 3–4 °C air temperature, while in saturated air it already rains at 1 °C. Computed from outdoor temperature and outdoor humidity."
-msgstr ""
+msgstr "Feuchtkugeltemperatur, nicht Lufttemperatur. Sie entscheidet, ob Niederschlag als Regen oder als Schnee unten ankommt: in trockener Luft schneit es noch bei 3–4 °C Lufttemperatur, bei gesättigter Luft regnet es schon bei 1 °C. Wird aus Außentemperatur und Außenfeuchte berechnet."
 
 #: admin/views/import.php:21
 msgid "What is imported"
-msgstr ""
+msgstr "Was wird importiert"
 
 #: admin/views/rest-api-docs.php:295
 msgid "When grouping is active, each entry additionally contains min_value, max_value and data_points."
-msgstr ""
+msgstr "Bei aktiver Gruppierung enthält jeder Eintrag zusätzlich min_value, max_value und data_points."
 
 #: admin/views/shortcodes.php:68
 msgid "Which measurement"
-msgstr ""
+msgstr "Welcher Messwert"
 
 #: admin/views/shortcodes.php:69 admin/views/shortcodes.php:147
 msgid "Which module"
-msgstr ""
+msgstr "Welches Modul"
 
 #: admin/views/shortcodes.php:148
 msgid "Which station to read, by module or station ID."
-msgstr ""
+msgstr "Welche Station gelesen wird, per Modul- oder Stations-ID."
 
 #: admin/views/appearance.php:533 includes/class-naws-labels.php:51
 msgid "Width"
-msgstr ""
+msgstr "Breite"
 
 #: admin/views/shortcodes.php:357
 msgid "Width in pixels, 250 to 500. Values outside that range are pulled to the nearer bound."
-msgstr ""
+msgstr "Breite in Pixeln, 250 bis 500. Werte außerhalb werden auf die nächste Grenze gezogen."
 
 #: admin/views/appearance.php:33 admin/views/appearance.php:80 includes/class-naws-labels.php:44 includes/class-naws-labels.php:140
 #: templates/live.php:70 templates/live.php:352
 msgid "Wind"
-msgstr ""
+msgstr "Wind"
 
 #: includes/class-naws-helpers.php:316 includes/class-naws-labels.php:139 templates/live.php:351
 msgid "Wind &amp; Gusts"
-msgstr ""
+msgstr "Wind &amp; Böen"
 
 #: includes/class-naws-helpers.php:317 includes/class-naws-labels.php:142 templates/live.php:354
 msgid "Wind Direction"
-msgstr ""
+msgstr "Windrichtung"
 
 #: admin/views/live-settings.php:110 includes/class-naws-helpers.php:71 includes/class-naws-helpers.php:694 includes/class-naws-labels.php:69
 msgid "Wind Direction (compass)"
-msgstr ""
+msgstr "Windrichtung (Kompass)"
 
 #: admin/views/import.php:26 admin/views/live-settings.php:104 includes/class-naws-helpers.php:705
 msgid "Wind Gauge"
-msgstr ""
+msgstr "Windmesser"
 
 #: admin/views/import.php:26 admin/views/settings.php:310 includes/class-naws-helpers.php:70 includes/class-naws-helpers.php:693
 #: includes/class-naws-labels.php:67
 msgid "Wind Speed"
-msgstr ""
+msgstr "Windgeschwindigkeit"
 
 #: includes/class-naws-labels.php:83 templates/forecast.php:104 templates/live.php:294
 msgid "Wind direction"
-msgstr ""
+msgstr "Windrichtung"
 
 #: admin/views/dashboard.php:30 includes/class-naws-admin.php:39 includes/class-naws-admin.php:40
 msgid "XTX Netatmo"
-msgstr ""
+msgstr "XTX Netatmo"
 
 #: admin/views/settings.php:28
 msgid "XTX Netatmo — Settings"
-msgstr ""
+msgstr "XTX Netatmo — Einstellungen"
 
 #: admin/views/appearance.php:481
 msgid "Year %d"
-msgstr ""
+msgstr "Jahr %d"
 
 #: admin/views/appearance.php:70
 msgid "Year Comparison Palette"
-msgstr ""
+msgstr "Jahresvergleich-Palette"
 
 #: admin/views/live-settings.php:262
 msgid "Year Comparison — Charts"
-msgstr ""
+msgstr "Jahresvergleich — Graphen"
 
 #: admin/views/settings.php:143
 msgid "Your Netatmo Client ID"
-msgstr ""
+msgstr "Deine Netatmo Client ID"
 
 #: admin/views/settings.php:358
 msgid "Yr.no / MET Norway (accurate for Northern Europe)"
-msgstr ""
+msgstr "Yr.no / MET Norway (genau für Nordeuropa)"
 
 #: admin/views/shortcodes.php:60
 msgid "[naws_value] – Attributes"
-msgstr ""
+msgstr "[naws_value] – Attribute"
 
 #: admin/views/live-settings.php:195 includes/class-naws-admin.php:270
 msgid "active"
-msgstr ""
+msgstr "aktiv"
 
 #: admin/views/settings.php:128
 msgid "and copy the Client ID and Secret below."
-msgstr ""
+msgstr "und kopiere Client ID und Secret hierher."
 
 #: admin/views/settings.php:478
 msgid "and dew-point spread up to"
-msgstr ""
+msgstr "und Taupunkt-Abstand bis"
 
 #: includes/class-naws-labels.php:110
 msgid "cold"
-msgstr ""
+msgstr "kalt"
 
 #: includes/class-naws-labels.php:111
 msgid "cool"
-msgstr ""
+msgstr "kühl"
 
 #: admin/views/shortcodes.php:152
 msgid "day classes only"
-msgstr ""
+msgstr "nur Tagesklassen"
 
 #: admin/views/shortcodes.php:148 admin/views/shortcodes.php:149 admin/views/shortcodes.php:150 admin/views/shortcodes.php:151
 msgid "day classes, sums, index"
-msgstr ""
+msgstr "Tagesklassen, Summen, Index"
 
 #: admin/views/settings.php:400
 msgid "e.g. Leipzig"
-msgstr ""
+msgstr "z.B. Leipzig"
 
 #: admin/views/settings.php:210
 msgid "e.g. My Weather Station Leipzig"
-msgstr ""
+msgstr "z.B. Wetterstation Leipzig"
 
 #: admin/views/shortcodes.php:156 admin/views/shortcodes.php:157 admin/views/shortcodes.php:158 admin/views/shortcodes.php:159
 #: admin/views/shortcodes.php:160
 msgid "everything"
-msgstr ""
+msgstr "alle"
 
 #: includes/class-naws-labels.php:116
 msgid "extremely hot"
-msgstr ""
+msgstr "extrem heiß"
 
 #: templates/live.php:339
 msgid "falling"
-msgstr ""
+msgstr "fallend"
 
 #: admin/views/shortcodes.php:335
 msgid "forecast stale, last known value"
-msgstr ""
+msgstr "Vorhersage veraltet, letzter bekannter Wert"
 
 #: includes/class-naws-labels.php:115
 msgid "hot"
-msgstr ""
+msgstr "heiß"
 
 #: admin/views/shortcodes.php:155
 msgid "index only"
-msgstr ""
+msgstr "nur Index"
 
 #: admin/views/shortcodes.php:147
 msgid "instant values"
-msgstr ""
+msgstr "Momentanwerte"
 
 #: admin/views/shortcodes.php:309
 msgid "larger, e.g. as a header graphic"
-msgstr ""
+msgstr "größer, z. B. als Kopfgrafik"
 
 #: includes/class-naws-calc.php:673 includes/class-naws-labels.php:104
 msgid "not yet reached"
-msgstr ""
+msgstr "noch nicht erreicht"
 
 #: includes/class-naws-labels.php:113
 msgid "pleasant"
-msgstr ""
+msgstr "angenehm"
 
 #: includes/class-naws-labels.php:112
 msgid "pleasantly cool"
-msgstr ""
+msgstr "angenehm kühl"
 
 #: templates/live.php:339
 msgid "rising"
-msgstr ""
+msgstr "steigend"
 
 #: admin/views/export.php:88
 msgid "rows"
-msgstr ""
+msgstr "Zeilen"
 
 #: admin/views/shortcodes.php:361
 msgid "shorter, for very narrow columns"
-msgstr ""
+msgstr "kürzer, für sehr schmale Spalten"
 
 #: templates/live.php:339
 msgid "stable"
-msgstr ""
+msgstr "stabil"
 
 #: admin/views/shortcodes.php:154
 msgid "sums (gdd)"
-msgstr ""
+msgstr "Summen (gdd)"
 
 #: admin/views/shortcodes.php:153
 msgid "sums (hdd, cdd, gdd)"
-msgstr ""
+msgstr "Summen (hdd, cdd, gdd)"
 
 #: admin/views/rest-api-docs.php:280 admin/views/rest-api-docs.php:329
 msgid "true = convert to user units (°F, inHg etc.), false = raw metric values"
-msgstr ""
+msgstr "true = in Benutzer-Einheiten umrechnen (°F, inHg etc.), false = metrische Rohwerte"
 
 #: admin/views/shortcodes.php:360
 msgid "uses the backend setting"
-msgstr ""
+msgstr "nutzt die Einstellung aus dem Backend"
 
 #: includes/class-naws-labels.php:109
 msgid "very cold"
-msgstr ""
+msgstr "sehr kalt"
 
 #: includes/class-naws-labels.php:114
 msgid "warm"
-msgstr ""
+msgstr "warm"
 
 #: admin/views/shortcodes.php:362
 msgid "wider, with a larger icon and larger figures"
-msgstr ""
+msgstr "breiter, mit größerem Icon und größeren Zahlen"
 
 #: admin/views/shortcodes.php:291
 msgid "→ 3 days with custom title"
-msgstr ""
+msgstr "→ 3 Tage mit eigenem Titel"
 
 #: admin/views/shortcodes.php:290
 msgid "→ Uses days and location from settings"
-msgstr ""
+msgstr "→ Nutzt Tage und Standort aus den Einstellungen"
 
 #: admin/views/shortcodes.php:79
 msgid "→ integer"
-msgstr ""
+msgstr "→ ganze Zahl"
 
 #: admin/views/shortcodes.php:78
 msgid "→ number only without unit"
-msgstr ""
+msgstr "→ nur Zahl ohne Einheit"
 
 #: admin/views/shortcodes.php:81
 msgid "→ rolling 24h sum"
-msgstr ""
+msgstr "→ 24h-Summe rollend"
 
 #: admin/views/shortcodes.php:80
 msgid "→ with HTML wrapper"
-msgstr ""
+msgstr "→ mit HTML-Wrapper"
 
 #: admin/views/settings.php:282
 msgid "⚠️ Manual Data Purge (Caution!)"
-msgstr ""
+msgstr "⚠️ Manuelle Datenlöschung (Vorsicht!)"
 
 #: admin/views/shortcodes.php:55
 msgid "⚡ [naws_value] — Single Inline Value"
-msgstr ""
+msgstr "⚡ [naws_value] — Einzelner Messwert (inline)"
 
 #: admin/views/settings.php:279
 msgid "✅ All data is stored permanently."
-msgstr ""
+msgstr "✅ Alle Daten werden dauerhaft gespeichert."
 
 #: includes/class-naws-admin.php:274
 msgid "✅ Saved!"
-msgstr ""
+msgstr "✅ Gespeichert!"
 
 #: includes/class-naws-admin.php:266
 msgid "✓ Copied"
-msgstr ""
+msgstr "✓ Kopiert"
 
 #: includes/class-naws-admin.php:275
 msgid "❌ Error."
-msgstr ""
+msgstr "❌ Fehler."
 
 #: admin/views/shortcodes.php:370
 msgid "📡 Available Modules (current installation)"
-msgstr ""
+msgstr "📡 Verfügbare Module (aktuelle Installation)"
 
 #: includes/class-naws-admin.php:54
 msgid "🖥️ Live-Dashboard"
-msgstr ""
+msgstr "🖥️ Live-Dashboard"
 
 #: admin/views/shortcodes.php:198
 msgid "🧩 Layout Shortcodes"
-msgstr ""
+msgstr "🧩 Layout-Shortcodes"
 
 #: admin/views/appearance.php:32
 msgctxt "appearance_chart_noise"
 msgid "Noise"
-msgstr ""
+msgstr "Lärm"
 
 #: admin/views/appearance.php:35
 msgctxt "appearance_chart_rain"
 msgid "Rain"
-msgstr ""
+msgstr "Regen"
 
 #: admin/views/appearance.php:78
 msgctxt "appearance_sensor_humidity"
 msgid "Humidity"
-msgstr ""
+msgstr "Feuchte"
 
 #: admin/views/appearance.php:83
 msgctxt "appearance_sensor_noise"
 msgid "Noise"
-msgstr ""
+msgstr "Lärm"
 
 #: admin/views/appearance.php:81
 msgctxt "appearance_sensor_rain"
 msgid "Rain"
-msgstr ""
+msgstr "Regen"
 
 #: includes/class-naws-labels.php:79
 msgctxt "calc_feels_like"
 msgid "Feels like"
-msgstr ""
+msgstr "Gefühlte Temperatur"
 
 #: includes/class-naws-helpers.php:309 includes/class-naws-helpers.php:314 includes/class-naws-labels.php:134 templates/live.php:346
 msgctxt "card_humidity"
 msgid "Humidity"
-msgstr ""
+msgstr "Luftfeuchte"
 
 #: includes/class-naws-helpers.php:312 includes/class-naws-labels.php:137 templates/live.php:349
 msgctxt "card_noise"
 msgid "Noise"
-msgstr ""
+msgstr "Lautstärke"
 
 #: templates/live.php:83
 msgctxt "chart_humid_prefix"
 msgid "Humidity"
-msgstr ""
+msgstr "Luftfeuchte"
 
 #: includes/class-naws-helpers.php:763
 msgctxt "clock time"
 msgid "%s"
-msgstr ""
+msgstr "%s Uhr"
 
 #: includes/class-naws-helpers.php:670
 msgctxt "co2_fair"
 msgid "Fair"
-msgstr ""
+msgstr "Befriedigend"
 
 #: admin/views/settings.php:364
 msgctxt "forecast_days_label"
 msgid "Forecast days"
-msgstr ""
+msgstr "Vorhersage-Tage"
 
 #: templates/infobar.php:70
 msgctxt "infobar_feels_like"
 msgid "Feels like"
-msgstr ""
+msgstr "Gefühlte Temp."
 
 #: admin/views/live-settings.php:353
 msgctxt "ls_shortcode"
 msgid "Shortcode"
-msgstr ""
+msgstr "Shortcode"
 
 #: admin/views/live-settings.php:68 admin/views/live-settings.php:83 admin/views/live-settings.php:99 includes/class-naws-helpers.php:63
 #: includes/class-naws-helpers.php:684 includes/class-naws-labels.php:66
 msgctxt "param_humidity"
 msgid "Humidity"
-msgstr ""
+msgstr "Luftfeuchtigkeit"
 
 #: admin/views/rest-api-docs.php:98
 msgctxt "rest_copy"
 msgid "Copy"
-msgstr ""
+msgstr "Kopieren"
 
 #: admin/views/shortcodes.php:167
 msgctxt "sc_calc_col_key"
 msgid "Shortcode"
-msgstr ""
+msgstr "Schreibweise"
 
 #: admin/views/shortcodes.php:123 admin/views/shortcodes.php:204 admin/views/shortcodes.php:215 admin/views/shortcodes.php:236
 #: admin/views/shortcodes.php:254 admin/views/shortcodes.php:273 admin/views/shortcodes.php:279 admin/views/shortcodes.php:298
 #: admin/views/shortcodes.php:349 admin/views/shortcodes.php:397 includes/class-naws-admin.php:265
 msgctxt "sc_copy"
 msgid "Copy"
-msgstr ""
+msgstr "Copy"
 
 #: includes/class-naws-forecast.php:932
 msgctxt "short date"
 msgid "%2$s %1$s"
-msgstr ""
+msgstr "%1$s. %2$s"
 
 #: templates/table.php:52
 msgctxt "table_col_time"
 msgid "Time"
-msgstr ""
+msgstr "Zeitpunkt"
 
 #: admin/views/cron-log.php:22
 msgctxt "time"
 msgid "Time"
-msgstr ""
+msgstr "Uhrzeit"
 
 #: admin/views/settings.php:331
 msgctxt "unit_rain"
 msgid "Rain"
-msgstr ""
+msgstr "Niederschlag"
 
 #: admin/views/appearance.php:523 includes/class-naws-labels.php:47
 msgctxt "wgt_days_label"
 msgid "Forecast days"
-msgstr ""
+msgstr "Vorhersagetage"
 
 #: includes/class-naws-labels.php:43
 msgctxt "wgt_rain"
 msgid "Rain"
-msgstr ""
+msgstr "Regen"
 
 #: includes/class-naws-labels.php:121
 msgctxt "wx_state_fair"
 msgid "Fair"
-msgstr ""
+msgstr "Heiter"
 
 #: includes/class-naws-labels.php:125
 msgctxt "wx_state_rain"
 msgid "Rain"
-msgstr ""
+msgstr "Regen"
