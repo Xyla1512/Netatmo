@@ -1,6 +1,41 @@
 {
-    "aktualisiert": "2026-08-24",
+    "aktualisiert": "2026-09-01",
     "vorhaben": [
+        {
+            "id": "uebersetzung-wordpress",
+            "titel": "Übersetzt wird jetzt über WordPress",
+            "satz": "Die Oberfläche geht nicht mehr über eigene Sprachdateien, sondern über den Weg, den WordPress für alle Plugins vorsieht. Jeder kann auf translate.wordpress.org eine Sprache beitragen, ohne eine Zeile Code anzufassen, und jede Sprache bekommt ein richtiges Sprachpaket. Deutsch und Norwegisch sind vollständig.",
+            "ab": "1.9.9",
+            "bild": null
+        },
+        {
+            "id": "sprache-folgt-wordpress",
+            "titel": "Die Sprache richtet sich nach WordPress",
+            "satz": "Die eigene Spracheinstellung des Plugins entfällt. Es folgt der Sprache der Website und, wenn im Profil gesetzt, der des angemeldeten Benutzers. Damit kann das Backend deutsch sein und die Seite für Besucher englisch, was vorher nicht ging. Wer die alte Einstellung genutzt hat, stellt sie einmal in WordPress um.",
+            "ab": "1.9.9",
+            "bild": null
+        },
+        {
+            "id": "wochentage-uebersetzbar",
+            "titel": "Wochentage, Monate und Wetterlagen sprechen mit",
+            "satz": "Sie standen als feste Listen auf Deutsch und Englisch im Code; wer das Plugin auf Norwegisch las, bekam sie englisch. Jetzt sind es gewöhnliche übersetzbare Texte, und das kurze Datum ist eine Formatangabe statt einer Verzweigung — eine Sprache, die das Datum andersherum schreibt, kann das sagen.",
+            "ab": "1.9.9",
+            "bild": null
+        },
+        {
+            "id": "naws-table",
+            "titel": "Der Tabellen-Kurzbefehl tut, was er verspricht",
+            "satz": "[naws_table] zeigt Messwerte als Tabelle über einen Zeitraum, gruppiert nach Stunde, Tag, Woche, Monat oder Jahr. Der Kurzbefehl war seit jeher dokumentiert und gelistet, nur fehlte die Vorlagendatei — er gab eine leere Seite zurück. Auch die empfohlenen Zeiträume wie 24h oder 30d werden jetzt richtig gelesen.",
+            "ab": "1.9.8",
+            "bild": null
+        },
+        {
+            "id": "modul-referenzen",
+            "titel": "Die Kennungen der Module bleiben auf dem Server",
+            "satz": "Ein Modul wird bei Netatmo über seine MAC-Adresse angesprochen, und die stand bisher in jeder Seite mit Live-Dashboard oder Verlauf. Künftig reist eine öffentliche Bezeichnung wie außen oder innen, die der Server wieder auflöst. Für Seiten, die vorher zwischengespeichert wurden, ändert sich nichts.",
+            "ab": null,
+            "bild": null
+        },
         {
             "id": "naws-calc",
             "titel": "Ein Kurzbefehl für 27 berechnete Werte",
