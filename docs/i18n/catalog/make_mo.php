@@ -75,7 +75,14 @@ $mo .= pack( 'V', $n );
 $mo .= pack( 'V', $id_tab_off );
 $mo .= pack( 'V', $str_tab_off );
 $mo .= pack( 'V', 0 );            // hash size
-$mo .= pack( 'V', $str_blob_off + strlen( $str_blob ) );
+// Die Adresse der Hashtabelle, auch wenn keine geschrieben wird: sie muss
+// direkt hinter die zweite Indextabelle zeigen. WordPress rechnet in
+// MO::import_from_reader() nach, ob hash_addr minus str_tab_off genau
+// total * 8 ergibt, und gibt sonst kommentarlos false zurueck -- die
+// ganze Datei wird dann uebergangen, ohne Fehlermeldung irgendwo.
+// Hier stand die Dateigroesse, weshalb 1.9.9 zwei .mo ausgeliefert hat,
+// die WordPress nie gelesen hat.
+$mo .= pack( 'V', $str_tab_off + $n * 8 );
 
 foreach ( $id_tab as [ $len, $off ] )  { $mo .= pack( 'VV', $len, $id_blob_off + $off ); }
 foreach ( $str_tab as [ $len, $off ] ) { $mo .= pack( 'VV', $len, $str_blob_off + $off ); }

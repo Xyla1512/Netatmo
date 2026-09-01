@@ -18,6 +18,12 @@ Merged and waiting for the release it will ship in. Nothing here is published ye
 
 ### Fixed
 
+- **The two language files 1.9.9 shipped were never read.** `NAWS_Lang` was replaced by gettext in 1.9.9 and German and Norwegian travelled along as `.mo` files, so that an installation with a German interface would not find an English one the day the update arrived. WordPress rejected both files: `MO::import_from_reader()` verifies that the hash-table address sits directly behind the second index table, and the writer had put the file size there instead. A rejected catalogue produces no warning, no log line and no visible difference except that everything stays English.
+
+  It went unnoticed because the test installation had a language pack from wordpress.org, which takes precedence and covered the gap. Norwegian has no pack, so a Norwegian installation of 1.9.9 reads English throughout.
+
+  `tests/test-mo-files.php` is new and checks the header with the same arithmetic WordPress uses, rather than with a more forgiving reader of its own — that is the whole point, because a lenient reader is what hid this. It fails on the files 1.9.9 shipped.
+
 - **Three sentences in the chart script were German whatever language WordPress was set to.** `assets/js/frontend.js` carried them as literals — the chart that failed to render, the period with no readings, the request that came back with an error code. Moving the interface to gettext in 1.9.9 did not reach them, because they were never in the PHP: an installation running in English or Norwegian showed them in German, and no setting changed that.
 
   They travel with the `nawsFrontend` config the script already receives on exactly the pages that load it. The HTTP status is substituted into a placeholder rather than appended, because where the number belongs in the sentence is a question of language: German puts it in brackets at the end, another language may not.
@@ -30,7 +36,7 @@ Merged and waiting for the release it will ship in. Nothing here is published ye
 
 - **A chart request without `group_by` wrote a PHP notice into the log.** `naws_get_chart_data` and `naws_get_daily_data` checked `$_POST['group_by'] ?? 'raw'` against the list of allowed values and then read `$_POST['group_by']` again without the fallback — so a request that left the parameter out passed the check and tripped over the second read. The plugin's own scripts always send it; anything else calling the endpoint did not have to.
 
-- **Fourteen German and thirteen Norwegian strings had lost their translation in 1.9.9.** The table columns from 1.9.8 — time, module, parameter, average — and the card-order screen came through the migration with an empty `msgstr`, and three more had their English text reworded in 1.9.8, which makes them new strings that no old translation matches. A German reader saw English column headings in a German interface. The texts were taken from the 1.9.8 language files rather than written afresh, so nothing changed wording that a reader had already got used to. German is complete again; Norwegian is at 612 of 652, the rest being the weekday, month and weather-condition names that first became translatable in 1.9.9.
+- **Fourteen German and thirteen Norwegian strings had lost their translation in 1.9.9.** The table columns from 1.9.8 — time, module, parameter, average — and the card-order screen came through the migration with an empty `msgstr`, and three more had their English text reworded in 1.9.8, which makes them new strings that no old translation matches. A German reader with no language pack yet saw English column headings in a German interface. The texts were taken from the 1.9.8 language files rather than written afresh, so nothing changed wording that a reader had already got used to. German is complete again; Norwegian is at 612 of 652, the rest being the weekday, month and weather-condition names that first became translatable in 1.9.9.
 
   The tooling that builds the catalogue lives in the repository now, in `docs/i18n/` — it was outside it, which is why the gap was invisible. `merge_po.php` is new and does what `msgmerge` would: it carries the `.pot` into a translation, and it names what is still open and what fell away.
 
