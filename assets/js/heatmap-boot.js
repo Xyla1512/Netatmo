@@ -16,7 +16,12 @@
 
     function loadFailedText(status) {
         var tpl = I18N.js_load_failed || 'Could not load data (HTTP %s)';
-        return tpl.replace('%s', status);
+        // fetch() rejects outright on a network failure (offline, DNS) with
+        // the browser's own message text rather than a status code. Fall
+        // back to 0, the XHR convention for "no HTTP status", instead of
+        // splicing that text into the sentence.
+        var code = /^\d+$/.test(String(status)) ? status : '0';
+        return tpl.replace('%s', code);
     }
 
     /** Die Verzoegerung je Kachel: eine Welle von links nach rechts. */
@@ -72,6 +77,11 @@
                 if (!exists) {
                     cell.removeAttribute('style');
                     cell.setAttribute('aria-hidden', 'true');
+                    cell.removeAttribute('data-d');
+                    cell.removeAttribute('data-day');
+                    cell.removeAttribute('data-v');
+                    cell.removeAttribute('data-l');
+                    cell.removeAttribute('data-src');
                     cell.textContent = '';
                     continue;
                 }
