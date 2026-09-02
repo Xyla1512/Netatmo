@@ -126,6 +126,11 @@ die in jeder Sprache vollständig vorliegen — die Karte fügt dem Katalog des 
 keinen einzigen String hinzu. `includes/class-naws-astro.php` macht es bereits so und
 begründet es dort.
 
+Neue Katalogeinträge braucht die Karte trotzdem drei: den Standardtitel, „Keine Messung"
+und „aus Min und Max gerechnet". Sie kommen mit dem nächsten `.pot` und müssen für Deutsch
+und Norwegisch übersetzt werden, bevor die Version rausgeht — der Weg dafür steht in
+`docs/i18n/README.md`.
+
 ---
 
 ## 4. Die Farbskala
@@ -177,15 +182,19 @@ includes/class-naws-ajax.php                 │
     └─ NAWS_Colors::heatmap_color( $v )  ─────┘   dieselbe Rechnung
 ```
 
-`NAWS_Database::get_heatmap_year( int $year ): array` liefert zwölf Arrays mit je bis zu 31
-Werten, `null` wo kein Messwert vorliegt. **Beide Achsen sind nullbasiert:** Index 0 ist der
-Januar und der Erste des Monats; ein Monat mit 30 Tagen hat 30 Einträge, nicht 31 mit einem
-`null` am Ende. Die Unterscheidung zwischen „Tag ohne Messwert" (`null` im Array) und „Tag
-gibt es nicht" (kein Eintrag) ist damit die Länge des Arrays, und die Tests prüfen genau
-das.
+`NAWS_Database::get_heatmap_year( int $year ): array` liefert zwei parallele Strukturen:
+`values` mit zwölf Arrays von je bis zu 31 Werten (`null` wo nichts vorliegt) und `sources`
+mit derselben Form, das je Tag `'avg'`, `'minmax'` oder `null` trägt.
 
-Eine Abfrage über die Tagestabelle, gefiltert auf `YEAR(day_date)`, ohne Modulfilter,
-aufsteigend nach `day_date`.
+**Beide Achsen sind nullbasiert:** Index 0 ist der Januar und der Erste des Monats; ein
+Monat mit 30 Tagen hat 30 Einträge, nicht 31 mit einem `null` am Ende. Die Unterscheidung
+zwischen „Tag ohne Messwert" (`null` im Array) und „Tag gibt es nicht" (kein Eintrag) ist
+damit die Länge des Arrays, und die Tests prüfen genau das.
+
+Die Abfrage geht über die Tagestabelle, gefiltert auf `YEAR(day_date)`, ohne Modulfilter,
+aufsteigend nach `day_date`. Sie holt `temp_avg`, `temp_min` und `temp_max`; der Rückgriff
+auf `(min + max) / 2` passiert in PHP und nicht als `COALESCE` in der SQL, weil `sources`
+sonst nicht zu füllen wäre, ohne dieselbe Bedingung ein zweites Mal zu schreiben.
 
 Die SQL gehört in `NAWS_Database` und nicht in die AJAX-Klasse, obwohl `get_history_data()`
 es dort tut: nur so ist sie ohne AJAX-Umgebung prüfbar.
@@ -211,8 +220,12 @@ es dort tut: nur so ist sie ohne AJAX-Umgebung prüfbar.
         <tr>
           <th scope="row">Januar</th>
           <td class="naws-hm-c" style="background:#3b5bdb"
-              data-d="2026-01-01" data-v="-3.4" data-l="−3,4 °C">
+              data-d="2026-01-01" data-v="-3.4" data-l="−3,4 °C" data-src="avg">
             <span class="screen-reader-text">−3,4 °C</span>
+          </td>
+          <td class="naws-hm-c" style="background:#3fa34d"
+              data-d="2026-01-02" data-v="6.1" data-l="6,1 °C" data-src="minmax">
+            <span class="screen-reader-text">6,1 °C · aus Min und Max gerechnet</span>
           </td>
           …
           <td class="naws-hm-x" aria-hidden="true"></td>   <!-- 31. Februar -->
@@ -262,9 +275,10 @@ action=naws_get_heatmap_data   nonce=naws_public_nonce   year=2025
 
 { "success": true,
   "data": { "year": 2025,
-            "months": [ [ 1.1, 0.8, …, null ], … ],      // 12 × bis zu 31
-            "colors": [ [ "#3b5bdb", …, null ], … ],
-            "labels": [ [ "1,1 °C", …, null ], … ] } }   // formatiert, mit Einheit
+            "months":  [ [ 1.1, 0.8, …, null ], … ],       // 12 × bis zu 31
+            "colors":  [ [ "#3b5bdb", …, null ], … ],
+            "labels":  [ [ "1,1 °C", …, null ], … ],       // formatiert, mit Einheit
+            "sources": [ [ "avg", "minmax", …, null ], … ] } }
 ```
 
 Registriert als `wp_ajax_naws_get_heatmap_data` **und** `wp_ajax_nopriv_…`, damit die Karte
@@ -284,8 +298,15 @@ Antwort, die wie ein Ergebnis aussieht.
 
 ## 9. Sonderfälle
 
-- **Tag ohne Messwert** → `heatmap_no_data`, Tooltip sagt „Keine Messung". Betrifft auf der
-  Testinstallation 28 Tage in 2024.
+- **Tag ohne `temp_avg`, aber mit `temp_min` und `temp_max`** → der Wert wird als
+  `(min + max) / 2` gerechnet. Das ist die klassische meteorologische Definition des
+  Tagesmittels, mit der Klimareihen seit dem 19. Jahrhundert geführt werden, und damit kein
+  Notbehelf. Die Kachel bekommt dieselbe Farbe wie jede andere — es ist eine echte
+  Temperatur —, aber Tooltip und Screenreader-Text nennen die Herkunft: „8,2 °C · aus Min
+  und Max gerechnet". Siehe Abschnitt 14 dazu, wie weit die beiden Definitionen
+  auseinanderliegen.
+- **Tag ganz ohne Messwert** → `heatmap_no_data`, Tooltip sagt „Keine Messung". Betrifft auf
+  der Testinstallation 28 Tage in 2024.
 - **Tag, den es nicht gibt** (31. Februar, 31. April) → leere Zelle ohne Rahmen und ohne
   Hintergrund, `aria-hidden`. Sie gehört sichtbar nicht zum Raster.
 - **Schaltjahr** → der 29. Februar ist eine Zelle wie jede andere. Der Test prüft 2024 gegen
@@ -332,6 +353,11 @@ Mehr nicht. Jedes weitere Attribut wäre geraten, solange niemand danach gefragt
 - Tageszahl je Monat stimmt; 2024 hat einen 29. Februar, 2025 nicht.
 - Nicht existierende Tage sind `naws-hm-x` und tragen keinen Hintergrund.
 - Jede Kachel mit Wert trägt eine Farbe, jede ohne trägt `heatmap_no_data`.
+- Ein Tag mit `temp_min` und `temp_max`, aber ohne `temp_avg`, bekommt `(min + max) / 2`,
+  `sources` sagt dort `'minmax'`, und die Herkunft steht im Tooltip. Ein Tag, dem auch Min
+  oder Max fehlt, bleibt `null` — der Rückgriff darf nicht auf halber Strecke greifen.
+- Ein Tag mit `temp_avg` benutzt diesen Wert auch dann, wenn Min und Max vorliegen; die
+  gespeicherte Zahl gewinnt immer gegen die gerechnete.
 - **Keine MAC-Adresse im Markup** — wie in allen Render-Tests seit 1.9.10.
 - Kein `<style>`-Block in der Ausgabe.
 
@@ -370,11 +396,26 @@ grundsätzlich nicht stimmt, fällt es auf, bevor der Endpunkt geschrieben ist.
 
 ## 14. Ehrliche Grenzen
 
-**Die Karte ist nur so gut wie die Tagestabelle.** Wo `temp_avg` fehlt, bleibt die Kachel
-grau — auch dann, wenn `temp_min` und `temp_max` desselben Tages vorhanden sind. Aus
-Minimum und Maximum ein Mittel zu rechnen wäre möglich, wäre aber ein anderer Wert als der,
-den die übrigen Ansichten „Durchschnitt" nennen, und der Unterschied wäre nirgends
-sichtbar. Lieber eine ehrliche Lücke.
+**Zwei Definitionen von „Tagesmittel" in einer Karte.** Wo `temp_avg` fehlt und Minimum und
+Maximum vorliegen, rechnet die Karte `(min + max) / 2` (Abschnitt 9). Das ist ein anderer
+Wert als der, den die übrigen Ansichten „Durchschnitt" nennen — nachgemessen an den 861
+Tagen der Testinstallation, an denen beides vorliegt:
+
+| | |
+| --- | --- |
+| mittlere Abweichung `\|temp_avg − (min+max)/2\|` | 0,44 K |
+| maximale Abweichung | 3,20 K |
+| mittlerer Versatz | +0,107 K |
+
+Meist also unter einem halben Grad, im Ausreißer aber genug, um eine Kachel eine Farbstufe
+zu verschieben. Deshalb steht die Herkunft im Tooltip und im Screenreader-Text: der
+Rückgriff soll erkennbar sein, nicht unsichtbar.
+
+Auf der Testinstallation greift er derzeit **an keinem einzigen Tag** — wo `temp_avg` fehlt,
+fehlen dort auch Minimum und Maximum. Erreichbar ist der Fall trotzdem, weil
+`upsert_daily_summary()` jede Spalte einzeln schreibt (`COALESCE(VALUES(col), col)`): ein
+abgebrochener Import oder eine unvollständige API-Antwort kann Min und Max liefern und den
+Durchschnitt nicht.
 
 **366 Kacheln sind auf dem Handy 366 Kacheln.** Die Mindestgröße von 14 px hält einen Tag
 mit dem Finger treffbar, und die Karte scrollt waagerecht — aber ein Jahr auf einen Blick
