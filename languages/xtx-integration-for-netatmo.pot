@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: XTX Integration for Netatmo\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/xtx-integration-for-netatmo\n"
-"POT-Creation-Date: 2026-09-02 18:20+0000\n"
+"POT-Creation-Date: 2026-09-02 19:49+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1327,7 +1327,7 @@ msgstr ""
 msgid "Monday"
 msgstr ""
 
-#: templates/heatmap.php:70
+#: templates/heatmap.php:77
 msgid "Month"
 msgstr ""
 
@@ -1431,7 +1431,7 @@ msgstr ""
 msgid "No data available yet."
 msgstr ""
 
-#: includes/class-naws-shortcodes.php:91 templates/heatmap.php:63
+#: includes/class-naws-shortcodes.php:91 templates/heatmap.php:70
 msgid "No data for this period."
 msgstr ""
 
