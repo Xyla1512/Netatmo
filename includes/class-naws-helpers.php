@@ -664,6 +664,33 @@ class NAWS_Helpers {
         return round( $value, 2 );
     }
 
+    /**
+     * Was im Tooltip einer Heatmap-Kachel steht.
+     *
+     * Die Farbe der Kachel kommt aus dem gespeicherten Celsius-Wert, die
+     * Beschriftung aus der eingestellten Einheit — hier wird umgerechnet.
+     * Ein aus Minimum und Maximum gerechneter Wert sagt das dazu: er ist
+     * eine andere Definition von "Tagesmittel" als der gespeicherte
+     * Durchschnitt, und wer die Karte liest, soll das sehen koennen.
+     *
+     * @param float|null  $value   Grad Celsius, oder null fuer keinen Messwert.
+     * @param string|null $source  'avg', 'minmax' oder null.
+     */
+    public static function heatmap_label( $value, $source = null ) {
+        if ( $value === null || $value === '' ) {
+            return __( 'No reading', 'xtx-integration-for-netatmo' );
+        }
+
+        $text = self::format_value( 'Temperature', $value ) . ' ' . self::get_unit( 'Temperature' );
+
+        if ( $source === 'minmax' ) {
+            /* translators: %s is a temperature that already carries its unit, e.g. "6 °C". */
+            $text = sprintf( __( '%s · computed from min and max', 'xtx-integration-for-netatmo' ), $text );
+        }
+
+        return $text;
+    }
+
     public static function get_co2_level( $ppm ) {
         if ( $ppm < 800 )  return [ 'level' => 'excellent', 'color' => '#10b981', 'label' => __( 'Excellent', 'xtx-integration-for-netatmo' ) ];
         if ( $ppm < 1000 ) return [ 'level' => 'good',      'color' => '#84cc16', 'label' => __( 'Good', 'xtx-integration-for-netatmo' ) ];
