@@ -52,9 +52,16 @@ foreach ( $values as $month ) {
   <div class="naws-hm-hdr">
     <div class="naws-hm-title"><?php echo esc_html( $atts['title'] ?? '' ); ?></div>
     <div class="naws-hm-years">
-      <?php foreach ( $years as $y ) : ?>
-        <button type="button" class="naws-hm-year<?php echo $y === $year ? ' is-active' : ''; ?>"
-                data-year="<?php echo esc_attr( (string) $y ); ?>"><?php echo esc_html( (string) $y ); ?></button>
+      <?php foreach ( $years as $y ) :
+          // Dieselben Pillen, die die Charts als Jahres-Umschalter benutzen,
+          // samt dem Punkt in der Farbe dieses Jahres. history-boot.js waehlt
+          // ihn als PALETTE[(Jahr - aeltestes Jahr) % 15]; dieselbe Rechnung
+          // hier haelt ein Jahr in beiden Ansichten in einer Farbe.
+          $dot = NAWS_Colors::get( 'history_year_' . ( ( ( $y - $y_first ) % 15 ) + 1 ) );
+      ?>
+        <button type="button"
+                class="naws-leg-pill naws-hm-year<?php echo $y === $year ? ' is-active' : ' hidden'; ?>"
+                data-year="<?php echo esc_attr( (string) $y ); ?>"><span class="naws-leg-pill-dot" style="background:<?php echo esc_attr( $dot ); ?>"></span><?php echo esc_html( (string) $y ); ?></button>
       <?php endforeach; ?>
     </div>
   </div>

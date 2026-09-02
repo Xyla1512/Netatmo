@@ -927,8 +927,7 @@
     text-align: right;
     padding: 0 0.25rem;
 }
-.naws-hist-range-btn,
-.naws-hm-year {
+.naws-hist-range-btn {
     background: transparent;
     border: 1px solid var(--naws-border, rgba(255,255,255,0.1));
     color: var(--naws-text-muted, #64748b);
@@ -942,9 +941,7 @@
     align-items: center;
 }
 .naws-hist-range-btn:hover,
-.naws-hist-range-btn.active,
-.naws-hm-year:hover,
-.naws-hm-year.is-active {
+.naws-hist-range-btn.active {
     background: var(--naws-primary, #00d4ff);
     border-color: var(--naws-primary, #00d4ff);
     color: #0a0e1a;
@@ -1634,29 +1631,39 @@
 
 .naws-hm-years { display: flex; flex-wrap: wrap; gap: 4px; }
 
+/* Die Jahreswahl benutzt dieselben Pillen wie die Jahres-Umschalter der
+   Charts (.naws-leg-pill, samt .hidden fuer den abgeschalteten Zustand).
+   Hier steht nur, was ein <button> gegenueber dem <span> dort zusaetzlich
+   braucht: die Browser-Vorgaben abraeumen. */
 .naws-hm-year {
-    border: 1px solid var(--naws-border, #e0eeee);
     background: transparent;
     color: inherit;
-    font: inherit;
-    font-size: 13px;
-    line-height: 1;
-    padding: 5px 10px;
-    border-radius: 999px;
+    font-family: inherit;
     cursor: pointer;
 }
-.naws-hm-year:hover { border-color: var(--naws-primary, #00d4ff); }
-.naws-hm-year.is-active {
-    background: var(--naws-primary, #00d4ff);
-    border-color: var(--naws-primary, #00d4ff);
-    color: #fff;
-}
+
 
 /* Waagerecht scrollen statt schrumpfen: eine Kachel bleibt gross genug,
    um sie mit dem Finger zu treffen. */
 .naws-hm-scroll { overflow-x: auto; overflow-y: hidden; }
 
-.naws-hm-grid { border-collapse: separate; border-spacing: 2px; width: auto; }
+.naws-hm-grid {
+    border-collapse: separate;
+    border-spacing: 2px;
+    /* Fuellt die verfuegbare Breite, statt klein in einer breiten Spalte zu
+       sitzen. table-layout: fixed verteilt die 31 Tagesspalten gleichmaessig;
+       min-width schiebt die Karte auf schmalen Bildschirmen ins Scrollen,
+       statt die Kacheln unter die Fingergroesse zu druecken. */
+    table-layout: fixed;
+    width: 100%;
+    min-width: 660px;
+}
+
+/* Themes rahmen Tabellenzellen gern ein. Auf einer Karte, die ihre
+   Bedeutung aus Flaechen zieht, zerlegt das jede Kachel in ein eigenes
+   Kaestchen. */
+.naws-hm-grid th,
+.naws-hm-grid td { border: 0; }
 
 .naws-hm-grid th {
     font-weight: 500;
@@ -1666,7 +1673,7 @@
     background: var(--naws-surface, #fff);
 }
 
-.naws-hm-dh { min-width: 20px; text-align: center; }
+.naws-hm-dh { text-align: center; }
 
 /* Die Monatsspalte bleibt beim Scrollen stehen. */
 .naws-hm-mh,
@@ -1674,17 +1681,18 @@
     position: sticky;
     left: 0;
     z-index: 2;
-    text-align: right;
-    padding-right: 8px;
+    text-align: left;
+    padding: 0 12px 0 4px;
     white-space: nowrap;
+    /* Feste Breite, nicht 1%: mit table-layout: fixed nimmt der Browser das
+       Prozent woertlich und gibt der Spalte rund 13px, worauf die Monatsnamen
+       ueber die erste Kachelspalte laufen. */
+    width: 92px;
 }
 
 .naws-hm-c,
 .naws-hm-x {
-    width: 20px;
-    min-width: 20px;
-    max-width: 20px;
-    height: 20px;
+    height: 22px;
     padding: 0;
     border-radius: 3px;
     /* Eine <td> waechst mit ihrem Inhalt. Die Kacheln tragen nur den
@@ -1752,7 +1760,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-top: 12px;
+    margin-top: 6px;
     font-size: 11px;
     color: var(--naws-text-muted, #7aa0a0);
 }

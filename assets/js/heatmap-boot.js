@@ -117,6 +117,9 @@
             for (var i = 0; i < buttons.length; i++) {
                 var on = buttons[i].getAttribute('data-year') === String(year);
                 buttons[i].classList.toggle('is-active', on);
+                // Die Chart-Pillen blenden den abgeschalteten Zustand aus, statt ihn
+                // umzufaerben — .naws-leg-pill.hidden macht das.
+                buttons[i].classList.toggle('hidden', !on);
             }
         }
 
