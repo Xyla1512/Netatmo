@@ -1634,8 +1634,14 @@
 /* Die Jahreswahl benutzt dieselben Pillen wie die Jahres-Umschalter der
    Charts (.naws-leg-pill, samt .hidden fuer den abgeschalteten Zustand).
    Hier steht nur, was ein <button> gegenueber dem <span> dort zusaetzlich
-   braucht: die Browser-Vorgaben abraeumen. */
-.naws-hm-year {
+   braucht: die Browser-Vorgaben abraeumen, und die des Themes. Hello
+   Elementor faerbt jeden [type="button"] bei :hover und :focus mit seiner
+   Akzentfarbe (Spezifitaet 0,2,0), und ein angetippter Button behaelt auf
+   dem Handy den Fokus, die Pille bliebe also rot. Deshalb unter .naws-hm
+   und beide Zustaende ausdruecklich. */
+.naws-hm .naws-hm-year,
+.naws-hm .naws-hm-year:hover,
+.naws-hm .naws-hm-year:focus {
     background: transparent;
     color: inherit;
     font-family: inherit;
@@ -1659,13 +1665,17 @@
     min-width: 660px;
 }
 
-/* Themes rahmen Tabellenzellen gern ein. Auf einer Karte, die ihre
-   Bedeutung aus Flaechen zieht, zerlegt das jede Kachel in ein eigenes
-   Kaestchen. */
-.naws-hm-grid th,
-.naws-hm-grid td { border: 0; }
+/* Themes rahmen Tabellenzellen gern ein und streifen jede zweite Zeile
+   (Hello Elementor: table tbody > tr:nth-child(2n+1) > th, Spezifitaet
+   0,1,4). Auf einer Karte, die ihre Bedeutung aus Flaechen zieht, zerlegt
+   der Rahmen jede Kachel in ein eigenes Kaestchen, und der Streifen macht
+   die klebende Monatsspalte in jeder zweiten Zeile durchscheinend: die
+   Kacheln laufen beim Scrollen durch die Monatsnamen. Deshalb stehen die
+   Zellregeln unter .naws-hm, zwei Klassen schlagen jede Typkette. */
+.naws-hm .naws-hm-grid th,
+.naws-hm .naws-hm-grid td { border: 0; }
 
-.naws-hm-grid th {
+.naws-hm .naws-hm-grid th {
     font-weight: 500;
     font-size: 11px;
     color: var(--naws-text-muted, #7aa0a0);
@@ -1706,7 +1716,7 @@
 .naws-hm-c { cursor: pointer; transition: background-color 250ms ease; }
 .naws-hm-c:hover { outline: 2px solid var(--naws-text, #427272); outline-offset: 1px; }
 
-.naws-hm-x { background: none; }
+.naws-hm .naws-hm-x { background: none; }
 
 /* The label each cell carries for screen readers. .screen-reader-text is a
    theme convention, not something WordPress provides, so the plugin ships
