@@ -86,6 +86,15 @@ $r = NAWS_Database::shape_heatmap_year( [
 check( 'ein anderes Jahr wird uebergangen',  $r['values'][5][0], 19.0 );
 check( 'ein unlesbares Datum stuerzt nicht', is_array( $r['values'] ), true );
 
+// Der Fall aus der Aufgabenbeschreibung: ein 31. April existiert nicht
+// und darf deshalb keine (graue) Zelle bekommen, sondern gar keine.
+$r = NAWS_Database::shape_heatmap_year( [
+    row( '2025-04-31', '99.0' ),
+], 2025 );
+
+check( 'der 31. April wird verworfen',      $r['values'][3][29], null );
+check( 'der April bleibt bei 30 Eintraegen', count( $r['values'][3] ), 30 );
+
 echo "\nZwei Zeilen fuer denselben Tag\n" . str_repeat( '-', 74 ) . "\n";
 
 // Die Tagestabelle fuehrt je Modul eine Zeile. Die Innenmodule tragen in

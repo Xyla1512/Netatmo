@@ -1067,13 +1067,7 @@ class NAWS_Database {
         $year = (int) $year;
         $t    = $wpdb->prefix . NAWS_TABLE_DAILY;
 
-        $rows = $wpdb->get_results( $wpdb->prepare( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name is prefix + constant
-            "SELECT day_date, temp_avg, temp_min, temp_max
-               FROM {$t}
-              WHERE YEAR(day_date) = %d
-              ORDER BY day_date ASC",
-            $year
-        ), ARRAY_A );
+        $rows = $wpdb->get_results( $wpdb->prepare( "SELECT day_date, temp_avg, temp_min, temp_max FROM {$t} WHERE YEAR(day_date) = %d ORDER BY day_date ASC", $year ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name is prefix + constant
 
         return self::shape_heatmap_year( is_array( $rows ) ? $rows : [], $year );
     }
