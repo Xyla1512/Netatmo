@@ -43,6 +43,18 @@ $color_labels = [
     'chart_tooltip_title'  => __( 'Tooltip Title', 'xtx-integration-for-netatmo' ),
     'chart_tooltip_text'   => __( 'Tooltip Text', 'xtx-integration-for-netatmo' ),
     'chart_axis_title'     => __( 'Axis Title', 'xtx-integration-for-netatmo' ),
+    // Heatmap
+    'heatmap_t_m10'   => __( '−10 °C and below', 'xtx-integration-for-netatmo' ),
+    'heatmap_t_m5'    => __( '−5 °C', 'xtx-integration-for-netatmo' ),
+    'heatmap_t_0'     => __( '0 °C', 'xtx-integration-for-netatmo' ),
+    'heatmap_t_5'     => __( '5 °C', 'xtx-integration-for-netatmo' ),
+    'heatmap_t_10'    => __( '10 °C', 'xtx-integration-for-netatmo' ),
+    'heatmap_t_15'    => __( '15 °C', 'xtx-integration-for-netatmo' ),
+    'heatmap_t_20'    => __( '20 °C', 'xtx-integration-for-netatmo' ),
+    'heatmap_t_25'    => __( '25 °C', 'xtx-integration-for-netatmo' ),
+    'heatmap_t_30'    => __( '30 °C', 'xtx-integration-for-netatmo' ),
+    'heatmap_t_35'    => __( '35 °C and above', 'xtx-integration-for-netatmo' ),
+    'heatmap_no_data' => __( 'Day without a reading', 'xtx-integration-for-netatmo' ),
 ];
 
 // Short labels for 24h chart preview legend
@@ -68,6 +80,7 @@ $tabs = [
     'chart24h'  => __( '24h Chart Colors', 'xtx-integration-for-netatmo' ),
     'charttheme'=> __( 'Chart Theming', 'xtx-integration-for-netatmo' ),
     'history'   => __( 'Year Comparison Palette', 'xtx-integration-for-netatmo' ),
+    'heatmap'   => __( 'Heatmap Scale', 'xtx-integration-for-netatmo' ),
 ];
 
 // Icon sets data
@@ -489,6 +502,48 @@ $icon_color_keys = [
                                data-default-color="<?php echo esc_attr( $defaults[ $key ] ); ?>">
                     </div>
                 <?php endfor; ?>
+            </div>
+        </div>
+
+        <!-- ============================================================
+             Tab 6: Heatmap-Skala
+             ============================================================ -->
+        <div class="naws-appearance-pane" data-pane="heatmap">
+            <p class="description"><?php esc_html_e( 'Colour scale for [naws_heatmap]. The stops are degrees Celsius; values in between are interpolated. They stay in Celsius even when the display unit is Fahrenheit, because the colour is taken from the stored value.', 'xtx-integration-for-netatmo' ); ?></p>
+            <div class="naws-appearance-row">
+                <div class="naws-appearance-controls">
+                    <table class="form-table naws-color-table">
+                        <tbody>
+                        <?php foreach ( $groups['heatmap']['keys'] as $key ) : ?>
+                            <tr>
+                                <th><label for="naws-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $color_labels[ $key ] ?? $key ); ?></label></th>
+                                <td>
+                                    <input type="text"
+                                           id="naws-<?php echo esc_attr( $key ); ?>"
+                                           name="naws_appearance[<?php echo esc_attr( $key ); ?>]"
+                                           value="<?php echo esc_attr( $colors[ $key ] ); ?>"
+                                           class="naws-color-picker"
+                                           data-preview="heatmap"
+                                           data-key="<?php echo esc_attr( $key ); ?>"
+                                           data-default-color="<?php echo esc_attr( $defaults[ $key ] ); ?>">
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="naws-appearance-preview naws-preview-sticky">
+                    <div class="naws-preview-label">Live-Vorschau — Temperaturskala</div>
+                    <div id="naws-preview-heatmap" class="naws-pv-heatmap">
+                        <?php foreach ( NAWS_Colors::HEATMAP_KEYS as $i => $key ) : ?>
+                        <div class="naws-pv-heatmap-stop" data-key="<?php echo esc_attr( $key ); ?>">
+                            <span class="naws-pv-heatmap-swatch"
+                                  style="display:block;width:100%;height:26px;border-radius:4px;background:<?php echo esc_attr( $colors[ $key ] ); ?>"></span>
+                            <span class="naws-pv-heatmap-deg"><?php echo esc_html( NAWS_Colors::HEATMAP_STOPS[ $i ] . ' °C' ); ?></span>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
             </div>
         </div>
 
