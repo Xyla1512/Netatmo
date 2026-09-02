@@ -12,13 +12,47 @@
 
 **Branch:** `heatmap-shortcode` (existiert bereits, zwei Commits mit dem Spec)
 
+## Definition of Done — gilt für jeden Task ohne Ausnahme
+
+Ein Task ist erst fertig, wenn **alle vier** Punkte erfüllt sind. Kein Commit ohne sie.
+
+1. **Das Review-Gate steht auf null.**
+
+   ```
+   vendor\bin\phpcs.bat --report=full
+   ```
+
+   `.phpcs.xml.dist` ist in diesem Projekt ausdrücklich kein Style-Guide, sondern das Gate, das über die Annahme bei WordPress.org entscheidet: `WordPress.Security` (Nonces, Sanitization, Escaping), `WordPress.DB` (Prepared Statements), `WordPress.WP` (i18n, Enqueueing, API-Missbrauch), `WordPress.NamingConventions.PrefixAllGlobals`, `PHPCompatibilityWP` gegen PHP 8.0+.
+
+   **Ausgangsstand am 2026-09-02: 51 Dateien, null Befunde.** Wer einen Befund hinterlässt, hat den Task nicht beendet.
+
+2. **Ein `phpcs:ignore` wird begründet oder gar nicht gesetzt.** Jedes vorhandene im Codebestand trägt einen Kommentar, der sagt, warum die Regel hier nicht greift. Ein Ignore, das nur den Lärm abstellt, ist eine Verschlechterung gegenüber dem Befund — dann lieber den Code ändern. Insbesondere: **keine eigene Escaping-Wrapper-Funktion** in die `customEscapingFunctions` aufnehmen; das Review-Team will `esc_html()`/`esc_attr()`/`wp_kses()` im `echo` selbst sehen, und die Datei sagt das ausdrücklich.
+
+3. **Die ganze Testsuite ist grün.**
+
+   ```
+   for t in tests/test-*.php; do php "$t" >/dev/null 2>&1 || echo "FAIL $t"; done
+   ```
+
+   Erwartet wird keine Ausgabe. Nicht nur der eigene Test — ein Task, der einen fremden bricht, ist nicht fertig.
+
+4. **`php -l` auf jeder angefassten PHP-Datei.**
+
+Wenn einer der vier Punkte nicht zu erfüllen ist, wird das gemeldet und **nicht** umgangen. Ein rot gemeldeter Task ist brauchbar; ein grün gemeldeter, der es nicht ist, kostet später ein Release.
+
+---
+
 ## Global Constraints
 
 - **Textdomain ist immer `xtx-integration-for-netatmo`.** Jeder `__()`, `_x()`, `esc_html__()` trägt sie als zweites bzw. drittes Argument.
 - **Prefix `naws_` / `NAWS_`** für jede globale Funktion, Klasse, Konstante und Option. CSS-Klassen beginnen mit `naws-`.
 - **Kein `<style>`- und kein `<script>`-Block in der Ausgabe.** Das Plugin hat beides 1.6.2 auf Verlangen des wp.org-Review-Teams entfernt. `style`-Attribute an einzelnen Elementen sind davon nicht betroffen und bleiben zulässig; JavaScript geht ausschließlich über `wp_enqueue_script()` auf eine registrierte Datei.
-- **Jede Ausgabe wird escaped** — `esc_html()`, `esc_attr()`, `esc_url()`. Ohne Ausnahme.
+- **Jede Ausgabe wird escaped** — `esc_html()`, `esc_attr()`, `esc_url()`, spät und sichtbar an der Ausgabestelle, nicht in einer Hilfsfunktion davor. Ohne Ausnahme.
+- **Jede Eingabe wird entschlüsselt und gesäubert**: `wp_unslash()` vor `sanitize_*()`, und beides vor der Benutzung — nicht über eine Zwischenvariable, weil weder PHPCS noch der Review-Scanner Sanitization über eine Zuweisung hinweg verfolgen. `handle_save_appearance()` in `class-naws-admin.php` erklärt das an Ort und Stelle und ist das Muster.
 - **Öffentliche AJAX-Endpunkte** prüfen `check_ajax_referer( 'naws_public_nonce', 'nonce' )` und rufen `nocache_headers()`.
+- **Jede SQL geht durch `$wpdb->prepare()`**, Spalten- und Tabellennamen als `%i`, Werte als `%s`/`%d`/`%f`. Ein Tabellenname aus `$wpdb->prefix` plus Konstante wird interpoliert und trägt dafür ein begründetes `phpcs:ignore` — so wie jede vorhandene Abfrage in `class-naws-database.php`.
+- **Keine externe Ressource.** Kein CDN, keine Schriftdatei, kein Skript von fremdem Host. Das Plugin lädt ausschließlich, was es selbst mitbringt.
+- **Kein `error_log()`, `var_dump()`, `print_r()` im ausgelieferten Code.** Das Logging läuft über `NAWS_Logger`.
 - **Keine MAC-Adresse in öffentlicher Ausgabe.** Seit 1.9.10 prüft das jeder Render-Test.
 - **Farbe immer aus dem gespeicherten Celsius-Wert**, nie aus dem angezeigten. Angezeigt wird über `NAWS_Helpers::format_value( 'Temperature', $v )`.
 - **Dateien sind LF**, PHP ohne schließendes `?>` am Dateiende (außer in Templates, die mit HTML enden).
