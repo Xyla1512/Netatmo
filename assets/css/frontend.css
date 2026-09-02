@@ -1604,3 +1604,136 @@
   display:flex; justify-content:space-between; gap:8px;
 }
 .naws-wgt-foot { padding:clamp(6px, 2.4cqw, 10px) clamp(12px, 4.8cqw, 20px) clamp(8px, 3.2cqw, 13px); font-size:clamp(10px, 4cqw, 12.5px); }
+
+/* ══════════════════════════════════════════════════════════════════
+   [naws_heatmap] — Kalenderraster des Tagesdurchschnitts
+   ══════════════════════════════════════════════════════════════════ */
+
+.naws-hm {
+    position: relative;
+    background: var(--naws-surface, #fff);
+    border: 1px solid var(--naws-border, #e0eeee);
+    border-radius: 12px;
+    padding: 14px;
+    color: var(--naws-text, #427272);
+}
+
+.naws-hm-hdr {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.naws-hm-title { font-weight: 600; font-size: 15px; }
+
+.naws-hm-years { display: flex; flex-wrap: wrap; gap: 4px; }
+
+.naws-hm-year {
+    border: 1px solid var(--naws-border, #e0eeee);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 13px;
+    line-height: 1;
+    padding: 5px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+}
+.naws-hm-year:hover { border-color: var(--naws-primary, #2d5252); }
+.naws-hm-year.is-active {
+    background: var(--naws-primary, #2d5252);
+    border-color: var(--naws-primary, #2d5252);
+    color: #fff;
+}
+
+/* Waagerecht scrollen statt schrumpfen: eine Kachel bleibt gross genug,
+   um sie mit dem Finger zu treffen. */
+.naws-hm-scroll { overflow-x: auto; overflow-y: hidden; }
+
+.naws-hm-grid { border-collapse: separate; border-spacing: 2px; width: auto; }
+
+.naws-hm-grid th {
+    font-weight: 500;
+    font-size: 11px;
+    color: var(--naws-text-muted, #7aa0a0);
+    padding: 0;
+    background: var(--naws-surface, #fff);
+}
+
+.naws-hm-dh { min-width: 14px; text-align: center; }
+
+/* Die Monatsspalte bleibt beim Scrollen stehen. */
+.naws-hm-mh,
+.naws-hm-corner {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    text-align: right;
+    padding-right: 8px;
+    white-space: nowrap;
+}
+
+.naws-hm-c,
+.naws-hm-x {
+    width: 14px;
+    min-width: 14px;
+    height: 14px;
+    padding: 0;
+    border-radius: 3px;
+}
+
+.naws-hm-c { cursor: pointer; transition: background-color 250ms ease; }
+.naws-hm-c:hover { outline: 2px solid var(--naws-text, #427272); outline-offset: 1px; }
+
+.naws-hm-x { background: none; }
+
+/* Aufbau: eine Welle von links nach rechts. Sie haengt am Setzen von
+   --naws-hm-d durch heatmap-boot.js — ohne JavaScript traegt keine Zelle
+   die Klasse und die Karte steht sofort vollstaendig da. */
+.naws-hm.is-animating .naws-hm-c {
+    animation: naws-hm-in 320ms ease both;
+    animation-delay: var(--naws-hm-d, 0ms);
+}
+
+@keyframes naws-hm-in {
+    from { opacity: 0; transform: scale(0.4); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .naws-hm.is-animating .naws-hm-c { animation: none; }
+    .naws-hm-c { transition: none; }
+}
+
+.naws-hm-tip {
+    position: absolute;
+    z-index: 10;
+    pointer-events: none;
+    background: var(--naws-text-darkest, #1a3535);
+    color: #fff;
+    font-size: 12px;
+    line-height: 1.4;
+    padding: 5px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+    transform: translate(-50%, -100%);
+}
+
+.naws-hm-legend {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    font-size: 11px;
+    color: var(--naws-text-muted, #7aa0a0);
+}
+.naws-hm-legend-bar { flex: 1; height: 8px; border-radius: 4px; }
+
+.naws-hm-empty {
+    padding: 10px 0;
+    font-size: 13px;
+    color: var(--naws-text-muted, #7aa0a0);
+}
