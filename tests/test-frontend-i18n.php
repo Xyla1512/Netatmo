@@ -76,6 +76,16 @@ echo "\nfrontend.js traegt keinen eigenen Anzeigetext\n" . str_repeat( '-', 74 )
 preg_match_all( '/([\'"])((?:(?!\1).)*?[äöüßÄÖÜ](?:(?!\1).)*?)\1/u', $js, $treffer );
 check( 'keine deutschen Umlaute in Zeichenketten', $treffer[2], [] );
 
+// Jedes weitere Frontend-Skript bekommt denselben Blick — sonst waere der
+// Test nur ein Versprechen fuer frontend.js und eine Luecke fuer jede neue
+// Datei daneben. [naws_heatmap] bootet ueber assets/js/heatmap-boot.js,
+// das hier ergaenzt wurde, als es geschrieben wurde.
+foreach ( [ 'assets/js/heatmap-boot.js' ] as $weitere_datei ) {
+    $inhalt = (string) file_get_contents( $wurzel . '/' . $weitere_datei );
+    preg_match_all( '/([\'"])((?:(?!\1).)*?[äöüßÄÖÜ](?:(?!\1).)*?)\1/u', $inhalt, $treffer2 );
+    check( 'keine deutschen Umlaute in Zeichenketten: ' . $weitere_datei, $treffer2[2], [] );
+}
+
 // Und die drei namentlich, damit die Meldung beim Fehlschlag sagt, worum es
 // geht, statt nur "irgendwo ein Umlaut".
 foreach ( [
