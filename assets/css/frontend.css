@@ -1624,7 +1624,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 10px;
-    margin-bottom: 12px;
+    margin-bottom: 4px;
 }
 
 .naws-hm-title { font-weight: 600; font-size: 15px; }
@@ -1760,7 +1760,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-top: 6px;
+    margin-top: 2px;
     font-size: 11px;
     color: var(--naws-text-muted, #7aa0a0);
 }
