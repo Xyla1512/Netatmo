@@ -2,9 +2,9 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
-## [Unreleased]
+## [1.9.10]
 
-Merged and waiting for the release it will ship in. Nothing here is published yet.
+The MAC addresses 1.9.9 put on every public page, and the two language files it shipped that WordPress never read.
 
 ### Changed
 

@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 1.9.9
+Stable tag: 1.9.10
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -109,6 +109,14 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 7. Export / Import page for backups
 
 == Changelog ==
+
+= 1.9.10 =
+* Changed: the MAC addresses of your modules are no longer written into public pages. A module id in this plugin is the hardware address of a Netatmo module, and until now it travelled into every page carrying `[naws_live]` or `[naws_history]` — in the data block, on every chart configuration, in the `data-module4`, `data-indoor` and `data-outdoor` attributes — and it came back out with every request the dashboard made, whose reply carried the base station's address on every one of its thirty-odd readings as well. What travels now is a public reference: `outdoor`, `indoor`, `wind`, `rain` and `in-<name>`, resolved back on the server. Pages cached from before the update and the documented `NAWS_Chart` JavaScript interface both keep working.
+* Fix: the two language files 1.9.9 shipped were never read. German and Norwegian travelled along as `.mo` files so that an installation with a German interface would not find an English one the day the update arrived — but WordPress refused both, because the address of the hash table in the file header was wrong. A refused catalogue produces no warning, no log line and no visible difference except that everything stays English. Norwegian, which has no language pack yet, therefore read English throughout 1.9.9.
+* Fix: fourteen German and thirteen Norwegian strings had lost their translation in 1.9.9. The table columns from 1.9.8 — time, module, parameter, average — and the card-order screen came through the migration empty, so a German reader without a language pack saw English column headings in a German interface. The texts were taken from the 1.9.8 language files rather than written afresh, so nothing changed wording that a reader had already got used to.
+* Fix: three sentences in the chart script were German whatever language WordPress was set to — the chart that failed to render, the period with no readings, the request that came back with an error code. They sat in the JavaScript as literals, which the move to gettext in 1.9.9 never reached.
+* Fix: `[naws_table]` printed a MAC address in its module column when the reading's module was no longer in the modules table. Readings outlive the module they came from, so this was reachable rather than theoretical. The cell stays empty now, the way the chart legend does.
+* Fix: a chart request that left out `group_by` wrote a PHP notice into the log. The plugin's own scripts always send it; anything else calling the endpoint did not have to.
 
 = 1.9.9 =
 * Changed: **breaking** — the plugin no longer has its own language setting; the WordPress locale decides. The old setting was a single site-wide value for the front end and the back end at once, and it read the site language rather than your own, so it could never give you a back end in one language and your visitors another. Site Language plus the per-user Language in your profile do exactly that, and for your theme and every other plugin at the same time. If you had the plugin set to a language other than your site's, set the site language instead — or your own user language, if you meant only your own screen.
@@ -368,6 +376,9 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 * Historical data importer with batch processing
 
 == Upgrade Notice ==
+
+= 1.9.10 =
+Privacy fix: your modules' MAC addresses were written into every page carrying [naws_live] or [naws_history] and into every request its dashboard made. They are gone — a public reference travels in their place, and pages cached from before the update keep working. This release also repairs the German and Norwegian language files, which 1.9.9 shipped in a form WordPress silently refused to read.
 
 = 1.9.7 =
 First release published through the WordPress.org directory. Breaking change for REST API users: the key is accepted in the X-NAWS-Key header only, and ?api_key=... now answers 401. Everything else is new features and fixes.
