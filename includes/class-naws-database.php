@@ -989,6 +989,95 @@ class NAWS_Database {
         return $wpdb->get_row( "SELECT MIN(day_date) AS date_begin, MAX(day_date) AS date_end FROM {$t} {$where}", ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table from constant; $where is either empty or wpdb->prepare()'d
     }
 
+    /**
+     * Ein Jahr Tagesdurchschnitte als Raster fuer die Heatmap.
+     *
+     * Zwoelf Arrays, nullbasiert, jedes so lang wie sein Monat Tage hat —
+     * der 31. April existiert nicht und bekommt deshalb keinen Eintrag,
+     * waehrend ein Tag ohne Messwert einen Eintrag mit null bekommt. Die
+     * Karte unterscheidet daran die leere Zelle von der grauen.
+     *
+     * Zwei Durchgaenge, und zwar in dieser Reihenfolge: erst die
+     * gespeicherten Durchschnitte, dann der Rueckgriff auf (min + max) / 2
+     * fuer die Tage, die danach noch offen sind. Die Tagestabelle fuehrt je
+     * Modul eine Zeile, also koennen fuer einen Tag mehrere Zeilen kommen;
+     * so gewinnt der gespeicherte Wert unabhaengig von ihrer Reihenfolge.
+     *
+     * @param array $rows  Zeilen mit day_date, temp_avg, temp_min, temp_max.
+     * @param int   $year
+     * @return array{values:array,sources:array}
+     */
+    public static function shape_heatmap_year( array $rows, $year ) {
+        $year    = (int) $year;
+        $values  = [];
+        $sources = [];
+
+        for ( $m = 1; $m <= 12; $m++ ) {
+            $days = (int) gmdate( 't', gmmktime( 0, 0, 0, $m, 1, $year ) );
+            $values[ $m - 1 ]  = array_fill( 0, $days, null );
+            $sources[ $m - 1 ] = array_fill( 0, $days, null );
+        }
+
+        $place = static function ( $row ) use ( $year, &$values ) {
+            $date = substr( (string) ( $row['day_date'] ?? '' ), 0, 10 );
+            if ( ! preg_match( '/^(\d{4})-(\d{2})-(\d{2})$/', $date, $p ) ) return null;
+            if ( (int) $p[1] !== $year ) return null;
+            $mi = (int) $p[2] - 1;
+            $di = (int) $p[3] - 1;
+            if ( ! isset( $values[ $mi ] ) || ! array_key_exists( $di, $values[ $mi ] ) ) return null;
+            return [ $mi, $di ];
+        };
+
+        // 1. Durchgang: der gespeicherte Durchschnitt.
+        foreach ( $rows as $row ) {
+            $at = $place( $row );
+            if ( $at === null ) continue;
+            $avg = $row['temp_avg'] ?? null;
+            if ( $avg === null || $avg === '' ) continue;
+            $values[ $at[0] ][ $at[1] ]  = round( (float) $avg, 1 );
+            $sources[ $at[0] ][ $at[1] ] = 'avg';
+        }
+
+        // 2. Durchgang: nur, wo der erste nichts gefunden hat.
+        foreach ( $rows as $row ) {
+            $at = $place( $row );
+            if ( $at === null ) continue;
+            if ( $values[ $at[0] ][ $at[1] ] !== null ) continue;
+            $min = $row['temp_min'] ?? null;
+            $max = $row['temp_max'] ?? null;
+            if ( $min === null || $min === '' || $max === null || $max === '' ) continue;
+            $values[ $at[0] ][ $at[1] ]  = round( ( (float) $min + (float) $max ) / 2, 1 );
+            $sources[ $at[0] ][ $at[1] ] = 'minmax';
+        }
+
+        return [ 'values' => $values, 'sources' => $sources ];
+    }
+
+    /**
+     * Holt ein Jahr aus der Tagestabelle und gibt es als Raster zurueck.
+     *
+     * Ohne Modulfilter — genau wie get_history_data(). Der Aussenwert steht
+     * auf der Zeile der Basisstation (module_id = station_id) und nicht
+     * unter der MAC des Aussenmoduls; wer nach dem Aussenmodul filtert,
+     * bekommt nichts. shape_heatmap_year() sortiert die Zeilen der
+     * Innenmodule von selbst aus, weil sie in temp_* nichts tragen.
+     */
+    public static function get_heatmap_year( $year ) {
+        global $wpdb;
+        $year = (int) $year;
+        $t    = $wpdb->prefix . NAWS_TABLE_DAILY;
+
+        $rows = $wpdb->get_results( $wpdb->prepare( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name is prefix + constant
+            "SELECT day_date, temp_avg, temp_min, temp_max
+               FROM {$t}
+              WHERE YEAR(day_date) = %d
+              ORDER BY day_date ASC",
+            $year
+        ), ARRAY_A );
+
+        return self::shape_heatmap_year( is_array( $rows ) ? $rows : [], $year );
+    }
+
     public static function count_readings() {
         global $wpdb;
         return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}" . NAWS_TABLE_READINGS ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- table name is a constant
