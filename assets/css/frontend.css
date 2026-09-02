@@ -927,7 +927,8 @@
     text-align: right;
     padding: 0 0.25rem;
 }
-.naws-hist-range-btn {
+.naws-hist-range-btn,
+.naws-hm-year {
     background: transparent;
     border: 1px solid var(--naws-border, rgba(255,255,255,0.1));
     color: var(--naws-text-muted, #64748b);
@@ -941,7 +942,9 @@
     align-items: center;
 }
 .naws-hist-range-btn:hover,
-.naws-hist-range-btn.active {
+.naws-hist-range-btn.active,
+.naws-hm-year:hover,
+.naws-hm-year.is-active {
     background: var(--naws-primary, #00d4ff);
     border-color: var(--naws-primary, #00d4ff);
     color: #0a0e1a;
@@ -1663,7 +1666,7 @@
     background: var(--naws-surface, #fff);
 }
 
-.naws-hm-dh { min-width: 14px; text-align: center; }
+.naws-hm-dh { min-width: 20px; text-align: center; }
 
 /* Die Monatsspalte bleibt beim Scrollen stehen. */
 .naws-hm-mh,
@@ -1678,11 +1681,18 @@
 
 .naws-hm-c,
 .naws-hm-x {
-    width: 14px;
-    min-width: 14px;
-    height: 14px;
+    width: 20px;
+    min-width: 20px;
+    max-width: 20px;
+    height: 20px;
     padding: 0;
     border-radius: 3px;
+    /* Eine <td> waechst mit ihrem Inhalt. Die Kacheln tragen nur den
+       absolut positionierten Screenreader-Text, aber ohne diese beiden
+       Zeilen streckt allein die geerbte Zeilenhoehe die Reihe auf das
+       Doppelte. */
+    font-size: 0;
+    line-height: 0;
 }
 
 .naws-hm-c { cursor: pointer; transition: background-color 250ms ease; }
