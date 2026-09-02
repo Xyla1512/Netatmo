@@ -781,6 +781,12 @@ jQuery(document).ready(function($) {
         if (group === 'history') {
             $('#naws-pv-bar-' + key).css('background', val);
         }
+
+        // ── Heatmap scale preview ──
+        if (group === 'heatmap') {
+            var stop = $('.naws-pv-heatmap-stop[data-key="'+key+'"]');
+            stop.find('.naws-pv-heatmap-swatch').css('background', val);
+        }
     }
 
     // ── Font: the free-text field only matters for "own family" ──
