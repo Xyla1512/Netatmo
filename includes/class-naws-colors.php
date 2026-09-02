@@ -290,7 +290,7 @@ class NAWS_Colors {
         $c = self::get_all();
         $sensors = [ 'temp', 'humidity', 'pressure', 'co2', 'noise', 'wind', 'rain', 'health' ];
 
-        $css = ".naws-wrap, .naws-wx {\n";
+        $css = ".naws-wrap, .naws-wx, .naws-hm {\n";
 
         // Basis-Theme
         $css .= "  --naws-bg: {$c['theme_bg']};\n";
@@ -367,7 +367,7 @@ class NAWS_Colors {
         // own variables and never saw an override, which is exactly why
         // their bars ignored every setting. Kept as its own rule so the
         // established cascade above stays untouched.
-        $css .= ".naws-wrap, .naws-wx, .naws-hist, .naws-hist-modal, .naws-fc-wrap {\n";
+        $css .= ".naws-wrap, .naws-wx, .naws-hm, .naws-hist, .naws-hist-modal, .naws-fc-wrap {\n";
         $css .= "  --naws-header-bg: {$c['header_bg']};\n";
         $css .= "  --naws-header-text: {$c['header_text']};\n";
         $css .= '  --naws-font: ' . NAWS_Fonts::stack( (string) $c['font_family'], (string) $c['font_custom'] ) . ";\n";

@@ -1642,10 +1642,10 @@
     border-radius: 999px;
     cursor: pointer;
 }
-.naws-hm-year:hover { border-color: var(--naws-primary, #2d5252); }
+.naws-hm-year:hover { border-color: var(--naws-primary, #00d4ff); }
 .naws-hm-year.is-active {
-    background: var(--naws-primary, #2d5252);
-    border-color: var(--naws-primary, #2d5252);
+    background: var(--naws-primary, #00d4ff);
+    border-color: var(--naws-primary, #00d4ff);
     color: #fff;
 }
 
@@ -1689,6 +1689,22 @@
 .naws-hm-c:hover { outline: 2px solid var(--naws-text, #427272); outline-offset: 1px; }
 
 .naws-hm-x { background: none; }
+
+/* The label each cell carries for screen readers. .screen-reader-text is a
+   theme convention, not something WordPress provides, so the plugin ships
+   its own rule rather than assuming the active theme has one — without it
+   every cell would print its full label as visible text. */
+.naws-hm .screen-reader-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
 
 /* Aufbau: eine Welle von links nach rechts. Sie haengt am Setzen von
    --naws-hm-d durch heatmap-boot.js — ohne JavaScript traegt keine Zelle
