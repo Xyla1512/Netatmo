@@ -360,7 +360,7 @@ In `get_groups()`, nach dem Eintrag `history_palette`:
 - [ ] **Step 6: Test laufen lassen**
 
 Run: `php tests/test-heatmap-colors.php`
-Expected: PASS — „25 bestanden, 0 fehlgeschlagen"
+Expected: PASS — die Schlusszeile endet auf „0 fehlgeschlagen". Die Zahl der bestandenen Pruefungen ist die, die herauskommt; sie ist kein Sollwert.
 
 - [ ] **Step 7: Die ganze Suite laufen lassen**
 
@@ -608,7 +608,7 @@ In `includes/class-naws-database.php`, direkt nach `get_daily_data_range()`:
 - [ ] **Step 4: Test laufen lassen**
 
 Run: `php tests/test-heatmap-year.php`
-Expected: PASS — „24 bestanden, 0 fehlgeschlagen"
+Expected: PASS — die Schlusszeile endet auf „0 fehlgeschlagen". Die Zahl der bestandenen Pruefungen ist die, die herauskommt; sie ist kein Sollwert.
 
 Schlägt der Test mit `Class "NAWS_Database" not found` fehl, prüfen, ob `class-naws-database.php` beim Laden ohne WordPress etwas erwartet — dann im Test die fehlende Konstante oder Funktion stubben, so wie `test-table-render.php` es mit `get_option()` tut.
 
@@ -731,7 +731,7 @@ In `includes/class-naws-helpers.php`, nach `format_value()`:
 - [ ] **Step 4: Test laufen lassen**
 
 Run: `php tests/test-heatmap-render.php`
-Expected: PASS — „5 bestanden, 0 fehlgeschlagen"
+Expected: PASS — die Schlusszeile endet auf „0 fehlgeschlagen".
 
 - [ ] **Step 5: Commit**
 
