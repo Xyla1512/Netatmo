@@ -2,9 +2,9 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
-## [Unreleased]
+## [1.9.10]
 
-Merged and waiting for the release it will ship in. Nothing here is published yet.
+A year of daily mean temperatures as a calendar grid under a new shortcode; the MAC addresses 1.9.9 put on every public page; and the two language files it shipped that WordPress never read.
 
 ### Added
 
@@ -17,10 +17,6 @@ Merged and waiting for the release it will ship in. Nothing here is published ye
   Where a day has no stored average but does have a minimum and a maximum, the tile shows `(min + max) / 2` — the definition climate series have used since the nineteenth century. It is not the same number as the stored average, though: across the 861 days that carry both, the two differ by 0.44 K on average and by 3.20 K at worst. The tooltip and the screen reader text therefore say which of the two a tile is showing.
 
   The grid is a `<table>` rather than a drawing, so the month column stays put while the days scroll sideways, and a screen reader reads "March, 14th, 8.2 °C" instead of "image". Colours are rendered server-side, so the map is complete without JavaScript; the wipe it builds in with is an addition, and it stands still for anyone who asked their system for reduced motion.
-
-## [1.9.10]
-
-The MAC addresses 1.9.9 put on every public page, and the two language files it shipped that WordPress never read.
 
 ### Changed
 
