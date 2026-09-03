@@ -1,0 +1,84 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "Month"
+msgstr "Monat"
+
+msgid "Could not load data (HTTP %s)"
+msgstr "Daten konnten nicht geladen werden (HTTP %s)"
+
+msgid "No data for this period."
+msgstr "Keine Daten für diesen Zeitraum."
+
+msgid "Chart could not be rendered."
+msgstr "Chart konnte nicht gerendert werden."
+
+msgid "%s · computed from min and max"
+msgstr "%s · aus Min und Max berechnet"
+
+msgid "No reading"
+msgstr "Kein Messwert"
+
+msgid "Show the colour scale below the grid (yes/no)"
+msgstr "Farbskala unter dem Raster anzeigen (yes/no)"
+
+msgid "Daily Average Temperature"
+msgstr "Tagesdurchschnittstemperatur"
+
+msgid "Title above the grid"
+msgstr "Titel über dem Raster"
+
+msgid "current year"
+msgstr "aktuelles Jahr"
+
+msgid "Year to open with. A year with no readings falls back to the current one."
+msgstr "Jahr, mit dem die Karte startet. Ein Jahr ohne Messwerte fällt auf das aktuelle zurück."
+
+msgid "One year of outdoor daily average temperature as a calendar grid: months down, days across, one coloured tile per day."
+msgstr "Ein Jahr Außen-Tagesdurchschnittstemperatur als Kalenderraster: Monate untereinander, Tage nebeneinander, eine farbige Kachel pro Tag."
+
+msgid "Colour scale for [naws_heatmap]. The stops are degrees Celsius; values in between are interpolated. They stay in Celsius even when the display unit is Fahrenheit, because the colour is taken from the stored value."
+msgstr "Farbskala für [naws_heatmap]. Die Stützpunkte sind Grad Celsius; Werte dazwischen werden interpoliert. Sie bleiben auch dann in Celsius, wenn die Anzeigeeinheit Fahrenheit ist, weil die Farbe aus dem gespeicherten Wert kommt."
+
+msgid "Heatmap Scale"
+msgstr "Heatmap-Skala"
+
+msgid "Day without a reading"
+msgstr "Tag ohne Messwert"
+
+msgid "35 °C and above"
+msgstr "35 °C und darüber"
+
+msgid "30 °C"
+msgstr "30 °C"
+
+msgid "25 °C"
+msgstr "25 °C"
+
+msgid "20 °C"
+msgstr "20 °C"
+
+msgid "15 °C"
+msgstr "15 °C"
+
+msgid "10 °C"
+msgstr "10 °C"
+
+msgid "5 °C"
+msgstr "5 °C"
+
+msgid "0 °C"
+msgstr "0 °C"
+
+msgid "−5 °C"
+msgstr "−5 °C"
+
+msgid "−10 °C and below"
+msgstr "−10 °C und darunter"
+

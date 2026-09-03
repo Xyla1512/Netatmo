@@ -1,0 +1,99 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo\n"
+"Language: nb_NO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "Month"
+msgstr "Måned"
+
+msgid "Could not load data (HTTP %s)"
+msgstr "Kunne ikke laste data (HTTP %s)"
+
+msgid "No data for this period."
+msgstr "Ingen data for denne perioden."
+
+msgid "Chart could not be rendered."
+msgstr "Diagrammet kunne ikke vises."
+
+msgid "%s · computed from min and max"
+msgstr "%s · beregnet fra min og maks"
+
+msgid "No reading"
+msgstr "Ingen måling"
+
+msgid "Show the colour scale below the grid (yes/no)"
+msgstr "Vis fargeskalaen under rutenettet (yes/no)"
+
+msgid "Daily Average Temperature"
+msgstr "Døgnmiddeltemperatur"
+
+msgid "Title above the grid"
+msgstr "Tittel over rutenettet"
+
+msgid "current year"
+msgstr "inneværende år"
+
+msgid "Year to open with. A year with no readings falls back to the current one."
+msgstr "Året kartet åpner med. Et år uten målinger faller tilbake til det inneværende."
+
+msgid "One year of outdoor daily average temperature as a calendar grid: months down, days across, one coloured tile per day."
+msgstr "Ett år med døgnmiddeltemperatur ute som kalenderrutenett: måneder nedover, dager bortover, én farget flis per dag."
+
+msgid "Colour scale for [naws_heatmap]. The stops are degrees Celsius; values in between are interpolated. They stay in Celsius even when the display unit is Fahrenheit, because the colour is taken from the stored value."
+msgstr "Fargeskala for [naws_heatmap]. Stoppunktene er grader Celsius; verdier imellom interpoleres. De forblir i Celsius selv når visningsenheten er Fahrenheit, fordi fargen hentes fra den lagrede verdien."
+
+msgid "Heatmap Scale"
+msgstr "Heatmap-skala"
+
+msgid "Day without a reading"
+msgstr "Dag uten måling"
+
+msgid "35 °C and above"
+msgstr "35 °C og over"
+
+msgid "30 °C"
+msgstr "30 °C"
+
+msgid "25 °C"
+msgstr "25 °C"
+
+msgid "20 °C"
+msgstr "20 °C"
+
+msgid "15 °C"
+msgstr "15 °C"
+
+msgid "10 °C"
+msgstr "10 °C"
+
+msgid "5 °C"
+msgstr "5 °C"
+
+msgid "0 °C"
+msgstr "0 °C"
+
+msgid "−5 °C"
+msgstr "−5 °C"
+
+msgid "−10 °C and below"
+msgstr "−10 °C og under"
+
+msgid "https://netatmo.frank-neumann.de/"
+msgstr "https://netatmo.frank-neumann.de/"
+
+msgid "https://frank-neumann.de"
+msgstr "https://frank-neumann.de"
+
+msgid "Frank Neumann"
+msgstr "Frank Neumann"
+
+msgid "Connects to the Netatmo API, stores all sensor data locally and displays live dashboards, charts, history and forecasts via shortcodes."
+msgstr "Kobler til Netatmo-API-et, lagrer alle sensordata lokalt og viser live-dashbord, diagrammer, historikk og varsler via kortkoder."
+
+msgid "XTX Integration for Netatmo"
+msgstr "XTX Integration for Netatmo"
+
