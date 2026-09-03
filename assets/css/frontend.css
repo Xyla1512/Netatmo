@@ -1698,6 +1698,12 @@
        Prozent woertlich und gibt der Spalte rund 13px, worauf die Monatsnamen
        ueber die erste Kachelspalte laufen. */
     width: 92px;
+    /* border-spacing laesst rechts neben der Spalte 2px frei, die keiner
+       Zelle gehoeren: beim Scrollen laufen die Kacheln dort als Streifen
+       durch. Der Schatten ist ein deckender 2px-Rand in der Flaechenfarbe;
+       er liegt ueber den Kacheln, weil die Spalte per z-index vor ihnen
+       steht. */
+    box-shadow: 2px 0 0 var(--naws-surface, #fff);
 }
 
 .naws-hm-c,

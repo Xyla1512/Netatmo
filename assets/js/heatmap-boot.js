@@ -52,7 +52,17 @@
             tip.style.display = '';
             var box = cell.getBoundingClientRect();
             var host = root.getBoundingClientRect();
-            tip.style.left = (box.left - host.left + box.width / 2) + 'px';
+            // Mittig ueber der Kachel, aber innerhalb der Karte. Auf einem
+            // schmalen Bildschirm liegt die Karte am Rand, und ein Tooltip
+            // mittig ueber dem 31. steht zur Haelfte draussen — das Theme
+            // schneidet den Ueberlauf ab, und der Satz endet mitten im Wort.
+            // Gemessen nach dem Setzen des Textes, weil die Breite seine ist.
+            // clientLeft/clientWidth, nicht die Rechtecke: absolute Position
+            // zaehlt vom Innenrand der Karte, und die hat einen Rahmen.
+            var half = tip.offsetWidth / 2;
+            var x = box.left - host.left - root.clientLeft + box.width / 2;
+            x = Math.max(half, Math.min(root.clientWidth - half, x));
+            tip.style.left = x + 'px';
             tip.style.top = (box.top - host.top - 6) + 'px';
         });
 
