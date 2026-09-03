@@ -152,6 +152,25 @@ class NAWS_Colors {
         'icon_color_rain'     => '#3585b0',
         'icon_color_co2'      => '#4a9848',
         'icon_color_noise'    => '#b88030',
+
+        // ── Gruppe 7: Heatmap ──────────────────────────────────────────
+        //
+        // Zehn Stuetzpunkte einer Temperaturskala in Celsius, dazwischen
+        // wird linear interpoliert. Sie haengen ausdruecklich an Celsius
+        // und nicht an der angezeigten Einheit: auf einer Installation mit
+        // temperature_unit = F waeren 35 Grad der Wert 95 und laegen weit
+        // jenseits des oberen Endes.
+        'heatmap_t_m10'   => '#6b21a8',
+        'heatmap_t_m5'    => '#3b5bdb',
+        'heatmap_t_0'     => '#2f9e97',
+        'heatmap_t_5'     => '#3fa34d',
+        'heatmap_t_10'    => '#a3c644',
+        'heatmap_t_15'    => '#f2c744',
+        'heatmap_t_20'    => '#f59f3c',
+        'heatmap_t_25'    => '#ec6a2c',
+        'heatmap_t_30'    => '#d92b2b',
+        'heatmap_t_35'    => '#7f1d1d',
+        'heatmap_no_data' => '#eef2f2',
     ];
 
     public static function instance() {
@@ -271,7 +290,7 @@ class NAWS_Colors {
         $c = self::get_all();
         $sensors = [ 'temp', 'humidity', 'pressure', 'co2', 'noise', 'wind', 'rain', 'health' ];
 
-        $css = ".naws-wrap, .naws-wx {\n";
+        $css = ".naws-wrap, .naws-wx, .naws-hm {\n";
 
         // Basis-Theme
         $css .= "  --naws-bg: {$c['theme_bg']};\n";
@@ -348,7 +367,7 @@ class NAWS_Colors {
         // own variables and never saw an override, which is exactly why
         // their bars ignored every setting. Kept as its own rule so the
         // established cascade above stays untouched.
-        $css .= ".naws-wrap, .naws-wx, .naws-hist, .naws-hist-modal, .naws-fc-wrap {\n";
+        $css .= ".naws-wrap, .naws-wx, .naws-hm, .naws-hist, .naws-hist-modal, .naws-fc-wrap {\n";
         $css .= "  --naws-header-bg: {$c['header_bg']};\n";
         $css .= "  --naws-header-text: {$c['header_text']};\n";
         $css .= '  --naws-font: ' . NAWS_Fonts::stack( (string) $c['font_family'], (string) $c['font_custom'] ) . ";\n";
@@ -428,6 +447,109 @@ class NAWS_Colors {
     }
 
     // ================================================================
+    // Heatmap
+    // ================================================================
+
+    /** Die Stuetzpunkte der Skala in Grad Celsius, aufsteigend. */
+    const HEATMAP_STOPS = [ -10, -5, 0, 5, 10, 15, 20, 25, 30, 35 ];
+
+    /** Die Einstellungsschluessel zu HEATMAP_STOPS, in derselben Reihenfolge. */
+    const HEATMAP_KEYS = [
+        'heatmap_t_m10', 'heatmap_t_m5', 'heatmap_t_0', 'heatmap_t_5', 'heatmap_t_10',
+        'heatmap_t_15', 'heatmap_t_20', 'heatmap_t_25', 'heatmap_t_30', 'heatmap_t_35',
+    ];
+
+    /**
+     * Die Skala als Paare aus Temperatur und Farbe.
+     *
+     * Die Legende zeichnet ihren Verlauf daraus, damit sie das Bild der
+     * tatsaechlich eingestellten Skala ist und nicht eine zweite, die
+     * davon abweichen kann.
+     *
+     * @return array<int,array{0:int,1:string}>
+     */
+    public static function heatmap_scale() {
+        $c   = self::get_all();
+        $out = [];
+        foreach ( self::HEATMAP_STOPS as $i => $deg ) {
+            $out[] = [ $deg, $c[ self::HEATMAP_KEYS[ $i ] ] ];
+        }
+        return $out;
+    }
+
+    /**
+     * Die Farbe einer Kachel zu einer Temperatur in Grad Celsius.
+     *
+     * Zwischen zwei Stuetzpunkten wird linear im RGB-Raum interpoliert,
+     * damit zwoelf und dreizehn Grad sich unterscheiden statt in dieselbe
+     * Stufe zu fallen. Unterhalb des ersten und oberhalb des letzten
+     * Stuetzpunktes wird gekappt.
+     *
+     * @param float|int|string|null $celsius
+     * @return string  #rrggbb
+     */
+    public static function heatmap_color( $celsius ) {
+        $c = self::get_all();
+
+        if ( $celsius === null || $celsius === '' || ! is_numeric( $celsius ) ) {
+            return $c['heatmap_no_data'];
+        }
+
+        $v    = (float) $celsius;
+        $last = count( self::HEATMAP_STOPS ) - 1;
+
+        if ( $v <= self::HEATMAP_STOPS[0] ) {
+            return $c[ self::HEATMAP_KEYS[0] ];
+        }
+        if ( $v >= self::HEATMAP_STOPS[ $last ] ) {
+            return $c[ self::HEATMAP_KEYS[ $last ] ];
+        }
+
+        for ( $i = 0; $i < $last; $i++ ) {
+            if ( $v <= self::HEATMAP_STOPS[ $i + 1 ] ) {
+                $span = self::HEATMAP_STOPS[ $i + 1 ] - self::HEATMAP_STOPS[ $i ];
+                $t    = ( $v - self::HEATMAP_STOPS[ $i ] ) / $span;
+                return self::mix_hex( $c[ self::HEATMAP_KEYS[ $i ] ], $c[ self::HEATMAP_KEYS[ $i + 1 ] ], $t );
+            }
+        }
+
+        return $c[ self::HEATMAP_KEYS[ $last ] ];
+    }
+
+    /** Mischt zwei Hexfarben, $t von 0 (ganz $a) bis 1 (ganz $b). */
+    private static function mix_hex( $a, $b, $t ) {
+        $ca = self::hex_to_rgb( $a );
+        $cb = self::hex_to_rgb( $b );
+        return sprintf(
+            '#%02x%02x%02x',
+            (int) round( $ca[0] + ( $cb[0] - $ca[0] ) * $t ),
+            (int) round( $ca[1] + ( $cb[1] - $ca[1] ) * $t ),
+            (int) round( $ca[2] + ( $cb[2] - $ca[2] ) * $t )
+        );
+    }
+
+    /**
+     * #rgb, #rrggbb und #rrggbbaa zu drei Kanaelen.
+     *
+     * Die achtstellige Form kommt vor — theme_shadow ist eine —, und ein
+     * Alphakanal gehoert nicht in die Mischung. Er faellt hier weg.
+     */
+    private static function hex_to_rgb( $hex ) {
+        $hex = ltrim( (string) $hex, '#' );
+        if ( strlen( $hex ) === 3 || strlen( $hex ) === 4 ) {
+            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+        }
+        if ( strlen( $hex ) < 6 || ! ctype_xdigit( substr( $hex, 0, 6 ) ) ) {
+            return [ 0, 0, 0 ];
+        }
+        return [
+            hexdec( substr( $hex, 0, 2 ) ),
+            hexdec( substr( $hex, 2, 2 ) ),
+            hexdec( substr( $hex, 4, 2 ) ),
+        ];
+    }
+
+    // ================================================================
     // Group definitions for admin UI
     // ================================================================
 
@@ -481,6 +603,10 @@ class NAWS_Colors {
             'history_palette' => [
                 'label' => 'appearance_group_history',
                 'keys'  => array_map( function( $i ) { return "history_year_{$i}"; }, range( 1, 15 ) ),
+            ],
+            'heatmap' => [
+                'label' => 'appearance_group_heatmap',
+                'keys'  => array_merge( self::HEATMAP_KEYS, [ 'heatmap_no_data' ] ),
             ],
         ];
     }

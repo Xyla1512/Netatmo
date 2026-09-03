@@ -1604,3 +1604,186 @@
   display:flex; justify-content:space-between; gap:8px;
 }
 .naws-wgt-foot { padding:clamp(6px, 2.4cqw, 10px) clamp(12px, 4.8cqw, 20px) clamp(8px, 3.2cqw, 13px); font-size:clamp(10px, 4cqw, 12.5px); }
+
+/* ══════════════════════════════════════════════════════════════════
+   [naws_heatmap] — Kalenderraster des Tagesdurchschnitts
+   ══════════════════════════════════════════════════════════════════ */
+
+.naws-hm {
+    position: relative;
+    background: var(--naws-surface, #fff);
+    border: 1px solid var(--naws-border, #e0eeee);
+    border-radius: 12px;
+    padding: 14px;
+    color: var(--naws-text, #427272);
+}
+
+.naws-hm-hdr {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 4px;
+}
+
+.naws-hm-title { font-weight: 600; font-size: 15px; }
+
+.naws-hm-years { display: flex; flex-wrap: wrap; gap: 4px; }
+
+/* Die Jahreswahl benutzt dieselben Pillen wie die Jahres-Umschalter der
+   Charts (.naws-leg-pill, samt .hidden fuer den abgeschalteten Zustand).
+   Hier steht nur, was ein <button> gegenueber dem <span> dort zusaetzlich
+   braucht: die Browser-Vorgaben abraeumen, und die des Themes. Hello
+   Elementor faerbt jeden [type="button"] bei :hover und :focus mit seiner
+   Akzentfarbe (Spezifitaet 0,2,0), und ein angetippter Button behaelt auf
+   dem Handy den Fokus, die Pille bliebe also rot. Deshalb unter .naws-hm
+   und beide Zustaende ausdruecklich. */
+.naws-hm .naws-hm-year,
+.naws-hm .naws-hm-year:hover,
+.naws-hm .naws-hm-year:focus {
+    background: transparent;
+    color: inherit;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+
+/* Waagerecht scrollen statt schrumpfen: eine Kachel bleibt gross genug,
+   um sie mit dem Finger zu treffen. */
+.naws-hm-scroll { overflow-x: auto; overflow-y: hidden; }
+
+.naws-hm-grid {
+    border-collapse: separate;
+    border-spacing: 2px;
+    /* Fuellt die verfuegbare Breite, statt klein in einer breiten Spalte zu
+       sitzen. table-layout: fixed verteilt die 31 Tagesspalten gleichmaessig;
+       min-width schiebt die Karte auf schmalen Bildschirmen ins Scrollen,
+       statt die Kacheln unter die Fingergroesse zu druecken. */
+    table-layout: fixed;
+    width: 100%;
+    min-width: 660px;
+}
+
+/* Themes rahmen Tabellenzellen gern ein und streifen jede zweite Zeile
+   (Hello Elementor: table tbody > tr:nth-child(2n+1) > th, Spezifitaet
+   0,1,4). Auf einer Karte, die ihre Bedeutung aus Flaechen zieht, zerlegt
+   der Rahmen jede Kachel in ein eigenes Kaestchen, und der Streifen macht
+   die klebende Monatsspalte in jeder zweiten Zeile durchscheinend: die
+   Kacheln laufen beim Scrollen durch die Monatsnamen. Deshalb stehen die
+   Zellregeln unter .naws-hm, zwei Klassen schlagen jede Typkette. */
+.naws-hm .naws-hm-grid th,
+.naws-hm .naws-hm-grid td { border: 0; }
+
+.naws-hm .naws-hm-grid th {
+    font-weight: 500;
+    font-size: 11px;
+    color: var(--naws-text-muted, #7aa0a0);
+    padding: 0;
+    background: var(--naws-surface, #fff);
+}
+
+.naws-hm-dh { text-align: center; }
+
+/* Die Monatsspalte bleibt beim Scrollen stehen. */
+.naws-hm-mh,
+.naws-hm-corner {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    text-align: left;
+    padding: 0 12px 0 4px;
+    white-space: nowrap;
+    /* Feste Breite, nicht 1%: mit table-layout: fixed nimmt der Browser das
+       Prozent woertlich und gibt der Spalte rund 13px, worauf die Monatsnamen
+       ueber die erste Kachelspalte laufen. */
+    width: 92px;
+    /* border-spacing laesst rechts neben der Spalte 2px frei, die keiner
+       Zelle gehoeren: beim Scrollen laufen die Kacheln dort als Streifen
+       durch. Der Schatten ist ein deckender 2px-Rand in der Flaechenfarbe;
+       er liegt ueber den Kacheln, weil die Spalte per z-index vor ihnen
+       steht. */
+    box-shadow: 2px 0 0 var(--naws-surface, #fff);
+}
+
+.naws-hm-c,
+.naws-hm-x {
+    height: 22px;
+    padding: 0;
+    border-radius: 3px;
+    /* Eine <td> waechst mit ihrem Inhalt. Die Kacheln tragen nur den
+       absolut positionierten Screenreader-Text, aber ohne diese beiden
+       Zeilen streckt allein die geerbte Zeilenhoehe die Reihe auf das
+       Doppelte. */
+    font-size: 0;
+    line-height: 0;
+}
+
+.naws-hm-c { cursor: pointer; transition: background-color 250ms ease; }
+.naws-hm-c:hover { outline: 2px solid var(--naws-text, #427272); outline-offset: 1px; }
+
+.naws-hm .naws-hm-x { background: none; }
+
+/* The label each cell carries for screen readers. .screen-reader-text is a
+   theme convention, not something WordPress provides, so the plugin ships
+   its own rule rather than assuming the active theme has one — without it
+   every cell would print its full label as visible text. */
+.naws-hm .screen-reader-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Aufbau: eine Welle von links nach rechts. Sie haengt am Setzen von
+   --naws-hm-d durch heatmap-boot.js — ohne JavaScript traegt keine Zelle
+   die Klasse und die Karte steht sofort vollstaendig da. */
+.naws-hm.is-animating .naws-hm-c {
+    animation: naws-hm-in 320ms ease both;
+    animation-delay: var(--naws-hm-d, 0ms);
+}
+
+@keyframes naws-hm-in {
+    from { opacity: 0; transform: scale(0.4); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .naws-hm.is-animating .naws-hm-c { animation: none; }
+    .naws-hm-c { transition: none; }
+}
+
+.naws-hm-tip {
+    position: absolute;
+    z-index: 10;
+    pointer-events: none;
+    background: var(--naws-text-darkest, #1a3535);
+    color: #fff;
+    font-size: 12px;
+    line-height: 1.4;
+    padding: 5px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+    transform: translate(-50%, -100%);
+}
+
+.naws-hm-legend {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 2px;
+    font-size: 11px;
+    color: var(--naws-text-muted, #7aa0a0);
+}
+.naws-hm-legend-bar { flex: 1; height: 8px; border-radius: 4px; }
+
+.naws-hm-empty {
+    padding: 10px 0;
+    font-size: 13px;
+    color: var(--naws-text-muted, #7aa0a0);
+}

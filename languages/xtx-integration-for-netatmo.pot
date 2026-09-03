@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: XTX Integration for Netatmo\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/xtx-integration-for-netatmo\n"
-"POT-Creation-Date: 2026-09-01 14:53+0000\n"
+"POT-Creation-Date: 2026-09-02 19:49+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,7 +19,7 @@ msgstr ""
 msgid "%d modules"
 msgstr ""
 
-#: admin/views/shortcodes.php:287 includes/class-naws-shortcodes.php:452 templates/forecast.php:14 templates/live.php:235
+#: admin/views/shortcodes.php:303 includes/class-naws-shortcodes.php:475 templates/forecast.php:14 templates/live.php:235
 msgid "%d-Day Forecast"
 msgstr ""
 
@@ -27,8 +27,16 @@ msgstr ""
 msgid "%s rows"
 msgstr ""
 
-#: includes/class-naws-labels.php:105 includes/class-naws-shortcodes.php:421
+#: includes/class-naws-helpers.php:688
+msgid "%s · computed from min and max"
+msgstr ""
+
+#: includes/class-naws-labels.php:105 includes/class-naws-shortcodes.php:444
 msgid "(from %1$d of %2$d days)"
+msgstr ""
+
+#: admin/views/appearance.php:49
+msgid "0 °C"
 msgstr ""
 
 #: admin/views/shortcodes.php:71 admin/views/shortcodes.php:157
@@ -39,23 +47,51 @@ msgstr ""
 msgid "1 = yes · 0 = number only"
 msgstr ""
 
-#: admin/views/appearance.php:461
+#: admin/views/appearance.php:51
+msgid "10 °C"
+msgstr ""
+
+#: admin/views/appearance.php:474
 msgid "15 colors for the year lines in the history chart."
 msgstr ""
 
-#: admin/views/appearance.php:68
+#: admin/views/appearance.php:52
+msgid "15 °C"
+msgstr ""
+
+#: admin/views/appearance.php:53
+msgid "20 °C"
+msgstr ""
+
+#: admin/views/appearance.php:80
 msgid "24h Chart Colors"
 msgstr ""
 
-#: admin/views/appearance.php:526 includes/class-naws-labels.php:48
+#: admin/views/appearance.php:54
+msgid "25 °C"
+msgstr ""
+
+#: admin/views/appearance.php:581 includes/class-naws-labels.php:48
 msgid "3 days"
 msgstr ""
 
-#: admin/views/appearance.php:527 includes/class-naws-labels.php:49
+#: admin/views/appearance.php:55
+msgid "30 °C"
+msgstr ""
+
+#: admin/views/appearance.php:56
+msgid "35 °C and above"
+msgstr ""
+
+#: admin/views/appearance.php:582 includes/class-naws-labels.php:49
 msgid "5 days"
 msgstr ""
 
-#: admin/views/shortcodes.php:308
+#: admin/views/appearance.php:50
+msgid "5 °C"
+msgstr ""
+
+#: admin/views/shortcodes.php:324
 msgid "96 px, centred"
 msgstr ""
 
@@ -123,7 +159,7 @@ msgstr ""
 msgid "Activate module"
 msgstr ""
 
-#: admin/views/modules.php:31 admin/views/rest-api-docs.php:75 admin/views/shortcodes.php:380
+#: admin/views/modules.php:31 admin/views/rest-api-docs.php:75 admin/views/shortcodes.php:396
 msgid "Active"
 msgstr ""
 
@@ -139,7 +175,7 @@ msgstr ""
 msgid "Air Pressure"
 msgstr ""
 
-#: admin/views/shortcodes.php:378
+#: admin/views/shortcodes.php:394
 msgid "Alias"
 msgstr ""
 
@@ -155,7 +191,7 @@ msgstr ""
 msgid "All available parameters for [naws_value]"
 msgstr ""
 
-#: admin/views/appearance.php:98
+#: admin/views/appearance.php:111
 msgid "All colors have been reset to defaults."
 msgstr ""
 
@@ -187,7 +223,7 @@ msgstr ""
 msgid "Any text"
 msgstr ""
 
-#: admin/views/appearance.php:90 includes/class-naws-admin.php:55
+#: admin/views/appearance.php:103 includes/class-naws-admin.php:55
 msgid "Appearance"
 msgstr ""
 
@@ -203,7 +239,7 @@ msgstr ""
 msgid "Applies to"
 msgstr ""
 
-#: admin/views/appearance.php:151
+#: admin/views/appearance.php:164
 msgid "Applies to every part of the plugin, charts included. Only fonts your site already serves are offered – the plugin loads no font file of its own."
 msgstr ""
 
@@ -216,8 +252,8 @@ msgid "At or above this rain rate the icon shows heavy rain instead of rain."
 msgstr ""
 
 #: admin/views/shortcodes.php:63 admin/views/shortcodes.php:142 admin/views/shortcodes.php:206 admin/views/shortcodes.php:217
-#: admin/views/shortcodes.php:238 admin/views/shortcodes.php:256 admin/views/shortcodes.php:282 admin/views/shortcodes.php:301
-#: admin/views/shortcodes.php:352
+#: admin/views/shortcodes.php:238 admin/views/shortcodes.php:254 admin/views/shortcodes.php:272 admin/views/shortcodes.php:298
+#: admin/views/shortcodes.php:317 admin/views/shortcodes.php:368
 msgid "Attribute"
 msgstr ""
 
@@ -258,15 +294,15 @@ msgstr ""
 msgid "Base"
 msgstr ""
 
-#: admin/views/appearance.php:66
+#: admin/views/appearance.php:78
 msgid "Base Theme"
 msgstr ""
 
-#: admin/views/appearance.php:127
+#: admin/views/appearance.php:140
 msgid "Base colors for background, surfaces, text and borders. Applied to all shortcodes."
 msgstr ""
 
-#: admin/views/import.php:24 admin/views/live-settings.php:79 includes/class-naws-helpers.php:703
+#: admin/views/import.php:24 admin/views/live-settings.php:79 includes/class-naws-helpers.php:730
 msgid "Base station (Indoor)"
 msgstr ""
 
@@ -274,7 +310,7 @@ msgstr ""
 msgid "Battery"
 msgstr ""
 
-#: admin/views/appearance.php:540 includes/class-naws-labels.php:52
+#: admin/views/appearance.php:595 includes/class-naws-labels.php:52
 msgid "Between 250 and 500 pixels. Icon, figures and spacing grow with it — at 500 pixels the weather icon is 96 pixels instead of 64. Where the column is narrower than the setting, the widget shrinks with it rather than overflowing."
 msgstr ""
 
@@ -286,7 +322,7 @@ msgstr ""
 msgid "Both conditions must hold. The dew-point spread is the difference between air temperature and dew point — the smaller it is, the closer the air is to saturation."
 msgstr ""
 
-#: admin/views/appearance.php:31 admin/views/appearance.php:82
+#: admin/views/appearance.php:31 admin/views/appearance.php:95
 msgid "CO2"
 msgstr ""
 
@@ -298,7 +334,7 @@ msgstr ""
 msgid "CO₂ Base"
 msgstr ""
 
-#: admin/views/live-settings.php:69 includes/class-naws-helpers.php:62 includes/class-naws-helpers.php:683 includes/class-naws-labels.php:59
+#: admin/views/live-settings.php:69 includes/class-naws-helpers.php:62 includes/class-naws-helpers.php:710 includes/class-naws-labels.php:59
 #: includes/class-naws-labels.php:75
 msgid "CO₂ Concentration"
 msgstr ""
@@ -315,11 +351,11 @@ msgstr ""
 msgid "Card Background"
 msgstr ""
 
-#: admin/views/appearance.php:69
+#: admin/views/appearance.php:81
 msgid "Chart Theming"
 msgstr ""
 
-#: includes/class-naws-shortcodes.php:86
+#: includes/class-naws-shortcodes.php:90
 msgid "Chart could not be rendered."
 msgstr ""
 
@@ -327,11 +363,11 @@ msgstr ""
 msgid "Chart height in px"
 msgstr ""
 
-#: admin/views/appearance.php:281
+#: admin/views/appearance.php:294
 msgid "Choose Icon Set"
 msgstr ""
 
-#: admin/views/appearance.php:279
+#: admin/views/appearance.php:292
 msgid "Choose an icon set for the frontend and customize colors per sensor."
 msgstr ""
 
@@ -367,6 +403,10 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
+#: admin/views/appearance.php:512
+msgid "Colour scale for [naws_heatmap]. The stops are degrees Celsius; values in between are interpolated. They stay in Celsius even when the display unit is Fahrenheit, because the colour is taken from the stored value."
+msgstr ""
+
 #: admin/views/shortcodes.php:220
 msgid "Comma-separated fields: temp_min, temp_max, temp_avg, pressure_avg, rain_sum"
 msgstr ""
@@ -375,19 +415,19 @@ msgstr ""
 msgid "Comma-separated list of fields to return"
 msgstr ""
 
-#: admin/views/shortcodes.php:240 admin/views/shortcodes.php:258
+#: admin/views/shortcodes.php:256 admin/views/shortcodes.php:274
 msgid "Comma-separated parameters to filter"
 msgstr ""
 
-#: admin/views/shortcodes.php:272
+#: admin/views/shortcodes.php:288
 msgid "Compact info bar with calculated values (feels like, dew point) and astronomical data (rise/set, moon phase, supermoon, lunar eclipse)."
 msgstr ""
 
-#: admin/views/appearance.php:513 includes/class-naws-labels.php:46
+#: admin/views/appearance.php:568 includes/class-naws-labels.php:46
 msgid "Compact weather widget for narrow columns. Shows the icon and outdoor temperature, rain and wind below that, then the forecast. Placed with the [naws_weather_widget] shortcode."
 msgstr ""
 
-#: admin/views/shortcodes.php:347
+#: admin/views/shortcodes.php:363
 msgid "Compact weather widget for sidebars"
 msgstr ""
 
@@ -427,7 +467,7 @@ msgstr ""
 msgid "Cooling limit (°C)"
 msgstr ""
 
-#: includes/class-naws-shortcodes.php:89
+#: includes/class-naws-shortcodes.php:93
 msgid "Could not load data (HTTP %s)"
 msgstr ""
 
@@ -455,12 +495,16 @@ msgstr ""
 msgid "Current Readings"
 msgstr ""
 
-#: admin/views/shortcodes.php:296
+#: admin/views/shortcodes.php:312
 msgid "Current weather as an animated icon"
 msgstr ""
 
-#: admin/views/shortcodes.php:287
+#: admin/views/shortcodes.php:303
 msgid "Custom title for the forecast header."
+msgstr ""
+
+#: admin/views/shortcodes.php:240 includes/class-naws-shortcodes.php:249
+msgid "Daily Average Temperature"
 msgstr ""
 
 #: admin/views/cron-log.php:49
@@ -519,6 +563,10 @@ msgstr ""
 msgid "Day"
 msgstr ""
 
+#: admin/views/appearance.php:57
+msgid "Day without a reading"
+msgstr ""
+
 #: admin/views/settings.php:285 admin/views/settings.php:369
 msgid "Days"
 msgstr ""
@@ -540,7 +588,8 @@ msgid "Decimal places"
 msgstr ""
 
 #: admin/views/shortcodes.php:66 admin/views/shortcodes.php:206 admin/views/shortcodes.php:217 admin/views/shortcodes.php:238
-#: admin/views/shortcodes.php:256 admin/views/shortcodes.php:284 admin/views/shortcodes.php:303 admin/views/shortcodes.php:354
+#: admin/views/shortcodes.php:254 admin/views/shortcodes.php:272 admin/views/shortcodes.php:300 admin/views/shortcodes.php:319
+#: admin/views/shortcodes.php:370
 msgid "Default"
 msgstr ""
 
@@ -561,8 +610,8 @@ msgid "Depositing rime fog"
 msgstr ""
 
 #: admin/views/shortcodes.php:64 admin/views/shortcodes.php:91 admin/views/shortcodes.php:143 admin/views/shortcodes.php:206
-#: admin/views/shortcodes.php:217 admin/views/shortcodes.php:238 admin/views/shortcodes.php:256 admin/views/shortcodes.php:283
-#: admin/views/shortcodes.php:302 admin/views/shortcodes.php:353
+#: admin/views/shortcodes.php:217 admin/views/shortcodes.php:238 admin/views/shortcodes.php:254 admin/views/shortcodes.php:272
+#: admin/views/shortcodes.php:299 admin/views/shortcodes.php:318 admin/views/shortcodes.php:369
 msgid "Description"
 msgstr ""
 
@@ -598,7 +647,7 @@ msgstr ""
 msgid "Displayed as default title in the live dashboard and shortcodes. Leave empty to use the WordPress site title."
 msgstr ""
 
-#: admin/views/shortcodes.php:278
+#: admin/views/shortcodes.php:294
 msgid "Displays a multi-day weather forecast with temperature, precipitation, wind and weather condition. The number of days and location are configurable in the plugin settings."
 msgstr ""
 
@@ -622,7 +671,7 @@ msgstr ""
 msgid "During night hours every second fetch is skipped, doubling the interval. The window follows the timezone configured in WordPress."
 msgstr ""
 
-#: admin/views/shortcodes.php:305
+#: admin/views/shortcodes.php:321
 msgid "Edge length in pixels. Values below 64 are raised to 64; below that the states are no longer distinguishable."
 msgstr ""
 
@@ -638,7 +687,7 @@ msgstr ""
 msgid "Enable REST API"
 msgstr ""
 
-#: admin/views/shortcodes.php:243
+#: admin/views/shortcodes.php:259
 msgid "Enable animation (true/false)"
 msgstr ""
 
@@ -694,7 +743,7 @@ msgstr ""
 msgid "Example shortcode"
 msgstr ""
 
-#: includes/class-naws-helpers.php:668
+#: includes/class-naws-helpers.php:695
 msgid "Excellent"
 msgstr ""
 
@@ -758,11 +807,11 @@ msgstr ""
 msgid "Fog from humidity"
 msgstr ""
 
-#: admin/views/appearance.php:150
+#: admin/views/appearance.php:163
 msgid "Font"
 msgstr ""
 
-#: admin/views/appearance.php:155
+#: admin/views/appearance.php:168
 msgid "Font Family"
 msgstr ""
 
@@ -770,7 +819,7 @@ msgstr ""
 msgid "Forecast Provider"
 msgstr ""
 
-#: admin/views/shortcodes.php:356
+#: admin/views/shortcodes.php:372
 msgid "Forecast length. Only 3 or 5; other values are pulled to the nearer one."
 msgstr ""
 
@@ -822,7 +871,7 @@ msgstr ""
 msgid "Go to Settings"
 msgstr ""
 
-#: includes/class-naws-helpers.php:669
+#: includes/class-naws-helpers.php:696
 msgid "Good"
 msgstr ""
 
@@ -834,7 +883,7 @@ msgstr ""
 msgid "Grid Lines"
 msgstr ""
 
-#: admin/views/appearance.php:402
+#: admin/views/appearance.php:415
 msgid "Grid, axis and tooltip colors for all charts."
 msgstr ""
 
@@ -842,7 +891,7 @@ msgstr ""
 msgid "Grouping: day, week, month, year"
 msgstr ""
 
-#: admin/views/shortcodes.php:261
+#: admin/views/shortcodes.php:277
 msgid "Grouping: hour, day, week, month, year. Any other value lists single readings."
 msgstr ""
 
@@ -854,11 +903,11 @@ msgstr ""
 msgid "Growing degree days"
 msgstr ""
 
-#: admin/views/live-settings.php:111 includes/class-naws-helpers.php:73 includes/class-naws-helpers.php:696 includes/class-naws-labels.php:70
+#: admin/views/live-settings.php:111 includes/class-naws-helpers.php:73 includes/class-naws-helpers.php:723 includes/class-naws-labels.php:70
 msgid "Gust Direction"
 msgstr ""
 
-#: admin/views/live-settings.php:109 includes/class-naws-helpers.php:72 includes/class-naws-helpers.php:695 includes/class-naws-labels.php:68
+#: admin/views/live-settings.php:109 includes/class-naws-helpers.php:72 includes/class-naws-helpers.php:722 includes/class-naws-labels.php:68
 msgid "Gust Speed"
 msgstr ""
 
@@ -875,7 +924,7 @@ msgstr ""
 msgid "HTTP header"
 msgstr ""
 
-#: admin/views/appearance.php:196
+#: admin/views/appearance.php:209
 msgid "Header Bar"
 msgstr ""
 
@@ -907,6 +956,10 @@ msgstr ""
 msgid "Heating limit (°C)"
 msgstr ""
 
+#: admin/views/appearance.php:83
+msgid "Heatmap Scale"
+msgstr ""
+
 #: includes/class-naws-forecast.php:858
 msgid "Heavy freezing rain"
 msgstr ""
@@ -935,7 +988,7 @@ msgstr ""
 msgid "Heavy thunderstorm"
 msgstr ""
 
-#: admin/views/shortcodes.php:222 includes/class-naws-shortcodes.php:220
+#: admin/views/shortcodes.php:222 includes/class-naws-shortcodes.php:224
 msgid "Historical Weather Data"
 msgstr ""
 
@@ -971,15 +1024,15 @@ msgstr ""
 msgid "Ice days"
 msgstr ""
 
-#: admin/views/appearance.php:302
+#: admin/views/appearance.php:315
 msgid "Icon Colors"
 msgstr ""
 
-#: admin/views/shortcodes.php:348
+#: admin/views/shortcodes.php:364
 msgid "Icon and outdoor temperature, rain and wind below that, then the forecast. Width adjustable between 250 and 500 pixels, with the contents scaling to match. A missing add-on module drops its value entirely. Rendered on page load and does not refresh by itself — the time in the footer shows its age."
 msgstr ""
 
-#: admin/views/appearance.php:67
+#: admin/views/appearance.php:79
 msgid "Icons"
 msgstr ""
 
@@ -1015,7 +1068,7 @@ msgstr ""
 msgid "Inactive"
 msgstr ""
 
-#: admin/views/appearance.php:303
+#: admin/views/appearance.php:316
 msgid "Individual colors for each sensor icon. These colors are also used for the tile accent bar."
 msgstr ""
 
@@ -1023,7 +1076,7 @@ msgstr ""
 msgid "Indoor Temperature"
 msgstr ""
 
-#: admin/views/live-settings.php:63 includes/class-naws-helpers.php:707
+#: admin/views/live-settings.php:63 includes/class-naws-helpers.php:734
 msgid "Indoor module (NAModule4)"
 msgstr ""
 
@@ -1083,7 +1136,7 @@ msgstr ""
 msgid "Latest sensor reading per module/parameter"
 msgstr ""
 
-#: admin/views/shortcodes.php:241
+#: admin/views/shortcodes.php:257
 msgid "Layout: grid or list"
 msgstr ""
 
@@ -1123,7 +1176,7 @@ msgstr ""
 msgid "Limit temperatures"
 msgstr ""
 
-#: admin/views/appearance.php:352
+#: admin/views/appearance.php:365
 msgid "Line color per sensor in the 24-hour charts."
 msgstr ""
 
@@ -1183,7 +1236,7 @@ msgstr ""
 msgid "Max"
 msgstr ""
 
-#: includes/class-naws-database.php:917 includes/class-naws-helpers.php:75 includes/class-naws-helpers.php:77 includes/class-naws-helpers.php:692
+#: includes/class-naws-database.php:917 includes/class-naws-helpers.php:75 includes/class-naws-helpers.php:77 includes/class-naws-helpers.php:719
 #: includes/class-naws-labels.php:65
 msgid "Max Temperature (day)"
 msgstr ""
@@ -1192,7 +1245,7 @@ msgstr ""
 msgid "Max results (1–5000)"
 msgstr ""
 
-#: admin/views/shortcodes.php:260
+#: admin/views/shortcodes.php:276
 msgid "Max. number of records"
 msgstr ""
 
@@ -1220,7 +1273,7 @@ msgstr ""
 msgid "Min"
 msgstr ""
 
-#: includes/class-naws-database.php:916 includes/class-naws-helpers.php:74 includes/class-naws-helpers.php:76 includes/class-naws-helpers.php:691
+#: includes/class-naws-database.php:916 includes/class-naws-helpers.php:74 includes/class-naws-helpers.php:76 includes/class-naws-helpers.php:718
 #: includes/class-naws-labels.php:62
 msgid "Min Temperature (day)"
 msgstr ""
@@ -1241,7 +1294,7 @@ msgstr ""
 msgid "Module ID (MAC)"
 msgstr ""
 
-#: admin/views/shortcodes.php:239 admin/views/shortcodes.php:257
+#: admin/views/shortcodes.php:255 admin/views/shortcodes.php:273
 msgid "Module MAC (empty = all modules)"
 msgstr ""
 
@@ -1257,7 +1310,7 @@ msgstr ""
 msgid "Module4 Temperature"
 msgstr ""
 
-#: admin/views/dashboard.php:79 admin/views/export.php:83 admin/views/modules.php:9 admin/views/shortcodes.php:376
+#: admin/views/dashboard.php:79 admin/views/export.php:83 admin/views/modules.php:9 admin/views/shortcodes.php:392
 #: includes/class-naws-admin.php:52
 msgid "Modules"
 msgstr ""
@@ -1272,6 +1325,10 @@ msgstr ""
 
 #: includes/class-naws-forecast.php:921
 msgid "Monday"
+msgstr ""
+
+#: templates/heatmap.php:77
+msgid "Month"
 msgstr ""
 
 #: templates/infobar.php:111
@@ -1374,7 +1431,7 @@ msgstr ""
 msgid "No data available yet."
 msgstr ""
 
-#: includes/class-naws-shortcodes.php:87
+#: includes/class-naws-shortcodes.php:91 templates/heatmap.php:70
 msgid "No data for this period."
 msgstr ""
 
@@ -1410,7 +1467,11 @@ msgstr ""
 msgid "No modules found."
 msgstr ""
 
-#: admin/views/shortcodes.php:340
+#: includes/class-naws-helpers.php:681
+msgid "No reading"
+msgstr ""
+
+#: admin/views/shortcodes.php:356
 msgid "No state determinable right now — neither station readings nor forecast are available. Nothing would be output."
 msgstr ""
 
@@ -1422,7 +1483,7 @@ msgstr ""
 msgid "Noise Base"
 msgstr ""
 
-#: admin/views/live-settings.php:87 includes/class-naws-helpers.php:64 includes/class-naws-helpers.php:685 includes/class-naws-labels.php:60
+#: admin/views/live-settings.php:87 includes/class-naws-helpers.php:64 includes/class-naws-helpers.php:712 includes/class-naws-labels.php:60
 msgid "Noise Level"
 msgstr ""
 
@@ -1442,7 +1503,7 @@ msgstr ""
 msgid "Notes"
 msgstr ""
 
-#: admin/views/appearance.php:573 includes/class-naws-labels.php:53
+#: admin/views/appearance.php:628 includes/class-naws-labels.php:53
 msgid "Nothing displayable right now — neither station readings nor forecast are available. The widget would output nothing."
 msgstr ""
 
@@ -1454,7 +1515,7 @@ msgstr ""
 msgid "Number of comparison years"
 msgstr ""
 
-#: admin/views/shortcodes.php:286
+#: admin/views/shortcodes.php:302
 msgid "Number of forecast days (1–7). Defaults to value from settings."
 msgstr ""
 
@@ -1470,7 +1531,11 @@ msgstr ""
 msgid "One shortcode for every computed value. The value goes in the <code>value</code> attribute — which of the other attributes apply depends on its kind (instant value, day class, sum or index); see the table below."
 msgstr ""
 
-#: admin/views/appearance.php:182
+#: admin/views/shortcodes.php:235
+msgid "One year of outdoor daily average temperature as a calendar grid: months down, days across, one coloured tile per day."
+msgstr ""
+
+#: admin/views/appearance.php:195
 msgid "Only needed when your font is not listed above. Write it as in CSS, e.g. \"PT Sans\", Arial, sans-serif. Your theme or page builder has to load it, otherwise the fallback applies."
 msgstr ""
 
@@ -1482,11 +1547,11 @@ msgstr ""
 msgid "Operation"
 msgstr ""
 
-#: admin/views/shortcodes.php:262
+#: admin/views/shortcodes.php:278
 msgid "Optional table title"
 msgstr ""
 
-#: admin/views/shortcodes.php:242
+#: admin/views/shortcodes.php:258
 msgid "Optional title"
 msgstr ""
 
@@ -1503,7 +1568,7 @@ msgstr ""
 msgid "Outdoor Humidity (Annual Mean)"
 msgstr ""
 
-#: admin/views/import.php:23 admin/views/live-settings.php:92 includes/class-naws-helpers.php:704
+#: admin/views/import.php:23 admin/views/live-settings.php:92 includes/class-naws-helpers.php:731
 msgid "Outdoor Module"
 msgstr ""
 
@@ -1531,7 +1596,7 @@ msgstr ""
 msgid "Overwrite existing settings (full backup only)"
 msgstr ""
 
-#: admin/views/appearance.php:171 admin/views/appearance.php:176
+#: admin/views/appearance.php:184 admin/views/appearance.php:189
 msgid "Own font family"
 msgstr ""
 
@@ -1555,7 +1620,7 @@ msgstr ""
 msgid "Please click \"Connect to Netatmo\" below and reauthorize the app. This one-time step saves the refresh token permanently."
 msgstr ""
 
-#: includes/class-naws-helpers.php:671
+#: includes/class-naws-helpers.php:698
 msgid "Poor"
 msgstr ""
 
@@ -1576,7 +1641,7 @@ msgstr ""
 msgid "Precipitation probability"
 msgstr ""
 
-#: admin/views/appearance.php:30 admin/views/appearance.php:79 admin/views/settings.php:321 templates/live.php:64
+#: admin/views/appearance.php:30 admin/views/appearance.php:92 admin/views/settings.php:321 templates/live.php:64
 msgid "Pressure"
 msgstr ""
 
@@ -1584,11 +1649,11 @@ msgstr ""
 msgid "Pressure (Annual Mean)"
 msgstr ""
 
-#: includes/class-naws-helpers.php:66 includes/class-naws-helpers.php:687 includes/class-naws-labels.php:58
+#: includes/class-naws-helpers.php:66 includes/class-naws-helpers.php:714 includes/class-naws-labels.php:58
 msgid "Pressure (absolute)"
 msgstr ""
 
-#: admin/views/import.php:24 includes/class-naws-helpers.php:65 includes/class-naws-helpers.php:686 includes/class-naws-labels.php:57
+#: admin/views/import.php:24 includes/class-naws-helpers.php:65 includes/class-naws-helpers.php:713 includes/class-naws-labels.php:57
 msgid "Pressure (relative)"
 msgstr ""
 
@@ -1596,7 +1661,7 @@ msgstr ""
 msgid "Pressure Ø (hPa)"
 msgstr ""
 
-#: admin/views/appearance.php:327
+#: admin/views/appearance.php:340
 msgid "Preview — Icon Colors"
 msgstr ""
 
@@ -1624,7 +1689,7 @@ msgstr ""
 msgid "Rain (hourly)"
 msgstr ""
 
-#: admin/views/import.php:25 includes/class-naws-helpers.php:706
+#: admin/views/import.php:25 includes/class-naws-helpers.php:733
 msgid "Rain Gauge"
 msgstr ""
 
@@ -1676,11 +1741,11 @@ msgstr ""
 msgid "Requests per minute per API key"
 msgstr ""
 
-#: admin/views/appearance.php:106
+#: admin/views/appearance.php:119
 msgid "Reset All"
 msgstr ""
 
-#: admin/views/appearance.php:105
+#: admin/views/appearance.php:118
 msgid "Reset all colors to defaults?"
 msgstr ""
 
@@ -1748,7 +1813,7 @@ msgstr ""
 msgid "Save Credentials"
 msgstr ""
 
-#: admin/views/appearance.php:496 admin/views/appearance.php:585 admin/views/rest-api-docs.php:88 admin/views/settings.php:501
+#: admin/views/appearance.php:551 admin/views/appearance.php:640 admin/views/rest-api-docs.php:88 admin/views/settings.php:501
 msgid "Save Settings"
 msgstr ""
 
@@ -1788,7 +1853,7 @@ msgstr ""
 msgid "Settings & OAuth"
 msgstr ""
 
-#: admin/views/appearance.php:94 admin/views/rest-api-docs.php:18 admin/views/settings.php:39
+#: admin/views/appearance.php:107 admin/views/rest-api-docs.php:18 admin/views/settings.php:39
 msgid "Settings saved."
 msgstr ""
 
@@ -1808,23 +1873,27 @@ msgstr ""
 msgid "Show range picker (true/false)"
 msgstr ""
 
+#: admin/views/shortcodes.php:241
+msgid "Show the colour scale below the grid (yes/no)"
+msgstr ""
+
 #: admin/views/settings.php:450
 msgid "Show the icon above the live dashboard. The [naws_weather_icon] shortcode is unaffected by this."
 msgstr ""
 
-#: admin/views/shortcodes.php:277
+#: admin/views/shortcodes.php:293
 msgid "Shows a weather forecast based on station location."
 msgstr ""
 
-#: admin/views/shortcodes.php:235
+#: admin/views/shortcodes.php:251
 msgid "Shows animated metric cards with the latest sensor values from all or specific modules."
 msgstr ""
 
-#: admin/views/shortcodes.php:297
+#: admin/views/shortcodes.php:313
 msgid "Shows the current weather state as an animated icon. Deliberately without a visible caption — the state is carried by the aria-label for screen readers. If the icon sits on the same page as the live dashboard it refreshes along with that page's polling cycle. When no state can be determined, nothing is output."
 msgstr ""
 
-#: admin/views/appearance.php:512 includes/class-naws-labels.php:45
+#: admin/views/appearance.php:567 includes/class-naws-labels.php:45
 msgid "Sidebar widget"
 msgstr ""
 
@@ -1852,7 +1921,7 @@ msgstr ""
 msgid "Solid filled icons for a bolder, modern look."
 msgstr ""
 
-#: admin/views/shortcodes.php:329 templates/forecast.php:118 templates/live.php:304
+#: admin/views/shortcodes.php:345 templates/forecast.php:118 templates/live.php:304
 msgid "Source"
 msgstr ""
 
@@ -1956,7 +2025,7 @@ msgstr ""
 msgid "Syncing…"
 msgstr ""
 
-#: admin/views/shortcodes.php:253
+#: admin/views/shortcodes.php:269
 msgid "Tabular view of historical readings with configurable time period and grouping."
 msgstr ""
 
@@ -1984,8 +2053,8 @@ msgstr ""
 msgid "Temp. Outdoor"
 msgstr ""
 
-#: admin/views/appearance.php:77 admin/views/live-settings.php:67 admin/views/settings.php:301 includes/class-naws-helpers.php:61
-#: includes/class-naws-helpers.php:306 includes/class-naws-helpers.php:313 includes/class-naws-helpers.php:682 includes/class-naws-labels.php:74
+#: admin/views/appearance.php:90 admin/views/live-settings.php:67 admin/views/settings.php:301 includes/class-naws-helpers.php:61
+#: includes/class-naws-helpers.php:306 includes/class-naws-helpers.php:313 includes/class-naws-helpers.php:709 includes/class-naws-labels.php:74
 #: includes/class-naws-labels.php:133 templates/live.php:345
 msgid "Temperature"
 msgstr ""
@@ -2083,7 +2152,7 @@ msgstr ""
 msgid "Thermal sensation"
 msgstr ""
 
-#: admin/views/shortcodes.php:372
+#: admin/views/shortcodes.php:388
 msgid "These module IDs can be used directly in shortcodes as module_id= or module=\"MAC-address\"."
 msgstr ""
 
@@ -2091,7 +2160,7 @@ msgstr ""
 msgid "This server does not know the aes-256-gcm cipher. Credentials cannot be stored encrypted, so they are not stored at all."
 msgstr ""
 
-#: admin/views/appearance.php:529 includes/class-naws-labels.php:50
+#: admin/views/appearance.php:584 includes/class-naws-labels.php:50
 msgid "Three days gives each column 77 pixels, five gives only 46. On narrow sidebars three reads considerably better."
 msgstr ""
 
@@ -2111,12 +2180,16 @@ msgstr ""
 msgid "Thursday"
 msgstr ""
 
-#: admin/views/shortcodes.php:259
+#: admin/views/shortcodes.php:275
 msgid "Time period, e.g. 24h, 7d, 30d"
 msgstr ""
 
 #: admin/views/shortcodes.php:222
 msgid "Title above the chart"
+msgstr ""
+
+#: admin/views/shortcodes.php:240
+msgid "Title above the grid"
 msgstr ""
 
 #: admin/views/import.php:68
@@ -2147,13 +2220,13 @@ msgstr ""
 msgid "Total"
 msgstr ""
 
-#: admin/views/import.php:25 includes/class-naws-database.php:920 includes/class-naws-helpers.php:69 includes/class-naws-helpers.php:690
+#: admin/views/import.php:25 includes/class-naws-database.php:920 includes/class-naws-helpers.php:69 includes/class-naws-helpers.php:717
 #: includes/class-naws-labels.php:73
 msgid "Total last 24h"
 msgstr ""
 
-#: admin/views/live-settings.php:121 includes/class-naws-helpers.php:67 includes/class-naws-helpers.php:68 includes/class-naws-helpers.php:688
-#: includes/class-naws-helpers.php:689 includes/class-naws-labels.php:72
+#: admin/views/live-settings.php:121 includes/class-naws-helpers.php:67 includes/class-naws-helpers.php:68 includes/class-naws-helpers.php:715
+#: includes/class-naws-helpers.php:716 includes/class-naws-labels.php:72
 msgid "Total last hour"
 msgstr ""
 
@@ -2169,7 +2242,7 @@ msgstr ""
 msgid "Tuesday"
 msgstr ""
 
-#: admin/views/modules.php:33 admin/views/shortcodes.php:377
+#: admin/views/modules.php:33 admin/views/shortcodes.php:393
 msgid "Type"
 msgstr ""
 
@@ -2177,7 +2250,7 @@ msgstr ""
 msgid "Ultra-thin, geometric icons for a reduced style."
 msgstr ""
 
-#: includes/class-naws-helpers.php:672
+#: includes/class-naws-helpers.php:699
 msgid "Unhealthy"
 msgstr ""
 
@@ -2281,15 +2354,15 @@ msgstr ""
 msgid "Which station to read, by module or station ID."
 msgstr ""
 
-#: admin/views/appearance.php:533 includes/class-naws-labels.php:51
+#: admin/views/appearance.php:588 includes/class-naws-labels.php:51
 msgid "Width"
 msgstr ""
 
-#: admin/views/shortcodes.php:357
+#: admin/views/shortcodes.php:373
 msgid "Width in pixels, 250 to 500. Values outside that range are pulled to the nearer bound."
 msgstr ""
 
-#: admin/views/appearance.php:33 admin/views/appearance.php:80 includes/class-naws-labels.php:44 includes/class-naws-labels.php:140
+#: admin/views/appearance.php:33 admin/views/appearance.php:93 includes/class-naws-labels.php:44 includes/class-naws-labels.php:140
 #: templates/live.php:70 templates/live.php:352
 msgid "Wind"
 msgstr ""
@@ -2302,15 +2375,15 @@ msgstr ""
 msgid "Wind Direction"
 msgstr ""
 
-#: admin/views/live-settings.php:110 includes/class-naws-helpers.php:71 includes/class-naws-helpers.php:694 includes/class-naws-labels.php:69
+#: admin/views/live-settings.php:110 includes/class-naws-helpers.php:71 includes/class-naws-helpers.php:721 includes/class-naws-labels.php:69
 msgid "Wind Direction (compass)"
 msgstr ""
 
-#: admin/views/import.php:26 admin/views/live-settings.php:104 includes/class-naws-helpers.php:705
+#: admin/views/import.php:26 admin/views/live-settings.php:104 includes/class-naws-helpers.php:732
 msgid "Wind Gauge"
 msgstr ""
 
-#: admin/views/import.php:26 admin/views/settings.php:310 includes/class-naws-helpers.php:70 includes/class-naws-helpers.php:693
+#: admin/views/import.php:26 admin/views/settings.php:310 includes/class-naws-helpers.php:70 includes/class-naws-helpers.php:720
 #: includes/class-naws-labels.php:67
 msgid "Wind Speed"
 msgstr ""
@@ -2327,16 +2400,20 @@ msgstr ""
 msgid "XTX Netatmo — Settings"
 msgstr ""
 
-#: admin/views/appearance.php:481
+#: admin/views/appearance.php:494
 msgid "Year %d"
 msgstr ""
 
-#: admin/views/appearance.php:70
+#: admin/views/appearance.php:82
 msgid "Year Comparison Palette"
 msgstr ""
 
 #: admin/views/live-settings.php:262
 msgid "Year Comparison — Charts"
+msgstr ""
+
+#: admin/views/shortcodes.php:239
+msgid "Year to open with. A year with no readings falls back to the current one."
 msgstr ""
 
 #: admin/views/settings.php:143
@@ -2371,6 +2448,10 @@ msgstr ""
 msgid "cool"
 msgstr ""
 
+#: admin/views/shortcodes.php:239
+msgid "current year"
+msgstr ""
+
 #: admin/views/shortcodes.php:152
 msgid "day classes only"
 msgstr ""
@@ -2400,7 +2481,7 @@ msgstr ""
 msgid "falling"
 msgstr ""
 
-#: admin/views/shortcodes.php:335
+#: admin/views/shortcodes.php:351
 msgid "forecast stale, last known value"
 msgstr ""
 
@@ -2416,7 +2497,7 @@ msgstr ""
 msgid "instant values"
 msgstr ""
 
-#: admin/views/shortcodes.php:309
+#: admin/views/shortcodes.php:325
 msgid "larger, e.g. as a header graphic"
 msgstr ""
 
@@ -2440,7 +2521,7 @@ msgstr ""
 msgid "rows"
 msgstr ""
 
-#: admin/views/shortcodes.php:361
+#: admin/views/shortcodes.php:377
 msgid "shorter, for very narrow columns"
 msgstr ""
 
@@ -2460,7 +2541,7 @@ msgstr ""
 msgid "true = convert to user units (°F, inHg etc.), false = raw metric values"
 msgstr ""
 
-#: admin/views/shortcodes.php:360
+#: admin/views/shortcodes.php:376
 msgid "uses the backend setting"
 msgstr ""
 
@@ -2472,15 +2553,15 @@ msgstr ""
 msgid "warm"
 msgstr ""
 
-#: admin/views/shortcodes.php:362
+#: admin/views/shortcodes.php:378
 msgid "wider, with a larger icon and larger figures"
 msgstr ""
 
-#: admin/views/shortcodes.php:291
+#: admin/views/shortcodes.php:307
 msgid "→ 3 days with custom title"
 msgstr ""
 
-#: admin/views/shortcodes.php:290
+#: admin/views/shortcodes.php:306
 msgid "→ Uses days and location from settings"
 msgstr ""
 
@@ -2498,6 +2579,14 @@ msgstr ""
 
 #: admin/views/shortcodes.php:80
 msgid "→ with HTML wrapper"
+msgstr ""
+
+#: admin/views/appearance.php:47
+msgid "−10 °C and below"
+msgstr ""
+
+#: admin/views/appearance.php:48
+msgid "−5 °C"
 msgstr ""
 
 #: admin/views/settings.php:282
@@ -2524,7 +2613,7 @@ msgstr ""
 msgid "❌ Error."
 msgstr ""
 
-#: admin/views/shortcodes.php:370
+#: admin/views/shortcodes.php:386
 msgid "📡 Available Modules (current installation)"
 msgstr ""
 
@@ -2546,17 +2635,17 @@ msgctxt "appearance_chart_rain"
 msgid "Rain"
 msgstr ""
 
-#: admin/views/appearance.php:78
+#: admin/views/appearance.php:91
 msgctxt "appearance_sensor_humidity"
 msgid "Humidity"
 msgstr ""
 
-#: admin/views/appearance.php:83
+#: admin/views/appearance.php:96
 msgctxt "appearance_sensor_noise"
 msgid "Noise"
 msgstr ""
 
-#: admin/views/appearance.php:81
+#: admin/views/appearance.php:94
 msgctxt "appearance_sensor_rain"
 msgid "Rain"
 msgstr ""
@@ -2581,12 +2670,12 @@ msgctxt "chart_humid_prefix"
 msgid "Humidity"
 msgstr ""
 
-#: includes/class-naws-helpers.php:763
+#: includes/class-naws-helpers.php:790
 msgctxt "clock time"
 msgid "%s"
 msgstr ""
 
-#: includes/class-naws-helpers.php:670
+#: includes/class-naws-helpers.php:697
 msgctxt "co2_fair"
 msgid "Fair"
 msgstr ""
@@ -2607,7 +2696,7 @@ msgid "Shortcode"
 msgstr ""
 
 #: admin/views/live-settings.php:68 admin/views/live-settings.php:83 admin/views/live-settings.php:99 includes/class-naws-helpers.php:63
-#: includes/class-naws-helpers.php:684 includes/class-naws-labels.php:66
+#: includes/class-naws-helpers.php:711 includes/class-naws-labels.php:66
 msgctxt "param_humidity"
 msgid "Humidity"
 msgstr ""
@@ -2623,8 +2712,8 @@ msgid "Shortcode"
 msgstr ""
 
 #: admin/views/shortcodes.php:123 admin/views/shortcodes.php:204 admin/views/shortcodes.php:215 admin/views/shortcodes.php:236
-#: admin/views/shortcodes.php:254 admin/views/shortcodes.php:273 admin/views/shortcodes.php:279 admin/views/shortcodes.php:298
-#: admin/views/shortcodes.php:349 admin/views/shortcodes.php:397 includes/class-naws-admin.php:265
+#: admin/views/shortcodes.php:252 admin/views/shortcodes.php:270 admin/views/shortcodes.php:289 admin/views/shortcodes.php:295
+#: admin/views/shortcodes.php:314 admin/views/shortcodes.php:365 admin/views/shortcodes.php:413 includes/class-naws-admin.php:265
 msgctxt "sc_copy"
 msgid "Copy"
 msgstr ""
@@ -2649,7 +2738,7 @@ msgctxt "unit_rain"
 msgid "Rain"
 msgstr ""
 
-#: admin/views/appearance.php:523 includes/class-naws-labels.php:47
+#: admin/views/appearance.php:578 includes/class-naws-labels.php:47
 msgctxt "wgt_days_label"
 msgid "Forecast days"
 msgstr ""

@@ -42,6 +42,9 @@ class NAWS_Ajax {
         add_action( 'wp_ajax_naws_get_history_data',        [ $this, 'get_history_data' ] );
         add_action( 'wp_ajax_nopriv_naws_get_history_data', [ $this, 'get_history_data' ] );
 
+        add_action( 'wp_ajax_naws_get_heatmap_data',        [ $this, 'get_heatmap_data' ] );
+        add_action( 'wp_ajax_nopriv_naws_get_heatmap_data', [ $this, 'get_heatmap_data' ] );
+
         // Admin: trigger daily summary manually
         add_action( 'wp_ajax_naws_run_daily_summary',      [ $this, 'run_daily_summary' ] );
     }
@@ -634,6 +637,58 @@ class NAWS_Ajax {
         }
 
         wp_send_json_success( [ 'series' => $result ] );
+    }
+
+    /**
+     * Ein Jahr fuer die Heatmap.
+     *
+     * Farben und Beschriftungen werden hier gerechnet und nicht im
+     * Browser: dieselbe Rechnung wie im Template, also sieht ein
+     * nachgeladenes Jahr aus wie ein gerendertes. Die Beschriftung haengt
+     * ausserdem an der Einheiteneinstellung, und die im JavaScript
+     * nachzubauen hiesse, format_value() ein zweites Mal zu schreiben.
+     */
+    public function get_heatmap_data() {
+        check_ajax_referer( 'naws_public_nonce', 'nonce' );
+        nocache_headers();
+
+        $year = isset( $_POST['year'] ) ? (int) $_POST['year'] : 0; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- cast to int
+
+        $range   = NAWS_Database::get_daily_data_range();
+        $y_first = ! empty( $range['date_begin'] ) ? (int) substr( $range['date_begin'], 0, 4 ) : (int) gmdate( 'Y' );
+        $y_last  = ! empty( $range['date_end'] )   ? (int) substr( $range['date_end'],   0, 4 ) : (int) gmdate( 'Y' );
+        if ( $y_first < 2000 || $y_first > $y_last ) {
+            $y_first = $y_last;
+        }
+
+        // Ein Jahr ausserhalb des Bereichs bekommt einen Fehler und keine
+        // Antwort, die wie ein leeres Jahr aussieht — dieselbe Haltung wie
+        // bei der unbekannten Modulreferenz in requested_module_id().
+        if ( $year < $y_first || $year > $y_last ) {
+            wp_send_json_error( [ 'message' => 'Year out of range.' ], 400 );
+            return;
+        }
+
+        $data   = NAWS_Database::get_heatmap_year( $year );
+        $colors = [];
+        $labels = [];
+
+        foreach ( $data['values'] as $mi => $days ) {
+            $colors[ $mi ] = [];
+            $labels[ $mi ] = [];
+            foreach ( $days as $di => $v ) {
+                $colors[ $mi ][ $di ] = NAWS_Colors::heatmap_color( $v );
+                $labels[ $mi ][ $di ] = NAWS_Helpers::heatmap_label( $v, $data['sources'][ $mi ][ $di ] ?? null );
+            }
+        }
+
+        wp_send_json_success( [
+            'year'    => $year,
+            'months'  => $data['values'],
+            'sources' => $data['sources'],
+            'colors'  => $colors,
+            'labels'  => $labels,
+        ] );
     }
 
     public function run_daily_summary() {

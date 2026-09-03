@@ -1,6 +1,13 @@
 {
-    "aktualisiert": "2026-09-01",
+    "aktualisiert": "2026-09-03",
     "vorhaben": [
+        {
+            "id": "naws-heatmap",
+            "titel": "Ein Jahr Tagesmittel als Kalender",
+            "satz": "[naws_heatmap] zeigt die Tagesdurchschnittstemperatur eines Jahres als Raster: Monate untereinander, Tage nebeneinander, eine farbige Kachel pro Tag, dazu Knöpfe für die Jahre. Was eine Kurve zum Ablesen zwingt, lässt das Raster sehen — die kalten zwei Wochen im Februar, die heiße Woche im Juli. Die Farbskala ist eine Einstellung, und auf dem Handy bleibt die Monatsspalte stehen, während die Tage darunter durchlaufen.",
+            "ab": "1.9.10",
+            "bild": null
+        },
         {
             "id": "uebersetzung-wordpress",
             "titel": "Übersetzt wird jetzt über WordPress",
@@ -32,8 +39,15 @@
         {
             "id": "modul-referenzen",
             "titel": "Die Kennungen der Module bleiben auf dem Server",
-            "satz": "Ein Modul wird bei Netatmo über seine MAC-Adresse angesprochen, und die stand bisher in jeder Seite mit Live-Dashboard oder Verlauf. Künftig reist eine öffentliche Bezeichnung wie außen oder innen, die der Server wieder auflöst. Für Seiten, die vorher zwischengespeichert wurden, ändert sich nichts.",
-            "ab": null,
+            "satz": "Ein Modul wird bei Netatmo über seine MAC-Adresse angesprochen, und die stand bisher in jeder Seite mit Live-Dashboard oder Verlauf. Jetzt reist eine öffentliche Bezeichnung wie außen oder innen, die der Server wieder auflöst. Für Seiten, die vorher zwischengespeichert wurden, ändert sich nichts.",
+            "ab": "1.9.10",
+            "bild": null
+        },
+        {
+            "id": "sprachdateien-gelesen",
+            "titel": "Die mitgelieferten Sprachdateien werden gelesen",
+            "satz": "Deutsch und Norwegisch reisen als Dateien mit dem Plugin, damit eine Installation nicht auf das Sprachpaket warten muss. In 1.9.9 hat WordPress beide stillschweigend abgelehnt — ein Fehler im Dateikopf, ohne Warnung, nur mit englischem Text. Jetzt werden sie gelesen, und die Übersetzungen, die beim Umzug verloren gegangen waren, sind wieder da.",
+            "ab": "1.9.10",
             "bild": null
         },
         {

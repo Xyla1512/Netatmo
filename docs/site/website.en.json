@@ -1,6 +1,13 @@
 {
-    "aktualisiert": "2026-09-01",
+    "aktualisiert": "2026-09-03",
     "vorhaben": [
+        {
+            "id": "naws-heatmap",
+            "titel": "A year of daily means as a calendar",
+            "satz": "[naws_heatmap] shows a year of daily mean temperatures as a grid: months down, days across, one coloured tile per day, and buttons for the years. What a curve makes you read, the grid lets you see — the cold fortnight in February, the hot week in July. The colour scale is a setting, and on a phone the month column stays put while the days scroll beneath it.",
+            "ab": "1.9.10",
+            "bild": null
+        },
         {
             "id": "uebersetzung-wordpress",
             "titel": "Translation goes through WordPress now",
@@ -33,7 +40,14 @@
             "id": "modul-referenzen",
             "titel": "The modules' identifiers stay on the server",
             "satz": "Netatmo addresses a module by its MAC address, and that address used to be written into every page carrying a live dashboard or a history chart. What travels now is a public name such as outdoor or indoor, which the server resolves back. Pages cached before the change keep working unchanged.",
-            "ab": null,
+            "ab": "1.9.10",
+            "bild": null
+        },
+        {
+            "id": "sprachdateien-gelesen",
+            "titel": "The bundled language files are read",
+            "satz": "German and Norwegian travel with the plugin as files, so an installation does not have to wait for its language pack. In 1.9.9 WordPress silently refused both — a mistake in the file header, with no warning, just English text. They are read now, and the translations that had gone missing in the move are back.",
+            "ab": "1.9.10",
             "bild": null
         },
         {

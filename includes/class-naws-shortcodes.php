@@ -19,6 +19,7 @@ class NAWS_Shortcodes {
         add_shortcode( 'naws_current',   [ $this, 'sc_current' ] );
         add_shortcode( 'naws_table',     [ $this, 'sc_table' ] );
         add_shortcode( 'naws_history',   [ $this, 'sc_history' ] );
+        add_shortcode( 'naws_heatmap',   [ $this, 'sc_heatmap' ] );
         add_shortcode( 'naws_live',      [ $this, 'sc_live' ] );
         add_shortcode( 'naws_infobar',   [ $this, 'sc_infobar' ] );
         add_shortcode( 'naws_value',     [ $this, 'sc_value' ] );
@@ -57,6 +58,9 @@ class NAWS_Shortcodes {
         wp_register_script( 'naws-history-boot',
             NAWS_PLUGIN_URL . 'assets/js/history-boot.js',
             [ 'naws-frontend', 'naws-chartjs-adapter' ], NAWS_VERSION, true );
+        wp_register_script( 'naws-heatmap-boot',
+            NAWS_PLUGIN_URL . 'assets/js/heatmap-boot.js',
+            [ 'naws-frontend' ], NAWS_VERSION, true );
     }
 
     private function enqueue_frontend() {
@@ -229,6 +233,25 @@ class NAWS_Shortcodes {
 
         ob_start();
         include NAWS_PLUGIN_DIR . 'templates/history.php';
+        return ob_get_clean();
+    }
+
+    // ----------------------------------------------------------------
+    // [naws_heatmap year="" title="" legend="yes"]
+    // ----------------------------------------------------------------
+
+    public function sc_heatmap( $atts ) {
+        $this->enqueue_frontend();
+        wp_enqueue_script( 'naws-heatmap-boot' );
+
+        $atts = shortcode_atts( [
+            'year'   => '',
+            'title'  => __( 'Daily Average Temperature', 'xtx-integration-for-netatmo' ),
+            'legend' => 'yes',
+        ], $atts, 'naws_heatmap' );
+
+        ob_start();
+        include NAWS_PLUGIN_DIR . 'templates/heatmap.php';
         return ob_get_clean();
     }
 

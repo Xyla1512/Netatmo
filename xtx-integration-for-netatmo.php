@@ -112,22 +112,36 @@ final class NAWS_Plugin {
      * strings are new and nobody has translated them yet. A German site would
      * find an English interface where it had a German one yesterday.
      *
-     * load_plugin_textdomain() stops as soon as it finds a pack and never
-     * looks at the plugin's own directory, so it cannot bridge that on its
-     * own. Loading the shipped copy afterwards does: load_textdomain() keeps
+     * Loading only one of them cannot bridge that. WordPress' just-in-time
+     * loader opens a single file per text domain, the pack if there is one,
+     * and once any file is in memory it never looks again; load the shipped
+     * copy on its own and the pack is never opened at all. Loading the pack
+     * first and the shipped copy afterwards does: load_textdomain() keeps
      * the entries already in memory, so every string the pack carries stays
      * exactly as the pack has it, and the bundled file answers only where the
      * pack is silent. As the packs fill up, these files stop being consulted
      * and can eventually go.
+     *
+     * The calls below are what load_plugin_textdomain() does inside, minus
+     * its early return after the pack. That function is the one Plugin Check
+     * flags as redundant since 4.6, and for the pack alone it would be.
      */
     public function load_textdomain() {
+        global $wp_textdomain_registry;
+
         $domain = 'xtx-integration-for-netatmo';
+        $locale = determine_locale();
+        $mofile = $domain . '-' . $locale . '.mo';
 
-        load_plugin_textdomain( $domain, false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+        // Where the shipped copies live, for the just-in-time loader that
+        // takes over after switch_to_locale() or unload_textdomain().
+        $wp_textdomain_registry->set_custom_path( $domain, NAWS_PLUGIN_DIR . 'languages' );
 
-        $mofile = NAWS_PLUGIN_DIR . 'languages/' . $domain . '-' . determine_locale() . '.mo';
-        if ( is_readable( $mofile ) ) {
-            load_textdomain( $domain, $mofile );
+        load_textdomain( $domain, WP_LANG_DIR . '/plugins/' . $mofile, $locale );
+
+        $shipped = NAWS_PLUGIN_DIR . 'languages/' . $mofile;
+        if ( is_readable( $shipped ) ) {
+            load_textdomain( $domain, $shipped, $locale );
         }
     }
 

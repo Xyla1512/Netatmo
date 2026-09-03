@@ -41,6 +41,7 @@ Data then syncs on its own. Drop a shortcode on any page to display it.
 | `[naws_history]` | Year-over-year comparison charts |
 | `[naws_current]` | Current readings |
 | `[naws_table]` | Readings as a table |
+| `[naws_heatmap]` | A year of daily mean temperatures as a calendar grid, with a year selector |
 | `[naws_infobar]` | Astronomy bar: sunrise, moon phase, felt temperature |
 | `[naws_value]` | A single sensor value, inline |
 | `[naws_calc]` | A single computed value (dew point, felt temperature, sunrise, moon phase, …), for running text or a table; full list on the Shortcodes page in the backend |
