@@ -94,7 +94,7 @@ Wenn einer der vier Punkte nicht zu erfüllen ist, wird das gemeldet und **nicht
   - Elf neue Schlüssel in `DEFAULTS`: `heatmap_t_m10`, `heatmap_t_m5`, `heatmap_t_0`, `heatmap_t_5`, `heatmap_t_10`, `heatmap_t_15`, `heatmap_t_20`, `heatmap_t_25`, `heatmap_t_30`, `heatmap_t_35`, `heatmap_no_data`
   - Gruppe `heatmap` in `get_groups()` mit Label `appearance_group_heatmap`
 
-- [ ] **Step 1: Den fehlschlagenden Test schreiben**
+- [x] **Step 1: Den fehlschlagenden Test schreiben**
 
 Neue Datei `tests/test-heatmap-colors.php`:
 
@@ -211,12 +211,12 @@ printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );
 ```
 
-- [ ] **Step 2: Test laufen lassen und den Fehlschlag sehen**
+- [x] **Step 2: Test laufen lassen und den Fehlschlag sehen**
 
 Run: `php tests/test-heatmap-colors.php`
 Expected: FAIL — `Call to undefined method NAWS_Colors::heatmap_color()`
 
-- [ ] **Step 3: Die elf Defaults eintragen**
+- [x] **Step 3: Die elf Defaults eintragen**
 
 In `includes/class-naws-colors.php`, ans Ende der Konstante `DEFAULTS` (vor der schließenden `];`):
 
@@ -241,7 +241,7 @@ In `includes/class-naws-colors.php`, ans Ende der Konstante `DEFAULTS` (vor der 
         'heatmap_no_data' => '#eef2f2',
 ```
 
-- [ ] **Step 4: Die Rechnung schreiben**
+- [x] **Step 4: Die Rechnung schreiben**
 
 In `includes/class-naws-colors.php`, vor `get_groups()`:
 
@@ -346,7 +346,7 @@ In `includes/class-naws-colors.php`, vor `get_groups()`:
     }
 ```
 
-- [ ] **Step 5: Die Gruppe eintragen**
+- [x] **Step 5: Die Gruppe eintragen**
 
 In `get_groups()`, nach dem Eintrag `history_palette`:
 
@@ -357,17 +357,17 @@ In `get_groups()`, nach dem Eintrag `history_palette`:
             ],
 ```
 
-- [ ] **Step 6: Test laufen lassen**
+- [x] **Step 6: Test laufen lassen**
 
 Run: `php tests/test-heatmap-colors.php`
 Expected: PASS — die Schlusszeile endet auf „0 fehlgeschlagen". Die Zahl der bestandenen Pruefungen ist die, die herauskommt; sie ist kein Sollwert.
 
-- [ ] **Step 7: Die ganze Suite laufen lassen**
+- [x] **Step 7: Die ganze Suite laufen lassen**
 
 Run: `for t in tests/test-*.php; do php "$t" >/dev/null 2>&1 || echo "FAIL $t"; done`
 Expected: keine Ausgabe. Die elf neuen Schlüssel dürfen keinen bestehenden Test brechen — `sanitize()` läuft über `DEFAULTS` und nimmt sie automatisch mit.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add includes/class-naws-colors.php tests/test-heatmap-colors.php
@@ -389,7 +389,7 @@ git commit -m "Give the heatmap a colour scale that can be set"
   - `NAWS_Database::get_heatmap_year( $year ): array` — dasselbe, mit der Abfrage davor
   - `$rows` sind Zeilen mit den Schlüsseln `day_date` (`Y-m-d`), `temp_avg`, `temp_min`, `temp_max`
 
-- [ ] **Step 1: Den fehlschlagenden Test schreiben**
+- [x] **Step 1: Den fehlschlagenden Test schreiben**
 
 Neue Datei `tests/test-heatmap-year.php`:
 
@@ -505,12 +505,12 @@ printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );
 ```
 
-- [ ] **Step 2: Test laufen lassen und den Fehlschlag sehen**
+- [x] **Step 2: Test laufen lassen und den Fehlschlag sehen**
 
 Run: `php tests/test-heatmap-year.php`
 Expected: FAIL — `Call to undefined method NAWS_Database::shape_heatmap_year()`
 
-- [ ] **Step 3: Die Formung schreiben**
+- [x] **Step 3: Die Formung schreiben**
 
 In `includes/class-naws-database.php`, direkt nach `get_daily_data_range()`:
 
@@ -605,14 +605,14 @@ In `includes/class-naws-database.php`, direkt nach `get_daily_data_range()`:
     }
 ```
 
-- [ ] **Step 4: Test laufen lassen**
+- [x] **Step 4: Test laufen lassen**
 
 Run: `php tests/test-heatmap-year.php`
 Expected: PASS — die Schlusszeile endet auf „0 fehlgeschlagen". Die Zahl der bestandenen Pruefungen ist die, die herauskommt; sie ist kein Sollwert.
 
 Schlägt der Test mit `Class "NAWS_Database" not found` fehl, prüfen, ob `class-naws-database.php` beim Laden ohne WordPress etwas erwartet — dann im Test die fehlende Konstante oder Funktion stubben, so wie `test-table-render.php` es mit `get_option()` tut.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add includes/class-naws-database.php tests/test-heatmap-year.php
@@ -633,7 +633,7 @@ git commit -m "Turn a year of daily rows into a calendar grid"
 
 **Warum eine eigene Funktion:** dieselbe Zeichenkette wird an drei Stellen gebraucht — im `data-l`-Attribut, im Screenreader-Text und in der AJAX-Antwort. Dreimal zusammengebaut wäre sie dreimal anders.
 
-- [ ] **Step 1: Den fehlschlagenden Test schreiben**
+- [x] **Step 1: Den fehlschlagenden Test schreiben**
 
 Neue Datei `tests/test-heatmap-render.php`:
 
@@ -690,12 +690,12 @@ printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );
 ```
 
-- [ ] **Step 2: Test laufen lassen und den Fehlschlag sehen**
+- [x] **Step 2: Test laufen lassen und den Fehlschlag sehen**
 
 Run: `php tests/test-heatmap-render.php`
 Expected: FAIL — `Call to undefined method NAWS_Helpers::heatmap_label()`
 
-- [ ] **Step 3: Die Funktion schreiben**
+- [x] **Step 3: Die Funktion schreiben**
 
 In `includes/class-naws-helpers.php`, nach `format_value()`:
 
@@ -728,12 +728,12 @@ In `includes/class-naws-helpers.php`, nach `format_value()`:
     }
 ```
 
-- [ ] **Step 4: Test laufen lassen**
+- [x] **Step 4: Test laufen lassen**
 
 Run: `php tests/test-heatmap-render.php`
 Expected: PASS — die Schlusszeile endet auf „0 fehlgeschlagen".
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add includes/class-naws-helpers.php tests/test-heatmap-render.php
@@ -753,7 +753,7 @@ git commit -m "Say in one place what a heatmap cell reads"
 - Consumes: `NAWS_Database::get_heatmap_year()`, `NAWS_Database::get_daily_data_range()`, `NAWS_Colors::heatmap_color()`, `NAWS_Colors::heatmap_scale()`, `NAWS_Helpers::heatmap_label()`, `NAWS_Helpers::get_unit()`
 - Produces: Shortcode `[naws_heatmap]`; Markup mit `.naws-hm`, `.naws-hm-c` (Kachel mit Wert oder ohne), `.naws-hm-x` (Tag existiert nicht), Attributen `data-d`, `data-v`, `data-l`, `data-src`, `data-day`; registriertes Skript-Handle `naws-heatmap-boot`
 
-- [ ] **Step 1: Die Testfälle für das Markup anhängen**
+- [x] **Step 1: Die Testfälle für das Markup anhängen**
 
 In `tests/test-heatmap-render.php`, **vor** dem abschließenden `echo "\n" . str_repeat(...)`-Block einfügen:
 
@@ -841,12 +841,12 @@ $xss = render_hm( [ 'year' => '2026', 'title' => '<script>x</script>' ] );
 check( 'der Titel wird escaped', str_contains( $xss, '<script>x' ), false );
 ```
 
-- [ ] **Step 2: Test laufen lassen und den Fehlschlag sehen**
+- [x] **Step 2: Test laufen lassen und den Fehlschlag sehen**
 
 Run: `php tests/test-heatmap-render.php`
 Expected: FAIL — das Template fehlt, `include` scheitert
 
-- [ ] **Step 3: Das Template schreiben**
+- [x] **Step 3: Das Template schreiben**
 
 Neue Datei `templates/heatmap.php`:
 
@@ -977,7 +977,7 @@ foreach ( $values as $month ) {
 </div>
 ```
 
-- [ ] **Step 4: Shortcode registrieren und rendern**
+- [x] **Step 4: Shortcode registrieren und rendern**
 
 In `includes/class-naws-shortcodes.php`, im Konstruktor nach `add_shortcode( 'naws_history', … );`:
 
@@ -1016,19 +1016,19 @@ Und die Shortcode-Methode, direkt nach `sc_history()`:
     }
 ```
 
-- [ ] **Step 5: Test laufen lassen**
+- [x] **Step 5: Test laufen lassen**
 
 Run: `php tests/test-heatmap-render.php`
 Expected: PASS
 
 Der Fall `naws-hm-x` verdient Nachrechnen, falls er fehlschlägt: 2026 hat vier Monate mit 30 Tagen (April, Juni, September, November) — je eine leere Zelle — und einen Februar mit 28 — drei leere Zellen. Zusammen sieben.
 
-- [ ] **Step 6: Die ganze Suite laufen lassen**
+- [x] **Step 6: Die ganze Suite laufen lassen**
 
 Run: `for t in tests/test-*.php; do php "$t" >/dev/null 2>&1 || echo "FAIL $t"; done`
 Expected: keine Ausgabe
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add templates/heatmap.php includes/class-naws-shortcodes.php tests/test-heatmap-render.php
@@ -1048,7 +1048,7 @@ git commit -m "Lay a year of daily means out as a calendar"
 
 **Zu prüfen vor dem Schreiben:** Welche Variablennamen `get_inline_css()` tatsächlich ausgibt — `grep -o '\--naws-[a-z0-9-]*' includes/class-naws-colors.php | sort -u`. Nur benutzen, was dort steht; ein erfundener Name fällt auf eine leere Farbe zurück.
 
-- [ ] **Step 1: Die Stile schreiben**
+- [x] **Step 1: Die Stile schreiben**
 
 Ans Ende von `assets/css/frontend.css`:
 
@@ -1187,12 +1187,12 @@ Ans Ende von `assets/css/frontend.css`:
 }
 ```
 
-- [ ] **Step 2: Die benutzten Variablen gegen die Wirklichkeit prüfen**
+- [x] **Step 2: Die benutzten Variablen gegen die Wirklichkeit prüfen**
 
 Run: `grep -o '\--naws-[a-z0-9-]*' includes/class-naws-colors.php | sort -u > /tmp/have.txt; grep -o 'var(--naws-[a-z0-9-]*' assets/css/frontend.css | sed 's/var(//' | sort -u > /tmp/used.txt; comm -13 /tmp/have.txt /tmp/used.txt`
 Expected: nur Namen, die auch vorher schon in `frontend.css` standen. Taucht einer der oben neu benutzten dort auf, ihn durch einen vorhandenen ersetzen oder den Fallback als endgültig hinnehmen.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add assets/css/frontend.css
@@ -1212,7 +1212,7 @@ git commit -m "Dress the heatmap, and let it wipe in from the left"
 
 **Reihenfolge-Hinweis:** Dieser Task wird vor Task 7 geschrieben, also gibt es den Endpunkt beim ersten Prüfen noch nicht. Der Jahreswechsel schlägt dann mit einer Fehlermeldung fehl — das ist der erwartete Zwischenstand, und die Fehlerbehandlung wird dabei gleich mitgeprüft.
 
-- [ ] **Step 1: Das Skript schreiben**
+- [x] **Step 1: Das Skript schreiben**
 
 Neue Datei `assets/js/heatmap-boot.js`:
 
@@ -1398,18 +1398,18 @@ Neue Datei `assets/js/heatmap-boot.js`:
 })();
 ```
 
-- [ ] **Step 2: Auf Syntaxfehler prüfen**
+- [x] **Step 2: Auf Syntaxfehler prüfen**
 
 **Auf dieser Maschine gibt es kein `node`** — geprüft am 2026-09-02, `command -v node` findet nichts. Der Syntaxcheck fällt damit auf den Browser: in Task 9, Schritt 6, die Karte auf dev öffnen und die Konsole ansehen. Ein Syntaxfehler zeigt sich dort sofort, weil dann gar keine Kachel eine Verzögerung bekommt und die Animation ausbleibt.
 
 Wer Node hat: `node --check assets/js/heatmap-boot.js`, erwartet wird keine Ausgabe.
 
-- [ ] **Step 3: Prüfen, dass keine deutschen Anzeigetexte im Skript stehen**
+- [x] **Step 3: Prüfen, dass keine deutschen Anzeigetexte im Skript stehen**
 
 Run: `php tests/test-frontend-i18n.php`
 Expected: PASS. Dieser Test schlägt bei jedem String-Literal mit deutschem Umlaut in den Frontend-Skripten fehl. Falls er `heatmap-boot.js` noch nicht kennt, die Datei in seiner Dateiliste ergänzen — das ist der Sinn des Tests.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add assets/js/heatmap-boot.js
@@ -1427,7 +1427,7 @@ git commit -m "Let the heatmap answer the pointer and change its year"
 - Consumes: `NAWS_Database::get_heatmap_year()`, `NAWS_Database::get_daily_data_range()`, `NAWS_Colors::heatmap_color()`, `NAWS_Helpers::heatmap_label()`
 - Produces: `action=naws_get_heatmap_data` mit `year`, Antwort `{ year, months, sources, colors, labels }`
 
-- [ ] **Step 1: Registrieren**
+- [x] **Step 1: Registrieren**
 
 In `includes/class-naws-ajax.php`, im Konstruktor nach den `naws_get_history_data`-Zeilen:
 
@@ -1436,7 +1436,7 @@ In `includes/class-naws-ajax.php`, im Konstruktor nach den `naws_get_history_dat
         add_action( 'wp_ajax_nopriv_naws_get_heatmap_data', [ $this, 'get_heatmap_data' ] );
 ```
 
-- [ ] **Step 2: Die Methode schreiben**
+- [x] **Step 2: Die Methode schreiben**
 
 Nach `get_history_data()`:
 
@@ -1494,12 +1494,12 @@ Nach `get_history_data()`:
     }
 ```
 
-- [ ] **Step 3: Die ganze Suite laufen lassen**
+- [x] **Step 3: Die ganze Suite laufen lassen**
 
 Run: `for t in tests/test-*.php; do php "$t" >/dev/null 2>&1 || echo "FAIL $t"; done`
 Expected: keine Ausgabe
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add includes/class-naws-ajax.php
@@ -1517,7 +1517,7 @@ git commit -m "Serve one year of the heatmap, and refuse the years there are non
 - Consumes: `$groups['heatmap']['keys']` aus Task 1, `$colors`, `$defaults`
 - Produces: nichts für spätere Tasks
 
-- [ ] **Step 1: Den Tab eintragen**
+- [x] **Step 1: Den Tab eintragen**
 
 In `admin/views/appearance.php`, im Array `$tabs` nach `'history'`:
 
@@ -1525,7 +1525,7 @@ In `admin/views/appearance.php`, im Array `$tabs` nach `'history'`:
     'heatmap'   => __( 'Heatmap Scale', 'xtx-integration-for-netatmo' ),
 ```
 
-- [ ] **Step 2: Die Beschriftungen eintragen**
+- [x] **Step 2: Die Beschriftungen eintragen**
 
 In `$color_labels`, ans Ende:
 
@@ -1546,7 +1546,7 @@ In `$color_labels`, ans Ende:
 
 Die Stützpunkte stehen bewusst in Celsius, auch wenn die Anzeige auf Fahrenheit steht: die Skala hängt an Celsius (Task 1), und ein Feld „95 °F" zu beschriften, das intern 35 bedeutet, wäre eine Falle.
 
-- [ ] **Step 3: Den Pane schreiben**
+- [x] **Step 3: Den Pane schreiben**
 
 Nach dem schließenden `</div>` des Panes `data-pane="history"`:
 
@@ -1594,12 +1594,12 @@ Nach dem schließenden `</div>` des Panes `data-pane="history"`:
         </div>
 ```
 
-- [ ] **Step 4: Prüfen, dass die Seite rendert**
+- [x] **Step 4: Prüfen, dass die Seite rendert**
 
 Run: `php -l admin/views/appearance.php`
 Expected: `No syntax errors detected`
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add admin/views/appearance.php
@@ -1617,7 +1617,7 @@ git commit -m "Put the heatmap's ten stops on the appearance screen"
 - Consumes: alles Vorherige
 - Produces: nichts
 
-- [ ] **Step 1: Den Shortcode in die Referenz aufnehmen**
+- [x] **Step 1: Den Shortcode in die Referenz aufnehmen**
 
 In `admin/views/shortcodes.php`, direkt nach dem schließenden `</div>` der Karte `[naws_history]` (die endet nach dem Block `naws-inline-examples`, ungefähr Zeile 231):
 
@@ -1641,7 +1641,7 @@ In `admin/views/shortcodes.php`, direkt nach dem schließenden `</div>` der Kart
 
 Die Farben stellt man unter **Darstellung → Heatmap Scale** ein; das steht in der Beschreibung des Tabs und muss hier nicht wiederholt werden.
 
-- [ ] **Step 2: readme.txt ergänzen**
+- [x] **Step 2: readme.txt ergänzen**
 
 In `readme.txt`, in der Shortcode-Aufzählung des Abschnitts `== Description ==`, direkt nach der Zeile für `[naws_history]` (Zeile 50):
 
@@ -1649,7 +1649,7 @@ In `readme.txt`, in der Shortcode-Aufzählung des Abschnitts `== Description ==`
 * `[naws_heatmap]` – One year of outdoor daily average temperature as a calendar grid, one tile per day, with a year selector (`year`, `title`, `legend`)
 ```
 
-- [ ] **Step 3: CHANGELOG.md ergänzen**
+- [x] **Step 3: CHANGELOG.md ergänzen**
 
 `## [Unreleased]` ist mit 1.9.10 verbraucht worden, der Abschnitt wird also neu angelegt — zwischen der Einleitungszeile und `## [1.9.10]`:
 
@@ -1671,7 +1671,7 @@ Merged and waiting for the release it will ship in. Nothing here is published ye
   The grid is a `<table>` rather than a drawing, so the month column stays put while the days scroll sideways, and a screen reader reads "March, 14th, 8.2 °C" instead of "image". Colours are rendered server-side, so the map is complete without JavaScript; the wipe it builds in with is an addition, and it stands still for anyone who asked their system for reduced motion.
 ```
 
-- [ ] **Step 4: Den Katalog neu erzeugen**
+- [x] **Step 4: Den Katalog neu erzeugen**
 
 Run: `php docs/i18n/catalog/makepot.php`
 Expected: `.pot` enthält die neuen Strings. Prüfen:
@@ -1679,12 +1679,12 @@ Expected: `.pot` enthält die neuen Strings. Prüfen:
 Run: `grep -c 'msgid' languages/xtx-integration-for-netatmo.pot && grep -n 'No reading\|computed from min and max\|Daily Average Temperature\|Heatmap Scale' languages/xtx-integration-for-netatmo.pot`
 Expected: die vier Strings sind da.
 
-- [ ] **Step 5: Die ganze Suite laufen lassen**
+- [x] **Step 5: Die ganze Suite laufen lassen**
 
 Run: `for t in tests/test-*.php; do php "$t" >/dev/null 2>&1 || echo "FAIL $t"; done`
 Expected: keine Ausgabe
 
-- [ ] **Step 6: Auf dev prüfen**
+- [x] **Step 6: Auf dev prüfen**
 
 ```bash
 powershell -ExecutionPolicy Bypass -File .\build-zip.ps1
@@ -1699,7 +1699,7 @@ Dann über den MCP-Server `novamira-dev`: hochladen, nach `WP_PLUGIN_DIR` entpac
 - `naws_settings['temperature_unit'] = 'F'` setzen, neu rendern: die Beschriftungen stehen in °F, **die Farben sind unverändert**. Danach zurückstellen.
 - Eine Farbe in `naws_appearance` ändern, `NAWS_Colors::flush_cache()`, neu rendern: die Kacheln folgen.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add admin/views/shortcodes.php readme.txt CHANGELOG.md languages/xtx-integration-for-netatmo.pot
