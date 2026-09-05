@@ -2,6 +2,13 @@
     "aktualisiert": "2026-09-05",
     "vorhaben": [
         {
+            "id": "email-benachrichtigungen",
+            "titel": "Email notifications for events and outages",
+            "satz": "A message when something happens: frost in the night, a gust above your threshold, a rain day beyond measure — and when the station goes quiet, the fetch fails or the credentials expire. Which events, to whom and how often is set in the admin.",
+            "ab": null,
+            "bild": null
+        },
+        {
             "id": "rekorde",
             "titel": "Records, and this day in earlier years",
             "satz": "[naws_records] pulls out what the daily summary holds: hottest day, coldest night, wettest month, longest dry spell, strongest gust — fifteen records with their dates, as tiles or a table, since the first reading or for one year. [naws_on_this_day] adds what the same date looked like in every earlier year.",

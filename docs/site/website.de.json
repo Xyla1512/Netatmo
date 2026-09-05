@@ -2,6 +2,13 @@
     "aktualisiert": "2026-09-05",
     "vorhaben": [
         {
+            "id": "email-benachrichtigungen",
+            "titel": "E-Mail-Benachrichtigungen bei Ereignissen und Störungen",
+            "satz": "Eine Nachricht, wenn etwas passiert: Frost in der Nacht, eine Böe über deiner Schwelle, ein Regentag über Maß — und wenn die Station schweigt, der Abruf scheitert oder die Zugangsdaten verfallen. Welche Ereignisse, an wen und wie oft, stellst du im Backend ein.",
+            "ab": null,
+            "bild": null
+        },
+        {
             "id": "rekorde",
             "titel": "Rekorde und dieser Tag in früheren Jahren",
             "satz": "[naws_records] holt aus der Tagesübersicht, was darin steckt: heißester Tag, kälteste Nacht, nassester Monat, längste Trockenperiode, stärkste Böe — fünfzehn Rekorde mit Datum, als Kacheln oder Tabelle, seit Aufzeichnungsbeginn oder für ein Jahr. [naws_on_this_day] zeigt dazu, was am selben Datum in jedem früheren Jahr war.",
