@@ -184,7 +184,7 @@ dann auch als Überschrift wahr.
 
 | Attribut | Werte | Voreinstellung |
 | --- | --- | --- |
-| `date` | `MM-DD` oder `YYYY-MM-DD` (das Jahr wird ignoriert) | heute in der Zeitzone der Site |
+| `date` | `MM-DD` oder `YYYY-MM-DD` (das Jahr von `YYYY-MM-DD` ist die obere Schranke: Jahre ≥ diesem Jahr werden ausgeschlossen) | heute in der Zeitzone der Site |
 | `title` | Überschrift | „This day in earlier years"; leer lässt sie weg |
 
 `NAWS_Records::on_this_day( array $rows, string $month_day, int $before_year ): array`
@@ -206,8 +206,11 @@ gibt der Shortcode `''` zurück. Die Zeilen kommen aus `NAWS_Records::rows()` mi
 ### 5.1 Die Rechnung: `NAWS_Astro::sun_path()`
 
 ```php
-public static function sun_path( float $lat, float $lng, ?int $ts = null ): ?array
+public static function sun_path( float $lat, float $lng, ?int $now = null, ?int $day = null ): ?array
 ```
+
+`$now` positioniert die Sonne auf dem Bogen, `$day` (ein beliebiger Zeitstempel innerhalb des
+gewünschten Kalendertags) wählt den Tag; das Template übergibt den lokalen Mittag der Site.
 
 Rein (nur `date_sun_info()`, PHP-Kern), gibt Zeitstempel und Zahlen zurück, keine Uhrzeiten:
 

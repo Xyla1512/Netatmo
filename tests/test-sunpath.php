@@ -97,6 +97,8 @@ close( 'Sydney: laengster Tag rund 14:24',         $syd['longest'], 14 * 3600 + 
 
 $polar = NAWS_Astro::sun_path( 78.22, 15.63, gmmktime( 12, 0, 0, 6, 21, 2026 ), gmmktime( 12, 0, 0, 6, 21, 2026 ) ); // Longyearbyen, Polartag
 check( 'Polartag: null',                           $polar, null );
+$polar_night = NAWS_Astro::sun_path( 78.22, 15.63, gmmktime( 12, 0, 0, 12, 21, 2026 ), gmmktime( 12, 0, 0, 12, 21, 2026 ) ); // Longyearbyen, Polarnacht
+check( 'Polarnacht: null',                         $polar_night, null );
 
 echo "\ntemplates/sunpath.php\n" . str_repeat( '-', 74 ) . "\n";
 

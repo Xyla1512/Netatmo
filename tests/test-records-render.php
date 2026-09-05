@@ -89,6 +89,13 @@ check( 'Fusszeile mit erstem Tag und Tagen',    (bool) preg_match( '#<p class="n
 check( 'keine MAC-Adresse',                     (bool) preg_match( '/[0-9a-f]{2}(:[0-9a-f]{2}){5}/i', $html ), false );
 check( 'kein style-Block',                      str_contains( $html, '<style' ), false );
 
+// Rain in inches needs three decimals, not the catalogue's one: format_value()
+// already returns 26.4 mm as 1.0394 in, and one decimal would round it to 1.0.
+$GLOBALS['naws_test_options']['naws_settings']['rain_unit'] = 'in';
+$inches = render( 'records.php', [ 'year' => '', 'records' => 'wettest_day', 'layout' => 'cards', 'title' => '' ], $year );
+check( 'Regen in Zoll mit drei Nachkommastellen', str_contains( $inches, '1.039 <span class="naws-rec-unit">in</span>' ), true );
+$GLOBALS['naws_test_options']['naws_settings']['rain_unit'] = 'mm';
+
 $table = render( 'records.php', [ 'year' => '', 'records' => '', 'layout' => 'table', 'title' => '' ], $year );
 check( 'Tabelle statt Kacheln',                 str_contains( $table, '<table class="naws-rec-table">' ), true );
 check( 'fuenfzehn Zeilen im Rumpf',             substr_count( $table, '<tr class="naws-rec-row' ), 15 );

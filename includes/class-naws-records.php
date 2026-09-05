@@ -147,6 +147,11 @@ final class NAWS_Records {
                     $best = $i;
                 }
             }
+            // A rain maximum of 0.0 is "no rain that day", not a record: mark
+            // it only when the winning value is actually greater than zero.
+            if ( $best !== null && $field === 'rain_sum' && $hits[ $best ][ $field ] <= 0.0 ) {
+                $best = null;
+            }
             if ( $best !== null ) {
                 $hits[ $best ]['record'][ $field ] = true;
             }
@@ -164,7 +169,8 @@ final class NAWS_Records {
      * @return array{value:float,unit:string}
      */
     public static function delta_parts( float $kelvin ): array {
-        $unit = get_option( 'naws_settings', [] )['temperature_unit'] ?? 'C';
+        $options = get_option( 'naws_settings', [] );
+        $unit    = $options['temperature_unit'] ?? 'C';
         if ( $unit === 'F' ) {
             return [ 'value' => round( $kelvin * 1.8, 1 ), 'unit' => '°F' ];
         }

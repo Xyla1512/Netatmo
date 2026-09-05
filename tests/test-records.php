@@ -231,6 +231,19 @@ check( 'echter Gleichstand beim Regen: das fruehere Jahr allein', $tie[2]['recor
 check( 'das spaetere der beiden gleichen Jahre bleibt ohne Rekord', $tie[1]['record'], [ 'temp_max' => false, 'temp_min' => false, 'rain_sum' => false ] );
 check( 'das juengste Jahr ohne Rekord',                             $tie[0]['record'], [ 'temp_max' => false, 'temp_min' => false, 'rain_sum' => false ] );
 
+// Ein Regenmaximum von 0,0 mm ist "kein Regen", kein Rekord: bleibt jedes
+// Jahr trocken, darf keine Zeile rain_sum markieren — auch nicht die
+// mit dem "fruehesten" Gleichstand.
+$dry_rows = [
+    [ 'day_date' => '2022-08-20', 'temp_min' => 5.0, 'temp_max' => 26.0, 'temp_avg' => 15.0, 'rain_sum' => 0.0 ],
+    [ 'day_date' => '2023-08-20', 'temp_min' => 4.0, 'temp_max' => 30.0, 'temp_avg' => 16.0, 'rain_sum' => 0.0 ],
+    [ 'day_date' => '2024-08-20', 'temp_min' => 3.0, 'temp_max' => 28.0, 'temp_avg' => 14.0, 'rain_sum' => 0.0 ],
+];
+$dry = NAWS_Records::on_this_day( $dry_rows, '08-20', 2026 );
+check( 'kein Jahr traegt einen Regenrekord bei 0,0 mm', array_column( array_column( $dry, 'record' ), 'rain_sum' ), [ false, false, false ] );
+check( 'kaeltestes Minimum bleibt markiert: 2024',      $dry[0]['record']['temp_min'], true );
+check( 'waermstes Maximum bleibt markiert: 2023',       $dry[1]['record']['temp_max'], true );
+
 echo "\nNAWS_Records::delta_parts() und coverage()\n" . str_repeat( '-', 74 ) . "\n";
 
 $GLOBALS['naws_test_options']['naws_settings']['temperature_unit'] = 'C';

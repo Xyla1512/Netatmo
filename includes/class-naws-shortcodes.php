@@ -275,8 +275,10 @@ class NAWS_Shortcodes {
         // The default title names the year when there is one; an explicit
         // empty title="" leaves the heading out.
         if ( $atts['title'] === null ) {
-            $year          = intval( $atts['year'] );
-            $atts['title'] = $year > 0 ? sprintf( naws_label( 'rec_title_year' ), $year ) : naws_label( 'rec_title' );
+            $year = intval( $atts['year'] );
+            // Same 1900-2999 window as NAWS_Calc::period_range(): a value
+            // outside it falls back to the whole record, so the title must too.
+            $atts['title'] = ( $year >= 1900 && $year <= 2999 ) ? sprintf( naws_label( 'rec_title_year' ), $year ) : naws_label( 'rec_title' );
         }
 
         ob_start();

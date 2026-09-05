@@ -49,8 +49,18 @@ $naws_rec_parts = static function ( array $entry, array $result ): array {
         $d = NAWS_Records::delta_parts( (float) $result['value'] );
         return [ 'value' => number_format_i18n( $d['value'], $entry['decimals'] ), 'unit' => $d['unit'] ];
     }
+    // format_value() already returns three decimals for rain in inches
+    // (26.4 mm -> 1.039 in); the catalogue's one decimal is right for mm
+    // and would round that away.
+    $decimals = $entry['decimals'];
+    if ( $entry['param'] === 'Rain' ) {
+        $options = get_option( 'naws_settings', [] );
+        if ( ( $options['rain_unit'] ?? 'mm' ) === 'in' ) {
+            $decimals = 3;
+        }
+    }
     return [
-        'value' => number_format_i18n( (float) NAWS_Helpers::format_value( $entry['param'], (float) $result['value'] ), $entry['decimals'] ),
+        'value' => number_format_i18n( (float) NAWS_Helpers::format_value( $entry['param'], (float) $result['value'] ), $decimals ),
         'unit'  => (string) NAWS_Helpers::get_unit( $entry['param'] ),
     ];
 };
