@@ -108,6 +108,33 @@ class NAWS_Widget_Data {
         return max( self::MIN_WIDTH, min( self::MAX_WIDTH, $width ) );
     }
 
+    /**
+     * The colour schemes the stylesheet knows. Light is the first, and the
+     * one everything falls back to: it is what the widget looked like before
+     * there was a choice.
+     *
+     * @since 1.9.11
+     */
+    const SCHEMES = [ 'light', 'dark', 'transparent' ];
+
+    /**
+     * Pull a scheme name onto one of SCHEMES.
+     *
+     * Used by the shortcode attribute, the settings sanitiser and the
+     * template alike, so a stored value and a rendered class can never
+     * disagree. Anything that is not one of the three names -- a typo, a
+     * number, nothing at all -- is light, not an error: a widget in the
+     * wrong colours is still a widget, a broken class is not.
+     *
+     * @param mixed $scheme Raw value from a form, an option or a shortcode.
+     * @return string One of SCHEMES.
+     */
+    public static function normalise_scheme( $scheme ): string {
+        $scheme = is_string( $scheme ) ? strtolower( trim( $scheme ) ) : '';
+
+        return in_array( $scheme, self::SCHEMES, true ) ? $scheme : self::SCHEMES[0];
+    }
+
     /** Validate a value/unit pair, returning null for anything unusable. */
     private static function pair( $raw ): ?array {
         if ( ! is_array( $raw ) || ! isset( $raw['value'] ) || $raw['value'] === '' ) {

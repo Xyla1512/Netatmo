@@ -1,6 +1,13 @@
 {
-    "aktualisiert": "2026-09-03",
+    "aktualisiert": "2026-09-05",
     "vorhaben": [
+        {
+            "id": "widget-farbschema",
+            "titel": "The sidebar widget suits dark sites",
+            "satz": "Three colour schemes for [naws_weather_widget]: light as before, dark for dark sidebars, and transparent — then the widget draws no card and takes its text and line colours from the sidebar. Set under Appearance, with a preview on a dark ground, or per placement with scheme=\"dark\" on the shortcode.",
+            "ab": null,
+            "bild": null
+        },
         {
             "id": "naws-heatmap",
             "titel": "A year of daily means as a calendar",

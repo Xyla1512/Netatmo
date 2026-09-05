@@ -595,6 +595,18 @@ $icon_color_keys = [
                             <p class="description"><?php esc_html_e( 'Between 250 and 500 pixels. Icon, figures and spacing grow with it — at 500 pixels the weather icon is 96 pixels instead of 64. Where the column is narrower than the setting, the widget shrinks with it rather than overflowing.', 'xtx-integration-for-netatmo' ); ?></p>
                         </td>
                     </tr>
+                    <tr>
+                        <th><?php echo esc_html( naws_label( 'wgt_scheme_label' ) ); ?></th>
+                        <td>
+                            <?php $naws_wgt_scheme_now = NAWS_Widget_Data::normalise_scheme( $naws_wgt_opts['wgt_scheme'] ?? null ); ?>
+                            <select name="naws_settings[wgt_scheme]">
+                                <?php foreach ( NAWS_Widget_Data::SCHEMES as $naws_wgt_scheme_opt ) : ?>
+                                    <option value="<?php echo esc_attr( $naws_wgt_scheme_opt ); ?>" <?php selected( $naws_wgt_scheme_now, $naws_wgt_scheme_opt ); ?>><?php echo esc_html( naws_label( 'wgt_scheme_' . $naws_wgt_scheme_opt ) ); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <p class="description"><?php echo esc_html( naws_label( 'wgt_scheme_desc' ) ); ?></p>
+                        </td>
+                    </tr>
                 </table>
 
                 <?php
@@ -621,14 +633,20 @@ $icon_color_keys = [
                     $naws_prev_days
                 );
                 ?>
-                <?php // 24 px is the frame's own horizontal padding, so the widget inside gets exactly the configured width. ?>
-                <div style="max-width:<?php echo absint( $naws_prev_width + 24 ); ?>px;padding:14px 12px;background:#fbfcfe;border:1px solid #cbd4e0;border-radius:12px;margin:0 0 1rem;">
+                <?php
+                // 24 px is the frame's own horizontal padding, so the widget inside gets exactly the configured width.
+                // The frame turns dark for the dark and the transparent scheme: both are made for a dark sidebar, and
+                // transparent on white would show nothing of what it does — it takes the frame's text colour.
+                $naws_prev_dark = 'light' !== $naws_wgt_scheme_now;
+                ?>
+                <div style="max-width:<?php echo absint( $naws_prev_width + 24 ); ?>px;padding:14px 12px;background:<?php echo $naws_prev_dark ? '#1e2633' : '#fbfcfe'; ?>;color:<?php echo $naws_prev_dark ? '#e8edf5' : '#1e293b'; ?>;border:1px solid <?php echo $naws_prev_dark ? '#39465c' : '#cbd4e0'; ?>;border-radius:12px;margin:0 0 1rem;">
                     <?php
                     if ( $naws_wgt['empty'] ) {
                         echo '<small style="color:#64748b">' . esc_html( __( 'Nothing displayable right now — neither station readings nor forecast are available. The widget would output nothing.', 'xtx-integration-for-netatmo' ) ) . '</small>';
                     } else {
-                        $naws_wgt_state = $naws_prev_state['state'];
-                        $naws_wgt_width = $naws_prev_width;
+                        $naws_wgt_state  = $naws_prev_state['state'];
+                        $naws_wgt_width  = $naws_prev_width;
+                        $naws_wgt_scheme = $naws_wgt_scheme_now;
                         $naws_wgt_place = (string) ( $naws_prev_fc['location_name'] ?? '' );
                         $naws_wgt_time  = empty( $naws_prev_fc['fetched_at'] ) ? '' : wp_date( get_option( 'time_format', 'H:i' ), (int) $naws_prev_fc['fetched_at'] );
                         include NAWS_PLUGIN_DIR . 'templates/weather-widget.php';

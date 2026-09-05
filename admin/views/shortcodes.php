@@ -371,11 +371,13 @@ $value_params = [
             </tr>
             <tr><td><code>days</code></td><td><?php esc_html_e( 'Forecast length. Only 3 or 5; other values are pulled to the nearer one.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php echo intval( get_option('naws_settings', [])['wgt_days'] ?? 5 ); ?></span></td></tr>
             <tr><td><code>width</code></td><td><?php esc_html_e( 'Width in pixels, 250 to 500. Values outside that range are pulled to the nearer bound.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php echo absint( NAWS_Widget_Data::normalise_width( get_option('naws_settings', [])['wgt_width'] ?? null ) ); ?></span></td></tr>
+            <tr><td><code>scheme</code></td><td><?php esc_html_e( 'Colour scheme: light, dark or transparent. Dark is the card in dark colours; transparent draws no card and takes the colours of whatever it is placed on. Anything else counts as light.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php echo esc_html( NAWS_Widget_Data::normalise_scheme( get_option('naws_settings', [])['wgt_scheme'] ?? null ) ); ?></span></td></tr>
         </table>
         <div class="naws-inline-examples">
             <div class="naws-inline-ex"><code>[naws_weather_widget]</code> <?php esc_html_e( 'uses the backend setting', 'xtx-integration-for-netatmo' ); ?></div>
             <div class="naws-inline-ex"><code>[naws_weather_widget days="3"]</code> <?php esc_html_e( 'shorter, for very narrow columns', 'xtx-integration-for-netatmo' ); ?></div>
             <div class="naws-inline-ex"><code>[naws_weather_widget width="400"]</code> <?php esc_html_e( 'wider, with a larger icon and larger figures', 'xtx-integration-for-netatmo' ); ?></div>
+            <div class="naws-inline-ex"><code>[naws_weather_widget scheme="dark"]</code> <?php esc_html_e( 'for a dark sidebar', 'xtx-integration-for-netatmo' ); ?></div>
         </div>
     </div>
     </div><!-- /.naws-panel-body -->

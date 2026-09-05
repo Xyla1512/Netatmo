@@ -174,6 +174,12 @@ class NAWS_Admin {
             $clean['wgt_width'] = NAWS_Widget_Data::normalise_width( $input['wgt_width'] );
         }
 
+        // And for the colour scheme (since 1.9.11): three names, anything
+        // else is light.
+        if ( $sent( 'wgt_scheme' ) ) {
+            $clean['wgt_scheme'] = NAWS_Widget_Data::normalise_scheme( $input['wgt_scheme'] );
+        }
+
         // Auto-resolved location name is written by NAWS_Forecast, never by
         // a form, so it is carried over untouched.
         $clean['forecast_auto_name'] = $old_opts['forecast_auto_name'] ?? '';
