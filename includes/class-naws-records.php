@@ -175,6 +175,9 @@ final class NAWS_Records {
      * First day with data and the number of days that carry at least one
      * of the five columns — for the footer under the tiles.
      *
+     * $rows must already be ascending by day_date, as get_daily_summaries()
+     * returns them, for 'first' to actually be the first day.
+     *
      * @return array{first:?string,days:int}
      */
     public static function coverage( array $rows ): array {

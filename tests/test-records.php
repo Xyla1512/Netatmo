@@ -218,6 +218,19 @@ check( 'nassester Tag: 2024',                     $otd[1]['record']['rain_sum'],
 check( 'der 29. Februar kommt nur aus Schaltjahren', array_column( NAWS_Records::on_this_day( $otd_rows, '02-29', 2026 ), 'year' ), [ 2024 ] );
 check( 'ohne fruehere Jahre leer',                NAWS_Records::on_this_day( $otd_rows, '09-05', 2023 ), [] );
 
+$tie_rows = [
+    [ 'day_date' => '2022-08-20', 'temp_min' => 3.0, 'temp_max' => 30.0, 'temp_avg' => 15.0, 'rain_sum' => 7.0 ],
+    [ 'day_date' => '2023-08-20', 'temp_min' => 3.0, 'temp_max' => 30.0, 'temp_avg' => 16.0, 'rain_sum' => 7.0 ],
+    [ 'day_date' => '2024-08-20', 'temp_min' => 5.0, 'temp_max' => 26.0, 'temp_avg' => 14.0, 'rain_sum' => 0.0 ],
+];
+$tie = NAWS_Records::on_this_day( $tie_rows, '08-20', 2026 );
+check( 'echter Gleichstand: Reihenfolge neuestes zuerst', array_column( $tie, 'year' ), [ 2024, 2023, 2022 ] );
+check( 'echter Gleichstand am Minimum: das fruehere Jahr allein', $tie[2]['record']['temp_min'], true );
+check( 'echter Gleichstand am Maximum: das fruehere Jahr allein', $tie[2]['record']['temp_max'], true );
+check( 'echter Gleichstand beim Regen: das fruehere Jahr allein', $tie[2]['record']['rain_sum'], true );
+check( 'das spaetere der beiden gleichen Jahre bleibt ohne Rekord', $tie[1]['record'], [ 'temp_max' => false, 'temp_min' => false, 'rain_sum' => false ] );
+check( 'das juengste Jahr ohne Rekord',                             $tie[0]['record'], [ 'temp_max' => false, 'temp_min' => false, 'rain_sum' => false ] );
+
 echo "\nNAWS_Records::delta_parts() und coverage()\n" . str_repeat( '-', 74 ) . "\n";
 
 $GLOBALS['naws_test_options']['naws_settings']['temperature_unit'] = 'C';
