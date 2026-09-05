@@ -111,8 +111,8 @@ Regeln:
 - **`widest_range`** ist eine Differenz. Sie wird in Fahrenheit mit dem Faktor 1,8 und
   **ohne** den Versatz 32 umgerechnet; `format_value( 'Temperature', … )` täte das falsch.
   Die Klasse liefert die Differenz in Kelvin; das Template rechnet mit
-  `NAWS_Records::format_delta( $kelvin )`, das die Temperatureinheit aus den Einstellungen
-  liest und `°C` bzw. `°F` anhängt.
+  `NAWS_Records::delta_parts( $kelvin )`, das `[ 'value' => float, 'unit' => '°C'|'°F' ]`
+  zurückgibt — die Temperatureinheit aus den Einstellungen, der Faktor 1,8 ohne Versatz.
 
 `NAWS_Records::all( array $rows, array $keys = [] ): array` rechnet die gewünschten
 Schlüssel (leer = alle, Reihenfolge des Katalogs) und lässt `null`-Ergebnisse weg.

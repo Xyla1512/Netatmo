@@ -8,6 +8,16 @@ All notable changes to the XTX Netatmo plugin are documented here.
 
 - **A colour scheme for the sidebar widget.** `[naws_weather_widget]` was a white card whatever the sidebar behind it looked like, because its colours were literals in the stylesheet — the theme settings under Appearance never reached it. It now has three schemes: `light` (the card as it was), `dark` (the same card in dark colours, for a dark sidebar) and `transparent`, which draws no card at all: the text takes the sidebar's own colour and the lines and chips are a faint shade of it, so one setting fits a navy sidebar and a cream one alike. Chosen under Appearance → Sidebar widget, where the preview shows it on a dark ground, or per placement with `scheme="dark"` on the shortcode. Anything that is not one of the three names is light. A site that never chooses gets 1.9.10's markup byte for byte.
 
+- **`[naws_records]` — fifteen records from the daily summary.** Hottest day, coldest night, warmest night, coldest day, largest daily range, warmest and coldest month, wettest day and month, longest dry and wet spell, strongest gust, longest frost period, heat wave and run of summer days — each with its date, as tiles or a table, since the first day with readings or for one year (`year="2025"`). The arithmetic is a pure class over the same daily rows `[naws_calc]` reads, with the same station and period logic; a tie goes to the earlier date, a month needs twenty days to compete, and a gap in the data breaks a run rather than bridging it.
+
+- **`[naws_on_this_day]` — this calendar day in every earlier year.** Low, high, mean and rain, newest year first, with the day's record marked in each column. The running year is left out: its row is written at the end of the day.
+
+- **`[naws_sunpath]` — the sun on its arc over the station.** An inline SVG with sunrise, solar noon and sunset, the part of the day already travelled drawn solid, and the sun where it stands; at night it sits below the horizon. Under it the day length, the change since yesterday, and the year's longest and shortest day at the station's latitude. Computed from the station's coordinates with PHP's own sun arithmetic, no script.
+
+### Changed
+
+- `NAWS_Climate::max_streak()` now derives from `longest_run()`, which also returns the dates; the numbers are unchanged. `NAWS_Database::get_daily_summaries()` hands out `gust_max` on request. The calculator's station and period helpers are public, so records and computed values can never disagree on which rows they looked at.
+
 ### Fixed
 
 - **The purge button in the settings did nothing, and every admin page of the plugin threw `$ is not a function`.** Since 1.6.4 two handlers in `admin.js` stood behind the line that closes the jQuery block, where `$` does not exist: the script died there on every page, and the button under "Manual Data Purge" never got its click handler. One of the two handlers was dead weight anyway — the daily-summary button has had its own in the dashboard for a long time — and is gone; the other is back inside the block. Its sentences ("Bitte mindestens 30 Tage eingeben" and friends) were German literals in the script and now come from the plugin's translation like everything else, in German and Norwegian.

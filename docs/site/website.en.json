@@ -2,6 +2,20 @@
     "aktualisiert": "2026-09-05",
     "vorhaben": [
         {
+            "id": "rekorde",
+            "titel": "Records, and this day in earlier years",
+            "satz": "[naws_records] pulls out what the daily summary holds: hottest day, coldest night, wettest month, longest dry spell, strongest gust — fifteen records with their dates, as tiles or a table, since the first reading or for one year. [naws_on_this_day] adds what the same date looked like in every earlier year.",
+            "ab": null,
+            "bild": null
+        },
+        {
+            "id": "sonnenbahn",
+            "titel": "The sun on its arc",
+            "satz": "[naws_sunpath] draws the sun's day over the station: sunrise, noon, sunset, the part already travelled and the sun where it stands. Below it the day length, the change since yesterday and the year's longest and shortest day at the station.",
+            "ab": null,
+            "bild": null
+        },
+        {
             "id": "widget-farbschema",
             "titel": "The sidebar widget suits dark sites",
             "satz": "Three colour schemes for [naws_weather_widget]: light as before, dark for dark sidebars, and transparent — then the widget draws no card and takes its text and line colours from the sidebar. Set under Appearance, with a preview on a dark ground, or per placement with scheme=\"dark\" on the shortcode.",

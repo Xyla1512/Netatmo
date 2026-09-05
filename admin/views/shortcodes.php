@@ -247,6 +247,47 @@ $value_params = [
     </div>
 
     <div class="naws-sc-card">
+        <h3><code>[naws_records]</code></h3>
+        <p><?php esc_html_e( 'Fifteen records from the daily summary — hottest day, coldest night, wettest month, longest dry spell, strongest gust and more — each with its date, as tiles or as a table.', 'xtx-integration-for-netatmo' ); ?></p>
+        <div class="naws-copy-wrap"><pre>[naws_records]</pre><button class="naws-copy-btn" data-copy='[naws_records]'><?php echo esc_html( _x( 'Copy', 'sc_copy', 'xtx-integration-for-netatmo' ) ); ?></button></div>
+        <table class="naws-attr-table" style="margin-top:10px">
+            <tr><th><?php esc_html_e( 'Attribute', 'xtx-integration-for-netatmo' ); ?></th><th><?php esc_html_e( 'Description', 'xtx-integration-for-netatmo' ); ?></th><th><?php esc_html_e( 'Default', 'xtx-integration-for-netatmo' ); ?></th></tr>
+            <tr><td><code>year</code></td><td><?php esc_html_e( 'Records of one year only. Empty means since the first day with readings.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">&ndash;</span></td></tr>
+            <tr><td><code>records</code></td><td><?php esc_html_e( 'Comma-separated keys to show, in that order: hottest_day, coldest_night, warmest_night, coldest_day, widest_range, warmest_month, coldest_month, wettest_day, wettest_month, longest_dry_spell, longest_wet_spell, strongest_gust, longest_frost, longest_heat_wave, longest_summer_run. Unknown keys are ignored.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php esc_html_e( 'all', 'xtx-integration-for-netatmo' ); ?></span></td></tr>
+            <tr><td><code>layout</code></td><td><?php esc_html_e( 'cards or table', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">cards</span></td></tr>
+            <tr><td><code>title</code></td><td><?php esc_html_e( 'Heading; an empty title="" leaves it out', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php echo esc_html( naws_label( 'rec_title' ) ); ?></span></td></tr>
+        </table>
+        <div class="naws-inline-examples">
+            <div class="naws-inline-ex"><code>[naws_records year="2025"]</code> &rarr; <?php esc_html_e( 'the records of 2025', 'xtx-integration-for-netatmo' ); ?></div>
+            <div class="naws-inline-ex"><code>[naws_records records="hottest_day,coldest_night,wettest_day" layout="table"]</code> &rarr; <?php esc_html_e( 'three records as a table', 'xtx-integration-for-netatmo' ); ?></div>
+        </div>
+    </div>
+
+    <div class="naws-sc-card">
+        <h3><code>[naws_on_this_day]</code></h3>
+        <p><?php esc_html_e( 'This calendar day in every earlier year: low, high, mean and rain, with the day’s record marked in each column. The running year is left out.', 'xtx-integration-for-netatmo' ); ?></p>
+        <div class="naws-copy-wrap"><pre>[naws_on_this_day]</pre><button class="naws-copy-btn" data-copy='[naws_on_this_day]'><?php echo esc_html( _x( 'Copy', 'sc_copy', 'xtx-integration-for-netatmo' ) ); ?></button></div>
+        <table class="naws-attr-table" style="margin-top:10px">
+            <tr><th><?php esc_html_e( 'Attribute', 'xtx-integration-for-netatmo' ); ?></th><th><?php esc_html_e( 'Description', 'xtx-integration-for-netatmo' ); ?></th><th><?php esc_html_e( 'Default', 'xtx-integration-for-netatmo' ); ?></th></tr>
+            <tr><td><code>date</code></td><td><?php esc_html_e( 'MM-DD or YYYY-MM-DD; the year only decides which years count as earlier. Anything else is today.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php esc_html_e( 'today', 'xtx-integration-for-netatmo' ); ?></span></td></tr>
+            <tr><td><code>title</code></td><td><?php esc_html_e( 'Heading; an empty title="" leaves it out', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php echo esc_html( naws_label( 'otd_title' ) ); ?></span></td></tr>
+        </table>
+        <div class="naws-inline-examples">
+            <div class="naws-inline-ex"><code>[naws_on_this_day date="12-24"]</code> &rarr; <?php esc_html_e( 'Christmas Eve in earlier years', 'xtx-integration-for-netatmo' ); ?></div>
+        </div>
+    </div>
+
+    <div class="naws-sc-card">
+        <h3><code>[naws_sunpath]</code></h3>
+        <p><?php esc_html_e( 'The sun on its arc over the station: sunrise, solar noon and sunset, the part of the day already travelled, and the sun where it stands. Below it the day length, the change since yesterday, and the year’s longest and shortest day. Computed from the station’s coordinates. No script: the sun stands where it stood when the page was built, so a page cache shows it until the cache is refreshed.', 'xtx-integration-for-netatmo' ); ?></p>
+        <div class="naws-copy-wrap"><pre>[naws_sunpath]</pre><button class="naws-copy-btn" data-copy='[naws_sunpath]'><?php echo esc_html( _x( 'Copy', 'sc_copy', 'xtx-integration-for-netatmo' ) ); ?></button></div>
+        <table class="naws-attr-table" style="margin-top:10px">
+            <tr><th><?php esc_html_e( 'Attribute', 'xtx-integration-for-netatmo' ); ?></th><th><?php esc_html_e( 'Description', 'xtx-integration-for-netatmo' ); ?></th><th><?php esc_html_e( 'Default', 'xtx-integration-for-netatmo' ); ?></th></tr>
+            <tr><td><code>title</code></td><td><?php esc_html_e( 'Heading; an empty title="" leaves it out', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php echo esc_html( naws_label( 'sun_title' ) ); ?></span></td></tr>
+        </table>
+    </div>
+
+    <div class="naws-sc-card">
         <h3><code>[naws_current]</code></h3>
         <p><?php esc_html_e( 'Shows animated metric cards with the latest sensor values from all or specific modules.', 'xtx-integration-for-netatmo' ); ?></p>
         <div class="naws-copy-wrap"><pre>[naws_current]</pre><button class="naws-copy-btn" data-copy='[naws_current]'><?php echo esc_html( _x( 'Copy', 'sc_copy', 'xtx-integration-for-netatmo' ) ); ?></button></div>
