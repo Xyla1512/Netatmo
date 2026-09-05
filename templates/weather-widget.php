@@ -12,6 +12,7 @@
  * @var string  $naws_wgt_place Location name, '' to omit
  * @var string  $naws_wgt_time  Formatted time of last fetch, '' to omit
  * @var int     $naws_wgt_width Widget width in px, 250–500; optional
+ * @var string  $naws_wgt_scheme light|dark|transparent; optional, light if absent
  *
  * @package NAWS
  * @since   1.8.0
@@ -27,8 +28,14 @@ $naws_wgt_cols = count( $naws_wgt['days'] );
 // applies it as a max-width, never a width: in a container narrower than the
 // setting the widget has to shrink rather than overflow.
 $naws_wgt_max = NAWS_Widget_Data::normalise_width( $naws_wgt_width ?? null );
+
+// The scheme is a modifier class, and light has none: the stylesheet's base
+// rule IS the light scheme, so a page that never chose keeps 1.9.10's markup
+// byte for byte.
+$naws_wgt_scheme = NAWS_Widget_Data::normalise_scheme( $naws_wgt_scheme ?? null );
+$naws_wgt_class  = 'naws-wgt' . ( 'light' === $naws_wgt_scheme ? '' : ' naws-wgt--' . $naws_wgt_scheme );
 ?>
-<div class="naws-wgt" style="--naws-wgt-max:<?php echo absint( $naws_wgt_max ); ?>px">
+<div class="<?php echo esc_attr( $naws_wgt_class ); ?>" style="--naws-wgt-max:<?php echo absint( $naws_wgt_max ); ?>px">
 
   <div class="naws-wgt-head">
     <?php if ( $naws_wgt_state !== '' ) : ?>

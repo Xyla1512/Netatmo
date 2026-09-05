@@ -49,6 +49,11 @@ function naws_label( string $key ): string {
         case 'wgt_days_5':                         return __( '5 days', 'xtx-integration-for-netatmo' );
         case 'wgt_days_desc':                      return __( 'Three days gives each column 77 pixels, five gives only 46. On narrow sidebars three reads considerably better.', 'xtx-integration-for-netatmo' );
         case 'wgt_width_label':                    return __( 'Width', 'xtx-integration-for-netatmo' );
+        case 'wgt_scheme_label':                   return __( 'Colour scheme', 'xtx-integration-for-netatmo' );
+        case 'wgt_scheme_light':                   return _x( 'Light', 'widget colour scheme', 'xtx-integration-for-netatmo' );
+        case 'wgt_scheme_dark':                    return _x( 'Dark', 'widget colour scheme', 'xtx-integration-for-netatmo' );
+        case 'wgt_scheme_transparent':             return _x( 'Transparent', 'widget colour scheme', 'xtx-integration-for-netatmo' );
+        case 'wgt_scheme_desc':                    return __( 'Light is the white card. Dark is the same card in dark colours, for a dark sidebar. Transparent draws no card at all: the text takes the sidebar’s own colour and the lines and chips are a faint shade of it, so the widget blends into whatever it is placed on. A single placement can override this with scheme="dark" on the shortcode.', 'xtx-integration-for-netatmo' );
         case 'wgt_width_desc':                     return __( 'Between 250 and 500 pixels. Icon, figures and spacing grow with it — at 500 pixels the weather icon is 96 pixels instead of 64. Where the column is narrower than the setting, the widget shrinks with it rather than overflowing.', 'xtx-integration-for-netatmo' );
         case 'wgt_preview_none':                   return __( 'Nothing displayable right now — neither station readings nor forecast are available. The widget would output nothing.', 'xtx-integration-for-netatmo' );
 

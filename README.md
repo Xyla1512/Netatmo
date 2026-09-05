@@ -35,7 +35,7 @@ Data then syncs on its own. Drop a shortcode on any page to display it.
 | Shortcode | What it renders |
 |---|---|
 | `[naws_live]` | Live sensor tiles with 24-hour trend charts and forecast |
-| `[naws_weather_widget days="3\|5"]` | Compact sidebar widget: weather icon, outdoor temperature, rain and wind, plus a three- or five-day forecast |
+| `[naws_weather_widget days="3\|5"]` | Compact sidebar widget: weather icon, outdoor temperature, rain and wind, plus a three- or five-day forecast, in a light, dark or transparent scheme |
 | `[naws_weather_icon size="96"]` | The animated current-weather icon on its own |
 | `[naws_forecast]` | Multi-day weather forecast |
 | `[naws_history]` | Year-over-year comparison charts |

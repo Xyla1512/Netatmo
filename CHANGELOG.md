@@ -2,6 +2,12 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [Unreleased]
+
+### Added
+
+- **A colour scheme for the sidebar widget.** `[naws_weather_widget]` was a white card whatever the sidebar behind it looked like, because its colours were literals in the stylesheet — the theme settings under Appearance never reached it. It now has three schemes: `light` (the card as it was), `dark` (the same card in dark colours, for a dark sidebar) and `transparent`, which draws no card at all: the text takes the sidebar's own colour and the lines and chips are a faint shade of it, so one setting fits a navy sidebar and a cream one alike. Chosen under Appearance → Sidebar widget, where the preview shows it on a dark ground, or per placement with `scheme="dark"` on the shortcode. Anything that is not one of the three names is light. A site that never chooses gets 1.9.10's markup byte for byte.
+
 ## [1.9.10]
 
 A year of daily mean temperatures as a calendar grid under a new shortcode; the MAC addresses 1.9.9 put on every public page; and the two language files it shipped that WordPress never read.

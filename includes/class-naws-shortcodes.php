@@ -517,8 +517,9 @@ class NAWS_Shortcodes {
         $opts = get_option( 'naws_settings', [] );
 
         $atts = shortcode_atts( [
-            'days'  => (string) ( $opts['wgt_days'] ?? 5 ),
-            'width' => (string) ( $opts['wgt_width'] ?? NAWS_Widget_Data::DEFAULT_WIDTH ),
+            'days'   => (string) ( $opts['wgt_days'] ?? 5 ),
+            'width'  => (string) ( $opts['wgt_width'] ?? NAWS_Widget_Data::DEFAULT_WIDTH ),
+            'scheme' => (string) ( $opts['wgt_scheme'] ?? NAWS_Widget_Data::SCHEMES[0] ),
         ], $atts, 'naws_weather_widget' );
 
         $station = NAWS_Weather_State::read_station();
@@ -557,8 +558,9 @@ class NAWS_Shortcodes {
         // need jquery/Chart.js, which enqueue_frontend() would drag in.
         $this->enqueue_frontend_styles();
 
-        $naws_wgt_state = $state['state'];
-        $naws_wgt_width = $atts['width'];
+        $naws_wgt_state  = $state['state'];
+        $naws_wgt_width  = $atts['width'];
+        $naws_wgt_scheme = NAWS_Widget_Data::normalise_scheme( $atts['scheme'] );
         $naws_wgt_place = (string) ( $forecast['location_name'] ?? '' );
         // The station's newest measurement, not the forecast fetch. The
         // forecast is cached for three hours, so printing its fetch time put
