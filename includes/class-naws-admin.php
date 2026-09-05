@@ -273,7 +273,9 @@ class NAWS_Admin {
                 'show'             => __( 'Show', 'xtx-integration-for-netatmo' ),
                 'hide'             => __( 'Hide', 'xtx-integration-for-netatmo' ),
                 'purge_min_days'   => __( 'Please enter at least 30 days.', 'xtx-integration-for-netatmo' ),
+                /* translators: %d: number of days */
                 'purge_confirm'    => __( 'Delete every reading older than %d days? This cannot be undone.', 'xtx-integration-for-netatmo' ),
+                /* translators: %d: number of deleted readings */
                 'purge_done'       => __( '%d readings deleted.', 'xtx-integration-for-netatmo' ),
                 'sc_copy'          => _x( 'Copy', 'sc_copy', 'xtx-integration-for-netatmo' ),
                 'sc_copied'        => __( '✓ Copied', 'xtx-integration-for-netatmo' ),

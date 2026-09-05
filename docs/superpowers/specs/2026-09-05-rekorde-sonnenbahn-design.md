@@ -306,7 +306,7 @@ Drei neue Dateien, frameworklos wie die übrigen 30:
 - `longest_run()` und `max_streak()` stimmen überein;
 - `on_this_day()`: nur frühere Jahre, neueste zuerst, 29. Februar nur aus Schaltjahren,
   Extremmarkierung je Spalte;
-- `format_delta()`: 10 K → „10 °C" bzw. „18 °F".
+- `delta_parts()`: 10 K → `[ 10.0, '°C' ]` bzw. `[ 18.0, '°F' ]`.
 
 **`tests/test-records-render.php`** — Templates mit Stubs (`esc_*`, `wp_date`,
 `get_option`, `naws_label`):
