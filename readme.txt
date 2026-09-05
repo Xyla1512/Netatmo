@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 1.9.10
+Stable tag: 1.9.11
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -114,6 +114,13 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 
 == Changelog ==
 
+= 1.9.11 =
+* Added: `[naws_records]` — fifteen records from the daily summary, each with its date: hottest day, coldest night, warmest night, coldest day, largest daily range, warmest and coldest month, wettest day and month, longest dry and wet spell, strongest gust, longest frost period, longest heat wave and longest run of summer days. As tiles or a table, since the first day with readings or for one year (`year="2025"`), a subset with `records="…"`. A tie goes to the earlier date, a month needs twenty days to compete, and a gap in the data breaks a run rather than bridging it.
+* Added: `[naws_on_this_day]` — this calendar day in every earlier year: low, high, mean and rain, newest year first, with the day's record marked in each column. The running year is left out.
+* Added: `[naws_sunpath]` — the sun on its arc over the station as an inline SVG: sunrise, solar noon and sunset, the part of the day already travelled, and the sun where it stands; at night below the horizon. Under it the day length, the change since yesterday and the year's longest and shortest day at the station's latitude. No script — a page cache shows the sun where it stood when the cache was filled.
+* Added: a colour scheme for the sidebar widget. `[naws_weather_widget]` was a white card whatever the sidebar looked like. It now has `light`, `dark` and `transparent` — the last draws no card at all and takes the sidebar's own colours. Chosen under Appearance → Sidebar widget, where the preview shows it on a dark ground, or per placement with `scheme="dark"`.
+* Fix: the purge button under Settings → Manual Data Purge did nothing, and every admin page of the plugin threw "$ is not a function". Since 1.6.4 two handlers in `admin.js` stood behind the line that closes the jQuery block. The purge button works again, and its messages are translated instead of German literals in the script.
+* Fix: the bundled catalogue builder now writes plural forms, so "1 day / 2 days" reads right in German and Norwegian. Both bundled catalogues are complete at 735 strings.
 = 1.9.10 =
 * Added: `[naws_heatmap]` — a year of outdoor daily mean temperatures as a calendar grid: twelve rows of months, thirty-one columns of days, one coloured tile per day, and a row of buttons to page through the years. What a curve makes you read, a grid lets you see: the cold fortnight in February and the hot week in July are shapes on the page rather than wiggles on a line. It reads the daily averages the annual chart already uses, so there is nothing to import. The ten colour stops are settings under Appearance → Heatmap Scale, values between two stops are interpolated, and they are anchored in Celsius even when the display is set to Fahrenheit, because the colour comes from the stored value and the tooltip from the unit you chose. Where a day has no stored average but does have a minimum and a maximum, the tile shows the mean of the two and its tooltip says so. The grid is a table rather than a drawing: the month column stays put while the days scroll sideways on a phone, colours are rendered on the server so the map is complete without JavaScript, and a screen reader reads "March, 14th, 8.2 °C" instead of "image". Attributes: `year`, `title`, `legend`.
 * Changed: the MAC addresses of your modules are no longer written into public pages. A module id in this plugin is the hardware address of a Netatmo module, and until now it travelled into every page carrying `[naws_live]` or `[naws_history]` — in the data block, on every chart configuration, in the `data-module4`, `data-indoor` and `data-outdoor` attributes — and it came back out with every request the dashboard made, whose reply carried the base station's address on every one of its thirty-odd readings as well. What travels now is a public reference: `outdoor`, `indoor`, `wind`, `rain` and `in-<name>`, resolved back on the server. Pages cached from before the update and the documented `NAWS_Chart` JavaScript interface both keep working.
@@ -381,6 +388,9 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 * Historical data importer with batch processing
 
 == Upgrade Notice ==
+
+= 1.9.11 =
+New: [naws_records] shows fifteen records from your daily summary with their dates, [naws_on_this_day] this day in earlier years, [naws_sunpath] the sun on its arc. The sidebar widget gets a dark and a transparent scheme. Fix: the purge button in the settings works again. Nothing to reconfigure.
 
 = 1.9.10 =
 New: [naws_heatmap] shows a year of daily mean temperatures as a calendar grid. Privacy fix: your modules' MAC addresses no longer appear in public pages or dashboard requests. The bundled German and Norwegian files WordPress refused in 1.9.9 are read again. Nothing to reconfigure.

@@ -5,21 +5,21 @@
             "id": "rekorde",
             "titel": "Rekorde und dieser Tag in früheren Jahren",
             "satz": "[naws_records] holt aus der Tagesübersicht, was darin steckt: heißester Tag, kälteste Nacht, nassester Monat, längste Trockenperiode, stärkste Böe — fünfzehn Rekorde mit Datum, als Kacheln oder Tabelle, seit Aufzeichnungsbeginn oder für ein Jahr. [naws_on_this_day] zeigt dazu, was am selben Datum in jedem früheren Jahr war.",
-            "ab": null,
+            "ab": "1.9.11",
             "bild": null
         },
         {
             "id": "sonnenbahn",
             "titel": "Die Sonne auf ihrem Bogen",
             "satz": "[naws_sunpath] zeichnet den Tagesbogen der Sonne über der Station: Aufgang, Mittag, Untergang, der schon vergangene Teil und die Sonne, wo sie gerade steht. Darunter Tageslänge, die Änderung seit gestern und der längste und kürzeste Tag des Jahres am Standort.",
-            "ab": null,
+            "ab": "1.9.11",
             "bild": null
         },
         {
             "id": "widget-farbschema",
             "titel": "Das Seitenleisten-Widget passt sich dunklen Seiten an",
             "satz": "Drei Farbschemata für [naws_weather_widget]: hell wie bisher, dunkel für dunkle Seitenleisten, und transparent — dann zeichnet das Widget keine Karte, sondern übernimmt Schrift- und Linienfarbe von der Seitenleiste. Einstellbar unter Erscheinungsbild, mit Vorschau auf dunklem Grund, oder je Platzierung mit scheme=\"dark\" auf dem Kurzbefehl.",
-            "ab": null,
+            "ab": "1.9.11",
             "bild": null
         },
         {

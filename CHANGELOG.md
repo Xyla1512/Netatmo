@@ -2,7 +2,9 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
-## [Unreleased]
+## [1.9.11]
+
+Fifteen records from the daily summary, this day in earlier years, the sun on its arc — and a colour scheme that lets the sidebar widget sit on a dark background.
 
 ### Added
 
