@@ -55,15 +55,20 @@ $naws_rec_parts = static function ( array $entry, array $result ): array {
     ];
 };
 
+// Anchored on noon: WordPress runs PHP in UTC, so strtotime('Y-m-d') is
+// midnight UTC and wp_date() would render the previous day on any site
+// with a negative UTC offset (same pattern as NAWS_Calc::raw_sum()).
+$naws_rec_day = static fn( string $ymd ): string => wp_date( $date_fmt, strtotime( $ymd . ' 12:00:00' ) );
+
 /** When it happened: a day, a month, or a span. */
-$naws_rec_when = static function ( array $entry, array $result ) use ( $date_fmt ): string {
+$naws_rec_when = static function ( array $entry, array $result ) use ( $date_fmt, $naws_rec_day ): string {
     if ( $entry['kind'] === 'month' ) {
         return wp_date( 'F Y', strtotime( $result['month'] . '-15' ) );
     }
     if ( $entry['kind'] === 'streak' ) {
-        return wp_date( $date_fmt, strtotime( $result['from'] ) ) . ' – ' . wp_date( $date_fmt, strtotime( $result['to'] ) );
+        return $naws_rec_day( $result['from'] ) . ' – ' . $naws_rec_day( $result['to'] );
     }
-    return wp_date( $date_fmt, strtotime( $result['date'] ) );
+    return $naws_rec_day( $result['date'] );
 };
 ?>
 <section class="naws-rec">
@@ -107,7 +112,7 @@ $naws_rec_when = static function ( array $entry, array $result ) use ( $date_fmt
       /* translators: 1: first date with readings, 2: "365 days" */
       echo esc_html( sprintf(
           naws_label( 'rec_since' ),
-          wp_date( $date_fmt, strtotime( $coverage['first'] ) ),
+          $naws_rec_day( $coverage['first'] ),
           /* translators: %d: number of days */
           sprintf( _n( '%d day', '%d days', $coverage['days'], 'xtx-integration-for-netatmo' ), $coverage['days'] )
       ) );

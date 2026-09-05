@@ -18,7 +18,7 @@ function esc_html( $s ) { return htmlspecialchars( (string) $s, ENT_QUOTES, 'UTF
 function esc_attr( $s ) { return htmlspecialchars( (string) $s, ENT_QUOTES, 'UTF-8' ); }
 function sanitize_text_field( $s ) { return is_string( $s ) ? trim( $s ) : $s; }
 function sanitize_key( $s ) { return preg_replace( '/[^a-z0-9_\-]/', '', strtolower( (string) $s ) ); }
-function wp_date( $fmt, $ts = null ) { return gmdate( $fmt, $ts ?? time() ); }
+function wp_date( $fmt, $ts = null ) { $d = new DateTime( 'now', new DateTimeZone( 'America/New_York' ) ); $d->setTimestamp( $ts ?? time() ); return $d->format( $fmt ); }
 function number_format_i18n( $n, $d = 0 ) { return number_format( (float) $n, $d, '.', '' ); }
 require_once __DIR__ . '/i18n-stubs.php';
 
