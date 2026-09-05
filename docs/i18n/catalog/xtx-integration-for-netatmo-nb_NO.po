@@ -9,9 +9,19 @@ msgstr ""
 "Language: nb_NO\n"
 "X-Domain: xtx-integration-for-netatmo\n"
 
+#: templates/records.php:46 templates/records.php:112
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d dag"
+msgstr[1] "%d dager"
+
 #: admin/views/dashboard.php:168
 msgid "%d error(s) in the last hour"
 msgstr "%d feil den siste timen"
+
+#: includes/class-naws-labels.php:151
+msgid "%d min"
+msgstr "%d min"
 
 #: admin/views/export.php:84
 msgid "%d modules"
@@ -21,19 +31,27 @@ msgstr "%d moduler"
 msgid "%d readings deleted."
 msgstr "%d målinger slettet."
 
-#: admin/views/shortcodes.php:303 includes/class-naws-shortcodes.php:475 templates/forecast.php:14 templates/live.php:235
+#: admin/views/shortcodes.php:344 includes/class-naws-shortcodes.php:544 templates/forecast.php:14 templates/live.php:235
 msgid "%d-Day Forecast"
 msgstr "%d-dagers varsel"
+
+#: includes/class-naws-labels.php:148
+msgid "%s longer than yesterday"
+msgstr "%s lengre enn i går"
 
 #: admin/views/export.php:44
 msgid "%s rows"
 msgstr "%s rader"
 
+#: includes/class-naws-labels.php:147
+msgid "%s shorter than yesterday"
+msgstr "%s kortere enn i går"
+
 #: includes/class-naws-helpers.php:688
 msgid "%s · computed from min and max"
 msgstr "%s · beregnet fra min og maks"
 
-#: includes/class-naws-labels.php:110 includes/class-naws-shortcodes.php:444
+#: includes/class-naws-labels.php:110 includes/class-naws-shortcodes.php:513
 msgid "(from %1$d of %2$d days)"
 msgstr "(fra %1$d av %2$d dager)"
 
@@ -93,7 +111,7 @@ msgstr "5 dager"
 msgid "5 °C"
 msgstr "5 °C"
 
-#: admin/views/shortcodes.php:324
+#: admin/views/shortcodes.php:365
 msgid "96 px, centred"
 msgstr "96 px, sentrert"
 
@@ -161,7 +179,7 @@ msgstr "Token present. Access Token gyldig til: %s"
 msgid "Activate module"
 msgstr "Aktiver modul"
 
-#: admin/views/modules.php:31 admin/views/rest-api-docs.php:75 admin/views/shortcodes.php:398
+#: admin/views/modules.php:31 admin/views/rest-api-docs.php:75 admin/views/shortcodes.php:439
 msgid "Active"
 msgstr "Aktiv"
 
@@ -173,11 +191,11 @@ msgstr "Flere attributter"
 msgid "After saving your Client ID and Secret, click the button below to authorize:"
 msgstr "Lagre Client ID og Secret, og klikk deretter på knappen under for å autorisere:"
 
-#: includes/class-naws-helpers.php:310 includes/class-naws-labels.php:140 templates/live.php:347
+#: includes/class-naws-helpers.php:310 includes/class-naws-labels.php:180 templates/live.php:347
 msgid "Air Pressure"
 msgstr "Lufttrykk"
 
-#: admin/views/shortcodes.php:396
+#: admin/views/shortcodes.php:437
 msgid "Alias"
 msgstr "Alias"
 
@@ -254,8 +272,9 @@ msgid "At or above this rain rate the icon shows heavy rain instead of rain."
 msgstr "Fra denne regnmengden viser ikonet kraftig regn i stedet for regn."
 
 #: admin/views/shortcodes.php:63 admin/views/shortcodes.php:142 admin/views/shortcodes.php:206 admin/views/shortcodes.php:217
-#: admin/views/shortcodes.php:238 admin/views/shortcodes.php:254 admin/views/shortcodes.php:272 admin/views/shortcodes.php:298
-#: admin/views/shortcodes.php:317 admin/views/shortcodes.php:368
+#: admin/views/shortcodes.php:238 admin/views/shortcodes.php:254 admin/views/shortcodes.php:271 admin/views/shortcodes.php:285
+#: admin/views/shortcodes.php:295 admin/views/shortcodes.php:313 admin/views/shortcodes.php:339 admin/views/shortcodes.php:358
+#: admin/views/shortcodes.php:409
 msgid "Attribute"
 msgstr "Attributt"
 
@@ -328,7 +347,7 @@ msgstr "Begge vilkår må være oppfylt. Duggpunktavstanden er forskjellen mello
 msgid "CO2"
 msgstr "CO2"
 
-#: includes/class-naws-helpers.php:311 includes/class-naws-labels.php:141 templates/live.php:84 templates/live.php:348
+#: includes/class-naws-helpers.php:311 includes/class-naws-labels.php:181 templates/live.php:84 templates/live.php:348
 msgid "CO₂"
 msgstr "CO₂"
 
@@ -357,7 +376,7 @@ msgstr "Kortbakgrunn"
 msgid "Chart Theming"
 msgstr "Diagramtema"
 
-#: includes/class-naws-shortcodes.php:90
+#: includes/class-naws-shortcodes.php:93
 msgid "Chart could not be rendered."
 msgstr "Diagrammet kunne ikke vises."
 
@@ -373,6 +392,10 @@ msgstr "Velg ikonsett"
 msgid "Choose an icon set for the frontend and customize colors per sensor."
 msgstr "Velg et ikonsett for frontend og tilpass fargene per sensor."
 
+#: admin/views/shortcodes.php:276
+msgid "Christmas Eve in earlier years"
+msgstr "Julaften i tidligere år"
+
 #: admin/views/settings.php:395
 msgid "City / Postal code"
 msgstr "By / postnummer"
@@ -381,11 +404,11 @@ msgstr "By / postnummer"
 msgid "Clean line icons with thin strokes — the classic look."
 msgstr "Rene linjeikoner med tynne streker — det klassiske utseendet."
 
-#: includes/class-naws-labels.php:124
+#: includes/class-naws-labels.php:164
 msgid "Clear"
 msgstr "Klart"
 
-#: includes/class-naws-labels.php:125
+#: includes/class-naws-labels.php:165
 msgid "Clear night"
 msgstr "Klar natt"
 
@@ -405,6 +428,18 @@ msgstr "Client Secret"
 msgid "Close"
 msgstr "Lukk"
 
+#: includes/class-naws-labels.php:119
+msgid "Coldest day"
+msgstr "Kaldeste dag"
+
+#: includes/class-naws-labels.php:122
+msgid "Coldest month"
+msgstr "Kaldeste måned"
+
+#: includes/class-naws-labels.php:117
+msgid "Coldest night"
+msgstr "Kaldeste natt"
+
 #: admin/views/appearance.php:512
 msgid "Colour scale for [naws_heatmap]. The stops are degrees Celsius; values in between are interpolated. They stay in Celsius even when the display unit is Fahrenheit, because the colour is taken from the stored value."
 msgstr "Fargeskala for [naws_heatmap]. Stoppunktene er grader Celsius; verdier imellom interpoleres. De forblir i Celsius selv når visningsenheten er Fahrenheit, fordi fargen hentes fra den lagrede verdien."
@@ -413,7 +448,7 @@ msgstr "Fargeskala for [naws_heatmap]. Stoppunktene er grader Celsius; verdier i
 msgid "Colour scheme"
 msgstr "Fargeskjema"
 
-#: admin/views/shortcodes.php:374
+#: admin/views/shortcodes.php:415
 msgid "Colour scheme: light, dark or transparent. Dark is the card in dark colours; transparent draws no card and takes the colours of whatever it is placed on. Anything else counts as light."
 msgstr "Fargeskjema: light, dark eller transparent. Mørk er kortet i mørke farger; gjennomsiktig tegner ikke noe kort og tar fargene fra det den står på. Alt annet regnes som lyst."
 
@@ -421,15 +456,19 @@ msgstr "Fargeskjema: light, dark eller transparent. Mørk er kortet i mørke far
 msgid "Comma-separated fields: temp_min, temp_max, temp_avg, pressure_avg, rain_sum"
 msgstr "Kommaseparerte felt: temp_min, temp_max, temp_avg, pressure_avg, rain_sum"
 
+#: admin/views/shortcodes.php:256
+msgid "Comma-separated keys to show, in that order: hottest_day, coldest_night, warmest_night, coldest_day, widest_range, warmest_month, coldest_month, wettest_day, wettest_month, longest_dry_spell, longest_wet_spell, strongest_gust, longest_frost, longest_heat_wave, longest_summer_run. Unknown keys are ignored."
+msgstr "Kommaseparerte nøkler i ønsket rekkefølge: hottest_day, coldest_night, warmest_night, coldest_day, widest_range, warmest_month, coldest_month, wettest_day, wettest_month, longest_dry_spell, longest_wet_spell, strongest_gust, longest_frost, longest_heat_wave, longest_summer_run. Ukjente nøkler blir oversett."
+
 #: admin/views/rest-api-docs.php:327
 msgid "Comma-separated list of fields to return"
 msgstr "Kommaseparert liste over felt som skal returneres"
 
-#: admin/views/shortcodes.php:256 admin/views/shortcodes.php:274
+#: admin/views/shortcodes.php:297 admin/views/shortcodes.php:315
 msgid "Comma-separated parameters to filter"
 msgstr "Kommaseparerte parametere å filtrere på"
 
-#: admin/views/shortcodes.php:288
+#: admin/views/shortcodes.php:329
 msgid "Compact info bar with calculated values (feels like, dew point) and astronomical data (rise/set, moon phase, supermoon, lunar eclipse)."
 msgstr "Kompakt infolinje med beregnede verdier (følt temperatur, duggpunkt) og astronomiske data (opp-/nedgang, månefase, supermåne, måneformørkelse)."
 
@@ -437,7 +476,7 @@ msgstr "Kompakt infolinje med beregnede verdier (følt temperatur, duggpunkt) og
 msgid "Compact weather widget for narrow columns. Shows the icon and outdoor temperature, rain and wind below that, then the forecast. Placed with the [naws_weather_widget] shortcode."
 msgstr "Kompakt værwidget for smale spalter. Viser ikon og utetemperatur, under det regn og vind, deretter varselet. Settes inn med kortkoden [naws_weather_widget]."
 
-#: admin/views/shortcodes.php:363
+#: admin/views/shortcodes.php:404
 msgid "Compact weather widget for sidebars"
 msgstr "Kompakt værwidget for sidefelt"
 
@@ -477,7 +516,7 @@ msgstr "Kjølegraddager"
 msgid "Cooling limit (°C)"
 msgstr "Kjølegrense (°C)"
 
-#: includes/class-naws-shortcodes.php:93
+#: includes/class-naws-shortcodes.php:96
 msgid "Could not load data (HTTP %s)"
 msgstr "Kunne ikke laste data (HTTP %s)"
 
@@ -505,15 +544,15 @@ msgstr "Cron-status"
 msgid "Current Readings"
 msgstr "Nåværende målinger"
 
-#: admin/views/shortcodes.php:312
+#: admin/views/shortcodes.php:353
 msgid "Current weather as an animated icon"
 msgstr "Været akkurat nå som animert ikon"
 
-#: admin/views/shortcodes.php:303
+#: admin/views/shortcodes.php:344
 msgid "Custom title for the forecast header."
 msgstr "Egen tittel for varseloverskriften."
 
-#: admin/views/shortcodes.php:240 includes/class-naws-shortcodes.php:249
+#: admin/views/shortcodes.php:240 includes/class-naws-shortcodes.php:252
 msgid "Daily Average Temperature"
 msgstr "Døgnmiddeltemperatur"
 
@@ -573,6 +612,10 @@ msgstr "Tidsrom"
 msgid "Day"
 msgstr "Dag"
 
+#: includes/class-naws-labels.php:146
+msgid "Day length %s"
+msgstr "Daglengde %s"
+
 #: admin/views/appearance.php:57
 msgid "Day without a reading"
 msgstr "Dag uten måling"
@@ -598,8 +641,8 @@ msgid "Decimal places"
 msgstr "Desimaler"
 
 #: admin/views/shortcodes.php:66 admin/views/shortcodes.php:206 admin/views/shortcodes.php:217 admin/views/shortcodes.php:238
-#: admin/views/shortcodes.php:254 admin/views/shortcodes.php:272 admin/views/shortcodes.php:300 admin/views/shortcodes.php:319
-#: admin/views/shortcodes.php:370
+#: admin/views/shortcodes.php:254 admin/views/shortcodes.php:271 admin/views/shortcodes.php:285 admin/views/shortcodes.php:295
+#: admin/views/shortcodes.php:313 admin/views/shortcodes.php:341 admin/views/shortcodes.php:360 admin/views/shortcodes.php:411
 msgid "Default"
 msgstr "Standard"
 
@@ -624,8 +667,9 @@ msgid "Depositing rime fog"
 msgstr "Rimtåke"
 
 #: admin/views/shortcodes.php:64 admin/views/shortcodes.php:91 admin/views/shortcodes.php:143 admin/views/shortcodes.php:206
-#: admin/views/shortcodes.php:217 admin/views/shortcodes.php:238 admin/views/shortcodes.php:254 admin/views/shortcodes.php:272
-#: admin/views/shortcodes.php:299 admin/views/shortcodes.php:318 admin/views/shortcodes.php:369
+#: admin/views/shortcodes.php:217 admin/views/shortcodes.php:238 admin/views/shortcodes.php:254 admin/views/shortcodes.php:271
+#: admin/views/shortcodes.php:285 admin/views/shortcodes.php:295 admin/views/shortcodes.php:313 admin/views/shortcodes.php:340
+#: admin/views/shortcodes.php:359 admin/views/shortcodes.php:410
 msgid "Description"
 msgstr "Beskrivelse"
 
@@ -661,7 +705,7 @@ msgstr "Netatmo-tilkobling frakoblet."
 msgid "Displayed as default title in the live dashboard and shortcodes. Leave empty to use the WordPress site title."
 msgstr "Vises som standardtittel i live-dashbordet og kortkoder. La stå tomt for å bruke WordPress-sidetittelen."
 
-#: admin/views/shortcodes.php:294
+#: admin/views/shortcodes.php:335
 msgid "Displays a multi-day weather forecast with temperature, precipitation, wind and weather condition. The number of days and location are configurable in the plugin settings."
 msgstr "Viser et flerdagers værvarsel med temperatur, nedbør, vind og værtype. Antall dager og sted konfigureres i plugin-innstillingene."
 
@@ -685,7 +729,7 @@ msgstr "Yr"
 msgid "During night hours every second fetch is skipped, doubling the interval. The window follows the timezone configured in WordPress."
 msgstr "I nattetimene hoppes annenhver henting over, slik at intervallet dobles. Tidsvinduet følger tidssonen som er satt i WordPress."
 
-#: admin/views/shortcodes.php:321
+#: admin/views/shortcodes.php:362
 msgid "Edge length in pixels. Values below 64 are raised to 64; below that the states are no longer distinguishable."
 msgstr "Kantlengde i piksler. Verdier under 64 heves til 64; under det lar tilstandene seg ikke skille."
 
@@ -701,7 +745,7 @@ msgstr "Aktiver 24t-diagram"
 msgid "Enable REST API"
 msgstr "Aktiver REST API"
 
-#: admin/views/shortcodes.php:259
+#: admin/views/shortcodes.php:300
 msgid "Enable animation (true/false)"
 msgstr "Aktiver animasjon (true/false)"
 
@@ -793,6 +837,10 @@ msgstr "Eksporter værdata, modulkonfigurasjon og alle plugin-innstillinger. Ide
 msgid "Feb"
 msgstr "Feb"
 
+#: admin/views/shortcodes.php:251
+msgid "Fifteen records from the daily summary — hottest day, coldest night, wettest month, longest dry spell, strongest gust and more — each with its date, as tiles or as a table."
+msgstr "Femten rekorder fra dagssammendraget — varmeste dag, kaldeste natt, våteste måned, lengste tørkeperiode, sterkeste vindkast og mer — hver med sin dato, som fliser eller som tabell."
+
 #: includes/class-naws-admin.php:621
 msgid "File too large. Maximum size: 100 MB."
 msgstr "Filen er for stor. Maksimal størrelse: 100 MB."
@@ -809,11 +857,11 @@ msgstr "Filtrer på parameter(e), kommaseparert: Temperature, Humidity, CO2, Pre
 msgid "Filter by specific module ID (optional)"
 msgstr "Filtrer på en bestemt modul-ID (valgfritt)"
 
-#: includes/class-naws-astro.php:279
+#: includes/class-naws-astro.php:347
 msgid "First Quarter"
 msgstr "Første kvarter"
 
-#: includes/class-naws-forecast.php:847 includes/class-naws-labels.php:129
+#: includes/class-naws-forecast.php:847 includes/class-naws-labels.php:169
 msgid "Fog"
 msgstr "Tåke"
 
@@ -833,7 +881,7 @@ msgstr "Skriftfamilie"
 msgid "Forecast Provider"
 msgstr "Værvarslingstjeneste"
 
-#: admin/views/shortcodes.php:372
+#: admin/views/shortcodes.php:413
 msgid "Forecast length. Only 3 or 5; other values are pulled to the nearer one."
 msgstr "Varselets lengde. Bare 3 eller 5; andre verdier trekkes til nærmeste."
 
@@ -857,7 +905,7 @@ msgstr "Frostdager"
 msgid "Full Backup"
 msgstr "Full sikkerhetskopi"
 
-#: includes/class-naws-astro.php:281
+#: includes/class-naws-astro.php:349
 msgid "Full Moon"
 msgstr "Fullmåne"
 
@@ -905,7 +953,7 @@ msgstr "Rutenett-, akse- og verktøytipsfarger for alle diagrammer."
 msgid "Grouping: day, week, month, year"
 msgstr "Gruppering: day, week, month, year"
 
-#: admin/views/shortcodes.php:277
+#: admin/views/shortcodes.php:318
 msgid "Grouping: hour, day, week, month, year. Any other value lists single readings."
 msgstr "Gruppering: hour, day, week, month, year. Enhver annen verdi viser enkeltmålinger."
 
@@ -925,7 +973,7 @@ msgstr "Vindkastretning"
 msgid "Gust Speed"
 msgstr "Vindkasthastighet"
 
-#: admin/views/appearance.php:34 includes/class-naws-labels.php:146 templates/forecast.php:107 templates/live.php:71
+#: admin/views/appearance.php:34 includes/class-naws-labels.php:186 templates/forecast.php:107 templates/live.php:71
 #: templates/live.php:353
 msgid "Gusts"
 msgstr "Vindkast"
@@ -949,6 +997,10 @@ msgstr "Topplinje – bakgrunn"
 #: admin/views/appearance.php:25
 msgid "Header Bar – Text"
 msgstr "Topplinje – tekst"
+
+#: admin/views/shortcodes.php:258 admin/views/shortcodes.php:273 admin/views/shortcodes.php:286
+msgid "Heading; an empty title=\"\" leaves it out"
+msgstr "Overskrift; en tom title=\"\" utelater den"
 
 #: templates/infobar.php:88
 msgid "Heat Index"
@@ -978,7 +1030,7 @@ msgstr "Heatmap-skala"
 msgid "Heavy freezing rain"
 msgstr "Kraftig underkjølt regn"
 
-#: includes/class-naws-forecast.php:856 includes/class-naws-labels.php:131
+#: includes/class-naws-forecast.php:856 includes/class-naws-labels.php:171
 msgid "Heavy rain"
 msgstr "Kraftig regn"
 
@@ -1006,7 +1058,7 @@ msgstr "Kraftig tordenvær"
 msgid "Hide"
 msgstr "Skjul"
 
-#: admin/views/shortcodes.php:222 includes/class-naws-shortcodes.php:224
+#: admin/views/shortcodes.php:222 includes/class-naws-shortcodes.php:227
 msgid "Historical Weather Data"
 msgstr "Historiske værdata"
 
@@ -1021,6 +1073,10 @@ msgstr "Historieimport"
 #: includes/class-naws-labels.php:100
 msgid "Hot days"
 msgstr "Hete dager"
+
+#: includes/class-naws-labels.php:116
+msgid "Hottest day"
+msgstr "Varmeste dag"
 
 #: admin/views/shortcodes.php:152
 msgid "How day classes are counted."
@@ -1046,7 +1102,7 @@ msgstr "Isdager"
 msgid "Icon Colors"
 msgstr "Ikonfarger"
 
-#: admin/views/shortcodes.php:364
+#: admin/views/shortcodes.php:405
 msgid "Icon and outdoor temperature, rain and wind below that, then the forecast. Width adjustable between 250 and 500 pixels, with the contents scaling to match. A missing add-on module drops its value entirely. Rendered on page load and does not refresh by itself — the time in the footer shows its age."
 msgstr "Ikon og utetemperatur, under det regn og vind, deretter varselet. Bredden kan stilles mellom 250 og 500 piksler, og innholdet skalerer med. Mangler en tilleggsmodul, faller verdien bort uten erstatning. Bygges ved sidelasting og oppdateres ikke av seg selv — klokkeslettet i bunnlinjen viser alderen."
 
@@ -1142,7 +1198,11 @@ msgstr "Knop"
 msgid "Language & station"
 msgstr "Språk og stasjon"
 
-#: includes/class-naws-astro.php:283
+#: includes/class-naws-labels.php:120
+msgid "Largest daily range"
+msgstr "Største døgnvariasjon"
+
+#: includes/class-naws-astro.php:351
 msgid "Last Quarter"
 msgstr "Siste kvarter"
 
@@ -1154,7 +1214,7 @@ msgstr "Sist sett"
 msgid "Latest sensor reading per module/parameter"
 msgstr "Nyeste sensormåling per modul/parameter"
 
-#: admin/views/shortcodes.php:257
+#: admin/views/shortcodes.php:298
 msgid "Layout: grid or list"
 msgstr "Layout: grid eller list"
 
@@ -1234,9 +1294,33 @@ msgstr "Stedet ble ikke funnet. Kontroller bynavn og landkode."
 msgid "Location source"
 msgstr "Posisjonskilden"
 
+#: includes/class-naws-labels.php:125
+msgid "Longest dry spell"
+msgstr "Lengste tørkeperiode"
+
+#: includes/class-naws-labels.php:128
+msgid "Longest frost period"
+msgstr "Lengste frostperiode"
+
+#: includes/class-naws-labels.php:129
+msgid "Longest heat wave"
+msgstr "Lengste hetebølge"
+
+#: includes/class-naws-labels.php:130
+msgid "Longest run of summer days"
+msgstr "Lengste rekke sommerdager"
+
+#: includes/class-naws-labels.php:126
+msgid "Longest wet spell"
+msgstr "Lengste regnperiode"
+
 #: templates/infobar.php:150
 msgid "Lunar Eclipse"
 msgstr "Måneformørkelse"
+
+#: admin/views/shortcodes.php:272
+msgid "MM-DD or YYYY-MM-DD; the year only decides which years count as earlier. Anything else is today."
+msgstr "MM-DD eller ÅÅÅÅ-MM-DD; året avgjør bare hvilke år som regnes som tidligere. Alt annet er i dag."
 
 #: includes/class-naws-forecast.php:844
 msgid "Mainly clear"
@@ -1267,7 +1351,7 @@ msgstr "Maks. temperatur (døgn)"
 msgid "Max results (1–5000)"
 msgstr "Maks. antall resultater (1–5000)"
 
-#: admin/views/shortcodes.php:276
+#: admin/views/shortcodes.php:317
 msgid "Max. number of records"
 msgstr "Maks. antall poster"
 
@@ -1316,7 +1400,7 @@ msgstr "Modul"
 msgid "Module ID (MAC)"
 msgstr "Modul-ID (MAC)"
 
-#: admin/views/shortcodes.php:255 admin/views/shortcodes.php:273
+#: admin/views/shortcodes.php:296 admin/views/shortcodes.php:314
 msgid "Module MAC (empty = all modules)"
 msgstr "Modul-MAC (tom = alle moduler)"
 
@@ -1332,7 +1416,7 @@ msgstr "Modul4 fuktighet"
 msgid "Module4 Temperature"
 msgstr "Modul4 temperatur"
 
-#: admin/views/dashboard.php:79 admin/views/export.php:83 admin/views/modules.php:9 admin/views/shortcodes.php:394
+#: admin/views/dashboard.php:79 admin/views/export.php:83 admin/views/modules.php:9 admin/views/shortcodes.php:435
 #: includes/class-naws-admin.php:52
 msgid "Modules"
 msgstr "Moduler"
@@ -1397,7 +1481,7 @@ msgstr "Token tilbakekalt eller utløpt. Koble til på nytt via OAuth."
 msgid "New API key generated."
 msgstr "Ny API-nøkkel er generert."
 
-#: includes/class-naws-astro.php:277
+#: includes/class-naws-astro.php:345
 msgid "New Moon"
 msgstr "Nymåne"
 
@@ -1453,7 +1537,7 @@ msgstr "Ingen by er angitt. Angi en by i innstillingene for værvarsel."
 msgid "No data available yet."
 msgstr "Ingen data tilgjengelig ennå."
 
-#: includes/class-naws-shortcodes.php:91 templates/heatmap.php:70
+#: includes/class-naws-shortcodes.php:94 templates/heatmap.php:70
 msgid "No data for this period."
 msgstr "Ingen data for denne perioden."
 
@@ -1493,7 +1577,7 @@ msgstr "Ingen moduler funnet."
 msgid "No reading"
 msgstr "Ingen måling"
 
-#: admin/views/shortcodes.php:356
+#: admin/views/shortcodes.php:397
 msgid "No state determinable right now — neither station readings nor forecast are available. Nothing would be output."
 msgstr "Ingen tilstand kan fastslås nå — verken stasjonsmålinger eller varsel foreligger. Ingenting ville blitt vist."
 
@@ -1537,7 +1621,7 @@ msgstr "Nov"
 msgid "Number of comparison years"
 msgstr "Antall sammenligningsår"
 
-#: admin/views/shortcodes.php:302
+#: admin/views/shortcodes.php:343
 msgid "Number of forecast days (1–7). Defaults to value from settings."
 msgstr "Antall varseldager (1–7). Standard hentes fra innstillingene."
 
@@ -1569,11 +1653,11 @@ msgstr "Open-Meteo (global, åpen kildekode)"
 msgid "Operation"
 msgstr "Drift"
 
-#: admin/views/shortcodes.php:278
+#: admin/views/shortcodes.php:319
 msgid "Optional table title"
 msgstr "Valgfri tabelltittel"
 
-#: admin/views/shortcodes.php:258
+#: admin/views/shortcodes.php:299
 msgid "Optional title"
 msgstr "Valgfri tittel"
 
@@ -1610,7 +1694,7 @@ msgstr "Utendørssensor"
 msgid "Outline"
 msgstr "Outline"
 
-#: includes/class-naws-forecast.php:846 includes/class-naws-labels.php:128
+#: includes/class-naws-forecast.php:846 includes/class-naws-labels.php:168
 msgid "Overcast"
 msgstr "Overskyet"
 
@@ -1630,7 +1714,7 @@ msgstr "Parameter"
 msgid "Partial"
 msgstr "Delvis"
 
-#: includes/class-naws-forecast.php:845 includes/class-naws-labels.php:127
+#: includes/class-naws-forecast.php:845 includes/class-naws-labels.php:167
 msgid "Partly cloudy"
 msgstr "Delvis skyet"
 
@@ -1654,7 +1738,7 @@ msgstr "Dårlig"
 msgid "Possible values"
 msgstr "Verdier"
 
-#: includes/class-naws-helpers.php:315 includes/class-naws-labels.php:143 templates/forecast.php:101 templates/live.php:291
+#: includes/class-naws-helpers.php:315 includes/class-naws-labels.php:183 templates/forecast.php:101 templates/live.php:291
 #: templates/live.php:350
 msgid "Precipitation"
 msgstr "Nedbør"
@@ -1742,6 +1826,18 @@ msgstr "Ferdige, komplette widgeter med Chart.js-visualiseringer og automatisk d
 #: admin/views/cron-log.php:9 admin/views/dashboard.php:132 admin/views/dashboard.php:399
 msgid "Recent Sync Events"
 msgstr "Siste synkroniseringer"
+
+#: includes/class-naws-labels.php:114
+msgid "Records"
+msgstr "Rekorder"
+
+#: includes/class-naws-labels.php:115
+msgid "Records %d"
+msgstr "Rekorder %d"
+
+#: admin/views/shortcodes.php:255
+msgid "Records of one year only. Empty means since the first day with readings."
+msgstr "Rekorder for bare ett år. Tomt betyr siden den første dagen med målinger."
 
 #: admin/views/settings.php:129
 msgid "Redirect URI to add in your Netatmo App:"
@@ -1907,15 +2003,15 @@ msgstr "Vis fargeskalaen under rutenettet (yes/no)"
 msgid "Show the icon above the live dashboard. The [naws_weather_icon] shortcode is unaffected by this."
 msgstr "Vis ikonet over live-dashbordet. Kortkoden [naws_weather_icon] berøres ikke av dette."
 
-#: admin/views/shortcodes.php:293
+#: admin/views/shortcodes.php:334
 msgid "Shows a weather forecast based on station location."
 msgstr "Viser et værvarsel basert på stasjonens plassering."
 
-#: admin/views/shortcodes.php:251
+#: admin/views/shortcodes.php:292
 msgid "Shows animated metric cards with the latest sensor values from all or specific modules."
 msgstr "Viser animerte målekort med de nyeste sensorverdiene fra alle eller enkelte moduler."
 
-#: admin/views/shortcodes.php:313
+#: admin/views/shortcodes.php:354
 msgid "Shows the current weather state as an animated icon. Deliberately without a visible caption — the state is carried by the aria-label for screen readers. If the icon sits on the same page as the live dashboard it refreshes along with that page's polling cycle. When no state can be determined, nothing is output."
 msgstr "Viser gjeldende værtilstand som et animert ikon. Bevisst uten synlig tekst — tilstanden ligger i aria-label for skjermlesere. Står ikonet på samme side som live-dashbordet, oppdateres det sammen med dets hentesyklus. Kan ingen tilstand fastslås, vises ingenting."
 
@@ -1923,11 +2019,15 @@ msgstr "Viser gjeldende værtilstand som et animert ikon. Bevisst uten synlig te
 msgid "Sidebar widget"
 msgstr "Sidefelt-widget"
 
-#: includes/class-naws-labels.php:133
+#: includes/class-naws-labels.php:134
+msgid "Since %1$s · %2$s with readings"
+msgstr "Siden %1$s · %2$s med målinger"
+
+#: includes/class-naws-labels.php:173
 msgid "Sleet or hail"
 msgstr "Sludd eller hagl"
 
-#: includes/class-naws-forecast.php:860 includes/class-naws-labels.php:132
+#: includes/class-naws-forecast.php:860 includes/class-naws-labels.php:172
 msgid "Snow"
 msgstr "Snø"
 
@@ -1947,7 +2047,7 @@ msgstr "Snøbyger"
 msgid "Solid filled icons for a bolder, modern look."
 msgstr "Fylte ikoner for et dristigere, moderne utseende."
 
-#: admin/views/shortcodes.php:345 templates/forecast.php:118 templates/live.php:304
+#: admin/views/shortcodes.php:386 templates/forecast.php:118 templates/live.php:304
 msgid "Source"
 msgstr "Kilde: Open-Meteo.com"
 
@@ -2007,13 +2107,17 @@ msgstr "Status"
 msgid "Stored encrypted"
 msgstr "Lagret kryptert"
 
-#: includes/class-naws-labels.php:135
+#: includes/class-naws-labels.php:175
 msgid "Storm"
 msgstr "Storm"
 
 #: admin/views/settings.php:486
 msgid "Storm from"
 msgstr "Storm fra"
+
+#: includes/class-naws-labels.php:127
+msgid "Strongest gust"
+msgstr "Sterkeste vindkast"
 
 #: includes/class-naws-labels.php:99
 msgid "Summer days"
@@ -2022,6 +2126,14 @@ msgstr "Sommerdager"
 #: includes/class-naws-forecast.php:913
 msgid "Sun"
 msgstr "søn"
+
+#: includes/class-naws-labels.php:144
+msgid "Sun path"
+msgstr "Solbane"
+
+#: includes/class-naws-labels.php:145
+msgid "Sun path: sunrise %1$s, sunset %2$s, day length %3$s."
+msgstr "Solbane: soloppgang %1$s, solnedgang %2$s, daglengde %3$s."
 
 #: includes/class-naws-forecast.php:921
 msgid "Sunday"
@@ -2051,7 +2163,7 @@ msgstr "Synkronisering fullført!"
 msgid "Syncing…"
 msgstr "Synkroniserer …"
 
-#: admin/views/shortcodes.php:269
+#: admin/views/shortcodes.php:310
 msgid "Tabular view of historical readings with configurable time period and grouping."
 msgstr "Tabellvisning av historiske målinger med konfigurerbart tidsrom og gruppering."
 
@@ -2067,11 +2179,11 @@ msgstr "Temp."
 msgid "Temp. Base"
 msgstr "Temp. basis"
 
-#: includes/class-naws-helpers.php:308 includes/class-naws-labels.php:149 templates/live.php:356
+#: includes/class-naws-helpers.php:308 includes/class-naws-labels.php:189 templates/live.php:356
 msgid "Temp. Max"
 msgstr "Temp. maks"
 
-#: includes/class-naws-helpers.php:307 includes/class-naws-labels.php:148 templates/live.php:355
+#: includes/class-naws-helpers.php:307 includes/class-naws-labels.php:188 templates/live.php:355
 msgid "Temp. Min"
 msgstr "Temp. min"
 
@@ -2081,7 +2193,7 @@ msgstr "Temp. ute"
 
 #: admin/views/appearance.php:90 admin/views/live-settings.php:67 admin/views/settings.php:301 includes/class-naws-helpers.php:61
 #: includes/class-naws-helpers.php:306 includes/class-naws-helpers.php:313 includes/class-naws-helpers.php:709 includes/class-naws-labels.php:79
-#: includes/class-naws-labels.php:138 templates/live.php:345
+#: includes/class-naws-labels.php:178 templates/live.php:345
 msgid "Temperature"
 msgstr "Temperatur"
 
@@ -2158,6 +2270,10 @@ msgstr "Nøkkelen hører hjemme i hodet, slik at den aldri havner i tjenerlogger
 msgid "The refresh token has been revoked or expired. Cron sync is paused until reconnected. Please click \"Connect to Netatmo\" below."
 msgstr "Refresh-token er tilbakekalt eller utløpt. Cron-synkroniseringen er stanset til tilkoblingen er gjenopprettet. Klikk på \"Koble til Netatmo\" under."
 
+#: admin/views/shortcodes.php:282
+msgid "The sun on its arc over the station: sunrise, solar noon and sunset, the part of the day already travelled, and the sun where it stands. Below it the day length, the change since yesterday, and the year’s longest and shortest day. Computed from the station’s coordinates. No script: the sun stands where it stood when the page was built, so a page cache shows it until the cache is refreshed."
+msgstr "Solen på sin bane over stasjonen: soloppgang, middagshøyde og solnedgang, den delen av dagen som allerede er tilbakelagt, og solen der den akkurat nå står. Under det dagens lengde, endringen siden i går, og årets lengste og korteste dag. Beregnet ut fra stasjonens koordinater. Ingen skript: solen står der den sto da siden ble bygget, så en sidebuffer viser den slik helt til bufferen fornyes."
+
 #: admin/views/shortcodes.php:153
 msgid "The threshold temperature the sum is measured against."
 msgstr "Terskeltemperaturen summen måles mot."
@@ -2178,9 +2294,17 @@ msgstr "Skrifter fra temaet"
 msgid "Thermal sensation"
 msgstr "Termisk opplevelse"
 
-#: admin/views/shortcodes.php:390
+#: admin/views/shortcodes.php:431
 msgid "These module IDs can be used directly in shortcodes as module_id= or module=\"MAC-address\"."
 msgstr "Disse modul-ID-ene kan brukes direkte i shortcodes som module_id= eller module=\"MAC-adresse\"."
+
+#: admin/views/shortcodes.php:268
+msgid "This calendar day in every earlier year: low, high, mean and rain, with the day’s record marked in each column. The running year is left out."
+msgstr "Denne kalenderdagen i hvert tidligere år: laveste, høyeste, middel og nedbør, med dagens rekord markert i hver kolonne. Det pågående året er utelatt."
+
+#: includes/class-naws-labels.php:135
+msgid "This day in earlier years"
+msgstr "Denne dagen i tidligere år"
 
 #: includes/class-naws-labels.php:30
 msgid "This server does not know the aes-256-gcm cipher. Credentials cannot be stored encrypted, so they are not stored at all."
@@ -2194,7 +2318,7 @@ msgstr "Tre dager gir hver kolonne 77 piksler, fem gir bare 46. I smale sidefelt
 msgid "Thu"
 msgstr "tor"
 
-#: includes/class-naws-forecast.php:868 includes/class-naws-labels.php:134
+#: includes/class-naws-forecast.php:868 includes/class-naws-labels.php:174
 msgid "Thunderstorm"
 msgstr "Tordenvær"
 
@@ -2206,7 +2330,7 @@ msgstr "Tordenvær med hagl"
 msgid "Thursday"
 msgstr "torsdag"
 
-#: admin/views/shortcodes.php:275
+#: admin/views/shortcodes.php:316
 msgid "Time period, e.g. 24h, 7d, 30d"
 msgstr "Tidsrom, f.eks. 24h, 7d, 30d"
 
@@ -2268,7 +2392,7 @@ msgstr "tir"
 msgid "Tuesday"
 msgstr "tirsdag"
 
-#: admin/views/modules.php:33 admin/views/shortcodes.php:395
+#: admin/views/modules.php:33 admin/views/shortcodes.php:436
 msgid "Type"
 msgstr "Type"
 
@@ -2316,23 +2440,31 @@ msgstr "Verdi"
 msgid "WP-Cron is triggered by page views, not by a clock: if nobody opens the site, no fetch happens — during quiet nights possibly for hours. Night mode then has nothing left to slow down, and a gap appears in the readings; the daily summary retrieves the missing values from the Netatmo API later. The schedule only becomes reliable once <code>define( 'DISABLE_WP_CRON', true );</code> is set in <code>wp-config.php</code> and a real server cron calls <code>wp-cron.php</code> at the interval you want."
 msgstr "WP-Cron utløses av sidevisninger, ikke av en klokke: besøker ingen nettstedet, skjer det heller ingen henting — i stille netter kan det gå timer. Nattmodus har da ingenting igjen å bremse, og det oppstår et hull i måleverdiene; den daglige oppsummeringen henter de manglende verdiene fra Netatmo-API-et senere. Takten blir først pålitelig når <code>define( 'DISABLE_WP_CRON', true );</code> står i <code>wp-config.php</code> og en ekte server-cron kaller <code>wp-cron.php</code> med ønsket intervall."
 
-#: includes/class-naws-astro.php:284
+#: includes/class-naws-astro.php:352
 msgid "Waning Crescent"
 msgstr "Avtagende månesigd"
 
-#: includes/class-naws-astro.php:282
+#: includes/class-naws-astro.php:350
 msgid "Waning Gibbous"
 msgstr "Avtagende måne"
+
+#: includes/class-naws-labels.php:121
+msgid "Warmest month"
+msgstr "Varmeste måned"
+
+#: includes/class-naws-labels.php:118
+msgid "Warmest night"
+msgstr "Varmeste natt"
 
 #: includes/class-naws-cron.php:535
 msgid "Warning: last sync %d minutes ago"
 msgstr "Advarsel: Siste sync %d minutter siden"
 
-#: includes/class-naws-astro.php:278
+#: includes/class-naws-astro.php:346
 msgid "Waxing Crescent"
 msgstr "Voksende månesigd"
 
-#: includes/class-naws-astro.php:280
+#: includes/class-naws-astro.php:348
 msgid "Waxing Gibbous"
 msgstr "Voksende måne"
 
@@ -2360,6 +2492,14 @@ msgstr "Våtkuletemperatur"
 msgid "Wet-bulb temperature, not air temperature. It decides whether precipitation arrives as rain or snow: in dry air it still snows at 3–4 °C air temperature, while in saturated air it already rains at 1 °C. Computed from outdoor temperature and outdoor humidity."
 msgstr "Våtkuletemperatur, ikke lufttemperatur. Den avgjør om nedbøren når bakken som regn eller snø: i tørr luft snør det fortsatt ved 3–4 °C lufttemperatur, mens det i mettet luft regner allerede ved 1 °C. Beregnes fra utetemperatur og uteluftfuktighet."
 
+#: includes/class-naws-labels.php:123
+msgid "Wettest day"
+msgstr "Våteste dag"
+
+#: includes/class-naws-labels.php:124
+msgid "Wettest month"
+msgstr "Våteste måned"
+
 #: admin/views/import.php:21
 msgid "What is imported"
 msgstr "Hva importeres"
@@ -2384,20 +2524,20 @@ msgstr "Hvilken stasjon som leses, med modul- eller stasjons-ID."
 msgid "Width"
 msgstr "Bredde"
 
-#: admin/views/shortcodes.php:373
+#: admin/views/shortcodes.php:414
 msgid "Width in pixels, 250 to 500. Values outside that range are pulled to the nearer bound."
 msgstr "Bredde i piksler, 250 til 500. Verdier utenfor trekkes til nærmeste grense."
 
-#: admin/views/appearance.php:33 admin/views/appearance.php:93 includes/class-naws-labels.php:44 includes/class-naws-labels.php:145
+#: admin/views/appearance.php:33 admin/views/appearance.php:93 includes/class-naws-labels.php:44 includes/class-naws-labels.php:185
 #: templates/live.php:70 templates/live.php:352
 msgid "Wind"
 msgstr "Vind og vindkast"
 
-#: includes/class-naws-helpers.php:316 includes/class-naws-labels.php:144 templates/live.php:351
+#: includes/class-naws-helpers.php:316 includes/class-naws-labels.php:184 templates/live.php:351
 msgid "Wind &amp; Gusts"
 msgstr "Vind &amp; vindkast"
 
-#: includes/class-naws-helpers.php:317 includes/class-naws-labels.php:147 templates/live.php:354
+#: includes/class-naws-helpers.php:317 includes/class-naws-labels.php:187 templates/live.php:354
 msgid "Wind Direction"
 msgstr "Vindretning"
 
@@ -2425,6 +2565,10 @@ msgstr "XTX Netatmo"
 #: admin/views/settings.php:28
 msgid "XTX Netatmo — Settings"
 msgstr "Innstillinger"
+
+#: includes/class-naws-labels.php:136
+msgid "Year"
+msgstr "År"
 
 #: admin/views/appearance.php:494
 msgid "Year %d"
@@ -2458,6 +2602,10 @@ msgstr "[naws_value] – attributter"
 msgid "active"
 msgstr "aktive"
 
+#: admin/views/shortcodes.php:256
+msgid "all"
+msgstr "alle"
+
 #: admin/views/settings.php:128
 msgid "and copy the Client ID and Secret below."
 msgstr "og kopier Client ID og Secret hit."
@@ -2466,11 +2614,19 @@ msgstr "og kopier Client ID og Secret hit."
 msgid "and dew-point spread up to"
 msgstr "og duggpunktavstand opptil"
 
-#: includes/class-naws-labels.php:115
+#: includes/class-naws-labels.php:149
+msgid "as long as yesterday"
+msgstr "like lang som i går"
+
+#: admin/views/shortcodes.php:257
+msgid "cards or table"
+msgstr "fliser eller tabell"
+
+#: includes/class-naws-labels.php:155
 msgid "cold"
 msgstr "kaldt"
 
-#: includes/class-naws-labels.php:116
+#: includes/class-naws-labels.php:156
 msgid "cool"
 msgstr "kjølig"
 
@@ -2499,7 +2655,7 @@ msgstr "f.eks. Værstasjon Oslo"
 msgid "everything"
 msgstr "alt"
 
-#: includes/class-naws-labels.php:121
+#: includes/class-naws-labels.php:161
 msgid "extremely hot"
 msgstr "ekstremt hett"
 
@@ -2507,15 +2663,15 @@ msgstr "ekstremt hett"
 msgid "falling"
 msgstr "synkende"
 
-#: admin/views/shortcodes.php:380
+#: admin/views/shortcodes.php:421
 msgid "for a dark sidebar"
 msgstr "for en mørk sidekolonne"
 
-#: admin/views/shortcodes.php:351
+#: admin/views/shortcodes.php:392
 msgid "forecast stale, last known value"
 msgstr "varselet er utdatert, siste kjente verdi"
 
-#: includes/class-naws-labels.php:120
+#: includes/class-naws-labels.php:160
 msgid "hot"
 msgstr "hett"
 
@@ -2527,21 +2683,29 @@ msgstr "kun indeks"
 msgid "instant values"
 msgstr "momentanverdier"
 
-#: admin/views/shortcodes.php:325
+#: admin/views/shortcodes.php:366
 msgid "larger, e.g. as a header graphic"
 msgstr "større, f.eks. som toppgrafikk"
 
-#: includes/class-naws-calc.php:673 includes/class-naws-labels.php:109
+#: includes/class-naws-labels.php:150
+msgid "longest day %1$s, shortest %2$s"
+msgstr "lengste dag %1$s, korteste %2$s"
+
+#: includes/class-naws-calc.php:681 includes/class-naws-labels.php:109
 msgid "not yet reached"
 msgstr "ikke nådd ennå"
 
-#: includes/class-naws-labels.php:118
+#: includes/class-naws-labels.php:158
 msgid "pleasant"
 msgstr "behagelig"
 
-#: includes/class-naws-labels.php:117
+#: includes/class-naws-labels.php:157
 msgid "pleasantly cool"
 msgstr "behagelig kjølig"
+
+#: includes/class-naws-labels.php:141
+msgid "record for this day"
+msgstr "rekord for denne dagen"
 
 #: templates/live.php:339
 msgid "rising"
@@ -2551,7 +2715,7 @@ msgstr "stigende"
 msgid "rows"
 msgstr "rader"
 
-#: admin/views/shortcodes.php:378
+#: admin/views/shortcodes.php:419
 msgid "shorter, for very narrow columns"
 msgstr "kortere, for svært smale spalter"
 
@@ -2567,31 +2731,43 @@ msgstr "summer (gdd)"
 msgid "sums (hdd, cdd, gdd)"
 msgstr "summer (hdd, cdd, gdd)"
 
+#: admin/views/shortcodes.php:261
+msgid "the records of 2025"
+msgstr "rekordene for 2025"
+
+#: admin/views/shortcodes.php:262
+msgid "three records as a table"
+msgstr "tre rekorder som tabell"
+
+#: admin/views/shortcodes.php:272
+msgid "today"
+msgstr "i dag"
+
 #: admin/views/rest-api-docs.php:280 admin/views/rest-api-docs.php:329
 msgid "true = convert to user units (°F, inHg etc.), false = raw metric values"
 msgstr "true = konverter til brukerens enheter (°F, inHg osv.), false = rå metriske verdier"
 
-#: admin/views/shortcodes.php:377
+#: admin/views/shortcodes.php:418
 msgid "uses the backend setting"
 msgstr "bruker innstillingen fra administrasjonen"
 
-#: includes/class-naws-labels.php:114
+#: includes/class-naws-labels.php:154
 msgid "very cold"
 msgstr "svært kaldt"
 
-#: includes/class-naws-labels.php:119
+#: includes/class-naws-labels.php:159
 msgid "warm"
 msgstr "varmt"
 
-#: admin/views/shortcodes.php:379
+#: admin/views/shortcodes.php:420
 msgid "wider, with a larger icon and larger figures"
 msgstr "bredere, med større ikon og større tall"
 
-#: admin/views/shortcodes.php:307
+#: admin/views/shortcodes.php:348
 msgid "→ 3 days with custom title"
 msgstr "→ 3 dager med egen tittel"
 
-#: admin/views/shortcodes.php:306
+#: admin/views/shortcodes.php:347
 msgid "→ Uses days and location from settings"
 msgstr "→ Bruker dager og sted fra innstillingene"
 
@@ -2643,7 +2819,7 @@ msgstr "✓ Kopiert"
 msgid "❌ Error."
 msgstr "❌ Feil."
 
-#: admin/views/shortcodes.php:388
+#: admin/views/shortcodes.php:429
 msgid "📡 Available Modules (current installation)"
 msgstr "📡 Tilgjengelige moduler (denne installasjonen)"
 
@@ -2685,12 +2861,12 @@ msgctxt "calc_feels_like"
 msgid "Feels like"
 msgstr "Følt temperatur"
 
-#: includes/class-naws-helpers.php:309 includes/class-naws-helpers.php:314 includes/class-naws-labels.php:139 templates/live.php:346
+#: includes/class-naws-helpers.php:309 includes/class-naws-helpers.php:314 includes/class-naws-labels.php:179 templates/live.php:346
 msgctxt "card_humidity"
 msgid "Humidity"
 msgstr "Luftfuktighet"
 
-#: includes/class-naws-helpers.php:312 includes/class-naws-labels.php:142 templates/live.php:349
+#: includes/class-naws-helpers.php:312 includes/class-naws-labels.php:182 templates/live.php:349
 msgctxt "card_noise"
 msgid "Noise"
 msgstr "Støynivå"
@@ -2709,6 +2885,26 @@ msgstr "%s"
 msgctxt "co2_fair"
 msgid "Fair"
 msgstr "Middels"
+
+#: includes/class-naws-labels.php:139
+msgctxt "daily average"
+msgid "Mean"
+msgstr "Middel"
+
+#: includes/class-naws-labels.php:138
+msgctxt "daily maximum"
+msgid "High"
+msgstr "Høyeste"
+
+#: includes/class-naws-labels.php:137
+msgctxt "daily minimum"
+msgid "Low"
+msgstr "Laveste"
+
+#: includes/class-naws-labels.php:140
+msgctxt "daily sum"
+msgid "Rain"
+msgstr "Nedbør"
 
 #: admin/views/settings.php:364
 msgctxt "forecast_days_label"
@@ -2742,8 +2938,9 @@ msgid "Shortcode"
 msgstr "Skrivemåte"
 
 #: admin/views/shortcodes.php:123 admin/views/shortcodes.php:204 admin/views/shortcodes.php:215 admin/views/shortcodes.php:236
-#: admin/views/shortcodes.php:252 admin/views/shortcodes.php:270 admin/views/shortcodes.php:289 admin/views/shortcodes.php:295
-#: admin/views/shortcodes.php:314 admin/views/shortcodes.php:365 admin/views/shortcodes.php:415 includes/class-naws-admin.php:278
+#: admin/views/shortcodes.php:252 admin/views/shortcodes.php:269 admin/views/shortcodes.php:283 admin/views/shortcodes.php:293
+#: admin/views/shortcodes.php:311 admin/views/shortcodes.php:330 admin/views/shortcodes.php:336 admin/views/shortcodes.php:355
+#: admin/views/shortcodes.php:406 admin/views/shortcodes.php:456 includes/class-naws-admin.php:278
 msgctxt "sc_copy"
 msgid "Copy"
 msgstr "Kopier"
@@ -2752,6 +2949,21 @@ msgstr "Kopier"
 msgctxt "short date"
 msgid "%2$s %1$s"
 msgstr "%1$s. %2$s"
+
+#: includes/class-naws-labels.php:131
+msgctxt "table column"
+msgid "Record"
+msgstr "Rekord"
+
+#: includes/class-naws-labels.php:132
+msgctxt "table column"
+msgid "Value"
+msgstr "Verdi"
+
+#: includes/class-naws-labels.php:133
+msgctxt "table column"
+msgid "When"
+msgstr "Når"
 
 #: templates/table.php:52
 msgctxt "table_col_time"
@@ -2793,12 +3005,12 @@ msgctxt "widget colour scheme"
 msgid "Transparent"
 msgstr "Gjennomsiktig"
 
-#: includes/class-naws-labels.php:126
+#: includes/class-naws-labels.php:166
 msgctxt "wx_state_fair"
 msgid "Fair"
 msgstr "Lettskyet"
 
-#: includes/class-naws-labels.php:130
+#: includes/class-naws-labels.php:170
 msgctxt "wx_state_rain"
 msgid "Rain"
 msgstr "Regn"

@@ -42,6 +42,9 @@ Data then syncs on its own. Drop a shortcode on any page to display it.
 | `[naws_current]` | Current readings |
 | `[naws_table]` | Readings as a table |
 | `[naws_heatmap]` | A year of daily mean temperatures as a calendar grid, with a year selector |
+| `[naws_records year="2025"]` | Fifteen records from the daily summary — hottest day, longest dry spell, strongest gust … — with their dates, as tiles or a table |
+| `[naws_on_this_day]` | This calendar day in every earlier year, low/high/mean/rain, records marked |
+| `[naws_sunpath]` | The sun on its arc over the station: sunrise, solar noon, sunset, day length and its change since yesterday |
 | `[naws_infobar]` | Astronomy bar: sunrise, moon phase, felt temperature |
 | `[naws_value]` | A single sensor value, inline |
 | `[naws_calc]` | A single computed value (dew point, felt temperature, sunrise, moon phase, …), for running text or a table; full list on the Shortcodes page in the backend |

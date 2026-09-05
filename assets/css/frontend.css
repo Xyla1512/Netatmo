@@ -1645,6 +1645,66 @@
 }
 
 /* ══════════════════════════════════════════════════════════════════
+   [naws_records] und [naws_on_this_day] — Rekorde aus der Tagesuebersicht
+   ══════════════════════════════════════════════════════════════════ */
+
+.naws-rec, .naws-otd {
+  background: var(--naws-surface, #fff);
+  border: 1px solid var(--naws-border, #e0eeee);
+  border-radius: var(--naws-radius, 12px);
+  padding: 14px;
+  color: var(--naws-text, #427272);
+}
+.naws-rec-title, .naws-otd-title { margin: 0 0 12px; font-size: 1.1em; color: var(--naws-text-dark, #2d5252); }
+
+.naws-rec-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+}
+.naws-rec-tile {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 12px 14px;
+  background: var(--naws-surface-2, #f8fafc);
+  border: 1px solid var(--naws-border, #e0eeee);
+  border-radius: var(--naws-radius-sm, 10px);
+}
+.naws-rec-label { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--naws-text-muted, #7aa0a0); }
+.naws-rec-value { font-size: 22px; font-weight: 640; line-height: 1.1; font-variant-numeric: tabular-nums; color: var(--naws-text-darkest, #1a3535); }
+.naws-rec-unit  { font-size: 13px; font-weight: 500; color: var(--naws-text-muted, #7aa0a0); }
+.naws-rec-when  { font-size: 12px; color: var(--naws-text-muted, #7aa0a0); }
+.naws-rec-foot  { margin: 12px 0 0; font-size: 12px; color: var(--naws-text-muted, #7aa0a0); }
+
+.naws-rec-table, .naws-otd-table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.naws-rec-table th, .naws-otd-table th { text-align: left; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--naws-text-muted, #7aa0a0); padding: 6px 8px; border-bottom: 1px solid var(--naws-border, #e0eeee); }
+.naws-rec-table td, .naws-otd-table td { padding: 8px; border-bottom: 1px solid var(--naws-border, #e0eeee); }
+.naws-otd-unit { font-weight: 400; text-transform: none; letter-spacing: 0; }
+.naws-otd-record { font-weight: 640; color: var(--naws-text-darkest, #1a3535); background: var(--naws-surface-2, #f8fafc); }
+
+/* ══════════════════════════════════════════════════════════════════
+   [naws_sunpath] — die Sonne auf ihrem Tagesbogen
+   ══════════════════════════════════════════════════════════════════ */
+
+.naws-sun {
+  max-width: 480px;
+  background: var(--naws-surface, #fff);
+  border: 1px solid var(--naws-border, #e0eeee);
+  border-radius: var(--naws-radius, 12px);
+  padding: 14px;
+  color: var(--naws-text, #427272);
+}
+.naws-sun-title { margin: 0 0 8px; font-size: 1.1em; color: var(--naws-text-dark, #2d5252); }
+.naws-sun-svg   { display: block; width: 100%; height: auto; font-size: 13px; }
+.naws-sun-horizon { stroke: var(--naws-border, #e0eeee); stroke-width: 2; }
+.naws-sun-arc   { fill: none; stroke: var(--naws-border, #e0eeee); stroke-width: 2; stroke-dasharray: 4 6; }
+.naws-sun-arc--night { stroke-dasharray: 3 5; opacity: .7; }
+.naws-sun-done  { fill: none; stroke: var(--naws-warning, #f59e0b); stroke-width: 3; stroke-linecap: round; }
+.naws-sun-disc  { fill: var(--naws-warning, #f59e0b); }
+.naws-sun-disc--night { opacity: .45; }
+.naws-sun-label { fill: var(--naws-text-muted, #7aa0a0); font-variant-numeric: tabular-nums; }
+.naws-sun-text  { margin: 6px 0 0; font-size: 12px; color: var(--naws-text-muted, #7aa0a0); }
+
+/* ══════════════════════════════════════════════════════════════════
    [naws_heatmap] — Kalenderraster des Tagesdurchschnitts
    ══════════════════════════════════════════════════════════════════ */
 

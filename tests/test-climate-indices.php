@@ -422,6 +422,43 @@ check( 'ein einziger fehlender Regenwert kippt den Monat',
 check( 'trockene Tage sind keine fehlenden',
     NAWS_Climate::monthly_sums( regen_monat( '2025-04', 30, 0.0 ), 'rain_sum' ), [ '2025-04' => 0.0 ] );
 
+echo "\nNAWS_Climate::longest_run()\n" . str_repeat( '-', 74 ) . "\n";
+
+// Frosttage: 3.–5. Januar (drei), Lücke am 8., dann 9.–13. (fuenf).
+$run_rows = [];
+foreach ( [ '01-01' => 2, '01-02' => 1, '01-03' => -1, '01-04' => -2, '01-05' => -1, '01-06' => 1, '01-07' => 3,
+            '01-09' => -1, '01-10' => -3, '01-11' => -2, '01-12' => -1, '01-13' => -1, '01-14' => 2 ] as $md => $tmin ) {
+    $run_rows[] = [ 'day_date' => "2025-$md", 'temp_min' => $tmin ];
+}
+$frost = static fn( $r ) => $r['temp_min'] < 0;
+
+$run = NAWS_Climate::longest_run( $run_rows, $frost );
+check( 'laengste Serie: fuenf Tage',          $run['length'] ?? null, 5 );
+check( 'sie beginnt am 9. Januar',            $run['from'] ?? null, '2025-01-09' );
+check( 'und endet am 13.',                    $run['to'] ?? null, '2025-01-13' );
+check( 'max_streak() sagt dieselbe Zahl',     NAWS_Climate::max_streak( $run_rows, $frost ), 5 );
+
+// Gleichstand: zwei Serien zu je drei Tagen — die fruehere gewinnt.
+$tie_rows = [];
+foreach ( [ '02-01' => -1, '02-02' => -1, '02-03' => -1, '02-04' => 2, '02-05' => -1, '02-06' => -1, '02-07' => -1 ] as $md => $tmin ) {
+    $tie_rows[] = [ 'day_date' => "2025-$md", 'temp_min' => $tmin ];
+}
+$tie = NAWS_Climate::longest_run( $tie_rows, $frost );
+check( 'Gleichstand: die fruehere Serie',     $tie['from'] ?? null, '2025-02-01' );
+
+// Eine Datenluecke bricht die Serie: 1., 2., (3. fehlt), 4., 5. → zwei Serien zu zwei.
+$gap_rows = [];
+foreach ( [ '03-01', '03-02', '03-04', '03-05' ] as $md ) {
+    $gap_rows[] = [ 'day_date' => "2025-$md", 'temp_min' => -1 ];
+}
+$gap = NAWS_Climate::longest_run( $gap_rows, $frost );
+check( 'Luecke bricht die Serie',             $gap['length'] ?? null, 2 );
+check( 'Luecke: die erste Serie gewinnt',     $gap['from'] ?? null, '2025-03-01' );
+
+check( 'ohne Treffer null',                   NAWS_Climate::longest_run( [ [ 'day_date' => '2025-04-01', 'temp_min' => 5 ] ], $frost ), null );
+check( 'ohne Treffer bleibt max_streak 0',    NAWS_Climate::max_streak( [ [ 'day_date' => '2025-04-01', 'temp_min' => 5 ] ], $frost ), 0 );
+check( 'ohne Zeilen null',                    NAWS_Climate::longest_run( [], $frost ), null );
+
 echo "\n" . str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );

@@ -9,7 +9,7 @@ if ( ! $in || ! $out ) { fwrite( STDERR, "Aufruf: php make_mo.php in.po out.mo\n
 
 $lines = file( $in, FILE_IGNORE_NEW_LINES );
 $entries = [];
-$cur = [ 'ctx' => null, 'id' => null, 'str' => null ];
+$cur = [ 'ctx' => null, 'id' => null, 'id_plural' => null, 'strs' => [] ];
 $field = null;
 
 $unq = function ( string $l ): string {
@@ -22,11 +22,19 @@ $unq = function ( string $l ): string {
 $flush = function () use ( &$cur, &$entries ) {
     if ( $cur['id'] !== null ) {
         $key = $cur['ctx'] !== null ? $cur['ctx'] . "\x04" . $cur['id'] : $cur['id'];
+        ksort( $cur['strs'] );
+        $translated = false;
+        foreach ( $cur['strs'] as $s ) { if ( '' !== $s ) { $translated = true; break; } }
         // Nur uebersetzte Eintraege wandern in die .mo; leere msgstr wuerden
         // den englischen Originaltext durch einen leeren String ersetzen.
-        if ( $cur['str'] !== '' || $cur['id'] === '' ) { $entries[ $key ] = $cur['str']; }
+        // Bei Plural-Eintraegen (msgstr[0]/msgstr[1]/...) werden alle Formen
+        // mit NUL aneinandergehaengt, wie WordPress' MO::translate_plural()
+        // es per select_plural_form()-Index aus dem Uebersetzungs-Blob liest.
+        if ( $translated || $cur['id'] === '' ) {
+            $entries[ $key ] = [ 'str' => implode( "\0", $cur['strs'] ), 'plural' => $cur['id_plural'] ];
+        }
     }
-    $cur = [ 'ctx' => null, 'id' => null, 'str' => null ];
+    $cur = [ 'ctx' => null, 'id' => null, 'id_plural' => null, 'strs' => [] ];
 };
 
 foreach ( $lines as $l ) {
@@ -34,14 +42,15 @@ foreach ( $lines as $l ) {
     if ( $t === '' ) { $flush(); $field = null; continue; }
     if ( $t[0] === '#' ) { continue; }
     if ( str_starts_with( $t, 'msgctxt ' ) ) { $flush(); $cur['ctx'] = $unq( $t ); $field = 'ctx'; continue; }
-    if ( str_starts_with( $t, 'msgid_plural ' ) ) { $field = 'skip'; continue; }
+    if ( str_starts_with( $t, 'msgid_plural ' ) ) { $cur['id_plural'] = $unq( $t ); $field = 'id_plural'; continue; }
     if ( str_starts_with( $t, 'msgid ' ) )  { if ( $cur['id'] !== null ) $flush(); $cur['id'] = $unq( $t ); $field = 'id'; continue; }
-    if ( str_starts_with( $t, 'msgstr[0] ' ) ) { $cur['str'] = $unq( $t ); $field = 'str'; continue; }
-    if ( str_starts_with( $t, 'msgstr[' ) ) { $field = 'skip'; continue; }
-    if ( str_starts_with( $t, 'msgstr ' ) ) { $cur['str'] = $unq( $t ); $field = 'str'; continue; }
-    if ( $t[0] === '"' && $field && $field !== 'skip' ) {
-        $map = [ 'ctx' => 'ctx', 'id' => 'id', 'str' => 'str' ];
-        $cur[ $map[ $field ] ] .= $unq( $t );
+    if ( preg_match( '/^msgstr\[(\d+)\] /', $t, $mm ) ) { $cur['strs'][ (int) $mm[1] ] = $unq( $t ); $field = 'str:' . $mm[1]; continue; }
+    if ( str_starts_with( $t, 'msgstr ' ) ) { $cur['strs'][0] = $unq( $t ); $field = 'str:0'; continue; }
+    if ( $t[0] === '"' && $field ) {
+        if ( 'ctx' === $field ) { $cur['ctx'] .= $unq( $t ); }
+        elseif ( 'id' === $field ) { $cur['id'] .= $unq( $t ); }
+        elseif ( 'id_plural' === $field ) { $cur['id_plural'] .= $unq( $t ); }
+        elseif ( str_starts_with( $field, 'str:' ) ) { $cur['strs'][ (int) substr( $field, 4 ) ] .= $unq( $t ); }
     }
 }
 $flush();
@@ -49,8 +58,14 @@ $flush();
 ksort( $entries );
 
 $n = count( $entries );
-$ids = array_keys( $entries );
-$strs = array_values( $entries );
+$ids = [];
+$strs = [];
+foreach ( $entries as $key => $entry ) {
+    // Original-Blob fuer Plural-Eintraege: "singular\0plural", wie msgfmt es
+    // schreibt -- MO::make_entry() erkennt is_plural nur so beim Einlesen.
+    $ids[]  = null !== $entry['plural'] ? $key . "\0" . $entry['plural'] : $key;
+    $strs[] = $entry['str'];
+}
 
 $id_blob = ''; $str_blob = '';
 $id_tab = []; $str_tab = [];
