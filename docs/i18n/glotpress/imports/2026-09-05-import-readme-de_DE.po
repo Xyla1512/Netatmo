@@ -1,0 +1,42 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo - Stable Readme\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "<strong>14 Shortcodes</strong> – Dashboard, current readings, infobar, single value, computed value, history charts, heatmap, records, this day in earlier years, sun path, forecast, table, widget, weather icon"
+msgstr "<strong>14 Shortcodes</strong> – Dashboard, aktuelle Messwerte, Infoleiste, Einzelwert, berechneter Wert, Verlaufsdiagramme, Heatmap, Rekorde, dieser Tag in früheren Jahren, Sonnenbahn, Vorhersage, Tabelle, Widget, Wettersymbol"
+
+msgid "<code>[naws_records]</code> – Fifteen records from the daily summary with their dates, as tiles or a table (<code>year</code>, <code>records</code>, <code>layout</code>, <code>title</code>)"
+msgstr "<code>[naws_records]</code> – Fünfzehn Rekorde aus der Tagesübersicht mit ihren Daten, als Kacheln oder Tabelle (<code>year</code>, <code>records</code>, <code>layout</code>, <code>title</code>)"
+
+msgid "<code>[naws_on_this_day]</code> – This calendar day in every earlier year, with the day's records marked (<code>date</code>, <code>title</code>)"
+msgstr "<code>[naws_on_this_day]</code> – Dieser Kalendertag in jedem früheren Jahr, die Tagesrekorde markiert (<code>date</code>, <code>title</code>)"
+
+msgid "<code>[naws_sunpath]</code> – The sun on its arc over the station, with sunrise, solar noon, sunset and the day length (<code>title</code>)"
+msgstr "<code>[naws_sunpath]</code> – Die Sonne auf ihrem Bogen über der Station, mit Aufgang, Kulmination, Untergang und Tageslänge (<code>title</code>)"
+
+msgid "<code>[naws_weather_widget]</code> – Compact forecast widget for a sidebar (<code>days</code> 3 or 5, <code>width</code> 250–500, <code>scheme</code> light, dark or transparent)"
+msgstr "<code>[naws_weather_widget]</code> – Kompaktes Vorhersage-Widget für eine Seitenleiste (<code>days</code> 3 oder 5, <code>width</code> 250–500, <code>scheme</code> light, dark oder transparent)"
+
+msgid "Added: <code>[naws_records]</code> — fifteen records from the daily summary, each with its date: hottest day, coldest night, warmest night, coldest day, largest daily range, warmest and coldest month, wettest day and month, longest dry and wet spell, strongest gust, longest frost period, longest heat wave and longest run of summer days. As tiles or a table, since the first day with readings or for one year (<code>year=\"2025\"</code>), a subset with <code>records=\"…\"</code>. A tie goes to the earlier date, a month needs twenty days to compete, and a gap in the data breaks a run rather than bridging it."
+msgstr "Neu: <code>[naws_records]</code> — fünfzehn Rekorde aus der Tagesübersicht, jeder mit seinem Datum: heißester Tag, kälteste Nacht, wärmste Nacht, kältester Tag, größte Tagesspanne, wärmster und kältester Monat, nassester Tag und Monat, längste Trocken- und Regenperiode, stärkste Böe, längste Frostperiode, längste Hitzewelle und längste Sommerserie. Als Kacheln oder Tabelle, seit dem ersten Tag mit Messwerten oder für ein Jahr (<code>year=\"2025\"</code>), eine Auswahl mit <code>records=\"…\"</code>. Bei Gleichstand gewinnt das frühere Datum, ein Monat braucht zwanzig Tage, um mitzuzählen, und eine Lücke in den Daten beendet eine Serie, statt sie zu überbrücken."
+
+msgid "Added: <code>[naws_on_this_day]</code> — this calendar day in every earlier year: low, high, mean and rain, newest year first, with the day's record marked in each column. The running year is left out."
+msgstr "Neu: <code>[naws_on_this_day]</code> — dieser Kalendertag in jedem früheren Jahr: Tiefst-, Höchst- und Mitteltemperatur und Regen, das neueste Jahr zuerst, die Rekorde des Tages in jeder Spalte markiert. Das laufende Jahr bleibt draußen."
+
+msgid "Added: <code>[naws_sunpath]</code> — the sun on its arc over the station as an inline SVG: sunrise, solar noon and sunset, the part of the day already travelled, and the sun where it stands; at night below the horizon. Under it the day length, the change since yesterday and the year's longest and shortest day at the station's latitude. No script — a page cache shows the sun where it stood when the cache was filled."
+msgstr "Neu: <code>[naws_sunpath]</code> — die Sonne auf ihrem Bogen über der Station als Inline-SVG: Aufgang, Kulmination und Untergang, der schon vergangene Teil des Tages und die Sonne dort, wo sie steht; nachts unter dem Horizont. Darunter Tageslänge, die Änderung seit gestern und der längste und kürzeste Tag des Jahres auf der Breite der Station. Kein Skript — ein Seiten-Cache zeigt die Sonne dort, wo sie beim Füllen des Caches stand."
+
+msgid "Added: a colour scheme for the sidebar widget. <code>[naws_weather_widget]</code> was a white card whatever the sidebar looked like. It now has <code>light</code>, <code>dark</code> and <code>transparent</code> — the last draws no card at all and takes the sidebar's own colours. Chosen under Appearance → Sidebar widget, where the preview shows it on a dark ground, or per placement with <code>scheme=\"dark\"</code>."
+msgstr "Neu: ein Farbschema für das Seitenleisten-Widget. <code>[naws_weather_widget]</code> war eine weiße Karte, ganz gleich, wie die Seitenleiste aussah. Jetzt gibt es <code>light</code>, <code>dark</code> und <code>transparent</code> — das letzte zeichnet gar keine Karte und übernimmt die Farben der Seitenleiste. Wählbar unter Erscheinungsbild → Seitenleisten-Widget, wo die Vorschau es auf dunklem Grund zeigt, oder je Platzierung mit <code>scheme=\"dark\"</code>."
+
+msgid "Fix: the purge button under Settings → Manual Data Purge did nothing, and every admin page of the plugin threw \"$ is not a function\". Since 1.6.4 two handlers in <code>admin.js</code> stood behind the line that closes the jQuery block. The purge button works again, and its messages are translated instead of German literals in the script."
+msgstr "Fix: Der Knopf „Jetzt bereinigen“ unter Einstellungen → Manuelle Datenbereinigung tat nichts, und jede Admin-Seite des Plugins warf „$ is not a function“. Seit 1.6.4 standen zwei Handler in <code>admin.js</code> hinter der Zeile, die den jQuery-Block schließt. Der Knopf funktioniert wieder, und seine Meldungen sind übersetzt statt als deutsche Texte im Skript."
+
+msgid "Fix: the bundled catalogue builder now writes plural forms, so \"1 day / 2 days\" reads right in German and Norwegian. Both bundled catalogues are complete at 735 strings."
+msgstr "Fix: Der mitgelieferte Katalogbauer schreibt jetzt Pluralformen, damit „1 Tag / 2 Tage“ auf Deutsch und Norwegisch richtig steht. Beide mitgelieferten Kataloge sind vollständig mit 735 Sätzen."
+
