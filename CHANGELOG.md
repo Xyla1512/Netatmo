@@ -8,6 +8,10 @@ All notable changes to the XTX Netatmo plugin are documented here.
 
 - **A colour scheme for the sidebar widget.** `[naws_weather_widget]` was a white card whatever the sidebar behind it looked like, because its colours were literals in the stylesheet — the theme settings under Appearance never reached it. It now has three schemes: `light` (the card as it was), `dark` (the same card in dark colours, for a dark sidebar) and `transparent`, which draws no card at all: the text takes the sidebar's own colour and the lines and chips are a faint shade of it, so one setting fits a navy sidebar and a cream one alike. Chosen under Appearance → Sidebar widget, where the preview shows it on a dark ground, or per placement with `scheme="dark"` on the shortcode. Anything that is not one of the three names is light. A site that never chooses gets 1.9.10's markup byte for byte.
 
+### Fixed
+
+- **The purge button in the settings did nothing, and every admin page of the plugin threw `$ is not a function`.** Since 1.6.4 two handlers in `admin.js` stood behind the line that closes the jQuery block, where `$` does not exist: the script died there on every page, and the button under "Manual Data Purge" never got its click handler. One of the two handlers was dead weight anyway — the daily-summary button has had its own in the dashboard for a long time — and is gone; the other is back inside the block. Its sentences ("Bitte mindestens 30 Tage eingeben" and friends) were German literals in the script and now come from the plugin's translation like everything else, in German and Norwegian.
+
 ## [1.9.10]
 
 A year of daily mean temperatures as a calendar grid under a new shortcode; the MAC addresses 1.9.9 put on every public page; and the two language files it shipped that WordPress never read.

@@ -17,6 +17,10 @@ msgstr "%d feil den siste timen"
 msgid "%d modules"
 msgstr "%d moduler"
 
+#: includes/class-naws-admin.php:277
+msgid "%d readings deleted."
+msgstr "%d målinger slettet."
+
 #: admin/views/shortcodes.php:303 includes/class-naws-shortcodes.php:475 templates/forecast.php:14 templates/live.php:235
 msgid "%d-Day Forecast"
 msgstr "%d-dagers varsel"
@@ -153,7 +157,7 @@ msgstr "Access-token er utløpt – fornyes automatisk ved neste synkronisering.
 msgid "Access Token valid until: %s"
 msgstr "Token present. Access Token gyldig til: %s"
 
-#: admin/views/live-settings.php:175 includes/class-naws-admin.php:275
+#: admin/views/live-settings.php:175 includes/class-naws-admin.php:282
 msgid "Activate module"
 msgstr "Aktiver modul"
 
@@ -517,7 +521,7 @@ msgstr "Døgnmiddeltemperatur"
 msgid "Daily Evaluation"
 msgstr "Daglig oppsummering"
 
-#: admin/views/dashboard.php:104 admin/views/dashboard.php:321 admin/views/dashboard.php:344 includes/class-naws-admin.php:273
+#: admin/views/dashboard.php:104 admin/views/dashboard.php:321 admin/views/dashboard.php:344 includes/class-naws-admin.php:280
 msgid "Daily Summary"
 msgstr "Daglig sammendrag"
 
@@ -577,7 +581,7 @@ msgstr "Dag uten måling"
 msgid "Days"
 msgstr "Dager"
 
-#: admin/views/live-settings.php:175 includes/class-naws-admin.php:274
+#: admin/views/live-settings.php:175 includes/class-naws-admin.php:281
 msgid "Deactivate module"
 msgstr "Deaktiver modul"
 
@@ -602,6 +606,10 @@ msgstr "Standard"
 #: admin/views/settings.php:284
 msgid "Delete entries older than:"
 msgstr "Slett oppføringer eldre enn:"
+
+#: includes/class-naws-admin.php:276
+msgid "Delete every reading older than %d days? This cannot be undone."
+msgstr "Slette alle målinger som er eldre enn %d dager? Dette kan ikke angres."
 
 #: includes/class-naws-forecast.php:851
 msgid "Dense drizzle"
@@ -629,7 +637,7 @@ msgstr "Duggpunkt"
 msgid "Dew point"
 msgstr "Duggpunkt"
 
-#: includes/class-naws-admin.php:277
+#: includes/class-naws-admin.php:284
 msgid "Disable 24h chart"
 msgstr "Deaktiver 24t-diagram"
 
@@ -685,7 +693,7 @@ msgstr "Kantlengde i piksler. Verdier under 64 heves til 64; under det lar tilst
 msgid "Emoji"
 msgstr "Emoji"
 
-#: includes/class-naws-admin.php:278
+#: includes/class-naws-admin.php:285
 msgid "Enable 24h chart"
 msgstr "Aktiver 24t-diagram"
 
@@ -785,7 +793,7 @@ msgstr "Eksporter værdata, modulkonfigurasjon og alle plugin-innstillinger. Ide
 msgid "Feb"
 msgstr "Feb"
 
-#: includes/class-naws-admin.php:614
+#: includes/class-naws-admin.php:621
 msgid "File too large. Maximum size: 100 MB."
 msgstr "Filen er for stor. Maksimal størrelse: 100 MB."
 
@@ -994,6 +1002,10 @@ msgstr "Kraftige snøbyger"
 msgid "Heavy thunderstorm"
 msgstr "Kraftig tordenvær"
 
+#: includes/class-naws-admin.php:274
+msgid "Hide"
+msgstr "Skjul"
+
 #: admin/views/shortcodes.php:222 includes/class-naws-shortcodes.php:224
 msgid "Historical Weather Data"
 msgstr "Historiske værdata"
@@ -1098,7 +1110,7 @@ msgstr "Interaktive årssammenligningsdiagrammer for temperatur, lufttrykk og ne
 msgid "Invalid date format or parameters."
 msgstr "Ugyldig datoformat eller parametere."
 
-#: includes/class-naws-admin.php:593 includes/class-naws-admin.php:608
+#: includes/class-naws-admin.php:600 includes/class-naws-admin.php:615
 msgid "Invalid file. Please select a valid NAWS export file (.json)."
 msgstr "Ugyldig fil. Velg en gyldig NAWS-eksportfil (.json)."
 
@@ -1630,6 +1642,10 @@ msgstr "Halvskygge"
 msgid "Please click \"Connect to Netatmo\" below and reauthorize the app. This one-time step saves the refresh token permanently."
 msgstr "Klikk på \"Koble til Netatmo\" under og autoriser appen på nytt. Dette engangssteget lagrer refresh-token permanent."
 
+#: includes/class-naws-admin.php:275
+msgid "Please enter at least 30 days."
+msgstr "Skriv inn minst 30 dager."
+
 #: includes/class-naws-helpers.php:698
 msgid "Poor"
 msgstr "Dårlig"
@@ -1827,7 +1843,7 @@ msgstr "Lagre påloggingsopplysninger"
 msgid "Save Settings"
 msgstr "Lagre innstillinger"
 
-#: includes/class-naws-admin.php:279
+#: includes/class-naws-admin.php:286
 msgid "Saving…"
 msgstr "Lagrer …"
 
@@ -1875,7 +1891,7 @@ msgstr "Skygge"
 msgid "Shortcode Reference"
 msgstr "Shortcode-referanse"
 
-#: admin/views/settings.php:151
+#: admin/views/settings.php:151 includes/class-naws-admin.php:273
 msgid "Show"
 msgstr "Vis"
 
@@ -2438,7 +2454,7 @@ msgstr "Yr.no / MET Norge (nøyaktig for Nord-Europa)"
 msgid "[naws_value] – Attributes"
 msgstr "[naws_value] – attributter"
 
-#: admin/views/live-settings.php:195 includes/class-naws-admin.php:276
+#: admin/views/live-settings.php:195 includes/class-naws-admin.php:283
 msgid "active"
 msgstr "aktive"
 
@@ -2615,15 +2631,15 @@ msgstr "⚡ [naws_value] — enkeltverdi i tekst"
 msgid "✅ All data is stored permanently."
 msgstr "✅ Alle data lagres permanent."
 
-#: includes/class-naws-admin.php:280
+#: includes/class-naws-admin.php:287
 msgid "✅ Saved!"
 msgstr "Dashboard-innstillinger lagret."
 
-#: includes/class-naws-admin.php:272
+#: includes/class-naws-admin.php:279
 msgid "✓ Copied"
 msgstr "✓ Kopiert"
 
-#: includes/class-naws-admin.php:281
+#: includes/class-naws-admin.php:288
 msgid "❌ Error."
 msgstr "❌ Feil."
 
@@ -2727,7 +2743,7 @@ msgstr "Skrivemåte"
 
 #: admin/views/shortcodes.php:123 admin/views/shortcodes.php:204 admin/views/shortcodes.php:215 admin/views/shortcodes.php:236
 #: admin/views/shortcodes.php:252 admin/views/shortcodes.php:270 admin/views/shortcodes.php:289 admin/views/shortcodes.php:295
-#: admin/views/shortcodes.php:314 admin/views/shortcodes.php:365 admin/views/shortcodes.php:415 includes/class-naws-admin.php:271
+#: admin/views/shortcodes.php:314 admin/views/shortcodes.php:365 admin/views/shortcodes.php:415 includes/class-naws-admin.php:278
 msgctxt "sc_copy"
 msgid "Copy"
 msgstr "Kopier"
