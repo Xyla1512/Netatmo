@@ -20,6 +20,8 @@ class NAWS_Shortcodes {
         add_shortcode( 'naws_table',     [ $this, 'sc_table' ] );
         add_shortcode( 'naws_history',   [ $this, 'sc_history' ] );
         add_shortcode( 'naws_heatmap',   [ $this, 'sc_heatmap' ] );
+        add_shortcode( 'naws_records',     [ $this, 'sc_records' ] );
+        add_shortcode( 'naws_on_this_day', [ $this, 'sc_on_this_day' ] );
         add_shortcode( 'naws_live',      [ $this, 'sc_live' ] );
         add_shortcode( 'naws_infobar',   [ $this, 'sc_infobar' ] );
         add_shortcode( 'naws_value',     [ $this, 'sc_value' ] );
@@ -252,6 +254,52 @@ class NAWS_Shortcodes {
 
         ob_start();
         include NAWS_PLUGIN_DIR . 'templates/heatmap.php';
+        return ob_get_clean();
+    }
+
+    // ----------------------------------------------------------------
+    // [naws_records year="" records="" layout="cards" title=""]
+    // Fifteen records from the daily summary, since 1.9.11
+    // ----------------------------------------------------------------
+    public function sc_records( $atts ) {
+        $this->enqueue_frontend_styles();
+
+        $atts = shortcode_atts( [
+            'year'    => '',
+            'records' => '',
+            'layout'  => 'cards',
+            'title'   => null,
+        ], $atts, 'naws_records' );
+
+        // The default title names the year when there is one; an explicit
+        // empty title="" leaves the heading out.
+        if ( $atts['title'] === null ) {
+            $year          = intval( $atts['year'] );
+            $atts['title'] = $year > 0 ? sprintf( naws_label( 'rec_title_year' ), $year ) : naws_label( 'rec_title' );
+        }
+
+        ob_start();
+        include NAWS_PLUGIN_DIR . 'templates/records.php';
+        return ob_get_clean();
+    }
+
+    // ----------------------------------------------------------------
+    // [naws_on_this_day date="" title=""]
+    // ----------------------------------------------------------------
+    public function sc_on_this_day( $atts ) {
+        $this->enqueue_frontend_styles();
+
+        $atts = shortcode_atts( [
+            'date'  => '',
+            'title' => null,
+        ], $atts, 'naws_on_this_day' );
+
+        if ( $atts['title'] === null ) {
+            $atts['title'] = naws_label( 'otd_title' );
+        }
+
+        ob_start();
+        include NAWS_PLUGIN_DIR . 'templates/on-this-day.php';
         return ob_get_clean();
     }
 

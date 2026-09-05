@@ -110,6 +110,36 @@ function naws_label( string $key ): string {
         case 'calc_note':                          return /* translators: 1: number of days with data, 2: number of days in the period. */ __( '(from %1$d of %2$d days)', 'xtx-integration-for-netatmo' );
         case 'calc_spi':                           return __( 'Standardized Precipitation Index (SPI)', 'xtx-integration-for-netatmo' );
 
+        // [naws_records] and [naws_on_this_day] (since 1.9.11).
+        case 'rec_title':                          return __( 'Records', 'xtx-integration-for-netatmo' );
+        case 'rec_title_year':                     return /* translators: %d: the year the records are from. */ __( 'Records %d', 'xtx-integration-for-netatmo' );
+        case 'rec_hottest_day':                    return __( 'Hottest day', 'xtx-integration-for-netatmo' );
+        case 'rec_coldest_night':                  return __( 'Coldest night', 'xtx-integration-for-netatmo' );
+        case 'rec_warmest_night':                  return __( 'Warmest night', 'xtx-integration-for-netatmo' );
+        case 'rec_coldest_day':                    return __( 'Coldest day', 'xtx-integration-for-netatmo' );
+        case 'rec_widest_range':                   return __( 'Largest daily range', 'xtx-integration-for-netatmo' );
+        case 'rec_warmest_month':                  return __( 'Warmest month', 'xtx-integration-for-netatmo' );
+        case 'rec_coldest_month':                  return __( 'Coldest month', 'xtx-integration-for-netatmo' );
+        case 'rec_wettest_day':                    return __( 'Wettest day', 'xtx-integration-for-netatmo' );
+        case 'rec_wettest_month':                  return __( 'Wettest month', 'xtx-integration-for-netatmo' );
+        case 'rec_longest_dry_spell':              return __( 'Longest dry spell', 'xtx-integration-for-netatmo' );
+        case 'rec_longest_wet_spell':              return __( 'Longest wet spell', 'xtx-integration-for-netatmo' );
+        case 'rec_strongest_gust':                 return __( 'Strongest gust', 'xtx-integration-for-netatmo' );
+        case 'rec_longest_frost':                  return __( 'Longest frost period', 'xtx-integration-for-netatmo' );
+        case 'rec_longest_heat_wave':              return __( 'Longest heat wave', 'xtx-integration-for-netatmo' );
+        case 'rec_longest_summer_run':             return __( 'Longest run of summer days', 'xtx-integration-for-netatmo' );
+        case 'rec_col_record':                     return _x( 'Record', 'table column', 'xtx-integration-for-netatmo' );
+        case 'rec_col_value':                      return _x( 'Value', 'table column', 'xtx-integration-for-netatmo' );
+        case 'rec_col_when':                       return _x( 'When', 'table column', 'xtx-integration-for-netatmo' );
+        case 'rec_since':                          return /* translators: 1: first date with readings, 2: "365 days" or similar. */ __( 'Since %1$s · %2$s with readings', 'xtx-integration-for-netatmo' );
+        case 'otd_title':                          return __( 'This day in earlier years', 'xtx-integration-for-netatmo' );
+        case 'otd_col_year':                       return __( 'Year', 'xtx-integration-for-netatmo' );
+        case 'otd_col_min':                        return _x( 'Low', 'daily minimum', 'xtx-integration-for-netatmo' );
+        case 'otd_col_max':                        return _x( 'High', 'daily maximum', 'xtx-integration-for-netatmo' );
+        case 'otd_col_avg':                        return _x( 'Mean', 'daily average', 'xtx-integration-for-netatmo' );
+        case 'otd_col_rain':                       return _x( 'Rain', 'daily sum', 'xtx-integration-for-netatmo' );
+        case 'otd_record':                         return __( 'record for this day', 'xtx-integration-for-netatmo' );
+
         // Thermal sensation classes returned by NAWS_Astro.
         case 'sens_very_cold':                     return __( 'very cold', 'xtx-integration-for-netatmo' );
         case 'sens_cold':                          return __( 'cold', 'xtx-integration-for-netatmo' );
