@@ -198,8 +198,12 @@ class NAWS_Calc {
      * station aggregates under the station_id, so outdoor temperatures and
      * rain both live on the station row. Reading "the outdoor module" here
      * would return nothing at all.
+     *
+     * Public since 1.9.11: NAWS_Records resolves station and period through
+     * these two, so a record and a [naws_calc] can never disagree on which
+     * rows they looked at.
      */
-    private static function station_row_id( array $atts ): ?string {
+    public static function station_row_id( array $atts ): ?string {
         $wanted = isset( $atts['station'] ) ? sanitize_text_field( (string) $atts['station'] ) : '';
         foreach ( NAWS_Database::get_modules( true ) as $m ) {
             if ( $m['module_type'] !== 'NAMain' ) {
@@ -215,9 +219,13 @@ class NAWS_Calc {
     /**
      * Resolve period/year attributes into a date range, in the site timezone.
      *
+     * Public since 1.9.11: NAWS_Records resolves station and period through
+     * these two, so a record and a [naws_calc] can never disagree on which
+     * rows they looked at.
+     *
      * @return array{from:string,to:string} Both 'Y-m-d'.
      */
-    private static function period_range( array $atts ): array {
+    public static function period_range( array $atts ): array {
         $today = wp_date( 'Y-m-d' );
 
         $year = isset( $atts['year'] ) ? intval( $atts['year'] ) : 0;

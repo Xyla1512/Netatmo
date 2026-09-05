@@ -812,7 +812,7 @@ class NAWS_Database {
         }
 
         // Only select requested fields + join with active modules
-        $allowed_fields = [ 'temp_min', 'temp_max', 'temp_avg', 'pressure_avg', 'rain_sum' ];
+        $allowed_fields = [ 'temp_min', 'temp_max', 'temp_avg', 'pressure_avg', 'rain_sum', 'gust_max' ];
         $fields = array_intersect( (array)$args['fields'], $allowed_fields );
         if ( empty( $fields ) ) $fields = $allowed_fields;
 
