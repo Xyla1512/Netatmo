@@ -1,11 +1,17 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: XTX Integration for Netatmo\n"
-"Language: nb_NO\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Project-Id-Version: XTX Integration for Netatmo
+"
+"Language: nb_NO
+"
+"MIME-Version: 1.0
+"
+"Content-Type: text/plain; charset=UTF-8
+"
+"Content-Transfer-Encoding: 8bit
+"
+"Plural-Forms: nplurals=2; plural=n != 1;
+"
 
 msgid "%d day"
 msgid_plural "%d days"
@@ -15,8 +21,11 @@ msgstr[1] "%d dager"
 msgid "%d min"
 msgstr "%d min"
 
-msgid "%d readings deleted."
-msgstr "%d målinger slettet."
+msgid "longest day %1$s, shortest %2$s"
+msgstr "lengste dag %1$s, korteste %2$s"
+
+msgid "as long as yesterday"
+msgstr "like lang som i går"
 
 msgid "%s longer than yesterday"
 msgstr "%s lengre enn i går"
@@ -24,140 +33,21 @@ msgstr "%s lengre enn i går"
 msgid "%s shorter than yesterday"
 msgstr "%s kortere enn i går"
 
-msgid "Christmas Eve in earlier years"
-msgstr "Julaften i tidligere år"
-
-msgid "Coldest day"
-msgstr "Kaldeste dag"
-
-msgid "Coldest month"
-msgstr "Kaldeste måned"
-
-msgid "Coldest night"
-msgstr "Kaldeste natt"
-
-msgid "Colour scheme"
-msgstr "Fargeskjema"
-
-msgid "Colour scheme: light, dark or transparent. Dark is the card in dark colours; transparent draws no card and takes the colours of whatever it is placed on. Anything else counts as light."
-msgstr "Fargeskjema: light, dark eller transparent. Mørk er kortet i mørke farger; gjennomsiktig tegner ikke noe kort og tar fargene fra det den står på. Alt annet regnes som lyst."
-
-msgid "Comma-separated keys to show, in that order: hottest_day, coldest_night, warmest_night, coldest_day, widest_range, warmest_month, coldest_month, wettest_day, wettest_month, longest_dry_spell, longest_wet_spell, strongest_gust, longest_frost, longest_heat_wave, longest_summer_run. Unknown keys are ignored."
-msgstr "Kommaseparerte nøkler i ønsket rekkefølge: hottest_day, coldest_night, warmest_night, coldest_day, widest_range, warmest_month, coldest_month, wettest_day, wettest_month, longest_dry_spell, longest_wet_spell, strongest_gust, longest_frost, longest_heat_wave, longest_summer_run. Ukjente nøkler blir oversett."
-
 msgid "Day length %s"
 msgstr "Daglengde %s"
-
-msgid "Delete every reading older than %d days? This cannot be undone."
-msgstr "Slette alle målinger som er eldre enn %d dager? Dette kan ikke angres."
-
-msgid "Fifteen records from the daily summary — hottest day, coldest night, wettest month, longest dry spell, strongest gust and more — each with its date, as tiles or as a table."
-msgstr "Femten rekorder fra dagssammendraget — varmeste dag, kaldeste natt, våteste måned, lengste tørkeperiode, sterkeste vindkast og mer — hver med sin dato, som fliser eller som tabell."
-
-msgid "Heading; an empty title=\"\" leaves it out"
-msgstr "Overskrift; en tom title=\"\" utelater den"
-
-msgid "Hide"
-msgstr "Skjul"
-
-msgid "Hottest day"
-msgstr "Varmeste dag"
-
-msgid "Largest daily range"
-msgstr "Største døgnvariasjon"
-
-msgid "Light is the white card. Dark is the same card in dark colours, for a dark sidebar. Transparent draws no card at all: the text takes the sidebar’s own colour and the lines and chips are a faint shade of it, so the widget blends into whatever it is placed on. A single placement can override this with scheme=\"dark\" on the shortcode."
-msgstr "Lys er det hvite kortet. Mørk er det samme kortet i mørke farger, for en mørk sidekolonne. Gjennomsiktig tegner ikke noe kort: Teksten tar sidekolonnens egen farge, og linjer og felt er en svak nyanse av den, slik at widgeten glir inn i det den står på. En enkelt plassering kan overstyre dette med scheme=\"dark\" på kortkoden."
-
-msgid "Longest dry spell"
-msgstr "Lengste tørkeperiode"
-
-msgid "Longest frost period"
-msgstr "Lengste frostperiode"
-
-msgid "Longest heat wave"
-msgstr "Lengste hetebølge"
-
-msgid "Longest run of summer days"
-msgstr "Lengste rekke sommerdager"
-
-msgid "Longest wet spell"
-msgstr "Lengste regnperiode"
-
-msgid "MM-DD or YYYY-MM-DD; the year only decides which years count as earlier. Anything else is today."
-msgstr "MM-DD eller "
-
-msgid "Please enter at least 30 days."
-msgstr "Skriv inn minst 30 dager."
-
-msgid "Records"
-msgstr "Rekorder"
-
-msgid "Records %d"
-msgstr "Rekorder %d"
-
-msgid "Records of one year only. Empty means since the first day with readings."
-msgstr "Rekorder for bare ett år. Tomt betyr siden den første dagen med målinger."
-
-msgid "Since %1$s · %2$s with readings"
-msgstr "Siden %1$s · %2$s med målinger"
-
-msgid "Strongest gust"
-msgstr "Sterkeste vindkast"
-
-msgid "Sun path"
-msgstr "Solbane"
 
 msgid "Sun path: sunrise %1$s, sunset %2$s, day length %3$s."
 msgstr "Solbane: soloppgang %1$s, solnedgang %2$s, daglengde %3$s."
 
-msgid "The sun on its arc over the station: sunrise, solar noon and sunset, the part of the day already travelled, and the sun where it stands. Below it the day length, the change since yesterday, and the year’s longest and shortest day. Computed from the station’s coordinates. No script: the sun stands where it stood when the page was built, so a page cache shows it until the cache is refreshed."
-msgstr "Solen på sin bane over stasjonen: soloppgang, middagshøyde og solnedgang, den delen av dagen som allerede er tilbakelagt, og solen der den akkurat nå står. Under det dagens lengde, endringen siden i går, og årets lengste og korteste dag. Beregnet ut fra stasjonens koordinater. Ingen skript: solen står der den sto da siden ble bygget, så en sidebuffer viser den slik helt til bufferen fornyes."
-
-msgid "This calendar day in every earlier year: low, high, mean and rain, with the day’s record marked in each column. The running year is left out."
-msgstr "Denne kalenderdagen i hvert tidligere år: laveste, høyeste, middel og nedbør, med dagens rekord markert i hver kolonne. Det pågående året er utelatt."
-
-msgid "This day in earlier years"
-msgstr "Denne dagen i tidligere år"
-
-msgid "Warmest month"
-msgstr "Varmeste måned"
-
-msgid "Warmest night"
-msgstr "Varmeste natt"
-
-msgid "Wettest day"
-msgstr "Våteste dag"
-
-msgid "Wettest month"
-msgstr "Våteste måned"
-
-msgid "all"
-msgstr "alle"
-
-msgid "as long as yesterday"
-msgstr "like lang som i går"
-
-msgid "cards or table"
-msgstr "fliser eller tabell"
-
-msgid "for a dark sidebar"
-msgstr "for en mørk sidekolonne"
-
-msgid "longest day %1$s, shortest %2$s"
-msgstr "lengste dag %1$s, korteste %2$s"
+msgid "Sun path"
+msgstr "Solbane"
 
 msgid "record for this day"
 msgstr "rekord for denne dagen"
 
-msgid "the records of 2025"
-msgstr "rekordene for 2025"
-
-msgid "three records as a table"
-msgstr "tre rekorder som tabell"
-
-msgid "today"
-msgstr "i dag"
+msgctxt "daily sum"
+msgid "Rain"
+msgstr "Nedbør"
 
 msgctxt "daily average"
 msgid "Mean"
@@ -171,21 +61,84 @@ msgctxt "daily minimum"
 msgid "Low"
 msgstr "Laveste"
 
-msgctxt "daily sum"
-msgid "Rain"
-msgstr "Nedbør"
+msgid "Year"
+msgstr "År"
+
+msgid "This day in earlier years"
+msgstr "Denne dagen i tidligere år"
+
+msgid "Since %1$s · %2$s with readings"
+msgstr "Siden %1$s · %2$s med målinger"
 
 msgctxt "table column"
-msgid "Record"
-msgstr "Rekord"
+msgid "When"
+msgstr "Når"
 
 msgctxt "table column"
 msgid "Value"
 msgstr "Verdi"
 
 msgctxt "table column"
-msgid "When"
-msgstr "Når"
+msgid "Record"
+msgstr "Rekord"
+
+msgid "Longest run of summer days"
+msgstr "Lengste rekke sommerdager"
+
+msgid "Longest heat wave"
+msgstr "Lengste hetebølge"
+
+msgid "Longest frost period"
+msgstr "Lengste frostperiode"
+
+msgid "Strongest gust"
+msgstr "Sterkeste vindkast"
+
+msgid "Longest wet spell"
+msgstr "Lengste regnperiode"
+
+msgid "Longest dry spell"
+msgstr "Lengste tørkeperiode"
+
+msgid "Wettest month"
+msgstr "Våteste måned"
+
+msgid "Wettest day"
+msgstr "Våteste dag"
+
+msgid "Coldest month"
+msgstr "Kaldeste måned"
+
+msgid "Warmest month"
+msgstr "Varmeste måned"
+
+msgid "Largest daily range"
+msgstr "Største døgnvariasjon"
+
+msgid "Coldest day"
+msgstr "Kaldeste dag"
+
+msgid "Warmest night"
+msgstr "Varmeste natt"
+
+msgid "Coldest night"
+msgstr "Kaldeste natt"
+
+msgid "Hottest day"
+msgstr "Varmeste dag"
+
+msgid "Records %d"
+msgstr "Rekorder %d"
+
+msgid "Records"
+msgstr "Rekorder"
+
+msgid "Light is the white card. Dark is the same card in dark colours, for a dark sidebar. Transparent draws no card at all: the text takes the sidebar’s own colour and the lines and chips are a faint shade of it, so the widget blends into whatever it is placed on. A single placement can override this with scheme=\"dark\" on the shortcode."
+msgstr "Lys er det hvite kortet. Mørk er det samme kortet i mørke farger, for en mørk sidekolonne. Gjennomsiktig tegner ikke noe kort: Teksten tar sidekolonnens egen farge, og linjer og felt er en svak nyanse av den, slik at widgeten glir inn i det den står på. En enkelt plassering kan overstyre dette med scheme=\"dark\" på kortkoden."
+
+msgctxt "widget colour scheme"
+msgid "Transparent"
+msgstr "Gjennomsiktig"
 
 msgctxt "widget colour scheme"
 msgid "Dark"
@@ -195,7 +148,63 @@ msgctxt "widget colour scheme"
 msgid "Light"
 msgstr "Lys"
 
-msgctxt "widget colour scheme"
-msgid "Transparent"
-msgstr "Gjennomsiktig"
+msgid "Colour scheme"
+msgstr "Fargeskjema"
+
+msgid "%d readings deleted."
+msgstr "%d målinger slettet."
+
+msgid "Delete every reading older than %d days? This cannot be undone."
+msgstr "Slette alle målinger som er eldre enn %d dager? Dette kan ikke angres."
+
+msgid "Please enter at least 30 days."
+msgstr "Skriv inn minst 30 dager."
+
+msgid "Hide"
+msgstr "Skjul"
+
+msgid "for a dark sidebar"
+msgstr "for en mørk sidekolonne"
+
+msgid "Colour scheme: light, dark or transparent. Dark is the card in dark colours; transparent draws no card and takes the colours of whatever it is placed on. Anything else counts as light."
+msgstr "Fargeskjema: light, dark eller transparent. Mørk er kortet i mørke farger; gjennomsiktig tegner ikke noe kort og tar fargene fra det den står på. Alt annet regnes som lyst."
+
+msgid "The sun on its arc over the station: sunrise, solar noon and sunset, the part of the day already travelled, and the sun where it stands. Below it the day length, the change since yesterday, and the year’s longest and shortest day. Computed from the station’s coordinates. No script: the sun stands where it stood when the page was built, so a page cache shows it until the cache is refreshed."
+msgstr "Solen på sin bane over stasjonen: soloppgang, middagshøyde og solnedgang, den delen av dagen som allerede er tilbakelagt, og solen der den akkurat nå står. Under det dagens lengde, endringen siden i går, og årets lengste og korteste dag. Beregnet ut fra stasjonens koordinater. Ingen skript: solen står der den sto da siden ble bygget, så en sidebuffer viser den slik helt til bufferen fornyes."
+
+msgid "Christmas Eve in earlier years"
+msgstr "Julaften i tidligere år"
+
+msgid "today"
+msgstr "i dag"
+
+msgid "MM-DD or YYYY-MM-DD; the year only decides which years count as earlier. Anything else is today."
+msgstr "MM-DD eller ÅÅÅÅ-MM-DD; året avgjør bare hvilke år som regnes som tidligere. Alt annet er i dag."
+
+msgid "This calendar day in every earlier year: low, high, mean and rain, with the day’s record marked in each column. The running year is left out."
+msgstr "Denne kalenderdagen i hvert tidligere år: laveste, høyeste, middel og nedbør, med dagens rekord markert i hver kolonne. Det pågående året er utelatt."
+
+msgid "three records as a table"
+msgstr "tre rekorder som tabell"
+
+msgid "the records of 2025"
+msgstr "rekordene for 2025"
+
+msgid "Heading; an empty title=\"\" leaves it out"
+msgstr "Overskrift; en tom title=\"\" utelater den"
+
+msgid "cards or table"
+msgstr "fliser eller tabell"
+
+msgid "all"
+msgstr "alle"
+
+msgid "Comma-separated keys to show, in that order: hottest_day, coldest_night, warmest_night, coldest_day, widest_range, warmest_month, coldest_month, wettest_day, wettest_month, longest_dry_spell, longest_wet_spell, strongest_gust, longest_frost, longest_heat_wave, longest_summer_run. Unknown keys are ignored."
+msgstr "Kommaseparerte nøkler i ønsket rekkefølge: hottest_day, coldest_night, warmest_night, coldest_day, widest_range, warmest_month, coldest_month, wettest_day, wettest_month, longest_dry_spell, longest_wet_spell, strongest_gust, longest_frost, longest_heat_wave, longest_summer_run. Ukjente nøkler blir oversett."
+
+msgid "Records of one year only. Empty means since the first day with readings."
+msgstr "Rekorder for bare ett år. Tomt betyr siden den første dagen med målinger."
+
+msgid "Fifteen records from the daily summary — hottest day, coldest night, wettest month, longest dry spell, strongest gust and more — each with its date, as tiles or as a table."
+msgstr "Femten rekorder fra dagssammendraget — varmeste dag, kaldeste natt, våteste måned, lengste tørkeperiode, sterkeste vindkast og mer — hver med sin dato, som fliser eller som tabell."
 
