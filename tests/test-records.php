@@ -199,6 +199,42 @@ check( 'Auswahl in Aufrufreihenfolge, Unbekanntes uebergangen', array_keys( $som
 $none = NAWS_Records::all( [ [ 'day_date' => '2025-06-01', 'pressure_avg' => 1010.0 ] ] );
 check( 'ohne berechenbaren Rekord leer',         $none, [] );
 
+echo "\nNAWS_Records::on_this_day()\n" . str_repeat( '-', 74 ) . "\n";
+
+$otd_rows = [
+    [ 'day_date' => '2023-09-05', 'temp_min' => 9.0,  'temp_max' => 21.0, 'temp_avg' => 15.0, 'rain_sum' => 0.0 ],
+    [ 'day_date' => '2024-02-29', 'temp_min' => 1.0,  'temp_max' => 6.0,  'temp_avg' => 3.0,  'rain_sum' => 2.0 ],
+    [ 'day_date' => '2024-09-05', 'temp_min' => 12.0, 'temp_max' => 24.0, 'temp_avg' => 18.0, 'rain_sum' => 4.2 ],
+    [ 'day_date' => '2025-09-05', 'temp_min' => 12.0, 'temp_max' => 28.0, 'temp_avg' => 20.0, 'rain_sum' => 0.0 ],
+    [ 'day_date' => '2026-09-05', 'temp_min' => 15.0, 'temp_max' => 30.0, 'temp_avg' => 22.0, 'rain_sum' => 0.0 ],
+];
+$otd = NAWS_Records::on_this_day( $otd_rows, '09-05', 2026 );
+check( 'drei fruehere Jahre, das laufende nicht', array_column( $otd, 'year' ), [ 2025, 2024, 2023 ] );
+check( 'waermstes Maximum: 2025',                 $otd[0]['record']['temp_max'], true );
+check( 'nicht 2024',                              $otd[1]['record']['temp_max'], false );
+check( 'kaeltestes Minimum: 2023',                $otd[2]['record']['temp_min'], true );
+check( 'Gleichstand beim Minimum geht an das fruehere Jahr', $otd[0]['record']['temp_min'] . '/' . $otd[1]['record']['temp_min'], '/' );
+check( 'nassester Tag: 2024',                     $otd[1]['record']['rain_sum'], true );
+check( 'der 29. Februar kommt nur aus Schaltjahren', array_column( NAWS_Records::on_this_day( $otd_rows, '02-29', 2026 ), 'year' ), [ 2024 ] );
+check( 'ohne fruehere Jahre leer',                NAWS_Records::on_this_day( $otd_rows, '09-05', 2023 ), [] );
+
+echo "\nNAWS_Records::delta_parts() und coverage()\n" . str_repeat( '-', 74 ) . "\n";
+
+$GLOBALS['naws_test_options']['naws_settings']['temperature_unit'] = 'C';
+check( '10 K in Celsius',    NAWS_Records::delta_parts( 10.0 ), [ 'value' => 10.0, 'unit' => '°C' ] );
+$GLOBALS['naws_test_options']['naws_settings']['temperature_unit'] = 'F';
+check( '10 K in Fahrenheit sind 18, ohne Versatz', NAWS_Records::delta_parts( 10.0 ), [ 'value' => 18.0, 'unit' => '°F' ] );
+$GLOBALS['naws_test_options']['naws_settings']['temperature_unit'] = 'C';
+
+$cov = NAWS_Records::coverage( [
+    [ 'day_date' => '2024-03-28', 'pressure_avg' => 1010.0 ],                // zaehlt nicht: keine der fuenf Spalten
+    [ 'day_date' => '2024-03-29', 'temp_avg' => 5.0 ],
+    [ 'day_date' => '2024-03-30', 'rain_sum' => 0.0 ],
+] );
+check( 'Abdeckung: erster Tag mit Daten', $cov['first'], '2024-03-29' );
+check( 'Abdeckung: zwei Tage',            $cov['days'], 2 );
+check( 'Abdeckung ohne Zeilen',           NAWS_Records::coverage( [] ), [ 'first' => null, 'days' => 0 ] );
+
 echo "\n" . str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );

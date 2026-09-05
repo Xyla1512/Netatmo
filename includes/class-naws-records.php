@@ -102,6 +102,123 @@ final class NAWS_Records {
         return $out;
     }
 
+    /**
+     * This calendar day in earlier years, newest first.
+     *
+     * The running year is left out: its row for today is written at the end
+     * of the day, and "in earlier years" is then also true as a heading.
+     * Each row is marked where it holds the day's record — warmest maximum,
+     * coldest minimum, wettest — with a strict comparison walked from the
+     * earliest year, so a tie goes to the earlier year.
+     *
+     * @param string $month_day   'MM-DD'.
+     * @param int    $before_year Years >= this one are excluded.
+     */
+    public static function on_this_day( array $rows, string $month_day, int $before_year ): array {
+        $hits = [];
+        foreach ( $rows as $row ) {
+            $date = (string) ( $row['day_date'] ?? '' );
+            if ( substr( $date, 5 ) !== $month_day ) {
+                continue;
+            }
+            $year = (int) substr( $date, 0, 4 );
+            if ( $year >= $before_year ) {
+                continue;
+            }
+            $hits[] = [
+                'year'     => $year,
+                'day_date' => $date,
+                'temp_min' => isset( $row['temp_min'] ) ? (float) $row['temp_min'] : null,
+                'temp_max' => isset( $row['temp_max'] ) ? (float) $row['temp_max'] : null,
+                'temp_avg' => isset( $row['temp_avg'] ) ? (float) $row['temp_avg'] : null,
+                'rain_sum' => isset( $row['rain_sum'] ) ? (float) $row['rain_sum'] : null,
+                'record'   => [ 'temp_max' => false, 'temp_min' => false, 'rain_sum' => false ],
+            ];
+        }
+        usort( $hits, static fn( $a, $b ) => $a['year'] <=> $b['year'] ); // ascending for the tie rule
+        foreach ( [ 'temp_max' => 'max', 'temp_min' => 'min', 'rain_sum' => 'max' ] as $field => $dir ) {
+            $best = null;
+            foreach ( $hits as $i => $hit ) {
+                $v = $hit[ $field ];
+                if ( $v === null ) {
+                    continue;
+                }
+                if ( $best === null || ( $dir === 'max' ? $v > $hits[ $best ][ $field ] : $v < $hits[ $best ][ $field ] ) ) {
+                    $best = $i;
+                }
+            }
+            if ( $best !== null ) {
+                $hits[ $best ]['record'][ $field ] = true;
+            }
+        }
+        return array_reverse( $hits );
+    }
+
+    /**
+     * A temperature difference in the site's unit.
+     *
+     * A difference converts with the factor alone: 10 K are 18 °F, not
+     * 50 °F. NAWS_Helpers::format_value() would add the offset, which is
+     * right for a temperature and wrong for a span.
+     *
+     * @return array{value:float,unit:string}
+     */
+    public static function delta_parts( float $kelvin ): array {
+        $unit = get_option( 'naws_settings', [] )['temperature_unit'] ?? 'C';
+        if ( $unit === 'F' ) {
+            return [ 'value' => round( $kelvin * 1.8, 1 ), 'unit' => '°F' ];
+        }
+        return [ 'value' => round( $kelvin, 1 ), 'unit' => '°C' ];
+    }
+
+    /**
+     * First day with data and the number of days that carry at least one
+     * of the five columns — for the footer under the tiles.
+     *
+     * @return array{first:?string,days:int}
+     */
+    public static function coverage( array $rows ): array {
+        $first = null;
+        $days  = 0;
+        foreach ( $rows as $row ) {
+            foreach ( [ 'temp_min', 'temp_max', 'temp_avg', 'rain_sum', 'gust_max' ] as $field ) {
+                if ( isset( $row[ $field ] ) ) {
+                    $days++;
+                    $first = $first ?? (string) $row['day_date'];
+                    break;
+                }
+            }
+        }
+        return [ 'first' => $first, 'days' => $days ];
+    }
+
+    /**
+     * The station's daily rows for the requested period — the only place
+     * this class talks to WordPress.
+     *
+     * Records default to the whole record: `period` is set to 'all' before
+     * NAWS_Calc::period_range() sees it, which keeps that function
+     * untouched. year="2025" still narrows to one year, as it does for
+     * [naws_calc].
+     */
+    public static function rows( array $atts ): array {
+        if ( ! isset( $atts['period'] ) || $atts['period'] === '' ) {
+            $atts['period'] = 'all';
+        }
+        $station = NAWS_Calc::station_row_id( $atts );
+        if ( $station === null ) {
+            return [];
+        }
+        $range = NAWS_Calc::period_range( $atts );
+        return NAWS_Database::get_daily_summaries( [
+            'module_id' => $station,
+            'date_from' => $range['from'],
+            'date_to'   => $range['to'],
+            'fields'    => [ 'temp_min', 'temp_max', 'temp_avg', 'rain_sum', 'gust_max' ],
+            'group_by'  => 'day',
+        ] );
+    }
+
     // ── The three kinds ──────────────────────────────────────────────────
 
     /** Strict comparison, rows in date order: a tie goes to the earlier day. */
