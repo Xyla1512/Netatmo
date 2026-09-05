@@ -157,6 +157,47 @@ foreach ( [ 'de_DE', 'nb_NO' ] as $locale ) {
     check( "$locale: jede Uebersetzung behaelt ihre Platzhalter", $verloren, [] );
 }
 
+// Der Plural-Eintrag "%d day"/"%d days" ist der einzige in diesem Katalog.
+// Ein nicht-leerer Platzhalter-Test allein wuerde auch dann bestehen, wenn
+// Einzahl und Mehrzahl vertauscht, verdoppelt oder das \0 im Original ganz
+// fehlen wuerde (so wie vor der make_mo.php-Reparatur) -- deshalb hier
+// gezielt den Eintrag entkoppeln und Reihenfolge sowie Anzahl der Formen
+// pruefen, statt nur "steht irgendwas Passendes drin".
+echo "\nPlural-Eintrag %d day/%d days ist richtig kompiliert\n" . str_repeat( '-', 74 ) . "\n";
+
+$plural_original = "%d day\0%d days";
+$plural_formen    = [
+    'de_DE' => [ '%d Tag', '%d Tage' ],
+    'nb_NO' => [ '%d dag', '%d dager' ],
+];
+
+foreach ( $plural_formen as $locale => $formen ) {
+    [ $einzahl, $mehrzahl ] = $formen;
+    $katalog = mo_lesen( $wurzel . '/languages/xtx-integration-for-netatmo-' . $locale . '.mo' );
+
+    // Existiert dieser Schluessel ueberhaupt, steht schon fest, dass das
+    // Original als "singular\0plural" in genau dieser Reihenfolge kompiliert
+    // wurde -- ein vertauschtes oder fehlendes \0 waere ein anderer Schluessel.
+    check( "$locale: Original \"%d day\\0%d days\" ist als Plural-Eintrag vorhanden", isset( $katalog[ $plural_original ] ), true );
+
+    $uebersetzung = $katalog[ $plural_original ] ?? '';
+    $teile        = explode( "\0", $uebersetzung );
+    check( "$locale: Uebersetzung zerfaellt in genau zwei Formen", count( $teile ), 2 );
+    check( "$locale: msgstr[0] ist die Einzahl ($einzahl)", $teile[0] ?? null, $einzahl );
+    check( "$locale: msgstr[1] ist die Mehrzahl ($mehrzahl)", $teile[1] ?? null, $mehrzahl );
+
+    // Dieser Katalog kennt nur einen einzigen Plural-Eintrag -- ein weiteres
+    // eingebettetes \0 im Original waere ein Zeichen, dass make_mo.php wieder
+    // Formen verwechselt oder Eintraege zusammengeworfen hat.
+    $weitere_plurale = [];
+    foreach ( $katalog as $original => $t ) {
+        if ( $original !== $plural_original && str_contains( $original, "\0" ) ) {
+            $weitere_plurale[] = $original;
+        }
+    }
+    check( "$locale: kein weiterer Plural-Eintrag im Katalog", $weitere_plurale, [] );
+}
+
 echo "\n" . str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );
