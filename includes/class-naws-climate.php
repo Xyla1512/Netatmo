@@ -48,22 +48,43 @@ class NAWS_Climate {
      * data gap are two runs of two, not one run of four.
      */
     public static function max_streak( array $rows, callable $matches ): int {
-        $best    = 0;
-        $current = 0;
-        $prev    = null;
+        $run = self::longest_run( $rows, $matches );
+        return $run === null ? 0 : $run['length'];
+    }
 
+    /**
+     * The longest run, with its dates.
+     *
+     * Same walk as max_streak() used to do on its own — one loop, two
+     * answers, so the number on a [naws_calc] and the dates on a record can
+     * never disagree. A tie goes to the earlier run: the comparison is
+     * strict, and the rows are walked in date order.
+     *
+     * @return array{length:int,from:string,to:string}|null Null when no day matches.
+     */
+    public static function longest_run( array $rows, callable $matches ): ?array {
+        $best    = null;
+        $current = 0;
+        $start   = null;
+        $prev    = null;
         foreach ( $rows as $row ) {
-            $date = $row['day_date'] ?? '';
+            $date = (string) ( $row['day_date'] ?? '' );
             if ( ! $matches( $row ) ) {
                 $current = 0;
                 $prev    = $date;
                 continue;
             }
-            $current = ( $prev !== null && self::is_next_day( $prev, $date ) ) ? $current + 1 : 1;
-            $best    = max( $best, $current );
-            $prev    = $date;
+            if ( $current > 0 && $prev !== null && self::is_next_day( $prev, $date ) ) {
+                $current++;
+            } else {
+                $current = 1;
+                $start   = $date;
+            }
+            if ( $best === null || $current > $best['length'] ) {
+                $best = [ 'length' => $current, 'from' => $start, 'to' => $date ];
+            }
+            $prev = $date;
         }
-
         return $best;
     }
 
