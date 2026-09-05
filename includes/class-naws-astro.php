@@ -223,6 +223,74 @@ class NAWS_Astro {
         ];
     }
 
+    /**
+     * The sun's day over one place: the events as timestamps, and where in
+     * the day (or the night) a given moment sits.
+     *
+     * Pure — date_sun_info() is PHP core — so a template can format the
+     * timestamps in the site's timezone and a test can check the arithmetic
+     * without WordPress.
+     *
+     * @param float    $lat Latitude.
+     * @param float    $lng Longitude.
+     * @param int|null $now The moment to place the sun at; defaults to time().
+     * @param int|null $day Any timestamp inside the calendar day wanted;
+     *                      defaults to $now. Callers pass the site's local
+     *                      noon so that "today" is the site's today, not UTC's.
+     * @return array|null Null on a polar day or night, when there is no
+     *                    sunrise or sunset to draw.
+     */
+    public static function sun_path( float $lat, float $lng, ?int $now = null, ?int $day = null ): ?array {
+        $now = $now ?? time();
+        $day = $day ?? $now;
+
+        $today = date_sun_info( $day, $lat, $lng );
+        if ( ! is_int( $today['sunrise'] ) || ! is_int( $today['sunset'] ) || ! is_int( $today['transit'] ) ) {
+            return null;
+        }
+
+        $length = $today['sunset'] - $today['sunrise'];
+
+        $yesterday = date_sun_info( $day - 86400, $lat, $lng );
+        $tomorrow  = date_sun_info( $day + 86400, $lat, $lng );
+        $len_y     = ( is_int( $yesterday['sunrise'] ) && is_int( $yesterday['sunset'] ) ) ? $yesterday['sunset'] - $yesterday['sunrise'] : $length;
+
+        $progress = null;
+        $night    = null;
+        if ( $now >= $today['sunrise'] && $now <= $today['sunset'] ) {
+            $progress = ( $now - $today['sunrise'] ) / max( 1, $length );
+        } elseif ( $now < $today['sunrise'] ) {
+            $from  = is_int( $yesterday['sunset'] ) ? $yesterday['sunset'] : $today['sunrise'] - 43200;
+            $night = ( $now - $from ) / max( 1, $today['sunrise'] - $from );
+        } else {
+            $to    = is_int( $tomorrow['sunrise'] ) ? $tomorrow['sunrise'] : $today['sunset'] + 43200;
+            $night = ( $now - $today['sunset'] ) / max( 1, $to - $today['sunset'] );
+        }
+
+        // The year's extremes at this latitude: the solstices, and whichever
+        // of the two is longer — that is what makes it right south of the
+        // equator too.
+        $year  = (int) gmdate( 'Y', $day );
+        $june  = date_sun_info( gmmktime( 12, 0, 0, 6, 21, $year ), $lat, $lng );
+        $dec   = date_sun_info( gmmktime( 12, 0, 0, 12, 21, $year ), $lat, $lng );
+        $len_j = ( is_int( $june['sunrise'] ) && is_int( $june['sunset'] ) ) ? $june['sunset'] - $june['sunrise'] : $length;
+        $len_d = ( is_int( $dec['sunrise'] ) && is_int( $dec['sunset'] ) ) ? $dec['sunset'] - $dec['sunrise'] : $length;
+
+        return [
+            'dawn'           => is_int( $today['civil_twilight_begin'] ) ? $today['civil_twilight_begin'] : null,
+            'sunrise'        => $today['sunrise'],
+            'transit'        => $today['transit'],
+            'sunset'         => $today['sunset'],
+            'dusk'           => is_int( $today['civil_twilight_end'] ) ? $today['civil_twilight_end'] : null,
+            'day_length'     => $length,
+            'progress'       => $progress === null ? null : max( 0.0, min( 1.0, $progress ) ),
+            'night_progress' => $night === null ? null : max( 0.0, min( 1.0, $night ) ),
+            'delta_day'      => $length - $len_y,
+            'longest'        => max( $len_j, $len_d ),
+            'shortest'       => min( $len_j, $len_d ),
+        ];
+    }
+
     // _sun_event() is no longer needed (replaced by date_sun_info)
 
     // ── Moon phase ───────────────────────────────────────────────────────────
