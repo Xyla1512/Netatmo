@@ -140,6 +140,16 @@ function naws_label( string $key ): string {
         case 'otd_col_rain':                       return _x( 'Rain', 'daily sum', 'xtx-integration-for-netatmo' );
         case 'otd_record':                         return __( 'record for this day', 'xtx-integration-for-netatmo' );
 
+        // [naws_sunpath] (since 1.9.11).
+        case 'sun_title':                          return __( 'Sun path', 'xtx-integration-for-netatmo' );
+        case 'sun_aria':                           return /* translators: 1: sunrise time, 2: sunset time, 3: day length. */ __( 'Sun path: sunrise %1$s, sunset %2$s, day length %3$s.', 'xtx-integration-for-netatmo' );
+        case 'sun_day_length':                     return /* translators: %s: the day length, e.g. "13:19". */ __( 'Day length %s', 'xtx-integration-for-netatmo' );
+        case 'sun_shorter':                        return /* translators: %s: minutes shorter than yesterday, e.g. "3 min". */ __( '%s shorter than yesterday', 'xtx-integration-for-netatmo' );
+        case 'sun_longer':                         return /* translators: %s: minutes longer than yesterday, e.g. "3 min". */ __( '%s longer than yesterday', 'xtx-integration-for-netatmo' );
+        case 'sun_same':                           return __( 'as long as yesterday', 'xtx-integration-for-netatmo' );
+        case 'sun_extremes':                       return /* translators: 1: longest day of the year, 2: shortest day of the year. */ __( 'longest day %1$s, shortest %2$s', 'xtx-integration-for-netatmo' );
+        case 'sun_minutes':                        return /* translators: %d: number of minutes. */ __( '%d min', 'xtx-integration-for-netatmo' );
+
         // Thermal sensation classes returned by NAWS_Astro.
         case 'sens_very_cold':                     return __( 'very cold', 'xtx-integration-for-netatmo' );
         case 'sens_cold':                          return __( 'cold', 'xtx-integration-for-netatmo' );

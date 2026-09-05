@@ -20,10 +20,25 @@ function esc_attr( $s ) { return htmlspecialchars( (string) $s, ENT_QUOTES, 'UTF
 function wp_timezone() { return new DateTimeZone( 'Europe/Berlin' ); }
 function wp_date( $fmt, $ts = null ) { $d = new DateTime( 'now', wp_timezone() ); $d->setTimestamp( $ts ?? time() ); return $d->format( $fmt ); }
 function sanitize_text_field( $s ) { return is_string( $s ) ? trim( $s ) : $s; }
+function esc_sql( $s ) { return addslashes( (string) $s ); }
 require_once __DIR__ . '/i18n-stubs.php';
 
 // NAWS_Astro liest Koordinaten aus $wpdb; die Sonnenbahn bekommt sie hier direkt.
 class NAWS_Test_Coords { public static $coords = [ 'lat' => 51.34, 'lng' => 12.37 ]; }
+
+// templates/sunpath.php falls back to NAWS_Astro::get_coords() when no
+// $naws_coords is injected. That method reads $wpdb, so a minimal stub lets
+// the "no coordinates yet" path (SHOW COLUMNS finds nothing) run without a
+// real database instead of fataling on an undefined global.
+class NAWS_Test_WPDB {
+    public $prefix = 'wp_';
+    public function get_var( $query ) { return null; }
+    public function get_row( $query, $output = null ) { return null; }
+    public function query( $query ) { return false; }
+    public function prepare( $query, ...$args ) { return $query; }
+}
+$wpdb = new NAWS_Test_WPDB();
+define( 'NAWS_TABLE_MODULES', 'naws_modules' );
 
 require_once dirname( __DIR__ ) . '/includes/class-naws-astro.php';
 
@@ -82,6 +97,34 @@ close( 'Sydney: laengster Tag rund 14:24',         $syd['longest'], 14 * 3600 + 
 
 $polar = NAWS_Astro::sun_path( 78.22, 15.63, gmmktime( 12, 0, 0, 6, 21, 2026 ), gmmktime( 12, 0, 0, 6, 21, 2026 ) ); // Longyearbyen, Polartag
 check( 'Polartag: null',                           $polar, null );
+
+echo "\ntemplates/sunpath.php\n" . str_repeat( '-', 74 ) . "\n";
+
+function render_sun( array $atts, ?array $naws_coords, int $naws_now ): string {
+    ob_start();
+    include dirname( __DIR__ ) . '/templates/sunpath.php';
+    return ob_get_clean();
+}
+
+$day_html = render_sun( [ 'title' => 'Sun path' ], [ 'lat' => 51.34, 'lng' => 12.37 ], gmmktime( 10, 0, 0, 9, 5, 2026 ) );
+check( 'Wurzel mit Klasse',                    str_contains( $day_html, '<section class="naws-sun">' ), true );
+check( 'Ueberschrift',                         str_contains( $day_html, '<h3 class="naws-sun-title">Sun path</h3>' ), true );
+check( 'ein SVG mit Rolle und Beschreibung',   (bool) preg_match( '/<svg[^>]*role="img"[^>]*aria-label="[^"]*06:2\d[^"]*19:4\d[^"]*"/', $day_html ), true );
+check( 'der Bogen ist ein Halbkreis um (200,170)', str_contains( $day_html, 'd="M 60 170 A 140 140 0 0 1 340 170"' ), true );
+check( 'am Tag steht die Sonne ueber der Linie', (bool) preg_match( '/<circle class="naws-sun-disc"[^>]*cy="([0-9.]+)"/', $day_html, $m ) && (float) $m[1] < 170, true );
+check( 'der vergangene Teil ist gezeichnet',   str_contains( $day_html, 'class="naws-sun-done"' ), true );
+check( 'Aufgang, Mittag, Untergang beschriftet', substr_count( $day_html, '<text' ), 3 );
+check( 'Textzeile mit Tageslaenge',            (bool) preg_match( '#<p class="naws-sun-text">Day length 13:1\d · \d+ min shorter than yesterday · longest day 16:[34]\d, shortest 7:5\d</p>#', $day_html ), true );
+check( 'kein style-Block',                     str_contains( $day_html, '<style' ), false );
+check( 'keine MAC-Adresse',                    (bool) preg_match( '/[0-9a-f]{2}(:[0-9a-f]{2}){5}/i', $day_html ), false );
+
+$night_html = render_sun( [ 'title' => '' ], [ 'lat' => 51.34, 'lng' => 12.37 ], gmmktime( 21, 0, 0, 9, 5, 2026 ) );
+check( 'nachts steht die Sonne unter der Linie', (bool) preg_match( '/<circle class="naws-sun-disc naws-sun-disc--night"[^>]*cy="([0-9.]+)"/', $night_html, $m ) && (float) $m[1] > 170, true );
+check( 'nachts kein vergangener Teil',         str_contains( $night_html, 'class="naws-sun-done"' ), false );
+check( 'ohne Titel keine Ueberschrift',        str_contains( $night_html, '<h3' ), false );
+
+check( 'ohne Koordinaten nichts',              render_sun( [ 'title' => 'x' ], null, gmmktime( 10, 0, 0, 9, 5, 2026 ) ), '' );
+check( 'Polartag: nichts',                     render_sun( [ 'title' => 'x' ], [ 'lat' => 78.22, 'lng' => 15.63 ], gmmktime( 12, 0, 0, 6, 21, 2026 ) ), '' );
 
 echo "\n" . str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );

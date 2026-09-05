@@ -1682,6 +1682,29 @@
 .naws-otd-record { font-weight: 640; color: var(--naws-text-darkest, #1a3535); background: var(--naws-surface-2, #f8fafc); }
 
 /* ══════════════════════════════════════════════════════════════════
+   [naws_sunpath] — die Sonne auf ihrem Tagesbogen
+   ══════════════════════════════════════════════════════════════════ */
+
+.naws-sun {
+  max-width: 480px;
+  background: var(--naws-surface, #fff);
+  border: 1px solid var(--naws-border, #e0eeee);
+  border-radius: var(--naws-radius, 12px);
+  padding: 14px;
+  color: var(--naws-text, #427272);
+}
+.naws-sun-title { margin: 0 0 8px; font-size: 1.1em; color: var(--naws-text-dark, #2d5252); }
+.naws-sun-svg   { display: block; width: 100%; height: auto; font-size: 13px; }
+.naws-sun-horizon { stroke: var(--naws-border, #e0eeee); stroke-width: 2; }
+.naws-sun-arc   { fill: none; stroke: var(--naws-border, #e0eeee); stroke-width: 2; stroke-dasharray: 4 6; }
+.naws-sun-arc--night { stroke-dasharray: 3 5; opacity: .7; }
+.naws-sun-done  { fill: none; stroke: var(--naws-warning, #f59e0b); stroke-width: 3; stroke-linecap: round; }
+.naws-sun-disc  { fill: var(--naws-warning, #f59e0b); }
+.naws-sun-disc--night { opacity: .45; }
+.naws-sun-label { fill: var(--naws-text-muted, #7aa0a0); font-variant-numeric: tabular-nums; }
+.naws-sun-text  { margin: 6px 0 0; font-size: 12px; color: var(--naws-text-muted, #7aa0a0); }
+
+/* ══════════════════════════════════════════════════════════════════
    [naws_heatmap] — Kalenderraster des Tagesdurchschnitts
    ══════════════════════════════════════════════════════════════════ */
 
