@@ -2,6 +2,11 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [Unreleased]
+
+### Changed
+- readme.txt now carries only the five most recent versions of the changelog; the full history since 1.0.0 lives here in CHANGELOG.md. WordPress.org truncates long changelog sections mid-line, which had left an orphaned string in the readme translation project.
+
 ## [1.9.11]
 
 Fifteen records from the daily summary, this day in earlier years, the sun on its arc — and a colour scheme that lets the sidebar widget sit on a dark background.
