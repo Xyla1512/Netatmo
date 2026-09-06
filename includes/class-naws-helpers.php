@@ -608,6 +608,7 @@ class NAWS_Helpers {
             'sum_rain_24'      => $rain_u === 'in' ? 'in' : 'mm',
             'WindStrength'     => self::wind_unit_label( $wind_u ),
             'GustStrength'     => self::wind_unit_label( $wind_u ),
+            'max_wind_str'     => self::wind_unit_label( $wind_u ),
             'WindAngle'        => '°',
             'GustAngle'        => '°',
             'health_idx'       => '',
@@ -649,7 +650,7 @@ class NAWS_Helpers {
             return round( $value, 1 );
         }
 
-        if ( in_array( $parameter, [ 'WindStrength', 'GustStrength' ], true ) ) {
+        if ( in_array( $parameter, [ 'WindStrength', 'GustStrength', 'max_wind_str' ], true ) ) {
             $unit = $options['wind_unit'] ?? 'kmh';
             if ( $unit === 'ms' )  return round( $value / 3.6, 1 );
             if ( $unit === 'mph' ) return round( $value * 0.62137, 1 );

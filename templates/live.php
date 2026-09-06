@@ -351,6 +351,7 @@ $_i18n = [
     'card_wind_gusts' => __( 'Wind &amp; Gusts', 'xtx-integration-for-netatmo' ),
     'card_wind'       => __( 'Wind', 'xtx-integration-for-netatmo' ),
     'card_gusts'      => __( 'Gusts', 'xtx-integration-for-netatmo' ),
+    'card_gust_max' => __( 'Max', 'xtx-integration-for-netatmo' ),
     'card_wind_dir'   => __( 'Wind Direction', 'xtx-integration-for-netatmo' ),
     'card_temp_min'   => __( 'Temp. Min', 'xtx-integration-for-netatmo' ),
     'card_temp_max'   => __( 'Temp. Max', 'xtx-integration-for-netatmo' ),

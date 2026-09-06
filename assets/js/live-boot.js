@@ -230,6 +230,9 @@ function buildLive(rows){
   var wDeg=p.WindAngle?parseFloat(p.WindAngle.value)||0:0;
   var wu=esc((p.WindStrength||{}).unit||'km/h');
   var gu=esc((p.GustStrength||{}).unit||'km/h');
+  // Netatmo's own peak gust of the day (max_wind_str); null on a station that does not report it
+  var gm=p.max_wind_str?parseFloat(p.max_wind_str.value)||0:null;
+  var gmu=esc((p.max_wind_str||{}).unit||gu);
   var h='<div class="naws-grid">';
 
   // ── Außentemperatur (NAModule1) ─────────────────────────────────────────
@@ -288,6 +291,7 @@ function buildLive(rows){
       +'<div class="naws-wvrow">'
       +'<div class="naws-wvblk"><div class="naws-wv-lbl">'+NAWS_I18N.card_wind+'</div><div class="naws-wv-num" id="'+WID+'-wv" style="color:var(--ink2)">'+esc(String(wv))+'</div><div class="naws-wv-unit">'+wu+'</div></div>'
       +'<div class="naws-wvblk"><div class="naws-wv-lbl">'+NAWS_I18N.card_gusts+'</div><div class="naws-wv-num" id="'+WID+'-gv" style="color:var(--muted)">'+esc(String(gv))+'</div><div class="naws-wv-unit">'+gu+'</div></div>'
+      +(gm===null?'':'<div class="naws-wvblk"><div class="naws-wv-lbl">'+NAWS_I18N.card_gust_max+'</div><div class="naws-wv-num" id="'+WID+'-gm" style="color:var(--muted)">'+esc(String(gm))+'</div><div class="naws-wv-unit">'+gmu+'</div></div>')
       +'</div>';
     if(p.WindStrength&&p.WindStrength.recorded_at)
       h+='<div class="naws-time" style="text-align:center;margin-top:7px">'+fmt(p.WindStrength.recorded_at)+'</div>';
@@ -362,6 +366,8 @@ function softUpdate(rows){
   var gauge=document.getElementById(WID+'-gauge'); if(gauge&&wv!==null) gauge.innerHTML=gaugeSVG(wv,gv||0);
   var wvEl=document.getElementById(WID+'-wv'); if(wvEl&&wv!==null) wvEl.textContent=String(wv);
   var gvEl=document.getElementById(WID+'-gv'); if(gvEl&&gv!==null) gvEl.textContent=String(gv);
+  var gm=p.max_wind_str?parseFloat(p.max_wind_str.value)||0:null;
+  var gmEl=document.getElementById(WID+'-gm'); if(gmEl&&gm!==null) gmEl.textContent=String(gm);
   var arr=document.getElementById(WID+'-arr'); if(arr&&wDeg!==null) arr.style.transform='rotate('+wDeg+'deg)';
   var dir=document.getElementById(WID+'-dir'); if(dir&&wDeg!==null) dir.innerHTML=Math.round(wDeg)+'° &nbsp;·&nbsp; '+cdir(wDeg);
 }

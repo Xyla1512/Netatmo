@@ -213,6 +213,12 @@ check( 'und fragt die Chartdaten mit der Referenz an',
 check( 'ein vor dem Update gecachtes Markup fuehrt nicht zu vermischten Charts',
     str_contains( $js, 'cfg.module_ref||cfg.module_id' ), true );
 
+// Die Windkarte zeigt Netatmos Tagesmaximum der Boee als dritten Block;
+// sein Text reist mit den anderen im I18N-Block (tests/test-gust-max.php
+// prueft die Gegenrichtung: jeder Schluessel im Skript wird geliefert).
+check( 'der Text fuer die Tagesboee reist im I18N-Block mit',
+    isset( $data['I18N']['card_gust_max'] ), true );
+
 echo str_repeat( '-', 70 ) . "\n";
 echo $fail ? "$fail fehlgeschlagen\n\n" : "alles bestanden\n\n";
 exit( $fail ? 1 : 0 );

@@ -1121,7 +1121,7 @@
 .naws-wx .naws-sub-u{font-size:9.5px;font-weight:400;color:var(--muted);}
 .naws-wx .naws-sub-time{font-size:8.5px;font-style:italic;color:var(--light);}
 .naws-wx .naws-gauge-svg{display:block;width:100%;max-width:200px;overflow:visible;}
-.naws-wx .naws-wvrow{display:flex;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);width:100%;max-width:200px;}
+.naws-wx .naws-wvrow{display:flex;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);width:100%;max-width:280px;}
 .naws-wx .naws-wvblk{flex:1;display:flex;flex-direction:column;align-items:center;padding:0 8px;}
 .naws-wx .naws-wvblk+.naws-wvblk{border-left:1px solid var(--line)}
 .naws-wx .naws-wv-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:3px;}
