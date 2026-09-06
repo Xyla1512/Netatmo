@@ -62,6 +62,10 @@ check( 'und beschriftet es mit card_gust_max',                      str_contains
 check( 'der Block hat eine Kennung fuer den Live-Zyklus',           substr_count( $js, "WID+'-gm" ) >= 2, true );
 check( 'er steht hinter Wind und Boeen',                            strpos( $js, "WID+'-gm" ) > strpos( $js, "WID+'-gv" ), true );
 check( 'Wind und Boeen bleiben, wo sie sind',                       substr_count( $js, "WID+'-wv" ) >= 2 && substr_count( $js, "WID+'-gv" ) >= 2, true );
+check( 'der Tacho nimmt die Tagesboee als dritten Wert',          (bool) preg_match( '/function gaugeSVG\(wv,gv,gm\)/', $js ), true );
+check( 'und richtet seine Skala auch nach ihr',                    str_contains( $js, 'Math.max(+wv||0,+gv||0,+gm||0)' ), true );
+check( 'ein dritter Zeiger: duenn, rot, gestrichelt',              (bool) preg_match( '/if\(gm>0\) s\+=\'<line [^\n]*stroke="#c0392b"[^\n]*stroke-dasharray=/', $js ), true );
+check( 'beide Aufrufe reichen die Tagesboee an den Tacho durch',   preg_match_all( '/(?<!function )gaugeSVG\(wv,gv(\|\|0)?,gm\)/', $js ), 2 );
 
 $css = (string) file_get_contents( $PLUGIN . 'assets/css/frontend.css' );
 check( 'die Wertezeile hat Platz fuer drei Bloecke',                (bool) preg_match( '/\.naws-wvrow\{[^}]*max-width:\s*280px/', $css ), true );

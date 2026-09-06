@@ -128,9 +128,9 @@ function arrowSVG(deg){
 }
 
 /* ── GAUGE ───────────────────────────── */
-function gaugeSVG(wv,gv){
+function gaugeSVG(wv,gv,gm){
   // Dynamic scale based on actual wind/gust values
-  var rawMax=Math.max(+wv||0,+gv||0);
+  var rawMax=Math.max(+wv||0,+gv||0,+gm||0);
   var steps=[10,15,20,30,40,60,80,100,120,150];
   var maxVal=steps[0];
   for(var i=0;i<steps.length;i++){if(steps[i]>=rawMax){maxVal=steps[i];break;}}
@@ -138,6 +138,7 @@ function gaugeSVG(wv,gv){
 
   wv=Math.max(0,Math.min(maxVal,+wv||0));
   gv=Math.max(0,Math.min(maxVal,+gv||0));
+  gm=Math.max(0,Math.min(maxVal,+gm||0));
 
   var numTicks=(maxVal<=20)?5:(maxVal<=60)?6:5;
   var tickStep=maxVal/numTicks;
@@ -147,7 +148,7 @@ function gaugeSVG(wv,gv){
     var a=Math.PI+(v/maxVal)*Math.PI;
     return{x:(CX+R*Math.cos(a)).toFixed(1),y:(CY+R*Math.sin(a)).toFixed(1)};
   }
-  var w=pt(wv),g=pt(gv);
+  var w=pt(wv),g=pt(gv),m=pt(gm);
   var s='<svg class="naws-gauge-svg" viewBox="14 12 172 86" xmlns="http://www.w3.org/2000/svg">';
   s+='<path d="M'+(CX-R)+','+CY+' A'+R+','+R+',0,0,1,'+(CX+R)+','+CY+'" fill="none" stroke="#e0eeee" stroke-width="9" stroke-linecap="round"/>';
   if(gv>0) s+='<path d="M'+(CX-R)+','+CY+' A'+R+','+R+',0,0,1,'+g.x+','+g.y+'" fill="none" stroke="#7aa0a0" stroke-width="5" stroke-linecap="round" opacity=".45" stroke-dasharray="5 3"/>';
@@ -163,6 +164,7 @@ function gaugeSVG(wv,gv){
     s+='<text x="'+lx+'" y="'+ly+'" text-anchor="middle" dominant-baseline="middle"'
       +' font-size="9" font-weight="700" fill="#7aa0a0">'+Math.round(val)+'</text>';
   }
+  if(gm>0) s+='<line x1="'+CX+'" y1="'+CY+'" x2="'+m.x+'" y2="'+m.y+'" stroke="#c0392b" stroke-width="1.5" stroke-linecap="round" opacity=".85" stroke-dasharray="3 3"/>';
   s+='<line x1="'+CX+'" y1="'+CY+'" x2="'+w.x+'" y2="'+w.y+'" stroke="#2d5252" stroke-width="3.5" stroke-linecap="round"/>';
   if(gv>0) s+='<line x1="'+CX+'" y1="'+CY+'" x2="'+g.x+'" y2="'+g.y+'" stroke="#7aa0a0" stroke-width="2.5" stroke-linecap="round" opacity=".55" stroke-dasharray="4 3"/>';
   s+='<circle cx="'+CX+'" cy="'+CY+'" r="7" fill="#427272" stroke="#fff" stroke-width="2.5"/>';
@@ -287,7 +289,7 @@ function buildLive(rows){
     h+='<div class="naws-card c-wind" data-card="WindStrength">'
       +'<div class="naws-ico">'+ICO.wind+'</div>'
       +'<div class="naws-lbl">'+NAWS_I18N.card_wind_gusts+'</div>'
-      +'<div id="'+WID+'-gauge" style="width:100%;display:flex;justify-content:center">'+gaugeSVG(wv,gv)+'</div>'
+      +'<div id="'+WID+'-gauge" style="width:100%;display:flex;justify-content:center">'+gaugeSVG(wv,gv,gm)+'</div>'
       +'<div class="naws-wvrow">'
       +'<div class="naws-wvblk"><div class="naws-wv-lbl">'+NAWS_I18N.card_wind+'</div><div class="naws-wv-num" id="'+WID+'-wv" style="color:var(--ink2)">'+esc(String(wv))+'</div><div class="naws-wv-unit">'+wu+'</div></div>'
       +'<div class="naws-wvblk"><div class="naws-wv-lbl">'+NAWS_I18N.card_gusts+'</div><div class="naws-wv-num" id="'+WID+'-gv" style="color:var(--muted)">'+esc(String(gv))+'</div><div class="naws-wv-unit">'+gu+'</div></div>'
@@ -363,10 +365,10 @@ function softUpdate(rows){
   var wv=p.WindStrength?parseFloat(p.WindStrength.value)||0:null;
   var gv=p.GustStrength?parseFloat(p.GustStrength.value)||0:null;
   var wDeg=p.WindAngle?parseFloat(p.WindAngle.value)||0:null;
-  var gauge=document.getElementById(WID+'-gauge'); if(gauge&&wv!==null) gauge.innerHTML=gaugeSVG(wv,gv||0);
+  var gm=p.max_wind_str?parseFloat(p.max_wind_str.value)||0:null;
+  var gauge=document.getElementById(WID+'-gauge'); if(gauge&&wv!==null) gauge.innerHTML=gaugeSVG(wv,gv||0,gm);
   var wvEl=document.getElementById(WID+'-wv'); if(wvEl&&wv!==null) wvEl.textContent=String(wv);
   var gvEl=document.getElementById(WID+'-gv'); if(gvEl&&gv!==null) gvEl.textContent=String(gv);
-  var gm=p.max_wind_str?parseFloat(p.max_wind_str.value)||0:null;
   var gmEl=document.getElementById(WID+'-gm'); if(gmEl&&gm!==null) gmEl.textContent=String(gm);
   var arr=document.getElementById(WID+'-arr'); if(arr&&wDeg!==null) arr.style.transform='rotate('+wDeg+'deg)';
   var dir=document.getElementById(WID+'-dir'); if(dir&&wDeg!==null) dir.innerHTML=Math.round(wDeg)+'° &nbsp;·&nbsp; '+cdir(wDeg);
