@@ -146,5 +146,35 @@ check( 'degrees_to_compass(0) = N',          NAWS_Helpers::degrees_to_compass( 0
 check( 'degrees_to_compass(359) = N',        NAWS_Helpers::degrees_to_compass( 359 ), 'N' );
 check( 'degrees_to_compass(-5) stirbt nicht', NAWS_Helpers::degrees_to_compass( -5 ), 'N' );
 
+echo "\nZeitraeume — heute ist der 07.09.2026\n" . str_repeat( '-', 74 ) . "\n";
+$mk = static fn( string $ymd ): int => ( new DateTimeImmutable( $ymd . ' 00:00:00', wp_timezone() ) )->getTimestamp();
+check( 'period_key: 14d',                    NAWS_Windrose::period_key( '14d' ), '14d' );
+check( 'period_key: YEAR',                   NAWS_Windrose::period_key( 'YEAR' ), 'year' );
+check( 'period_key: all',                    NAWS_Windrose::period_key( 'all' ), 'all' );
+check( 'period_key: 0d faellt auf 90d',      NAWS_Windrose::period_key( '0d' ), '90d' );
+check( 'period_key: 5000d faellt auf 90d',   NAWS_Windrose::period_key( '5000d' ), '90d' );
+check( 'period_key: Unsinn faellt auf 90d',  NAWS_Windrose::period_key( '<script>' ), '90d' );
+$r = NAWS_Windrose::range( [ 'period' => '90d' ] );
+check( '90d beginnt vor 89 Tagen um Mitternacht', $r['from'], $mk( '2026-06-10' ) );
+check( '90d endet heute um 23:59:59',        $r['to'], $mk( '2026-09-08' ) - 1 );
+check( '90d ist ein period-Zeitraum',        [ $r['mode'], $r['key'] ], [ 'period', '90d' ] );
+check( '1d ist nur heute',                   NAWS_Windrose::range( [ 'period' => '1d' ] )['from'], $mk( '2026-09-07' ) );
+check( 'year beginnt am 1. Januar',          NAWS_Windrose::range( [ 'period' => 'year' ] )['from'], $mk( '2026-01-01' ) );
+check( 'all beginnt bei 0',                  NAWS_Windrose::range( [ 'period' => 'all' ] )['from'], 0 );
+check( 'ohne period: 90d',                   NAWS_Windrose::range( [] )['key'], '90d' );
+$f = NAWS_Windrose::range( [ 'period' => '7d', 'from' => '2026-05-01', 'to' => '2026-08-31' ] );
+check( 'fest: Beginn 1. Mai',                $f['from'], $mk( '2026-05-01' ) );
+check( 'fest: Ende 31. August einschliesslich', $f['to'], $mk( '2026-09-01' ) - 1 );
+check( 'fest: mode und key',                 [ $f['mode'], $f['key'] ], [ 'fixed', 'fixed' ] );
+check( 'nur from: bis heute',                NAWS_Windrose::range( [ 'from' => '2026-05-01' ] )['to'], $mk( '2026-09-08' ) - 1 );
+check( 'nur to: ab dem Anfang',              NAWS_Windrose::range( [ 'to' => '2026-08-31' ] )['from'], 0 );
+check( 'from > to: beide ignoriert',         NAWS_Windrose::range( [ 'from' => '2026-08-31', 'to' => '2026-05-01' ] )['mode'], 'period' );
+check( 'ungueltiges Datum ignoriert',        NAWS_Windrose::range( [ 'from' => '2026-02-30' ] )['mode'], 'period' );
+check( 'falsches Format ignoriert',          NAWS_Windrose::range( [ 'from' => '01.05.2026' ] )['mode'], 'period' );
+check( 'switch_keys: Standardfolge',         NAWS_Windrose::switch_keys( [] ), [ '7d', '30d', '90d', 'year', 'all' ] );
+check( 'switch_keys: 14d kommt hinten dazu', NAWS_Windrose::switch_keys( [ 'period' => '14d' ] ), [ '7d', '30d', '90d', 'year', 'all', '14d' ] );
+check( 'switch_keys: fester Bereich hat keine', NAWS_Windrose::switch_keys( [ 'from' => '2026-05-01' ] ), [] );
+check( 'period_range(all) endet heute',      NAWS_Windrose::period_range( 'all' )['to'], $mk( '2026-09-08' ) - 1 );
+
 printf( "\n%d ok, %d fehlgeschlagen\n", $passed, $failed );
 exit( $failed ? 1 : 0 );

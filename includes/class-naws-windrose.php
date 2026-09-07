@@ -180,4 +180,92 @@ final class NAWS_Windrose {
             'ring'    => round( max( 0.05, ceil( $top_share / 0.05 - 1e-9 ) * 0.05 ), 2 ),
         ];
     }
+
+    // ── Periods ─────────────────────────────────────────────────────
+
+    /** A period key the shortcode accepts: 'Nd' (1–3660), 'year', 'all'; anything else is '90d'. */
+    public static function period_key( $raw ): string {
+        $p = strtolower( trim( (string) $raw ) );
+        if ( $p === 'year' || $p === 'all' ) {
+            return $p;
+        }
+        if ( preg_match( '/^(\d{1,4})d$/', $p, $m ) ) {
+            $days = (int) $m[1];
+            if ( $days >= 1 && $days <= 3660 ) {
+                return $days . 'd';
+            }
+        }
+        return '90d';
+    }
+
+    /** Midnight today in the site's time zone. */
+    private static function today(): DateTimeImmutable {
+        return new DateTimeImmutable( wp_date( 'Y-m-d' ) . ' 00:00:00', wp_timezone() );
+    }
+
+    /**
+     * The Unix range of a period key, ending at the last second of today so
+     * the cache key stays the same all day.
+     *
+     * @return array{from:int,to:int,mode:string,key:string}
+     */
+    public static function period_range( string $key ): array {
+        $key   = self::period_key( $key );
+        $today = self::today();
+        $to    = $today->modify( '+1 day' )->getTimestamp() - 1;
+        if ( $key === 'all' ) {
+            $from = 0;
+        } elseif ( $key === 'year' ) {
+            $from = $today->setDate( (int) $today->format( 'Y' ), 1, 1 )->getTimestamp();
+        } else {
+            $from = $today->modify( '-' . ( (int) $key - 1 ) . ' days' )->getTimestamp();
+        }
+        return [ 'from' => $from, 'to' => $to, 'mode' => 'period', 'key' => $key ];
+    }
+
+    /** 'YYYY-MM-DD' if the attribute is a real date, else null. */
+    private static function date_attr( $raw ): ?string {
+        $s = trim( (string) $raw );
+        if ( ! preg_match( '/^(\d{4})-(\d{2})-(\d{2})$/', $s, $m ) ) {
+            return null;
+        }
+        return checkdate( (int) $m[2], (int) $m[3], (int) $m[1] ) ? $s : null;
+    }
+
+    /**
+     * The range the shortcode asks for. A fixed from/to wins over period;
+     * only from runs to today, only to starts at the first reading; an
+     * impossible pair (from after to) is ignored as a whole.
+     *
+     * @return array{from:int,to:int,mode:string,key:string}
+     */
+    public static function range( array $atts ): array {
+        $from_s = self::date_attr( $atts['from'] ?? '' );
+        $to_s   = self::date_attr( $atts['to'] ?? '' );
+        if ( $from_s !== null || $to_s !== null ) {
+            $tz    = wp_timezone();
+            $today = self::today();
+            $from  = $from_s === null ? 0 : ( new DateTimeImmutable( $from_s . ' 00:00:00', $tz ) )->getTimestamp();
+            $to    = $to_s === null
+                ? $today->modify( '+1 day' )->getTimestamp() - 1
+                : ( new DateTimeImmutable( $to_s . ' 00:00:00', $tz ) )->modify( '+1 day' )->getTimestamp() - 1;
+            if ( $from <= $to ) {
+                return [ 'from' => $from, 'to' => $to, 'mode' => 'fixed', 'key' => 'fixed' ];
+            }
+        }
+        return self::period_range( self::period_key( $atts['period'] ?? '' ) );
+    }
+
+    /** The period keys the switcher shows: the fixed five, plus the shortcode's own if it differs; none for a fixed range. */
+    public static function switch_keys( array $atts ): array {
+        $range = self::range( $atts );
+        if ( $range['mode'] === 'fixed' ) {
+            return [];
+        }
+        $keys = self::SWITCH;
+        if ( ! in_array( $range['key'], $keys, true ) ) {
+            $keys[] = $range['key'];
+        }
+        return $keys;
+    }
 }
