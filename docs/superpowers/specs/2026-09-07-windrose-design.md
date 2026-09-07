@@ -55,9 +55,9 @@ Statische Methoden, keine Instanz, wie `NAWS_Records`. Wird in `xtx-integration-
 | `switch_keys( array $atts ): array` | Die Zeitraum-Schlüssel der Umschaltung in Reihenfolge: `['7d','30d','90d','year','all']`, ergänzt um ein abweichendes `period`. | rein |
 | `bin( float $kmh ): int` | Klasse 0–4 nach Abschnitt 2.4; `-1` für Windstille. | rein |
 | `sector( float $deg, int $sectors ): ?int` | `floor( fmod( $deg + w/2, 360 ) / w )` mit `w = 360 / $sectors`, `% $sectors`; `null` für Werte außerhalb 0–360. | rein |
-| `query( string $measure, int $from, int $to, int $sectors ): array` | Führt die Bündelungsabfrage aus (Abschnitt 4.2), liest den Transient, schreibt ihn. | DB |
-| `shape( array $rows, int $sectors, int $max_at, int $first ): array` | Baut aus den Gruppenzeilen die Rose (Abschnitt 4.3). | rein |
-| `rose( string $measure, array $range, int $sectors ): array` | `query()` + Spitzenzeitpunkt + `shape()`. | DB |
+| `query( string $measure, int $from, int $to, int $sectors ): array` | Führt die Bündelungsabfrage aus (Abschnitt 4.2). | DB |
+| `shape( array $rows, int $sectors, int $max_at = 0 ): array` | Baut aus den Gruppenzeilen die Rose (Abschnitt 4.3). | rein |
+| `rose( string $measure, array $range, int $sectors ): array` | `query()` + `peak_at()` + `shape()`, als Transient gecacht (Schlüssel aus Messgröße, Grenzen, Sektorzahl). | DB |
 | `arc( float $a0, float $a1, float $r0, float $r1, float $cx ): string` | Der SVG-Pfad eines Ringsektors: äußerer Bogen im Uhrzeigersinn, innerer zurück. 0° ist Norden, Winkel wachsen im Uhrzeigersinn, `x = cx + r·sin`, `y = cx − r·cos`. | rein |
 | `compass( int $i, int $sectors ): string` | Kürzel des Sektors über `naws_label( 'compass_…' )`. | rein |
 
