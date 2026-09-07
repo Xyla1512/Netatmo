@@ -171,6 +171,17 @@ class NAWS_Colors {
         'heatmap_t_30'    => '#d92b2b',
         'heatmap_t_35'    => '#7f1d1d',
         'heatmap_no_data' => '#eef2f2',
+
+        // [naws_windrose]: five Beaufort classes of one hue from light to
+        // dark (validated for step contrast), the rings behind the rays,
+        // and the hub that carries the calm share.
+        'windrose_b1'   => '#86b6ef',
+        'windrose_b2'   => '#5598e7',
+        'windrose_b3'   => '#2a78d6',
+        'windrose_b4'   => '#1c5cab',
+        'windrose_b5'   => '#0d366b',
+        'windrose_grid' => '#dbe3ea',
+        'windrose_calm' => '#e9eff5',
     ];
 
     public static function instance() {
@@ -264,8 +275,10 @@ class NAWS_Colors {
             // Validate hex color (3, 4, 6, or 8 digit)
             if ( preg_match( '/^#([0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/', $val ) ) {
                 $clean[ $key ] = $val;
+            } else {
+                // Invalid value: fall back to default
+                $clean[ $key ] = $default;
             }
-            // else: invalid value, skip (will use default)
         }
         return $clean;
     }
@@ -331,6 +344,11 @@ class NAWS_Colors {
         $css .= "  --naws-chart-tooltip-title: {$c['chart_tooltip_title']};\n";
         $css .= "  --naws-chart-tooltip-text: {$c['chart_tooltip_text']};\n";
         $css .= "  --naws-chart-axis-title: {$c['chart_axis_title']};\n";
+
+        // [naws_windrose]: windrose_b1 -> --naws-wr-b1, and so on.
+        foreach ( self::WINDROSE_KEYS as $key ) {
+            $css .= '  --naws-wr-' . substr( $key, 9 ) . ": {$c[ $key ]};\n";
+        }
 
         $css .= "}\n";
 
@@ -457,6 +475,12 @@ class NAWS_Colors {
     const HEATMAP_KEYS = [
         'heatmap_t_m10', 'heatmap_t_m5', 'heatmap_t_0', 'heatmap_t_5', 'heatmap_t_10',
         'heatmap_t_15', 'heatmap_t_20', 'heatmap_t_25', 'heatmap_t_30', 'heatmap_t_35',
+    ];
+
+    /** The [naws_windrose] keys, in the order the Appearance page shows them. */
+    const WINDROSE_KEYS = [
+        'windrose_b1', 'windrose_b2', 'windrose_b3', 'windrose_b4', 'windrose_b5',
+        'windrose_grid', 'windrose_calm',
     ];
 
     /**
@@ -607,6 +631,10 @@ class NAWS_Colors {
             'heatmap' => [
                 'label' => 'appearance_group_heatmap',
                 'keys'  => array_merge( self::HEATMAP_KEYS, [ 'heatmap_no_data' ] ),
+            ],
+            'windrose' => [
+                'label' => 'appearance_group_windrose',
+                'keys'  => self::WINDROSE_KEYS,
             ],
         ];
     }

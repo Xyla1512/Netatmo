@@ -205,5 +205,28 @@ $none = NAWS_Windrose::rose( 'wind', [ 'from' => 5, 'to' => 6 ], 16 );
 check( 'ohne Zeilen keine zweite Abfrage',   count( $wpdb->last ), 1 );
 check( 'ohne Zeilen eine leere Rose',        $none['n'], 0 );
 
+echo "\nFarben im Erscheinungsbild\n" . str_repeat( '-', 74 ) . "\n";
+$GLOBALS['naws_test_options']['naws_appearance'] = [];   // NAWS_Colors liest die Einstellung; leer heisst Vorgaben
+class NAWS_Fonts {
+    public static function available() { return [ 'inherit' => 'Inherit' ]; }
+    public static function sanitize_family( $s ) { return $s; }
+    public static function stack( $family, $custom ) { return 'inherit'; }
+}
+require_once dirname( __DIR__ ) . '/includes/class-naws-colors.php';
+check( 'sieben Schluessel',                  NAWS_Colors::WINDROSE_KEYS, [ 'windrose_b1', 'windrose_b2', 'windrose_b3', 'windrose_b4', 'windrose_b5', 'windrose_grid', 'windrose_calm' ] );
+check( 'Vorgabe der ersten Klasse',          NAWS_Colors::DEFAULTS['windrose_b1'], '#86b6ef' );
+check( 'Vorgabe der letzten Klasse',         NAWS_Colors::DEFAULTS['windrose_b5'], '#0d366b' );
+check( 'Vorgabe der Nabe',                   NAWS_Colors::DEFAULTS['windrose_calm'], '#e9eff5' );
+check( 'eigene Gruppe',                      NAWS_Colors::get_groups()['windrose']['keys'], NAWS_Colors::WINDROSE_KEYS );
+$css = NAWS_Colors::get_inline_css();
+check( 'CSS-Variable der ersten Klasse',     str_contains( $css, '--naws-wr-b1: #86b6ef;' ), true );
+check( 'CSS-Variable der Ringe',             str_contains( $css, '--naws-wr-grid: #dbe3ea;' ), true );
+check( 'CSS-Variable der Nabe',              str_contains( $css, '--naws-wr-calm: #e9eff5;' ), true );
+check( 'die Variablen stehen im .naws-wrap-Block', strpos( $css, '--naws-wr-b1' ) < strpos( $css, '.naws-wx {' ), true );
+$san = NAWS_Colors::sanitize( [ 'windrose_b1' => '#123456', 'windrose_b2' => 'red', 'windrose_grid' => '<script>' ] );
+check( 'gueltiges Hex bleibt',               $san['windrose_b1'], '#123456' );
+check( 'Farbname faellt auf die Vorgabe',    $san['windrose_b2'], '#5598e7' );
+check( 'Unsinn faellt auf die Vorgabe',      $san['windrose_grid'], '#dbe3ea' );
+
 printf( "\n%d ok, %d fehlgeschlagen\n", $passed, $failed );
 exit( $failed ? 1 : 0 );
