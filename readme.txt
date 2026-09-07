@@ -173,44 +173,6 @@ New: [naws_heatmap] shows a year of daily mean temperatures as a calendar grid. 
 = 1.9.7 =
 First release published through the WordPress.org directory. Breaking change for REST API users: the key is accepted in the X-NAWS-Key header only, and ?api_key=... now answers 401. Everything else is new features and fixes.
 
-= 1.9.6.2 =
-Header correction only: compatibility is now declared against WordPress 7.1. Identical in code to 1.9.6.1.
-
-= 1.9.6.1 =
-Security release. The OAuth return route now requires the manage_options capability before it exchanges an authorization code for tokens. Reported by the WordPress plugin review team. Updating is recommended for every installation.
-= 1.6.3 =
-WordPress.org compliance release. All file-scope ob_start() patterns replaced with wp_add_inline_script(). PHP values passed to JS via wp_json_encode() instead of direct echoing.
-
-= 1.6.2 =
-WordPress.org compliance release. Input sanitization, ob_start() fixes, inline script/style removal, SQL whitelist validation.
-
-= 1.5.7 =
-WordPress.org compliance release. Removed GitHub Auto-Updater. Plugin Check fixes for move_uploaded_file, rand, SVG escaping.
-
-= 1.5.6 =
-Security update: Client ID and Client Secret are now fully AES-256-GCM encrypted at rest.
-
-= 1.4.3 =
-Plugin renamed to "XTX Netatmo". New icon sets and per-sensor colors.
-
-= 1.4.0 =
-Major visual update: 130+ configurable colors with live preview on new Appearance page.
-
-= 1.3.0 =
-New Export / Import feature for full data backup and migration.
-
-= 1.2.0 =
-Complete mobile-first responsive redesign. All views optimized for smartphones.
-
-= 1.1.0 =
-Error logging, caching, adaptive polling, night mode and health dashboard.
-
-= 1.0.2 =
-Removed shortcodes: naws_chart, naws_gauge, naws_dashboard, naws_card. Use [naws_live] and [naws_history] instead.
-
-= 1.0.0 =
-Initial release.
-
 == Privacy & External Services ==
 
 This plugin connects to the following external services:
