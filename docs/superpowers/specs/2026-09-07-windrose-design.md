@@ -36,7 +36,7 @@ Die Demo vom 07.09. ist die visuelle Vorlage. Was dort JavaScript rechnete, rech
 | `from`, `to` | `Y-m-d` | leer | Fester Bereich, Tagesgrenzen in der Zeitzone der Site, `to` einschließlich. Nur `from`: bis heute. Nur `to`: ab dem ältesten Rohwert. Ungültiges Datum → Attribut wird ignoriert. `from > to` → beide ignoriert. Ein fester Bereich schaltet die Umschaltung ab. |
 | `measure` | `wind`, `gust`, `both` | `wind` | `both` rendert beide Messgrößen und gibt der Umschaltung ein zweites Paar Schalter „Wind / Böen". Ungültiges → `wind`. |
 | `sectors` | `16`, `8` | `16` | Alles andere → `16`. Bei 8 Sektoren heißen die Richtungen N, NO, O, SO, S, SW, W, NW; Sektorbreite 45°. |
-| `show` | Liste aus `legend`, `summary`, `table` | `legend,summary` | Unbekannte Einträge werden ignoriert. Ohne `table` bleibt die Tabelle im Markup, aber `screen-reader-text`. Leere Liste (`show=""`) zeigt nur die Rose. |
+| `show` | Liste aus `legend`, `summary`, `table` | `legend,summary` | Unbekannte Einträge werden ignoriert. Ohne `table` bleibt die Tabelle im Markup, aber `naws-wr-sr`. Leere Liste (`show=""`) zeigt nur die Rose. |
 | `switcher` | `yes`, `no` | `yes` | Umschaltung mit den Zeiträumen 7 Tage / 30 Tage / 90 Tage / dieses Jahr / alles; der aktive ist `period`. Steht `period` auf einem anderen `Nd`, kommt dieser als sechster Schalter hinzu. Bei `from`/`to` immer `no`. |
 | `size` | 200–1200 | leer | Höchstbreite der Rose in Pixeln als `max-width` am Wurzelelement; leer heißt fließend bis 640 px. |
 | `title` | Text | `null` | `null` → `naws_label( 'wr_title' )` („Wind rose"); leerer Text → keine Überschrift, wie bei Rekorden und Sonnenbahn. |
@@ -126,12 +126,14 @@ Cache: Transient `naws_cache_windrose_` + `md5( wp_json_encode( [ $measure, $fro
     </figure>
     <dl class="naws-wr-summary">…</dl>
     <ul class="naws-wr-legend">…</ul>
-    <table class="naws-wr-table screen-reader-text">…</table>
+    <table class="naws-wr-table naws-wr-sr">…</table>
   </div>
 </div>
 ```
 
 Der Wurzelklasse `naws-wrap` verdankt die Rose die CSS-Variablen aus `NAWS_Colors::get_inline_css()`. Die Tabelle ist die Screenreader-Fassung der Rose; das SVG trägt `aria-label` mit Zeitraum, Anzahl und Hauptrichtung, seine Textelemente sind `aria-hidden`.
+
+`naws-wr-sr` ist die plugineigene Unsichtbar-Klasse (dieselbe Regel wie WordPress' `screen-reader-text`, aber im Plugin-CSS, damit die Tabelle auch in einem Theme ohne diese Klasse unsichtbar bleibt).
 
 ### 5.2 Geometrie (viewBox 660 × 660)
 
@@ -180,8 +182,8 @@ Alle sichtbaren Texte über gettext mit der Text-Domain des Plugins. Zur Laufzei
 - `arc()`: Pfad beginnt mit `M`, enthält zwei `A`, endet mit `Z`; Sektor 0 ist symmetrisch zur Senkrechten (gleiche `y`-Werte der beiden Außenpunkte).
 
 `tests/test-windrose-render.php` (Template über `render_windrose( array $atts, array $naws_roses )` mit Output-Buffering):
-- Standard: ein `<svg role="img"` mit `aria-label`, 16 `naws-wr-sector`, Ringe, fünf Legendenzeilen, `<dl class="naws-wr-summary"`, Tabelle mit `screen-reader-text` und 16 Zeilen, `<title>` je Sektor, drei Prozentbeschriftungen, Nabe mit Windstille.
-- `show="table"` → Tabelle ohne `screen-reader-text`; `show=""` → keine Legende, keine Kennzahlen.
+- Standard: ein `<svg role="img"` mit `aria-label`, 16 `naws-wr-sector`, Ringe, fünf Legendenzeilen, `<dl class="naws-wr-summary"`, Tabelle mit `naws-wr-sr` und 16 Zeilen, `<title>` je Sektor, drei Prozentbeschriftungen, Nabe mit Windstille.
+- `show="table"` → Tabelle ohne `naws-wr-sr`; `show=""` → keine Legende, keine Kennzahlen.
 - `switcher="yes"` → `naws-wr-switch` mit `hidden` und fünf Knöpfen, fünf Panels, genau eines ohne `hidden`; `switcher="no"` → keine Umschaltung, ein Panel; `from="2026-05-01"` → keine Umschaltung.
 - `measure="both"` → zehn Panels und zwei Schaltergruppen; `sectors="8"` → acht Sektoren, Kürzel `NE` statt `NNE`.
 - `size="420"` → `max-width:420px`; `size="50"` → kein Style.
