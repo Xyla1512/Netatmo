@@ -269,6 +269,74 @@ final class NAWS_Windrose {
         return $keys;
     }
 
+    // ── Units and labels ────────────────────────────────────────────
+
+    /** The site's wind unit label: km/h, m/s, mph or kn. */
+    public static function unit(): string {
+        return NAWS_Helpers::get_unit( 'WindStrength' );
+    }
+
+    /**
+     * A speed in km/h as a number in the site's wind unit, without the
+     * unit. Whole numbers stay whole ("22"), others get one decimal
+     * ("5.4"); $decimals forces the count.
+     */
+    public static function speed( float $kmh, int $decimals = -1 ): string {
+        $v = (float) NAWS_Helpers::format_value( 'WindStrength', $kmh );
+        if ( $decimals < 0 ) {
+            $decimals = ( floor( $v ) == $v ) ? 0 : 1; // phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual -- float against its floor
+        }
+        return number_format_i18n( $v, $decimals );
+    }
+
+    /** The legend text of class $b: "Bft 1 · 1–5 km/h", the last one "Bft 5+ · from 29 km/h". */
+    public static function bin_label( int $b ): string {
+        $last = count( self::BINS ) - 1;
+        $b    = max( 0, min( $last, $b ) );
+        $name = sprintf( naws_label( 'wr_bft' ), $b + 1 ) . ( $b === $last ? '+' : '' );
+        if ( $b === $last ) {
+            return $name . ' · ' . sprintf( naws_label( 'wr_bft_from' ), self::speed( (float) self::BINS[ $b ] ) . ' ' . self::unit() );
+        }
+        return $name . ' · ' . self::speed( (float) self::BINS[ $b ] ) . '–' . self::speed( (float) ( self::BINS[ $b + 1 ] - 1 ) ) . ' ' . self::unit();
+    }
+
+    /** "last 90 days", "this year", "everything recorded", or "1 May 2026 to 31 August 2026". */
+    public static function period_label( array $range ): string {
+        $key = (string) ( $range['key'] ?? '90d' );
+        if ( $key === 'fixed' ) {
+            $fmt  = get_option( 'date_format', 'j. F Y' );
+            $from = (int) ( $range['from'] ?? 0 ) > 0 ? wp_date( $fmt, (int) $range['from'] ) : naws_label( 'wr_period_first' );
+            return sprintf( naws_label( 'wr_period_fixed' ), $from, wp_date( $fmt, (int) ( $range['to'] ?? 0 ) ) );
+        }
+        if ( $key === 'year' ) {
+            return naws_label( 'wr_period_year' );
+        }
+        if ( $key === 'all' ) {
+            return naws_label( 'wr_period_all' );
+        }
+        $n = (int) $key;
+        /* translators: %d: number of days. */
+        return sprintf( _n( 'last %d day', 'last %d days', $n, 'xtx-integration-for-netatmo' ), $n );
+    }
+
+    /** The switcher's short text for a period key: "90 days", "this year", "all". */
+    public static function button_label( string $key ): string {
+        if ( $key === 'year' ) {
+            return naws_label( 'wr_period_year' );
+        }
+        if ( $key === 'all' ) {
+            return naws_label( 'wr_button_all' );
+        }
+        $n = (int) $key;
+        /* translators: %d: number of days */
+        return sprintf( _n( '%d day', '%d days', $n, 'xtx-integration-for-netatmo' ), $n );
+    }
+
+    /** "Wind, 10-minute mean" or "Gusts, 10-minute peak". */
+    public static function meta_label( string $measure ): string {
+        return naws_label( $measure === 'gust' ? 'wr_meta_gust' : 'wr_meta_wind' );
+    }
+
     // ── Database ────────────────────────────────────────────────────
 
     /** The angle and speed parameters of a measure. */

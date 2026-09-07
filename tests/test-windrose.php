@@ -229,5 +229,31 @@ check( 'Farbname wird verworfen …',          array_key_exists( 'windrose_b2', 
 check( 'Unsinn wird verworfen …',            array_key_exists( 'windrose_grid', $san ), false );
 check( '… und get_all() fuellt die Vorgabe nach', NAWS_Colors::get_all()['windrose_b2'], '#5598e7' );
 
+echo "\nBeschriftungen\n" . str_repeat( '-', 74 ) . "\n";
+check( 'Einheit km/h',                       NAWS_Windrose::unit(), 'km/h' );
+check( 'speed: ganze Zahl bleibt ganz',      NAWS_Windrose::speed( 22.0 ), '22' );
+check( 'speed: eine Stelle wenn noetig',     NAWS_Windrose::speed( 5.4 ), '5.4' );
+check( 'speed: erzwungene Stelle',           NAWS_Windrose::speed( 5.0, 1 ), '5.0' );
+check( 'Klasse 1',                           NAWS_Windrose::bin_label( 0 ), 'Bft 1 · 1–5 km/h' );
+check( 'Klasse 3',                           NAWS_Windrose::bin_label( 2 ), 'Bft 3 · 12–19 km/h' );
+check( 'Klasse 5+',                          NAWS_Windrose::bin_label( 4 ), 'Bft 5+ · from 29 km/h' );
+$GLOBALS['naws_test_options']['naws_settings']['wind_unit'] = 'ms';
+check( 'Einheit m/s',                        NAWS_Windrose::unit(), 'm/s' );
+check( 'Klasse 1 in m/s',                    NAWS_Windrose::bin_label( 0 ), 'Bft 1 · 0.3–1.4 m/s' );
+check( 'speed in m/s',                       NAWS_Windrose::speed( 22.0 ), '6.1' );
+$GLOBALS['naws_test_options']['naws_settings']['wind_unit'] = 'kmh';
+check( 'Zeitraum 90d',                       NAWS_Windrose::period_label( [ 'key' => '90d', 'from' => 0, 'to' => 0 ] ), 'last 90 days' );
+check( 'Zeitraum 1d',                        NAWS_Windrose::period_label( [ 'key' => '1d', 'from' => 0, 'to' => 0 ] ), 'last 1 day' );
+check( 'Zeitraum year',                      NAWS_Windrose::period_label( [ 'key' => 'year', 'from' => 0, 'to' => 0 ] ), 'this year' );
+check( 'Zeitraum all',                       NAWS_Windrose::period_label( [ 'key' => 'all', 'from' => 0, 'to' => 0 ] ), 'everything recorded' );
+check( 'Zeitraum fest',                      NAWS_Windrose::period_label( [ 'key' => 'fixed', 'from' => $mk( '2026-05-01' ), 'to' => $mk( '2026-09-01' ) - 1 ] ), '01.05.2026 to 31.08.2026' );
+check( 'Zeitraum fest ab dem Anfang',        NAWS_Windrose::period_label( [ 'key' => 'fixed', 'from' => 0, 'to' => $mk( '2026-09-01' ) - 1 ] ), 'the first reading to 31.08.2026' );
+check( 'Knopf 7d',                           NAWS_Windrose::button_label( '7d' ), '7 days' );
+check( 'Knopf 1d',                           NAWS_Windrose::button_label( '1d' ), '1 day' );
+check( 'Knopf year',                         NAWS_Windrose::button_label( 'year' ), 'this year' );
+check( 'Knopf all',                          NAWS_Windrose::button_label( 'all' ), 'all' );
+check( 'Messgroesse Wind',                   NAWS_Windrose::meta_label( 'wind' ), 'Wind, 10-minute mean' );
+check( 'Messgroesse Boeen',                  NAWS_Windrose::meta_label( 'gust' ), 'Gusts, 10-minute peak' );
+
 printf( "\n%d ok, %d fehlgeschlagen\n", $passed, $failed );
 exit( $failed ? 1 : 0 );
