@@ -275,10 +275,8 @@ class NAWS_Colors {
             // Validate hex color (3, 4, 6, or 8 digit)
             if ( preg_match( '/^#([0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/', $val ) ) {
                 $clean[ $key ] = $val;
-            } else {
-                // Invalid value: fall back to default
-                $clean[ $key ] = $default;
             }
+            // else: invalid value, skip (will use default)
         }
         return $clean;
     }

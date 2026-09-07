@@ -225,8 +225,9 @@ check( 'CSS-Variable der Nabe',              str_contains( $css, '--naws-wr-calm
 check( 'die Variablen stehen im .naws-wrap-Block', strpos( $css, '--naws-wr-b1' ) < strpos( $css, '.naws-wx {' ), true );
 $san = NAWS_Colors::sanitize( [ 'windrose_b1' => '#123456', 'windrose_b2' => 'red', 'windrose_grid' => '<script>' ] );
 check( 'gueltiges Hex bleibt',               $san['windrose_b1'], '#123456' );
-check( 'Farbname faellt auf die Vorgabe',    $san['windrose_b2'], '#5598e7' );
-check( 'Unsinn faellt auf die Vorgabe',      $san['windrose_grid'], '#dbe3ea' );
+check( 'Farbname wird verworfen …',          array_key_exists( 'windrose_b2', $san ), false );
+check( 'Unsinn wird verworfen …',            array_key_exists( 'windrose_grid', $san ), false );
+check( '… und get_all() fuellt die Vorgabe nach', NAWS_Colors::get_all()['windrose_b2'], '#5598e7' );
 
 printf( "\n%d ok, %d fehlgeschlagen\n", $passed, $failed );
 exit( $failed ? 1 : 0 );
