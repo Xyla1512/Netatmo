@@ -80,14 +80,14 @@ $naws_wr_tip = static function ( int $i, array $s ) use ( $sectors, $unit, $pct 
 <?php if ( $switch || count( $measures ) > 1 ) : ?>
   <div class="naws-wr-switch" hidden>
 <?php if ( $switch ) : ?>
-    <div class="naws-wr-seg" role="group" aria-label="<?php echo esc_attr( naws_label( 'wr_switch_period' ) ); ?>">
+    <div class="naws-wr-group" role="group" aria-label="<?php echo esc_attr( naws_label( 'wr_switch_period' ) ); ?>">
 <?php foreach ( $keys as $k ) : $on = ( $k === $range['key'] ); ?>
       <button type="button" class="naws-leg-pill naws-wr-btn<?php if ( $on ) : ?> is-active<?php endif; ?>" data-period="<?php echo esc_attr( $k ); ?>" aria-pressed="<?php echo $on ? 'true' : 'false'; ?>"><?php echo esc_html( NAWS_Windrose::button_label( $k ) ); ?></button>
 <?php endforeach; ?>
     </div>
 <?php endif; ?>
 <?php if ( count( $measures ) > 1 ) : ?>
-    <div class="naws-wr-seg" role="group" aria-label="<?php echo esc_attr( naws_label( 'wr_switch_measure' ) ); ?>">
+    <div class="naws-wr-group" role="group" aria-label="<?php echo esc_attr( naws_label( 'wr_switch_measure' ) ); ?>">
 <?php foreach ( $measures as $m ) : $on = ( $m === $measures[0] ); ?>
       <button type="button" class="naws-leg-pill naws-wr-btn<?php if ( $on ) : ?> is-active<?php endif; ?>" data-measure="<?php echo esc_attr( $m ); ?>" aria-pressed="<?php echo $on ? 'true' : 'false'; ?>"><?php echo esc_html( $m === 'gust' ? __( 'Gusts', 'xtx-integration-for-netatmo' ) : __( 'Wind', 'xtx-integration-for-netatmo' ) ); ?></button>
 <?php endforeach; ?>

@@ -170,5 +170,26 @@ check( 'all: Bildunterschrift „readings from 21.04.2026"', str_contains( $h, '
 $h = render_windrose( atts(), [ 'wind|90d' => $rose16, 'wind|7d' => NAWS_Windrose::shape( [], 16 ), 'wind|30d' => $rose16, 'wind|year' => $rose16, 'wind|all' => $rose16 ] );
 check( 'je Panel seine Rose: 7d ist leer', substr_count( $h, 'naws-wr-empty' ), 1 );
 
+echo "\nDateien\n" . str_repeat( '-', 74 ) . "\n";
+$PLUGIN = dirname( __DIR__ ) . '/';
+$css = (string) file_get_contents( $PLUGIN . 'assets/css/frontend.css' );
+foreach ( [ '.naws-wr {', '.naws-wr-b1', '.naws-wr-b5', 'var(--naws-wr-b1', 'var(--naws-wr-grid', 'var(--naws-wr-calm', '.naws-wr-sr', '.naws-wr-tip', '.naws-wr-hover .naws-wr-sector:not(.is-on)', 'prefers-reduced-motion' ] as $needle ) {
+    check( "CSS enthaelt $needle", str_contains( $css, $needle ), true );
+}
+$js = (string) file_get_contents( $PLUGIN . 'assets/js/windrose-boot.js' );
+foreach ( [ 'data-naws-windrose', 'naws-wr-switch', 'data-period', 'data-measure', 'aria-pressed', 'data-tip', 'naws-wr-tip', 'is-on' ] as $needle ) {
+    check( "JS enthaelt $needle", str_contains( $js, $needle ), true );
+}
+check( 'JS holt nichts nach',               (bool) preg_match( '/fetch\(|XMLHttpRequest|admin-ajax|wp-json/', $js ), false );
+check( 'JS schreibt kein innerHTML',        str_contains( $js, 'innerHTML' ), false );
+$node = trim( (string) @shell_exec( 'node --version 2>&1' ) );
+if ( preg_match( '/^v\d+/', $node ) ) {
+    $out = []; $rc = 1;
+    exec( 'node --check ' . escapeshellarg( $PLUGIN . 'assets/js/windrose-boot.js' ) . ' 2>&1', $out, $rc );
+    check( "Syntax laut node $node", $rc, 0 );
+} else {
+    echo "  --    node nicht gefunden, Syntaxpruefung uebersprungen\n";
+}
+
 printf( "\n%d ok, %d fehlgeschlagen\n", $passed, $failed );
 exit( $failed ? 1 : 0 );
