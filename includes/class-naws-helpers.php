@@ -700,9 +700,15 @@ class NAWS_Helpers {
         return                    [ 'level' => 'unhealthy',  'color' => '#ef4444', 'label' => __( 'Unhealthy', 'xtx-integration-for-netatmo' ) ];
     }
 
+    /**
+     * The compass code of a direction in degrees, translated (since 1.9.12:
+     * a German visitor reads "OSO", not "ESE"). The codes stay the keys of
+     * naws_label(), so nothing that compares against them changes.
+     */
     public static function degrees_to_compass( $deg ) {
         $directions = [ 'N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW' ];
-        return $directions[ round( $deg / 22.5 ) % 16 ];
+        $i = ( ( (int) round( (float) $deg / 22.5 ) ) % 16 + 16 ) % 16;
+        return naws_label( 'compass_' . strtolower( $directions[ $i ] ) );
     }
 
     public static function get_all_parameters() {

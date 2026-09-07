@@ -140,6 +140,43 @@ function naws_label( string $key ): string {
         case 'otd_col_rain':                       return _x( 'Rain', 'daily sum', 'xtx-integration-for-netatmo' );
         case 'otd_record':                         return __( 'record for this day', 'xtx-integration-for-netatmo' );
 
+        // Compass directions (since 1.9.12): the codes are the keys, the
+        // texts are what a visitor reads. degrees_to_compass() and
+        // [naws_windrose] both come here, so the live card and the rose
+        // can never disagree on how "ESE" is spelt.
+        case 'compass_n':                          return _x( 'N',   'compass direction', 'xtx-integration-for-netatmo' );
+        case 'compass_nne':                        return _x( 'NNE', 'compass direction', 'xtx-integration-for-netatmo' );
+        case 'compass_ne':                         return _x( 'NE',  'compass direction', 'xtx-integration-for-netatmo' );
+        case 'compass_ene':                        return _x( 'ENE', 'compass direction', 'xtx-integration-for-netatmo' );
+        case 'compass_e':                          return _x( 'E',   'compass direction', 'xtx-integration-for-netatmo' );
+        case 'compass_ese':                        return _x( 'ESE', 'compass direction', 'xtx-integration-for-netatmo' );
+        case 'compass_se':                         return _x( 'SE',  'compass direction', 'xtx-integration-for-netatmo' );
+        case 'compass_sse':                        return _x( 'SSE', 'compass direction', 'xtx-integration-for-netatmo' );
+        case 'compass_s':                          return _x( 'S',   'compass direction', 'xtx-integration-for-netatmo' );
+        case 'compass_ssw':                        return _x( 'SSW', 'compass direction', 'xtx-integration-for-netatmo' );
+        case 'compass_sw':                         return _x( 'SW',  'compass direction', 'xtx-integration-for-netatmo' );
+        case 'compass_wsw':                        return _x( 'WSW', 'compass direction', 'xtx-integration-for-netatmo' );
+        case 'compass_w':                          return _x( 'W',   'compass direction', 'xtx-integration-for-netatmo' );
+        case 'compass_wnw':                        return _x( 'WNW', 'compass direction', 'xtx-integration-for-netatmo' );
+        case 'compass_nw':                         return _x( 'NW',  'compass direction', 'xtx-integration-for-netatmo' );
+        case 'compass_nnw':                        return _x( 'NNW', 'compass direction', 'xtx-integration-for-netatmo' );
+        case 'compass_long_n':                     return _x( 'North',           'compass direction, long', 'xtx-integration-for-netatmo' );
+        case 'compass_long_nne':                   return _x( 'North-northeast', 'compass direction, long', 'xtx-integration-for-netatmo' );
+        case 'compass_long_ne':                    return _x( 'Northeast',       'compass direction, long', 'xtx-integration-for-netatmo' );
+        case 'compass_long_ene':                   return _x( 'East-northeast',  'compass direction, long', 'xtx-integration-for-netatmo' );
+        case 'compass_long_e':                     return _x( 'East',            'compass direction, long', 'xtx-integration-for-netatmo' );
+        case 'compass_long_ese':                   return _x( 'East-southeast',  'compass direction, long', 'xtx-integration-for-netatmo' );
+        case 'compass_long_se':                    return _x( 'Southeast',       'compass direction, long', 'xtx-integration-for-netatmo' );
+        case 'compass_long_sse':                   return _x( 'South-southeast', 'compass direction, long', 'xtx-integration-for-netatmo' );
+        case 'compass_long_s':                     return _x( 'South',           'compass direction, long', 'xtx-integration-for-netatmo' );
+        case 'compass_long_ssw':                   return _x( 'South-southwest', 'compass direction, long', 'xtx-integration-for-netatmo' );
+        case 'compass_long_sw':                    return _x( 'Southwest',       'compass direction, long', 'xtx-integration-for-netatmo' );
+        case 'compass_long_wsw':                   return _x( 'West-southwest',  'compass direction, long', 'xtx-integration-for-netatmo' );
+        case 'compass_long_w':                     return _x( 'West',            'compass direction, long', 'xtx-integration-for-netatmo' );
+        case 'compass_long_wnw':                   return _x( 'West-northwest',  'compass direction, long', 'xtx-integration-for-netatmo' );
+        case 'compass_long_nw':                    return _x( 'Northwest',       'compass direction, long', 'xtx-integration-for-netatmo' );
+        case 'compass_long_nnw':                   return _x( 'North-northwest', 'compass direction, long', 'xtx-integration-for-netatmo' );
+
         // [naws_sunpath] (since 1.9.11).
         case 'sun_title':                          return __( 'Sun path', 'xtx-integration-for-netatmo' );
         case 'sun_aria':                           return /* translators: 1: sunrise time, 2: sunset time, 3: day length. */ __( 'Sun path: sunrise %1$s, sunset %2$s, day length %3$s.', 'xtx-integration-for-netatmo' );

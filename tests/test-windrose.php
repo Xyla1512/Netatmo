@@ -133,5 +133,18 @@ $flat = NAWS_Windrose::shape( [ [ 'sector' => 2, 'bin' => 0, 'n' => 17, 'sum_v' 
 close( '17,0 % rundet auf 20 %',             $flat['ring'], 0.2, 0.0001 );
 check( 'top laesst leere Sektoren aus',      $flat['top'], [ 2, 5 ] );
 
+echo "\nHimmelsrichtungen\n" . str_repeat( '-', 74 ) . "\n";
+check( 'Kuerzel NNE',                        NAWS_Windrose::compass( 1, 16 ), 'NNE' );
+check( 'Kuerzel bei 8 Sektoren: NE',         NAWS_Windrose::compass( 1, 8 ), 'NE' );
+check( 'Kuerzel laeuft rund',                NAWS_Windrose::compass( 16, 16 ), 'N' );
+check( 'Langform',                           NAWS_Windrose::compass_long( 1, 16 ), 'North-northeast' );
+check( 'Langform bei 8 Sektoren',            NAWS_Windrose::compass_long( 7, 8 ), 'Northwest' );
+check( 'alle 16 Kuerzel haben ein Label',    count( array_filter( array_map( fn( $i ) => NAWS_Windrose::compass( $i, 16 ), range( 0, 15 ) ) ) ), 16 );
+check( 'alle 16 Langformen haben ein Label', count( array_filter( array_map( fn( $i ) => NAWS_Windrose::compass_long( $i, 16 ), range( 0, 15 ) ) ) ), 16 );
+check( 'degrees_to_compass(112.5) = ESE',    NAWS_Helpers::degrees_to_compass( 112.5 ), 'ESE' );
+check( 'degrees_to_compass(0) = N',          NAWS_Helpers::degrees_to_compass( 0 ), 'N' );
+check( 'degrees_to_compass(359) = N',        NAWS_Helpers::degrees_to_compass( 359 ), 'N' );
+check( 'degrees_to_compass(-5) stirbt nicht', NAWS_Helpers::degrees_to_compass( -5 ), 'N' );
+
 printf( "\n%d ok, %d fehlgeschlagen\n", $passed, $failed );
 exit( $failed ? 1 : 0 );

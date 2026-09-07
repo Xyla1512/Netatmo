@@ -75,6 +75,18 @@ final class NAWS_Windrose {
         return $sectors === 8 ? self::COMPASS_8 : self::COMPASS_16;
     }
 
+    /** The translated short code of sector i, e.g. "NNE" — or "NNO" in German. */
+    public static function compass( int $i, int $sectors ): string {
+        $codes = self::codes( $sectors );
+        return naws_label( 'compass_' . strtolower( $codes[ $i % count( $codes ) ] ) );
+    }
+
+    /** The translated long name of sector i, e.g. "North-northeast". */
+    public static function compass_long( int $i, int $sectors ): string {
+        $codes = self::codes( $sectors );
+        return naws_label( 'compass_long_' . strtolower( $codes[ $i % count( $codes ) ] ) );
+    }
+
     /** A point on the drawing: degrees clockwise from north, radius, centre. */
     public static function point( float $deg, float $r, float $c ): array {
         return [ $c + $r * sin( deg2rad( $deg ) ), $c - $r * cos( deg2rad( $deg ) ) ];
