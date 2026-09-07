@@ -27,6 +27,7 @@ function set_transient( $k, $v, $ttl = 0 ) { $GLOBALS['naws_test_transients'][ $
 require_once __DIR__ . '/i18n-stubs.php';
 
 define( 'NAWS_TABLE_READINGS', 'naws_readings' );
+define( 'ARRAY_A', 'ARRAY_A' );
 class NAWS_Database { const CACHE_PREFIX = 'naws_cache_'; }
 class NAWS_Test_WPDB {
     public $prefix = 'wp_';
@@ -175,6 +176,34 @@ check( 'switch_keys: Standardfolge',         NAWS_Windrose::switch_keys( [] ), [
 check( 'switch_keys: 14d kommt hinten dazu', NAWS_Windrose::switch_keys( [ 'period' => '14d' ] ), [ '7d', '30d', '90d', 'year', 'all', '14d' ] );
 check( 'switch_keys: fester Bereich hat keine', NAWS_Windrose::switch_keys( [ 'from' => '2026-05-01' ] ), [] );
 check( 'period_range(all) endet heute',      NAWS_Windrose::period_range( 'all' )['to'], $mk( '2026-09-08' ) - 1 );
+
+echo "\nDatenweg ueber den wpdb-Stub\n" . str_repeat( '-', 74 ) . "\n";
+$wpdb->rows = $rows; $wpdb->peak = 1779602428; $wpdb->last = [];
+$db = NAWS_Windrose::rose( 'wind', [ 'from' => 100, 'to' => 200 ], 16 );
+check( 'zwei Abfragen, beide ueber prepare()', count( $wpdb->last ), 2 );
+[ $sql, $args ] = $wpdb->last[0];
+check( 'die Tabelle kommt aus dem Praefix',  str_contains( $sql, 'FROM wp_naws_readings s' ), true );
+check( 'der Zeitraum sind Platzhalter',      str_contains( $sql, 'BETWEEN %d AND %d' ), true );
+check( '13 Platzhalter …',                   substr_count( $sql, '%' ), 13 );
+check( '… und 13 Werte',                     count( $args ), 13 );
+check( 'keine Variable im SQL',              str_contains( $sql, '$' ), false );
+check( 'Wind fragt WindAngle/WindStrength',  [ $args[9], $args[10] ], [ 'WindAngle', 'WindStrength' ] );
+check( 'Grenzen als Zahlen',                 [ $args[11], $args[12] ], [ 100, 200 ] );
+check( '16 Sektoren: 45 vor Norden, 90 breit', [ $args[1], $args[2], $args[3] ], [ 45, 90, 16 ] );
+check( 'Klassengrenzen',                     array_slice( $args, 4, 5 ), [ 1, 6, 12, 20, 29 ] );
+check( 'Spitze: zweite Abfrage sortiert nach value', str_contains( $wpdb->last[1][0], 'ORDER BY value DESC' ), true );
+check( 'Rose aus den Stub-Zeilen',           $db['n'], 7058 );
+check( 'Spitzenzeit aus der zweiten Abfrage', $db['max_at'], 1779602428 );
+$wpdb->last = [];
+NAWS_Windrose::rose( 'wind', [ 'from' => 100, 'to' => 200 ], 16 );
+check( 'zweiter Aufruf kommt aus dem Transient', count( $wpdb->last ), 0 );
+$g = NAWS_Windrose::rose( 'gust', [ 'from' => 1, 'to' => 2 ], 8 );
+check( 'Boeen fragen GustAngle/GustStrength', [ $wpdb->last[0][1][9], $wpdb->last[0][1][10] ], [ 'GustAngle', 'GustStrength' ] );
+check( '8 Sektoren: 90 vor Norden, 180 breit', [ $wpdb->last[0][1][1], $wpdb->last[0][1][2], $wpdb->last[0][1][3] ], [ 90, 180, 8 ] );
+$wpdb->rows = []; $wpdb->last = [];
+$none = NAWS_Windrose::rose( 'wind', [ 'from' => 5, 'to' => 6 ], 16 );
+check( 'ohne Zeilen keine zweite Abfrage',   count( $wpdb->last ), 1 );
+check( 'ohne Zeilen eine leere Rose',        $none['n'], 0 );
 
 printf( "\n%d ok, %d fehlgeschlagen\n", $passed, $failed );
 exit( $failed ? 1 : 0 );

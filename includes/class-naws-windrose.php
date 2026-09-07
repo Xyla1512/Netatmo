@@ -268,4 +268,88 @@ final class NAWS_Windrose {
         }
         return $keys;
     }
+
+    // ── Database ────────────────────────────────────────────────────
+
+    /** The angle and speed parameters of a measure. */
+    private static function params( string $measure ): array {
+        return $measure === 'gust' ? [ 'GustAngle', 'GustStrength' ] : [ 'WindAngle', 'WindStrength' ];
+    }
+
+    /**
+     * One grouped query: every angle/speed pair in the range, folded to
+     * (sector, class) with count, sum, maximum and the earliest timestamp.
+     *
+     * The sector is computed in quadrupled degrees so every bound is an
+     * integer: a 16-sector rose has 90 units per sector and starts 45 units
+     * before north. Calm readings get sector −1, readings whose angle is
+     * outside 0–360 get −2; both still count.
+     */
+    public static function query( string $measure, int $from, int $to, int $sectors ): array {
+        global $wpdb;
+        $sectors = in_array( $sectors, self::SECTORS, true ) ? $sectors : 16;
+        [ $angle, $speed ] = self::params( $measure );
+        $t  = $wpdb->prefix . NAWS_TABLE_READINGS;
+        $b  = self::BINS;
+        $w4 = (int) ( 1440 / $sectors );
+
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name is prefix + constant; every value is a placeholder; rose() caches the result as a transient
+        $rows = $wpdb->get_results( $wpdb->prepare(
+            "SELECT
+                CASE WHEN s.value < %d THEN -1
+                     WHEN a.value < 0 OR a.value > 360 THEN -2
+                     ELSE MOD( FLOOR( MOD( a.value * 4 + %d, 1440 ) / %d ), %d ) END AS sector,
+                CASE WHEN s.value < %d THEN -1 WHEN s.value < %d THEN 0 WHEN s.value < %d THEN 1
+                     WHEN s.value < %d THEN 2 WHEN s.value < %d THEN 3 ELSE 4 END AS bin,
+                COUNT(*) AS n, SUM(s.value) AS sum_v, MAX(s.value) AS max_v, MIN(s.recorded_at) AS first_at
+             FROM {$t} s
+             INNER JOIN {$t} a ON a.module_id = s.module_id AND a.recorded_at = s.recorded_at AND a.parameter = %s
+             WHERE s.parameter = %s AND s.recorded_at BETWEEN %d AND %d
+             GROUP BY sector, bin",
+            $b[0], (int) ( $w4 / 2 ), $w4, $sectors,
+            $b[0], $b[1], $b[2], $b[3], $b[4],
+            $angle, $speed, $from, $to
+        ), ARRAY_A );
+        // phpcs:enable
+
+        return is_array( $rows ) ? $rows : [];
+    }
+
+    /** When the strongest reading of the range was taken; 0 when there is none. */
+    public static function peak_at( string $measure, int $from, int $to ): int {
+        global $wpdb;
+        [ , $speed ] = self::params( $measure );
+        $t = $wpdb->prefix . NAWS_TABLE_READINGS;
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name is prefix + constant; rose() caches the result
+        $ts = $wpdb->get_var( $wpdb->prepare(
+            "SELECT recorded_at FROM {$t} WHERE parameter = %s AND recorded_at BETWEEN %d AND %d ORDER BY value DESC, recorded_at DESC LIMIT 1",
+            $speed, $from, $to
+        ) );
+        // phpcs:enable
+        return (int) $ts;
+    }
+
+    /**
+     * The rose of a measure over a range, from the transient when it is
+     * there. The key carries measure, both bounds and the sector count;
+     * NAWS_Database::flush_caches() removes it with everything else after
+     * each sync.
+     */
+    public static function rose( string $measure, array $range, int $sectors ): array {
+        $measure = $measure === 'gust' ? 'gust' : 'wind';
+        $sectors = in_array( $sectors, self::SECTORS, true ) ? $sectors : 16;
+        $from    = (int) ( $range['from'] ?? 0 );
+        $to      = (int) ( $range['to'] ?? 0 );
+        $key     = NAWS_Database::CACHE_PREFIX . 'windrose_' . md5( wp_json_encode( [ $measure, $from, $to, $sectors ] ) );
+
+        $hit = get_transient( $key );
+        if ( is_array( $hit ) && isset( $hit['sectors'] ) ) {
+            return $hit;
+        }
+        $rows = self::query( $measure, $from, $to, $sectors );
+        $peak = $rows ? self::peak_at( $measure, $from, $to ) : 0;
+        $rose = self::shape( $rows, $sectors, $peak );
+        set_transient( $key, $rose, self::CACHE_TTL );
+        return $rose;
+    }
 }
