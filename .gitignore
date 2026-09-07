@@ -29,3 +29,8 @@
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# GlotPress import file for the readme translation. build.php writes it,
+# verify.php reads it, and imports/ keeps the dated copy that was actually
+# sent to translate.wordpress.org. The working file is build output.
+docs/i18n/glotpress/xtx-integration-for-netatmo-de_DE-readme.po
