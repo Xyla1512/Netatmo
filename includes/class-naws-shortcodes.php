@@ -23,6 +23,7 @@ class NAWS_Shortcodes {
         add_shortcode( 'naws_records',     [ $this, 'sc_records' ] );
         add_shortcode( 'naws_on_this_day', [ $this, 'sc_on_this_day' ] );
         add_shortcode( 'naws_sunpath',     [ $this, 'sc_sunpath' ] );
+        add_shortcode( 'naws_windrose',    [ $this, 'sc_windrose' ] );
         add_shortcode( 'naws_live',      [ $this, 'sc_live' ] );
         add_shortcode( 'naws_infobar',   [ $this, 'sc_infobar' ] );
         add_shortcode( 'naws_value',     [ $this, 'sc_value' ] );
@@ -64,6 +65,12 @@ class NAWS_Shortcodes {
         wp_register_script( 'naws-heatmap-boot',
             NAWS_PLUGIN_URL . 'assets/js/heatmap-boot.js',
             [ 'naws-frontend' ], NAWS_VERSION, true );
+
+        // [naws_windrose]: swaps the pre-rendered panels and dresses the
+        // native <title> tooltips. Needs neither jQuery nor the charts.
+        wp_register_script( 'naws-windrose-boot',
+            NAWS_PLUGIN_URL . 'assets/js/windrose-boot.js',
+            [], NAWS_VERSION, true );
     }
 
     private function enqueue_frontend() {
@@ -323,6 +330,35 @@ class NAWS_Shortcodes {
 
         ob_start();
         include NAWS_PLUGIN_DIR . 'templates/sunpath.php';
+        return ob_get_clean();
+    }
+
+    // ----------------------------------------------------------------
+    // [naws_windrose period="90d" measure="wind" sectors="16" from="" to="" show="legend,summary" switcher="yes" size="" title=""]
+    // Where the wind comes from, how often, and how hard, since 1.9.12
+    // ----------------------------------------------------------------
+    public function sc_windrose( $atts ) {
+        $this->enqueue_frontend_styles();
+        wp_enqueue_script( 'naws-windrose-boot' );
+
+        $atts = shortcode_atts( [
+            'period'   => '90d',
+            'measure'  => 'wind',
+            'sectors'  => '16',
+            'from'     => '',
+            'to'       => '',
+            'show'     => 'legend,summary',
+            'switcher' => 'yes',
+            'size'     => '',
+            'title'    => null,
+        ], $atts, 'naws_windrose' );
+
+        if ( $atts['title'] === null ) {
+            $atts['title'] = naws_label( 'wr_title' );
+        }
+
+        ob_start();
+        include NAWS_PLUGIN_DIR . 'templates/windrose.php';
         return ob_get_clean();
     }
 
