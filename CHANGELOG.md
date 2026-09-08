@@ -11,6 +11,7 @@ All notable changes to the XTX Netatmo plugin are documented here.
 
 ### Fixed
 - The compass directions are translated: the forecast in `[naws_live]` and `[naws_forecast]` showed a German visitor "ESE" where "OSO" belongs. The sixteen codes go through gettext now, in German and Norwegian.
+- The frontend stylesheet and scripts carry the file's modification time in their version, so a changed file is fetched even when the plugin version stays the same — the admin assets have done this since 1.9.7. A visitor with a cached stylesheet no longer sees a new shortcode unstyled.
 
 ### Changed
 - readme.txt now carries only the five most recent versions of the changelog and their upgrade notices; the full history since 1.0.0 lives here in CHANGELOG.md. WordPress.org truncates long changelog sections mid-line, which had left an orphaned string in the readme translation project.

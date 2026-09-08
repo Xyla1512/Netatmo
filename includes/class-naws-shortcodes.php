@@ -37,7 +37,7 @@ class NAWS_Shortcodes {
 
     public function enqueue_frontend_assets() {
         // Register scripts/styles (not enqueued yet – done per-shortcode)
-        wp_register_style(  'naws-frontend', NAWS_PLUGIN_URL . 'assets/css/frontend.css', [], NAWS_VERSION );
+        wp_register_style(  'naws-frontend', NAWS_PLUGIN_URL . 'assets/css/frontend.css', [], NAWS_Helpers::asset_version( 'assets/css/frontend.css' ) );
         wp_register_script( 'naws-chartjs',
             NAWS_PLUGIN_URL . 'assets/vendor/chart.umd.min.js',
             [], '4.5.1', true );
@@ -46,7 +46,7 @@ class NAWS_Shortcodes {
             [ 'naws-chartjs' ], '3.0.0', true );
         wp_register_script( 'naws-frontend',
             NAWS_PLUGIN_URL . 'assets/js/frontend.js',
-            [ 'jquery','naws-chartjs','naws-chartjs-adapter' ], NAWS_VERSION, true );
+            [ 'jquery','naws-chartjs','naws-chartjs-adapter' ], NAWS_Helpers::asset_version( 'assets/js/frontend.js' ), true );
 
         // Boot routines for the two chart-bearing shortcodes. Until 1.9.5 both
         // were printed into the page as inline <script> blocks on wp_footer,
@@ -58,19 +58,19 @@ class NAWS_Shortcodes {
         // prints, so any number of shortcodes on a page share one copy.
         wp_register_script( 'naws-live-boot',
             NAWS_PLUGIN_URL . 'assets/js/live-boot.js',
-            [ 'naws-frontend' ], NAWS_VERSION, true );
+            [ 'naws-frontend' ], NAWS_Helpers::asset_version( 'assets/js/live-boot.js' ), true );
         wp_register_script( 'naws-history-boot',
             NAWS_PLUGIN_URL . 'assets/js/history-boot.js',
-            [ 'naws-frontend', 'naws-chartjs-adapter' ], NAWS_VERSION, true );
+            [ 'naws-frontend', 'naws-chartjs-adapter' ], NAWS_Helpers::asset_version( 'assets/js/history-boot.js' ), true );
         wp_register_script( 'naws-heatmap-boot',
             NAWS_PLUGIN_URL . 'assets/js/heatmap-boot.js',
-            [ 'naws-frontend' ], NAWS_VERSION, true );
+            [ 'naws-frontend' ], NAWS_Helpers::asset_version( 'assets/js/heatmap-boot.js' ), true );
 
         // [naws_windrose]: swaps the pre-rendered panels and dresses the
         // native <title> tooltips. Needs neither jQuery nor the charts.
         wp_register_script( 'naws-windrose-boot',
             NAWS_PLUGIN_URL . 'assets/js/windrose-boot.js',
-            [], NAWS_VERSION, true );
+            [], NAWS_Helpers::asset_version( 'assets/js/windrose-boot.js' ), true );
     }
 
     private function enqueue_frontend() {

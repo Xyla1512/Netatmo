@@ -56,6 +56,26 @@ function naws_timezone(): DateTimeZone {
 
 class NAWS_Helpers {
 
+    /**
+     * Cache-busting version for an asset: its modification time, falling
+     * back to the plugin version.
+     *
+     * NAWS_VERSION alone is not enough between releases. A stylesheet that
+     * changes while the version number stays put keeps its URL, so the
+     * browser serves the copy it already has — the change is on the server
+     * and nowhere to be seen. Every release ships new files with new
+     * timestamps, so this is at least as fresh as the version was.
+     *
+     * @param string $rel Path relative to the plugin directory.
+     * @return string
+     */
+    public static function asset_version( string $rel ): string {
+        $path = NAWS_PLUGIN_DIR . $rel;
+        $time = file_exists( $path ) ? filemtime( $path ) : false;
+
+        return $time ? NAWS_VERSION . '.' . $time : NAWS_VERSION;
+    }
+
     public static function get_label( $parameter ) {
         $labels = [
             'Temperature'       => __( 'Temperature', 'xtx-integration-for-netatmo' ),
