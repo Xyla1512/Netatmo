@@ -1905,8 +1905,9 @@
 }
 .naws-wr-title  { margin: 0 0 8px; font-size: 1.1em; color: var(--naws-text-dark, #2d5252); }
 .naws-wr-switch { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 0 0 8px; }
+.naws-wr-switch[hidden] { display: none; }
 .naws-wr-group  { display: inline-flex; flex-wrap: wrap; gap: 4px; }
-.naws-wr-btn    { background: var(--naws-surface-2, #f8fafc); color: var(--naws-text-muted, #7aa0a0); border-color: var(--naws-border, #e0eeee); }
+.naws-wr-btn    { background: var(--naws-surface-2, #f8fafc); color: var(--naws-text-muted, #7aa0a0); border-color: var(--naws-border, #e0eeee); font-size: 11px; padding: 3px 10px; }
 .naws-wr-btn.is-active,
 .naws-wr-btn[aria-pressed="true"] { background: var(--naws-primary, #427272); color: #fff; border-color: var(--naws-primary, #427272); }
 .naws-wr-btn:focus-visible { outline: 2px solid var(--naws-primary, #427272); outline-offset: 2px; }

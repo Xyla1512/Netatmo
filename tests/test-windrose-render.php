@@ -173,7 +173,7 @@ check( 'je Panel seine Rose: 7d ist leer', substr_count( $h, 'naws-wr-empty' ), 
 echo "\nDateien\n" . str_repeat( '-', 74 ) . "\n";
 $PLUGIN = dirname( __DIR__ ) . '/';
 $css = (string) file_get_contents( $PLUGIN . 'assets/css/frontend.css' );
-foreach ( [ '.naws-wr {', '.naws-wr-b1', '.naws-wr-b5', 'var(--naws-wr-b1', 'var(--naws-wr-grid', 'var(--naws-wr-calm', '.naws-wr-sr', '.naws-wr-tip', '.naws-wr-hover .naws-wr-sector:not(.is-on)', 'prefers-reduced-motion' ] as $needle ) {
+foreach ( [ '.naws-wr {', '.naws-wr-b1', '.naws-wr-b5', 'var(--naws-wr-b1', 'var(--naws-wr-grid', 'var(--naws-wr-calm', '.naws-wr-sr', '.naws-wr-tip', '.naws-wr-hover .naws-wr-sector:not(.is-on)', 'prefers-reduced-motion', '.naws-wr-switch[hidden] { display: none' ] as $needle ) {
     check( "CSS enthaelt $needle", str_contains( $css, $needle ), true );
 }
 $js = (string) file_get_contents( $PLUGIN . 'assets/js/windrose-boot.js' );
