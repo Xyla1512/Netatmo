@@ -1,11 +1,18 @@
 {
-    "aktualisiert": "2026-09-05",
+    "aktualisiert": "2026-09-08",
     "vorhaben": [
         {
             "id": "email-benachrichtigungen",
             "titel": "E-Mail-Benachrichtigungen bei Ereignissen und Störungen",
             "satz": "Eine Nachricht, wenn etwas passiert: Frost in der Nacht, eine Böe über deiner Schwelle, ein Regentag über Maß — und wenn die Station schweigt, der Abruf scheitert oder die Zugangsdaten verfallen. Welche Ereignisse, an wen und wie oft, stellst du im Backend ein.",
             "ab": null,
+            "bild": null
+        },
+        {
+            "id": "windrose",
+            "titel": "Die Windrose",
+            "satz": "[naws_windrose] zeigt, aus welcher Richtung der Wind an deiner Station kommt, wie oft und wie kräftig: sechzehn Strahlen, je länger, desto häufiger, von innen nach außen nach Beaufort gestapelt, Windstille in der Mitte. Umschaltbar zwischen 7, 30 und 90 Tagen, dem laufenden Jahr und allem, was aufgezeichnet ist, oder ein fester Zeitraum. Farben aus dem Erscheinungsbild.",
+            "ab": "1.9.12",
             "bild": null
         },
         {

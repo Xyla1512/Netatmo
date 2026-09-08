@@ -288,6 +288,28 @@ $value_params = [
     </div>
 
     <div class="naws-sc-card">
+        <h3><code>[naws_windrose]</code></h3>
+        <p><?php esc_html_e( 'Where the wind comes from, how often, and how hard: one ray per compass direction, its length the share of readings from there, stacked by Beaufort class from light (centre) to strong (edge). Calm sits in the hub. Below it the main directions, mean, peak and calm share, the legend, and a table for screen readers. Built from the raw ten-minute readings; the switcher offers 7, 30 and 90 days, this year and everything recorded, all rendered on the server.', 'xtx-integration-for-netatmo' ); ?></p>
+        <div class="naws-copy-wrap"><pre>[naws_windrose]</pre><button class="naws-copy-btn" data-copy='[naws_windrose]'><?php echo esc_html( _x( 'Copy', 'sc_copy', 'xtx-integration-for-netatmo' ) ); ?></button></div>
+        <table class="naws-attr-table" style="margin-top:10px">
+            <tr><th><?php esc_html_e( 'Attribute', 'xtx-integration-for-netatmo' ); ?></th><th><?php esc_html_e( 'Description', 'xtx-integration-for-netatmo' ); ?></th><th><?php esc_html_e( 'Default', 'xtx-integration-for-netatmo' ); ?></th></tr>
+            <tr><td><code>period</code></td><td><?php esc_html_e( '7d, 30d, 90d or any number of days with a d; year for the running calendar year; all for everything recorded. Ignored when from or to is set.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">90d</span></td></tr>
+            <tr><td><code>from</code>, <code>to</code></td><td><?php esc_html_e( 'A fixed range as YYYY-MM-DD, both days included. Only from runs to today, only to starts at the first reading. Turns the switcher off.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php esc_html_e( 'empty', 'xtx-integration-for-netatmo' ); ?></span></td></tr>
+            <tr><td><code>measure</code></td><td><?php esc_html_e( 'wind for the ten-minute mean, gust for the gusts, both for a Wind / Gusts switch.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">wind</span></td></tr>
+            <tr><td><code>sectors</code></td><td><?php esc_html_e( '16 directions (N, NNE, NE …) or 8 (N, NE, E …).', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">16</span></td></tr>
+            <tr><td><code>show</code></td><td><?php esc_html_e( 'Comma-separated: legend, summary, table. The table is always in the page for screen readers; naming it makes it visible.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">legend,summary</span></td></tr>
+            <tr><td><code>switcher</code></td><td><?php esc_html_e( 'yes or no: the buttons for 7, 30 and 90 days, this year and everything recorded. Every period is rendered on the server; the script only swaps.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">yes</span></td></tr>
+            <tr><td><code>size</code></td><td><?php esc_html_e( 'Maximum width in pixels, 200–1200; empty fills the column up to 640 px.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php esc_html_e( 'empty', 'xtx-integration-for-netatmo' ); ?></span></td></tr>
+            <tr><td><code>title</code></td><td><?php esc_html_e( 'Heading; an empty title="" leaves it out', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php echo esc_html( naws_label( 'wr_title' ) ); ?></span></td></tr>
+        </table>
+        <div class="naws-inline-examples">
+            <div class="naws-inline-ex"><code>[naws_windrose period="year" measure="both"]</code> &rarr; <?php esc_html_e( 'this year, with a Wind / Gusts switch', 'xtx-integration-for-netatmo' ); ?></div>
+            <div class="naws-inline-ex"><code>[naws_windrose from="2026-05-01" to="2026-08-31" sectors="8" title="Summer wind"]</code> &rarr; <?php esc_html_e( 'one fixed summer, eight directions', 'xtx-integration-for-netatmo' ); ?></div>
+            <div class="naws-inline-ex"><code>[naws_windrose switcher="no" show="legend,summary,table" size="420"]</code> &rarr; <?php esc_html_e( 'one period, the table visible, 420 px wide', 'xtx-integration-for-netatmo' ); ?></div>
+        </div>
+    </div>
+
+    <div class="naws-sc-card">
         <h3><code>[naws_current]</code></h3>
         <p><?php esc_html_e( 'Shows animated metric cards with the latest sensor values from all or specific modules.', 'xtx-integration-for-netatmo' ); ?></p>
         <div class="naws-copy-wrap"><pre>[naws_current]</pre><button class="naws-copy-btn" data-copy='[naws_current]'><?php echo esc_html( _x( 'Copy', 'sc_copy', 'xtx-integration-for-netatmo' ) ); ?></button></div>

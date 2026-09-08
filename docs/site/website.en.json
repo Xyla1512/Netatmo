@@ -1,11 +1,18 @@
 {
-    "aktualisiert": "2026-09-05",
+    "aktualisiert": "2026-09-08",
     "vorhaben": [
         {
             "id": "email-benachrichtigungen",
             "titel": "Email notifications for events and outages",
             "satz": "A message when something happens: frost in the night, a gust above your threshold, a rain day beyond measure — and when the station goes quiet, the fetch fails or the credentials expire. Which events, to whom and how often is set in the admin.",
             "ab": null,
+            "bild": null
+        },
+        {
+            "id": "windrose",
+            "titel": "The wind rose",
+            "satz": "[naws_windrose] shows where the wind at your station comes from, how often, and how hard: sixteen rays, the longer the more frequent, stacked by Beaufort class from the centre outwards, calm in the hub. Switch between 7, 30 and 90 days, the running year and everything recorded, or pin a fixed range. Colours from the Appearance page.",
+            "ab": "1.9.12",
             "bild": null
         },
         {
