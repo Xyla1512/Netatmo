@@ -55,6 +55,14 @@ $color_labels = [
     'heatmap_t_30'    => __( '30 °C', 'xtx-integration-for-netatmo' ),
     'heatmap_t_35'    => __( '35 °C and above', 'xtx-integration-for-netatmo' ),
     'heatmap_no_data' => __( 'Day without a reading', 'xtx-integration-for-netatmo' ),
+    // Wind rose
+    'windrose_b1'   => __( 'Beaufort 1 · light air', 'xtx-integration-for-netatmo' ),
+    'windrose_b2'   => __( 'Beaufort 2 · light breeze', 'xtx-integration-for-netatmo' ),
+    'windrose_b3'   => __( 'Beaufort 3 · gentle breeze', 'xtx-integration-for-netatmo' ),
+    'windrose_b4'   => __( 'Beaufort 4 · moderate breeze', 'xtx-integration-for-netatmo' ),
+    'windrose_b5'   => __( 'Beaufort 5 and above · fresh breeze', 'xtx-integration-for-netatmo' ),
+    'windrose_grid' => __( 'Rings', 'xtx-integration-for-netatmo' ),
+    'windrose_calm' => __( 'Hub (calm)', 'xtx-integration-for-netatmo' ),
 ];
 
 // Short labels for 24h chart preview legend
@@ -81,6 +89,7 @@ $tabs = [
     'charttheme'=> __( 'Chart Theming', 'xtx-integration-for-netatmo' ),
     'history'   => __( 'Year Comparison Palette', 'xtx-integration-for-netatmo' ),
     'heatmap'   => __( 'Heatmap Scale', 'xtx-integration-for-netatmo' ),
+    'windrose'  => __( 'Wind Rose', 'xtx-integration-for-netatmo' ),
 ];
 
 // Icon sets data
@@ -547,6 +556,57 @@ $icon_color_keys = [
             </div>
         </div>
 
+        <!-- ============================================================
+             Tab 7: Windrose
+             ============================================================ -->
+        <div class="naws-appearance-pane" data-pane="windrose">
+            <p class="description"><?php esc_html_e( 'Colours for [naws_windrose]: one class per Beaufort step from the centre outwards, the rings behind the rays, and the hub that carries the calm share. Pick one hue that gets darker step by step; the rose is read by length first and by colour second.', 'xtx-integration-for-netatmo' ); ?></p>
+            <div class="naws-appearance-row">
+                <div class="naws-appearance-controls">
+                    <table class="form-table naws-color-table">
+                        <tbody>
+                        <?php foreach ( $groups['windrose']['keys'] as $key ) : ?>
+                            <tr>
+                                <th><label for="naws-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $color_labels[ $key ] ?? $key ); ?></label></th>
+                                <td>
+                                    <input type="text"
+                                           id="naws-<?php echo esc_attr( $key ); ?>"
+                                           name="naws_appearance[<?php echo esc_attr( $key ); ?>]"
+                                           value="<?php echo esc_attr( $colors[ $key ] ); ?>"
+                                           class="naws-color-picker"
+                                           data-preview="windrose"
+                                           data-key="<?php echo esc_attr( $key ); ?>"
+                                           data-default-color="<?php echo esc_attr( $defaults[ $key ] ); ?>">
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="naws-appearance-preview naws-preview-sticky">
+                    <div class="naws-preview-label"><?php esc_html_e( 'Live preview — wind rose', 'xtx-integration-for-netatmo' ); ?></div>
+                    <?php
+                    // A fixed sample rose of eight sectors: units per class, so
+                    // every colour is on screen whatever the station's wind does.
+                    $naws_pv_units = [ [ 4, 3, 2, 1, 1 ], [ 3, 2, 1, 0, 0 ], [ 1, 1, 0, 0, 0 ], [ 1, 0, 0, 0, 0 ], [ 2, 1, 0, 0, 0 ], [ 3, 3, 2, 1, 0 ], [ 4, 3, 2, 2, 1 ], [ 3, 2, 1, 0, 0 ] ];
+                    $naws_pv_max   = 12;
+                    $naws_pv_rad   = static fn( int $u ): float => 14.0 + $u / $naws_pv_max * 76.0;
+                    ?>
+                    <svg id="naws-preview-windrose" viewBox="0 0 200 200" width="220" height="220" role="img" aria-label="<?php esc_attr_e( 'Sample wind rose in the chosen colours', 'xtx-integration-for-netatmo' ); ?>">
+                        <?php foreach ( [ 3, 6, 9, 12 ] as $naws_pv_u ) : ?>
+                        <circle class="naws-pv-wr-grid" cx="100" cy="100" r="<?php echo esc_attr( number_format( $naws_pv_rad( $naws_pv_u ), 2, '.', '' ) ); ?>" fill="none" style="stroke:<?php echo esc_attr( $colors['windrose_grid'] ); ?>"/>
+                        <?php endforeach; ?>
+                        <?php foreach ( $naws_pv_units as $naws_pv_i => $naws_pv_bins ) : $naws_pv_cum = 0; ?>
+                            <?php foreach ( $naws_pv_bins as $naws_pv_b => $naws_pv_n ) : if ( $naws_pv_n === 0 ) { continue; } $naws_pv_r0 = $naws_pv_rad( $naws_pv_cum ); $naws_pv_cum += $naws_pv_n; ?>
+                        <path class="naws-pv-wr-b<?php echo esc_attr( (string) ( $naws_pv_b + 1 ) ); ?>" d="<?php echo esc_attr( NAWS_Windrose::arc( $naws_pv_i * 45 - 22.5, $naws_pv_i * 45 + 22.5, $naws_pv_r0, $naws_pv_rad( $naws_pv_cum ), 100.0 ) ); ?>" stroke="#fff" stroke-width="1.5" style="fill:<?php echo esc_attr( $colors[ 'windrose_b' . ( $naws_pv_b + 1 ) ] ); ?>"/>
+                            <?php endforeach; ?>
+                        <?php endforeach; ?>
+                        <circle class="naws-pv-wr-calm" cx="100" cy="100" r="12" stroke="#d0d7de" style="fill:<?php echo esc_attr( $colors['windrose_calm'] ); ?>"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
         <p class="submit">
             <button type="submit" class="button button-primary"><?php esc_html_e( 'Save Settings', 'xtx-integration-for-netatmo' ); ?></button>
         </p>
@@ -804,6 +864,13 @@ jQuery(document).ready(function($) {
         if (group === 'heatmap') {
             var stop = $('.naws-pv-heatmap-stop[data-key="'+key+'"]');
             stop.find('.naws-pv-heatmap-swatch').css('background', val);
+        }
+
+        // ── Wind rose preview ──
+        if (group === 'windrose') {
+            var wr = $('#naws-preview-windrose');
+            var suffix = String(key).replace('windrose_', '');
+            wr.find('.naws-pv-wr-' + suffix).css(suffix === 'grid' ? 'stroke' : 'fill', val);
         }
     }
 

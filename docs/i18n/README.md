@@ -19,6 +19,8 @@ an ihren Aufrufstellen, Deutsch und Norwegisch stehen in `catalog/`.
 php docs/i18n/catalog/makepot.php              # languages/*.pot neu aus dem Code
 php docs/i18n/catalog/merge_po.php de_DE       # .pot in die Übersetzung nachtragen
 php docs/i18n/catalog/merge_po.php nb_NO
+php docs/i18n/catalog/fill_po.php de_DE liste.php   # optional: leere msgstr aus einer fertigen Liste fuellen
+php docs/i18n/catalog/fill_po.php nb_NO liste.php
 php docs/i18n/catalog/make_mo.php docs/i18n/catalog/xtx-integration-for-netatmo-de_DE.po languages/xtx-integration-for-netatmo-de_DE.mo
 php docs/i18n/catalog/make_mo.php docs/i18n/catalog/xtx-integration-for-netatmo-nb_NO.po languages/xtx-integration-for-netatmo-nb_NO.mo
 ```
@@ -28,6 +30,10 @@ liest die Aufrufe mit dem PHP-Tokenizer (kein `wp-cli` nötig, kein `msgfmt`
 auf diesem Rechner), `merge_po.php` ersetzt `msgmerge`, `make_mo.php`
 ersetzt `msgfmt`. `merge_po.php` sagt am Ende, was offen und was weggefallen
 ist — die Liste ist die eigentliche Ausgabe, nicht nur ein Protokoll.
+`fill_po.php <de_DE|nb_NO> <liste.php>` trägt eine fertige Übersetzung aus
+einer PHP-Liste in die noch leeren `msgstr` ein, meldet am Ende Schlüssel,
+die die `.po` nicht kennt, und lässt ein schon gefülltes `msgstr`
+unangetastet.
 
 Stand 01.09.2026: **de_DE und nb_NO je 652 von 652.**
 

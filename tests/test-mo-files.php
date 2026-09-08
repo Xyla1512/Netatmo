@@ -157,45 +157,60 @@ foreach ( [ 'de_DE', 'nb_NO' ] as $locale ) {
     check( "$locale: jede Uebersetzung behaelt ihre Platzhalter", $verloren, [] );
 }
 
-// Der Plural-Eintrag "%d day"/"%d days" ist der einzige in diesem Katalog.
+// Jeder Plural-Eintrag in diesem Katalog wird einzeln entkoppelt geprueft.
 // Ein nicht-leerer Platzhalter-Test allein wuerde auch dann bestehen, wenn
 // Einzahl und Mehrzahl vertauscht, verdoppelt oder das \0 im Original ganz
 // fehlen wuerde (so wie vor der make_mo.php-Reparatur) -- deshalb hier
-// gezielt den Eintrag entkoppeln und Reihenfolge sowie Anzahl der Formen
-// pruefen, statt nur "steht irgendwas Passendes drin".
-echo "\nPlural-Eintrag %d day/%d days ist richtig kompiliert\n" . str_repeat( '-', 74 ) . "\n";
+// gezielt jeden Eintrag entkoppeln und Reihenfolge sowie Anzahl der Formen
+// pruefen, statt nur "steht irgendwas Passendes drin". Seit der Windrose
+// (Task 11) gibt es zwei unabhaengige Plural-Originale in diesem Katalog:
+// das aeltere "%d day"/"%d days" und "last %d day"/"last %d days" aus dem
+// Zeitraum-Umschalter.
+echo "\nPlural-Eintraege sind richtig kompiliert\n" . str_repeat( '-', 74 ) . "\n";
 
-$plural_original = "%d day\0%d days";
-$plural_formen    = [
-    'de_DE' => [ '%d Tag', '%d Tage' ],
-    'nb_NO' => [ '%d dag', '%d dager' ],
+$plural_formen = [
+    "%d day\0%d days"           => [
+        'de_DE' => [ '%d Tag', '%d Tage' ],
+        'nb_NO' => [ '%d dag', '%d dager' ],
+    ],
+    "last %d day\0last %d days" => [
+        'de_DE' => [ 'letzter %d Tag', 'letzte %d Tage' ],
+        'nb_NO' => [ 'siste %d dag', 'siste %d dager' ],
+    ],
 ];
 
-foreach ( $plural_formen as $locale => $formen ) {
-    [ $einzahl, $mehrzahl ] = $formen;
-    $katalog = mo_lesen( $wurzel . '/languages/xtx-integration-for-netatmo-' . $locale . '.mo' );
+foreach ( $plural_formen as $plural_original => $je_sprache ) {
+    foreach ( $je_sprache as $locale => $formen ) {
+        [ $einzahl, $mehrzahl ] = $formen;
+        $katalog = mo_lesen( $wurzel . '/languages/xtx-integration-for-netatmo-' . $locale . '.mo' );
 
-    // Existiert dieser Schluessel ueberhaupt, steht schon fest, dass das
-    // Original als "singular\0plural" in genau dieser Reihenfolge kompiliert
-    // wurde -- ein vertauschtes oder fehlendes \0 waere ein anderer Schluessel.
-    check( "$locale: Original \"%d day\\0%d days\" ist als Plural-Eintrag vorhanden", isset( $katalog[ $plural_original ] ), true );
+        // Existiert dieser Schluessel ueberhaupt, steht schon fest, dass das
+        // Original als "singular\0plural" in genau dieser Reihenfolge kompiliert
+        // wurde -- ein vertauschtes oder fehlendes \0 waere ein anderer Schluessel.
+        check( "$locale: Original \"" . str_replace( "\0", '\\0', $plural_original ) . '" ist als Plural-Eintrag vorhanden', isset( $katalog[ $plural_original ] ), true );
 
-    $uebersetzung = $katalog[ $plural_original ] ?? '';
-    $teile        = explode( "\0", $uebersetzung );
-    check( "$locale: Uebersetzung zerfaellt in genau zwei Formen", count( $teile ), 2 );
-    check( "$locale: msgstr[0] ist die Einzahl ($einzahl)", $teile[0] ?? null, $einzahl );
-    check( "$locale: msgstr[1] ist die Mehrzahl ($mehrzahl)", $teile[1] ?? null, $mehrzahl );
+        $uebersetzung = $katalog[ $plural_original ] ?? '';
+        $teile        = explode( "\0", $uebersetzung );
+        check( "$locale: Uebersetzung zerfaellt in genau zwei Formen ($plural_original)", count( $teile ), 2 );
+        check( "$locale: msgstr[0] ist die Einzahl ($einzahl)", $teile[0] ?? null, $einzahl );
+        check( "$locale: msgstr[1] ist die Mehrzahl ($mehrzahl)", $teile[1] ?? null, $mehrzahl );
+    }
+}
 
-    // Dieser Katalog kennt nur einen einzigen Plural-Eintrag -- ein weiteres
-    // eingebettetes \0 im Original waere ein Zeichen, dass make_mo.php wieder
-    // Formen verwechselt oder Eintraege zusammengeworfen hat.
-    $weitere_plurale = [];
+// Dieser Katalog kennt nur die oben aufgefuehrten Plural-Originale -- ein
+// weiteres, unerwartetes eingebettetes \0 im Original waere ein Zeichen,
+// dass make_mo.php wieder Formen verwechselt oder Eintraege zusammengeworfen
+// hat.
+$erlaubte_plurale = array_keys( $plural_formen );
+foreach ( [ 'de_DE', 'nb_NO' ] as $locale ) {
+    $katalog          = mo_lesen( $wurzel . '/languages/xtx-integration-for-netatmo-' . $locale . '.mo' );
+    $unerwartet       = [];
     foreach ( $katalog as $original => $t ) {
-        if ( $original !== $plural_original && str_contains( $original, "\0" ) ) {
-            $weitere_plurale[] = $original;
+        if ( ! in_array( $original, $erlaubte_plurale, true ) && str_contains( $original, "\0" ) ) {
+            $unerwartet[] = $original;
         }
     }
-    check( "$locale: kein weiterer Plural-Eintrag im Katalog", $weitere_plurale, [] );
+    check( "$locale: keine unerwarteten weiteren Plural-Eintraege im Katalog", $unerwartet, [] );
 }
 
 echo "\n" . str_repeat( '-', 74 ) . "\n";

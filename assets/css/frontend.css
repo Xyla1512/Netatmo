@@ -1886,3 +1886,92 @@
     font-size: 13px;
     color: var(--naws-text-muted, #7aa0a0);
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   [naws_windrose] — where the wind comes from, how often, how hard
+   Colours: --naws-wr-b1…b5 (Beaufort classes), --naws-wr-grid (rings),
+   --naws-wr-calm (hub), all from the Appearance page; text from the
+   theme variables like every other block.
+   ══════════════════════════════════════════════════════════════════ */
+
+.naws-wr {
+  position: relative;
+  max-width: 640px;
+  background: var(--naws-surface, #fff);
+  border: 1px solid var(--naws-border, #e0eeee);
+  border-radius: var(--naws-radius, 12px);
+  padding: 14px;
+  color: var(--naws-text, #427272);
+}
+.naws-wr-title  { margin: 0 0 8px; font-size: 1.1em; color: var(--naws-text-dark, #2d5252); }
+.naws-wr-switch { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 0 0 8px; }
+.naws-wr-switch[hidden] { display: none; }
+.naws-wr-group  { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+.naws-wr-btn    { background: var(--naws-surface-2, #f8fafc); color: var(--naws-text-muted, #7aa0a0); border-color: var(--naws-border, #e0eeee); font-size: 11px; padding: 3px 10px; }
+.naws-wr-btn.is-active,
+.naws-wr-btn[aria-pressed="true"] { background: var(--naws-primary, #427272); color: #fff; border-color: var(--naws-primary, #427272); }
+.naws-wr-btn:focus-visible { outline: 2px solid var(--naws-primary, #427272); outline-offset: 2px; }
+.naws-wr-meta   { margin: 0 0 6px; font-size: 12px; color: var(--naws-text-muted, #7aa0a0); }
+.naws-wr-empty  { margin: 0; font-size: 13px; color: var(--naws-text-muted, #7aa0a0); }
+.naws-wr-figure { margin: 0; }
+.naws-wr-svg    { display: block; width: 100%; height: auto; font-family: inherit; }
+.naws-wr-ring   { fill: none; stroke: var(--naws-wr-grid, #dbe3ea); stroke-width: 1; }
+.naws-wr-ringlbl { font-size: 11.5px; fill: var(--naws-text-muted, #7aa0a0); paint-order: stroke; stroke: var(--naws-surface, #fff); stroke-width: 4px; stroke-linejoin: round; }
+.naws-wr-seg    { stroke: var(--naws-surface, #fff); stroke-width: 2; stroke-linejoin: round; }
+.naws-wr-b1 { fill: var(--naws-wr-b1, #86b6ef); background: var(--naws-wr-b1, #86b6ef); }
+.naws-wr-b2 { fill: var(--naws-wr-b2, #5598e7); background: var(--naws-wr-b2, #5598e7); }
+.naws-wr-b3 { fill: var(--naws-wr-b3, #2a78d6); background: var(--naws-wr-b3, #2a78d6); }
+.naws-wr-b4 { fill: var(--naws-wr-b4, #1c5cab); background: var(--naws-wr-b4, #1c5cab); }
+.naws-wr-b5 { fill: var(--naws-wr-b5, #0d366b); background: var(--naws-wr-b5, #0d366b); }
+.naws-wr-hit    { fill: transparent; stroke: none; }
+.naws-wr-sector { transition: opacity .15s; }
+.naws-wr-hover .naws-wr-sector:not(.is-on) { opacity: .4; }
+.naws-wr-dir    { fill: var(--naws-text-dark, #2d5252); text-anchor: middle; dominant-baseline: central; font-size: 14.5px; font-weight: 600; }
+.naws-wr-dir--p { fill: var(--naws-text-darkest, #1a3535); font-size: 17px; font-weight: 700; }
+.naws-wr-dir--i { fill: var(--naws-text-muted, #7aa0a0); font-size: 12px; font-weight: 400; }
+.naws-wr-share  { fill: var(--naws-text, #427272); dominant-baseline: central; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.naws-wr-hub    { fill: var(--naws-wr-calm, #e9eff5); stroke: var(--naws-border, #e0eeee); }
+.naws-wr-hublbl { fill: var(--naws-text-muted, #7aa0a0); text-anchor: middle; font-size: 10.5px; }
+.naws-wr-hubval { fill: var(--naws-text-darkest, #1a3535); text-anchor: middle; font-size: 13px; font-variant-numeric: tabular-nums; }
+.naws-wr-caption { margin-top: 4px; font-size: 12px; color: var(--naws-text-muted, #7aa0a0); }
+.naws-wr-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px 16px; margin: 10px 0 0; }
+.naws-wr-summary > div { margin: 0; }
+.naws-wr-summary dt { font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--naws-text-muted, #7aa0a0); }
+.naws-wr-summary dd { margin: 2px 0 0; font-size: 18px; font-weight: 600; color: var(--naws-text-darkest, #1a3535); font-variant-numeric: tabular-nums; }
+.naws-wr-summary dd small { display: block; font-size: 12px; font-weight: 400; color: var(--naws-text-muted, #7aa0a0); }
+.naws-wr-legend { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 4px; font-size: 13px; }
+.naws-wr-legend li { display: flex; align-items: center; gap: 8px; }
+.naws-wr-legend li.is-none { color: var(--naws-text-muted, #7aa0a0); }
+.naws-wr-legend em { margin-left: auto; font-style: normal; color: var(--naws-text, #427272); font-variant-numeric: tabular-nums; }
+.naws-wr-sw     { display: inline-block; width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+.naws-wr-table  { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+.naws-wr-table caption { text-align: left; padding: 4px 0; color: var(--naws-text-muted, #7aa0a0); font-size: 12px; }
+.naws-wr-table th, .naws-wr-table td { padding: 4px 6px; text-align: right; border-top: 1px solid var(--naws-border, #e0eeee); font-variant-numeric: tabular-nums; }
+.naws-wr-table th[scope="row"], .naws-wr-table thead th:first-child { text-align: left; }
+.naws-wr-table th[scope="row"] small { font-weight: 400; color: var(--naws-text-muted, #7aa0a0); }
+.naws-wr-sr     { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.naws-wr-tip {
+  position: absolute;
+  z-index: 10;
+  pointer-events: none;
+  background: var(--naws-text-darkest, #1a3535);
+  color: #fff;
+  font-size: 12px;
+  line-height: 1.4;
+  padding: 5px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  transform: translate(-50%, -100%);
+}
+@media (max-width: 600px) {
+  .naws-wr-dir    { font-size: 19px; }
+  .naws-wr-dir--p { font-size: 23px; }
+  .naws-wr-dir--i { font-size: 16px; }
+  .naws-wr-share  { font-size: 16px; }
+  .naws-wr-ringlbl { font-size: 15px; }
+  .naws-wr-hublbl { font-size: 13px; }
+  .naws-wr-hubval { font-size: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .naws-wr-sector { transition: none; }
+}

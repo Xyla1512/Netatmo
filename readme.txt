@@ -52,6 +52,7 @@ Connects to the Netatmo API, stores all sensor data locally and displays live da
 * `[naws_records]` – Fifteen records from the daily summary with their dates, as tiles or a table (`year`, `records`, `layout`, `title`)
 * `[naws_on_this_day]` – This calendar day in every earlier year, with the day's records marked (`date`, `title`)
 * `[naws_sunpath]` – The sun on its arc over the station, with sunrise, solar noon, sunset and the day length (`title`)
+* `[naws_windrose]` – Where the wind comes from and how hard, as a rose of 16 or 8 directions stacked by Beaufort class, with a period switcher (`period`, `from`, `to`, `measure`, `sectors`, `show`, `switcher`, `size`, `title`)
 * `[naws_forecast]` – Multi-day weather forecast
 * `[naws_table]` – Readings as a table over a period, grouped by hour, day, week, month or year (`module_id`, `parameters`, `period`, `limit`, `group_by`, `title`)
 * `[naws_weather_widget]` – Compact forecast widget for a sidebar (`days` 3 or 5, `width` 250–500, `scheme` light, dark or transparent)

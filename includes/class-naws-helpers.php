@@ -56,6 +56,26 @@ function naws_timezone(): DateTimeZone {
 
 class NAWS_Helpers {
 
+    /**
+     * Cache-busting version for an asset: its modification time, falling
+     * back to the plugin version.
+     *
+     * NAWS_VERSION alone is not enough between releases. A stylesheet that
+     * changes while the version number stays put keeps its URL, so the
+     * browser serves the copy it already has — the change is on the server
+     * and nowhere to be seen. Every release ships new files with new
+     * timestamps, so this is at least as fresh as the version was.
+     *
+     * @param string $rel Path relative to the plugin directory.
+     * @return string
+     */
+    public static function asset_version( string $rel ): string {
+        $path = NAWS_PLUGIN_DIR . $rel;
+        $time = file_exists( $path ) ? filemtime( $path ) : false;
+
+        return $time ? NAWS_VERSION . '.' . $time : NAWS_VERSION;
+    }
+
     public static function get_label( $parameter ) {
         $labels = [
             'Temperature'       => __( 'Temperature', 'xtx-integration-for-netatmo' ),
@@ -700,9 +720,15 @@ class NAWS_Helpers {
         return                    [ 'level' => 'unhealthy',  'color' => '#ef4444', 'label' => __( 'Unhealthy', 'xtx-integration-for-netatmo' ) ];
     }
 
+    /**
+     * The compass code of a direction in degrees, translated (since 1.9.12:
+     * a German visitor reads "OSO", not "ESE"). The codes stay the keys of
+     * naws_label(), so nothing that compares against them changes.
+     */
     public static function degrees_to_compass( $deg ) {
         $directions = [ 'N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW' ];
-        return $directions[ round( $deg / 22.5 ) % 16 ];
+        $i = ( ( (int) round( (float) $deg / 22.5 ) ) % 16 + 16 ) % 16;
+        return naws_label( 'compass_' . strtolower( $directions[ $i ] ) );
     }
 
     public static function get_all_parameters() {

@@ -7,6 +7,11 @@ All notable changes to the XTX Netatmo plugin are documented here.
 ### Added
 - The "Wind & Gusts" card of `[naws_live]` shows a third value: the strongest gust of the day, as reported by the Netatmo wind gauge itself (`max_wind_str`). The plugin has stored that reading all along; it now follows the configured wind unit like the other two values and is refreshed with every live cycle.
 - The wind gauge in that card has a third needle for the day's strongest gust: thin, red and dashed, next to the solid needle for the current wind and the dashed one for the current gust. The scale grows to fit it.
+- `[naws_windrose]`: where the wind comes from, how often, and how hard. One ray per compass direction (16 or 8), its length the share of readings, stacked by Beaufort class from the centre outwards; calm in the hub; main directions, mean, peak and calm share below, a legend, and a table for screen readers. Built from the raw ten-minute readings with one grouped query per period, cached as a transient. `period` (`7d`…, `year`, `all`), `from`/`to` for a fixed range, `measure` (`wind`, `gust`, `both`), `sectors`, `show`, `switcher`, `size`, `title`. Every period of the switcher is rendered on the server; the script only swaps panels and dresses the tooltips. Seven colours on a new Appearance tab.
+
+### Fixed
+- The compass directions are translated: the forecast in `[naws_live]` and `[naws_forecast]` showed a German visitor "ESE" where "OSO" belongs. The sixteen codes go through gettext now, in German and Norwegian.
+- The frontend stylesheet and scripts carry the file's modification time in their version, so a changed file is fetched even when the plugin version stays the same — the admin assets have done this since 1.9.7. A visitor with a cached stylesheet no longer sees a new shortcode unstyled.
 
 ### Changed
 - readme.txt now carries only the five most recent versions of the changelog and their upgrade notices; the full history since 1.0.0 lives here in CHANGELOG.md. WordPress.org truncates long changelog sections mid-line, which had left an orphaned string in the readme translation project.

@@ -227,10 +227,7 @@ class NAWS_Admin {
      * @return string
      */
     private static function asset_version( string $rel ): string {
-        $path = NAWS_PLUGIN_DIR . $rel;
-        $time = file_exists( $path ) ? filemtime( $path ) : false;
-
-        return $time ? NAWS_VERSION . '.' . $time : NAWS_VERSION;
+        return NAWS_Helpers::asset_version( $rel );
     }
 
     public function enqueue_assets( $hook ) {
@@ -251,7 +248,7 @@ class NAWS_Admin {
         // 'naws-frontend' handle is registered on wp_enqueue_scripts and
         // does not exist in the admin, so the file gets its own handle.
         if ( strpos( $hook, 'naws-shortcodes' ) !== false || strpos( $hook, 'naws-appearance' ) !== false ) {
-            wp_enqueue_style( 'naws-weather-icon', NAWS_PLUGIN_URL . 'assets/css/frontend.css', [], NAWS_VERSION );
+            wp_enqueue_style( 'naws-weather-icon', NAWS_PLUGIN_URL . 'assets/css/frontend.css', [], self::asset_version( 'assets/css/frontend.css' ) );
         }
 
         wp_enqueue_script( 'naws-admin', NAWS_PLUGIN_URL . 'assets/js/admin.js', $js_deps, self::asset_version( 'assets/js/admin.js' ), true );

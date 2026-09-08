@@ -143,7 +143,7 @@ Jeder Sektor ist eine `<g class="naws-wr-sector" data-i="…">` mit den Klassenp
 
 ### 5.3 Skript `windrose-boot.js`
 
-Registriert als `naws-windrose-boot` (abhängig von nichts; kein jQuery), nur bei `switcher="yes"` oder `measure="both"` eingereiht. Es findet alle `[data-naws-windrose]`, entfernt `hidden` von der Umschaltung, schaltet die Panels per `data-period`/`data-measure` um und setzt `aria-pressed`. Tooltips: bei `mouseenter`/`focus` eines Sektors ein `<div class="naws-wr-tip">` mit dem Inhalt des `<title>`, bei Berührung und ohne Maus bleibt der native Tooltip. Alles, was das Skript braucht, steht als `data-*` im Markup; es druckt nichts inline und lädt nichts nach.
+Registriert als `naws-windrose-boot` (abhängig von nichts; kein jQuery), bei jeder Rose eingereiht — nicht nur bei `switcher="yes"` oder `measure="both"`, denn es kleidet auch die Tooltips ein. Es findet alle `[data-naws-windrose]`, entfernt `hidden` von der Umschaltung, schaltet die Panels per `data-period`/`data-measure` um und setzt `aria-pressed`. Tooltips: bei `mouseover` eines Sektors ein `<div class="naws-wr-tip">` mit dem Inhalt des `<title>`; das Skript entfernt dabei das native `<title>`-Element, für Screenreader und Touch tragen die Zahlen in der Tabelle `naws-wr-sr` weiter. Alles, was das Skript braucht, steht als `data-*` im Markup; es druckt nichts inline und lädt nichts nach.
 
 ### 5.4 CSS
 
@@ -199,7 +199,7 @@ Dazu: `test-main-requires.php` (neue Klassendatei), `test-mo-files.php` (Katalog
 - `admin/views/shortcodes.php`: Karte mit Attributtabelle und Beispielen (`[naws_windrose]`, `[naws_windrose period="year" measure="both"]`, `[naws_windrose from="2026-05-01" to="2026-08-31" sectors="8" title="Sommerwind"]`).
 - `readme.txt`: Zeile in der Shortcode-Liste, Absatz im Changelog von 1.9.12 (beim Release), `README.md`: Tabellenzeile.
 - `CHANGELOG.md` `[Unreleased]`: `### Added` Windrose, `### Fixed` Himmelsrichtungen in der Vorhersage der Live-Karte übersetzt.
-- `docs/site/website.de.json`/`.en.json`: Vorhaben `windrose` mit `"ab": null` (erscheint als „In Arbeit"), `"aktualisiert"` mitgezogen; Bild folgt beim Release.
+- `docs/site/website.de.json`/`.en.json`: Vorhaben `windrose` mit `"ab": "1.9.12"` (eine Version über dem stabilen Tag erscheint ebenfalls als „In Arbeit"), `"aktualisiert"` mitgezogen; Bild folgt beim Release.
 
 ## 10. Sicherheit (WordPress-Vorgaben, Frank: „Sehr wichtig")
 

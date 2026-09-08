@@ -52,6 +52,7 @@ naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-astro.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-calc.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-climate.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-records.php' );
+naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-windrose.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-forecast.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-fonts.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-colors.php' );
