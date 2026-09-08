@@ -383,15 +383,24 @@ final class NAWS_Windrose {
         return is_array( $rows ) ? $rows : [];
     }
 
-    /** When the strongest reading of the range was taken; 0 when there is none. */
+    /**
+     * When the strongest reading of the range was taken; 0 when there is
+     * none. Joins the angle parameter exactly as query() does, so the peak
+     * is the maximum among readings the rose actually counts — a speed
+     * without an angle partner cannot win here either.
+     */
     public static function peak_at( string $measure, int $from, int $to ): int {
         global $wpdb;
-        [ , $speed ] = self::params( $measure );
+        [ $angle, $speed ] = self::params( $measure );
         $t = $wpdb->prefix . NAWS_TABLE_READINGS;
         // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name is prefix + constant; rose() caches the result
         $ts = $wpdb->get_var( $wpdb->prepare(
-            "SELECT recorded_at FROM {$t} WHERE parameter = %s AND recorded_at BETWEEN %d AND %d ORDER BY value DESC, recorded_at DESC LIMIT 1",
-            $speed, $from, $to
+            "SELECT s.recorded_at
+             FROM {$t} s
+             INNER JOIN {$t} a ON a.module_id = s.module_id AND a.recorded_at = s.recorded_at AND a.parameter = %s
+             WHERE s.parameter = %s AND s.recorded_at BETWEEN %d AND %d
+             ORDER BY s.value DESC, s.recorded_at DESC LIMIT 1",
+            $angle, $speed, $from, $to
         ) );
         // phpcs:enable
         return (int) $ts;

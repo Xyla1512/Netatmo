@@ -146,6 +146,7 @@ check( 'degrees_to_compass(112.5) = ESE',    NAWS_Helpers::degrees_to_compass( 1
 check( 'degrees_to_compass(0) = N',          NAWS_Helpers::degrees_to_compass( 0 ), 'N' );
 check( 'degrees_to_compass(359) = N',        NAWS_Helpers::degrees_to_compass( 359 ), 'N' );
 check( 'degrees_to_compass(-5) stirbt nicht', NAWS_Helpers::degrees_to_compass( -5 ), 'N' );
+check( 'degrees_to_compass(-30) rechnet den negativen Rest richtig', NAWS_Helpers::degrees_to_compass( -30 ), 'NNW' );
 
 echo "\nZeitraeume — heute ist der 07.09.2026\n" . str_repeat( '-', 74 ) . "\n";
 $mk = static fn( string $ymd ): int => ( new DateTimeImmutable( $ymd . ' 00:00:00', wp_timezone() ) )->getTimestamp();
@@ -191,7 +192,14 @@ check( 'Wind fragt WindAngle/WindStrength',  [ $args[9], $args[10] ], [ 'WindAng
 check( 'Grenzen als Zahlen',                 [ $args[11], $args[12] ], [ 100, 200 ] );
 check( '16 Sektoren: 45 vor Norden, 90 breit', [ $args[1], $args[2], $args[3] ], [ 45, 90, 16 ] );
 check( 'Klassengrenzen',                     array_slice( $args, 4, 5 ), [ 1, 6, 12, 20, 29 ] );
-check( 'Spitze: zweite Abfrage sortiert nach value', str_contains( $wpdb->last[1][0], 'ORDER BY value DESC' ), true );
+[ $psql, $pargs ] = $wpdb->last[1];
+check( 'Spitze: zweite Abfrage sortiert nach der gepaarten Geschwindigkeit', str_contains( $psql, 'ORDER BY s.value DESC' ), true );
+check( 'Spitze: JOIN auf module_id und recorded_at', str_contains( $psql, 'ON a.module_id = s.module_id AND a.recorded_at = s.recorded_at' ), true );
+check( 'Spitze: JOIN filtert auf den Winkel-Parameter', str_contains( $psql, 'a.parameter = %s' ), true );
+check( 'Spitze: 4 Platzhalter …',             substr_count( $psql, '%' ), 4 );
+check( '… und 4 Werte',                       count( $pargs ), 4 );
+check( 'Spitze: Winkel vor Geschwindigkeit',  [ $pargs[0], $pargs[1] ], [ 'WindAngle', 'WindStrength' ] );
+check( 'Spitze: Grenzen als Zahlen',          [ $pargs[2], $pargs[3] ], [ 100, 200 ] );
 check( 'Rose aus den Stub-Zeilen',           $db['n'], 7058 );
 check( 'Spitzenzeit aus der zweiten Abfrage', $db['max_at'], 1779602428 );
 $wpdb->last = [];
@@ -223,7 +231,7 @@ check( 'CSS-Variable der ersten Klasse',     str_contains( $css, '--naws-wr-b1: 
 check( 'CSS-Variable der Ringe',             str_contains( $css, '--naws-wr-grid: #dbe3ea;' ), true );
 check( 'CSS-Variable der Nabe',              str_contains( $css, '--naws-wr-calm: #e9eff5;' ), true );
 check( 'die Variablen stehen im .naws-wrap-Block', strpos( $css, '--naws-wr-b1' ) < strpos( $css, '.naws-wx {' ), true );
-$san = NAWS_Colors::sanitize( [ 'windrose_b1' => '#123456', 'windrose_b2' => 'red', 'windrose_grid' => '<script>' ] );
+$san = NAWS_Colors::sanitize( [ 'windrose_b1' => '#123456', 'windrose_b2' => 'red', 'windrose_grid' => '<script>', 'icon_set' => 'emoji' ] );
 check( 'gueltiges Hex bleibt',               $san['windrose_b1'], '#123456' );
 check( 'Farbname wird verworfen …',          array_key_exists( 'windrose_b2', $san ), false );
 check( 'Unsinn wird verworfen …',            array_key_exists( 'windrose_grid', $san ), false );
