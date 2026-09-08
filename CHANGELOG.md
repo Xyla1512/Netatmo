@@ -2,7 +2,7 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
-## [Unreleased]
+## [1.9.12]
 
 ### Added
 - The "Wind & Gusts" card of `[naws_live]` shows a third value: the strongest gust of the day, as reported by the Netatmo wind gauge itself (`max_wind_str`). The plugin has stored that reading all along; it now follows the configured wind unit like the other two values and is refreshed with every live cycle.

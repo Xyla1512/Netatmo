@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 1.9.11
+Stable tag: 1.9.12
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -26,7 +26,7 @@ Connects to the Netatmo API, stores all sensor data locally and displays live da
 * **Encrypted Storage** – All credentials (OAuth tokens, client secret, API keys) are AES-256-GCM encrypted at rest
 * **Configurable Units** – C/F, mm/inch, mbar/inHg/mmHg, km/h/m/s/mph/kn
 * **Multilingual** – Full German, English and Norwegian interface
-* **14 Shortcodes** – Dashboard, current readings, infobar, single value, computed value, history charts, heatmap, records, this day in earlier years, sun path, forecast, table, widget, weather icon
+* **15 Shortcodes** – Dashboard, current readings, infobar, single value, computed value, history charts, heatmap, records, this day in earlier years, sun path, wind rose, forecast, table, widget, weather icon
 * **Export / Import** – Full backup and restore of weather data, modules and settings
 * **Mobile-First Responsive** – All views optimized for smartphones, tablets and desktops
 * **130+ Configurable Colors** – Full appearance customization with live preview
@@ -115,6 +115,13 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 
 == Changelog ==
 
+= 1.9.12 =
+* Added: `[naws_windrose]` — where the wind comes from, how often, and how hard: one ray per compass direction (16 or 8), its length the share of readings from there, stacked by Beaufort class from the centre outwards, calm in the hub. Below it the main directions, mean, peak and calm share, a legend, and a table for screen readers. Built from the raw ten-minute readings with one grouped query per period, cached as a transient. `period` (`7d`, `30d`, `90d`, `year`, `all`), `from`/`to` for a fixed range, `measure` (`wind`, `gust`, `both`), `sectors`, `show`, `switcher`, `size`, `title`. Every period of the switcher is rendered on the server; the script only swaps panels and dresses the tooltips. Seven colours on a new Appearance tab.
+* Added: the "Wind & Gusts" card of `[naws_live]` shows the day's strongest gust as a third value, in the configured wind unit, and the gauge gets a third, red needle for it.
+* Fix: the compass directions are translated. The forecast in `[naws_live]` and `[naws_forecast]` showed a German visitor "ESE" where "OSO" belongs; the sixteen codes go through gettext now, in German and Norwegian.
+* Fix: the frontend stylesheet and scripts carry the file's modification time in their version, so a changed file is fetched even when the plugin version stays the same — the admin assets have done this since 1.9.7.
+* Changed: this readme carries only the five most recent versions of the changelog; the full history since 1.0.0 lives in CHANGELOG.md on GitHub.
+
 = 1.9.11 =
 * Added: `[naws_records]` — fifteen records from the daily summary, each with its date: hottest day, coldest night, warmest night, coldest day, largest daily range, warmest and coldest month, wettest day and month, longest dry and wet spell, strongest gust, longest frost period, longest heat wave and longest run of summer days. As tiles or a table, since the first day with readings or for one year (`year="2025"`), a subset with `records="…"`. A tie goes to the earlier date, a month needs twenty days to compete, and a gap in the data breaks a run rather than bridging it.
 * Added: `[naws_on_this_day]` — this calendar day in every earlier year: low, high, mean and rain, newest year first, with the day's record marked in each column. The running year is left out.
@@ -145,34 +152,18 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 * Fix: a database change would never have reached anyone who updates through WordPress. The routine that creates and migrates the tables hung on the activation hook alone, and WordPress does not fire that when it updates a plugin — it reactivates it silently. Nobody was hurt by it yet, because until 1.9.7 the plugin was installed by hand and activated in the process; since the directory listing, the update button is the normal way, and that is exactly the path that skipped it. The plugin now compares the stored schema version on every load and migrates when they differ.
 * Changed: `Plugin URI` in the plugin header points at the plugin's own page, netatmo.frank-neumann.de, instead of at a weather page that carries a section about it. That is what the "Visit plugin site" link in your plugins list opens.
 
-= 1.9.7 =
-* New: the order of the live cards and of the yearly comparison charts is a setting. Both lists on the Live-Dashboard screen are sortable by drag and drop, and the front end follows. A saved order decides position, never membership: an id left over from a renamed module is passed over, and a chart the order has never heard of takes its place at the end instead of disappearing.
-* New: `[naws_calc]` — one shortcode for twenty-seven computed values in four kinds. Fourteen instant values (dew point, apparent temperature, wet-bulb temperature, heat index, thermal sensation, CO2 rating, wind compass, sunrise, sunset, day length, moon phase and illumination, next supermoon, next lunar eclipse), seven day classes with `mode="count|streak|max_streak"` (ice days, frost days, summer days, hot days, tropical nights, heating and cooling days), five sums (heating and cooling degree days, growing degree days, the grassland temperature sum and the date the growing season started) and the Standardized Precipitation Index.
-* New: the admin shows the state of the encryption — a missing openssl extension, a missing aes-256-gcm, an `AUTH_KEY` still set to the sample value from wp-config-sample.php, and changed WordPress salts. A fingerprint of the key sits beside the ciphertext so a salt change is recognizable as one instead of looking like a broken plugin.
-* New: the header bar and the font are settings now. The font list offers only fonts your page already serves — the plugin loads no font file of its own.
-* New: three settings for the degree-day limits: heating limit, room temperature and cooling limit.
-* Changed: **breaking** — the REST API accepts its key in the `X-NAWS-Key` header only. A secret in the address line is written down by access logs, the Referer header, the browser history and every cache in between. Calls of the form `?api_key=...` now answer 401. If you use the API, switch before you update.
-* Changed: the cron settings and the cron log now say what WP-Cron does not do. WP-Cron is triggered by page views, not by a clock, so on a quiet night no sync happens at all.
-* Fix: a five-second hiccup at Netatmo cost a whole ten-minute polling cycle. Requests are retried now, and an error without an error code is no longer handed back as an empty result.
-* Fix: a server without the openssl extension died on the first read of a token, and an unauthenticated REST request could turn a 401 into a fatal 500.
-* Fix: the apparent temperature ignored wind chill, and the heat index was computed outside the range it is defined for.
-* Fix: the next supermoon, the next lunar eclipse and the next full moon were dated in German whatever the site language was.
-* Fix: an uppercase MAC address in `[naws_value module="..."]` matched nothing, and an emptied degree-day limit field silently stored 0 degrees.
-* Fix: this readme advertised five shortcodes and documented six. Ten are registered; all ten are listed now.
-* Security: the REST API key page created and revoked keys on POST with a nonce check but no capability check of its own. The page is reachable only with `manage_options`, so nothing stood open — it is the pattern the review team warned about, and the check now runs before the nonce is spent.
-
 Older versions: the complete changelog since 1.0.0 is kept in [CHANGELOG.md](https://github.com/Xyla1512/Netatmo/blob/main/CHANGELOG.md) on GitHub.
 
 == Upgrade Notice ==
+
+= 1.9.12 =
+New: [naws_windrose] shows where the wind comes from, how often and how hard, with a period switcher and seven colours under Appearance. The Wind & Gusts card shows the day's strongest gust. Compass directions are translated. Nothing to reconfigure.
 
 = 1.9.11 =
 New: [naws_records] shows fifteen records from your daily summary with their dates, [naws_on_this_day] this day in earlier years, [naws_sunpath] the sun on its arc. The sidebar widget gets a dark and a transparent scheme. Fix: the purge button in the settings works again. Nothing to reconfigure.
 
 = 1.9.10 =
 New: [naws_heatmap] shows a year of daily mean temperatures as a calendar grid. Privacy fix: your modules' MAC addresses no longer appear in public pages or dashboard requests. The bundled German and Norwegian files WordPress refused in 1.9.9 are read again. Nothing to reconfigure.
-
-= 1.9.7 =
-First release published through the WordPress.org directory. Breaking change for REST API users: the key is accepted in the X-NAWS-Key header only, and ?api_key=... now answers 401. Everything else is new features and fixes.
 
 == Privacy & External Services ==
 
