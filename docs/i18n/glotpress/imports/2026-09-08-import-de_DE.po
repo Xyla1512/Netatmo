@@ -1,0 +1,304 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "last %d day"
+msgid_plural "last %d days"
+msgstr[0] "letzter %d Tag"
+msgstr[1] "letzte %d Tage"
+
+msgctxt "wind rose switcher"
+msgid "Measure"
+msgstr "Messgröße"
+
+msgctxt "wind rose switcher"
+msgid "Period"
+msgstr "Zeitraum"
+
+msgid "No wind readings in this period."
+msgstr "Keine Windmessungen in diesem Zeitraum."
+
+msgid "Share"
+msgstr "Anteil"
+
+msgid "Direction"
+msgstr "Richtung"
+
+msgctxt "wind rose legend"
+msgid "none"
+msgstr "keine"
+
+msgid "Wind force (Beaufort)"
+msgstr "Windstärke (Beaufort)"
+
+msgctxt "wind rose legend"
+msgid "from %s"
+msgstr "ab %s"
+
+msgid "Bft %d"
+msgstr "Bft %d"
+
+msgctxt "wind rose peak date"
+msgid "on %s"
+msgstr "am %s"
+
+msgctxt "wind rose"
+msgid "Readings"
+msgstr "Messungen"
+
+msgid "%s readings"
+msgstr "%s Messungen"
+
+msgid "below %s"
+msgstr "unter %s"
+
+msgid "Calm"
+msgstr "Windstille"
+
+msgid "Strongest wind"
+msgstr "Stärkster Wind"
+
+msgctxt "wind rose"
+msgid "Mean"
+msgstr "Mittel"
+
+msgid "Second direction"
+msgstr "Zweite Richtung"
+
+msgid "Main direction"
+msgstr "Hauptrichtung"
+
+msgid "readings from %s"
+msgstr "Messungen ab %s"
+
+msgctxt "wind rose switcher"
+msgid "all"
+msgstr "alles"
+
+msgid "the first reading"
+msgstr "erste Messung"
+
+msgid "%1$s to %2$s"
+msgstr "%1$s bis %2$s"
+
+msgid "everything recorded"
+msgstr "alles Aufgezeichnete"
+
+msgctxt "wind rose period"
+msgid "this year"
+msgstr "dieses Jahr"
+
+msgid "Gusts, 10-minute peak"
+msgstr "Böen, 10-Minuten-Spitze"
+
+msgid "Wind, 10-minute mean"
+msgstr "Wind, 10-Minuten-Mittel"
+
+msgid "Wind rose, %1$s: %2$s readings, main direction %3$s (%4$s)."
+msgstr "Windrose, %1$s: %2$s Messungen, Hauptrichtung %3$s (%4$s)."
+
+msgid "Wind rose"
+msgstr "Windrose"
+
+msgctxt "compass direction, long"
+msgid "North-northwest"
+msgstr "Nordnordwest"
+
+msgctxt "compass direction, long"
+msgid "Northwest"
+msgstr "Nordwest"
+
+msgctxt "compass direction, long"
+msgid "West-northwest"
+msgstr "Westnordwest"
+
+msgctxt "compass direction, long"
+msgid "West"
+msgstr "West"
+
+msgctxt "compass direction, long"
+msgid "West-southwest"
+msgstr "Westsüdwest"
+
+msgctxt "compass direction, long"
+msgid "Southwest"
+msgstr "Südwest"
+
+msgctxt "compass direction, long"
+msgid "South-southwest"
+msgstr "Südsüdwest"
+
+msgctxt "compass direction, long"
+msgid "South"
+msgstr "Süd"
+
+msgctxt "compass direction, long"
+msgid "South-southeast"
+msgstr "Südsüdost"
+
+msgctxt "compass direction, long"
+msgid "Southeast"
+msgstr "Südost"
+
+msgctxt "compass direction, long"
+msgid "East-southeast"
+msgstr "Ostsüdost"
+
+msgctxt "compass direction, long"
+msgid "East"
+msgstr "Ost"
+
+msgctxt "compass direction, long"
+msgid "East-northeast"
+msgstr "Ostnordost"
+
+msgctxt "compass direction, long"
+msgid "Northeast"
+msgstr "Nordost"
+
+msgctxt "compass direction, long"
+msgid "North-northeast"
+msgstr "Nordnordost"
+
+msgctxt "compass direction, long"
+msgid "North"
+msgstr "Nord"
+
+msgctxt "compass direction"
+msgid "NNW"
+msgstr "NNW"
+
+msgctxt "compass direction"
+msgid "NW"
+msgstr "NW"
+
+msgctxt "compass direction"
+msgid "WNW"
+msgstr "WNW"
+
+msgctxt "compass direction"
+msgid "W"
+msgstr "W"
+
+msgctxt "compass direction"
+msgid "WSW"
+msgstr "WSW"
+
+msgctxt "compass direction"
+msgid "SW"
+msgstr "SW"
+
+msgctxt "compass direction"
+msgid "SSW"
+msgstr "SSW"
+
+msgctxt "compass direction"
+msgid "S"
+msgstr "S"
+
+msgctxt "compass direction"
+msgid "SSE"
+msgstr "SSO"
+
+msgctxt "compass direction"
+msgid "SE"
+msgstr "SO"
+
+msgctxt "compass direction"
+msgid "ESE"
+msgstr "OSO"
+
+msgctxt "compass direction"
+msgid "E"
+msgstr "O"
+
+msgctxt "compass direction"
+msgid "ENE"
+msgstr "ONO"
+
+msgctxt "compass direction"
+msgid "NE"
+msgstr "NO"
+
+msgctxt "compass direction"
+msgid "NNE"
+msgstr "NNO"
+
+msgctxt "compass direction"
+msgid "N"
+msgstr "N"
+
+msgid "one period, the table visible, 420 px wide"
+msgstr "ein Zeitraum, die Tabelle sichtbar, 420 px breit"
+
+msgid "one fixed summer, eight directions"
+msgstr "ein fester Sommer, acht Richtungen"
+
+msgid "this year, with a Wind / Gusts switch"
+msgstr "dieses Jahr, mit Schalter Wind / Böen"
+
+msgid "Maximum width in pixels, 200–1200; empty fills the column up to 640 px."
+msgstr "Höchstbreite in Pixeln, 200–1200; leer füllt die Spalte bis 640 px."
+
+msgid "yes or no: the buttons for 7, 30 and 90 days, this year and everything recorded. Every period is rendered on the server; the script only swaps."
+msgstr "yes oder no: die Knöpfe für 7, 30 und 90 Tage, dieses Jahr und alles Aufgezeichnete. Jeder Zeitraum wird auf dem Server gerendert; das Skript schaltet nur um."
+
+msgid "Comma-separated: legend, summary, table. The table is always in the page for screen readers; naming it makes it visible."
+msgstr "Durch Komma getrennt: legend, summary, table. Die Tabelle steht für Screenreader immer in der Seite; wer sie nennt, macht sie sichtbar."
+
+msgid "16 directions (N, NNE, NE …) or 8 (N, NE, E …)."
+msgstr "16 Richtungen (N, NNO, NO …) oder 8 (N, NO, O …)."
+
+msgid "wind for the ten-minute mean, gust for the gusts, both for a Wind / Gusts switch."
+msgstr "wind für das Zehn-Minuten-Mittel, gust für die Böen, both für einen Schalter Wind / Böen."
+
+msgid "empty"
+msgstr "leer"
+
+msgid "A fixed range as YYYY-MM-DD, both days included. Only from runs to today, only to starts at the first reading. Turns the switcher off."
+msgstr "Ein fester Bereich als JJJJ-MM-TT, beide Tage eingeschlossen. Nur from läuft bis heute, nur to beginnt bei der ersten Messung. Schaltet die Umschaltung ab."
+
+msgid "7d, 30d, 90d or any number of days with a d; year for the running calendar year; all for everything recorded. Ignored when from or to is set."
+msgstr "7d, 30d, 90d oder eine beliebige Zahl Tage mit d; year für das laufende Kalenderjahr; all für alles Aufgezeichnete. Wird ignoriert, sobald from oder to gesetzt ist."
+
+msgid "Where the wind comes from, how often, and how hard: one ray per compass direction, its length the share of readings from there, stacked by Beaufort class from light (centre) to strong (edge). Calm sits in the hub. Below it the main directions, mean, peak and calm share, the legend, and a table for screen readers. Built from the raw ten-minute readings; the switcher offers 7, 30 and 90 days, this year and everything recorded, all rendered on the server."
+msgstr "Aus welcher Richtung der Wind kommt, wie oft und wie kräftig: ein Strahl je Himmelsrichtung, seine Länge der Anteil der Messungen von dort, nach Beaufort-Klassen gestapelt von leicht (innen) bis kräftig (außen). Windstille sitzt in der Nabe. Darunter die Hauptrichtungen, Mittel, Spitze und Windstille-Anteil, die Legende und eine Tabelle für Screenreader. Aus den Zehn-Minuten-Rohwerten gebaut; die Umschaltung bietet 7, 30 und 90 Tage, dieses Jahr und alles Aufgezeichnete, alles auf dem Server gerendert."
+
+msgid "Sample wind rose in the chosen colours"
+msgstr "Beispiel-Windrose in den gewählten Farben"
+
+msgid "Live preview — wind rose"
+msgstr "Live-Vorschau — Windrose"
+
+msgid "Colours for [naws_windrose]: one class per Beaufort step from the centre outwards, the rings behind the rays, and the hub that carries the calm share. Pick one hue that gets darker step by step; the rose is read by length first and by colour second."
+msgstr "Farben für [naws_windrose]: eine Klasse je Beaufort-Stufe von innen nach außen, die Ringe hinter den Strahlen und die Nabe mit dem Anteil der Windstille. Nimm einen Farbton, der Stufe für Stufe dunkler wird; die Rose wird zuerst über die Länge gelesen, dann über die Farbe."
+
+msgid "Wind Rose"
+msgstr "Windrose"
+
+msgid "Hub (calm)"
+msgstr "Nabe (Windstille)"
+
+msgid "Rings"
+msgstr "Ringe"
+
+msgid "Beaufort 5 and above · fresh breeze"
+msgstr "Beaufort 5 und mehr · frische Brise"
+
+msgid "Beaufort 4 · moderate breeze"
+msgstr "Beaufort 4 · mäßige Brise"
+
+msgid "Beaufort 3 · gentle breeze"
+msgstr "Beaufort 3 · schwache Brise"
+
+msgid "Beaufort 2 · light breeze"
+msgstr "Beaufort 2 · leichte Brise"
+
+msgid "Beaufort 1 · light air"
+msgstr "Beaufort 1 · leiser Zug"
+

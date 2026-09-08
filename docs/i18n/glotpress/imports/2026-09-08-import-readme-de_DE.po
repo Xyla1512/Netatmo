@@ -1,0 +1,33 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo - Stable Readme\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "<code>[naws_windrose]</code> – Where the wind comes from and how hard, as a rose of 16 or 8 directions stacked by Beaufort class, with a period switcher (<code>period</code>, <code>from</code>, <code>to</code>, <code>measure</code>, <code>sectors</code>, <code>show</code>, <code>switcher</code>, <code>size</code>, <code>title</code>)"
+msgstr "<code>[naws_windrose]</code> – Woher der Wind kommt und wie kräftig, als Rose mit 16 oder 8 Richtungen, nach Beaufort-Klassen gestapelt, mit Zeitraum-Umschaltung (<code>period</code>, <code>from</code>, <code>to</code>, <code>measure</code>, <code>sectors</code>, <code>show</code>, <code>switcher</code>, <code>size</code>, <code>title</code>)"
+
+msgid "<strong>15 Shortcodes</strong> – Dashboard, current readings, infobar, single value, computed value, history charts, heatmap, records, this day in earlier years, sun path, wind rose, forecast, table, widget, weather icon"
+msgstr "<strong>15 Shortcodes</strong> – Dashboard, aktuelle Messwerte, Infoleiste, Einzelwert, berechneter Wert, Verlaufsdiagramme, Heatmap, Rekorde, dieser Tag in früheren Jahren, Sonnenbahn, Windrose, Vorhersage, Tabelle, Widget, Wettersymbol"
+
+msgid "Changed: this readme carries only the five most recent versions of the changelog; the full history since 1.0.0 lives in CHANGELOG.md on GitHub."
+msgstr "Geändert: diese readme führt nur noch die fünf jüngsten Versionen des Changelogs; die vollständige Geschichte seit 1.0.0 steht in CHANGELOG.md auf GitHub."
+
+msgid "Fix: the frontend stylesheet and scripts carry the file's modification time in their version, so a changed file is fetched even when the plugin version stays the same — the admin assets have done this since 1.9.7."
+msgstr "Fix: Stylesheet und Skripte des Frontends tragen die Änderungszeit der Datei in ihrer Version, sodass eine geänderte Datei auch dann geladen wird, wenn die Plugin-Version gleich bleibt — die Admin-Dateien tun das seit 1.9.7."
+
+msgid "Fix: the compass directions are translated. The forecast in <code>[naws_live]</code> and <code>[naws_forecast]</code> showed a German visitor \"ESE\" where \"OSO\" belongs; the sixteen codes go through gettext now, in German and Norwegian."
+msgstr "Fix: die Himmelsrichtungen sind übersetzt. Die Vorhersage in <code>[naws_live]</code> und <code>[naws_forecast]</code> zeigte einem deutschen Besucher \"ESE\", wo \"OSO\" hingehört; die sechzehn Kürzel laufen jetzt durch gettext, auf Deutsch und Norwegisch."
+
+msgid "Added: the \"Wind &amp; Gusts\" card of <code>[naws_live]</code> shows the day's strongest gust as a third value, in the configured wind unit, and the gauge gets a third, red needle for it."
+msgstr "Neu: die Karte \"Wind &amp; Böen\" von <code>[naws_live]</code> zeigt die stärkste Böe des Tages als dritten Wert, in der eingestellten Windeinheit, und der Tacho bekommt dafür einen dritten, roten Zeiger."
+
+msgid "Added: <code>[naws_windrose]</code> — where the wind comes from, how often, and how hard: one ray per compass direction (16 or 8), its length the share of readings from there, stacked by Beaufort class from the centre outwards, calm in the hub. Below it the main directions, mean, peak and calm share, a legend, and a table for screen readers. Built from the raw ten-minute readings with one grouped query per period, cached as a transient. <code>period</code> (<code>7d</code>, <code>30d</code>, <code>90d</code>, <code>year</code>, <code>all</code>), <code>from</code>/<code>to</code> for a fixed range, <code>measure</code> (<code>wind</code>, <code>gust</code>, <code>both</code>), <code>sectors</code>, <code>show</code>, <code>switcher</code>, <code>size</code>, <code>title</code>. Every period of the switcher is rendered on the server; the script only swaps panels and dresses the tooltips. Seven colours on a new Appearance tab."
+msgstr "Neu: <code>[naws_windrose]</code> — woher der Wind kommt, wie oft und wie kräftig: ein Strahl je Himmelsrichtung (16 oder 8), seine Länge der Anteil der Messungen von dort, von innen nach außen nach Beaufort-Klassen gestapelt, Windstille in der Nabe. Darunter die Hauptrichtungen, Mittel, Spitze und Anteil der Windstille, eine Legende und eine Tabelle für Screenreader. Aus den Zehn-Minuten-Rohwerten gebaut, eine gruppierende Abfrage je Zeitraum, als Transient zwischengespeichert. <code>period</code> (<code>7d</code>, <code>30d</code>, <code>90d</code>, <code>year</code>, <code>all</code>), <code>from</code>/<code>to</code> für einen festen Zeitraum, <code>measure</code> (<code>wind</code>, <code>gust</code>, <code>both</code>), <code>sectors</code>, <code>show</code>, <code>switcher</code>, <code>size</code>, <code>title</code>. Jeder Zeitraum der Umschaltung wird auf dem Server gerendert; das Skript blendet nur die Panels um und kümmert sich um die Tooltips. Sieben Farben auf einem neuen Reiter im Erscheinungsbild."
+
+msgid "Older versions: the complete changelog since 1.0.0 is kept in <a href=\"https://github.com/Xyla1512/Netatmo/blob/main/CHANGELOG.md\">CHANGELOG.md</a> on GitHub."
+msgstr "Ältere Versionen: der vollständige Changelog seit 1.0.0 liegt in <a href=\"https://github.com/Xyla1512/Netatmo/blob/main/CHANGELOG.md\">CHANGELOG.md</a> auf GitHub."
+

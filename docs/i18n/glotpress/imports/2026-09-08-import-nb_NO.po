@@ -1,0 +1,304 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo\n"
+"Language: nb_NO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "last %d day"
+msgid_plural "last %d days"
+msgstr[0] "siste %d dag"
+msgstr[1] "siste %d dager"
+
+msgctxt "wind rose switcher"
+msgid "Measure"
+msgstr "Måleverdi"
+
+msgctxt "wind rose switcher"
+msgid "Period"
+msgstr "Periode"
+
+msgid "No wind readings in this period."
+msgstr "Ingen vindmålinger i denne perioden."
+
+msgid "Share"
+msgstr "Andel"
+
+msgid "Direction"
+msgstr "Retning"
+
+msgctxt "wind rose legend"
+msgid "none"
+msgstr "ingen"
+
+msgid "Wind force (Beaufort)"
+msgstr "Vindstyrke (Beaufort)"
+
+msgctxt "wind rose legend"
+msgid "from %s"
+msgstr "fra %s"
+
+msgid "Bft %d"
+msgstr "Bft %d"
+
+msgctxt "wind rose peak date"
+msgid "on %s"
+msgstr "den %s"
+
+msgctxt "wind rose"
+msgid "Readings"
+msgstr "Målinger"
+
+msgid "%s readings"
+msgstr "%s målinger"
+
+msgid "below %s"
+msgstr "under %s"
+
+msgid "Calm"
+msgstr "Vindstille"
+
+msgid "Strongest wind"
+msgstr "Sterkeste vind"
+
+msgctxt "wind rose"
+msgid "Mean"
+msgstr "Middel"
+
+msgid "Second direction"
+msgstr "Nest vanligste retning"
+
+msgid "Main direction"
+msgstr "Hovedretning"
+
+msgid "readings from %s"
+msgstr "målinger fra %s"
+
+msgctxt "wind rose switcher"
+msgid "all"
+msgstr "alt"
+
+msgid "the first reading"
+msgstr "første måling"
+
+msgid "%1$s to %2$s"
+msgstr "%1$s til %2$s"
+
+msgid "everything recorded"
+msgstr "alt som er registrert"
+
+msgctxt "wind rose period"
+msgid "this year"
+msgstr "i år"
+
+msgid "Gusts, 10-minute peak"
+msgstr "Vindkast, 10-minutters topp"
+
+msgid "Wind, 10-minute mean"
+msgstr "Vind, 10-minutters middel"
+
+msgid "Wind rose, %1$s: %2$s readings, main direction %3$s (%4$s)."
+msgstr "Vindrose, %1$s: %2$s målinger, hovedretning %3$s (%4$s)."
+
+msgid "Wind rose"
+msgstr "Vindrose"
+
+msgctxt "compass direction, long"
+msgid "North-northwest"
+msgstr "Nord-nordvest"
+
+msgctxt "compass direction, long"
+msgid "Northwest"
+msgstr "Nordvest"
+
+msgctxt "compass direction, long"
+msgid "West-northwest"
+msgstr "Vest-nordvest"
+
+msgctxt "compass direction, long"
+msgid "West"
+msgstr "Vest"
+
+msgctxt "compass direction, long"
+msgid "West-southwest"
+msgstr "Vest-sørvest"
+
+msgctxt "compass direction, long"
+msgid "Southwest"
+msgstr "Sørvest"
+
+msgctxt "compass direction, long"
+msgid "South-southwest"
+msgstr "Sør-sørvest"
+
+msgctxt "compass direction, long"
+msgid "South"
+msgstr "Sør"
+
+msgctxt "compass direction, long"
+msgid "South-southeast"
+msgstr "Sør-sørøst"
+
+msgctxt "compass direction, long"
+msgid "Southeast"
+msgstr "Sørøst"
+
+msgctxt "compass direction, long"
+msgid "East-southeast"
+msgstr "Øst-sørøst"
+
+msgctxt "compass direction, long"
+msgid "East"
+msgstr "Øst"
+
+msgctxt "compass direction, long"
+msgid "East-northeast"
+msgstr "Øst-nordøst"
+
+msgctxt "compass direction, long"
+msgid "Northeast"
+msgstr "Nordøst"
+
+msgctxt "compass direction, long"
+msgid "North-northeast"
+msgstr "Nord-nordøst"
+
+msgctxt "compass direction, long"
+msgid "North"
+msgstr "Nord"
+
+msgctxt "compass direction"
+msgid "NNW"
+msgstr "NNV"
+
+msgctxt "compass direction"
+msgid "NW"
+msgstr "NV"
+
+msgctxt "compass direction"
+msgid "WNW"
+msgstr "VNV"
+
+msgctxt "compass direction"
+msgid "W"
+msgstr "V"
+
+msgctxt "compass direction"
+msgid "WSW"
+msgstr "VSV"
+
+msgctxt "compass direction"
+msgid "SW"
+msgstr "SV"
+
+msgctxt "compass direction"
+msgid "SSW"
+msgstr "SSV"
+
+msgctxt "compass direction"
+msgid "S"
+msgstr "S"
+
+msgctxt "compass direction"
+msgid "SSE"
+msgstr "SSØ"
+
+msgctxt "compass direction"
+msgid "SE"
+msgstr "SØ"
+
+msgctxt "compass direction"
+msgid "ESE"
+msgstr "ØSØ"
+
+msgctxt "compass direction"
+msgid "E"
+msgstr "Ø"
+
+msgctxt "compass direction"
+msgid "ENE"
+msgstr "ØNØ"
+
+msgctxt "compass direction"
+msgid "NE"
+msgstr "NØ"
+
+msgctxt "compass direction"
+msgid "NNE"
+msgstr "NNØ"
+
+msgctxt "compass direction"
+msgid "N"
+msgstr "N"
+
+msgid "one period, the table visible, 420 px wide"
+msgstr "én periode, tabellen synlig, 420 px bred"
+
+msgid "one fixed summer, eight directions"
+msgstr "én fast sommer, åtte retninger"
+
+msgid "this year, with a Wind / Gusts switch"
+msgstr "i år, med velger Vind / Vindkast"
+
+msgid "Maximum width in pixels, 200–1200; empty fills the column up to 640 px."
+msgstr "Største bredde i piksler, 200–1200; tom fyller kolonnen opptil 640 px."
+
+msgid "yes or no: the buttons for 7, 30 and 90 days, this year and everything recorded. Every period is rendered on the server; the script only swaps."
+msgstr "yes eller no: knappene for 7, 30 og 90 dager, i år og alt som er registrert. Hver periode gjengis på serveren; skriptet bare bytter."
+
+msgid "Comma-separated: legend, summary, table. The table is always in the page for screen readers; naming it makes it visible."
+msgstr "Kommaseparert: legend, summary, table. Tabellen ligger alltid i siden for skjermlesere; nevner du den, blir den synlig."
+
+msgid "16 directions (N, NNE, NE …) or 8 (N, NE, E …)."
+msgstr "16 retninger (N, NNØ, NØ …) eller 8 (N, NØ, Ø …)."
+
+msgid "wind for the ten-minute mean, gust for the gusts, both for a Wind / Gusts switch."
+msgstr "wind for ti-minutters middel, gust for vindkast, both for en velger Vind / Vindkast."
+
+msgid "empty"
+msgstr "tom"
+
+msgid "A fixed range as YYYY-MM-DD, both days included. Only from runs to today, only to starts at the first reading. Turns the switcher off."
+msgstr "Et fast tidsrom som ÅÅÅÅ-MM-DD, begge dager inkludert. Bare from går til i dag, bare to starter ved første måling. Slår av velgeren."
+
+msgid "7d, 30d, 90d or any number of days with a d; year for the running calendar year; all for everything recorded. Ignored when from or to is set."
+msgstr "7d, 30d, 90d eller et vilkårlig antall dager med d; year for inneværende kalenderår; all for alt som er registrert. Ignoreres når from eller to er satt."
+
+msgid "Where the wind comes from, how often, and how hard: one ray per compass direction, its length the share of readings from there, stacked by Beaufort class from light (centre) to strong (edge). Calm sits in the hub. Below it the main directions, mean, peak and calm share, the legend, and a table for screen readers. Built from the raw ten-minute readings; the switcher offers 7, 30 and 90 days, this year and everything recorded, all rendered on the server."
+msgstr "Hvor vinden kommer fra, hvor ofte og hvor kraftig: én stråle per himmelretning, lengden er andelen målinger derfra, stablet etter Beaufort-klasse fra svak (midten) til sterk (kanten). Vindstille ligger i navet. Under: hovedretningene, middel, topp og andel vindstille, forklaringen og en tabell for skjermlesere. Bygget av ti-minutters råmålinger; velgeren tilbyr 7, 30 og 90 dager, i år og alt som er registrert, alt gjengitt på serveren."
+
+msgid "Sample wind rose in the chosen colours"
+msgstr "Eksempel på vindrose i de valgte fargene"
+
+msgid "Live preview — wind rose"
+msgstr "Forhåndsvisning — vindrose"
+
+msgid "Colours for [naws_windrose]: one class per Beaufort step from the centre outwards, the rings behind the rays, and the hub that carries the calm share. Pick one hue that gets darker step by step; the rose is read by length first and by colour second."
+msgstr "Farger for [naws_windrose]: én klasse per Beaufort-trinn fra midten og utover, ringene bak strålene, og navet som viser andelen vindstille. Velg én farge som blir mørkere trinn for trinn; rosen leses først etter lengde, deretter etter farge."
+
+msgid "Wind Rose"
+msgstr "Vindrose"
+
+msgid "Hub (calm)"
+msgstr "Nav (vindstille)"
+
+msgid "Rings"
+msgstr "Ringer"
+
+msgid "Beaufort 5 and above · fresh breeze"
+msgstr "Beaufort 5 og over · frisk bris"
+
+msgid "Beaufort 4 · moderate breeze"
+msgstr "Beaufort 4 · laber bris"
+
+msgid "Beaufort 3 · gentle breeze"
+msgstr "Beaufort 3 · lett bris"
+
+msgid "Beaufort 2 · light breeze"
+msgstr "Beaufort 2 · svak vind"
+
+msgid "Beaufort 1 · light air"
+msgstr "Beaufort 1 · flau vind"
+
