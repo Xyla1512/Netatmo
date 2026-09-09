@@ -298,12 +298,18 @@ class NAWS_Database {
 
     public static function set_module_active( $module_id, $is_active ) {
         global $wpdb;
-        return $wpdb->update(
+        $result = $wpdb->update(
             $wpdb->prefix . NAWS_TABLE_MODULES,
             [ 'is_active' => $is_active ? 1 : 0 ],
             [ 'module_id' => sanitize_text_field( $module_id ) ],
             [ '%d' ], [ '%s' ]
         );
+        // get_modules() keeps both lists for an hour. The front end must see
+        // the switch at once, as the admin does, so drop them here rather
+        // than trusting every caller to remember.
+        delete_transient( self::CACHE_PREFIX . 'modules_1' );
+        delete_transient( self::CACHE_PREFIX . 'modules_0' );
+        return $result;
     }
 
     public static function is_module_active( $module_id ) {
