@@ -6,6 +6,25 @@ require_once NAWS_PLUGIN_DIR . 'includes/class-naws-helpers.php';
 
 class NAWS_Shortcodes {
 
+    /** Tag => handler, in the order the Shortcodes admin page lists them. */
+    const TAGS = [
+        'naws_current'        => 'sc_current',
+        'naws_table'          => 'sc_table',
+        'naws_history'        => 'sc_history',
+        'naws_heatmap'        => 'sc_heatmap',
+        'naws_records'        => 'sc_records',
+        'naws_on_this_day'    => 'sc_on_this_day',
+        'naws_sunpath'        => 'sc_sunpath',
+        'naws_windrose'       => 'sc_windrose',
+        'naws_live'           => 'sc_live',
+        'naws_infobar'        => 'sc_infobar',
+        'naws_value'          => 'sc_value',
+        'naws_calc'           => 'sc_calc',
+        'naws_forecast'       => 'sc_forecast',
+        'naws_weather_icon'   => 'sc_weather_icon',
+        'naws_weather_widget' => 'sc_weather_widget',
+    ];
+
     private static $instance = null;
 
     public static function instance() {
@@ -16,23 +35,34 @@ class NAWS_Shortcodes {
     }
 
     private function __construct() {
-        add_shortcode( 'naws_current',   [ $this, 'sc_current' ] );
-        add_shortcode( 'naws_table',     [ $this, 'sc_table' ] );
-        add_shortcode( 'naws_history',   [ $this, 'sc_history' ] );
-        add_shortcode( 'naws_heatmap',   [ $this, 'sc_heatmap' ] );
-        add_shortcode( 'naws_records',     [ $this, 'sc_records' ] );
-        add_shortcode( 'naws_on_this_day', [ $this, 'sc_on_this_day' ] );
-        add_shortcode( 'naws_sunpath',     [ $this, 'sc_sunpath' ] );
-        add_shortcode( 'naws_windrose',    [ $this, 'sc_windrose' ] );
-        add_shortcode( 'naws_live',      [ $this, 'sc_live' ] );
-        add_shortcode( 'naws_infobar',   [ $this, 'sc_infobar' ] );
-        add_shortcode( 'naws_value',     [ $this, 'sc_value' ] );
-        add_shortcode( 'naws_calc',      [ $this, 'sc_calc' ] );
-        add_shortcode( 'naws_forecast',  [ $this, 'sc_forecast' ] );
-        add_shortcode( 'naws_weather_icon', [ $this, 'sc_weather_icon' ] );
-        add_shortcode( 'naws_weather_widget', [ $this, 'sc_weather_widget' ] );
+        // One wrapper for all fifteen: decode the attributes before a handler
+        // sees them. Page builders write quotes as &quot;, WordPress passes that
+        // through as it is, and sanitize_key() then turns "dewpoint" into
+        // quotdewpointquot — the shortcode shows only its fallback.
+        foreach ( self::TAGS as $tag => $method ) {
+            add_shortcode( $tag, function ( $atts = [], $content = '' ) use ( $method ) {
+                return $this->$method( self::decode_atts( $atts ), $content );
+            } );
+        }
 
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_frontend_assets' ] );
+    }
+
+    /**
+     * Attribute values as the author meant them: &quot; back to ", &amp; to &.
+     * WordPress hands the attributes over as parsed, entities included. Only
+     * strings are touched; a bare '' (no attributes at all) stays as it is.
+     */
+    public static function decode_atts( $atts ) {
+        if ( ! is_array( $atts ) ) {
+            return $atts;
+        }
+        foreach ( $atts as $key => $value ) {
+            if ( is_string( $value ) ) {
+                $atts[ $key ] = wp_specialchars_decode( $value, ENT_QUOTES );
+            }
+        }
+        return $atts;
     }
 
     public function enqueue_frontend_assets() {
