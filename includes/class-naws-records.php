@@ -228,6 +228,49 @@ final class NAWS_Records {
         ] );
     }
 
+    // ── Diagnosis ────────────────────────────────────────────────────────
+
+    /**
+     * Why rows() came back empty: the query failed, there is no active base
+     * station, or no daily rows for it. Answered separately so a template
+     * can say which one.
+     */
+    public static function empty_reason( array $atts ): string {
+        if ( NAWS_Database::last_error() !== '' ) {
+            return 'db_error';
+        }
+        return NAWS_Calc::station_row_id( $atts ) === null ? 'no_station' : 'no_rows';
+    }
+
+    /**
+     * A sentence for the editor when a block stays empty, and a log line for
+     * everyone. Visitors get an empty string, as before: the page must not
+     * change for them. Each reason is logged once per request.
+     *
+     * @param string $shortcode 'naws_records' or 'naws_on_this_day'.
+     * @param string $reason    db_error, no_station, no_rows, unknown or no_hits.
+     * @param string $detail    Filled into %s where the label carries one.
+     */
+    public static function notice( string $shortcode, string $reason, string $detail = '' ): string {
+        $key     = ( $shortcode === 'naws_on_this_day' && $reason === 'no_hits' ) ? 'otd_notice_no_hits' : 'rec_notice_' . $reason;
+        if ( $reason === 'db_error' && $detail === '' ) {
+            $detail = NAWS_Database::last_error();
+        }
+        $message = $detail === '' ? naws_label( $key ) : sprintf( naws_label( $key ), $detail );
+
+        static $logged = [];
+        $entry = $shortcode . '|' . $reason . '|' . $detail;
+        if ( ! isset( $logged[ $entry ] ) ) {
+            $logged[ $entry ] = true;
+            NAWS_Logger::warning( 'records', '[' . $shortcode . '] ' . $reason . ': ' . $message );
+        }
+        if ( ! current_user_can( 'edit_posts' ) ) {
+            return '';
+        }
+        return '<p class="naws-notice"><strong>[' . esc_html( $shortcode ) . ']</strong> ' . esc_html( $message )
+            . ' <span class="naws-notice-who">' . esc_html( naws_label( 'notice_editors_only' ) ) . '</span></p>' . "\n";
+    }
+
     // ── The three kinds ──────────────────────────────────────────────────
 
     /** Strict comparison, rows in date order: a tie goes to the earlier day. */

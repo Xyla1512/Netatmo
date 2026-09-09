@@ -20,7 +20,26 @@ function sanitize_text_field( $s ) { return is_string( $s ) ? trim( $s ) : $s; }
 function sanitize_key( $s ) { return preg_replace( '/[^a-z0-9_\-]/', '', strtolower( (string) $s ) ); }
 function wp_date( $fmt, $ts = null ) { $d = new DateTime( 'now', new DateTimeZone( 'America/New_York' ) ); $d->setTimestamp( $ts ?? time() ); return $d->format( $fmt ); }
 function number_format_i18n( $n, $d = 0 ) { return number_format( (float) $n, $d, '.', '' ); }
+// Diagnose: wer die Seite bearbeiten darf, sieht im leeren Block den Grund;
+// Besucher sehen nichts. Beides wird hier ueber die drei Stubs gesteuert.
+$GLOBALS['naws_test_can_edit'] = false;
+function current_user_can( $cap ) { return $GLOBALS['naws_test_can_edit']; }
+class NAWS_Logger {
+    public static $warnings = [];
+    public static function warning( $ctx, $msg, $extra = [] ) { self::$warnings[] = $msg; }
+    public static function error( ...$a ) {}
+    public static function info( ...$a ) {}
+}
+class NAWS_Database {
+    public static $modules = [ [ 'module_id' => '70:ee:50:00:00:01', 'station_id' => '70:ee:50:00:00:01', 'module_type' => 'NAMain', 'is_active' => 1 ] ];
+    public static $daily   = [];
+    public static $error   = '';
+    public static function last_error() { return self::$error; }
+    public static function get_modules( $active_only = false ) { return self::$modules; }
+    public static function get_daily_summaries( array $args ) { return self::$daily; }
+}
 require_once __DIR__ . '/i18n-stubs.php';
+require_once dirname( __DIR__ ) . '/includes/class-naws-labels.php';
 
 require_once dirname( __DIR__ ) . '/includes/class-naws-helpers.php';
 require_once dirname( __DIR__ ) . '/includes/class-naws-climate.php';
@@ -122,6 +141,49 @@ check( 'Rekordzelle markiert',                  substr_count( $otd, 'class="naws
 check( 'Kopfzeile',                             str_contains( $otd, '<th>Year</th>' ), true );
 check( 'ohne fruehere Jahre nichts',            render( 'on-this-day.php', [ 'date' => '2024-09-05', 'title' => '' ], $otd_rows ), '' );
 check( 'unbrauchbares Datum faellt auf heute',  str_contains( render( 'on-this-day.php', [ 'date' => 'gestern', 'title' => '' ], [ [ 'day_date' => '2000-' . gmdate( 'm-d' ), 'temp_max' => 1.0 ] ] ), '>2000<' ), true );
+
+echo "\nDiagnose statt leerer Huelle\n" . str_repeat( '-', 74 ) . "\n";
+$atts_all = [ 'year' => '', 'records' => '', 'layout' => 'cards', 'title' => 'x' ];
+
+// Besucher: ein leerer Baustein bleibt leer — wie bisher.
+$GLOBALS['naws_test_can_edit'] = false;
+check( 'Besucher: ohne Zeilen weiterhin nichts',           render( 'records.php', $atts_all, [] ), '' );
+check( 'Besucher: unbekannter Name, gueltiger wird gezeigt', str_contains( render( 'records.php', [ 'year' => '', 'records' => 'temp_max,hottest_day', 'layout' => 'cards', 'title' => 'x' ], $year ), 'naws-rec-hottest_day' ), true );
+check( 'Besucher: dabei kein Hinweis',                     str_contains( render( 'records.php', [ 'year' => '', 'records' => 'temp_max,hottest_day', 'layout' => 'cards', 'title' => 'x' ], $year ), 'naws-notice' ), false );
+
+// Angemeldete mit Bearbeitungsrecht: der Grund steht im Block.
+$GLOBALS['naws_test_can_edit'] = true;
+$html = render( 'records.php', $atts_all, [] );
+check( 'Redakteur: ohne Zeilen ein Hinweis',               str_contains( $html, 'class="naws-notice"' ), true );
+check( 'Redakteur: ohne Zeilen nennt die Tagesuebersicht', str_contains( $html, 'holds no rows' ), true );
+check( 'Redakteur: Hinweis nennt den Shortcode',           str_contains( $html, '[naws_records]' ), true );
+check( 'Redakteur: Hinweis sagt, wer ihn sieht',           str_contains( $html, 'Only visible to logged-in editors' ), true );
+
+NAWS_Database::$modules = [];
+check( 'Redakteur: ohne aktive Basisstation der Stationsgrund', str_contains( render( 'records.php', $atts_all, null ), 'No active base station' ), true );
+NAWS_Database::$modules = [ [ 'module_id' => '70:ee:50:00:00:01', 'station_id' => '70:ee:50:00:00:01', 'module_type' => 'NAMain', 'is_active' => 1 ] ];
+check( 'Redakteur: Station da, Tabelle leer -> Zeilengrund',   str_contains( render( 'records.php', $atts_all, null ), 'holds no rows' ), true );
+
+NAWS_Logger::$warnings = [];
+$html = render( 'records.php', [ 'year' => '', 'records' => 'temp_avg,hottest_day', 'layout' => 'cards', 'title' => 'x' ], $year );
+check( 'Redakteur: unbekannter Name wird uebersprungen, Block bleibt', str_contains( $html, 'naws-rec-hottest_day' ), true );
+check( 'Redakteur: und der unbekannte Name wird genannt',   str_contains( $html, 'Unknown record names: temp_avg' ), true );
+check( 'unbekannter Name landet im Log',                    count( NAWS_Logger::$warnings ) >= 1 && str_contains( end( NAWS_Logger::$warnings ), 'temp_avg' ), true );
+$html = render( 'records.php', [ 'year' => '', 'records' => 'temp_max,temp_min', 'layout' => 'cards', 'title' => 'x' ], $year );
+check( 'Redakteur: nur unbekannte Namen -> Hinweis, kein Block', str_contains( $html, 'Unknown record names: temp_max, temp_min' ) && ! str_contains( $html, '<section' ), true );
+check( 'Redakteur: nichts berechenbar -> Hinweis',          str_contains( render( 'records.php', $atts_all, [ [ 'day_date' => '2025-01-01', 'pressure_avg' => 1000.0 ] ] ), 'No record can be computed' ), true );
+check( 'Redakteur: An diesem Tag ohne fruehere Jahre -> Hinweis', str_contains( render( 'on-this-day.php', [ 'date' => '2024-09-05', 'title' => '' ], $otd_rows ), 'No earlier year holds this day' ), true );
+$GLOBALS['naws_test_can_edit'] = false;
+
+// Ein SQL-Fehler (etwa ein Kollationskonflikt) ist fuer Redakteure der Grund — nicht "keine Zeilen".
+$GLOBALS['naws_test_can_edit'] = true;
+NAWS_Database::$error = "Illegal mix of collations (utf8mb4_unicode_520_ci,IMPLICIT) and (utf8mb4_general_ci,IMPLICIT) for operation '='";
+$html = render( 'records.php', $atts_all, null );
+check( 'Redakteur: SQL-Fehler wird als Datenbankgrund genannt', str_contains( $html, 'query for the daily summary failed' ) && str_contains( $html, 'Illegal mix of collations' ), true );
+$html = render( 'on-this-day.php', [ 'date' => '2024-09-05', 'title' => '' ], null );
+check( 'Redakteur: auch An diesem Tag nennt den Datenbankgrund', str_contains( $html, 'Illegal mix of collations' ), true );
+NAWS_Database::$error = '';
+$GLOBALS['naws_test_can_edit'] = false;
 
 echo "\n" . str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );

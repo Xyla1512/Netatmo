@@ -20,12 +20,25 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 $rows = $naws_rows ?? NAWS_Records::rows( $atts );
 if ( empty( $rows ) ) {
+    echo NAWS_Records::notice( 'naws_records', NAWS_Records::empty_reason( $atts ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped inside
     return;
 }
 
-$wanted = array_filter( array_map( 'sanitize_key', explode( ',', (string) ( $atts['records'] ?? '' ) ) ) );
-$found  = NAWS_Records::all( $rows, array_values( $wanted ) );
+// An unknown name is skipped, not fatal: one typo must not empty the block.
+// Only when nothing valid is left does the block stay away.
+$wanted  = array_filter( array_map( 'sanitize_key', explode( ',', (string) ( $atts['records'] ?? '' ) ) ) );
+$known   = array_keys( NAWS_Records::catalogue() );
+$unknown = array_values( array_diff( $wanted, $known ) );
+$wanted  = array_values( array_intersect( $wanted, $known ) );
+if ( $unknown ) {
+    echo NAWS_Records::notice( 'naws_records', 'unknown', implode( ', ', $unknown ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped inside
+    if ( ! $wanted ) {
+        return;
+    }
+}
+$found = NAWS_Records::all( $rows, $wanted );
 if ( empty( $found ) ) {
+    echo NAWS_Records::notice( 'naws_records', 'no_hits' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped inside
     return;
 }
 

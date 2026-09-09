@@ -112,6 +112,14 @@ function naws_label( string $key ): string {
 
         // [naws_records] and [naws_on_this_day] (since 1.9.11).
         case 'rec_title':                          return __( 'Records', 'xtx-integration-for-netatmo' );
+        case 'rec_notice_no_station':              return __( 'No active base station found. Under Netatmo → Modules the station (NAMain) must be active.', 'xtx-integration-for-netatmo' );
+        case 'rec_notice_no_rows':                 return __( 'The daily summary holds no rows for this station and period. See Netatmo → Dashboard → Daily Summary, or run Readings → Summary under History Import.', 'xtx-integration-for-netatmo' );
+        /* translators: %s: comma-separated list of unknown record names */
+        case 'rec_notice_unknown':                 return __( 'Unknown record names: %s. The Shortcodes page lists the valid ones.', 'xtx-integration-for-netatmo' );
+        case 'rec_notice_no_hits':                 return __( 'No record can be computed from these rows.', 'xtx-integration-for-netatmo' );
+        /* translators: %s: the database error message */
+        case 'rec_notice_db_error':                return __( 'The database query for the daily summary failed: %s', 'xtx-integration-for-netatmo' );
+        case 'notice_editors_only':                return __( 'Only visible to logged-in editors.', 'xtx-integration-for-netatmo' );
         case 'rec_title_year':                     return /* translators: %d: the year the records are from. */ __( 'Records %d', 'xtx-integration-for-netatmo' );
         case 'rec_hottest_day':                    return __( 'Hottest day', 'xtx-integration-for-netatmo' );
         case 'rec_coldest_night':                  return __( 'Coldest night', 'xtx-integration-for-netatmo' );
@@ -133,6 +141,7 @@ function naws_label( string $key ): string {
         case 'rec_col_when':                       return _x( 'When', 'table column', 'xtx-integration-for-netatmo' );
         case 'rec_since':                          return /* translators: 1: first date with readings, 2: "365 days" or similar. */ __( 'Since %1$s · %2$s with readings', 'xtx-integration-for-netatmo' );
         case 'otd_title':                          return __( 'This day in earlier years', 'xtx-integration-for-netatmo' );
+        case 'otd_notice_no_hits':                 return __( 'No earlier year holds this day yet.', 'xtx-integration-for-netatmo' );
         case 'otd_col_year':                       return __( 'Year', 'xtx-integration-for-netatmo' );
         case 'otd_col_min':                        return _x( 'Low', 'daily minimum', 'xtx-integration-for-netatmo' );
         case 'otd_col_max':                        return _x( 'High', 'daily maximum', 'xtx-integration-for-netatmo' );

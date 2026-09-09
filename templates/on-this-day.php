@@ -33,8 +33,13 @@ if ( preg_match( '/^(\d{4})-(\d{2}-\d{2})$/', $raw, $m ) && checkdate( (int) sub
 }
 
 $rows = $naws_rows ?? NAWS_Records::rows( $atts );
+if ( empty( $rows ) ) {
+    echo NAWS_Records::notice( 'naws_on_this_day', NAWS_Records::empty_reason( $atts ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped inside
+    return;
+}
 $hits = NAWS_Records::on_this_day( $rows, $month_day, $before );
 if ( empty( $hits ) ) {
+    echo NAWS_Records::notice( 'naws_on_this_day', 'no_hits' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped inside
     return;
 }
 

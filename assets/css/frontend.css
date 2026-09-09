@@ -59,6 +59,15 @@
 /* ============================================================
    Base Wrapper
    ============================================================ */
+/* Editor-only diagnosis in an otherwise empty block (NAWS_Records::notice) */
+.naws-notice {
+  margin: 0 0 .75rem; padding: .5rem .75rem;
+  border-left: 3px solid var(--naws-danger, #ef4444);
+  background: var(--naws-surface-2, #f8fafc); color: var(--naws-text, #427272);
+  font-size: .9em; line-height: 1.4;
+}
+.naws-notice-who { opacity: .7; font-style: italic; }
+
 .naws-wrap {
   font-family: var(--naws-font);
   background:  var(--naws-bg);
