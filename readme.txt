@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 1.9.12
+Stable tag: 1.9.13
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -115,6 +115,13 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 
 == Changelog ==
 
+= 1.9.13 =
+* Fix: `[naws_records]` and `[naws_on_this_day]` stayed empty on an installation whose daily summary table carried a different collation than the modules table. The three big queries compared `module_id` across two tables; MySQL refuses that as soon as the collations differ, the query failed, and the plugin returned nothing without a word. The active modules now go into every query as an id list from PHP, so no comparison crosses a table any more — `[naws_live]`, `[naws_infobar]` and the history are read the same way.
+* Fix: when a block has nothing to show, an editor who is logged in reads why in the block — no active base station, no daily rows, a failed query with the database's own message, unknown record names — and the log gets a line. Visitors see what they saw before. An unknown name in `records="…"` is skipped with a note instead of emptying the whole block.
+* Fix: switching a module on or off under Netatmo → Modules reaches the front end at once. The module list was cached for an hour, and only the admin read fresh.
+* Fix: attributes that a page builder writes with HTML entities (`value=&quot;dewpoint&quot;`) reach the shortcode as intended; they used to arrive as `quotdewpointquot` and fall back to `--`. All fifteen shortcodes decode them first.
+* Fix: on Android, Chrome's automatic dark theme inverted the wind rose and the sun's arc into black shapes. The blocks declare `color-scheme: only light` now, which takes exactly them out of that and leaves the page alone.
+
 = 1.9.12 =
 * Added: `[naws_windrose]` — where the wind comes from, how often, and how hard: one ray per compass direction (16 or 8), its length the share of readings from there, stacked by Beaufort class from the centre outwards, calm in the hub. Below it the main directions, mean, peak and calm share, a legend, and a table for screen readers. Built from the raw ten-minute readings with one grouped query per period, cached as a transient. `period` (`7d`, `30d`, `90d`, `year`, `all`), `from`/`to` for a fixed range, `measure` (`wind`, `gust`, `both`), `sectors`, `show`, `switcher`, `size`, `title`. Every period of the switcher is rendered on the server; the script only swaps panels and dresses the tooltips. Seven colours on a new Appearance tab.
 * Added: the "Wind & Gusts" card of `[naws_live]` shows the day's strongest gust as a third value, in the configured wind unit, and the gauge gets a third, red needle for it.
@@ -144,26 +151,18 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 * Changed: weekday, month and weather-condition names are translatable. They used to be two hardcoded lists, German and English, so a Norwegian reader got English with no way to change it.
 * New: German and Norwegian ship with this release as a bridge. Language packs do not exist the moment an update goes out, and an installation that had a German interface yesterday should not find an English one today. A pack always takes precedence once it is built.
 
-= 1.9.8 =
-* Fix: `[naws_table]` produced nothing at all. The shortcode was registered, documented in the reference and listed in this readme, and its stylesheet was written — but the template it includes, `templates/table.php`, had never been committed. Every use of the shortcode output an empty string and left two PHP warnings in the log. The template is there now, and a test fails if it goes missing again.
-* Fix: `[naws_table]` listed the bookkeeping values Netatmo stores alongside the readings. `max_wind_angle` and `max_wind_str` have neither a name nor a unit in the plugin, so they appeared as a raw key next to a bare number. The table now asks only for parameters it can present; naming one explicitly in `parameters` still returns it. The daily minimum and maximum temperature and the hourly rain total were in the same position for the opposite reason — they are meaningful and were simply unnamed, so they have their labels now instead of being hidden.
-* Fix: `[naws_table]` found nothing for the periods its own reference recommends. `period="24h"` asked for a range that starts tomorrow — PHP does not read `24h` as a duration, and `strtotime('-24h')` returns a point in the future rather than yesterday. `365d` failed to parse altogether. The start of the range therefore sat behind its end and the query returned nothing, which looked exactly like a station with no readings. The shorthand is spelled out before it reaches the parser now, and a period that cannot be read falls back to the documented 24 hours instead of to 1970.
-* Fix: the reference gave the grouping of `[naws_table]` as hour, day, week or month. `year` works as well, and any other value lists single readings instead of averages. The readme named four of the shortcode's six attributes.
-* Fix: a database change would never have reached anyone who updates through WordPress. The routine that creates and migrates the tables hung on the activation hook alone, and WordPress does not fire that when it updates a plugin — it reactivates it silently. Nobody was hurt by it yet, because until 1.9.7 the plugin was installed by hand and activated in the process; since the directory listing, the update button is the normal way, and that is exactly the path that skipped it. The plugin now compares the stored schema version on every load and migrates when they differ.
-* Changed: `Plugin URI` in the plugin header points at the plugin's own page, netatmo.frank-neumann.de, instead of at a weather page that carries a section about it. That is what the "Visit plugin site" link in your plugins list opens.
-
 Older versions: the complete changelog since 1.0.0 is kept in [CHANGELOG.md](https://github.com/Xyla1512/Netatmo/blob/main/CHANGELOG.md) on GitHub.
 
 == Upgrade Notice ==
+
+= 1.9.13 =
+Fix: [naws_records] and [naws_on_this_day] stayed empty where the daily summary table had a different collation. Editors now read why a block is empty. Module switches show at once, entity attributes work, Android Chrome no longer blackens the wind rose. Nothing to reconfigure.
 
 = 1.9.12 =
 New: [naws_windrose] shows where the wind comes from, how often and how hard, with a period switcher and seven colours under Appearance. The Wind & Gusts card shows the day's strongest gust. Compass directions are translated. Nothing to reconfigure.
 
 = 1.9.11 =
 New: [naws_records] shows fifteen records from your daily summary with their dates, [naws_on_this_day] this day in earlier years, [naws_sunpath] the sun on its arc. The sidebar widget gets a dark and a transparent scheme. Fix: the purge button in the settings works again. Nothing to reconfigure.
-
-= 1.9.10 =
-New: [naws_heatmap] shows a year of daily mean temperatures as a calendar grid. Privacy fix: your modules' MAC addresses no longer appear in public pages or dashboard requests. The bundled German and Norwegian files WordPress refused in 1.9.9 are read again. Nothing to reconfigure.
 
 == Privacy & External Services ==
 

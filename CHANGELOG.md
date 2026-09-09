@@ -2,6 +2,17 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [1.9.13]
+
+A bugfix release. Nothing to reconfigure.
+
+### Fixed
+- **Blocks that stayed empty because two tables disagreed on their collation.** `get_readings()`, `get_daily_summaries()` and `get_latest_readings()` compared `module_id` across `naws_modules` and the data table — `EXISTS` or `INNER JOIN`. MySQL refuses that comparison as soon as the collations differ ("Illegal mix of collations"), the query failed, and the plugin returned `[]` without a word. Seen on a real installation whose daily summary had been created with `utf8mb4_general_ci` next to `utf8mb4_unicode_520_ci` everywhere else: `[naws_records]` and `[naws_on_this_day]` were empty while everything reading the raw readings worked. The active ids now come from `get_modules( true )` and go into the `WHERE` as `IN (…)`; a requested but inactive module drops out of the list, and with no active module there is no query at all. The three error branches keep `$wpdb->last_error` in `NAWS_Database::last_error()`, because the option and transient queries that follow overwrite `$wpdb`'s copy before a template can ask.
+- **A block that stays empty says why — to editors.** The records and this-day templates returned from four places in silence. `NAWS_Records::empty_reason()` and `notice()` now put one sentence into the block for anyone who may edit posts — no active base station, no daily rows, the database's own error message, unknown record names, nothing computable — and a line into the log for everyone. Visitors see exactly what they saw before. An unknown name in `records="…"` is skipped with a note instead of emptying the whole block; only when nothing valid is left does the block stay away. Seven labels, in German and Norwegian.
+- **Switching a module reaches the front end at once.** `set_module_active()` only wrote to the table; `get_modules()` kept its two lists for an hour, so every block that resolves the station through the active modules showed the old set while the admin, reading fresh, showed the switch. The two transients go with the update now.
+- **HTML entities in shortcode attributes.** Page builders write quotes as `&quot;`; WordPress passes that through, `sanitize_key()` turned `"dewpoint"` into `quotdewpointquot`, and the shortcode showed only its fallback. All fifteen shortcodes register through one wrapper that runs `wp_specialchars_decode()` over the string attributes first.
+- **Black wind rose and sun path on Android.** Chrome's automatic dark theme lays itself over pages that declare no `color-scheme` and inverts the white areas of the server-side SVGs. The ten root classes declare `color-scheme: only light` now, which takes exactly these blocks out of that and leaves the page alone; plain `light` is ignored by Chrome, measured with CDP.
+
 ## [1.9.12]
 
 ### Added
