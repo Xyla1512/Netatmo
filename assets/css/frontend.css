@@ -59,6 +59,15 @@
 /* ============================================================
    Base Wrapper
    ============================================================ */
+/* Chrome for Android lays its "auto dark theme" over pages that declare no
+   color-scheme and inverts the white areas of the server-side SVGs to black.
+   "only light" takes exactly these blocks out of that and nothing else on
+   the page; plain "light" is ignored by Chrome (measured 2026-09-09). */
+.naws-wrap, .naws-rec, .naws-otd, .naws-sun, .naws-hm, .naws-hist, .naws-wx,
+.naws-fc-wrap, .naws-wgt, .naws-weather-icon {
+  color-scheme: only light;
+}
+
 /* Editor-only diagnosis in an otherwise empty block (NAWS_Records::notice) */
 .naws-notice {
   margin: 0 0 .75rem; padding: .5rem .75rem;
