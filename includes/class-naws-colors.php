@@ -246,8 +246,8 @@ class NAWS_Colors {
         foreach ( self::DEFAULTS as $key => $default ) {
             if ( $key === 'icon_set' ) {
                 $valid = [ 'emoji', 'outline', 'filled', 'minimal' ];
-                $clean['icon_set'] = in_array( $input['icon_set'] ?? 'emoji', $valid, true )
-                    ? $input['icon_set'] : 'emoji';
+                $icon_set          = $input['icon_set'] ?? 'emoji';
+                $clean['icon_set'] = in_array( $icon_set, $valid, true ) ? $icon_set : 'emoji';
                 continue;
             }
             // The font is not a color and no hex pattern can vet it. A

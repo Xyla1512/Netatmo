@@ -127,6 +127,22 @@ $clean = NAWS_Colors::sanitize( [ 'font_family' => 'custom', 'font_custom' => 'F
 check( 'CSS im Freitextfeld wird verworfen',
     $clean['font_custom'], '' );
 
+// ── icon_set fehlt im Eingang ─────────────────────────────────────────────
+$naws_warnings = [];
+set_error_handler( function ( $no, $msg ) use ( &$naws_warnings ) { $naws_warnings[] = $msg; return true; }, E_WARNING | E_NOTICE );
+$clean = NAWS_Colors::sanitize( [ 'font_family' => 'serif' ] );
+restore_error_handler();
+check( 'ohne icon_set im Eingang: Standard emoji',
+    $clean['icon_set'], 'emoji' );
+check( 'ohne icon_set im Eingang: keine Warnung',
+    $naws_warnings, [] );
+$clean = NAWS_Colors::sanitize( [ 'icon_set' => 'filled' ] );
+check( 'ein gueltiges icon_set wird uebernommen',
+    $clean['icon_set'], 'filled' );
+$clean = NAWS_Colors::sanitize( [ 'icon_set' => 'gibtsnicht' ] );
+check( 'ein unbekanntes icon_set faellt auf emoji zurueck',
+    $clean['icon_set'], 'emoji' );
+
 // ── Ausgabe der Schrift ──────────────────────────────────────────────────
 saved( [ 'font_family' => 'serif' ] );
 $css = NAWS_Colors::get_inline_css();
