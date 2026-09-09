@@ -38,6 +38,36 @@ class NAWS_Database {
     const TTL_READINGS = 10 * MINUTE_IN_SECONDS;   // Grouped time-series
     const TTL_DAILY    = HOUR_IN_SECONDS;          // Historical daily data
 
+    /** The error of the last failed query in this class, '' after a success. */
+    private static $last_error = '';
+
+    /**
+     * Why the last get_readings() / get_daily_summaries() came back empty
+     * when its query failed: the database's own words. NAWS_Records shows
+     * them to editors; $wpdb->last_error is gone by then, overwritten by
+     * the option and transient queries that follow.
+     */
+    public static function last_error(): string {
+        return self::$last_error;
+    }
+
+    /**
+     * module_id of every active module, for the WHERE of the two big
+     * queries. The former EXISTS join compared module_id across two
+     * tables and broke down as soon as they carried different collations
+     * ("Illegal mix of collations", seen on a real installation); an id
+     * list from PHP cannot.
+     */
+    private static function active_module_ids(): array {
+        $ids = [];
+        foreach ( self::get_modules( true ) as $module ) {
+            if ( ! empty( $module['module_id'] ) ) {
+                $ids[] = (string) $module['module_id'];
+            }
+        }
+        return $ids;
+    }
+
     // ================================================================
     // Install / Migrations
     // ================================================================
@@ -396,8 +426,8 @@ class NAWS_Database {
      */
     public static function get_readings( $args = [] ) {
         global $wpdb;
+        self::$last_error = '';
         $r = $wpdb->prefix . NAWS_TABLE_READINGS;
-        $m = $wpdb->prefix . NAWS_TABLE_MODULES;
 
         $args = wp_parse_args( $args, [
             'module_id'  => null,
@@ -415,19 +445,20 @@ class NAWS_Database {
             return $cached;
         }
 
-        // WHERE
+        // WHERE — active modules as an id list, not a join (see active_module_ids)
+        $ids = self::active_module_ids();
+        if ( ! empty( $args['module_id'] ) ) {
+            $ids = array_values( array_intersect( (array) $args['module_id'], $ids ) );
+        }
+        if ( ! $ids ) {
+            return [];
+        }
+        $ph     = implode( ',', array_fill( 0, count( $ids ), '%s' ) );
         $where  = [
             "r.recorded_at BETWEEN %d AND %d",
-            "EXISTS (SELECT 1 FROM {$m} mx WHERE mx.module_id = r.module_id AND mx.is_active = 1)",
+            "r.module_id IN ({$ph})",
         ];
-        $params = [ intval( $args['date_from'] ), intval( $args['date_to'] ) ];
-
-        if ( ! empty( $args['module_id'] ) ) {
-            $ids = (array) $args['module_id'];
-            $ph  = implode( ',', array_fill( 0, count( $ids ), '%s' ) );
-            $where[]  = "r.module_id IN ({$ph})";
-            $params   = array_merge( $params, $ids );
-        }
+        $params = array_merge( [ intval( $args['date_from'] ), intval( $args['date_to'] ) ], $ids );
         if ( ! empty( $args['parameter'] ) ) {
             $ps = (array) $args['parameter'];
             $ph = implode( ',', array_fill( 0, count( $ps ), '%s' ) );
@@ -467,6 +498,7 @@ class NAWS_Database {
         $results = $wpdb->get_results( $wpdb->prepare( $sql, $params ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         if ( $wpdb->last_error ) {
+            self::$last_error = $wpdb->last_error;
             NAWS_Logger::error( 'database', 'get_readings query failed: ' . $wpdb->last_error, [
                 'group_by' => $args['group_by'],
             ] );
@@ -491,10 +523,16 @@ class NAWS_Database {
         }
 
         global $wpdb;
+        self::$last_error = '';
         $r = $wpdb->prefix . NAWS_TABLE_READINGS;
-        $m = $wpdb->prefix . NAWS_TABLE_MODULES;
+
+        // Only active modules, by id list rather than a join (see active_module_ids)
+        $active = self::active_module_ids();
 
         if ( $module_id ) {
+            if ( ! in_array( (string) $module_id, $active, true ) ) {
+                return [];
+            }
             $sql = $wpdb->prepare(
                 "SELECT r1.*
                  FROM {$r} r1
@@ -502,11 +540,14 @@ class NAWS_Database {
                      SELECT parameter, MAX(recorded_at) AS max_ts
                      FROM {$r} WHERE module_id = %s GROUP BY parameter
                  ) r2 ON r1.parameter = r2.parameter AND r1.recorded_at = r2.max_ts
-                 INNER JOIN {$m} m ON m.module_id = r1.module_id AND m.is_active = 1
                  WHERE r1.module_id = %s",
                 $module_id, $module_id
             );
         } else {
+            if ( ! $active ) {
+                return [];
+            }
+            $ph  = implode( ',', array_fill( 0, count( $active ), '%s' ) );
             $sql = "SELECT r1.*
                     FROM {$r} r1
                     INNER JOIN (
@@ -515,12 +556,14 @@ class NAWS_Database {
                     ) r2 ON  r1.module_id  = r2.module_id
                          AND r1.parameter  = r2.parameter
                          AND r1.recorded_at = r2.max_ts
-                    INNER JOIN {$m} m ON m.module_id = r1.module_id AND m.is_active = 1";
+                    WHERE r1.module_id IN ({$ph})";
+            $sql = $wpdb->prepare( $sql, $active ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- placeholders only
         }
 
         $results = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- query built from constants
 
         if ( $wpdb->last_error ) {
+            self::$last_error = $wpdb->last_error;
             NAWS_Logger::error( 'database', 'get_latest_readings query failed: ' . $wpdb->last_error );
             return [];
         }
@@ -798,8 +841,8 @@ class NAWS_Database {
 
     public static function get_daily_summaries( $args = [] ) {
         global $wpdb;
+        self::$last_error = '';
         $t   = $wpdb->prefix . NAWS_TABLE_DAILY;
-        $m   = $wpdb->prefix . NAWS_TABLE_MODULES;
 
         $args = wp_parse_args( $args, [
             'module_id'  => null,
@@ -825,19 +868,20 @@ class NAWS_Database {
         // %i placeholders for field identifiers (WP 6.2+); passed as first args to prepare()
         $field_ph = implode( ', ', array_fill( 0, count( $fields ), '%i' ) );
 
-        // WHERE
+        // WHERE — active modules as an id list, not a join (see active_module_ids)
+        $ids = self::active_module_ids();
+        if ( ! empty( $args['module_id'] ) ) {
+            $ids = array_values( array_intersect( (array) $args['module_id'], $ids ) );
+        }
+        if ( ! $ids ) {
+            return [];
+        }
+        $ph     = implode( ',', array_fill( 0, count( $ids ), '%s' ) );
         $where  = [
             "d.day_date BETWEEN %s AND %s",
-            "EXISTS (SELECT 1 FROM {$m} mx WHERE mx.module_id = d.module_id AND mx.is_active = 1)",
+            "d.module_id IN ({$ph})",
         ];
-        $params = [ $args['date_from'], $args['date_to'] ];
-
-        if ( ! empty( $args['module_id'] ) ) {
-            $ids = (array) $args['module_id'];
-            $ph  = implode( ',', array_fill( 0, count($ids), '%s' ) );
-            $where[]  = "d.module_id IN ({$ph})";
-            $params   = array_merge( $params, $ids );
-        }
+        $params = array_merge( [ $args['date_from'], $args['date_to'] ], $ids );
 
         $where_sql = 'WHERE ' . implode( ' AND ', $where );
         $limit_sql = $args['limit'] > 0 ? 'LIMIT ' . intval( $args['limit'] ) : '';
@@ -861,6 +905,7 @@ class NAWS_Database {
             $results = $wpdb->get_results( $wpdb->prepare( $sql, array_merge( $fields, $params ) ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
             if ( $wpdb->last_error ) {
+                self::$last_error = $wpdb->last_error;
                 NAWS_Logger::error( 'database', 'get_daily_summaries query failed: ' . $wpdb->last_error );
                 return [];
             }
@@ -895,6 +940,7 @@ class NAWS_Database {
         $results = $wpdb->get_results( $wpdb->prepare( $sql, $params ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         if ( $wpdb->last_error ) {
+            self::$last_error = $wpdb->last_error;
             NAWS_Logger::error( 'database', 'get_daily_summaries aggregated query failed: ' . $wpdb->last_error, [
                 'group_by' => $group_by,
             ] );
