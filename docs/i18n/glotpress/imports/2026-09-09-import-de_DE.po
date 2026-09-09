@@ -1,0 +1,30 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "No active base station found. Under Netatmo → Modules the station (NAMain) must be active."
+msgstr "Keine aktive Basisstation gefunden. Unter Netatmo → Module muss die Station (NAMain) aktiv sein."
+
+msgid "The daily summary holds no rows for this station and period. See Netatmo → Dashboard → Daily Summary, or run Readings → Summary under History Import."
+msgstr "Die Tagesauswertung enthält keine Zeilen für diese Station und diesen Zeitraum. Siehe Netatmo → Dashboard → Tagesauswertung, oder unter Historien Import „Readings → Summary“ ausführen."
+
+msgid "Unknown record names: %s. The Shortcodes page lists the valid ones."
+msgstr "Unbekannte Rekordnamen: %s. Die Seite „Shortcodes“ nennt die gültigen."
+
+msgid "No record can be computed from these rows."
+msgstr "Aus diesen Zeilen lässt sich kein Rekord berechnen."
+
+msgid "Only visible to logged-in editors."
+msgstr "Nur für angemeldete Redakteure sichtbar."
+
+msgid "No earlier year holds this day yet."
+msgstr "Noch kein früheres Jahr enthält diesen Tag."
+
+msgid "The database query for the daily summary failed: %s"
+msgstr "Die Datenbankabfrage der Tagesauswertung ist fehlgeschlagen: %s"
+

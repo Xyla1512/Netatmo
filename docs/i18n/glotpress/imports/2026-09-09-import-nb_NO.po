@@ -1,0 +1,30 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo\n"
+"Language: nb_NO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "No active base station found. Under Netatmo → Modules the station (NAMain) must be active."
+msgstr "Fant ingen aktiv basestasjon. Under Netatmo → Moduler må stasjonen (NAMain) være aktiv."
+
+msgid "The daily summary holds no rows for this station and period. See Netatmo → Dashboard → Daily Summary, or run Readings → Summary under History Import."
+msgstr "Det daglige sammendraget har ingen rader for denne stasjonen og perioden. Se Netatmo → Oversikt → Daglig sammendrag, eller kjør «Readings → Summary» under Historieimport."
+
+msgid "Unknown record names: %s. The Shortcodes page lists the valid ones."
+msgstr "Ukjente rekordnavn: %s. Siden «Shortcodes» viser de gyldige."
+
+msgid "No record can be computed from these rows."
+msgstr "Ingen rekord kan beregnes fra disse radene."
+
+msgid "Only visible to logged-in editors."
+msgstr "Bare synlig for innloggede redaktører."
+
+msgid "No earlier year holds this day yet."
+msgstr "Ingen tidligere år har denne dagen ennå."
+
+msgid "The database query for the daily summary failed: %s"
+msgstr "Databasespørringen for det daglige sammendraget mislyktes: %s"
+
