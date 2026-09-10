@@ -221,15 +221,20 @@ class NAWS_Fonts {
     public static function stack( $family, $custom ) { return 'inherit'; }
 }
 require_once dirname( __DIR__ ) . '/includes/class-naws-colors.php';
-check( 'sieben Schluessel',                  NAWS_Colors::WINDROSE_KEYS, [ 'windrose_b1', 'windrose_b2', 'windrose_b3', 'windrose_b4', 'windrose_b5', 'windrose_grid', 'windrose_calm' ] );
+check( 'acht Schluessel',                    NAWS_Colors::WINDROSE_KEYS, [ 'windrose_b1', 'windrose_b2', 'windrose_b3', 'windrose_b4', 'windrose_b5', 'windrose_grid', 'windrose_calm', 'windrose_switch' ] );
 check( 'Vorgabe der ersten Klasse',          NAWS_Colors::DEFAULTS['windrose_b1'], '#86b6ef' );
 check( 'Vorgabe der letzten Klasse',         NAWS_Colors::DEFAULTS['windrose_b5'], '#0d366b' );
 check( 'Vorgabe der Nabe',                   NAWS_Colors::DEFAULTS['windrose_calm'], '#e9eff5' );
+check( 'Vorgabe des Umschalters (= Beaufort 4)', NAWS_Colors::DEFAULTS['windrose_switch'], NAWS_Colors::DEFAULTS['windrose_b4'] );
 check( 'eigene Gruppe',                      NAWS_Colors::get_groups()['windrose']['keys'], NAWS_Colors::WINDROSE_KEYS );
 $css = NAWS_Colors::get_inline_css();
 check( 'CSS-Variable der ersten Klasse',     str_contains( $css, '--naws-wr-b1: #86b6ef;' ), true );
 check( 'CSS-Variable der Ringe',             str_contains( $css, '--naws-wr-grid: #dbe3ea;' ), true );
 check( 'CSS-Variable der Nabe',              str_contains( $css, '--naws-wr-calm: #e9eff5;' ), true );
+check( 'CSS-Variable des Umschalters',       str_contains( $css, '--naws-wr-switch: #1c5cab;' ), true );
+$naws_view = file_get_contents( dirname( __DIR__ ) . '/admin/views/appearance.php' );
+check( 'Beschriftung im Erscheinungsbild',   str_contains( $naws_view, "'windrose_switch' =>" ), true );
+check( 'Vorschau-Knopf im Erscheinungsbild', str_contains( $naws_view, 'naws-pv-wr-switch' ), true );
 check( 'die Variablen stehen im .naws-wrap-Block', strpos( $css, '--naws-wr-b1' ) < strpos( $css, '.naws-wx {' ), true );
 $san = NAWS_Colors::sanitize( [ 'windrose_b1' => '#123456', 'windrose_b2' => 'red', 'windrose_grid' => '<script>', 'icon_set' => 'emoji' ] );
 check( 'gueltiges Hex bleibt',               $san['windrose_b1'], '#123456' );

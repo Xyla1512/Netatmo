@@ -174,7 +174,10 @@ class NAWS_Colors {
 
         // [naws_windrose]: five Beaufort classes of one hue from light to
         // dark (validated for step contrast), the rings behind the rays,
-        // and the hub that carries the calm share.
+        // the hub that carries the calm share, and the active button of
+        // the period switcher (white text on it; the hover state of the
+        // other buttons borrows the same colour for text and border).
+        // Starts as Beaufort 4: the lightest step that carries white text.
         'windrose_b1'   => '#86b6ef',
         'windrose_b2'   => '#5598e7',
         'windrose_b3'   => '#2a78d6',
@@ -182,6 +185,7 @@ class NAWS_Colors {
         'windrose_b5'   => '#0d366b',
         'windrose_grid' => '#dbe3ea',
         'windrose_calm' => '#e9eff5',
+        'windrose_switch' => '#1c5cab',
     ];
 
     public static function instance() {
@@ -478,7 +482,7 @@ class NAWS_Colors {
     /** The [naws_windrose] keys, in the order the Appearance page shows them. */
     const WINDROSE_KEYS = [
         'windrose_b1', 'windrose_b2', 'windrose_b3', 'windrose_b4', 'windrose_b5',
-        'windrose_grid', 'windrose_calm',
+        'windrose_grid', 'windrose_calm', 'windrose_switch',
     ];
 
     /**

@@ -1908,8 +1908,13 @@
 /* ══════════════════════════════════════════════════════════════════
    [naws_windrose] — where the wind comes from, how often, how hard
    Colours: --naws-wr-b1…b5 (Beaufort classes), --naws-wr-grid (rings),
-   --naws-wr-calm (hub), all from the Appearance page; text from the
-   theme variables like every other block.
+   --naws-wr-calm (hub), --naws-wr-switch (the active button of the
+   period switcher), all from the Appearance page; text from the theme
+   variables like every other block.
+   The switcher buttons are <button>s, and themes style those: Hello
+   Elementor's reset paints button:hover and button:focus red at
+   specificity 0,1,1. Every rule below carries two classes (0,2,x) and
+   sets hover and focus itself, so no theme gets a word in.
    ══════════════════════════════════════════════════════════════════ */
 
 .naws-wr {
@@ -1925,10 +1930,14 @@
 .naws-wr-switch { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 0 0 8px; }
 .naws-wr-switch[hidden] { display: none; }
 .naws-wr-group  { display: inline-flex; flex-wrap: wrap; gap: 4px; }
-.naws-wr-btn    { background: var(--naws-surface-2, #f8fafc); color: var(--naws-text-muted, #7aa0a0); border-color: var(--naws-border, #e0eeee); font-size: 11px; padding: 3px 10px; }
-.naws-wr-btn.is-active,
-.naws-wr-btn[aria-pressed="true"] { background: var(--naws-primary, #427272); color: #fff; border-color: var(--naws-primary, #427272); }
-.naws-wr-btn:focus-visible { outline: 2px solid var(--naws-primary, #427272); outline-offset: 2px; }
+.naws-wr .naws-wr-btn { background: var(--naws-surface-2, #f8fafc); color: var(--naws-text-muted, #7aa0a0); border-color: var(--naws-border, #e0eeee); font-size: 11px; padding: 3px 10px; box-shadow: none; }
+.naws-wr .naws-wr-btn:hover,
+.naws-wr .naws-wr-btn:focus { background: var(--naws-surface-2, #f8fafc); color: var(--naws-wr-switch, #1c5cab); border-color: var(--naws-wr-switch, #1c5cab); }
+.naws-wr .naws-wr-btn.is-active,
+.naws-wr .naws-wr-btn[aria-pressed="true"],
+.naws-wr .naws-wr-btn.is-active:hover,
+.naws-wr .naws-wr-btn.is-active:focus { background: var(--naws-wr-switch, #1c5cab); color: #fff; border-color: var(--naws-wr-switch, #1c5cab); }
+.naws-wr .naws-wr-btn:focus-visible { outline: 2px solid var(--naws-wr-switch, #1c5cab); outline-offset: 2px; box-shadow: none; }
 .naws-wr-meta   { margin: 0 0 6px; font-size: 12px; color: var(--naws-text-muted, #7aa0a0); }
 .naws-wr-empty  { margin: 0; font-size: 13px; color: var(--naws-text-muted, #7aa0a0); }
 .naws-wr-figure { margin: 0; }

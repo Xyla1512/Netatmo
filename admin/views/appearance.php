@@ -63,6 +63,7 @@ $color_labels = [
     'windrose_b5'   => __( 'Beaufort 5 and above · fresh breeze', 'xtx-integration-for-netatmo' ),
     'windrose_grid' => __( 'Rings', 'xtx-integration-for-netatmo' ),
     'windrose_calm' => __( 'Hub (calm)', 'xtx-integration-for-netatmo' ),
+    'windrose_switch' => __( 'Period switcher (active button)', 'xtx-integration-for-netatmo' ),
 ];
 
 // Short labels for 24h chart preview legend
@@ -560,7 +561,7 @@ $icon_color_keys = [
              Tab 7: Windrose
              ============================================================ -->
         <div class="naws-appearance-pane" data-pane="windrose">
-            <p class="description"><?php esc_html_e( 'Colours for [naws_windrose]: one class per Beaufort step from the centre outwards, the rings behind the rays, and the hub that carries the calm share. Pick one hue that gets darker step by step; the rose is read by length first and by colour second.', 'xtx-integration-for-netatmo' ); ?></p>
+            <p class="description"><?php esc_html_e( 'Colours for [naws_windrose]: one class per Beaufort step from the centre outwards, the rings behind the rays, the hub that carries the calm share, and the active button of the period switcher — the other buttons borrow that colour when the mouse is over them. Pick one hue that gets darker step by step; the rose is read by length first and by colour second.', 'xtx-integration-for-netatmo' ); ?></p>
             <div class="naws-appearance-row">
                 <div class="naws-appearance-controls">
                     <table class="form-table naws-color-table">
@@ -603,6 +604,12 @@ $icon_color_keys = [
                         <?php endforeach; ?>
                         <circle class="naws-pv-wr-calm" cx="100" cy="100" r="12" stroke="#d0d7de" style="fill:<?php echo esc_attr( $colors['windrose_calm'] ); ?>"/>
                     </svg>
+                    <?php // The period switcher as it sits over the rose: the active pill carries windrose_switch, the others stay as the theme tab paints them. ?>
+                    <div class="naws-pv-wr-switchrow" aria-hidden="true" style="display:flex;gap:4px;justify-content:center;margin-top:10px">
+                        <?php foreach ( [ '7d', '30d', '90d' ] as $naws_pv_k ) : $naws_pv_on = ( $naws_pv_k === '90d' ); ?>
+                        <span class="naws-pv-wr-pill<?php if ( $naws_pv_on ) : ?> naws-pv-wr-switch<?php endif; ?>" style="display:inline-block;padding:3px 10px;border-radius:14px;font-size:11px;font-weight:700;line-height:1.1;border:1.5px solid <?php echo esc_attr( $naws_pv_on ? $colors['windrose_switch'] : $colors['theme_border'] ); ?>;background:<?php echo esc_attr( $naws_pv_on ? $colors['windrose_switch'] : $colors['theme_surface_alt'] ); ?>;color:<?php echo esc_attr( $naws_pv_on ? '#fff' : $colors['theme_text_muted'] ); ?>"><?php echo esc_html( NAWS_Windrose::button_label( $naws_pv_k ) ); ?></span>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
             </div>
         </div>
@@ -870,7 +877,11 @@ jQuery(document).ready(function($) {
         if (group === 'windrose') {
             var wr = $('#naws-preview-windrose');
             var suffix = String(key).replace('windrose_', '');
-            wr.find('.naws-pv-wr-' + suffix).css(suffix === 'grid' ? 'stroke' : 'fill', val);
+            if (suffix === 'switch') {
+                wr.closest('.naws-appearance-preview').find('.naws-pv-wr-switch').css({ background: val, 'border-color': val });
+            } else {
+                wr.find('.naws-pv-wr-' + suffix).css(suffix === 'grid' ? 'stroke' : 'fill', val);
+            }
         }
     }
 

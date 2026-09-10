@@ -2,6 +2,16 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [1.9.14]
+
+### Fixed
+- **The wind rose's period buttons turned red under the mouse on Hello Elementor.** They are `<button>` elements, the theme's reset paints `button:hover` and `button:focus` in its own colour, and that rule outranked the plugin's single-class selector; the plugin had no hover rule of its own for these buttons. Every rule for them now carries two classes and sets rest, hover, focus and active state itself, so no theme has a say. All other buttons of the plugin already did this; a test walks every `<button>` in the templates and checks for a hover rule.
+- **The active period button took the "primary" accent colour** (cyan by default) instead of anything from the rose. It now takes its own colour from the Wind Rose tab (see below); the other buttons borrow it for text and border while the mouse is over them.
+- Appearance: saving without the icon set in the input no longer logs "Undefined array key".
+
+### Changed
+- Appearance › Wind Rose has an eighth colour, "Period switcher (active button)", starting as the Beaufort 4 blue — the lightest step of the default ramp that still carries white text. The live preview shows the three buttons under the sample rose.
+
 ## [1.9.13]
 
 A bugfix release. Nothing to reconfigure.

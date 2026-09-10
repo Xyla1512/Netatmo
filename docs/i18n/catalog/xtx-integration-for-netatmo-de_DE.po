@@ -79,7 +79,7 @@ msgstr "1 = ja · 0 = nur Zahl"
 msgid "10 °C"
 msgstr "10 °C"
 
-#: admin/views/appearance.php:483
+#: admin/views/appearance.php:484
 msgid "15 colors for the year lines in the history chart."
 msgstr "15 Farben für die Jahreslinien im Historien-Chart."
 
@@ -95,7 +95,7 @@ msgstr "16 Richtungen (N, NNO, NO …) oder 8 (N, NO, O …)."
 msgid "20 °C"
 msgstr "20 °C"
 
-#: admin/views/appearance.php:88
+#: admin/views/appearance.php:89
 msgid "24h Chart Colors"
 msgstr "24h-Chart-Farben"
 
@@ -103,7 +103,7 @@ msgstr "24h-Chart-Farben"
 msgid "25 °C"
 msgstr "25 °C"
 
-#: admin/views/appearance.php:641 includes/class-naws-labels.php:48
+#: admin/views/appearance.php:648 includes/class-naws-labels.php:48
 msgid "3 days"
 msgstr "3 Tage"
 
@@ -115,7 +115,7 @@ msgstr "30 °C"
 msgid "35 °C and above"
 msgstr "35 °C und darüber"
 
-#: admin/views/appearance.php:642 includes/class-naws-labels.php:49
+#: admin/views/appearance.php:649 includes/class-naws-labels.php:49
 msgid "5 days"
 msgstr "5 Tage"
 
@@ -231,7 +231,7 @@ msgstr "Alle Jahresvergleiche sind momentan deaktiviert."
 msgid "All available parameters for [naws_value]"
 msgstr "Alle verfügbaren Parameter für [naws_value]"
 
-#: admin/views/appearance.php:120
+#: admin/views/appearance.php:121
 msgid "All colors have been reset to defaults."
 msgstr "Alle Farben wurden auf die Standardwerte zurückgesetzt."
 
@@ -263,7 +263,7 @@ msgstr "Beliebige CSS-Klasse(n)"
 msgid "Any text"
 msgstr "Beliebiger Text"
 
-#: admin/views/appearance.php:112 includes/class-naws-admin.php:55
+#: admin/views/appearance.php:113 includes/class-naws-admin.php:55
 msgid "Appearance"
 msgstr "Darstellung"
 
@@ -279,7 +279,7 @@ msgstr "Hängt einen Hinweis an, an wie vielen Tagen des Zeitraums tatsächlich 
 msgid "Applies to"
 msgstr "Gilt für"
 
-#: admin/views/appearance.php:173
+#: admin/views/appearance.php:174
 msgid "Applies to every part of the plugin, charts included. Only fonts your site already serves are offered – the plugin loads no font file of its own."
 msgstr "Gilt für alle Bausteine des Plugins, Diagramme eingeschlossen. Zur Wahl stehen nur Schriften, die deine Seite ohnehin ausliefert – das Plugin lädt selbst keine Schriftdatei nach."
 
@@ -335,11 +335,11 @@ msgstr "Hintergrund"
 msgid "Base"
 msgstr "Basis"
 
-#: admin/views/appearance.php:86
+#: admin/views/appearance.php:87
 msgid "Base Theme"
 msgstr "Basis-Theme"
 
-#: admin/views/appearance.php:149
+#: admin/views/appearance.php:150
 msgid "Base colors for background, surfaces, text and borders. Applied to all shortcodes."
 msgstr "Grundfarben für Hintergrund, Oberflächen, Text und Rahmen. Diese gelten für alle Shortcodes."
 
@@ -371,7 +371,7 @@ msgstr "Beaufort 4 · mäßige Brise"
 msgid "Beaufort 5 and above · fresh breeze"
 msgstr "Beaufort 5 und mehr · frische Brise"
 
-#: admin/views/appearance.php:655 includes/class-naws-labels.php:57
+#: admin/views/appearance.php:662 includes/class-naws-labels.php:57
 msgid "Between 250 and 500 pixels. Icon, figures and spacing grow with it — at 500 pixels the weather icon is 96 pixels instead of 64. Where the column is narrower than the setting, the widget shrinks with it rather than overflowing."
 msgstr "Zwischen 250 und 500 Pixel. Icon, Zahlen und Abstände wachsen stufenlos mit — bei 500 Pixel ist das Wetter-Icon 96 statt 64 Pixel groß. Ist die Spalte schmaler als der eingestellte Wert, schrumpft das Widget mit, statt überzulaufen."
 
@@ -387,7 +387,7 @@ msgstr "Rahmen"
 msgid "Both conditions must hold. The dew-point spread is the difference between air temperature and dew point — the smaller it is, the closer the air is to saturation."
 msgstr "Beide Bedingungen müssen zutreffen. Der Taupunkt-Abstand ist die Differenz zwischen Lufttemperatur und Taupunkt — je kleiner, desto näher ist die Luft an der Sättigung."
 
-#: admin/views/appearance.php:31 admin/views/appearance.php:104
+#: admin/views/appearance.php:31 admin/views/appearance.php:105
 msgid "CO2"
 msgstr "CO₂"
 
@@ -420,7 +420,7 @@ msgstr "Windstille"
 msgid "Card Background"
 msgstr "Karten-Hintergrund"
 
-#: admin/views/appearance.php:89
+#: admin/views/appearance.php:90
 msgid "Chart Theming"
 msgstr "Chart-Theming"
 
@@ -432,11 +432,11 @@ msgstr "Chart konnte nicht gerendert werden."
 msgid "Chart height in px"
 msgstr "Diagramm-Höhe in px"
 
-#: admin/views/appearance.php:303
+#: admin/views/appearance.php:304
 msgid "Choose Icon Set"
 msgstr "Icon-Set wählen"
 
-#: admin/views/appearance.php:301
+#: admin/views/appearance.php:302
 msgid "Choose an icon set for the frontend and customize colors per sensor."
 msgstr "Wähle ein Icon-Set für das Frontend und passe die Farben pro Sensor an."
 
@@ -488,7 +488,7 @@ msgstr "Kältester Monat"
 msgid "Coldest night"
 msgstr "Kälteste Nacht"
 
-#: admin/views/appearance.php:521
+#: admin/views/appearance.php:522
 msgid "Colour scale for [naws_heatmap]. The stops are degrees Celsius; values in between are interpolated. They stay in Celsius even when the display unit is Fahrenheit, because the colour is taken from the stored value."
 msgstr "Farbskala für [naws_heatmap]. Die Stützpunkte sind Grad Celsius; Werte dazwischen werden interpoliert. Sie bleiben auch dann in Celsius, wenn die Anzeigeeinheit Fahrenheit ist, weil die Farbe aus dem gespeicherten Wert kommt."
 
@@ -500,9 +500,9 @@ msgstr "Farbschema"
 msgid "Colour scheme: light, dark or transparent. Dark is the card in dark colours; transparent draws no card and takes the colours of whatever it is placed on. Anything else counts as light."
 msgstr "Farbschema: light, dark oder transparent. Dunkel ist die Karte in dunklen Farben; transparent zeichnet keine Karte und übernimmt die Farben des Untergrunds. Alles andere zählt als hell."
 
-#: admin/views/appearance.php:563
-msgid "Colours for [naws_windrose]: one class per Beaufort step from the centre outwards, the rings behind the rays, and the hub that carries the calm share. Pick one hue that gets darker step by step; the rose is read by length first and by colour second."
-msgstr "Farben für [naws_windrose]: eine Klasse je Beaufort-Stufe von innen nach außen, die Ringe hinter den Strahlen und die Nabe mit dem Anteil der Windstille. Nimm einen Farbton, der Stufe für Stufe dunkler wird; die Rose wird zuerst über die Länge gelesen, dann über die Farbe."
+#: admin/views/appearance.php:564
+msgid "Colours for [naws_windrose]: one class per Beaufort step from the centre outwards, the rings behind the rays, the hub that carries the calm share, and the active button of the period switcher — the other buttons borrow that colour when the mouse is over them. Pick one hue that gets darker step by step; the rose is read by length first and by colour second."
+msgstr "Farben für [naws_windrose]: eine Klasse je Beaufort-Stufe von der Mitte nach außen, die Ringe hinter den Strahlen, die Nabe mit dem Anteil der Windstille und der aktive Knopf des Zeitraum-Umschalters — die übrigen Knöpfe leihen sich diese Farbe, solange die Maus über ihnen steht. Einen Farbton wählen, der Stufe für Stufe dunkler wird; die Rose wird zuerst über die Länge gelesen und erst dann über die Farbe."
 
 #: admin/views/shortcodes.php:220
 msgid "Comma-separated fields: temp_min, temp_max, temp_avg, pressure_avg, rain_sum"
@@ -528,7 +528,7 @@ msgstr "Durch Komma getrennt: legend, summary, table. Die Tabelle steht für Scr
 msgid "Compact info bar with calculated values (feels like, dew point) and astronomical data (rise/set, moon phase, supermoon, lunar eclipse)."
 msgstr "Kompakte Infoleiste mit berechneten Werten (Gefühlte Temp., Taupunkt) und astronomischen Daten (Auf-/Untergang, Mondphase, Supermond, Mondfinsternis)."
 
-#: admin/views/appearance.php:628 includes/class-naws-labels.php:46
+#: admin/views/appearance.php:635 includes/class-naws-labels.php:46
 msgid "Compact weather widget for narrow columns. Shows the icon and outdoor temperature, rain and wind below that, then the forecast. Placed with the [naws_weather_widget] shortcode."
 msgstr "Kompaktes Wetter-Widget für schmale Spalten. Zeigt Icon und Außentemperatur, darunter Regen und Wind, darunter die Vorhersage. Einzufügen über den Shortcode [naws_weather_widget]."
 
@@ -930,11 +930,11 @@ msgstr "Nebel"
 msgid "Fog from humidity"
 msgstr "Nebel ab Luftfeuchte"
 
-#: admin/views/appearance.php:172
+#: admin/views/appearance.php:173
 msgid "Font"
 msgstr "Schrift"
 
-#: admin/views/appearance.php:177
+#: admin/views/appearance.php:178
 msgid "Font Family"
 msgstr "Schriftfamilie"
 
@@ -1006,7 +1006,7 @@ msgstr "Grünlandtemperatursumme"
 msgid "Grid Lines"
 msgstr "Grid-Linien"
 
-#: admin/views/appearance.php:424
+#: admin/views/appearance.php:425
 msgid "Grid, axis and tooltip colors for all charts."
 msgstr "Grid, Achsen und Tooltip-Farben für alle Charts."
 
@@ -1051,7 +1051,7 @@ msgstr "HTML-Wrapper-Tag"
 msgid "HTTP header"
 msgstr "HTTP-Header"
 
-#: admin/views/appearance.php:218
+#: admin/views/appearance.php:219
 msgid "Header Bar"
 msgstr "Kopfleiste"
 
@@ -1087,7 +1087,7 @@ msgstr "Heizgradtage"
 msgid "Heating limit (°C)"
 msgstr "Heizgrenztemperatur (°C)"
 
-#: admin/views/appearance.php:91
+#: admin/views/appearance.php:92
 msgid "Heatmap Scale"
 msgstr "Heatmap-Skala"
 
@@ -1167,7 +1167,7 @@ msgstr "ISO 3166 Code (z.B. DE, AT, CH, US, GB)"
 msgid "Ice days"
 msgstr "Eistage"
 
-#: admin/views/appearance.php:324
+#: admin/views/appearance.php:325
 msgid "Icon Colors"
 msgstr "Icon-Farben"
 
@@ -1175,7 +1175,7 @@ msgstr "Icon-Farben"
 msgid "Icon and outdoor temperature, rain and wind below that, then the forecast. Width adjustable between 250 and 500 pixels, with the contents scaling to match. A missing add-on module drops its value entirely. Rendered on page load and does not refresh by itself — the time in the footer shows its age."
 msgstr "Icon und Außentemperatur, darunter Regen und Wind, darunter die Vorhersage. Breite zwischen 250 und 500 Pixel einstellbar; der Inhalt skaliert mit. Fehlt ein Zusatzmodul, entfällt der zugehörige Wert ersatzlos. Wird beim Seitenaufbau erzeugt und aktualisiert sich nicht von selbst — die Uhrzeit in der Fußzeile zeigt das Alter."
 
-#: admin/views/appearance.php:87
+#: admin/views/appearance.php:88
 msgid "Icons"
 msgstr "Icons"
 
@@ -1211,7 +1211,7 @@ msgstr "Importiere…"
 msgid "Inactive"
 msgstr "Inaktiv"
 
-#: admin/views/appearance.php:325
+#: admin/views/appearance.php:326
 msgid "Individual colors for each sensor icon. These colors are also used for the tile accent bar."
 msgstr "Individuelle Farben für jedes Sensor-Icon. Diese Farben werden auch für den Akzent-Balken der Kacheln verwendet."
 
@@ -1327,7 +1327,7 @@ msgstr "Leichter Schneefall"
 msgid "Limit temperatures"
 msgstr "Grenztemperaturen"
 
-#: admin/views/appearance.php:374
+#: admin/views/appearance.php:375
 msgid "Line color per sensor in the 24-hour charts."
 msgstr "Linienfarbe pro Sensor in den 24-Stunden-Charts."
 
@@ -1343,7 +1343,7 @@ msgstr "Live"
 msgid "Live Dashboard — Card Order"
 msgstr "Live-Dashboard — Reihenfolge der Kacheln"
 
-#: admin/views/appearance.php:587
+#: admin/views/appearance.php:588
 msgid "Live preview — wind rose"
 msgstr "Live-Vorschau — Windrose"
 
@@ -1420,7 +1420,7 @@ msgstr "Mär"
 msgid "Max"
 msgstr "Max"
 
-#: includes/class-naws-database.php:958 includes/class-naws-helpers.php:95 includes/class-naws-helpers.php:97 includes/class-naws-helpers.php:746
+#: includes/class-naws-database.php:969 includes/class-naws-helpers.php:95 includes/class-naws-helpers.php:97 includes/class-naws-helpers.php:746
 #: includes/class-naws-labels.php:70
 msgid "Max Temperature (day)"
 msgstr "Max-Temperatur (Tag)"
@@ -1461,7 +1461,7 @@ msgstr "Meldung"
 msgid "Min"
 msgstr "Min"
 
-#: includes/class-naws-database.php:957 includes/class-naws-helpers.php:94 includes/class-naws-helpers.php:96 includes/class-naws-helpers.php:745
+#: includes/class-naws-database.php:968 includes/class-naws-helpers.php:94 includes/class-naws-helpers.php:96 includes/class-naws-helpers.php:745
 #: includes/class-naws-labels.php:67
 msgid "Min Temperature (day)"
 msgstr "Min-Temperatur (Tag)"
@@ -1707,7 +1707,7 @@ msgstr "Noch nicht mit Netatmo verbunden."
 msgid "Notes"
 msgstr "Hinweise"
 
-#: admin/views/appearance.php:705 includes/class-naws-labels.php:58
+#: admin/views/appearance.php:712 includes/class-naws-labels.php:58
 msgid "Nothing displayable right now — neither station readings nor forecast are available. The widget would output nothing."
 msgstr "Zurzeit nichts darstellbar — weder Stationswerte noch Vorhersage liegen vor. Das Widget würde nichts ausgeben."
 
@@ -1739,7 +1739,7 @@ msgstr "Ein Shortcode für alle berechneten Werte. Der Wert steckt im Attribut <
 msgid "One year of outdoor daily average temperature as a calendar grid: months down, days across, one coloured tile per day."
 msgstr "Ein Jahr Außen-Tagesdurchschnittstemperatur als Kalenderraster: Monate untereinander, Tage nebeneinander, eine farbige Kachel pro Tag."
 
-#: admin/views/appearance.php:204
+#: admin/views/appearance.php:205
 msgid "Only needed when your font is not listed above. Write it as in CSS, e.g. \"PT Sans\", Arial, sans-serif. Your theme or page builder has to load it, otherwise the fallback applies."
 msgstr "Nur nötig, wenn deine Schrift oben nicht auftaucht. Wie in CSS notieren, z. B. \"PT Sans\", Arial, sans-serif. Geladen werden muss sie von Theme oder Seitenbaukasten – sonst greift die Ersatzschrift."
 
@@ -1804,7 +1804,7 @@ msgstr "Bedeckt"
 msgid "Overwrite existing settings (full backup only)"
 msgstr "Bestehende Einstellungen überschreiben (nur bei Komplett-Backup)"
 
-#: admin/views/appearance.php:193 admin/views/appearance.php:198
+#: admin/views/appearance.php:194 admin/views/appearance.php:199
 msgid "Own font family"
 msgstr "Eigene Schriftfamilie"
 
@@ -1823,6 +1823,10 @@ msgstr "Teilweise bewölkt"
 #: includes/class-naws-labels.php:40
 msgid "Penumbral"
 msgstr "Halbschatten"
+
+#: admin/views/appearance.php:66
+msgid "Period switcher (active button)"
+msgstr "Zeitraum-Umschalter (aktiver Knopf)"
 
 #: admin/views/settings.php:85
 msgid "Please click \"Connect to Netatmo\" below and reauthorize the app. This one-time step saves the refresh token permanently."
@@ -1853,7 +1857,7 @@ msgstr "Niederschlags-Modul"
 msgid "Precipitation probability"
 msgstr "Regenwahrscheinlichkeit"
 
-#: admin/views/appearance.php:30 admin/views/appearance.php:101 admin/views/settings.php:321 templates/live.php:64
+#: admin/views/appearance.php:30 admin/views/appearance.php:102 admin/views/settings.php:321 templates/live.php:64
 msgid "Pressure"
 msgstr "Luftdruck"
 
@@ -1869,11 +1873,11 @@ msgstr "Luftdruck absolut"
 msgid "Pressure (relative)"
 msgstr "Luftdruck relativ"
 
-#: includes/class-naws-database.php:960 includes/class-naws-labels.php:69
+#: includes/class-naws-database.php:971 includes/class-naws-labels.php:69
 msgid "Pressure Ø (hPa)"
 msgstr "Pressure Ø (hPa)"
 
-#: admin/views/appearance.php:349
+#: admin/views/appearance.php:350
 msgid "Preview — Icon Colors"
 msgstr "Vorschau — Icon-Farben"
 
@@ -1965,11 +1969,11 @@ msgstr "Anfrage fehlgeschlagen."
 msgid "Requests per minute per API key"
 msgstr "Anfragen pro Minute pro API-Key"
 
-#: admin/views/appearance.php:128
+#: admin/views/appearance.php:129
 msgid "Reset All"
 msgstr "Alle zurücksetzen"
 
-#: admin/views/appearance.php:127
+#: admin/views/appearance.php:128
 msgid "Reset all colors to defaults?"
 msgstr "Alle Farben auf Standardwerte zurücksetzen?"
 
@@ -2025,7 +2029,7 @@ msgstr "Raumtemperatur (°C)"
 msgid "SPI data basis: %1$d complete months of gap-free rain measurement (%2$d full years). It computes from 24 months on; the customary reference is about 30 years — below that the index is a tendency rather than a measurement."
 msgstr "Datengrundlage des SPI: %1$d vollständige Monate lückenloser Regenmessung (%2$d volle Jahre). Gerechnet wird ab 24 Monaten; üblich sind rund 30 Jahre — darunter ist der Index eher Tendenz als Messgröße."
 
-#: admin/views/appearance.php:595
+#: admin/views/appearance.php:596
 msgid "Sample wind rose in the chosen colours"
 msgstr "Beispiel-Windrose in den gewählten Farben"
 
@@ -2045,7 +2049,7 @@ msgstr "Bitte zuerst Client ID und Secret speichern."
 msgid "Save Credentials"
 msgstr "Zugangsdaten speichern"
 
-#: admin/views/appearance.php:611 admin/views/appearance.php:718 admin/views/rest-api-docs.php:88 admin/views/settings.php:501
+#: admin/views/appearance.php:618 admin/views/appearance.php:725 admin/views/rest-api-docs.php:88 admin/views/settings.php:501
 msgid "Save Settings"
 msgstr "Einstellungen speichern"
 
@@ -2089,7 +2093,7 @@ msgstr "Einstellungen"
 msgid "Settings & OAuth"
 msgstr "Einstellungen & OAuth"
 
-#: admin/views/appearance.php:116 admin/views/rest-api-docs.php:18 admin/views/settings.php:39
+#: admin/views/appearance.php:117 admin/views/rest-api-docs.php:18 admin/views/settings.php:39
 msgid "Settings saved."
 msgstr "Einstellungen gespeichert."
 
@@ -2133,7 +2137,7 @@ msgstr "Zeigt animierte Messkarten mit den aktuellen Sensorwerten aller oder ein
 msgid "Shows the current weather state as an animated icon. Deliberately without a visible caption — the state is carried by the aria-label for screen readers. If the icon sits on the same page as the live dashboard it refreshes along with that page's polling cycle. When no state can be determined, nothing is output."
 msgstr "Zeigt den aktuellen Wetterzustand als animiertes Icon. Bewusst ohne sichtbare Beschriftung — der Zustand steckt im aria-label für Screenreader. Steht das Icon auf derselben Seite wie das Live-Dashboard, aktualisiert es sich über dessen Abfragezyklus mit. Lässt sich kein Zustand bestimmen, wird nichts ausgegeben."
 
-#: admin/views/appearance.php:627 includes/class-naws-labels.php:45
+#: admin/views/appearance.php:634 includes/class-naws-labels.php:45
 msgid "Sidebar widget"
 msgstr "Seitenleisten-Widget"
 
@@ -2289,7 +2293,7 @@ msgstr "Synchronisiere…"
 msgid "Tabular view of historical readings with configurable time period and grouping."
 msgstr "Tabellarische Ansicht der historischen Messwerte mit konfigurierbarem Zeitraum und Gruppierung."
 
-#: includes/class-naws-database.php:959 includes/class-naws-labels.php:68
+#: includes/class-naws-database.php:970 includes/class-naws-labels.php:68
 msgid "Temp Ø (°C)"
 msgstr "Temp Ø (°C)"
 
@@ -2313,7 +2317,7 @@ msgstr "Temp. Min"
 msgid "Temp. Outdoor"
 msgstr "Temp. Außen"
 
-#: admin/views/appearance.php:99 admin/views/live-settings.php:67 admin/views/settings.php:301 includes/class-naws-helpers.php:81
+#: admin/views/appearance.php:100 admin/views/live-settings.php:67 admin/views/settings.php:301 includes/class-naws-helpers.php:81
 #: includes/class-naws-helpers.php:326 includes/class-naws-helpers.php:333 includes/class-naws-helpers.php:736 includes/class-naws-labels.php:79
 #: includes/class-naws-labels.php:255 templates/live.php:345
 msgid "Temperature"
@@ -2440,7 +2444,7 @@ msgstr "Dieser Tag in früheren Jahren"
 msgid "This server does not know the aes-256-gcm cipher. Credentials cannot be stored encrypted, so they are not stored at all."
 msgstr "Dieser Server kennt das Verfahren aes-256-gcm nicht. Zugangsdaten können nicht verschlüsselt gespeichert werden — sie werden deshalb gar nicht gespeichert."
 
-#: admin/views/appearance.php:644 includes/class-naws-labels.php:50
+#: admin/views/appearance.php:651 includes/class-naws-labels.php:50
 msgid "Three days gives each column 77 pixels, five gives only 46. On narrow sidebars three reads considerably better."
 msgstr "Bei drei Tagen ist jede Spalte 77 Pixel breit, bei fünf nur 46. Auf schmalen Seitenleisten sind drei deutlich besser lesbar."
 
@@ -2500,7 +2504,7 @@ msgstr "Tooltip Titel"
 msgid "Total"
 msgstr "Total"
 
-#: admin/views/import.php:25 includes/class-naws-database.php:961 includes/class-naws-helpers.php:89 includes/class-naws-helpers.php:744
+#: admin/views/import.php:25 includes/class-naws-database.php:972 includes/class-naws-helpers.php:89 includes/class-naws-helpers.php:744
 #: includes/class-naws-labels.php:78
 msgid "Total last 24h"
 msgstr "Summe letzte 24h"
@@ -2658,7 +2662,7 @@ msgstr "Welches Modul"
 msgid "Which station to read, by module or station ID."
 msgstr "Welche Station gelesen wird, per Modul- oder Stations-ID."
 
-#: admin/views/appearance.php:648 includes/class-naws-labels.php:51
+#: admin/views/appearance.php:655 includes/class-naws-labels.php:51
 msgid "Width"
 msgstr "Breite"
 
@@ -2666,7 +2670,7 @@ msgstr "Breite"
 msgid "Width in pixels, 250 to 500. Values outside that range are pulled to the nearer bound."
 msgstr "Breite in Pixeln, 250 bis 500. Werte außerhalb werden auf die nächste Grenze gezogen."
 
-#: admin/views/appearance.php:33 admin/views/appearance.php:102 includes/class-naws-labels.php:44 includes/class-naws-labels.php:262
+#: admin/views/appearance.php:33 admin/views/appearance.php:103 includes/class-naws-labels.php:44 includes/class-naws-labels.php:262
 #: templates/live.php:70 templates/live.php:352 templates/windrose.php:92
 msgid "Wind"
 msgstr "Wind"
@@ -2687,7 +2691,7 @@ msgstr "Windrichtung (Kompass)"
 msgid "Wind Gauge"
 msgstr "Windmesser"
 
-#: admin/views/appearance.php:92
+#: admin/views/appearance.php:93
 msgid "Wind Rose"
 msgstr "Windrose"
 
@@ -2728,11 +2732,11 @@ msgstr "XTX Netatmo — Einstellungen"
 msgid "Year"
 msgstr "Jahr"
 
-#: admin/views/appearance.php:503
+#: admin/views/appearance.php:504
 msgid "Year %d"
 msgstr "Jahr %d"
 
-#: admin/views/appearance.php:90
+#: admin/views/appearance.php:91
 msgid "Year Comparison Palette"
 msgstr "Jahresvergleich-Palette"
 
@@ -3045,17 +3049,17 @@ msgctxt "appearance_chart_rain"
 msgid "Rain"
 msgstr "Regen"
 
-#: admin/views/appearance.php:100
+#: admin/views/appearance.php:101
 msgctxt "appearance_sensor_humidity"
 msgid "Humidity"
 msgstr "Feuchte"
 
-#: admin/views/appearance.php:105
+#: admin/views/appearance.php:106
 msgctxt "appearance_sensor_noise"
 msgid "Noise"
 msgstr "Lärm"
 
-#: admin/views/appearance.php:103
+#: admin/views/appearance.php:104
 msgctxt "appearance_sensor_rain"
 msgid "Rain"
 msgstr "Regen"
@@ -3344,7 +3348,7 @@ msgctxt "unit_rain"
 msgid "Rain"
 msgstr "Niederschlag"
 
-#: admin/views/appearance.php:638 includes/class-naws-labels.php:47
+#: admin/views/appearance.php:645 includes/class-naws-labels.php:47
 msgctxt "wgt_days_label"
 msgid "Forecast days"
 msgstr "Vorhersagetage"
