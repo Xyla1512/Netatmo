@@ -780,7 +780,8 @@ $g1 = NAWS_Notify_Rules::evaluate( $snap( $base, $wm( 70.0, $NOW ) ), $sg, [], $
 check( 'Boe: raise sofort',                  $ev( $g1 ), [ [ 'gust', 'raise', 'Wind', 70.0, 60.0 ] ] );
 $g2 = NAWS_Notify_Rules::evaluate( $snap( $base, $wm( 40.0, $NOW + 600 ) ), $sg, $g1['state'], $NOW + 600, $ctx );
 check( 'Boe: unter Schwelle wartet 60 min', [ $g2['events'], $g2['state']['gust|wind']['active'], $row( $g2, 'gust', 'wind' ) ], [ [], true, [ 'pending', '' ] ] );
-$g3 = NAWS_Notify_Rules::evaluate( $snap( $base, $wm( 40.0, $NOW + 4200 ) ), $sg, $g2['state'], $NOW + 4200, $ctx );
+// Die Basis meldet sich im Szenario mit — sonst gilt sie nach 60 min als still und friert die Wetterregel ein.
+$g3 = NAWS_Notify_Rules::evaluate( $snap( array_merge( $base, [ 'last_status_store' => $NOW + 3900 ] ), $wm( 40.0, $NOW + 4200 ) ), $sg, $g2['state'], $NOW + 4200, $ctx );
 check( 'Boe: nach 60 min clear',             [ $ev( $g3 ), $g3['state'] ], [ [ [ 'gust', 'clear', 'Wind', 40.0, 60.0 ] ], [] ] );
 
 $sn = $on( [ 'rain' => [ 'enabled' => 1, 'threshold' => 20.0 ] ] );
