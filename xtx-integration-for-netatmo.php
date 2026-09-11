@@ -54,6 +54,7 @@ naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-climate.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-records.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-windrose.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-notify-rules.php' );
+naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-notifications.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-forecast.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-fonts.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-colors.php' );
