@@ -252,4 +252,196 @@ final class NAWS_Notify_Rules {
         }
         return null;
     }
+
+    /** A rule's settings with the catalogue defaults filled in. */
+    public static function rule_cfg( string $rule, array $settings ): array {
+        $defaults = self::defaults()['rules'][ $rule ] ?? [ 'enabled' => 0 ];
+        $cfg      = $settings['rules'][ $rule ] ?? [];
+        return ( is_array( $cfg ) ? $cfg : [] ) + $defaults;
+    }
+
+    /**
+     * Run every rule over the snapshot and the previous state.
+     *
+     * A failed fetch ($ctx['sync'] !== 'ok') carries no snapshot: module and
+     * station entries are carried over untouched, only the two site rules
+     * are judged. A silent base station freezes the module rules of its
+     * modules — their values would be stale. Only active or pending entries
+     * are returned, so the option stays small.
+     *
+     * @return array{state: array, events: array, rows: array}
+     */
+    public static function evaluate( array $snapshot, array $settings, array $state, int $now, array $ctx ): array {
+        $catalog     = self::catalog();
+        $modules     = is_array( $snapshot['modules'] ?? null ) ? $snapshot['modules'] : [];
+        $interval    = max( 60, (int) ( $ctx['interval'] ?? 600 ) );
+        $stale_after = max( 1200, 2 * $interval );
+        $sync_ok     = ( $ctx['sync'] ?? 'ok' ) === 'ok';
+        $new = []; $events = []; $rows = [];
+
+        // Base stations silent this run: the raw condition, whatever the switch says.
+        $silent = [];
+        $cfg_ss = self::rule_cfg( 'station_silent', $settings );
+        foreach ( $modules as $id => $m ) {
+            if ( ( $m['module_type'] ?? '' ) === 'NAMain' && self::condition( 'station_silent', $m, $cfg_ss, false, $now, $stale_after ) === true ) {
+                $silent[ (string) $id ] = true;
+            }
+        }
+
+        foreach ( $catalog as $rule => $def ) {
+            $cfg     = self::rule_cfg( $rule, $settings );
+            $enabled = ! empty( $cfg['enabled'] );
+
+            if ( $def['scope'] === 'site' ) {
+                $key = $rule . '|site';
+                if ( ! $enabled ) {
+                    $rows[] = self::row( $rule, null, 'suspended', 'disabled', null, $cfg, null );
+                    continue;
+                }
+                $value = $rule === 'sync_failed' ? (int) ( $ctx['consecutive_errors'] ?? 0 ) : null;
+                $cond  = $rule === 'sync_failed' ? ( $value >= 3 ) : ! empty( $ctx['auth_required'] );
+                [ $entry, $kind ] = self::step( $def, $state[ $key ] ?? null, $cond, $now, $value );
+                if ( $kind ) {
+                    $events[] = self::event( $rule, $kind, null, $entry, $value, $cfg, $now, (string) ( $ctx['error'] ?? '' ) );
+                }
+                if ( self::keep( $entry ) ) {
+                    $new[ $key ] = $entry;
+                }
+                $rows[] = self::row( $rule, null, self::status_of( $entry ), '', $value, $cfg, $entry );
+                continue;
+            }
+
+            if ( ! $sync_ok ) {
+                foreach ( $state as $k => $e ) {
+                    if ( is_array( $e ) && str_starts_with( (string) $k, $rule . '|' ) && self::keep( $e ) ) {
+                        $new[ $k ] = $e;
+                        $rows[]    = self::row( $rule, [ 'module_id' => substr( (string) $k, strlen( $rule ) + 1 ), 'module_name' => '', 'module_type' => '' ], 'suspended', 'no_sync', $e['value'] ?? null, $cfg, $e );
+                    }
+                }
+                continue;
+            }
+
+            foreach ( $modules as $id => $m ) {
+                if ( ! in_array( $m['module_type'] ?? '', $def['types'], true ) ) {
+                    continue;
+                }
+                $key   = $rule . '|' . $id;
+                $entry = $state[ $key ] ?? null;
+                $entry = is_array( $entry ) ? $entry : null;
+                $value = self::value_of( $rule, $m );
+
+                if ( ! $enabled ) {
+                    $rows[] = self::row( $rule, $m, 'suspended', 'disabled', $value, $cfg, null );
+                    continue;
+                }
+                if ( $def['scope'] === 'module' && isset( $silent[ (string) ( $m['station_id'] ?? '' ) ] ) ) {
+                    if ( $entry && self::keep( $entry ) ) {
+                        $new[ $key ] = $entry;
+                    }
+                    $rows[] = self::row( $rule, $m, 'suspended', 'station_silent', $value, $cfg, $entry );
+                    continue;
+                }
+                $active = ! empty( $entry['active'] );
+                $cond   = self::condition( $rule, $m, $cfg, $active, $now, $stale_after );
+                if ( $cond === null ) {
+                    if ( $entry && self::keep( $entry ) ) {
+                        $new[ $key ] = $entry;
+                    }
+                    $has_reading = ! empty( $def['reading'] ) && isset( $m['readings'][ $def['reading'] ] );
+                    $rows[]      = self::row( $rule, $m, 'suspended', $has_reading ? 'stale' : 'missing', $value, $cfg, $entry );
+                    continue;
+                }
+                [ $entry, $kind ] = self::step( $def, $entry, $cond, $now, $value );
+                if ( $kind ) {
+                    $events[] = self::event( $rule, $kind, $m, $entry, $value, $cfg, $now, '' );
+                }
+                if ( self::keep( $entry ) ) {
+                    $new[ $key ] = $entry;
+                }
+                $rows[] = self::row( $rule, $m, self::status_of( $entry ), '', $value, $cfg, $entry );
+            }
+        }
+
+        return [ 'state' => $new, 'events' => $events, 'rows' => $rows ];
+    }
+
+    /**
+     * One transition of one entry. Returns the entry and 'raise', 'clear'
+     * or null. `since` is set when the entry becomes active and kept through
+     * the all-clear, so the clear event can say how long it lasted.
+     *
+     * @return array{0: array, 1: ?string}
+     */
+    private static function step( array $def, ?array $entry, bool $cond, int $now, $value ): array {
+        $entry = ( is_array( $entry ) ? $entry : [] ) + [ 'active' => false, 'since' => 0, 'pending_since' => null, 'value' => null ];
+        $entry['value'] = $value;
+        $kind = null;
+
+        if ( ! $entry['active'] ) {
+            if ( $cond ) {
+                $entry['pending_since'] = $entry['pending_since'] ?? $now;
+                if ( $now - $entry['pending_since'] >= $def['hold_on'] ) {
+                    $entry['active']        = true;
+                    $entry['since']         = $now;
+                    $entry['pending_since'] = null;
+                    $kind                   = 'raise';
+                }
+            } else {
+                $entry['pending_since'] = null;
+            }
+        } elseif ( ! $cond ) {
+            $entry['pending_since'] = $entry['pending_since'] ?? $now;
+            if ( $now - $entry['pending_since'] >= $def['hold_off'] ) {
+                $entry['active']        = false;
+                $entry['pending_since'] = null;
+                $kind                   = $def['clears'] ? 'clear' : null;
+            }
+        } else {
+            $entry['pending_since'] = null;
+        }
+        return [ $entry, $kind ];
+    }
+
+    private static function keep( array $entry ): bool {
+        return ! empty( $entry['active'] ) || isset( $entry['pending_since'] );
+    }
+
+    private static function status_of( array $entry ): string {
+        if ( ! empty( $entry['active'] ) ) {
+            return isset( $entry['pending_since'] ) ? 'pending' : 'active';
+        }
+        return isset( $entry['pending_since'] ) ? 'pending' : 'ok';
+    }
+
+    private static function event( string $rule, string $kind, ?array $m, array $entry, $value, array $cfg, int $now, string $error ): array {
+        $def = self::catalog()[ $rule ];
+        return [
+            'rule'        => $rule,
+            'kind'        => $kind,
+            'module_id'   => (string) ( $m['module_id'] ?? '' ),
+            'module_name' => (string) ( $m['module_name'] ?? '' ),
+            'module_type' => (string) ( $m['module_type'] ?? '' ),
+            'value'       => $value,
+            'threshold'   => $def['param'] !== '' ? ( $cfg[ $def['param'] ] ?? $def['default'] ) : null,
+            'since'       => (int) ( $entry['since'] ?? $now ),
+            'now'         => $now,
+            'error'       => $error,
+        ];
+    }
+
+    private static function row( string $rule, ?array $m, string $status, string $reason, $value, array $cfg, ?array $entry ): array {
+        $def = self::catalog()[ $rule ];
+        return [
+            'rule'        => $rule,
+            'module_id'   => (string) ( $m['module_id'] ?? '' ),
+            'module_name' => (string) ( $m['module_name'] ?? '' ),
+            'module_type' => (string) ( $m['module_type'] ?? '' ),
+            'status'      => $status,
+            'reason'      => $reason,
+            'since'       => (int) ( ( ! empty( $entry['active'] ) ? $entry['since'] : ( $entry['pending_since'] ?? 0 ) ) ?? 0 ),
+            'value'       => $value,
+            'threshold'   => $def['param'] !== '' ? ( $cfg[ $def['param'] ] ?? $def['default'] ) : null,
+            'kind'        => $def['kind'],
+        ];
+    }
 }
