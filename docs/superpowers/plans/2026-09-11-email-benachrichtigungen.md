@@ -83,7 +83,13 @@ Wer einen der vier Punkte nicht erfüllen kann, meldet das und umgeht ihn nicht.
  *
  * @package NAWS
  */
-define( 'ABSPATH', __DIR__ );
+// install() laedt ABSPATH . 'wp-admin/includes/upgrade.php' per require_once,
+// bevor es dbDelta() ruft. Ein leerer Stub an genau dieser Stelle laesst
+// den Aufruf durch; dbDelta() selbst wird unten gestubbt.
+$naws_test_abspath = rtrim( sys_get_temp_dir(), '/\\' ) . '/naws-test-abspath-' . getmypid() . '/';
+@mkdir( $naws_test_abspath . 'wp-admin/includes', 0777, true );
+file_put_contents( $naws_test_abspath . 'wp-admin/includes/upgrade.php', "<?php\n" );
+define( 'ABSPATH', $naws_test_abspath );
 define( 'ARRAY_A', 'ARRAY_A' );
 define( 'MINUTE_IN_SECONDS', 60 );
 define( 'HOUR_IN_SECONDS', 3600 );
@@ -196,6 +202,9 @@ $wpdb->raw = []; $wpdb->columns = [ 'id', 'module_id', 'rf_status', 'battery_per
 NAWS_Database::install();
 $alters = array_filter( $wpdb->raw, fn( $q ) => str_contains( $q, 'naws_modules' ) && str_contains( $q, 'ADD COLUMN' ) );
 check( 'kein ALTER, wenn alle da sind',     count( $alters ), 0 );
+
+@unlink( $naws_test_abspath . 'wp-admin/includes/upgrade.php' );
+@rmdir( $naws_test_abspath . 'wp-admin/includes' ); @rmdir( $naws_test_abspath . 'wp-admin' ); @rmdir( $naws_test_abspath );
 
 printf( "\n%d ok, %d fehlgeschlagen\n", $passed, $failed );
 exit( $failed ? 1 : 0 );
@@ -381,7 +390,8 @@ check( 'to_base: 20 kn = 37 km/h',       round( NAWS_Notify_Rules::to_base( 'win
 check( 'to_base: 1 in = 25.4 mm',        round( NAWS_Notify_Rules::to_base( 'rain', 1.0, $F ), 2 ), 25.4 );
 check( 'to_base: Prozent unveraendert',  NAWS_Notify_Rules::to_base( 'percent', 20.0, $F ), 20.0 );
 foreach ( [ [ 'temp', -7.5 ], [ 'wind', 60.0 ], [ 'rain', 20.0 ] ] as [ $k, $v ] ) {
-    check( "hin und zurueck $k", round( NAWS_Notify_Rules::to_base( $k, NAWS_Notify_Rules::to_display( $k, $v, $F ), $F ), 2 ), $v );
+    // to_display() rundet auf die Anzeigestelle; zurueckgerechnet bleibt ein Rest unter 0,1.
+    check( "hin und zurueck $k", abs( NAWS_Notify_Rules::to_base( $k, NAWS_Notify_Rules::to_display( $k, $v, $F ), $F ) - $v ) < 0.1, true );
 }
 check( 'unit_label', [ NAWS_Notify_Rules::unit_label( 'temp', $U ), NAWS_Notify_Rules::unit_label( 'temp', $F ), NAWS_Notify_Rules::unit_label( 'wind', $U ), NAWS_Notify_Rules::unit_label( 'wind', $F ), NAWS_Notify_Rules::unit_label( 'rain', $F ), NAWS_Notify_Rules::unit_label( 'percent', $U ), NAWS_Notify_Rules::unit_label( 'minutes', $U ), NAWS_Notify_Rules::unit_label( 'level', $U ) ], [ '°C', '°F', 'km/h', 'mph', 'in', '%', 'min', '' ] );
 
