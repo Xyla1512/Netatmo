@@ -41,9 +41,14 @@ $modules = NAWS_Database::get_modules( false );
                 <?php foreach ( $modules as $m ) :
                     $is_active  = (bool) $m['is_active'];
                     $batt_vp    = $m['battery_vp'] ?? null;
-                    $batt_pct   = ( $batt_vp && $m['module_type'] !== 'NAMain' )
-                                ? max( 0, min( 100, round( ( $batt_vp - 3500 ) / 2500 * 100 ) ) )
-                                : null;
+                    $batt_api   = $m['battery_percent'] ?? null;
+                    // Netatmo's own percentage since schema 1.5; the voltage
+                    // estimate stays as the fallback for rows not synced since.
+                    $batt_pct   = ( $m['module_type'] !== 'NAMain' && $batt_api !== null && $batt_api !== '' )
+                                ? max( 0, min( 100, intval( $batt_api ) ) )
+                                : ( ( $batt_vp && $m['module_type'] !== 'NAMain' )
+                                    ? max( 0, min( 100, round( ( $batt_vp - 3500 ) / 2500 * 100 ) ) )
+                                    : null );
                     $row_style  = $is_active ? '' : 'opacity:0.45;';
                 ?>
                 <tr id="naws-module-row-<?php echo esc_attr( sanitize_html_class( $m['module_id'] ) ); ?>"

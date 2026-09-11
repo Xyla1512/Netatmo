@@ -24,7 +24,7 @@ define( 'NAWS_PLUGIN_FILE',    __FILE__ );
 define( 'NAWS_PLUGIN_DIR',     plugin_dir_path( __FILE__ ) );
 define( 'NAWS_PLUGIN_URL',     plugin_dir_url( __FILE__ ) );
 define( 'NAWS_PLUGIN_BASENAME',plugin_basename( __FILE__ ) );
-define( 'NAWS_DB_VERSION',     '1.4' );
+define( 'NAWS_DB_VERSION',     '1.5' );
 define( 'NAWS_TABLE_READINGS', 'naws_readings' );
 define( 'NAWS_TABLE_MODULES',  'naws_modules' );
 define( 'NAWS_TABLE_DAILY',    'naws_daily_summary' );
