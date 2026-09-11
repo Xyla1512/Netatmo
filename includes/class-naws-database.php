@@ -333,8 +333,13 @@ class NAWS_Database {
         // Status fields as a second, small write: wpdb::update() writes a real
         // NULL where prepare()'s %d would write 0 — and 0 would mean
         // "unreachable" for reachable.
-        $status = self::status_fields( $data );
-        $wpdb->update( $table, $status, [ 'module_id' => $module_id ], [ '%d', '%d', '%d', '%d', '%d' ], [ '%s' ] ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- module upsert, no caching applicable
+        $status        = self::status_fields( $data );
+        $status_result = $wpdb->update( $table, $status, [ 'module_id' => $module_id ], [ '%d', '%d', '%d', '%d', '%d' ], [ '%s' ] ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- module upsert, no caching applicable
+        if ( $status_result === false ) {
+            NAWS_Logger::error( 'database', 'save_module status update failed: ' . $wpdb->last_error, [
+                'module_id' => $module_id,
+            ] );
+        }
 
         return true;
     }

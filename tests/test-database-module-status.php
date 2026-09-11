@@ -56,6 +56,7 @@ class NAWS_Test_WPDB {
     public $raw        = [];   // jede SQL an query()
     public $updates    = [];   // [ table, data, where, format ] je update()
     public $columns    = [];   // Antwort auf SHOW COLUMNS (get_col)
+    public $fail_update = false; // update() naechstes Mal scheitern lassen
     public function prepare( $q, ...$args ) {
         if ( count( $args ) === 1 && is_array( $args[0] ) ) { $args = $args[0]; }
         $this->queries[] = [ $q, $args ];
@@ -69,6 +70,10 @@ class NAWS_Test_WPDB {
     public function query( $q ) { $this->raw[] = $q; return 1; }
     public function update( $table, $data, $where, $format = null, $where_format = null ) {
         $this->updates[] = [ $table, $data, $where, $format ];
+        if ( $this->fail_update ) {
+            $this->last_error = 'gone';
+            return false;
+        }
         return 1;
     }
 }
@@ -112,6 +117,15 @@ check( 'ein update() auf naws_modules',              [ count( $wpdb->updates ), 
 check( 'update(): die fuenf Felder, NULL bleibt NULL', $wpdb->updates[0][1] ?? [], [ 'battery_percent' => 23, 'wifi_status' => null, 'reachable' => 1, 'last_status_store' => null, 'last_message' => 1789144820 ] );
 check( 'update(): WHERE module_id',                   $wpdb->updates[0][2] ?? [], [ 'module_id' => '03:00:00:0d:aa:ca' ] );
 check( 'update(): Formate %d fuer alle fuenf',        $wpdb->updates[0][3] ?? [], [ '%d', '%d', '%d', '%d', '%d' ] );
+
+echo "\nsave_module(): fehlgeschlagene Statusaktualisierung wird geloggt, nicht abgebrochen\n" . str_repeat( '-', 74 ) . "\n";
+$wpdb->fail_update  = true;
+NAWS_Logger::$errors = [];
+$result = NAWS_Database::save_module( $gast );
+check( 'save_module() liefert trotzdem true',        $result, true );
+$logged = array_filter( NAWS_Logger::$errors, fn( $m ) => str_contains( $m, 'save_module status update failed' ) && str_contains( $m, 'gone' ) );
+check( 'NAWS_Logger::error() nennt den Grund',       count( $logged ) > 0, true );
+$wpdb->fail_update  = false;
 
 echo "\ninstall()/maybe_migrate(): Spalten anlegen, vorhandene in Ruhe lassen\n" . str_repeat( '-', 74 ) . "\n";
 $wpdb->raw = []; $wpdb->columns = [ 'id', 'module_id', 'rf_status', 'is_active' ];
