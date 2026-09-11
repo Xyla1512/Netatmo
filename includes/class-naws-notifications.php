@@ -26,9 +26,10 @@ final class NAWS_Notifications {
     public static function units(): array {
         $o = get_option( 'naws_settings', [] );
         $o = is_array( $o ) ? $o : [];
+        $wind = $o['wind_unit'] ?? 'kmh';
         return [
             'temperature_unit' => ( $o['temperature_unit'] ?? 'C' ) === 'F' ? 'F' : 'C',
-            'wind_unit'        => in_array( $o['wind_unit'] ?? 'kmh', [ 'kmh', 'ms', 'mph', 'kn' ], true ) ? $o['wind_unit'] : 'kmh',
+            'wind_unit'        => in_array( $wind, [ 'kmh', 'ms', 'mph', 'kn' ], true ) ? $wind : 'kmh',
             'rain_unit'        => ( $o['rain_unit'] ?? 'mm' ) === 'in' ? 'in' : 'mm',
         ];
     }

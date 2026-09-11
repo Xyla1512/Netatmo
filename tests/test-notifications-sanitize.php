@@ -68,6 +68,10 @@ check( 'Prozent bleibt',                          $s['rules']['battery']['thresh
 check( 'Empfaenger aus dem Text',                 $s['recipients'], [ 'f@x.de' ] );
 $GLOBALS['naws_test_options']['naws_settings'] = [ 'temperature_unit' => 'F', 'wind_unit' => 'kn' ];
 check( 'units(): aus naws_settings mit Vorgaben', NAWS_Notifications::units(), [ 'temperature_unit' => 'F', 'wind_unit' => 'kn', 'rain_unit' => 'mm' ] );
+$GLOBALS['naws_test_options']['naws_settings'] = [ 'temperature_unit' => 'C' ];
+check( 'units(): fehlendes wind_unit -> kmh, ohne Warnung', NAWS_Notifications::units(), [ 'temperature_unit' => 'C', 'wind_unit' => 'kmh', 'rain_unit' => 'mm' ] );
+$GLOBALS['naws_test_options']['naws_settings'] = [ 'wind_unit' => 'furlongs', 'rain_unit' => 'cups', 'temperature_unit' => 'K' ];
+check( 'units(): ungueltige Werte -> Vorgaben', NAWS_Notifications::units(), [ 'temperature_unit' => 'C', 'wind_unit' => 'kmh', 'rain_unit' => 'mm' ] );
 
 printf( "\n%d ok, %d fehlgeschlagen\n", $passed, $failed );
 exit( $failed ? 1 : 0 );
