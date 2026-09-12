@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 1.9.13
+Stable tag: 2.0.0
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -106,7 +106,7 @@ Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Euro
 
 = I don't receive notification e-mails =
 
-Open XTX Netatmo → Notifications and press "Send test mail". If the page reports that the mail could not be sent, your server sends no mail at all: an SMTP plugin or your hosting provider fixes that, not the plugin. If the test mail arrives but no notifications do, check that the rule is switched on and look at the "Current state" table on the same page — it says what every rule sees right now and why one is suspended. Notifications go out only when a state changes; a battery that has been low since before you switched the rule on is reported at the next fetch, not again afterwards.
+Open XTX Netatmo → Notifications and press "Send test mail". If the page reports that the mail could not be sent, your server sends no mail at all: an SMTP plugin or your hosting provider fixes that, not the plugin. If the test mail arrives but no notifications do, check that the master switch and the rule are switched on and look at the log on the same page. Notifications go out only when a state changes; a battery that has been low since before you switched the rule on is reported at the next fetch, not again afterwards.
 
 == Screenshots ==
 
@@ -119,6 +119,13 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 7. Export / Import page for backups
 
 == Changelog ==
+
+= 2.0.0 =
+* Added: e-mail notifications. After every fetch the plugin checks up to thirteen rules and mails every change of state — once when it begins and, for every rule but rain, once when it is over; all changes of one fetch go into one mail. Seven rules watch the station: battery of a module below a percentage, weak radio link of a module, poor Wi-Fi of the base station, base station not reporting to Netatmo, module not reporting to the base station, three failed fetches in a row, expired credentials. Six watch the weather and the indoor air: frost, heat, a gust above a threshold, rain of the last 24 hours above a threshold, rain starting, CO₂ of the base station or an indoor module above a threshold. Radio, Wi-Fi and the two silence rules hold for a while before they speak or clear; frost and gust wait an hour below the threshold before the all-clear; rain sends no all-clear. All rules ship switched off, and a master switch pauses every mail without touching the rules. The new page XTX Netatmo → Notifications holds the switch, the recipients, the rules with their thresholds in your units, a test-mail button and the last fifty mails.
+* Added: the five status fields Netatmo sends with every module are stored now (schema 1.5): battery percentage, Wi-Fi of the base station, whether a device is reachable, when the base station last reported to Netatmo and when a module last spoke to the base station. The Modules page shows Netatmo's own battery percentage instead of an estimate from the voltage.
+* Added: two actions for other code — `naws_sync_failed( $message, $consecutive_errors )` fires wherever a fetch fails; `naws_data_synced( $readings )` existed before and is documented now.
+* Fix: the wind rose's period buttons turned red under the mouse on Hello Elementor and took the "primary" accent colour when active. Every rule for them now carries two classes and sets rest, hover, focus and active state itself, and the active button has its own colour — an eighth one on the Wind Rose tab under Appearance.
+* Fix: Appearance: saving without the icon set in the input no longer logs "Undefined array key".
 
 = 1.9.13 =
 * Fix: `[naws_records]` and `[naws_on_this_day]` stayed empty on an installation whose daily summary table carried a different collation than the modules table. The three big queries compared `module_id` across two tables; MySQL refuses that as soon as the collations differ, the query failed, and the plugin returned nothing without a word. The active modules now go into every query as an id list from PHP, so no comparison crosses a table any more — `[naws_live]`, `[naws_infobar]` and the history are read the same way.
@@ -150,15 +157,12 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 * Fix: `[naws_table]` printed a MAC address in its module column when the reading's module was no longer in the modules table. Readings outlive the module they came from, so this was reachable rather than theoretical. The cell stays empty now, the way the chart legend does.
 * Fix: a chart request that left out `group_by` wrote a PHP notice into the log. The plugin's own scripts always send it; anything else calling the endpoint did not have to.
 
-= 1.9.9 =
-* Changed: **breaking** — the plugin no longer has its own language setting; the WordPress locale decides. The old setting was a single site-wide value for the front end and the back end at once, and it read the site language rather than your own, so it could never give you a back end in one language and your visitors another. Site Language plus the per-user Language in your profile do exactly that, and for your theme and every other plugin at the same time. If you had the plugin set to a language other than your site's, set the site language instead — or your own user language, if you meant only your own screen.
-* Changed: the interface translates through WordPress now instead of through the plugin's own language files. Until now translate.wordpress.org saw six strings of this plugin; it sees all 649. That means anyone can contribute a language without touching the code, and every language gets a proper WordPress language pack.
-* Changed: weekday, month and weather-condition names are translatable. They used to be two hardcoded lists, German and English, so a Norwegian reader got English with no way to change it.
-* New: German and Norwegian ship with this release as a bridge. Language packs do not exist the moment an update goes out, and an installation that had a German interface yesterday should not find an English one today. A pack always takes precedence once it is built.
-
 Older versions: the complete changelog since 1.0.0 is kept in [CHANGELOG.md](https://github.com/Xyla1512/Netatmo/blob/main/CHANGELOG.md) on GitHub.
 
 == Upgrade Notice ==
+
+= 2.0.0 =
+New: e-mail notifications under XTX Netatmo → Notifications — thirteen rules for battery, radio, Wi-Fi, silent station or module, failed fetches, frost, heat, gusts, rain and CO₂, one mail per state change plus all-clear. All rules ship off; five status columns are added automatically. Nothing to reconfigure.
 
 = 1.9.13 =
 Fix: [naws_records] and [naws_on_this_day] stayed empty where the daily summary table had a different collation. Editors now read why a block is empty. Module switches show at once, entity attributes work, Android Chrome no longer blackens the wind rose. Nothing to reconfigure.
@@ -166,65 +170,3 @@ Fix: [naws_records] and [naws_on_this_day] stayed empty where the daily summary 
 = 1.9.12 =
 New: [naws_windrose] shows where the wind comes from, how often and how hard, with a period switcher and seven colours under Appearance. The Wind & Gusts card shows the day's strongest gust. Compass directions are translated. Nothing to reconfigure.
 
-= 1.9.11 =
-New: [naws_records] shows fifteen records from your daily summary with their dates, [naws_on_this_day] this day in earlier years, [naws_sunpath] the sun on its arc. The sidebar widget gets a dark and a transparent scheme. Fix: the purge button in the settings works again. Nothing to reconfigure.
-
-== Privacy & External Services ==
-
-This plugin connects to the following external services:
-
-= Netatmo API (api.netatmo.com) =
-
-* **Purpose:** Authenticate via OAuth2, fetch sensor readings and station data
-* **Data sent:** The Client ID and Client Secret of the Netatmo application you created, in exchange for an access token; afterwards the access or refresh token with every request, plus the station and module IDs whose measurements are being requested
-* **When:** During initial authentication, on every automatic sync cycle, on every token refresh, and while a historical import is running
-* **Terms of service:** [https://dev.netatmo.com/legal](https://dev.netatmo.com/legal)
-* **Privacy policy:** [https://legals.netatmo.com/?goto=privacy](https://legals.netatmo.com/?goto=privacy)
-
-= Open-Meteo API (api.open-meteo.com) =
-
-* **Purpose:** Fetch weather forecast data based on station coordinates (default provider)
-* **Data sent:** Latitude and longitude of your weather station
-* **When:** When the forecast shortcode is displayed (cached for 3 hours)
-* **Terms and privacy:** [https://open-meteo.com/en/terms](https://open-meteo.com/en/terms)
-* **Note:** Open-Meteo is a free, open-source weather API. No API key or registration required.
-
-= Open-Meteo Geocoding API (geocoding-api.open-meteo.com) =
-
-* **Purpose:** Turn a place into coordinates, and coordinates into a place name for the forecast heading
-* **Data sent:** In "manual" location mode, the city name or postal code entered in the plugin settings. In "automatic" mode, the latitude and longitude of your weather station, rounded to two decimal places, in order to look up the name of the nearest place.
-* **When:** In manual mode whenever no cached result exists (cached for 7 days). In automatic mode exactly once — the resolved name is stored in the plugin settings and never looked up again.
-* **Terms and privacy:** [https://open-meteo.com/en/terms](https://open-meteo.com/en/terms)
-* **Documentation:** [https://open-meteo.com/en/docs/geocoding-api](https://open-meteo.com/en/docs/geocoding-api)
-
-= Yr.no / MET Norway API (api.met.no) =
-
-* **Purpose:** Fetch weather forecast data (optional provider, selectable in settings)
-* **Data sent:** Latitude and longitude of your weather station
-* **When:** When the forecast shortcode is displayed and Yr.no is selected as provider (cached for 3 hours)
-* **Privacy policy:** [https://www.met.no/en/About-us/privacy](https://www.met.no/en/About-us/privacy)
-* **Terms:** [https://developer.yr.no/doc/TermsOfService/](https://developer.yr.no/doc/TermsOfService/)
-* **Note:** Free API, no API key needed. MET Norway's terms require every client to identify itself, so requests to this service carry a User-Agent naming the plugin, its version and your site address — that address is how MET Norway would reach you before restricting a misbehaving client. This is sent to api.met.no only, and only while Yr.no is the selected provider.
-
-No personal user data (names, emails, IP addresses) is collected or transmitted by this plugin. All sensor data is stored exclusively in your local WordPress database.
-
-== Third-Party Libraries ==
-
-Two JavaScript libraries are bundled with this plugin, both under the MIT license, which is GPL-compatible. They ship in their minified distribution builds; the unminified source and the build tooling for each are available at the links below.
-
-= Chart.js 4.5.1 =
-
-* **File:** `assets/vendor/chart.umd.min.js`
-* **License:** MIT
-* **Homepage:** [https://www.chartjs.org](https://www.chartjs.org)
-* **Source and build tools:** [https://github.com/chartjs/Chart.js](https://github.com/chartjs/Chart.js) — the exact release bundled here is [v4.5.1](https://github.com/chartjs/Chart.js/releases/tag/v4.5.1)
-* **Used for:** All charts — 24h trend lines on the live dashboard and the year-over-year history charts
-
-= chartjs-adapter-date-fns 3.0.0 =
-
-* **File:** `assets/vendor/chartjs-adapter-date-fns.bundle.min.js`
-* **License:** MIT
-* **Source and build tools:** [https://github.com/chartjs/chartjs-adapter-date-fns](https://github.com/chartjs/chartjs-adapter-date-fns) — the exact release bundled here is [v3.0.0](https://github.com/chartjs/chartjs-adapter-date-fns/releases/tag/v3.0.0)
-* **Used for:** Time axis formatting in the charts. This is the bundled build, which includes date-fns (also MIT).
-
-No other third-party code is included. No library is loaded from a CDN; everything is served from your own installation. Libraries that ship with WordPress itself are used from WordPress and are not bundled.
