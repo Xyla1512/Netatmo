@@ -28,6 +28,7 @@ Connects to the Netatmo API, stores all sensor data locally and displays live da
 * **Multilingual** – Full German, English and Norwegian interface
 * **15 Shortcodes** – Dashboard, current readings, infobar, single value, computed value, history charts, heatmap, records, this day in earlier years, sun path, wind rose, forecast, table, widget, weather icon
 * **Export / Import** – Full backup and restore of weather data, modules and settings
+* **E-Mail Notifications** – battery, radio and Wi-Fi, station offline, failed syncs, frost, gusts, rain; per-rule thresholds, one mail per state change with an all-clear
 * **Mobile-First Responsive** – All views optimized for smartphones, tablets and desktops
 * **130+ Configurable Colors** – Full appearance customization with live preview
 * **4 Icon Sets** – Emoji, Outline, Filled, Minimal with per-sensor color control
@@ -102,6 +103,10 @@ Yes. The Export/Import feature lets you download weather data, module configs an
 = Which forecast providers are supported? =
 
 Open-Meteo (global, default) and Yr.no / MET Norway (optimized for Northern Europe). Both are free and require no API key.
+
+= I don't receive notification e-mails =
+
+Open XTX Netatmo → Notifications and press "Send test mail". If the page reports that the mail could not be sent, your server sends no mail at all: an SMTP plugin or your hosting provider fixes that, not the plugin. If the test mail arrives but no notifications do, check that the rule is switched on and look at the "Current state" table on the same page — it says what every rule sees right now and why one is suspended. Notifications go out only when a state changes; a battery that has been low since before you switched the rule on is reported at the next fetch, not again afterwards.
 
 == Screenshots ==
 
