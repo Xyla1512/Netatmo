@@ -42,8 +42,11 @@ Kennungen sind die Schlüssel in Option und Zustand. „Beharrung" heißt: die B
 | `sync_failed` | Abruf scheitert | Site | Fehlerzähler des Cron (`naws_polling_state`) | keine, fest 3 | 3 Fehler in Folge (Aktion `naws_sync_failed`) | nächster Erfolg (Aktion `naws_data_synced`) | 0 / 0 |
 | `auth_required` | Zugangsdaten verfallen | Site | Option `naws_auth_required` | keine | Option gesetzt | Option leer beim nächsten Erfolg | 0 / 0 |
 | `frost` | Frost | Modul (NAModule1) | Messwert `Temperature` | °C, −50…50 (0) | Wert ≤ Schwelle | Wert > Schwelle + 1 | 0 / 60 min |
+| `heat` | Hitze | Modul (NAModule1) | Messwert `Temperature` | °C, −50…50 (30) | Wert ≥ Schwelle | Wert < Schwelle − 1 | 0 / 60 min |
 | `gust` | Böe | Modul (NAModule2) | Messwert `GustStrength` | km/h, 1…300 (60) | Wert ≥ Schwelle | Wert < Schwelle | 0 / 60 min |
 | `rain` | Regen in 24 Stunden | Modul (NAModule3) | Messwert `sum_rain_24`, im Schnappschuss ersetzt durch die rollierende 24-h-Summe aus den Rohwerten (`get_rain_rolling_24h()`), weil Netatmos Feld um Mitternacht zurückspringt | mm, 0,1…500 (20) | Wert ≥ Schwelle | Wert < Schwelle, **ohne Mail** | 0 / 0 |
+| `rain_start` | Regen beginnt | Modul (NAModule3) | Messwert `sum_rain_1` (Regen der letzten Stunde) | mm, 0,1…50 (0,2) | Wert ≥ Schwelle | Wert < Schwelle, **ohne Mail** | 0 / 0 |
+| `co2` | CO₂ hoch | Basis (NAMain) oder Innenmodul (NAModule4) | Messwert `CO2` | ppm, 400…5000 (1000) | Wert ≥ Schwelle | Wert < Schwelle − 100 | 0 / 30 min |
 
 Die beiden Stille-Regeln entwarnen erst, wenn die Basis beziehungsweise das Modul 30 Minuten lang wieder gemeldet hat — sonst würde ein Zeitstempel, der um die Schwelle pendelt, bei jedem Abruf eine Mail auslösen.
 
@@ -154,6 +157,7 @@ Option `naws_notifications`:
 
 ```
 [
+  'enabled' => 1,                                   // Generalschalter
   'recipients' => [ 'frank@example.org', … ],       // leer erlaubt
   'rules' => [
     'battery'        => [ 'enabled' => 0, 'threshold' => 20 ],
@@ -172,6 +176,7 @@ Option `naws_notifications`:
 
 `sanitize( $input )` ist eine Whitelist über den Katalog: unbekannte Regeln und Felder fallen weg, jede bekannte Regel wird mit ihrer Vorgabe aufgefüllt.
 
+- `enabled` ist der Generalschalter (Vorgabe 1): steht er auf 0, wertet der Lauf nichts aus und verschickt nichts; Zustand und Regeln bleiben, die Testmail geht weiter.
 - `recipients`: Der Handler übergibt das Feld als Text (siehe 8). `sanitize()` trennt an Zeilenumbruch, Komma und Semikolon, führt jede Adresse durch `sanitize_email()` und behält nur, was `is_email()` besteht, ohne Dubletten, höchstens 20.
 - `enabled`: `! empty()` → 0/1.
 - `threshold` je `kind`: `percent` → `absint()`, 1–99; `temp`/`wind`/`rain` → `floatval()` des in Anzeigeeinheit eingegebenen Werts, mit `to_base()` in die Basiseinheit gerechnet, dann in den Bereich der Tabelle in Abschnitt 3 geklemmt.
@@ -210,18 +215,19 @@ Site-Regeln haben keine Modulzeile; `sync_failed` trägt stattdessen den Fehlert
 
 ## 7. Backend-Seite
 
-**Registrierung.** In `NAWS_Admin::add_menu()` direkt nach `naws-modules`: `add_submenu_page( 'naws-dashboard', __( 'Notifications' ), …, 'manage_options', 'naws-notifications', [ $this, 'page_notifications' ] )`. `page_notifications()` lädt `$settings`, `$catalog`, `$units`, `$rows = NAWS_Notifications::status_rows()`, `$log`, und bindet `admin/views/notifications.php` ein. Zwei Handler im Konstruktor: `admin_post_naws_save_notifications` und `admin_post_naws_test_notification`.
+**Registrierung.** In `NAWS_Admin::add_menu()` direkt nach `naws-modules`: `add_submenu_page( 'naws-dashboard', __( 'Notifications' ), …, 'manage_options', 'naws-notifications', [ $this, 'page_notifications' ] )`. `page_notifications()` lädt `$settings`, `$catalog`, `$units`, `$log`, und bindet `admin/views/notifications.php` ein. Zwei Handler im Konstruktor: `admin_post_naws_save_notifications` und `admin_post_naws_test_notification`.
 
 **Aufbau der Seite**, von oben:
 
+0. Generalschalter „Benachrichtigungen senden" mit Hinweis, wenn er aus ist.
 1. Titel, ein Satz Erklärung.
 2. Formular „Speichern" (`admin-post.php`, `wp_nonce_field( 'naws_save_notifications' )`, Hidden `action`):
    - Empfänger: `<textarea name="naws_notifications[recipients]">`, Platzhalter die Admin-Adresse, Hilfetext „eine Adresse je Zeile, leer = Admin-Adresse".
    - Gruppe „Station" und Gruppe „Wetter": je Regel eine Zeile mit Checkbox (davor ein Hidden-Feld mit Wert 0, wie überall im Plugin), Name, ein Satz Erklärung, und je nach `param` ein Zahlenfeld mit Einheit (`step` passend), ein `<select>` mit den Stufen oder ein Minutenfeld. Regeln ohne Parameter zeigen die feste Bedingung als Text.
    - Knopf „Speichern" (`submit_button()`).
 3. Formular „Testmail senden" (eigenes kleines Formular, `wp_nonce_field( 'naws_test_notification' )`), daneben der Hinweis, dass die Testmail an die **gespeicherten** Empfänger geht.
-4. Tabelle „Aktueller Zustand": Regel, Modul, Zustand (ok / Warnung seit … / Beharrung läuft seit … / ausgesetzt: Regel aus, Wert fehlt, Messwert veraltet, Basis still), Wert mit Einheit.
-5. Tabelle „Letzte Benachrichtigungen": Zeit, Ergebnis, Empfänger, Betreff.
+4. Kein Zustandsabschnitt (Frank, 12.09.: die Seite soll kurz bleiben; `status_rows()` bleibt als Methode für Tests und eine spätere Kompaktanzeige).
+5. Tabelle „Letzte Benachrichtigungen": Zeit, Ergebnis, Empfänger, Betreff, sechs Zeilen sichtbar, der Rest scrollt.
 
 **Rückmeldungen.** Die Handler leiten mit `wp_safe_redirect()` auf eine URL zurück, die `wp_nonce_url( …, 'naws_notifications_notice' )` erzeugt hat: `&updated=1`, `&dropped=<n>` (ungültige Adressen verworfen), `&test=1|0`. Die View liest diese Parameter nur in einer Bedingung, die den Nonce direkt prüft (Abschnitt 8).
 
