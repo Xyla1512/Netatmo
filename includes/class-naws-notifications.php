@@ -194,8 +194,10 @@ final class NAWS_Notifications {
     }
 
     /**
-     * add_option() is the one check WordPress offers that a second request
-     * cannot overtake without an object cache: it fails when the row exists.
+     * add_option() fails when the row exists; the existence check runs
+     * through the options cache, so this is a best-effort guard against two
+     * overlapping cron runs, not a hard lock — WP-Cron's own doing_cron
+     * transient already serialises the fetch.
      * A lock older than LOCK_TTL is an orphan from a crashed run.
      */
     private static function lock(): bool {
@@ -220,6 +222,12 @@ final class NAWS_Notifications {
 
     /** Active modules with their status columns and latest readings, keyed by module id. */
     public static function snapshot(): array {
+        // flush_caches() deletes the transient rows by SQL; a copy already read in this
+        // request or held by a persistent object cache survives that. The snapshot must
+        // see this fetch's rows, so it drops its own caches through the API first.
+        NAWS_Database::flush_module_caches();
+        delete_transient( NAWS_Database::CACHE_PREFIX . 'latest_all' );
+
         $out = [];
         foreach ( NAWS_Database::get_modules( true ) as $m ) {
             $id = (string) ( $m['module_id'] ?? '' );
@@ -247,6 +255,20 @@ final class NAWS_Notifications {
                 $out[ $id ]['readings'][ (string) $r['parameter'] ] = [ 'value' => (float) $r['value'], 'at' => (int) $r['recorded_at'] ];
             }
         }
+
+        // Netatmo's sum_rain_24 resets at midnight; the rule promises the last
+        // 24 hours, so the rain gauge gets the rolling sum from the raw readings.
+        foreach ( $out as $id => $m ) {
+            if ( $m['module_type'] !== 'NAModule3' ) {
+                continue;
+            }
+            delete_transient( NAWS_Database::CACHE_PREFIX . 'rain24h_' . md5( $id ) );
+            $rolling = NAWS_Database::get_rain_rolling_24h( $id );
+            if ( $rolling !== null ) {
+                $out[ $id ]['readings']['sum_rain_24'] = [ 'value' => (float) $rolling, 'at' => time() ];
+            }
+        }
+
         return [ 'modules' => $out ];
     }
 

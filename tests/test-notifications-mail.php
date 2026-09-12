@@ -44,6 +44,23 @@ class NAWS_Cron {
     public static function is_night_mode() { return false; }
     public static function get_polling_state() { return [ 'consecutive_errors' => 0 ]; }
 }
+$GLOBALS['naws_test_deleted']   = [];
+function delete_transient( $k )              { $GLOBALS['naws_test_deleted'][] = $k; return true; }
+class NAWS_Database {
+    const CACHE_PREFIX = 'naws_cache_';
+    public static $flushed = 0;
+    public static function flush_module_caches() { self::$flushed++; }
+    public static function get_modules( $active_only = false ) {
+        return [
+            [ 'module_id' => 'base', 'station_id' => 'base', 'module_name' => 'Basis', 'module_type' => 'NAMain', 'wifi_status' => '54', 'reachable' => '1', 'last_status_store' => '1789195712', 'battery_percent' => null, 'rf_status' => '0', 'last_seen' => '0', 'last_message' => null ],
+            [ 'module_id' => 'rain', 'station_id' => 'base', 'module_name' => 'Regenmesser', 'module_type' => 'NAModule3', 'battery_percent' => '69', 'rf_status' => '74', 'wifi_status' => null, 'reachable' => '1', 'last_status_store' => null, 'last_seen' => '1789195699', 'last_message' => '1789195706' ],
+        ];
+    }
+    public static function get_latest_readings( $module_id = null ) {
+        return [ [ 'module_id' => 'rain', 'parameter' => 'sum_rain_24', 'value' => '3.2', 'recorded_at' => '1789195700' ], [ 'module_id' => 'rain', 'parameter' => 'Rain', 'value' => '0.1', 'recorded_at' => '1789195700' ] ];
+    }
+    public static function get_rain_rolling_24h( $module_id ) { return 12.5; }
+}
 require_once dirname( __DIR__ ) . '/includes/class-naws-notify-rules.php';
 require_once dirname( __DIR__ ) . '/includes/class-naws-notifications.php';
 
@@ -127,6 +144,14 @@ $GLOBALS['naws_test_options'][ NAWS_Notifications::LOCK_KEY ] = time() - 500;
 $GLOBALS['naws_test_options'][ NAWS_Notifications::STATE_KEY ] = [];
 NAWS_Notifications::on_failed( 'x', 3 );
 check( 'verwaister Lock (>120 s) wird uebernommen', [ count( $GLOBALS['naws_test_mails'] ), isset( $GLOBALS['naws_test_options'][ NAWS_Notifications::LOCK_KEY ] ) ], [ 2, false ] );
+
+echo "\nSchnappschuss\n" . str_repeat( '-', 74 ) . "\n";
+$GLOBALS['naws_test_deleted'] = []; NAWS_Database::$flushed = 0;
+$snap = NAWS_Notifications::snapshot();
+check( 'Schnappschuss: Module nach ID, Statusfelder als int/null', [ array_keys( $snap['modules'] ), $snap['modules']['base']['wifi_status'], $snap['modules']['base']['battery_percent'], $snap['modules']['rain']['reachable'] ], [ [ 'base', 'rain' ], 54, null, 1 ] );
+check( 'Schnappschuss: Regen = rollierende 24-h-Summe, nicht das Netatmo-Feld', $snap['modules']['rain']['readings']['sum_rain_24']['value'], 12.5 );
+check( 'Schnappschuss: andere Messwerte bleiben', $snap['modules']['rain']['readings']['Rain']['value'], 0.1 );
+check( 'Schnappschuss: eigene Caches vorher geloescht', [ NAWS_Database::$flushed, in_array( 'naws_cache_latest_all', $GLOBALS['naws_test_deleted'], true ), in_array( 'naws_cache_rain24h_' . md5( 'rain' ), $GLOBALS['naws_test_deleted'], true ) ], [ 1, true, true ] );
 
 printf( "\n%d ok, %d fehlgeschlagen\n", $passed, $failed );
 exit( $failed ? 1 : 0 );
