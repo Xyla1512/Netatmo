@@ -55,6 +55,10 @@ final class NAWS_Notifications {
         $out     = NAWS_Notify_Rules::defaults();
         $catalog = NAWS_Notify_Rules::catalog();
 
+        if ( array_key_exists( 'enabled', $input ) ) {
+            $out['enabled'] = empty( $input['enabled'] ) ? 0 : 1;
+        }
+
         $raw = $input['recipients'] ?? [];
         if ( is_string( $raw ) ) {
             $raw = self::split_recipients( $raw );
@@ -78,7 +82,7 @@ final class NAWS_Notifications {
             switch ( $def['param'] ) {
                 case 'threshold':
                     if ( isset( $r['threshold'] ) && is_numeric( $r['threshold'] ) ) {
-                        if ( $def['kind'] === 'percent' ) {
+                        if ( in_array( $def['kind'], [ 'percent', 'ppm' ], true ) ) {
                             $out['rules'][ $id ]['threshold'] = (int) max( $def['min'], min( $def['max'], absint( $r['threshold'] ) ) );
                         } else {
                             $out['rules'][ $id ]['threshold'] = round( max( (float) $def['min'], min( (float) $def['max'], (float) $r['threshold'] ) ), 1 );
@@ -101,7 +105,7 @@ final class NAWS_Notifications {
     }
 
     /** What the admin form posts: recipients as text, thresholds in display units. */
-    public static function from_form( string $recipients, array $rules, array $units ): array {
+    public static function from_form( string $recipients, array $rules, array $units, bool $enabled = true ): array {
         $catalog = NAWS_Notify_Rules::catalog();
         foreach ( $rules as $id => $r ) {
             $def = $catalog[ $id ] ?? null;
@@ -110,7 +114,7 @@ final class NAWS_Notifications {
                 $rules[ $id ]['threshold'] = NAWS_Notify_Rules::to_base( $def['kind'], (float) $r['threshold'], $units );
             }
         }
-        return self::sanitize( [ 'recipients' => $recipients, 'rules' => $rules ] );
+        return self::sanitize( [ 'enabled' => $enabled ? 1 : 0, 'recipients' => $recipients, 'rules' => $rules ] );
     }
 
     /** Where the mail goes: the stored list, or the site's admin address when it is empty. */
@@ -150,6 +154,9 @@ final class NAWS_Notifications {
         $locked = false;
         try {
             $settings = self::get_settings();
+            if ( empty( $settings['enabled'] ) ) {
+                return; // master switch off: no evaluation, no mail, state kept
+            }
             $state    = get_option( self::STATE_KEY, [] );
             $state    = is_array( $state ) ? $state : [];
             if ( ! self::any_enabled( $settings ) && ! $state ) {
@@ -374,6 +381,7 @@ final class NAWS_Notifications {
             case 'temp':
             case 'wind':
             case 'rain':
+            case 'ppm':
                 $p = $def['reading'];
                 return NAWS_Helpers::format_value( $p, (float) $value ) . ' ' . NAWS_Helpers::get_unit( $p );
         }
@@ -398,6 +406,7 @@ final class NAWS_Notifications {
             case 'temp':
             case 'wind':
             case 'rain':
+            case 'ppm':
                 $p = $def['reading'];
                 return NAWS_Helpers::format_value( $p, (float) $threshold ) . ' ' . NAWS_Helpers::get_unit( $p );
         }

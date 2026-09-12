@@ -512,7 +512,6 @@ class NAWS_Admin {
         $settings    = NAWS_Notifications::get_settings();
         $catalog     = NAWS_Notify_Rules::catalog();
         $units       = NAWS_Notifications::units();
-        $rows        = NAWS_Notifications::status_rows();
         $log         = NAWS_Notifications::get_log();
         $admin_email = (string) get_option( 'admin_email', '' );
         include NAWS_PLUGIN_DIR . 'admin/views/notifications.php';
@@ -532,8 +531,10 @@ class NAWS_Admin {
         $rules = isset( $_POST['naws_notifications']['rules'] ) && is_array( $_POST['naws_notifications']['rules'] )
             ? map_deep( wp_unslash( $_POST['naws_notifications']['rules'] ), 'sanitize_text_field' )
             : [];
+        $enabled = isset( $_POST['naws_notifications']['enabled'] )
+            && '1' === sanitize_text_field( wp_unslash( $_POST['naws_notifications']['enabled'] ) );
 
-        $clean   = NAWS_Notifications::from_form( $recipients, $rules, NAWS_Notifications::units() );
+        $clean   = NAWS_Notifications::from_form( $recipients, $rules, NAWS_Notifications::units(), $enabled );
         $dropped = count( NAWS_Notifications::split_recipients( $recipients ) ) - count( $clean['recipients'] );
         update_option( NAWS_Notifications::OPTION_KEY, $clean );
 

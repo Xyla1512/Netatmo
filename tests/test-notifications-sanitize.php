@@ -31,6 +31,7 @@ $D = NAWS_Notify_Rules::defaults();
 
 echo "\nsanitize(): Whitelist ueber den Katalog\n" . str_repeat( '-', 74 ) . "\n";
 check( 'leer -> Vorgaben',                        NAWS_Notifications::sanitize( [] ), $D );
+check( 'Generalschalter: fehlt -> 1, "0" -> 0, "1" -> 1', [ NAWS_Notifications::sanitize( [] )['enabled'], NAWS_Notifications::sanitize( [ 'enabled' => '0' ] )['enabled'], NAWS_Notifications::sanitize( [ 'enabled' => '1' ] )['enabled'] ], [ 1, 0, 1 ] );
 check( 'unbekannte Regel und unbekanntes Feld fallen weg', NAWS_Notifications::sanitize( [ 'rules' => [ 'moon' => [ 'enabled' => 1 ], 'battery' => [ 'enabled' => 1, 'colour' => 'red' ] ] ] )['rules']['battery'], [ 'enabled' => 1, 'threshold' => 20 ] );
 check( 'enabled: "1" -> 1, fehlt -> 0, "0" -> 0', [ NAWS_Notifications::sanitize( [ 'rules' => [ 'frost' => [ 'enabled' => '1' ] ] ] )['rules']['frost']['enabled'], NAWS_Notifications::sanitize( [ 'rules' => [ 'frost' => [] ] ] )['rules']['frost']['enabled'], NAWS_Notifications::sanitize( [ 'rules' => [ 'frost' => [ 'enabled' => '0' ] ] ] )['rules']['frost']['enabled'] ], [ 1, 0, 0 ] );
 $t = fn( string $rule, $v ) => NAWS_Notifications::sanitize( [ 'rules' => [ $rule => [ 'threshold' => $v ] ] ] )['rules'][ $rule ]['threshold'];
@@ -38,6 +39,8 @@ check( 'battery: 150 -> 99, 0 -> 1, "abc" -> 20, "35" -> 35', [ $t( 'battery', '
 check( 'frost: -60 -> -50.0, "2.55" -> 2.6 (eine Stelle)', [ $t( 'frost', '-60' ), $t( 'frost', '2.55' ) ], [ -50.0, 2.6 ] );
 check( 'gust: 0.5 -> 1.0, 999 -> 300.0',            [ $t( 'gust', '0.5' ), $t( 'gust', '999' ) ], [ 1.0, 300.0 ] );
 check( 'rain: 600 -> 500.0, 0 -> 0.1',              [ $t( 'rain', '600' ), $t( 'rain', '0' ) ], [ 500.0, 0.1 ] );
+check( 'co2: 300 -> 400, 9000 -> 5000, "1200.7" -> 1200', [ $t( 'co2', '300' ), $t( 'co2', '9000' ), $t( 'co2', '1200.7' ) ], [ 400, 5000, 1200 ] );
+check( 'heat -60 -> -50.0; rain_start 0 -> 0.1, 99 -> 50.0', [ $t( 'heat', '-60' ), $t( 'rain_start', '0' ), $t( 'rain_start', '99' ) ], [ -50.0, 0.1, 50.0 ] );
 $l = fn( string $rule, $v ) => NAWS_Notifications::sanitize( [ 'rules' => [ $rule => [ 'level' => $v ] ] ] )['rules'][ $rule ]['level'];
 check( 'rf: medium bleibt, xxx -> low',            [ $l( 'rf', 'medium' ), $l( 'rf', 'xxx' ) ], [ 'medium', 'low' ] );
 check( 'wifi: average bleibt, low -> bad',         [ $l( 'wifi', 'average' ), $l( 'wifi', 'low' ) ], [ 'average', 'bad' ] );
@@ -66,6 +69,8 @@ check( 'gust 37.28 mph -> 60.0 km/h',             $s['rules']['gust']['threshold
 check( 'rain 1 in -> 25.4 mm',                    $s['rules']['rain']['threshold'], 25.4 );
 check( 'Prozent bleibt',                          $s['rules']['battery']['threshold'], 30 );
 check( 'Empfaenger aus dem Text',                 $s['recipients'], [ 'f@x.de' ] );
+check( 'from_form: Generalschalter aus', NAWS_Notifications::from_form( '', [], $F, false )['enabled'], 0 );
+check( 'from_form: ppm nicht umgerechnet', NAWS_Notifications::from_form( '', [ 'co2' => [ 'threshold' => '1500' ] ], $F )['rules']['co2']['threshold'], 1500 );
 $GLOBALS['naws_test_options']['naws_settings'] = [ 'temperature_unit' => 'F', 'wind_unit' => 'kn' ];
 check( 'units(): aus naws_settings mit Vorgaben', NAWS_Notifications::units(), [ 'temperature_unit' => 'F', 'wind_unit' => 'kn', 'rain_unit' => 'mm' ] );
 $GLOBALS['naws_test_options']['naws_settings'] = [ 'temperature_unit' => 'C' ];

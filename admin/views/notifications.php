@@ -6,7 +6,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /** @var array  $settings    NAWS_Notifications::get_settings() */
 /** @var array  $catalog     NAWS_Notify_Rules::catalog() */
 /** @var array  $units       NAWS_Notifications::units() */
-/** @var array  $rows        NAWS_Notifications::status_rows() */
 /** @var array  $log         NAWS_Notifications::get_log() */
 /** @var string $admin_email get_option( 'admin_email' ) */
 
@@ -40,7 +39,22 @@ $groups = [
         <?php wp_nonce_field( 'naws_save_notifications' ); ?>
         <input type="hidden" name="action" value="naws_save_notifications">
 
+        <?php if ( empty( $settings['enabled'] ) ) : ?>
+            <div class="notice notice-warning inline"><p><?php esc_html_e( 'Notifications are switched off. No rule is evaluated and no mail is sent until you switch them on again.', 'xtx-integration-for-netatmo' ); ?></p></div>
+        <?php endif; ?>
         <div class="naws-admin-panel">
+            <div class="naws-panel-header"><h2><?php esc_html_e( 'Master switch', 'xtx-integration-for-netatmo' ); ?></h2></div>
+            <div style="padding:1rem 1.25rem;">
+                <input type="hidden" name="naws_notifications[enabled]" value="0">
+                <label>
+                    <input type="checkbox" name="naws_notifications[enabled]" value="1" <?php checked( ! empty( $settings['enabled'] ) ); ?>>
+                    <strong><?php esc_html_e( 'Send notifications', 'xtx-integration-for-netatmo' ); ?></strong>
+                </label>
+                <p class="description"><?php esc_html_e( 'Switch off to pause every mail without losing your rules; the test mail still works.', 'xtx-integration-for-netatmo' ); ?></p>
+            </div>
+        </div>
+
+        <div class="naws-admin-panel" style="margin-top:1rem;">
             <div class="naws-panel-header"><h2><?php esc_html_e( 'Recipients', 'xtx-integration-for-netatmo' ); ?></h2></div>
             <div style="padding:1rem 1.25rem;">
                 <textarea name="naws_notifications[recipients]" rows="3" cols="60" class="large-text code" placeholder="<?php echo esc_attr( $admin_email ); ?>"><?php echo esc_textarea( implode( "\n", $settings['recipients'] ) ); ?></textarea>
@@ -113,45 +127,12 @@ $groups = [
         <span class="description" style="margin-left:0.5rem;"><?php esc_html_e( 'The test mail goes to the saved recipients.', 'xtx-integration-for-netatmo' ); ?></span>
     </form>
 
-    <div class="naws-admin-panel">
-        <div class="naws-panel-header"><h2><?php esc_html_e( 'Current state', 'xtx-integration-for-netatmo' ); ?></h2></div>
-        <?php $has_modules = (bool) array_filter( $rows, static fn( $r ) => $r['module_id'] !== '' ); ?>
-        <?php if ( ! $has_modules ) : ?>
-            <p style="padding:1rem;"><?php esc_html_e( 'No active modules.', 'xtx-integration-for-netatmo' ); ?></p>
-        <?php endif; ?>
-        <table class="wp-list-table widefat striped naws-list-table">
-            <thead>
-                <tr>
-                    <th><?php esc_html_e( 'Rule', 'xtx-integration-for-netatmo' ); ?></th>
-                    <th><?php echo esc_html( naws_label( 'ntf_module' ) ); ?></th>
-                    <th><?php esc_html_e( 'State', 'xtx-integration-for-netatmo' ); ?></th>
-                    <th><?php esc_html_e( 'Value', 'xtx-integration-for-netatmo' ); ?></th>
-                </tr>
-            </thead>
-            <tbody>
-            <?php foreach ( $rows as $row ) :
-                switch ( $row['status'] ) {
-                    case 'active':    $state = sprintf( naws_label( 'ntf_status_active' ), NAWS_Notifications::stamp( (int) $row['since'] ) ); $badge = 'naws-badge-error'; break;
-                    case 'pending':   $state = sprintf( naws_label( 'ntf_status_pending' ), NAWS_Notifications::stamp( (int) $row['since'] ) ); $badge = 'naws-badge-warning'; break;
-                    case 'suspended': $state = naws_label( 'ntf_status_suspended' ) . ' (' . naws_label( 'ntf_reason_' . $row['reason'] ) . ')'; $badge = ''; break;
-                    default:          $state = naws_label( 'ntf_status_ok' ); $badge = 'naws-badge-success';
-                } ?>
-                <tr>
-                    <td><?php echo esc_html( naws_label( 'ntf_rule_' . $row['rule'] ) ); ?></td>
-                    <td><?php echo $row['module_name'] !== '' ? esc_html( $row['module_name'] . ' (' . NAWS_Helpers::module_type_label( $row['module_type'] ) . ')' ) : '—'; ?></td>
-                    <td><span class="naws-badge <?php echo esc_attr( $badge ); ?>"><?php echo esc_html( $state ); ?></span></td>
-                    <td><?php echo esc_html( NAWS_Notifications::format_measure( $row['rule'], $row['value'] ) ); ?></td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-
     <div class="naws-admin-panel" style="margin-top:1rem;">
         <div class="naws-panel-header"><h2><?php esc_html_e( 'Recent notifications', 'xtx-integration-for-netatmo' ); ?></h2></div>
         <?php if ( empty( $log ) ) : ?>
             <p style="padding:1rem;"><?php esc_html_e( 'No notifications sent yet.', 'xtx-integration-for-netatmo' ); ?></p>
         <?php else : ?>
+        <div style="max-height:15rem;overflow-y:auto;">
         <table class="wp-list-table widefat striped naws-list-table">
             <thead>
                 <tr>
@@ -172,6 +153,7 @@ $groups = [
             <?php endforeach; ?>
             </tbody>
         </table>
+        </div>
         <?php endif; ?>
     </div>
 </div>

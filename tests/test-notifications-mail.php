@@ -34,8 +34,8 @@ function switch_to_locale( $l )              { $GLOBALS['naws_test_locale_calls'
 function restore_previous_locale()           { $GLOBALS['naws_test_locale_calls'][] = 'restore'; return true; }
 require_once __DIR__ . '/i18n-stubs.php';
 class NAWS_Helpers {
-    public static function format_value( $p, $v ) { return round( $v, 1 ); }
-    public static function get_unit( $p ) { return [ 'Temperature' => '°C', 'GustStrength' => 'km/h', 'sum_rain_24' => 'mm' ][ $p ] ?? ''; }
+    public static function format_value( $p, $v ) { return $p === 'CO2' ? (int) $v : round( $v, 1 ); }
+    public static function get_unit( $p ) { return [ 'Temperature' => '°C', 'GustStrength' => 'km/h', 'sum_rain_24' => 'mm', 'CO2' => 'ppm' ][ $p ] ?? ''; }
     public static function module_type_label( $t ) { return [ 'NAModule1' => 'Outdoor Module', 'NAModule4' => 'Indoor module' ][ $t ] ?? $t; }
 }
 class NAWS_Logger { public static $errors = []; public static function error( $c, $m, $x = [] ) { self::$errors[] = $m; } public static function warning( ...$a ) {} public static function info( ...$a ) {} }
@@ -100,6 +100,7 @@ check( 'drei Absaetze, Leerzeile dazwischen', substr_count( $m['body'], "\n\n" )
 echo "\nformat_measure() / format_threshold()\n" . str_repeat( '-', 74 ) . "\n";
 check( 'Prozent, Stufe, Temperatur, leer', [ NAWS_Notifications::format_measure( 'battery', 23 ), NAWS_Notifications::format_measure( 'rf', 92 ), NAWS_Notifications::format_measure( 'frost', -2.25 ), NAWS_Notifications::format_measure( 'frost', null ) ], [ '23 %', '92', '-2.3 °C', '' ] );
 check( 'Schwellen',                        [ NAWS_Notifications::format_threshold( 'battery', 25 ), NAWS_Notifications::format_threshold( 'wifi', 'average' ), NAWS_Notifications::format_threshold( 'module_silent', 60 ), NAWS_Notifications::format_threshold( 'gust', 60.0 ), NAWS_Notifications::format_threshold( 'sync_failed', null ) ], [ '25 %', 'average or worse (≥ 71)', '60 min', '60 km/h', '' ] );
+check( 'ppm', [ NAWS_Notifications::format_measure( 'co2', 1234 ), NAWS_Notifications::format_threshold( 'co2', 1000 ) ], [ '1234 ppm', '1000 ppm' ] );
 
 echo "\nProtokoll und Testmail\n" . str_repeat( '-', 74 ) . "\n";
 for ( $i = 1; $i <= 52; $i++ ) { NAWS_Notifications::log( [ 'time' => $i, 'subject' => "s$i", 'to' => [], 'sent' => true, 'events' => [] ] ); }
@@ -127,6 +128,16 @@ check( 'send_test(): auch bei Fehlschlag zurueck (finally)', $GLOBALS['naws_test
 $GLOBALS['naws_test_locale_calls'] = []; $GLOBALS['naws_test_mail_ok'] = true; $GLOBALS['naws_test_user_locale'] = 'de_DE';
 NAWS_Notifications::send_test();
 check( 'send_test(): gleiche Sprache -> kein Umschalten', $GLOBALS['naws_test_locale_calls'], [] );
+
+echo "\nGeneralschalter\n" . str_repeat( '-', 74 ) . "\n";
+$GLOBALS['naws_test_options'][ NAWS_Notifications::OPTION_KEY ] = [ 'enabled' => 0, 'recipients' => [ 'f@x.de' ], 'rules' => [ 'sync_failed' => [ 'enabled' => 1 ] ] ];
+$GLOBALS['naws_test_options'][ NAWS_Notifications::STATE_KEY ] = [ 'battery|gast' => [ 'active' => true, 'since' => 1, 'pending_since' => null, 'value' => 23 ] ];
+$GLOBALS['naws_test_options'][ NAWS_Notifications::LOG_KEY ] = [];
+$GLOBALS['naws_test_mails'] = [];
+NAWS_Notifications::on_failed( 'timeout', 3 );
+check( 'Schalter aus: keine Mail, Zustand unveraendert, kein Lock', [ count( $GLOBALS['naws_test_mails'] ), array_keys( $GLOBALS['naws_test_options'][ NAWS_Notifications::STATE_KEY ] ), isset( $GLOBALS['naws_test_options'][ NAWS_Notifications::LOCK_KEY ] ) ], [ 0, [ 'battery|gast' ], false ] );
+check( 'Schalter aus: Testmail geht trotzdem', NAWS_Notifications::send_test(), true );
+$GLOBALS['naws_test_options'][ NAWS_Notifications::STATE_KEY ] = [];
 
 echo "\nLauf nach gescheitertem Abruf, mit Lock\n" . str_repeat( '-', 74 ) . "\n";
 $GLOBALS['naws_test_options'][ NAWS_Notifications::OPTION_KEY ] = [ 'recipients' => [ 'f@x.de' ], 'rules' => [ 'sync_failed' => [ 'enabled' => 1 ] ] ];

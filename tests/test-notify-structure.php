@@ -55,6 +55,8 @@ check( 'jedes echo traegt eine Escaping-Funktion',   $naked, [] );
 check( 'Hidden 0 direkt vor der Checkbox (eine Schleife fuer alle zehn Regeln)', preg_match( '/type="hidden" name="<\?php echo esc_attr\( \$name \); \?>\[enabled\]" value="0">\s*<label>\s*<input type="checkbox" name="<\?php echo esc_attr\( \$name \); \?>\[enabled\]" value="1"/', $view ), 1 );
 check( 'Empfaengerfeld per esc_textarea',            str_contains( $view, 'esc_textarea( implode( "\n", $settings[\'recipients\'] ) )' ), true );
 check( 'View beginnt mit ABSPATH-Wache',             str_contains( substr( $view, 0, 300 ), "if ( ! defined( 'ABSPATH' ) ) exit;" ), true );
+check( 'Generalschalter: Hidden 0 direkt vor der Checkbox',  preg_match( '/type="hidden" name="naws_notifications\[enabled\]" value="0">\s*<label>\s*<input type="checkbox" name="naws_notifications\[enabled\]" value="1"/', $view ), 1 );
+check( 'Handler liest den Generalschalter sichtbar sanitiert', str_contains( $admin, "'1' === sanitize_text_field( wp_unslash( \$_POST['naws_notifications']['enabled'] ) )" ), true );
 
 printf( "\n%d ok, %d fehlgeschlagen\n", $passed, $failed );
 exit( $failed ? 1 : 0 );
