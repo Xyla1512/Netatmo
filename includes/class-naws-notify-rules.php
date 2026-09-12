@@ -36,7 +36,11 @@ final class NAWS_Notify_Rules {
      * clears   whether the rule sends an all-clear mail
      */
     public static function catalog(): array {
-        return [
+        static $catalog = null;
+        if ( $catalog !== null ) {
+            return $catalog;
+        }
+        $catalog = [
             'battery' => [
                 'group' => 'station', 'scope' => 'module', 'types' => self::MODULE_TYPES,
                 'field' => 'battery_percent', 'param' => 'threshold', 'kind' => 'percent',
@@ -59,13 +63,13 @@ final class NAWS_Notify_Rules {
                 'group' => 'station', 'scope' => 'station', 'types' => [ 'NAMain' ],
                 'field' => 'last_status_store', 'param' => 'minutes', 'kind' => 'minutes',
                 'default' => 60, 'min' => 10, 'max' => 1440,
-                'hold_on' => 0, 'hold_off' => 0, 'clears' => true,
+                'hold_on' => 0, 'hold_off' => 1800, 'clears' => true,
             ],
             'module_silent' => [
                 'group' => 'station', 'scope' => 'module', 'types' => self::MODULE_TYPES,
                 'field' => 'last_message', 'param' => 'minutes', 'kind' => 'minutes',
                 'default' => 60, 'min' => 10, 'max' => 1440,
-                'hold_on' => 0, 'hold_off' => 0, 'clears' => true,
+                'hold_on' => 0, 'hold_off' => 1800, 'clears' => true,
             ],
             'sync_failed' => [
                 'group' => 'station', 'scope' => 'site', 'types' => [],
@@ -89,6 +93,7 @@ final class NAWS_Notify_Rules {
                 'default' => 60.0, 'min' => 1.0, 'max' => 300.0,
                 'hold_on' => 0, 'hold_off' => 3600, 'clears' => true,
             ],
+            // reading sum_rain_24 is replaced by the rolling 24-hour sum in NAWS_Notifications::snapshot().
             'rain' => [
                 'group' => 'weather', 'scope' => 'module', 'types' => [ 'NAModule3' ],
                 'reading' => 'sum_rain_24', 'param' => 'threshold', 'kind' => 'rain',
@@ -96,6 +101,7 @@ final class NAWS_Notify_Rules {
                 'hold_on' => 0, 'hold_off' => 0, 'clears' => false,
             ],
         ];
+        return $catalog;
     }
 
     /** Settings as shipped: no recipients, every rule off with its default parameter. */
@@ -312,6 +318,9 @@ final class NAWS_Notify_Rules {
             }
 
             if ( ! $sync_ok ) {
+                if ( ! $enabled ) {
+                    continue;
+                }
                 foreach ( $state as $k => $e ) {
                     if ( is_array( $e ) && str_starts_with( (string) $k, $rule . '|' ) && self::keep( $e ) ) {
                         $new[ $k ] = $e;
@@ -438,7 +447,7 @@ final class NAWS_Notify_Rules {
             'module_type' => (string) ( $m['module_type'] ?? '' ),
             'status'      => $status,
             'reason'      => $reason,
-            'since'       => (int) ( ( ! empty( $entry['active'] ) ? $entry['since'] : ( $entry['pending_since'] ?? 0 ) ) ?? 0 ),
+            'since'       => (int) ( $entry['pending_since'] ?? ( ! empty( $entry['active'] ) ? $entry['since'] : 0 ) ),
             'value'       => $value,
             'threshold'   => $def['param'] !== '' ? ( $cfg[ $def['param'] ] ?? $def['default'] ) : null,
             'kind'        => $def['kind'],

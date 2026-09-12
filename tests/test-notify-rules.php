@@ -40,7 +40,7 @@ check( 'Gruppen',        array_map( fn( $d ) => $d['group'],    $cat ), [ 'batte
 check( 'Scopes',         array_map( fn( $d ) => $d['scope'],    $cat ), [ 'battery' => 'module', 'rf' => 'module', 'wifi' => 'station', 'station_silent' => 'station', 'module_silent' => 'module', 'sync_failed' => 'site', 'auth_required' => 'site', 'frost' => 'module', 'gust' => 'module', 'rain' => 'module' ] );
 check( 'Vorgaben',       array_map( fn( $d ) => $d['default'],  $cat ), [ 'battery' => 20, 'rf' => 'low', 'wifi' => 'bad', 'station_silent' => 60, 'module_silent' => 60, 'sync_failed' => null, 'auth_required' => null, 'frost' => 0.0, 'gust' => 60.0, 'rain' => 20.0 ] );
 check( 'Beharrungen an', array_map( fn( $d ) => $d['hold_on'],  $cat ), [ 'battery' => 0, 'rf' => 1800, 'wifi' => 1800, 'station_silent' => 0, 'module_silent' => 0, 'sync_failed' => 0, 'auth_required' => 0, 'frost' => 0, 'gust' => 0, 'rain' => 0 ] );
-check( 'Beharrungen aus',array_map( fn( $d ) => $d['hold_off'], $cat ), [ 'battery' => 0, 'rf' => 1800, 'wifi' => 1800, 'station_silent' => 0, 'module_silent' => 0, 'sync_failed' => 0, 'auth_required' => 0, 'frost' => 3600, 'gust' => 3600, 'rain' => 0 ] );
+check( 'Beharrungen aus',array_map( fn( $d ) => $d['hold_off'], $cat ), [ 'battery' => 0, 'rf' => 1800, 'wifi' => 1800, 'station_silent' => 1800, 'module_silent' => 1800, 'sync_failed' => 0, 'auth_required' => 0, 'frost' => 3600, 'gust' => 3600, 'rain' => 0 ] );
 check( 'nur Regen ohne Entwarnung', array_keys( array_filter( $cat, fn( $d ) => ! $d['clears'] ) ), [ 'rain' ] );
 check( 'Stufen Funk und WLAN', [ $cat['rf']['levels'], $cat['wifi']['levels'] ], [ [ 'low' => [ 90, 80 ], 'medium' => [ 80, 70 ] ], [ 'bad' => [ 86, 71 ], 'average' => [ 71, 56 ] ] ] );
 $def = NAWS_Notify_Rules::defaults();
@@ -139,6 +139,8 @@ check( 'Boe: unter Schwelle wartet 60 min', [ $g2['events'], $g2['state']['gust|
 // Die Basis meldet sich im Szenario mit — sonst gilt sie nach 60 min als still und friert die Wetterregel ein.
 $g3 = NAWS_Notify_Rules::evaluate( $snap( array_merge( $base, [ 'last_status_store' => $NOW + 3900 ] ), $wm( 40.0, $NOW + 4200 ) ), $sg, $g2['state'], $NOW + 4200, $ctx );
 check( 'Boe: nach 60 min clear',             [ $ev( $g3 ), $g3['state'] ], [ [ [ 'gust', 'clear', 'Wind', 40.0, 60.0 ] ], [] ] );
+$g2row = null; foreach ( $g2['rows'] as $x ) { if ( $x['rule'] === 'gust' && $x['module_id'] === 'wind' ) { $g2row = $x; } }
+check( 'Zeile: Entwarnungs-Beharrung zeigt ihren eigenen Beginn, nicht den der Warnung', [ $g2row['status'], $g2row['since'] ], [ 'pending', $NOW + 600 ] );
 
 $sn = $on( [ 'rain' => [ 'enabled' => 1, 'threshold' => 20.0 ] ] );
 $rm = fn( float $r, int $at ) => mod( 'NAModule3', [ 'module_id' => 'rain', 'module_name' => 'Regen', 'reachable' => 1, 'last_message' => $at, 'readings' => [ 'sum_rain_24' => [ 'value' => $r, 'at' => $at ] ] ] );
@@ -152,8 +154,12 @@ $d = NAWS_Notify_Rules::evaluate( $snap( $dead, $gast ), $ss, [], $NOW, $ctx );
 check( 'Basis still: nur station_silent meldet', $ev( $d ), [ [ 'station_silent', 'raise', 'Basis', $NOW - 300, 60 ] ] );
 check( 'Basis still: Batterie ausgesetzt, WLAN nicht', [ $row( $d, 'battery', 'gast' ), $row( $d, 'wifi', 'base' ) ], [ [ 'suspended', 'station_silent' ], [ 'ok', '' ] ] );
 check( 'Basis still: Zustand nur die Basis', array_keys( $d['state'] ), [ 'station_silent|base' ] );
+$d0 = NAWS_Notify_Rules::evaluate( $snap( $dead, $gast ), $on( [ 'battery' => [ 'enabled' => 1, 'threshold' => 25 ] ] ), [], $NOW, $ctx );
+check( 'Basis still mit station_silent AUS: Modulregeln trotzdem ausgesetzt, kein Wechsel', [ $d0['events'], $row( $d0, 'battery', 'gast' ), $d0['state'] ], [ [], [ 'suspended', 'station_silent' ], [] ] );
 $d2 = NAWS_Notify_Rules::evaluate( $snap( $base, $gast ), $ss, $d['state'], $NOW + 600, $ctx );
-check( 'Basis zurueck: clear und Batterie meldet', $ev( $d2 ), [ [ 'battery', 'raise', 'Gast', 23, 25 ], [ 'station_silent', 'clear', 'Basis', $NOW - 300, 60 ] ] );
+check( 'Basis zurueck: Batterie meldet, Entwarnung wartet 30 min', [ $ev( $d2 ), $row( $d2, 'station_silent', 'base' ), $d2['state']['station_silent|base']['active'] ], [ [ [ 'battery', 'raise', 'Gast', 23, 25 ] ], [ 'pending', '' ], true ] );
+$d3 = NAWS_Notify_Rules::evaluate( $snap( $base, $gast ), $ss, $d2['state'], $NOW + 600 + 1800, $ctx );
+check( 'Basis zurueck: nach 30 min Entwarnung', [ $ev( $d3 ), array_keys( $d3['state'] ) ], [ [ [ 'station_silent', 'clear', 'Basis', $NOW - 300, 60 ] ], [ 'battery|gast' ] ] );
 
 $was = [ 'battery|gast' => [ 'active' => true, 'since' => $NOW - 100, 'pending_since' => null, 'value' => 23 ] ];
 $e = NAWS_Notify_Rules::evaluate( $snap( $base, $gast ), $on(), $was, $NOW, $ctx );
@@ -170,6 +176,8 @@ $h0 = NAWS_Notify_Rules::evaluate( [ 'modules' => [] ], $sf, [], $NOW, [ 'consec
 check( 'Abruf scheitert: zwei Fehler reichen nicht', $h0['events'], [] );
 $h2 = NAWS_Notify_Rules::evaluate( $snap( $base, $gast ), $sf, $h['state'], $NOW + 600, $ctx );
 check( 'naechster Erfolg: clear, Batterie bleibt aktiv ohne Wechsel', [ $ev( $h2 ), $h2['state']['battery|gast']['active'] ], [ [ [ 'sync_failed', 'clear', '', 0, null ] ], true ] );
+$h3 = NAWS_Notify_Rules::evaluate( [ 'modules' => [] ], $on( [ 'sync_failed' => [ 'enabled' => 1 ] ] ), $was, $NOW, $ctxF );
+check( 'kein Abruf + Regel aus: Eintrag faellt trotzdem weg', array_keys( $h3['state'] ), [ 'sync_failed|site' ] );
 
 $sa = $on( [ 'auth_required' => [ 'enabled' => 1 ] ] );
 $i1 = NAWS_Notify_Rules::evaluate( [ 'modules' => [] ], $sa, [], $NOW, [ 'auth_required' => true ] + $ctxF );
