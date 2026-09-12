@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Plugins - XTX Integration for Netatmo - Stable Readme (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-09-09 18:33:21+0000\n"
+"PO-Revision-Date: 2026-09-12 10:05:07+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,6 +20,18 @@ msgstr "Verbindet sich mit der Netatmo-API, speichert alle Sensordaten lokal und
 #, gp-priority: high
 msgid "XTX Integration for Netatmo"
 msgstr "XTX Integration for Netatmo"
+
+#. Found in faq paragraph.
+msgid "Open XTX Netatmo → Notifications and press \"Send test mail\". If the page reports that the mail could not be sent, your server sends no mail at all: an SMTP plugin or your hosting provider fixes that, not the plugin. If the test mail arrives but no notifications do, check that the master switch and the rule are switched on and look at the log on the same page. Notifications go out only when a state changes; a battery that has been low since before you switched the rule on is reported at the next fetch, not again afterwards."
+msgstr "Öffne XTX Netatmo → Benachrichtigungen und drücke „Testmail senden\". Meldet die Seite, dass die Mail nicht gesendet werden konnte, verschickt dein Server gar keine Mails: ein SMTP-Plugin oder dein Hoster behebt das, nicht das Plugin. Kommt die Testmail an, aber keine Benachrichtigung, prüfe, ob Generalschalter und Regel eingeschaltet sind, und sieh ins Protokoll auf derselben Seite. Benachrichtigungen gehen nur bei einem Zustandswechsel raus; eine Batterie, die schon vor dem Einschalten der Regel schwach war, wird beim nächsten Abruf gemeldet, danach nicht mehr."
+
+#. Found in faq header.
+msgid "I don't receive notification e-mails"
+msgstr "Ich bekomme keine Benachrichtigungs-Mails"
+
+#. Found in description list item.
+msgid "<strong>E-Mail Notifications</strong> – battery, radio and Wi-Fi, station offline, failed syncs, frost, heat, gusts, rain, rain starting, CO₂; per-rule thresholds, one mail per state change and an all-clear when the state ends, and a master switch"
+msgstr "<strong>E-Mail-Benachrichtigungen</strong> – Batterie, Funk und WLAN, Station offline, gescheiterte Abrufe, Frost, Hitze, Böen, Regen, Regenbeginn, CO₂; Schwellen je Regel, eine Mail je Zustandswechsel und eine Entwarnung, wenn der Zustand endet, dazu ein Generalschalter"
 
 #. Found in description list item.
 msgid "<code>[naws_windrose]</code> – Where the wind comes from and how hard, as a rose of 16 or 8 directions stacked by Beaufort class, with a period switcher (<code>period</code>, <code>from</code>, <code>to</code>, <code>measure</code>, <code>sectors</code>, <code>show</code>, <code>switcher</code>, <code>size</code>, <code>title</code>)"
@@ -459,6 +471,31 @@ msgstr "Live-Dashboard mit Sensorkacheln und 24-Stunden-Verläufen"
 
 #. Found in changelog list item.
 #, gp-priority: low
+msgid "Fix: Appearance: saving without the icon set in the input no longer logs \"Undefined array key\"."
+msgstr "Fix: Erscheinungsbild: Speichern ohne Icon-Set in der Eingabe schreibt kein „Undefined array key\" mehr ins Log."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: the wind rose's period buttons turned red under the mouse on Hello Elementor and took the \"primary\" accent colour when active. Every rule for them now carries two classes and sets rest, hover, focus and active state itself, and the active button has its own colour — an eighth one on the Wind Rose tab under Appearance."
+msgstr "Fix: Die Zeitraum-Knöpfe der Windrose wurden unter Hello Elementor rot, sobald die Maus darüber lag, und der aktive Knopf trug die Akzentfarbe „Primär\". Jede Regel für sie trägt jetzt zwei Klassen und setzt Ruhe-, Hover-, Fokus- und Aktivzustand selbst, und der aktive Knopf hat eine eigene Farbe — eine achte im Reiter „Windrose\" unter Erscheinungsbild."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Added: two actions for other code — <code>naws_sync_failed( $message, $consecutive_errors )</code> fires wherever a fetch fails; <code>naws_data_synced( $readings )</code> existed before and is documented now."
+msgstr "Added: Zwei Aktionen für fremden Code — <code>naws_sync_failed( $message, $consecutive_errors )</code> feuert bei jedem gescheiterten Abruf; <code>naws_data_synced( $readings )</code> gab es schon und ist jetzt dokumentiert."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Added: the five status fields Netatmo sends with every module are stored now (schema 1.5): battery percentage, Wi-Fi of the base station, whether a device is reachable, when the base station last reported to Netatmo and when a module last spoke to the base station. The Modules page shows Netatmo's own battery percentage instead of an estimate from the voltage."
+msgstr "Added: Die fünf Statusfelder, die Netatmo mit jedem Modul sendet, werden jetzt gespeichert (Schema 1.5): Batterie in Prozent, WLAN der Basisstation, ob ein Gerät erreichbar ist, wann die Basisstation zuletzt an Netatmo gemeldet hat und wann ein Modul zuletzt mit der Basisstation gesprochen hat. Die Modulseite zeigt Netatmos eigenen Batteriewert statt einer Schätzung aus der Spannung."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Added: e-mail notifications. After every fetch the plugin checks up to thirteen rules and mails every change of state — once when it begins and, for every rule but rain, once when it is over; all changes of one fetch go into one mail. Seven rules watch the station: battery of a module below a percentage, weak radio link of a module, poor Wi-Fi of the base station, base station not reporting to Netatmo, module not reporting to the base station, three failed fetches in a row, expired credentials. Six watch the weather and the indoor air: frost, heat, a gust above a threshold, rain of the last 24 hours above a threshold, rain starting, CO₂ of the base station or an indoor module above a threshold. Radio, Wi-Fi and the two silence rules hold for a while before they speak or clear; frost and gust wait an hour below the threshold before the all-clear; rain sends no all-clear. All rules ship switched off, and a master switch pauses every mail without touching the rules. The new page XTX Netatmo → Notifications holds the switch, the recipients, the rules with their thresholds in your units, a test-mail button and the last fifty mails."
+msgstr "Added: E-Mail-Benachrichtigungen. Nach jedem Abruf prüft das Plugin bis zu dreizehn Regeln und verschickt bei jedem Zustandswechsel eine Mail — einmal, wenn er beginnt, und bei allen Regeln außer Regen einmal, wenn er vorbei ist; alle Wechsel eines Abrufs kommen in eine Mail. Sieben Regeln beobachten die Station: Batterie eines Moduls unter einem Prozentwert, schwache Funkverbindung eines Moduls, schlechtes WLAN der Basisstation, Basisstation meldet sich nicht bei Netatmo, Modul meldet sich nicht bei der Basisstation, drei gescheiterte Abrufe in Folge, verfallene Zugangsdaten. Sechs beobachten Wetter und Raumluft: Frost, Hitze, Böe über einer Schwelle, Regen der letzten 24 Stunden über einer Schwelle, Regenbeginn, CO₂ der Basisstation oder eines Innenmoduls über einer Schwelle. Funk, WLAN und die beiden Stille-Regeln warten eine Weile, bevor sie melden oder entwarnen; Frost und Böe warten eine Stunde unter der Schwelle bis zur Entwarnung; Regen entwarnt nicht. Alle Regeln sind bei Auslieferung aus, und ein Generalschalter setzt alle Mails aus, ohne die Regeln anzurühren. Die neue Seite XTX Netatmo → Benachrichtigungen enthält den Schalter, die Empfänger, die Regeln mit ihren Schwellen in deinen Einheiten, einen Testmail-Knopf und die letzten fünfzig Mails."
+
+#. Found in changelog list item.
+#, gp-priority: low
 msgid "Fix: on Android, Chrome's automatic dark theme inverted the wind rose and the sun's arc into black shapes. The blocks declare <code>color-scheme: only light</code> now, which takes exactly them out of that and leaves the page alone."
 msgstr "Fix: Auf Android verkehrte Chromes automatisches Dunkeldesign Windrose und Sonnenbahn in schwarze Flächen. Die Blöcke deklarieren jetzt <code>color-scheme: only light</code>, was genau sie herausnimmt und die Seite in Ruhe lässt."
 
@@ -576,23 +613,3 @@ msgstr "Geändert: Die MAC-Adressen deiner Module werden nicht mehr in öffentli
 #, gp-priority: low
 msgid "Added: <code>[naws_heatmap]</code> — a year of outdoor daily mean temperatures as a calendar grid: twelve rows of months, thirty-one columns of days, one coloured tile per day, and a row of buttons to page through the years. What a curve makes you read, a grid lets you see: the cold fortnight in February and the hot week in July are shapes on the page rather than wiggles on a line. It reads the daily averages the annual chart already uses, so there is nothing to import. The ten colour stops are settings under Appearance → Heatmap Scale, values between two stops are interpolated, and they are anchored in Celsius even when the display is set to Fahrenheit, because the colour comes from the stored value and the tooltip from the unit you chose. Where a day has no stored average but does have a minimum and a maximum, the tile shows the mean of the two and its tooltip says so. The grid is a table rather than a drawing: the month column stays put while the days scroll sideways on a phone, colours are rendered on the server so the map is complete without JavaScript, and a screen reader reads \"March, 14th, 8.2 °C\" instead of \"image\". Attributes: <code>year</code>, <code>title</code>, <code>legend</code>."
 msgstr "Neu: <code>[naws_heatmap]</code> — ein Jahr Außen-Tagesdurchschnittstemperatur als Kalenderraster: zwölf Zeilen für die Monate, 31 Spalten für die Tage, eine farbige Kachel pro Tag und eine Reihe Knöpfe zum Blättern durch die Jahre. Was eine Kurve zum Ablesen zwingt, lässt das Raster sehen: die kalten zwei Wochen im Februar und die heiße Woche im Juli sind Flächen auf der Seite statt Zacken auf einer Linie. Es liest dieselben Tagesmittel wie das Jahresdiagramm, es gibt also nichts zu importieren. Die zehn Farbstützpunkte sind Einstellungen unter Erscheinungsbild → Heatmap-Skala, Werte zwischen zwei Stützpunkten werden interpoliert, und sie bleiben in Celsius verankert, auch wenn die Anzeige auf Fahrenheit steht, weil die Farbe aus dem gespeicherten Wert kommt und der Tooltip aus der gewählten Einheit. Fehlt einem Tag der gespeicherte Durchschnitt, hat er aber Minimum und Maximum, zeigt die Kachel deren Mittel, und der Tooltip sagt das auch. Das Raster ist eine Tabelle und keine Grafik: Die Monatsspalte bleibt stehen, während die Tage auf dem Handy seitwärts durchlaufen, die Farben rechnet der Server, die Karte ist also auch ohne JavaScript vollständig da, und ein Screenreader liest „14. März, 8,2 °C“ statt „Grafik“. Attribute: <code>year</code>, <code>title</code>, <code>legend</code>."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "New: German and Norwegian ship with this release as a bridge. Language packs do not exist the moment an update goes out, and an installation that had a German interface yesterday should not find an English one today. A pack always takes precedence once it is built."
-msgstr "Neu: Deutsch und Norwegisch liegen dieser Version als Übergang bei. Im Moment einer Veröffentlichung gibt es noch keine Sprachpakete, und eine Installation, die gestern eine deutsche Oberfläche hatte, soll heute keine englische vorfinden. Sobald ein Paket gebaut ist, hat es Vorrang."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Changed: weekday, month and weather-condition names are translatable. They used to be two hardcoded lists, German and English, so a Norwegian reader got English with no way to change it."
-msgstr "Geändert: Wochentage, Monatsnamen und Wetterlagen sind übersetzbar. Sie standen bisher als zwei fest verdrahtete Listen im Code, Deutsch und Englisch — wer norwegisch las, bekam Englisch und konnte nichts daran ändern."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Changed: the interface translates through WordPress now instead of through the plugin's own language files. Until now translate.wordpress.org saw six strings of this plugin; it sees all 649. That means anyone can contribute a language without touching the code, and every language gets a proper WordPress language pack."
-msgstr "Geändert: Die Oberfläche übersetzt jetzt über WordPress statt über die plugin-eigenen Sprachdateien. Bisher sah translate.wordpress.org sechs Strings dieses Plugins; jetzt sind es alle 649. Damit kann jeder eine Sprache beitragen, ohne den Code anzufassen, und jede Sprache bekommt ein richtiges WordPress-Sprachpaket."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Changed: <strong>breaking</strong> — the plugin no longer has its own language setting; the WordPress locale decides. The old setting was a single site-wide value for the front end and the back end at once, and it read the site language rather than your own, so it could never give you a back end in one language and your visitors another. Site Language plus the per-user Language in your profile do exactly that, and for your theme and every other plugin at the same time. If you had the plugin set to a language other than your site's, set the site language instead — or your own user language, if you meant only your own screen."
-msgstr "Geändert: <strong>breaking</strong> — das Plugin hat keine eigene Spracheinstellung mehr, die WordPress-Locale entscheidet. Die alte Einstellung war ein einziger seitenweiter Wert für Frontend und Backend zusammen, und sie las die Sprache der Website statt deiner eigenen — sie konnte dir also nie ein Backend in einer Sprache und den Besuchern eine andere geben. Die Sprache der Website plus die Sprache in deinem Benutzerprofil tun genau das, und zwar für dein Theme und jedes andere Plugin gleich mit. Wenn du das Plugin auf eine andere Sprache als deine Website eingestellt hattest, stell stattdessen die Sprache der Website um — oder deine Benutzersprache, wenn du nur deinen eigenen Bildschirm gemeint hast."
