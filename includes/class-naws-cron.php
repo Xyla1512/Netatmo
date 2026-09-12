@@ -3,6 +3,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class NAWS_Cron {
 
+    /**
+     * Actions fired by the fetch: `naws_data_synced` (int $readings_saved)
+     * after a successful sync, `naws_sync_failed` (string $message,
+     * int $consecutive_errors) after a failed one — including the
+     * "re-authentication required" case, where $message is 'auth_required'.
+     */
     const HOOK_FETCH   = 'naws_fetch_data';
     const HOOK_DAILY   = 'naws_daily_summary';
 
@@ -85,7 +91,7 @@ class NAWS_Cron {
      *
      * @return int
      */
-    private static function base_interval() {
+    public static function base_interval() {
         $opts = get_option( 'naws_settings', [] );
         return self::normalise_interval( $opts['cron_interval'] ?? self::DEFAULT_INTERVAL ) * MINUTE_IN_SECONDS;
     }
@@ -346,6 +352,7 @@ class NAWS_Cron {
             $this->log( 'error', 'Uncaught exception: ' . $e->getMessage() );
             NAWS_Logger::error( 'cron', 'Uncaught exception in run_fetch: ' . $e->getMessage() );
             self::record_error();
+            do_action( 'naws_sync_failed', 'Uncaught exception: ' . $e->getMessage(), (int) self::get_polling_state()['consecutive_errors'] );
         }
     }
 
@@ -367,6 +374,7 @@ class NAWS_Cron {
         if ( get_option( 'naws_auth_required' ) ) {
             $this->log( 'error', 'Re-authentication required. Please visit XTX Netatmo → Settings.' );
             self::record_error();
+            do_action( 'naws_sync_failed', 'auth_required', (int) self::get_polling_state()['consecutive_errors'] );
             return;
         }
 
@@ -383,6 +391,7 @@ class NAWS_Cron {
             $this->log( 'error', $result->get_error_message() );
             NAWS_Logger::error( 'cron', 'Sync failed: ' . $result->get_error_message() );
             self::record_error();
+            do_action( 'naws_sync_failed', $result->get_error_message(), (int) self::get_polling_state()['consecutive_errors'] );
         } else {
             $expiry  = (int) get_option( 'naws_token_expiry', 0 );
             $this->log( 'ok', sprintf(
