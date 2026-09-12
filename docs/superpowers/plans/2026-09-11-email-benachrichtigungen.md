@@ -83,7 +83,13 @@ Wer einen der vier Punkte nicht erfüllen kann, meldet das und umgeht ihn nicht.
  *
  * @package NAWS
  */
-define( 'ABSPATH', __DIR__ );
+// install() laedt ABSPATH . 'wp-admin/includes/upgrade.php' per require_once,
+// bevor es dbDelta() ruft. Ein leerer Stub an genau dieser Stelle laesst
+// den Aufruf durch; dbDelta() selbst wird unten gestubbt.
+$naws_test_abspath = rtrim( sys_get_temp_dir(), '/\\' ) . '/naws-test-abspath-' . getmypid() . '/';
+@mkdir( $naws_test_abspath . 'wp-admin/includes', 0777, true );
+file_put_contents( $naws_test_abspath . 'wp-admin/includes/upgrade.php', "<?php\n" );
+define( 'ABSPATH', $naws_test_abspath );
 define( 'ARRAY_A', 'ARRAY_A' );
 define( 'MINUTE_IN_SECONDS', 60 );
 define( 'HOUR_IN_SECONDS', 3600 );
@@ -196,6 +202,9 @@ $wpdb->raw = []; $wpdb->columns = [ 'id', 'module_id', 'rf_status', 'battery_per
 NAWS_Database::install();
 $alters = array_filter( $wpdb->raw, fn( $q ) => str_contains( $q, 'naws_modules' ) && str_contains( $q, 'ADD COLUMN' ) );
 check( 'kein ALTER, wenn alle da sind',     count( $alters ), 0 );
+
+@unlink( $naws_test_abspath . 'wp-admin/includes/upgrade.php' );
+@rmdir( $naws_test_abspath . 'wp-admin/includes' ); @rmdir( $naws_test_abspath . 'wp-admin' ); @rmdir( $naws_test_abspath );
 
 printf( "\n%d ok, %d fehlgeschlagen\n", $passed, $failed );
 exit( $failed ? 1 : 0 );
@@ -381,7 +390,8 @@ check( 'to_base: 20 kn = 37 km/h',       round( NAWS_Notify_Rules::to_base( 'win
 check( 'to_base: 1 in = 25.4 mm',        round( NAWS_Notify_Rules::to_base( 'rain', 1.0, $F ), 2 ), 25.4 );
 check( 'to_base: Prozent unveraendert',  NAWS_Notify_Rules::to_base( 'percent', 20.0, $F ), 20.0 );
 foreach ( [ [ 'temp', -7.5 ], [ 'wind', 60.0 ], [ 'rain', 20.0 ] ] as [ $k, $v ] ) {
-    check( "hin und zurueck $k", round( NAWS_Notify_Rules::to_base( $k, NAWS_Notify_Rules::to_display( $k, $v, $F ), $F ), 2 ), $v );
+    // to_display() rundet auf die Anzeigestelle; zurueckgerechnet bleibt ein Rest unter 0,1.
+    check( "hin und zurueck $k", abs( NAWS_Notify_Rules::to_base( $k, NAWS_Notify_Rules::to_display( $k, $v, $F ), $F ) - $v ) < 0.1, true );
 }
 check( 'unit_label', [ NAWS_Notify_Rules::unit_label( 'temp', $U ), NAWS_Notify_Rules::unit_label( 'temp', $F ), NAWS_Notify_Rules::unit_label( 'wind', $U ), NAWS_Notify_Rules::unit_label( 'wind', $F ), NAWS_Notify_Rules::unit_label( 'rain', $F ), NAWS_Notify_Rules::unit_label( 'percent', $U ), NAWS_Notify_Rules::unit_label( 'minutes', $U ), NAWS_Notify_Rules::unit_label( 'level', $U ) ], [ '°C', '°F', 'km/h', 'mph', 'in', '%', 'min', '' ] );
 
@@ -770,7 +780,8 @@ $g1 = NAWS_Notify_Rules::evaluate( $snap( $base, $wm( 70.0, $NOW ) ), $sg, [], $
 check( 'Boe: raise sofort',                  $ev( $g1 ), [ [ 'gust', 'raise', 'Wind', 70.0, 60.0 ] ] );
 $g2 = NAWS_Notify_Rules::evaluate( $snap( $base, $wm( 40.0, $NOW + 600 ) ), $sg, $g1['state'], $NOW + 600, $ctx );
 check( 'Boe: unter Schwelle wartet 60 min', [ $g2['events'], $g2['state']['gust|wind']['active'], $row( $g2, 'gust', 'wind' ) ], [ [], true, [ 'pending', '' ] ] );
-$g3 = NAWS_Notify_Rules::evaluate( $snap( $base, $wm( 40.0, $NOW + 4200 ) ), $sg, $g2['state'], $NOW + 4200, $ctx );
+// Die Basis meldet sich im Szenario mit — sonst gilt sie nach 60 min als still und friert die Wetterregel ein.
+$g3 = NAWS_Notify_Rules::evaluate( $snap( array_merge( $base, [ 'last_status_store' => $NOW + 3900 ] ), $wm( 40.0, $NOW + 4200 ) ), $sg, $g2['state'], $NOW + 4200, $ctx );
 check( 'Boe: nach 60 min clear',             [ $ev( $g3 ), $g3['state'] ], [ [ [ 'gust', 'clear', 'Wind', 40.0, 60.0 ] ], [] ] );
 
 $sn = $on( [ 'rain' => [ 'enabled' => 1, 'threshold' => 20.0 ] ] );
@@ -1159,10 +1170,11 @@ final class NAWS_Notifications {
     /** The display units from the plugin settings, always all three keys. */
     public static function units(): array {
         $o = get_option( 'naws_settings', [] );
-        $o = is_array( $o ) ? $o : [];
+        $o    = is_array( $o ) ? $o : [];
+        $wind = $o['wind_unit'] ?? 'kmh';
         return [
             'temperature_unit' => ( $o['temperature_unit'] ?? 'C' ) === 'F' ? 'F' : 'C',
-            'wind_unit'        => in_array( $o['wind_unit'] ?? 'kmh', [ 'kmh', 'ms', 'mph', 'kn' ], true ) ? $o['wind_unit'] : 'kmh',
+            'wind_unit'        => in_array( $wind, [ 'kmh', 'ms', 'mph', 'kn' ], true ) ? $wind : 'kmh',
             'rain_unit'        => ( $o['rain_unit'] ?? 'mm' ) === 'in' ? 'in' : 'mm',
         ];
     }
@@ -1324,7 +1336,9 @@ function wp_date( $f, $t = null )            { return gmdate( $f, $t ?? time() )
 function wp_mail( $to, $subject, $body )     { $GLOBALS['naws_test_mails'][] = [ $to, $subject, $body ]; return $GLOBALS['naws_test_mail_ok'] ?? true; }
 function add_action( ...$a )                 {}
 function get_locale()                        { return 'de_DE'; }
-function determine_locale()                  { return 'de_DE'; }
+function determine_locale()                  { return $GLOBALS['naws_test_user_locale'] ?? 'de_DE'; }
+function switch_to_locale( $l )              { $GLOBALS['naws_test_locale_calls'][] = 'switch:' . $l; return true; }
+function restore_previous_locale()           { $GLOBALS['naws_test_locale_calls'][] = 'restore'; return true; }
 require_once __DIR__ . '/i18n-stubs.php';
 class NAWS_Helpers {
     public static function format_value( $p, $v ) { return round( $v, 1 ); }
@@ -1392,6 +1406,17 @@ check( 'Testmail im Protokoll ohne Wechsel', [ count( NAWS_Notifications::get_lo
 $GLOBALS['naws_test_mail_ok'] = false;
 check( 'send(): false wird protokolliert', [ NAWS_Notifications::send( [ 'f@x.de' ], 'x', 'y' ), count( NAWS_Logger::$errors ) > 0 ], [ false, true ] );
 $GLOBALS['naws_test_mail_ok'] = true;
+
+echo "\nTestmail in der Site-Sprache\n" . str_repeat( '-', 74 ) . "\n";
+$GLOBALS['naws_test_user_locale'] = 'en_US'; $GLOBALS['naws_test_locale_calls'] = [];
+NAWS_Notifications::send_test();
+check( 'send_test(): auf die Site-Sprache umgeschaltet und zurueck', $GLOBALS['naws_test_locale_calls'], [ 'switch:de_DE', 'restore' ] );
+$GLOBALS['naws_test_locale_calls'] = []; $GLOBALS['naws_test_mail_ok'] = false;
+NAWS_Notifications::send_test();
+check( 'send_test(): auch bei Fehlschlag zurueck (finally)', $GLOBALS['naws_test_locale_calls'], [ 'switch:de_DE', 'restore' ] );
+$GLOBALS['naws_test_locale_calls'] = []; $GLOBALS['naws_test_mail_ok'] = true; $GLOBALS['naws_test_user_locale'] = 'de_DE';
+NAWS_Notifications::send_test();
+check( 'send_test(): gleiche Sprache -> kein Umschalten', $GLOBALS['naws_test_locale_calls'], [] );
 
 echo "\nLauf nach gescheitertem Abruf, mit Lock\n" . str_repeat( '-', 74 ) . "\n";
 $GLOBALS['naws_test_options'][ NAWS_Notifications::OPTION_KEY ] = [ 'recipients' => [ 'f@x.de' ], 'rules' => [ 'sync_failed' => [ 'enabled' => 1 ] ] ];
@@ -1980,8 +2005,9 @@ check( 'Regeln sichtbar per map_deep',               str_contains( $admin, "map_
 check( 'Rueckleitung per wp_safe_redirect + exit in beiden Handlern', preg_match_all( '/wp_safe_redirect\( \$url \);\s*\n\s*exit;/', $admin ) >= 2, true );
 
 echo "\nView\n" . str_repeat( '-', 74 ) . "\n";
-$view  = file_get_contents( $PLUGIN . 'admin/views/notifications.php' );
+$view  = (string) file_get_contents( $PLUGIN . 'admin/views/notifications.php' );
 $lines = explode( "\n", $view );
+check( 'View vorhanden und nicht leer',              $view !== '', true );
 check( 'kein ob_start, kein script, kein style',      [ str_contains( $view, 'ob_start' ), stripos( $view, '<script' ) !== false, stripos( $view, '<style' ) !== false ], [ false, false, false ] );
 check( 'zwei Formulare mit Nonce',                   [ substr_count( $view, 'method="post"' ), str_contains( $view, "wp_nonce_field( 'naws_save_notifications' )" ), str_contains( $view, "wp_nonce_field( 'naws_test_notification' )" ) ], [ 2, true, true ] );
 check( 'jeder $_GET-Zugriff steht bei einem Nonce-Check', preg_match_all( "/isset\( \\\$_GET\['(updated|dropped|test)'\] \) && wp_verify_nonce\( sanitize_text_field\( wp_unslash\( \\\$_GET\['_wpnonce'\] \?\? '' \) \), 'naws_notifications_notice' \)/", $view ), 3 );
@@ -2156,7 +2182,7 @@ $groups = [
                                 $shown = in_array( $def['kind'], [ 'temp', 'wind', 'rain' ], true )
                                     ? NAWS_Notify_Rules::to_display( $def['kind'], (float) $cfg['threshold'], $units )
                                     : (int) $cfg['threshold'];
-                                $step  = $def['kind'] === 'percent' ? '1' : '0.1'; ?>
+                                $step  = $def['kind'] === 'percent' ? '1' : 'any'; ?>
                                 <input type="number" step="<?php echo esc_attr( $step ); ?>" name="<?php echo esc_attr( $name ); ?>[threshold]" value="<?php echo esc_attr( $shown ); ?>" class="small-text">
                                 <?php echo esc_html( NAWS_Notify_Rules::unit_label( $def['kind'], $units ) ); ?>
                             <?php elseif ( $def['param'] === 'level' ) : ?>

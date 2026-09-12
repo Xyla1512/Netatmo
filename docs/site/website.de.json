@@ -1,11 +1,11 @@
 {
-    "aktualisiert": "2026-09-08",
+    "aktualisiert": "2026-09-12",
     "vorhaben": [
         {
             "id": "email-benachrichtigungen",
             "titel": "E-Mail-Benachrichtigungen bei Ereignissen und Störungen",
             "satz": "Eine Nachricht, wenn etwas passiert: Frost in der Nacht, eine Böe über deiner Schwelle, ein Regentag über Maß — und wenn die Station schweigt, der Abruf scheitert oder die Zugangsdaten verfallen. Welche Ereignisse, an wen und wie oft, stellst du im Backend ein.",
-            "ab": null,
+            "ab": "2.0.0",
             "bild": null
         },
         {

@@ -165,7 +165,9 @@ foreach ( [ 'de_DE', 'nb_NO' ] as $locale ) {
 // pruefen, statt nur "steht irgendwas Passendes drin". Seit der Windrose
 // (Task 11) gibt es zwei unabhaengige Plural-Originale in diesem Katalog:
 // das aeltere "%d day"/"%d days" und "last %d day"/"last %d days" aus dem
-// Zeitraum-Umschalter.
+// Zeitraum-Umschalter. Seit den E-Mail-Benachrichtigungen (Task 8) kommen
+// drei weitere hinzu: "%d warning"/"%d all-clear" aus der Zusammenfassung
+// einer Mail und "%d invalid address was dropped." aus der Empfaenger-Liste.
 echo "\nPlural-Eintraege sind richtig kompiliert\n" . str_repeat( '-', 74 ) . "\n";
 
 $plural_formen = [
@@ -176,6 +178,18 @@ $plural_formen = [
     "last %d day\0last %d days" => [
         'de_DE' => [ 'letzter %d Tag', 'letzte %d Tage' ],
         'nb_NO' => [ 'siste %d dag', 'siste %d dager' ],
+    ],
+    "%d warning\0%d warnings"   => [
+        'de_DE' => [ '%d Warnung', '%d Warnungen' ],
+        'nb_NO' => [ '%d varsel', '%d varsler' ],
+    ],
+    "%d all-clear\0%d all-clears" => [
+        'de_DE' => [ '%d Entwarnung', '%d Entwarnungen' ],
+        'nb_NO' => [ '%d friskmelding', '%d friskmeldinger' ],
+    ],
+    "%d invalid address was dropped.\0%d invalid addresses were dropped." => [
+        'de_DE' => [ '%d ungültige Adresse wurde verworfen.', '%d ungültige Adressen wurden verworfen.' ],
+        'nb_NO' => [ '%d ugyldig adresse ble forkastet.', '%d ugyldige adresser ble forkastet.' ],
     ],
 ];
 

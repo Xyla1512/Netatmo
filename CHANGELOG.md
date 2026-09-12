@@ -2,7 +2,12 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
-## [1.9.14]
+## [2.0.0]
+
+### Added
+- **E-mail notifications.** After every fetch the plugin checks up to thirteen rules and mails every change of state — once when it begins and, for every rule but rain, once when it is over; all changes of one fetch go into one mail. Seven rules watch the station: battery of a module below a percentage, weak radio link of a module, poor Wi-Fi of the base station, base station not reporting to Netatmo, module not reporting to the base station, three failed fetches in a row, expired credentials. Six watch the weather and the indoor air: frost, heat, a gust above a threshold, rain of the last 24 hours above a threshold, rain starting (rain in the last hour, one mail per rain), CO₂ of the base station or an indoor module above a threshold. Every rule has a switch, most a threshold. Radio and Wi-Fi must stay poor for 30 minutes before they speak; the two silence rules speak at once and give the all-clear only after 30 quiet-free minutes; frost and gust wait an hour below the threshold before the all-clear; rain sends no all-clear, one mail per rain event. All rules ship switched off. A master switch pauses every mail without touching the rules. The new page XTX Netatmo → Notifications holds a master switch, the recipients, the rules, a test-mail button and the last fifty mails, six visible and the rest in a scroll box.
+- The five status fields Netatmo sends with every module are stored now: battery percentage, Wi-Fi of the base station, whether a device is reachable, when the base station last reported to Netatmo and when a module last spoke to the base station (schema 1.5). The Modules page shows Netatmo's own battery percentage instead of an estimate from the voltage, which put a module at 44 % that Netatmo reports at 23 %.
+- Two actions for other code: `naws_sync_failed( string $message, int $consecutive_errors )` fires wherever a fetch fails; `naws_data_synced( int $readings )` existed before and is documented now.
 
 ### Fixed
 - **The wind rose's period buttons turned red under the mouse on Hello Elementor.** They are `<button>` elements, the theme's reset paints `button:hover` and `button:focus` in its own colour, and that rule outranked the plugin's single-class selector; the plugin had no hover rule of its own for these buttons. Every rule for them now carries two classes and sets rest, hover, focus and active state itself, so no theme has a say. All other buttons of the plugin already did this; a test walks every `<button>` in the templates and checks for a hover rule.

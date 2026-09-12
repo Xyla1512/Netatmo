@@ -24,7 +24,7 @@ define( 'NAWS_PLUGIN_FILE',    __FILE__ );
 define( 'NAWS_PLUGIN_DIR',     plugin_dir_path( __FILE__ ) );
 define( 'NAWS_PLUGIN_URL',     plugin_dir_url( __FILE__ ) );
 define( 'NAWS_PLUGIN_BASENAME',plugin_basename( __FILE__ ) );
-define( 'NAWS_DB_VERSION',     '1.4' );
+define( 'NAWS_DB_VERSION',     '1.5' );
 define( 'NAWS_TABLE_READINGS', 'naws_readings' );
 define( 'NAWS_TABLE_MODULES',  'naws_modules' );
 define( 'NAWS_TABLE_DAILY',    'naws_daily_summary' );
@@ -53,6 +53,8 @@ naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-calc.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-climate.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-records.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-windrose.php' );
+naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-notify-rules.php' );
+naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-notifications.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-forecast.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-fonts.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-colors.php' );
@@ -184,6 +186,7 @@ final class NAWS_Plugin {
         NAWS_Shortcodes::instance();
         NAWS_Ajax::instance();
         NAWS_Rest_API::init();
+        NAWS_Notifications::init();
 
         // ── Cron watchdog: schedule if missing OR stale ─────────────────────
         $next_fetch = wp_next_scheduled( NAWS_Cron::HOOK_FETCH );

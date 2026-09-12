@@ -93,6 +93,11 @@ class NAWS_Database {
             firmware      INT          DEFAULT NULL,
             battery_vp    INT          DEFAULT NULL,
             rf_status     INT          DEFAULT NULL,
+            battery_percent   TINYINT UNSIGNED DEFAULT NULL,
+            wifi_status       INT          DEFAULT NULL,
+            reachable         TINYINT(1)   DEFAULT NULL,
+            last_status_store BIGINT       DEFAULT NULL,
+            last_message      BIGINT       DEFAULT NULL,
             is_active     TINYINT(1)   NOT NULL DEFAULT 1,
             created_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -213,11 +218,50 @@ class NAWS_Database {
             $wpdb->query( 'ALTER TABLE `' . esc_sql( $t_mod ) . '` ADD COLUMN is_active TINYINT(1) NOT NULL DEFAULT 1 AFTER rf_status' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.NotPrepared -- DDL; table name from constant+prefix
             $wpdb->query( 'ALTER TABLE `' . esc_sql( $t_mod ) . '` ADD KEY idx_active (is_active)' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.NotPrepared -- DDL; table name from constant+prefix
         }
+
+        // v1.5: the five status fields Netatmo sends with every module. Every
+        // ALTER is a complete SQL literal; the table name comes from the
+        // constant plus prefix. Read by the notifications, shown on Modules.
+        $mcols = $wpdb->get_col( 'SHOW COLUMNS FROM `' . esc_sql( $t_mod ) . '`' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- schema check; table name from constant+prefix
+        $mcols = is_array( $mcols ) ? $mcols : [];
+        $v15   = [
+            'battery_percent'   => 'ADD COLUMN battery_percent TINYINT UNSIGNED DEFAULT NULL AFTER rf_status',
+            'wifi_status'       => 'ADD COLUMN wifi_status INT DEFAULT NULL AFTER battery_percent',
+            'reachable'         => 'ADD COLUMN reachable TINYINT(1) DEFAULT NULL AFTER wifi_status',
+            'last_status_store' => 'ADD COLUMN last_status_store BIGINT DEFAULT NULL AFTER reachable',
+            'last_message'      => 'ADD COLUMN last_message BIGINT DEFAULT NULL AFTER last_status_store',
+        ];
+        foreach ( $v15 as $col => $ddl ) {
+            if ( ! in_array( $col, $mcols, true ) ) {
+                $wpdb->query( 'ALTER TABLE `' . esc_sql( $t_mod ) . '` ' . $ddl ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.NotPrepared -- DDL from the literal list above; table name from constant+prefix
+            }
+        }
     }
 
     // ================================================================
     // Modules
     // ================================================================
+
+    /**
+     * The five status fields Netatmo sends with a module, as columns.
+     *
+     * NULL where the answer has no such field: a base station has no
+     * battery, a module no Wi-Fi. reachable arrives as a boolean and is
+     * stored as 0/1; battery_percent is clamped to 0..100.
+     *
+     * @param  array $data One device or module from getstationsdata.
+     * @return array{battery_percent:?int,wifi_status:?int,reachable:?int,last_status_store:?int,last_message:?int}
+     */
+    public static function status_fields( array $data ): array {
+        $is_main = ( $data['type'] ?? 'NAMain' ) === 'NAMain';
+        return [
+            'battery_percent'   => ( ! $is_main && isset( $data['battery_percent'] ) ) ? max( 0, min( 100, intval( $data['battery_percent'] ) ) ) : null,
+            'wifi_status'       => ( $is_main && isset( $data['wifi_status'] ) ) ? intval( $data['wifi_status'] ) : null,
+            'reachable'         => isset( $data['reachable'] ) ? ( $data['reachable'] ? 1 : 0 ) : null,
+            'last_status_store' => isset( $data['last_status_store'] ) ? intval( $data['last_status_store'] ) : null,
+            'last_message'      => isset( $data['last_message'] ) ? intval( $data['last_message'] ) : null,
+        ];
+    }
 
     /**
      * Upsert module metadata.
@@ -284,6 +328,17 @@ class NAWS_Database {
                 'module_id' => $module_id,
             ] );
             return new WP_Error( 'db_error', 'Failed to save module: ' . $wpdb->last_error );
+        }
+
+        // Status fields as a second, small write: wpdb::update() writes a real
+        // NULL where prepare()'s %d would write 0 — and 0 would mean
+        // "unreachable" for reachable.
+        $status        = self::status_fields( $data );
+        $status_result = $wpdb->update( $table, $status, [ 'module_id' => $module_id ], [ '%d', '%d', '%d', '%d', '%d' ], [ '%s' ] ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- module upsert, no caching applicable
+        if ( $status_result === false ) {
+            NAWS_Logger::error( 'database', 'save_module status update failed: ' . $wpdb->last_error, [
+                'module_id' => $module_id,
+            ] );
         }
 
         return true;
