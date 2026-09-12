@@ -2005,8 +2005,9 @@ check( 'Regeln sichtbar per map_deep',               str_contains( $admin, "map_
 check( 'Rueckleitung per wp_safe_redirect + exit in beiden Handlern', preg_match_all( '/wp_safe_redirect\( \$url \);\s*\n\s*exit;/', $admin ) >= 2, true );
 
 echo "\nView\n" . str_repeat( '-', 74 ) . "\n";
-$view  = file_get_contents( $PLUGIN . 'admin/views/notifications.php' );
+$view  = (string) file_get_contents( $PLUGIN . 'admin/views/notifications.php' );
 $lines = explode( "\n", $view );
+check( 'View vorhanden und nicht leer',              $view !== '', true );
 check( 'kein ob_start, kein script, kein style',      [ str_contains( $view, 'ob_start' ), stripos( $view, '<script' ) !== false, stripos( $view, '<style' ) !== false ], [ false, false, false ] );
 check( 'zwei Formulare mit Nonce',                   [ substr_count( $view, 'method="post"' ), str_contains( $view, "wp_nonce_field( 'naws_save_notifications' )" ), str_contains( $view, "wp_nonce_field( 'naws_test_notification' )" ) ], [ 2, true, true ] );
 check( 'jeder $_GET-Zugriff steht bei einem Nonce-Check', preg_match_all( "/isset\( \\\$_GET\['(updated|dropped|test)'\] \) && wp_verify_nonce\( sanitize_text_field\( wp_unslash\( \\\$_GET\['_wpnonce'\] \?\? '' \) \), 'naws_notifications_notice' \)/", $view ), 3 );
@@ -2181,7 +2182,7 @@ $groups = [
                                 $shown = in_array( $def['kind'], [ 'temp', 'wind', 'rain' ], true )
                                     ? NAWS_Notify_Rules::to_display( $def['kind'], (float) $cfg['threshold'], $units )
                                     : (int) $cfg['threshold'];
-                                $step  = $def['kind'] === 'percent' ? '1' : '0.1'; ?>
+                                $step  = $def['kind'] === 'percent' ? '1' : 'any'; ?>
                                 <input type="number" step="<?php echo esc_attr( $step ); ?>" name="<?php echo esc_attr( $name ); ?>[threshold]" value="<?php echo esc_attr( $shown ); ?>" class="small-text">
                                 <?php echo esc_html( NAWS_Notify_Rules::unit_label( $def['kind'], $units ) ); ?>
                             <?php elseif ( $def['param'] === 'level' ) : ?>
