@@ -170,3 +170,62 @@ Fix: [naws_records] and [naws_on_this_day] stayed empty where the daily summary 
 = 1.9.12 =
 New: [naws_windrose] shows where the wind comes from, how often and how hard, with a period switcher and seven colours under Appearance. The Wind & Gusts card shows the day's strongest gust. Compass directions are translated. Nothing to reconfigure.
 
+== Privacy & External Services ==
+
+This plugin connects to the following external services:
+
+= Netatmo API (api.netatmo.com) =
+
+* **Purpose:** Authenticate via OAuth2, fetch sensor readings and station data
+* **Data sent:** The Client ID and Client Secret of the Netatmo application you created, in exchange for an access token; afterwards the access or refresh token with every request, plus the station and module IDs whose measurements are being requested
+* **When:** During initial authentication, on every automatic sync cycle, on every token refresh, and while a historical import is running
+* **Terms of service:** [https://dev.netatmo.com/legal](https://dev.netatmo.com/legal)
+* **Privacy policy:** [https://legals.netatmo.com/?goto=privacy](https://legals.netatmo.com/?goto=privacy)
+
+= Open-Meteo API (api.open-meteo.com) =
+
+* **Purpose:** Fetch weather forecast data based on station coordinates (default provider)
+* **Data sent:** Latitude and longitude of your weather station
+* **When:** When the forecast shortcode is displayed (cached for 3 hours)
+* **Terms and privacy:** [https://open-meteo.com/en/terms](https://open-meteo.com/en/terms)
+* **Note:** Open-Meteo is a free, open-source weather API. No API key or registration required.
+
+= Open-Meteo Geocoding API (geocoding-api.open-meteo.com) =
+
+* **Purpose:** Turn a place into coordinates, and coordinates into a place name for the forecast heading
+* **Data sent:** In "manual" location mode, the city name or postal code entered in the plugin settings. In "automatic" mode, the latitude and longitude of your weather station, rounded to two decimal places, in order to look up the name of the nearest place.
+* **When:** In manual mode whenever no cached result exists (cached for 7 days). In automatic mode exactly once — the resolved name is stored in the plugin settings and never looked up again.
+* **Terms and privacy:** [https://open-meteo.com/en/terms](https://open-meteo.com/en/terms)
+* **Documentation:** [https://open-meteo.com/en/docs/geocoding-api](https://open-meteo.com/en/docs/geocoding-api)
+
+= Yr.no / MET Norway API (api.met.no) =
+
+* **Purpose:** Fetch weather forecast data (optional provider, selectable in settings)
+* **Data sent:** Latitude and longitude of your weather station
+* **When:** When the forecast shortcode is displayed and Yr.no is selected as provider (cached for 3 hours)
+* **Privacy policy:** [https://www.met.no/en/About-us/privacy](https://www.met.no/en/About-us/privacy)
+* **Terms:** [https://developer.yr.no/doc/TermsOfService/](https://developer.yr.no/doc/TermsOfService/)
+* **Note:** Free API, no API key needed. MET Norway's terms require every client to identify itself, so requests to this service carry a User-Agent naming the plugin, its version and your site address — that address is how MET Norway would reach you before restricting a misbehaving client. This is sent to api.met.no only, and only while Yr.no is the selected provider.
+
+No personal user data (names, emails, IP addresses) is collected or transmitted by this plugin. All sensor data is stored exclusively in your local WordPress database.
+
+== Third-Party Libraries ==
+
+Two JavaScript libraries are bundled with this plugin, both under the MIT license, which is GPL-compatible. They ship in their minified distribution builds; the unminified source and the build tooling for each are available at the links below.
+
+= Chart.js 4.5.1 =
+
+* **File:** `assets/vendor/chart.umd.min.js`
+* **License:** MIT
+* **Homepage:** [https://www.chartjs.org](https://www.chartjs.org)
+* **Source and build tools:** [https://github.com/chartjs/Chart.js](https://github.com/chartjs/Chart.js) — the exact release bundled here is [v4.5.1](https://github.com/chartjs/Chart.js/releases/tag/v4.5.1)
+* **Used for:** All charts — 24h trend lines on the live dashboard and the year-over-year history charts
+
+= chartjs-adapter-date-fns 3.0.0 =
+
+* **File:** `assets/vendor/chartjs-adapter-date-fns.bundle.min.js`
+* **License:** MIT
+* **Source and build tools:** [https://github.com/chartjs/chartjs-adapter-date-fns](https://github.com/chartjs/chartjs-adapter-date-fns) — the exact release bundled here is [v3.0.0](https://github.com/chartjs/chartjs-adapter-date-fns/releases/tag/v3.0.0)
+* **Used for:** Time axis formatting in the charts. This is the bundled build, which includes date-fns (also MIT).
+
+No other third-party code is included. No library is loaded from a CDN; everything is served from your own installation. Libraries that ship with WordPress itself are used from WordPress and are not bundled.
