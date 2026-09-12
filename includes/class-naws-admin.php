@@ -28,6 +28,8 @@ class NAWS_Admin {
         add_action( 'admin_post_naws_import_file',    [ $this, 'handle_import_upload' ] );
         add_action( 'admin_post_naws_save_appearance', [ $this, 'handle_save_appearance' ] );
         add_action( 'admin_post_naws_reset_appearance', [ $this, 'handle_reset_appearance' ] );
+        add_action( 'admin_post_naws_save_notifications', [ $this, 'handle_save_notifications' ] );
+        add_action( 'admin_post_naws_test_notification', [ $this, 'handle_test_notification' ] );
     }
 
     public function add_menu() {
@@ -50,6 +52,7 @@ class NAWS_Admin {
         add_submenu_page( 'naws-dashboard', __( 'History Import', 'xtx-integration-for-netatmo' ),    __( 'History Import', 'xtx-integration-for-netatmo' ),    'manage_options', 'naws-import',         [ $this, 'page_import' ] );
         add_submenu_page( 'naws-dashboard', __( 'Export / Import', 'xtx-integration-for-netatmo' ),    __( 'Export / Import', 'xtx-integration-for-netatmo' ),    'manage_options', 'naws-export',         [ $this, 'page_export' ] );
         add_submenu_page( 'naws-dashboard', __( 'Modules', 'xtx-integration-for-netatmo' ),   __( 'Modules', 'xtx-integration-for-netatmo' ),   'manage_options', 'naws-modules',        [ $this, 'page_modules' ] );
+        add_submenu_page( 'naws-dashboard', __( 'Notifications', 'xtx-integration-for-netatmo' ), __( 'Notifications', 'xtx-integration-for-netatmo' ), 'manage_options', 'naws-notifications', [ $this, 'page_notifications' ] );
         add_submenu_page( 'naws-dashboard', __( 'Cron Log', 'xtx-integration-for-netatmo' ),  __( 'Cron Log', 'xtx-integration-for-netatmo' ),  'manage_options', 'naws-cron-log',       [ $this, 'page_cron_log' ] );
         add_submenu_page( 'naws-dashboard', __( '🖥️ Live-Dashboard', 'xtx-integration-for-netatmo' ),      __( '🖥️ Live-Dashboard', 'xtx-integration-for-netatmo' ),      'manage_options', 'naws-live-settings',  [ $this, 'page_live_settings' ] );
         add_submenu_page( 'naws-dashboard', __( 'Appearance', 'xtx-integration-for-netatmo' ),  __( 'Appearance', 'xtx-integration-for-netatmo' ), 'manage_options', 'naws-appearance',     [ $this, 'page_appearance' ] );
@@ -503,6 +506,61 @@ class NAWS_Admin {
     public function page_modules() {
         $modules = NAWS_Database::get_modules();
         include NAWS_PLUGIN_DIR . 'admin/views/modules.php';
+    }
+
+    public function page_notifications() {
+        $settings    = NAWS_Notifications::get_settings();
+        $catalog     = NAWS_Notify_Rules::catalog();
+        $units       = NAWS_Notifications::units();
+        $rows        = NAWS_Notifications::status_rows();
+        $log         = NAWS_Notifications::get_log();
+        $admin_email = (string) get_option( 'admin_email', '' );
+        include NAWS_PLUGIN_DIR . 'admin/views/notifications.php';
+    }
+
+    public function handle_save_notifications() {
+        check_admin_referer( 'naws_save_notifications' );
+        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+
+        // The recipients are a textarea: sanitize_text_field() would strip
+        // the line breaks and merge the addresses into one. The rules are
+        // scalar fields and go through map_deep(). Both sanitized right
+        // here, where the scanner looks for it.
+        $recipients = isset( $_POST['naws_notifications']['recipients'] )
+            ? sanitize_textarea_field( wp_unslash( $_POST['naws_notifications']['recipients'] ) )
+            : '';
+        $rules = isset( $_POST['naws_notifications']['rules'] ) && is_array( $_POST['naws_notifications']['rules'] )
+            ? map_deep( wp_unslash( $_POST['naws_notifications']['rules'] ), 'sanitize_text_field' )
+            : [];
+
+        $clean   = NAWS_Notifications::from_form( $recipients, $rules, NAWS_Notifications::units() );
+        $dropped = count( NAWS_Notifications::split_recipients( $recipients ) ) - count( $clean['recipients'] );
+        update_option( NAWS_Notifications::OPTION_KEY, $clean );
+
+        // add_query_arg(), not wp_nonce_url(): the latter escapes for HTML
+        // and would put &amp; into a Location header.
+        $url = add_query_arg( [
+            'page'     => 'naws-notifications',
+            'updated'  => 1,
+            'dropped'  => $dropped > 0 ? (int) $dropped : false,
+            '_wpnonce' => wp_create_nonce( 'naws_notifications_notice' ),
+        ], admin_url( 'admin.php' ) );
+        wp_safe_redirect( $url );
+        exit;
+    }
+
+    public function handle_test_notification() {
+        check_admin_referer( 'naws_test_notification' );
+        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+
+        $sent = NAWS_Notifications::send_test();
+        $url  = add_query_arg( [
+            'page'     => 'naws-notifications',
+            'test'     => $sent ? 1 : 0,
+            '_wpnonce' => wp_create_nonce( 'naws_notifications_notice' ),
+        ], admin_url( 'admin.php' ) );
+        wp_safe_redirect( $url );
+        exit;
     }
 
     public function page_cron_log() {
