@@ -29,7 +29,9 @@ function wp_date( $f, $t = null )            { return gmdate( $f, $t ?? time() )
 function wp_mail( $to, $subject, $body )     { $GLOBALS['naws_test_mails'][] = [ $to, $subject, $body ]; return $GLOBALS['naws_test_mail_ok'] ?? true; }
 function add_action( ...$a )                 {}
 function get_locale()                        { return 'de_DE'; }
-function determine_locale()                  { return 'de_DE'; }
+function determine_locale()                  { return $GLOBALS['naws_test_user_locale'] ?? 'de_DE'; }
+function switch_to_locale( $l )              { $GLOBALS['naws_test_locale_calls'][] = 'switch:' . $l; return true; }
+function restore_previous_locale()           { $GLOBALS['naws_test_locale_calls'][] = 'restore'; return true; }
 require_once __DIR__ . '/i18n-stubs.php';
 class NAWS_Helpers {
     public static function format_value( $p, $v ) { return round( $v, 1 ); }
@@ -97,6 +99,17 @@ check( 'Testmail im Protokoll ohne Wechsel', [ count( NAWS_Notifications::get_lo
 $GLOBALS['naws_test_mail_ok'] = false;
 check( 'send(): false wird protokolliert', [ NAWS_Notifications::send( [ 'f@x.de' ], 'x', 'y' ), count( NAWS_Logger::$errors ) > 0 ], [ false, true ] );
 $GLOBALS['naws_test_mail_ok'] = true;
+
+echo "\nTestmail in der Site-Sprache\n" . str_repeat( '-', 74 ) . "\n";
+$GLOBALS['naws_test_user_locale'] = 'en_US'; $GLOBALS['naws_test_locale_calls'] = [];
+NAWS_Notifications::send_test();
+check( 'send_test(): auf die Site-Sprache umgeschaltet und zurueck', $GLOBALS['naws_test_locale_calls'], [ 'switch:de_DE', 'restore' ] );
+$GLOBALS['naws_test_locale_calls'] = []; $GLOBALS['naws_test_mail_ok'] = false;
+NAWS_Notifications::send_test();
+check( 'send_test(): auch bei Fehlschlag zurueck (finally)', $GLOBALS['naws_test_locale_calls'], [ 'switch:de_DE', 'restore' ] );
+$GLOBALS['naws_test_locale_calls'] = []; $GLOBALS['naws_test_mail_ok'] = true; $GLOBALS['naws_test_user_locale'] = 'de_DE';
+NAWS_Notifications::send_test();
+check( 'send_test(): gleiche Sprache -> kein Umschalten', $GLOBALS['naws_test_locale_calls'], [] );
 
 echo "\nLauf nach gescheitertem Abruf, mit Lock\n" . str_repeat( '-', 74 ) . "\n";
 $GLOBALS['naws_test_options'][ NAWS_Notifications::OPTION_KEY ] = [ 'recipients' => [ 'f@x.de' ], 'rules' => [ 'sync_failed' => [ 'enabled' => 1 ] ] ];
