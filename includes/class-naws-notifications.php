@@ -122,4 +122,327 @@ final class NAWS_Notifications {
         $admin = sanitize_email( (string) get_option( 'admin_email', '' ) );
         return ( $admin !== '' && is_email( $admin ) ) ? [ $admin ] : [];
     }
+
+    // ── Hooks ───────────────────────────────────────────────────────
+
+    public static function init(): void {
+        add_action( 'naws_data_synced', [ __CLASS__, 'on_synced' ] );
+        add_action( 'naws_sync_failed', [ __CLASS__, 'on_failed' ], 10, 2 );
+    }
+
+    /** After a successful fetch: fresh snapshot, every rule. */
+    public static function on_synced( $saved = 0 ): void {
+        self::run( [ 'sync' => 'ok', 'consecutive_errors' => 0, 'auth_required' => (bool) get_option( 'naws_auth_required' ), 'error' => '' ] );
+    }
+
+    /** After a failed fetch: no snapshot, only the two site rules move. */
+    public static function on_failed( $message = '', $errors = 0 ): void {
+        self::run( [
+            'sync'               => 'failed',
+            'consecutive_errors' => (int) $errors,
+            'auth_required'      => (bool) get_option( 'naws_auth_required' ) || (string) $message === 'auth_required',
+            'error'              => (string) $message,
+        ] );
+    }
+
+    /** One evaluation run. Never throws: the cron callback must survive it. */
+    private static function run( array $ctx ): void {
+        $locked = false;
+        try {
+            $settings = self::get_settings();
+            $state    = get_option( self::STATE_KEY, [] );
+            $state    = is_array( $state ) ? $state : [];
+            if ( ! self::any_enabled( $settings ) && ! $state ) {
+                return;
+            }
+            $locked = self::lock();
+            if ( ! $locked ) {
+                return;
+            }
+            $ctx['interval'] = self::interval();
+            $snapshot        = ( $ctx['sync'] ?? 'ok' ) === 'ok' ? self::snapshot() : [ 'modules' => [] ];
+            $result          = NAWS_Notify_Rules::evaluate( $snapshot, $settings, $state, time(), $ctx );
+            update_option( self::STATE_KEY, $result['state'], false );
+            if ( $result['events'] ) {
+                $mail = self::compose( $result['events'] );
+                $to   = self::recipients();
+                $sent = self::send( $to, $mail['subject'], $mail['body'] );
+                self::log( [
+                    'time'    => time(),
+                    'subject' => $mail['subject'],
+                    'to'      => $to,
+                    'sent'    => $sent,
+                    'events'  => array_map( static fn( $e ) => [ 'rule' => $e['rule'], 'kind' => $e['kind'], 'module_name' => $e['module_name'], 'value' => $e['value'] ], $result['events'] ),
+                ] );
+            }
+        } catch ( \Throwable $e ) {
+            NAWS_Logger::error( 'notify', 'Notification run failed: ' . $e->getMessage() );
+        } finally {
+            if ( $locked ) {
+                self::unlock();
+            }
+        }
+    }
+
+    private static function any_enabled( array $settings ): bool {
+        foreach ( $settings['rules'] as $r ) {
+            if ( ! empty( $r['enabled'] ) ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * add_option() is the one check WordPress offers that a second request
+     * cannot overtake without an object cache: it fails when the row exists.
+     * A lock older than LOCK_TTL is an orphan from a crashed run.
+     */
+    private static function lock(): bool {
+        $stamp = (int) get_option( self::LOCK_KEY, 0 );
+        if ( $stamp && time() - $stamp > self::LOCK_TTL ) {
+            delete_option( self::LOCK_KEY );
+        }
+        return (bool) add_option( self::LOCK_KEY, time(), '', false );
+    }
+
+    private static function unlock(): void {
+        delete_option( self::LOCK_KEY );
+    }
+
+    /** The effective fetch interval in seconds; night mode skips every other run. */
+    private static function interval(): int {
+        $base = (int) NAWS_Cron::base_interval();
+        return NAWS_Cron::is_night_mode() ? 2 * $base : $base;
+    }
+
+    // ── Snapshot ────────────────────────────────────────────────────
+
+    /** Active modules with their status columns and latest readings, keyed by module id. */
+    public static function snapshot(): array {
+        $out = [];
+        foreach ( NAWS_Database::get_modules( true ) as $m ) {
+            $id = (string) ( $m['module_id'] ?? '' );
+            if ( $id === '' ) {
+                continue;
+            }
+            $out[ $id ] = [
+                'module_id'         => $id,
+                'station_id'        => (string) ( $m['station_id'] ?? '' ),
+                'module_name'       => (string) ( $m['module_name'] ?? '' ),
+                'module_type'       => (string) ( $m['module_type'] ?? '' ),
+                'battery_percent'   => self::int_or_null( $m['battery_percent'] ?? null ),
+                'rf_status'         => self::int_or_null( $m['rf_status'] ?? null ),
+                'wifi_status'       => self::int_or_null( $m['wifi_status'] ?? null ),
+                'reachable'         => self::int_or_null( $m['reachable'] ?? null ),
+                'last_status_store' => self::int_or_null( $m['last_status_store'] ?? null ),
+                'last_seen'         => self::int_or_null( $m['last_seen'] ?? null ),
+                'last_message'      => self::int_or_null( $m['last_message'] ?? null ),
+                'readings'          => [],
+            ];
+        }
+        foreach ( NAWS_Database::get_latest_readings() as $r ) {
+            $id = (string) ( $r['module_id'] ?? '' );
+            if ( isset( $out[ $id ] ) && isset( $r['parameter'], $r['value'], $r['recorded_at'] ) ) {
+                $out[ $id ]['readings'][ (string) $r['parameter'] ] = [ 'value' => (float) $r['value'], 'at' => (int) $r['recorded_at'] ];
+            }
+        }
+        return [ 'modules' => $out ];
+    }
+
+    private static function int_or_null( $v ): ?int {
+        return ( $v === null || $v === '' ) ? null : (int) $v;
+    }
+
+    /** The status rows for the admin page: a dry run, nothing saved, nothing sent. */
+    public static function status_rows(): array {
+        $state = get_option( self::STATE_KEY, [] );
+        $poll  = NAWS_Cron::get_polling_state();
+        $ctx   = [
+            'interval'           => self::interval(),
+            'sync'               => 'ok',
+            'consecutive_errors' => (int) ( $poll['consecutive_errors'] ?? 0 ),
+            'auth_required'      => (bool) get_option( 'naws_auth_required' ),
+            'error'              => '',
+        ];
+        return NAWS_Notify_Rules::evaluate( self::snapshot(), self::get_settings(), is_array( $state ) ? $state : [], time(), $ctx )['rows'];
+    }
+
+    // ── Mail ────────────────────────────────────────────────────────
+
+    /** Subject and plain-text body for a list of changes from one run. */
+    public static function compose( array $events ): array {
+        $site   = wp_specialchars_decode( (string) get_bloginfo( 'name' ), ENT_QUOTES );
+        $raises = count( array_filter( $events, static fn( $e ) => ( $e['kind'] ?? '' ) === 'raise' ) );
+        $clears = count( $events ) - $raises;
+
+        if ( count( $events ) === 1 ) {
+            $e     = $events[0];
+            $title = naws_label( 'ntf_rule_' . $e['rule'] );
+            if ( $e['module_name'] !== '' ) {
+                $title .= ' – ' . $e['module_name'];
+            }
+            $shown = self::format_measure( $e['rule'], $e['value'] );
+            if ( $shown !== '' ) {
+                $title .= ' (' . $shown . ')';
+            }
+            $what = $e['kind'] === 'clear' ? naws_label( 'ntf_all_clear' ) . ': ' . $title : $title;
+        } else {
+            $parts = [];
+            if ( $raises ) {
+                /* translators: %d: number of warnings in one mail */
+                $parts[] = sprintf( _n( '%d warning', '%d warnings', $raises, 'xtx-integration-for-netatmo' ), $raises );
+            }
+            if ( $clears ) {
+                /* translators: %d: number of all-clears in one mail */
+                $parts[] = sprintf( _n( '%d all-clear', '%d all-clears', $clears, 'xtx-integration-for-netatmo' ), $clears );
+            }
+            $what = implode( ', ', $parts );
+        }
+
+        $subject = sanitize_text_field( sprintf( '[%s] Netatmo: %s', $site, $what ) );
+        $blocks  = [];
+        foreach ( $events as $e ) {
+            $blocks[] = self::event_block( $e );
+        }
+        $body = implode( "\n\n", $blocks ) . "\n\n" . naws_label( 'ntf_manage' ) . ': ' . admin_url( 'admin.php?page=naws-notifications' ) . "\n";
+        return [ 'subject' => $subject, 'body' => $body ];
+    }
+
+    /** One paragraph of the body: what, which module, value and threshold, since when. */
+    private static function event_block( array $e ): string {
+        $lines   = [];
+        $lines[] = ( $e['kind'] === 'clear' ? naws_label( 'ntf_all_clear' ) : naws_label( 'ntf_warning' ) ) . ': ' . naws_label( 'ntf_rule_' . $e['rule'] );
+        if ( $e['module_name'] !== '' ) {
+            $lines[] = naws_label( 'ntf_module' ) . ': ' . $e['module_name'] . ' (' . NAWS_Helpers::module_type_label( $e['module_type'] ) . ')';
+        }
+        if ( $e['rule'] === 'sync_failed' ) {
+            $lines[] = naws_label( 'ntf_measure_sync_failed' ) . ': ' . (int) $e['value'];
+            if ( (string) $e['error'] !== '' ) {
+                $lines[] = sprintf( naws_label( 'ntf_sync_error' ), $e['error'] );
+            }
+        } elseif ( $e['rule'] === 'auth_required' ) {
+            $lines[] = naws_label( 'ntf_auth_hint' );
+        } else {
+            $shown = self::format_measure( $e['rule'], $e['value'] );
+            $thr   = self::format_threshold( $e['rule'], $e['threshold'] );
+            if ( $shown !== '' ) {
+                $lines[] = naws_label( 'ntf_measure_' . $e['rule'] ) . ': ' . $shown . ( $thr !== '' ? ' (' . sprintf( naws_label( 'ntf_threshold' ), $thr ) . ')' : '' );
+            }
+        }
+        $lines[] = $e['kind'] === 'clear'
+            ? sprintf( naws_label( 'ntf_from_to' ), self::stamp( (int) $e['since'] ), self::stamp( (int) $e['now'] ) )
+            : sprintf( naws_label( 'ntf_since' ), self::stamp( (int) $e['since'] ) );
+        return implode( "\n", $lines );
+    }
+
+    /** A measured value the way the mail and the page show it; '' when there is none. */
+    public static function format_measure( string $rule, $value ): string {
+        if ( $value === null || $value === '' ) {
+            return '';
+        }
+        $def = NAWS_Notify_Rules::catalog()[ $rule ] ?? null;
+        if ( ! $def ) {
+            return '';
+        }
+        switch ( $def['kind'] ) {
+            case 'percent': return (int) $value . ' %';
+            case 'level':   return (string) (int) $value;
+            case 'minutes': return self::stamp( (int) $value );
+            case 'temp':
+            case 'wind':
+            case 'rain':
+                $p = $def['reading'];
+                return NAWS_Helpers::format_value( $p, (float) $value ) . ' ' . NAWS_Helpers::get_unit( $p );
+        }
+        return (string) $value;
+    }
+
+    /** A threshold with its unit or level name; '' for rules without one. */
+    public static function format_threshold( string $rule, $threshold ): string {
+        if ( $threshold === null || $threshold === '' ) {
+            return '';
+        }
+        $def = NAWS_Notify_Rules::catalog()[ $rule ] ?? null;
+        if ( ! $def || $def['param'] === '' ) {
+            return '';
+        }
+        switch ( $def['kind'] ) {
+            case 'percent': return (int) $threshold . ' %';
+            case 'minutes': return (int) $threshold . ' min';
+            case 'level':
+                $on = $def['levels'][ $threshold ][0] ?? $def['levels'][ $def['default'] ][0];
+                return naws_label( 'ntf_level_' . $threshold ) . ' (≥ ' . (int) $on . ')';
+            case 'temp':
+            case 'wind':
+            case 'rain':
+                $p = $def['reading'];
+                return NAWS_Helpers::format_value( $p, (float) $threshold ) . ' ' . NAWS_Helpers::get_unit( $p );
+        }
+        return (string) $threshold;
+    }
+
+    /** Date and time in the site's format and timezone. */
+    public static function stamp( int $ts ): string {
+        return wp_date( (string) get_option( 'date_format', 'd.m.Y' ) . ', ' . (string) get_option( 'time_format', 'H:i' ), $ts );
+    }
+
+    public static function send( array $to, string $subject, string $body ): bool {
+        if ( ! $to ) {
+            NAWS_Logger::error( 'notify', 'No recipient for: ' . $subject );
+            return false;
+        }
+        $ok = (bool) wp_mail( $to, $subject, $body );
+        if ( ! $ok ) {
+            NAWS_Logger::error( 'notify', 'wp_mail() returned false for: ' . $subject );
+        }
+        return $ok;
+    }
+
+    /** The test mail from the admin page, in the site's language, listing the rules switched on. */
+    public static function send_test(): bool {
+        $switched = ( determine_locale() !== get_locale() ) ? (bool) switch_to_locale( get_locale() ) : false;
+        try {
+            $settings = self::get_settings();
+            $site     = wp_specialchars_decode( (string) get_bloginfo( 'name' ), ENT_QUOTES );
+            $lines    = [ sprintf( naws_label( 'ntf_test_intro' ), $site ), self::stamp( time() ), '', naws_label( 'ntf_test_rules' ) ];
+            $any      = false;
+            foreach ( NAWS_Notify_Rules::catalog() as $id => $def ) {
+                $cfg = $settings['rules'][ $id ];
+                if ( empty( $cfg['enabled'] ) ) {
+                    continue;
+                }
+                $any     = true;
+                $thr     = $def['param'] !== '' ? self::format_threshold( $id, $cfg[ $def['param'] ] ) : '';
+                $lines[] = '- ' . naws_label( 'ntf_rule_' . $id ) . ( $thr !== '' ? ' (' . $thr . ')' : '' );
+            }
+            if ( ! $any ) {
+                $lines[] = naws_label( 'ntf_test_none' );
+            }
+            $subject = sanitize_text_field( sprintf( '[%s] Netatmo: %s', $site, naws_label( 'ntf_test_subject' ) ) );
+            $body    = implode( "\n", $lines ) . "\n\n" . naws_label( 'ntf_manage' ) . ': ' . admin_url( 'admin.php?page=naws-notifications' ) . "\n";
+            $to      = self::recipients();
+            $sent    = self::send( $to, $subject, $body );
+            self::log( [ 'time' => time(), 'subject' => $subject, 'to' => $to, 'sent' => $sent, 'events' => [] ] );
+            return $sent;
+        } finally {
+            if ( $switched ) {
+                restore_previous_locale();
+            }
+        }
+    }
+
+    // ── Log ─────────────────────────────────────────────────────────
+
+    public static function log( array $entry ): void {
+        $log = get_option( self::LOG_KEY, [] );
+        $log = is_array( $log ) ? $log : [];
+        array_unshift( $log, $entry );
+        update_option( self::LOG_KEY, array_slice( $log, 0, self::LOG_MAX ), false );
+    }
+
+    public static function get_log(): array {
+        $log = get_option( self::LOG_KEY, [] );
+        return is_array( $log ) ? $log : [];
+    }
 }
