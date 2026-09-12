@@ -77,7 +77,7 @@ $groups = [
                                 $shown = in_array( $def['kind'], [ 'temp', 'wind', 'rain' ], true )
                                     ? NAWS_Notify_Rules::to_display( $def['kind'], (float) $cfg['threshold'], $units )
                                     : (int) $cfg['threshold'];
-                                $step  = $def['kind'] === 'percent' ? '1' : '0.1'; ?>
+                                $step  = $def['kind'] === 'percent' ? '1' : 'any'; ?>
                                 <input type="number" step="<?php echo esc_attr( $step ); ?>" name="<?php echo esc_attr( $name ); ?>[threshold]" value="<?php echo esc_attr( $shown ); ?>" class="small-text">
                                 <?php echo esc_html( NAWS_Notify_Rules::unit_label( $def['kind'], $units ) ); ?>
                             <?php elseif ( $def['param'] === 'level' ) : ?>
