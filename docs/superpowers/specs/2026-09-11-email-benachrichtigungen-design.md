@@ -168,8 +168,11 @@ Option `naws_notifications`:
     'sync_failed'    => [ 'enabled' => 0 ],
     'auth_required'  => [ 'enabled' => 0 ],
     'frost'          => [ 'enabled' => 0, 'threshold' => 0.0 ],   // °C
+    'heat'           => [ 'enabled' => 0, 'threshold' => 30.0 ],  // °C
     'gust'           => [ 'enabled' => 0, 'threshold' => 60.0 ],  // km/h
     'rain'           => [ 'enabled' => 0, 'threshold' => 20.0 ],  // mm
+    'rain_start'     => [ 'enabled' => 0, 'threshold' => 0.2 ],   // mm
+    'co2'            => [ 'enabled' => 0, 'threshold' => 1000 ],  // ppm
   ],
 ]
 ```
@@ -287,7 +290,7 @@ Frank, 11.09.: „bitte alle Sicherheitsaspekte berücksichtigen und WordPress-V
 
 Eigenständige PHP-Skripte wie die 43 vorhandenen (`php tests/test-*.php`, Exit-Code 1 bei Fehlschlag, `check()`-Helfer, Stubs im Kopf, `tests/i18n-stubs.php` für Labels).
 
-1. **`tests/test-notify-rules.php`** — ohne WordPress: Katalog vollständig (zehn Regeln, jede mit Gruppe, Scope, Vorgabe, Beharrung, `clears`); `condition()` je Regel für wahr, falsch und ausgesetzt (Feld fehlt, Messwert veraltet, falscher Modultyp); Zustandsmaschine: Eintritt ohne Beharrung, Eintritt mit Beharrung nach zwei Läufen, Flattern setzt die Beharrung zurück, Entwarnung mit Hysterese (Batterie 20 → 25 keine Entwarnung, 30 ja), Regen ohne Entwarnung (Eintrag inaktiv, kein Wechsel), Basis still setzt Modul- und Wetterregeln aus, ausgeschaltete Regel räumt ihren Eintrag ab, deaktiviertes Modul ebenso, Site-Regeln bei `sync = failed`, frisch eingeschaltete Regel löst sofort aus, Wechsel eines Laufs kommen gesammelt zurück; `to_base()`/`to_display()` hin und zurück für °F, m/s, mph, kn, in.
+1. **`tests/test-notify-rules.php`** — ohne WordPress: Katalog vollständig (dreizehn Regeln, jede mit Gruppe, Scope, Vorgabe, Beharrung, `clears`); `condition()` je Regel für wahr, falsch und ausgesetzt (Feld fehlt, Messwert veraltet, falscher Modultyp); Zustandsmaschine: Eintritt ohne Beharrung, Eintritt mit Beharrung nach zwei Läufen, Flattern setzt die Beharrung zurück, Entwarnung mit Hysterese (Batterie 20 → 25 keine Entwarnung, 30 ja), Regen ohne Entwarnung (Eintrag inaktiv, kein Wechsel), Basis still setzt Modul- und Wetterregeln aus, ausgeschaltete Regel räumt ihren Eintrag ab, deaktiviertes Modul ebenso, Site-Regeln bei `sync = failed`, frisch eingeschaltete Regel löst sofort aus, Wechsel eines Laufs kommen gesammelt zurück; `to_base()`/`to_display()` hin und zurück für °F, m/s, mph, kn, in.
 2. **`tests/test-notifications-sanitize.php`** — `sanitize()`: Adressen (Zeilenumbruch, Komma, Semikolon, Dubletten, ungültige, Obergrenze), Bereiche und Klemmung je `kind`, Stufen-Whitelist, unbekannte Schlüssel fallen weg, Vorgaben werden aufgefüllt, beschädigte Eingabe (String statt Array) → Vorgaben.
 3. **`tests/test-notifications-mail.php`** — `compose()` mit deutschen Stubs: Betreff für einen Wechsel, für eine Entwarnung, für mehrere; Absätze je Wechsel; Site-Regel ohne Modulzeile; Link am Ende; Betreff ohne Zeilenumbruch, auch wenn der Modulname einen enthält.
 4. **`tests/test-database-module-status.php`** — mit dem wpdb-Stub aus `test-database-active-modules.php`: `save_module()` übergibt die fünf Felder (Werte, `NULL` bei Fehlen, `battery_percent` geklemmt, `wifi_status` nur bei NAMain); `install()`/`maybe_migrate()` legt fehlende Spalten an und lässt vorhandene in Ruhe.
