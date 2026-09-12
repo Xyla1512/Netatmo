@@ -162,7 +162,7 @@ Older versions: the complete changelog since 1.0.0 is kept in [CHANGELOG.md](htt
 == Upgrade Notice ==
 
 = 2.0.0 =
-New: e-mail notifications under XTX Netatmo → Notifications — thirteen rules for battery, radio, Wi-Fi, silent station or module, failed fetches, frost, heat, gusts, rain and CO₂, one mail per state change plus all-clear. All rules ship off; five status columns are added automatically. Nothing to reconfigure.
+New: e-mail notifications — thirteen rules for battery, radio, Wi-Fi, silent station or module, failed fetches, frost, heat, gusts, rain and CO₂; one mail per state change plus all-clear. All rules ship off; five status columns are added automatically. Nothing to reconfigure.
 
 = 1.9.13 =
 Fix: [naws_records] and [naws_on_this_day] stayed empty where the daily summary table had a different collation. Editors now read why a block is empty. Module switches show at once, entity attributes work, Android Chrome no longer blackens the wind rose. Nothing to reconfigure.
