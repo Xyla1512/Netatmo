@@ -87,6 +87,12 @@ final class NAWS_Notify_Rules {
                 'default' => 0.0, 'min' => -50.0, 'max' => 50.0,
                 'hold_on' => 0, 'hold_off' => 3600, 'clears' => true,
             ],
+            'heat' => [
+                'group' => 'weather', 'scope' => 'module', 'types' => [ 'NAModule1' ],
+                'reading' => 'Temperature', 'param' => 'threshold', 'kind' => 'temp',
+                'default' => 30.0, 'min' => -50.0, 'max' => 50.0,
+                'hold_on' => 0, 'hold_off' => 3600, 'clears' => true,
+            ],
             'gust' => [
                 'group' => 'weather', 'scope' => 'module', 'types' => [ 'NAModule2' ],
                 'reading' => 'GustStrength', 'param' => 'threshold', 'kind' => 'wind',
@@ -99,6 +105,20 @@ final class NAWS_Notify_Rules {
                 'reading' => 'sum_rain_24', 'param' => 'threshold', 'kind' => 'rain',
                 'default' => 20.0, 'min' => 0.1, 'max' => 500.0,
                 'hold_on' => 0, 'hold_off' => 0, 'clears' => false,
+            ],
+            // sum_rain_1 is the rain of the last hour: the dry hour before a new
+            // event is built into the reading, so no hold is needed.
+            'rain_start' => [
+                'group' => 'weather', 'scope' => 'module', 'types' => [ 'NAModule3' ],
+                'reading' => 'sum_rain_1', 'param' => 'threshold', 'kind' => 'rain',
+                'default' => 0.2, 'min' => 0.1, 'max' => 50.0,
+                'hold_on' => 0, 'hold_off' => 0, 'clears' => false,
+            ],
+            'co2' => [
+                'group' => 'weather', 'scope' => 'module', 'types' => [ 'NAMain', 'NAModule4' ],
+                'reading' => 'CO2', 'param' => 'threshold', 'kind' => 'ppm',
+                'default' => 1000, 'min' => 400, 'max' => 5000,
+                'hold_on' => 0, 'hold_off' => 1800, 'clears' => true,
             ],
         ];
         return $catalog;
@@ -114,7 +134,7 @@ final class NAWS_Notify_Rules {
             }
             $rules[ $id ] = $rule;
         }
-        return [ 'recipients' => [], 'rules' => $rules ];
+        return [ 'enabled' => 1, 'recipients' => [], 'rules' => $rules ];
     }
 
     /** A value entered in the display unit, in the base unit (°C, km/h, mm). */
@@ -132,6 +152,7 @@ final class NAWS_Notify_Rules {
             case 'rain':
                 return ( $units['rain_unit'] ?? 'mm' ) === 'in' ? $v * 25.4 : $v;
         }
+        // 'percent', 'minutes' and 'ppm' have no display unit conversion.
         return $v;
     }
 
@@ -150,6 +171,7 @@ final class NAWS_Notify_Rules {
             case 'rain':
                 return ( $units['rain_unit'] ?? 'mm' ) === 'in' ? round( $v / 25.4, 2 ) : round( $v, 1 );
         }
+        // 'percent', 'minutes' and 'ppm' have no display unit conversion.
         return $v;
     }
 
@@ -163,6 +185,7 @@ final class NAWS_Notify_Rules {
                 $labels = [ 'kmh' => 'km/h', 'ms' => 'm/s', 'mph' => 'mph', 'kn' => 'kn' ];
                 return $labels[ $units['wind_unit'] ?? 'kmh' ] ?? 'km/h';
             case 'rain':    return ( $units['rain_unit'] ?? 'mm' ) === 'in' ? 'in' : 'mm';
+            case 'ppm':     return 'ppm';
         }
         return '';
     }
@@ -251,10 +274,19 @@ final class NAWS_Notify_Rules {
                 $t = (float) ( $cfg['threshold'] ?? $def['default'] );
                 return $active ? ! ( $v > $t + 1 ) : ( $v <= $t );
 
+            case 'heat':
+                $t = (float) ( $cfg['threshold'] ?? $def['default'] );
+                return $active ? ! ( $v < $t - 1 ) : ( $v >= $t );
+
             case 'gust':
             case 'rain':
+            case 'rain_start':
                 $t = (float) ( $cfg['threshold'] ?? $def['default'] );
                 return $v >= $t;
+
+            case 'co2':
+                $t = (int) ( $cfg['threshold'] ?? $def['default'] );
+                return $active ? ! ( $v < $t - 100 ) : ( $v >= $t );
         }
         return null;
     }

@@ -28,7 +28,7 @@ function mod( string $type, array $extra = [] ): array {
 
 echo "\nKatalog\n" . str_repeat( '-', 74 ) . "\n";
 $cat = NAWS_Notify_Rules::catalog();
-check( 'zehn Regeln in dieser Reihenfolge', array_keys( $cat ), [ 'battery', 'rf', 'wifi', 'station_silent', 'module_silent', 'sync_failed', 'auth_required', 'frost', 'gust', 'rain' ] );
+check( 'dreizehn Regeln in dieser Reihenfolge', array_keys( $cat ), [ 'battery', 'rf', 'wifi', 'station_silent', 'module_silent', 'sync_failed', 'auth_required', 'frost', 'heat', 'gust', 'rain', 'rain_start', 'co2' ] );
 $complete = true;
 foreach ( $cat as $id => $d ) {
     foreach ( [ 'group', 'scope', 'types', 'param', 'kind', 'default', 'hold_on', 'hold_off', 'clears' ] as $k ) {
@@ -36,15 +36,15 @@ foreach ( $cat as $id => $d ) {
     }
 }
 check( 'jede Regel hat alle Schluessel', $complete, true );
-check( 'Gruppen',        array_map( fn( $d ) => $d['group'],    $cat ), [ 'battery' => 'station', 'rf' => 'station', 'wifi' => 'station', 'station_silent' => 'station', 'module_silent' => 'station', 'sync_failed' => 'station', 'auth_required' => 'station', 'frost' => 'weather', 'gust' => 'weather', 'rain' => 'weather' ] );
-check( 'Scopes',         array_map( fn( $d ) => $d['scope'],    $cat ), [ 'battery' => 'module', 'rf' => 'module', 'wifi' => 'station', 'station_silent' => 'station', 'module_silent' => 'module', 'sync_failed' => 'site', 'auth_required' => 'site', 'frost' => 'module', 'gust' => 'module', 'rain' => 'module' ] );
-check( 'Vorgaben',       array_map( fn( $d ) => $d['default'],  $cat ), [ 'battery' => 20, 'rf' => 'low', 'wifi' => 'bad', 'station_silent' => 60, 'module_silent' => 60, 'sync_failed' => null, 'auth_required' => null, 'frost' => 0.0, 'gust' => 60.0, 'rain' => 20.0 ] );
-check( 'Beharrungen an', array_map( fn( $d ) => $d['hold_on'],  $cat ), [ 'battery' => 0, 'rf' => 1800, 'wifi' => 1800, 'station_silent' => 0, 'module_silent' => 0, 'sync_failed' => 0, 'auth_required' => 0, 'frost' => 0, 'gust' => 0, 'rain' => 0 ] );
-check( 'Beharrungen aus',array_map( fn( $d ) => $d['hold_off'], $cat ), [ 'battery' => 0, 'rf' => 1800, 'wifi' => 1800, 'station_silent' => 1800, 'module_silent' => 1800, 'sync_failed' => 0, 'auth_required' => 0, 'frost' => 3600, 'gust' => 3600, 'rain' => 0 ] );
-check( 'nur Regen ohne Entwarnung', array_keys( array_filter( $cat, fn( $d ) => ! $d['clears'] ) ), [ 'rain' ] );
+check( 'Gruppen',        array_map( fn( $d ) => $d['group'],    $cat ), [ 'battery' => 'station', 'rf' => 'station', 'wifi' => 'station', 'station_silent' => 'station', 'module_silent' => 'station', 'sync_failed' => 'station', 'auth_required' => 'station', 'frost' => 'weather', 'heat' => 'weather', 'gust' => 'weather', 'rain' => 'weather', 'rain_start' => 'weather', 'co2' => 'weather' ] );
+check( 'Scopes',         array_map( fn( $d ) => $d['scope'],    $cat ), [ 'battery' => 'module', 'rf' => 'module', 'wifi' => 'station', 'station_silent' => 'station', 'module_silent' => 'module', 'sync_failed' => 'site', 'auth_required' => 'site', 'frost' => 'module', 'heat' => 'module', 'gust' => 'module', 'rain' => 'module', 'rain_start' => 'module', 'co2' => 'module' ] );
+check( 'Vorgaben',       array_map( fn( $d ) => $d['default'],  $cat ), [ 'battery' => 20, 'rf' => 'low', 'wifi' => 'bad', 'station_silent' => 60, 'module_silent' => 60, 'sync_failed' => null, 'auth_required' => null, 'frost' => 0.0, 'heat' => 30.0, 'gust' => 60.0, 'rain' => 20.0, 'rain_start' => 0.2, 'co2' => 1000 ] );
+check( 'Beharrungen an', array_map( fn( $d ) => $d['hold_on'],  $cat ), [ 'battery' => 0, 'rf' => 1800, 'wifi' => 1800, 'station_silent' => 0, 'module_silent' => 0, 'sync_failed' => 0, 'auth_required' => 0, 'frost' => 0, 'heat' => 0, 'gust' => 0, 'rain' => 0, 'rain_start' => 0, 'co2' => 0 ] );
+check( 'Beharrungen aus',array_map( fn( $d ) => $d['hold_off'], $cat ), [ 'battery' => 0, 'rf' => 1800, 'wifi' => 1800, 'station_silent' => 1800, 'module_silent' => 1800, 'sync_failed' => 0, 'auth_required' => 0, 'frost' => 3600, 'heat' => 3600, 'gust' => 3600, 'rain' => 0, 'rain_start' => 0, 'co2' => 1800 ] );
+check( 'ohne Entwarnung: rain und rain_start', array_keys( array_filter( $cat, fn( $d ) => ! $d['clears'] ) ), [ 'rain', 'rain_start' ] );
 check( 'Stufen Funk und WLAN', [ $cat['rf']['levels'], $cat['wifi']['levels'] ], [ [ 'low' => [ 90, 80 ], 'medium' => [ 80, 70 ] ], [ 'bad' => [ 86, 71 ], 'average' => [ 71, 56 ] ] ] );
 $def = NAWS_Notify_Rules::defaults();
-check( 'defaults(): alles aus, Empfaenger leer', [ $def['recipients'], $def['rules']['battery'], $def['rules']['rf'], $def['rules']['sync_failed'], $def['rules']['gust'] ], [ [], [ 'enabled' => 0, 'threshold' => 20 ], [ 'enabled' => 0, 'level' => 'low' ], [ 'enabled' => 0 ], [ 'enabled' => 0, 'threshold' => 60.0 ] ] );
+check( 'defaults(): alles aus, Empfaenger leer', [ $def['enabled'], $def['recipients'], $def['rules']['battery'], $def['rules']['rf'], $def['rules']['sync_failed'], $def['rules']['gust'] ], [ 1, [], [ 'enabled' => 0, 'threshold' => 20 ], [ 'enabled' => 0, 'level' => 'low' ], [ 'enabled' => 0 ], [ 'enabled' => 0, 'threshold' => 60.0 ] ] );
 
 echo "\nEinheiten\n" . str_repeat( '-', 74 ) . "\n";
 $F = [ 'temperature_unit' => 'F', 'wind_unit' => 'mph', 'rain_unit' => 'in' ];
@@ -58,7 +58,8 @@ foreach ( [ [ 'temp', -7.5 ], [ 'wind', 60.0 ], [ 'rain', 20.0 ] ] as [ $k, $v ]
     // to_display() rundet auf die Anzeigestelle; zurueckgerechnet bleibt ein Rest unter 0,1.
     check( "hin und zurueck $k", abs( NAWS_Notify_Rules::to_base( $k, NAWS_Notify_Rules::to_display( $k, $v, $F ), $F ) - $v ) < 0.1, true );
 }
-check( 'unit_label', [ NAWS_Notify_Rules::unit_label( 'temp', $U ), NAWS_Notify_Rules::unit_label( 'temp', $F ), NAWS_Notify_Rules::unit_label( 'wind', $U ), NAWS_Notify_Rules::unit_label( 'wind', $F ), NAWS_Notify_Rules::unit_label( 'rain', $F ), NAWS_Notify_Rules::unit_label( 'percent', $U ), NAWS_Notify_Rules::unit_label( 'minutes', $U ), NAWS_Notify_Rules::unit_label( 'level', $U ) ], [ '°C', '°F', 'km/h', 'mph', 'in', '%', 'min', '' ] );
+check( 'unit_label', [ NAWS_Notify_Rules::unit_label( 'temp', $U ), NAWS_Notify_Rules::unit_label( 'temp', $F ), NAWS_Notify_Rules::unit_label( 'wind', $U ), NAWS_Notify_Rules::unit_label( 'wind', $F ), NAWS_Notify_Rules::unit_label( 'rain', $F ), NAWS_Notify_Rules::unit_label( 'percent', $U ), NAWS_Notify_Rules::unit_label( 'minutes', $U ), NAWS_Notify_Rules::unit_label( 'level', $U ), NAWS_Notify_Rules::unit_label( 'ppm', $U ) ], [ '°C', '°F', 'km/h', 'mph', 'in', '%', 'min', '', 'ppm' ] );
+check( 'to_base/to_display: ppm unveraendert', [ NAWS_Notify_Rules::to_base( 'ppm', 1000.0, $F ), NAWS_Notify_Rules::to_display( 'ppm', 1000.0, $F ) ], [ 1000.0, 1000.0 ] );
 
 echo "\nBedingungen\n" . str_repeat( '-', 74 ) . "\n";
 $c = fn( string $r, array $m, array $cfg, bool $active = false ) => NAWS_Notify_Rules::condition( $r, $m, $cfg, $active, $GLOBALS['NOW'], 1200 );
@@ -93,6 +94,16 @@ check( 'gust aktiv: 59.9 entwarnt',           $c( 'gust', $wind( 59.9 ), [ 'thre
 $rain = fn( float $r ) => mod( 'NAModule3', [ 'readings' => [ 'sum_rain_24' => [ 'value' => $r, 'at' => $GLOBALS['NOW'] ] ] ] );
 check( 'rain: 20 warnt, 19.9 nicht',          [ $c( 'rain', $rain( 20.0 ), [ 'threshold' => 20.0 ] ), $c( 'rain', $rain( 19.9 ), [ 'threshold' => 20.0 ] ) ], [ true, false ] );
 check( 'Site-Regel per condition() -> null',  $c( 'sync_failed', mod( 'NAMain' ), [] ), null );
+check( 'heat: 30.0 warnt, 29.9 nicht',        [ $c( 'heat', $out( 30.0 ), [ 'threshold' => 30.0 ] ), $c( 'heat', $out( 29.9 ), [ 'threshold' => 30.0 ] ) ], [ true, false ] );
+check( 'heat aktiv: 29.5 haelt, 28.9 entwarnt', [ $c( 'heat', $out( 29.5 ), [ 'threshold' => 30.0 ], true ), $c( 'heat', $out( 28.9 ), [ 'threshold' => 30.0 ], true ) ], [ true, false ] );
+check( 'heat: Innenmodul -> ausgesetzt',      $c( 'heat', mod( 'NAModule4', [ 'readings' => [ 'Temperature' => [ 'value' => 35.0, 'at' => $NOW ] ] ] ), [ 'threshold' => 30.0 ] ), null );
+$rain1 = fn( float $r ) => mod( 'NAModule3', [ 'readings' => [ 'sum_rain_1' => [ 'value' => $r, 'at' => $GLOBALS['NOW'] ] ] ] );
+check( 'rain_start: 0.2 warnt, 0.1 nicht',   [ $c( 'rain_start', $rain1( 0.2 ), [ 'threshold' => 0.2 ] ), $c( 'rain_start', $rain1( 0.1 ), [ 'threshold' => 0.2 ] ) ], [ true, false ] );
+check( 'rain_start aktiv: 0.0 beendet',       $c( 'rain_start', $rain1( 0.0 ), [ 'threshold' => 0.2 ], true ), false );
+$co2 = fn( string $type, float $v ) => mod( $type, [ 'readings' => [ 'CO2' => [ 'value' => $v, 'at' => $GLOBALS['NOW'] ] ] ] );
+check( 'co2: 1000 warnt, 999 nicht, Basis und Innenmodul', [ $c( 'co2', $co2( 'NAMain', 1000.0 ), [ 'threshold' => 1000 ] ), $c( 'co2', $co2( 'NAModule4', 999.0 ), [ 'threshold' => 1000 ] ) ], [ true, false ] );
+check( 'co2 aktiv: 950 haelt, 899 entwarnt', [ $c( 'co2', $co2( 'NAModule4', 950.0 ), [ 'threshold' => 1000 ], true ), $c( 'co2', $co2( 'NAModule4', 899.0 ), [ 'threshold' => 1000 ], true ) ], [ true, false ] );
+check( 'co2: Aussenmodul -> ausgesetzt',       $c( 'co2', $co2( 'NAModule1', 2000.0 ), [ 'threshold' => 1000 ] ), null );
 check( 'value_of: Batterie, Frost, Zeitstempel', [ NAWS_Notify_Rules::value_of( 'battery', mod( 'NAModule4', [ 'battery_percent' => 23 ] ) ), NAWS_Notify_Rules::value_of( 'frost', $out( -2.5 ) ), NAWS_Notify_Rules::value_of( 'station_silent', mod( 'NAMain', [ 'last_status_store' => 5 ] ) ), NAWS_Notify_Rules::value_of( 'module_silent', mod( 'NAModule1', [ 'last_seen' => 7 ] ) ) ], [ 23, -2.5, 5, 7 ] );
 
 echo "\nZustandsmaschine\n" . str_repeat( '-', 74 ) . "\n";
@@ -192,6 +203,13 @@ $k = NAWS_Notify_Rules::evaluate( $snap( $base, array_merge( $aus, [ 'readings' 
 check( 'fehlender Messwert: ausgesetzt',     $row( $k, 'frost', 'aus' ), [ 'suspended', 'missing' ] );
 $l = NAWS_Notify_Rules::evaluate( $snap( $base, $aus ), $sfr, [], $NOW, [ 'interval' => 1800 ] + $ctx );
 check( 'Intervall 30 min: 25 min alt zaehlt noch', $ev( $l ), [ [ 'frost', 'raise', 'Aussen', -2.0, 0.0 ] ] );
+$sr1 = $on( [ 'rain_start' => [ 'enabled' => 1, 'threshold' => 0.2 ] ] );
+$rs  = fn( float $r, int $at ) => mod( 'NAModule3', [ 'module_id' => 'rain', 'module_name' => 'Regen', 'reachable' => 1, 'last_message' => $at, 'readings' => [ 'sum_rain_1' => [ 'value' => $r, 'at' => $at ] ] ] );
+$p1 = NAWS_Notify_Rules::evaluate( $snap( $base, $rs( 0.5, $NOW ) ), $sr1, [], $NOW, $ctx );
+$p2 = NAWS_Notify_Rules::evaluate( $snap( array_merge( $base, [ 'last_status_store' => $NOW + 300 ] ), $rs( 0.0, $NOW + 600 ) ), $sr1, $p1['state'], $NOW + 600, $ctx );
+$p3 = NAWS_Notify_Rules::evaluate( $snap( array_merge( $base, [ 'last_status_store' => $NOW + 900 ] ), $rs( 0.3, $NOW + 1200 ) ), $sr1, $p2['state'], $NOW + 1200, $ctx );
+check( 'Regen beginnt: eine Mail, stilles Ende, neuer Schauer nach trockener Stunde meldet wieder', [ $ev( $p1 ), $p2['events'], $p2['state'], $ev( $p3 ) ], [ [ [ 'rain_start', 'raise', 'Regen', 0.5, 0.2 ] ], [], [], [ [ 'rain_start', 'raise', 'Regen', 0.3, 0.2 ] ] ] );
+
 check( 'rule_cfg fuellt Vorgaben auf',        NAWS_Notify_Rules::rule_cfg( 'battery', [ 'rules' => [ 'battery' => [ 'enabled' => 1 ] ] ] ), [ 'enabled' => 1, 'threshold' => 20 ] );
 
 printf( "\n%d ok, %d fehlgeschlagen\n", $passed, $failed );
