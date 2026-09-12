@@ -553,7 +553,14 @@ class NAWS_Admin {
         check_admin_referer( 'naws_test_notification' );
         if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
 
-        $sent = NAWS_Notifications::send_test();
+        // A third-party wp_mail() (SMTP plugins) may throw on a bad configuration;
+        // the button exists to reveal exactly that, not to white-screen wp-admin.
+        try {
+            $sent = NAWS_Notifications::send_test();
+        } catch ( \Throwable $e ) {
+            NAWS_Logger::error( 'notify', 'Test mail failed: ' . $e->getMessage() );
+            $sent = false;
+        }
         $url  = add_query_arg( [
             'page'     => 'naws-notifications',
             'test'     => $sent ? 1 : 0,

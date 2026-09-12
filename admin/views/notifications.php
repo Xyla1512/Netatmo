@@ -115,9 +115,10 @@ $groups = [
 
     <div class="naws-admin-panel">
         <div class="naws-panel-header"><h2><?php esc_html_e( 'Current state', 'xtx-integration-for-netatmo' ); ?></h2></div>
-        <?php if ( empty( $rows ) ) : ?>
+        <?php $has_modules = (bool) array_filter( $rows, static fn( $r ) => $r['module_id'] !== '' ); ?>
+        <?php if ( ! $has_modules ) : ?>
             <p style="padding:1rem;"><?php esc_html_e( 'No active modules.', 'xtx-integration-for-netatmo' ); ?></p>
-        <?php else : ?>
+        <?php endif; ?>
         <table class="wp-list-table widefat striped naws-list-table">
             <thead>
                 <tr>
@@ -144,7 +145,6 @@ $groups = [
             <?php endforeach; ?>
             </tbody>
         </table>
-        <?php endif; ?>
     </div>
 
     <div class="naws-admin-panel" style="margin-top:1rem;">
