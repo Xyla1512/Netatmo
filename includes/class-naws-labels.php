@@ -274,8 +274,11 @@ function naws_label( string $key ): string {
         case 'ntf_rule_sync_failed':               return __( 'Fetch failing', 'xtx-integration-for-netatmo' );
         case 'ntf_rule_auth_required':             return __( 'Credentials expired', 'xtx-integration-for-netatmo' );
         case 'ntf_rule_frost':                     return _x( 'Frost', 'notification rule', 'xtx-integration-for-netatmo' );
+        case 'ntf_rule_heat':                      return _x( 'Heat', 'notification rule', 'xtx-integration-for-netatmo' );
         case 'ntf_rule_gust':                      return _x( 'Gust', 'notification rule', 'xtx-integration-for-netatmo' );
         case 'ntf_rule_rain':                      return __( 'Rain in 24 hours', 'xtx-integration-for-netatmo' );
+        case 'ntf_rule_rain_start':                return __( 'Rain starting', 'xtx-integration-for-netatmo' );
+        case 'ntf_rule_co2':                       return __( 'CO₂ high', 'xtx-integration-for-netatmo' );
         case 'ntf_desc_battery':                   return __( 'The battery of a module is below the threshold. Applies to every active module.', 'xtx-integration-for-netatmo' );
         case 'ntf_desc_rf':                        return __( 'The radio signal from a module to the base station is at or below the chosen level for 30 minutes.', 'xtx-integration-for-netatmo' );
         case 'ntf_desc_wifi':                      return __( 'The Wi-Fi of the base station is at or below the chosen level for 30 minutes.', 'xtx-integration-for-netatmo' );
@@ -284,8 +287,11 @@ function naws_label( string $key ): string {
         case 'ntf_desc_sync_failed':               return __( 'Three fetches in a row have failed.', 'xtx-integration-for-netatmo' );
         case 'ntf_desc_auth_required':             return __( 'The Netatmo connection needs a new login under Settings.', 'xtx-integration-for-netatmo' );
         case 'ntf_desc_frost':                     return __( 'The outdoor temperature is at or below the threshold.', 'xtx-integration-for-netatmo' );
+        case 'ntf_desc_heat':                      return __( 'The outdoor temperature is at or above the threshold.', 'xtx-integration-for-netatmo' );
         case 'ntf_desc_gust':                      return __( 'A gust at or above the threshold.', 'xtx-integration-for-netatmo' );
         case 'ntf_desc_rain':                      return __( 'The rain of the last 24 hours is at or above the threshold. No all-clear: one mail per rain event.', 'xtx-integration-for-netatmo' );
+        case 'ntf_desc_rain_start':                return __( 'Rain has fallen in the last hour, at or above the threshold. No all-clear: showers within an hour count as one rain.', 'xtx-integration-for-netatmo' );
+        case 'ntf_desc_co2':                       return __( 'The CO₂ of the base station or an indoor module is at or above the threshold.', 'xtx-integration-for-netatmo' );
         case 'ntf_measure_battery':                return _x( 'Battery', 'notification measure', 'xtx-integration-for-netatmo' );
         case 'ntf_measure_rf':                     return __( 'Radio', 'xtx-integration-for-netatmo' );
         case 'ntf_measure_wifi':                   return __( 'Wi-Fi', 'xtx-integration-for-netatmo' );
@@ -294,8 +300,11 @@ function naws_label( string $key ): string {
         case 'ntf_measure_sync_failed':            return __( 'Errors in a row', 'xtx-integration-for-netatmo' );
         case 'ntf_measure_auth_required':          return '';
         case 'ntf_measure_frost':                  return _x( 'Temperature', 'notification measure', 'xtx-integration-for-netatmo' );
+        case 'ntf_measure_heat':                   return _x( 'Temperature', 'notification measure', 'xtx-integration-for-netatmo' );
         case 'ntf_measure_gust':                   return _x( 'Gust', 'notification measure', 'xtx-integration-for-netatmo' );
         case 'ntf_measure_rain':                   return __( 'Rain (24 h)', 'xtx-integration-for-netatmo' );
+        case 'ntf_measure_rain_start':             return __( 'Rain (last hour)', 'xtx-integration-for-netatmo' );
+        case 'ntf_measure_co2':                    return _x( 'CO₂', 'notification measure', 'xtx-integration-for-netatmo' );
         case 'ntf_level_low':                      return _x( 'weak', 'radio level', 'xtx-integration-for-netatmo' );
         case 'ntf_level_medium':                   return _x( 'medium or worse', 'radio level', 'xtx-integration-for-netatmo' );
         case 'ntf_level_bad':                      return _x( 'poor', 'wifi level', 'xtx-integration-for-netatmo' );
