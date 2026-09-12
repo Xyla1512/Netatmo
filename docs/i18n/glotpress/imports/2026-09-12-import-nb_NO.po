@@ -1,0 +1,301 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo\n"
+"Language: nb_NO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "%d all-clear"
+msgid_plural "%d all-clears"
+msgstr[0] "%d friskmelding"
+msgstr[1] "%d friskmeldinger"
+
+msgid "%d invalid address was dropped."
+msgid_plural "%d invalid addresses were dropped."
+msgstr[0] "%d ugyldig adresse ble forkastet."
+msgstr[1] "%d ugyldige adresser ble forkastet."
+
+msgid "%d warning"
+msgid_plural "%d warnings"
+msgstr[0] "%d varsel"
+msgstr[1] "%d varsler"
+
+msgid "(none)"
+msgstr "(ingen)"
+
+msgid "A gust at or above the threshold."
+msgstr "Et vindkast på eller over terskelen."
+
+msgid "A module is unreachable or has not reported to the base station for longer than the set minutes."
+msgstr "En modul er utilgjengelig eller har ikke rapportert til basestasjonen på lengre tid enn de angitte minuttene."
+
+msgid "Adjust rules"
+msgstr "Juster regler"
+
+msgid "After every fetch the plugin checks the rules switched on below and sends one e-mail per state change; all changes of one fetch go into one mail."
+msgstr "Etter hver henting sjekker utvidelsen reglene som er slått på nedenfor og sender én e-post per tilstandsendring; alle endringer fra én henting samles i én e-post."
+
+msgid "All clear"
+msgstr "Friskmelding"
+
+msgid "Base station not reporting"
+msgstr "Basestasjonen rapporterer ikke"
+
+msgid "Battery low"
+msgstr "Lavt batteri"
+
+msgid "CO₂ high"
+msgstr "Høyt CO₂"
+
+msgid "Colours for [naws_windrose]: one class per Beaufort step from the centre outwards, the rings behind the rays, the hub that carries the calm share, and the active button of the period switcher — the other buttons borrow that colour when the mouse is over them. Pick one hue that gets darker step by step; the rose is read by length first and by colour second."
+msgstr "Farger for [naws_windrose]: én klasse per Beaufort-trinn fra midten og utover, ringene bak strålene, navet som bærer andelen vindstille, og den aktive knappen i periodevelgeren — de andre knappene låner denne fargen når musepekeren er over dem. Velg én fargetone som blir mørkere trinn for trinn; rosen leses først etter lengde og deretter etter farge."
+
+msgid "Credentials expired"
+msgstr "Påloggingen er utløpt"
+
+msgid "Error: %s"
+msgstr "Feil: %s"
+
+msgid "Errors in a row"
+msgstr "Feil på rad"
+
+msgid "Fetch failing"
+msgstr "Henting feiler"
+
+msgid "From %1$s to %2$s"
+msgstr "Fra %1$s til %2$s"
+
+msgid "Hold running since %s"
+msgstr "Ventetid løper siden %s"
+
+msgid "Last message"
+msgstr "Siste melding"
+
+msgid "Last report"
+msgstr "Siste rapport"
+
+msgid "Master switch"
+msgstr "Hovedbryter"
+
+msgid "Module not reporting"
+msgstr "Modulen rapporterer ikke"
+
+msgid "No notifications sent yet."
+msgstr "Ingen varsler sendt ennå."
+
+msgid "Notifications"
+msgstr "Varsler"
+
+msgid "Notifications are switched off. No rule is evaluated and no mail is sent until you switch them on again."
+msgstr "Varsler er slått av. Ingen regel evalueres og ingen e-post sendes før du slår dem på igjen."
+
+msgid "One address per line. Leave empty to use the site's admin address."
+msgstr "Én adresse per linje. La stå tom for å bruke nettstedets administratoradresse."
+
+msgid "Period switcher (active button)"
+msgstr "Periodevelger (aktiv knapp)"
+
+msgid "Please connect to Netatmo again under XTX Netatmo → Settings."
+msgstr "Koble til Netatmo på nytt under XTX Netatmo → Innstillinger."
+
+msgid "Poor Wi-Fi at the base station"
+msgstr "Dårlig Wi-Fi ved basestasjonen"
+
+msgid "Radio"
+msgstr "Radio"
+
+msgid "Rain (24 h)"
+msgstr "Regn (24 t)"
+
+msgid "Rain (last hour)"
+msgstr "Regn (siste time)"
+
+msgid "Rain has fallen in the last hour, at or above the threshold. No all-clear: showers within an hour count as one rain."
+msgstr "Det har regnet den siste timen, på eller over terskelen. Ingen friskmelding: byger innen én time regnes som ett regn."
+
+msgid "Rain in 24 hours"
+msgstr "Regn på 24 timer"
+
+msgid "Rain starting"
+msgstr "Regn begynner"
+
+msgid "Recent notifications"
+msgstr "Siste varsler"
+
+msgid "Recipients"
+msgstr "Mottakere"
+
+msgid "Rule"
+msgstr "Regel"
+
+msgid "Rules switched on:"
+msgstr "Regler som er slått på:"
+
+msgid "Save Notifications"
+msgstr "Lagre varsler"
+
+msgid "Send notifications"
+msgstr "Send varsler"
+
+msgid "Send test mail"
+msgstr "Send test-e-post"
+
+msgid "Since: %s"
+msgstr "Siden: %s"
+
+msgid "Station"
+msgstr "Stasjon"
+
+msgid "Subject"
+msgstr "Emne"
+
+msgid "Switch off to pause every mail without losing your rules; the test mail still works."
+msgstr "Slå av for å sette alle e-poster på pause uten å miste reglene; test-e-posten fungerer fortsatt."
+
+msgid "Test mail"
+msgstr "Test-e-post"
+
+msgid "Test mail sent."
+msgstr "Test-e-post sendt."
+
+msgid "The CO₂ of the base station or an indoor module is at or above the threshold."
+msgstr "CO₂-nivået i basestasjonen eller en innemodul er på eller over terskelen."
+
+msgid "The Netatmo connection needs a new login under Settings."
+msgstr "Netatmo-tilkoblingen trenger ny pålogging under Innstillinger."
+
+msgid "The Wi-Fi of the base station is at or below the chosen level for 30 minutes."
+msgstr "Wi-Fi-signalet til basestasjonen er på eller under valgt nivå i 30 minutter."
+
+msgid "The base station is unreachable or has not reported to Netatmo for longer than the set minutes."
+msgstr "Basestasjonen er utilgjengelig eller har ikke rapportert til Netatmo på lengre tid enn de angitte minuttene."
+
+msgid "The battery of a module is below the threshold. Applies to every active module."
+msgstr "Batteriet i en modul er under terskelen. Gjelder alle aktive moduler."
+
+msgid "The outdoor temperature is at or above the threshold."
+msgstr "Utetemperaturen er på eller over terskelen."
+
+msgid "The outdoor temperature is at or below the threshold."
+msgstr "Utetemperaturen er på eller under terskelen."
+
+msgid "The radio signal from a module to the base station is at or below the chosen level for 30 minutes."
+msgstr "Radiosignalet fra en modul til basestasjonen er på eller under valgt nivå i 30 minutter."
+
+msgid "The rain of the last 24 hours is at or above the threshold. No all-clear: one mail per rain event."
+msgstr "Regnet de siste 24 timene er på eller over terskelen. Ingen friskmelding: én e-post per regnhendelse."
+
+msgid "The test mail could not be sent: wp_mail() returned false. The server sends no mail — an SMTP plugin or your host can fix that."
+msgstr "Test-e-posten kunne ikke sendes: wp_mail() returnerte false. Serveren sender ingen e-post – en SMTP-utvidelse eller leverandøren din kan ordne det."
+
+msgid "The test mail goes to the saved recipients."
+msgstr "Test-e-posten går til de lagrede mottakerne."
+
+msgid "This mail was sent by hand from %s to check the delivery."
+msgstr "Denne e-posten ble sendt manuelt fra %s for å sjekke leveringen."
+
+msgid "Three fetches in a row have failed."
+msgstr "Tre hentinger på rad har feilet."
+
+msgid "Threshold"
+msgstr "Terskel"
+
+msgid "Warning since %s"
+msgstr "Varsel siden %s"
+
+msgid "Weak radio link to the base station"
+msgstr "Svakt radiosignal til basestasjonen"
+
+msgid "Weather"
+msgstr "Vær"
+
+msgid "Wi-Fi"
+msgstr "Wi-Fi"
+
+msgid "after 3 errors in a row"
+msgstr "etter 3 feil på rad"
+
+msgid "base station silent"
+msgstr "basestasjonen er stille"
+
+msgid "failed"
+msgstr "mislyktes"
+
+msgid "no fetch"
+msgstr "ingen henting"
+
+msgid "no value yet"
+msgstr "ingen verdi ennå"
+
+msgid "reading outdated"
+msgstr "måling utdatert"
+
+msgid "rule off"
+msgstr "regel av"
+
+msgid "sent"
+msgstr "sendt"
+
+msgid "suspended"
+msgstr "satt på vent"
+
+msgid "threshold %s"
+msgstr "terskel %s"
+
+msgctxt "notification mail"
+msgid "Module"
+msgstr "Modul"
+
+msgctxt "notification mail"
+msgid "Warning"
+msgstr "Varsel"
+
+msgctxt "notification measure"
+msgid "Battery"
+msgstr "Batteri"
+
+msgctxt "notification measure"
+msgid "CO₂"
+msgstr "CO₂"
+
+msgctxt "notification measure"
+msgid "Gust"
+msgstr "Vindkast"
+
+msgctxt "notification measure"
+msgid "Temperature"
+msgstr "Temperatur"
+
+msgctxt "notification rule"
+msgid "Frost"
+msgstr "Frost"
+
+msgctxt "notification rule"
+msgid "Gust"
+msgstr "Vindkast"
+
+msgctxt "notification rule"
+msgid "Heat"
+msgstr "Hete"
+
+msgctxt "notification status"
+msgid "ok"
+msgstr "ok"
+
+msgctxt "radio level"
+msgid "medium or worse"
+msgstr "middels eller dårligere"
+
+msgctxt "radio level"
+msgid "weak"
+msgstr "svakt"
+
+msgctxt "wifi level"
+msgid "average or worse"
+msgstr "middels eller dårligere"
+
+msgctxt "wifi level"
+msgid "poor"
+msgstr "dårlig"

@@ -1,0 +1,301 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "%d all-clear"
+msgid_plural "%d all-clears"
+msgstr[0] "%d Entwarnung"
+msgstr[1] "%d Entwarnungen"
+
+msgid "%d invalid address was dropped."
+msgid_plural "%d invalid addresses were dropped."
+msgstr[0] "%d ungültige Adresse wurde verworfen."
+msgstr[1] "%d ungültige Adressen wurden verworfen."
+
+msgid "%d warning"
+msgid_plural "%d warnings"
+msgstr[0] "%d Warnung"
+msgstr[1] "%d Warnungen"
+
+msgid "(none)"
+msgstr "(keine)"
+
+msgid "A gust at or above the threshold."
+msgstr "Eine Böe auf oder über der Schwelle."
+
+msgid "A module is unreachable or has not reported to the base station for longer than the set minutes."
+msgstr "Ein Modul ist nicht erreichbar oder hat sich länger als die eingestellten Minuten nicht bei der Basisstation gemeldet."
+
+msgid "Adjust rules"
+msgstr "Regeln anpassen"
+
+msgid "After every fetch the plugin checks the rules switched on below and sends one e-mail per state change; all changes of one fetch go into one mail."
+msgstr "Nach jedem Abruf prüft das Plugin die unten eingeschalteten Regeln und schickt je Zustandswechsel eine E-Mail; alle Wechsel eines Abrufs kommen in eine Mail."
+
+msgid "All clear"
+msgstr "Entwarnung"
+
+msgid "Base station not reporting"
+msgstr "Basisstation meldet sich nicht"
+
+msgid "Battery low"
+msgstr "Batterie niedrig"
+
+msgid "CO₂ high"
+msgstr "CO₂ hoch"
+
+msgid "Colours for [naws_windrose]: one class per Beaufort step from the centre outwards, the rings behind the rays, the hub that carries the calm share, and the active button of the period switcher — the other buttons borrow that colour when the mouse is over them. Pick one hue that gets darker step by step; the rose is read by length first and by colour second."
+msgstr "Farben für [naws_windrose]: eine Klasse je Beaufort-Stufe von der Mitte nach außen, die Ringe hinter den Strahlen, die Nabe mit dem Anteil der Windstille und der aktive Knopf des Zeitraum-Umschalters — die übrigen Knöpfe leihen sich diese Farbe, solange die Maus über ihnen steht. Einen Farbton wählen, der Stufe für Stufe dunkler wird; die Rose wird zuerst über die Länge gelesen und erst dann über die Farbe."
+
+msgid "Credentials expired"
+msgstr "Zugangsdaten verfallen"
+
+msgid "Error: %s"
+msgstr "Fehler: %s"
+
+msgid "Errors in a row"
+msgstr "Fehler in Folge"
+
+msgid "Fetch failing"
+msgstr "Abruf scheitert"
+
+msgid "From %1$s to %2$s"
+msgstr "Von %1$s bis %2$s"
+
+msgid "Hold running since %s"
+msgstr "Beharrung läuft seit %s"
+
+msgid "Last message"
+msgstr "Letzte Nachricht"
+
+msgid "Last report"
+msgstr "Letzte Meldung"
+
+msgid "Master switch"
+msgstr "Generalschalter"
+
+msgid "Module not reporting"
+msgstr "Modul meldet sich nicht"
+
+msgid "No notifications sent yet."
+msgstr "Noch keine Benachrichtigung verschickt."
+
+msgid "Notifications"
+msgstr "Benachrichtigungen"
+
+msgid "Notifications are switched off. No rule is evaluated and no mail is sent until you switch them on again."
+msgstr "Benachrichtigungen sind ausgeschaltet. Keine Regel wird ausgewertet und keine Mail verschickt, bis du sie wieder einschaltest."
+
+msgid "One address per line. Leave empty to use the site's admin address."
+msgstr "Eine Adresse je Zeile. Leer lassen, um die Admin-Adresse der Site zu verwenden."
+
+msgid "Period switcher (active button)"
+msgstr "Zeitraum-Umschalter (aktiver Knopf)"
+
+msgid "Please connect to Netatmo again under XTX Netatmo → Settings."
+msgstr "Bitte verbinde dich unter XTX Netatmo → Einstellungen erneut mit Netatmo."
+
+msgid "Poor Wi-Fi at the base station"
+msgstr "Schlechtes WLAN an der Basisstation"
+
+msgid "Radio"
+msgstr "Funk"
+
+msgid "Rain (24 h)"
+msgstr "Regen (24 h)"
+
+msgid "Rain (last hour)"
+msgstr "Regen (letzte Stunde)"
+
+msgid "Rain has fallen in the last hour, at or above the threshold. No all-clear: showers within an hour count as one rain."
+msgstr "In der letzten Stunde ist Regen gefallen, auf oder über der Schwelle. Keine Entwarnung: Schauer innerhalb einer Stunde zählen als ein Regen."
+
+msgid "Rain in 24 hours"
+msgstr "Regen in 24 Stunden"
+
+msgid "Rain starting"
+msgstr "Regen beginnt"
+
+msgid "Recent notifications"
+msgstr "Letzte Benachrichtigungen"
+
+msgid "Recipients"
+msgstr "Empfänger"
+
+msgid "Rule"
+msgstr "Regel"
+
+msgid "Rules switched on:"
+msgstr "Eingeschaltete Regeln:"
+
+msgid "Save Notifications"
+msgstr "Benachrichtigungen speichern"
+
+msgid "Send notifications"
+msgstr "Benachrichtigungen senden"
+
+msgid "Send test mail"
+msgstr "Testmail senden"
+
+msgid "Since: %s"
+msgstr "Seit: %s"
+
+msgid "Station"
+msgstr "Station"
+
+msgid "Subject"
+msgstr "Betreff"
+
+msgid "Switch off to pause every mail without losing your rules; the test mail still works."
+msgstr "Ausschalten, um alle Mails auszusetzen, ohne die Regeln zu verlieren; die Testmail funktioniert weiterhin."
+
+msgid "Test mail"
+msgstr "Testmail"
+
+msgid "Test mail sent."
+msgstr "Testmail gesendet."
+
+msgid "The CO₂ of the base station or an indoor module is at or above the threshold."
+msgstr "Das CO₂ der Basisstation oder eines Innenmoduls liegt auf oder über der Schwelle."
+
+msgid "The Netatmo connection needs a new login under Settings."
+msgstr "Die Netatmo-Verbindung braucht unter Einstellungen eine neue Anmeldung."
+
+msgid "The Wi-Fi of the base station is at or below the chosen level for 30 minutes."
+msgstr "Das WLAN der Basisstation liegt 30 Minuten lang auf oder unter der gewählten Stufe."
+
+msgid "The base station is unreachable or has not reported to Netatmo for longer than the set minutes."
+msgstr "Die Basisstation ist nicht erreichbar oder hat sich länger als die eingestellten Minuten nicht bei Netatmo gemeldet."
+
+msgid "The battery of a module is below the threshold. Applies to every active module."
+msgstr "Die Batterie eines Moduls liegt unter der Schwelle. Gilt für jedes aktive Modul."
+
+msgid "The outdoor temperature is at or above the threshold."
+msgstr "Die Außentemperatur liegt auf oder über der Schwelle."
+
+msgid "The outdoor temperature is at or below the threshold."
+msgstr "Die Außentemperatur liegt auf oder unter der Schwelle."
+
+msgid "The radio signal from a module to the base station is at or below the chosen level for 30 minutes."
+msgstr "Das Funksignal eines Moduls zur Basisstation liegt 30 Minuten lang auf oder unter der gewählten Stufe."
+
+msgid "The rain of the last 24 hours is at or above the threshold. No all-clear: one mail per rain event."
+msgstr "Der Regen der letzten 24 Stunden liegt auf oder über der Schwelle. Keine Entwarnung: eine Mail je Regenereignis."
+
+msgid "The test mail could not be sent: wp_mail() returned false. The server sends no mail — an SMTP plugin or your host can fix that."
+msgstr "Die Testmail konnte nicht gesendet werden: wp_mail() hat false zurückgegeben. Der Server verschickt keine Mail — ein SMTP-Plugin oder dein Hoster hilft."
+
+msgid "The test mail goes to the saved recipients."
+msgstr "Die Testmail geht an die gespeicherten Empfänger."
+
+msgid "This mail was sent by hand from %s to check the delivery."
+msgstr "Diese Mail wurde von Hand von %s verschickt, um die Zustellung zu prüfen."
+
+msgid "Three fetches in a row have failed."
+msgstr "Drei Abrufe in Folge sind gescheitert."
+
+msgid "Threshold"
+msgstr "Schwelle"
+
+msgid "Warning since %s"
+msgstr "Warnung seit %s"
+
+msgid "Weak radio link to the base station"
+msgstr "Schwache Funkverbindung zur Basisstation"
+
+msgid "Weather"
+msgstr "Wetter"
+
+msgid "Wi-Fi"
+msgstr "WLAN"
+
+msgid "after 3 errors in a row"
+msgstr "nach 3 Fehlern in Folge"
+
+msgid "base station silent"
+msgstr "Basisstation still"
+
+msgid "failed"
+msgstr "fehlgeschlagen"
+
+msgid "no fetch"
+msgstr "kein Abruf"
+
+msgid "no value yet"
+msgstr "noch kein Wert"
+
+msgid "reading outdated"
+msgstr "Messwert veraltet"
+
+msgid "rule off"
+msgstr "Regel aus"
+
+msgid "sent"
+msgstr "gesendet"
+
+msgid "suspended"
+msgstr "ausgesetzt"
+
+msgid "threshold %s"
+msgstr "Schwelle %s"
+
+msgctxt "notification mail"
+msgid "Module"
+msgstr "Modul"
+
+msgctxt "notification mail"
+msgid "Warning"
+msgstr "Warnung"
+
+msgctxt "notification measure"
+msgid "Battery"
+msgstr "Batterie"
+
+msgctxt "notification measure"
+msgid "CO₂"
+msgstr "CO₂"
+
+msgctxt "notification measure"
+msgid "Gust"
+msgstr "Böe"
+
+msgctxt "notification measure"
+msgid "Temperature"
+msgstr "Temperatur"
+
+msgctxt "notification rule"
+msgid "Frost"
+msgstr "Frost"
+
+msgctxt "notification rule"
+msgid "Gust"
+msgstr "Böe"
+
+msgctxt "notification rule"
+msgid "Heat"
+msgstr "Hitze"
+
+msgctxt "notification status"
+msgid "ok"
+msgstr "ok"
+
+msgctxt "radio level"
+msgid "medium or worse"
+msgstr "mittel oder schlechter"
+
+msgctxt "radio level"
+msgid "weak"
+msgstr "schwach"
+
+msgctxt "wifi level"
+msgid "average or worse"
+msgstr "mittel oder schlechter"
+
+msgctxt "wifi level"
+msgid "poor"
+msgstr "schlecht"
