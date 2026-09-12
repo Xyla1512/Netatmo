@@ -28,7 +28,7 @@ Connects to the Netatmo API, stores all sensor data locally and displays live da
 * **Multilingual** – Full German, English and Norwegian interface
 * **15 Shortcodes** – Dashboard, current readings, infobar, single value, computed value, history charts, heatmap, records, this day in earlier years, sun path, wind rose, forecast, table, widget, weather icon
 * **Export / Import** – Full backup and restore of weather data, modules and settings
-* **E-Mail Notifications** – battery, radio and Wi-Fi, station offline, failed syncs, frost, gusts, rain; per-rule thresholds, one mail per state change with an all-clear
+* **E-Mail Notifications** – battery, radio and Wi-Fi, station offline, failed syncs, frost, gusts, rain; per-rule thresholds, one mail per state change and an all-clear when the state ends
 * **Mobile-First Responsive** – All views optimized for smartphones, tablets and desktops
 * **130+ Configurable Colors** – Full appearance customization with live preview
 * **4 Icon Sets** – Emoji, Outline, Filled, Minimal with per-sensor color control
