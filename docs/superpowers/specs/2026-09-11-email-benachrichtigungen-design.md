@@ -37,13 +37,15 @@ Kennungen sind die Schlüssel in Option und Zustand. „Beharrung" heißt: die B
 | `battery` | Batterie niedrig | Modul (NAModule1–4) | `battery_percent` | Prozent, 1–99 (20) | Wert < Schwelle | Wert ≥ Schwelle + 10 | 0 / 0 |
 | `rf` | Funk zur Basis schwach | Modul (NAModule1–4) | `rf_status` | Stufe `low` (ab 90) oder `medium` (ab 80); Vorgabe `low` | Wert ≥ Stufenwert | Wert ≤ Stufenwert − 10 | 30 min / 30 min |
 | `wifi` | WLAN der Basis schlecht | Basis (NAMain) | `wifi_status` | Stufe `bad` (ab 86) oder `average` (ab 71); Vorgabe `bad` | Wert ≥ Stufenwert | Wert ≤ Stufenwert − 15 | 30 min / 30 min |
-| `station_silent` | Basis meldet sich nicht | Basis | `reachable`, `last_status_store` | Minuten, 10–1440 (60) | `reachable` = 0 oder Meldung älter als Schwelle | `reachable` = 1 und Meldung jünger als Schwelle | 0 / 0 |
-| `module_silent` | Modul meldet sich nicht | Modul (NAModule1–4) | `reachable`, `last_message` (Rückfall `last_seen`) | Minuten, 10–1440 (60) | `reachable` = 0 oder Meldung älter als Schwelle | `reachable` = 1 und Meldung jünger als Schwelle | 0 / 0 |
+| `station_silent` | Basis meldet sich nicht | Basis | `reachable`, `last_status_store` | Minuten, 10–1440 (60) | `reachable` = 0 oder Meldung älter als Schwelle | `reachable` = 1 und Meldung jünger als Schwelle | 0 / 30 min |
+| `module_silent` | Modul meldet sich nicht | Modul (NAModule1–4) | `reachable`, `last_message` (Rückfall `last_seen`) | Minuten, 10–1440 (60) | `reachable` = 0 oder Meldung älter als Schwelle | `reachable` = 1 und Meldung jünger als Schwelle | 0 / 30 min |
 | `sync_failed` | Abruf scheitert | Site | Fehlerzähler des Cron (`naws_polling_state`) | keine, fest 3 | 3 Fehler in Folge (Aktion `naws_sync_failed`) | nächster Erfolg (Aktion `naws_data_synced`) | 0 / 0 |
 | `auth_required` | Zugangsdaten verfallen | Site | Option `naws_auth_required` | keine | Option gesetzt | Option leer beim nächsten Erfolg | 0 / 0 |
 | `frost` | Frost | Modul (NAModule1) | Messwert `Temperature` | °C, −50…50 (0) | Wert ≤ Schwelle | Wert > Schwelle + 1 | 0 / 60 min |
 | `gust` | Böe | Modul (NAModule2) | Messwert `GustStrength` | km/h, 1…300 (60) | Wert ≥ Schwelle | Wert < Schwelle | 0 / 60 min |
-| `rain` | Regen in 24 Stunden | Modul (NAModule3) | Messwert `sum_rain_24` | mm, 0,1…500 (20) | Wert ≥ Schwelle | Wert < Schwelle, **ohne Mail** | 0 / 0 |
+| `rain` | Regen in 24 Stunden | Modul (NAModule3) | Messwert `sum_rain_24`, im Schnappschuss ersetzt durch die rollierende 24-h-Summe aus den Rohwerten (`get_rain_rolling_24h()`), weil Netatmos Feld um Mitternacht zurückspringt | mm, 0,1…500 (20) | Wert ≥ Schwelle | Wert < Schwelle, **ohne Mail** | 0 / 0 |
+
+Die beiden Stille-Regeln entwarnen erst, wenn die Basis beziehungsweise das Modul 30 Minuten lang wieder gemeldet hat — sonst würde ein Zeitstempel, der um die Schwelle pendelt, bei jedem Abruf eine Mail auslösen.
 
 Die Skalen für Funk und WLAN stammen aus der Netatmo-Dokumentation (WLAN 86 = schlecht, 71 = mittel, 56 = gut; Funk 90 = schwach, 60 = voll; kleiner ist jeweils besser). Sie passen zu den auf dev gemessenen Werten (Basis 60, Module 60–74). Die Dokumentationsseite ist eine JavaScript-Anwendung und wird bei der Umsetzung im Browser gegengeprüft; weichen die Zahlen ab, ändert sich nur der Katalog.
 
