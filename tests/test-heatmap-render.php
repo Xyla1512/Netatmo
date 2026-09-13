@@ -127,6 +127,34 @@ check( 'ein Jahr ausserhalb des Bereichs faellt zurueck', str_contains( $bad, 'd
 $xss = render_hm( [ 'year' => '2026', 'title' => '<script>x</script>' ] );
 check( 'der Titel wird escaped', str_contains( $xss, '<script>x' ), false );
 
+echo "\nassets/js/heatmap-boot.js + frontend.css -- Aufbau erst im Blick\n" . str_repeat( '-', 74 ) . "\n";
+
+// Die Welle laeuft nicht mehr beim Laden der Seite, sondern erst, wenn die
+// Oberkante der Karte die Bildschirmmitte erreicht — oder die Karte ganz im
+// Bild steht, damit sie am Ende einer kurzen Seite nicht unsichtbar bleibt.
+// Bis dahin haelt eine Wartestellung die Zellen unsichtbar; ohne JavaScript
+// gibt es sie nicht. Kommentarzeilen zaehlen nicht mit.
+$js  = (string) preg_replace( '/^\s*(?:\/\/|\*|\/\*\*).*$/m', '', (string) file_get_contents( $PLUGIN . 'assets/js/heatmap-boot.js' ) );
+$css = (string) file_get_contents( $PLUGIN . 'assets/css/frontend.css' );
+preg_match( '/function boot\(\) \{(.*?)\n    \}/s', $js, $boot );
+$rm_from = (int) strpos( $css, '@keyframes naws-hm-in' );
+preg_match( '/@media \(prefers-reduced-motion: reduce\) \{.*?\n\}/s', substr( $css, $rm_from ), $rm );
+
+check( 'boot() startet die Welle nicht mehr selbst',
+    str_contains( $boot[1] ?? 'stagger(root)', 'stagger(root)' ), false );
+check( 'die Karte wird beobachtet, bis ihre Oberkante die Bildschirmmitte erreicht',
+    str_contains( $js, 'IntersectionObserver' ) && str_contains( $js, "rootMargin: '0px 0px -50% 0px'" ), true );
+check( 'oder bis sie ganz im Bild steht',
+    str_contains( $js, 'threshold: 0.99' ), true );
+check( 'bis dahin steht sie in Wartestellung',
+    str_contains( $js, "'is-pending'" ), true );
+check( 'ein Jahreswechsel beendet die Wartestellung',
+    (bool) preg_match( '/addEventListener\(\'click\'.*?endPending\(\)/s', $js ), true );
+check( 'die Wartestellung haelt die Zellen unsichtbar',
+    str_contains( $css, '.naws-hm.is-pending .naws-hm-c { opacity: 0; }' ), true );
+check( 'nicht aber bei reduzierter Bewegung',
+    str_contains( $rm[0] ?? '', '.naws-hm.is-pending .naws-hm-c { opacity: 1; }' ), true );
+
 echo "\n" . str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );

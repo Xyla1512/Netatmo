@@ -34,6 +34,42 @@
         root.classList.add('is-animating');
     }
 
+    /**
+     * Der Aufbau wartet, bis die Karte im Blick ist: die Welle startet,
+     * sobald ihre Oberkante die Bildschirmmitte erreicht — oder sobald die
+     * Karte ganz im Bild steht, damit sie am Ende einer kurzen Seite, deren
+     * Mitte sie nie erreicht, nicht unsichtbar bleibt. Bis dahin haelt
+     * .is-pending die Zellen unsichtbar. Ohne IntersectionObserver laeuft
+     * die Welle sofort, wie frueher. Zurueck kommt die Funktion, die die
+     * Wartestellung vorzeitig beendet (Jahreswechsel).
+     */
+    function reveal(root) {
+        if (!('IntersectionObserver' in window)) { stagger(root); return function () {}; }
+        root.classList.add('is-pending');
+        var watchers = [];
+        function endPending() {
+            for (var i = 0; i < watchers.length; i++) { watchers[i].disconnect(); }
+            watchers = [];
+            root.classList.remove('is-pending');
+        }
+        function onEnter(entries) {
+            for (var i = 0; i < entries.length; i++) {
+                if (!entries[i].isIntersecting) { continue; }
+                if (!root.classList.contains('is-pending')) { return; }
+                endPending();
+                stagger(root);
+                return;
+            }
+        }
+        // Die Oberkante erreicht die obere Bildschirmhaelfte ...
+        watchers.push(new IntersectionObserver(onEnter, { rootMargin: '0px 0px -50% 0px', threshold: 0 }));
+        // ... oder die ganze Karte steht im Bild. 0.99 statt 1: bei
+        // Bruchteil-Pixeln meldet der Browser sonst nie "vollstaendig".
+        watchers.push(new IntersectionObserver(onEnter, { threshold: 0.99 }));
+        for (var j = 0; j < watchers.length; j++) { watchers[j].observe(root); }
+        return endPending;
+    }
+
     function makeTip(root) {
         var tip = document.createElement('div');
         tip.className = 'naws-hm-tip';
@@ -119,7 +155,7 @@
         root.setAttribute('data-year', String(data.year));
     }
 
-    function bindYears(root) {
+    function bindYears(root, endPending) {
         var cache = {};
         var buttons = root.querySelectorAll('.naws-hm-year');
 
@@ -139,7 +175,10 @@
                 if (!year || root.getAttribute('data-year') === year) { return; }
 
                 // Der Aufbau laeuft genau einmal. Ein Jahreswechsel blendet
-                // um, statt dieselbe Welle ein drittes Mal zu zeigen.
+                // um, statt dieselbe Welle ein drittes Mal zu zeigen — und ein
+                // Wechsel vor dem Aufbau beendet die Wartestellung, sonst
+                // bliebe die Karte unsichtbar.
+                endPending();
                 root.classList.remove('is-animating');
                 activate(year);
 
@@ -189,8 +228,7 @@
             if (root.getAttribute('data-naws-booted')) { continue; }
             root.setAttribute('data-naws-booted', '1');
             bindTip(root, makeTip(root));
-            bindYears(root);
-            stagger(root);
+            bindYears(root, reveal(root));
         }
     }
 
