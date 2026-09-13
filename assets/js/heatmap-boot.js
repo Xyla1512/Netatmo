@@ -36,37 +36,48 @@
 
     /**
      * Der Aufbau wartet, bis die Karte im Blick ist: die Welle startet,
-     * sobald ihre Oberkante die Bildschirmmitte erreicht — oder sobald die
-     * Karte ganz im Bild steht, damit sie am Ende einer kurzen Seite, deren
-     * Mitte sie nie erreicht, nicht unsichtbar bleibt. Bis dahin haelt
-     * .is-pending die Zellen unsichtbar. Ohne IntersectionObserver laeuft
-     * die Welle sofort, wie frueher. Zurueck kommt die Funktion, die die
-     * Wartestellung vorzeitig beendet (Jahreswechsel).
+     * sobald ihre Oberkante die Bildschirmmitte erreicht — oder sobald das
+     * Seitenende erreicht ist, damit eine Karte am Ende einer kurzen Seite,
+     * deren Mitte sie nie erreichen kann, nicht unsichtbar bleibt. Bis
+     * dahin haelt .is-pending die Zellen unsichtbar. Geprueft wird beim
+     * Booten, beim Scrollen, bei Groessenaenderung und — fuer Karten in
+     * einem Reiter oder Akkordeon — sobald die Karte sichtbar wird; die
+     * Zuhoerer gehen mit der Welle wieder weg. Zurueck kommt die Funktion,
+     * die die Wartestellung vorzeitig beendet (Jahreswechsel).
      */
     function reveal(root) {
-        if (!('IntersectionObserver' in window)) { stagger(root); return function () {}; }
         root.classList.add('is-pending');
-        var watchers = [];
+        var ticking = false;
+        var io = null;
         function endPending() {
-            for (var i = 0; i < watchers.length; i++) { watchers[i].disconnect(); }
-            watchers = [];
+            window.removeEventListener('scroll', onChange);
+            window.removeEventListener('resize', onChange);
+            if (io) { io.disconnect(); io = null; }
             root.classList.remove('is-pending');
         }
-        function onEnter(entries) {
-            for (var i = 0; i < entries.length; i++) {
-                if (!entries[i].isIntersecting) { continue; }
-                if (!root.classList.contains('is-pending')) { return; }
+        function check() {
+            ticking = false;
+            if (!root.classList.contains('is-pending')) { return; }
+            var r = root.getBoundingClientRect();
+            if (r.bottom <= 0 || r.top >= window.innerHeight || r.height === 0) { return; }
+            var atEnd = window.pageYOffset + window.innerHeight >= document.documentElement.scrollHeight - 2;
+            if (r.top <= window.innerHeight / 2 || atEnd) {
                 endPending();
                 stagger(root);
-                return;
             }
         }
-        // Die Oberkante erreicht die obere Bildschirmhaelfte ...
-        watchers.push(new IntersectionObserver(onEnter, { rootMargin: '0px 0px -50% 0px', threshold: 0 }));
-        // ... oder die ganze Karte steht im Bild. 0.99 statt 1: bei
-        // Bruchteil-Pixeln meldet der Browser sonst nie "vollstaendig".
-        watchers.push(new IntersectionObserver(onEnter, { threshold: 0.99 }));
-        for (var j = 0; j < watchers.length; j++) { watchers[j].observe(root); }
+        function onChange() {
+            if (ticking) { return; }
+            ticking = true;
+            window.requestAnimationFrame(check);
+        }
+        window.addEventListener('scroll', onChange, { passive: true });
+        window.addEventListener('resize', onChange, { passive: true });
+        if ('IntersectionObserver' in window) {
+            io = new IntersectionObserver(onChange, { threshold: 0 });
+            io.observe(root);
+        }
+        onChange();
         return endPending;
     }
 

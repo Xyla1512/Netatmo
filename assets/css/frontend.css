@@ -1825,8 +1825,8 @@
 }
 
 /* Wartestellung: heatmap-boot.js haelt die Zellen unsichtbar, bis die
-   Oberkante der Karte die Bildschirmmitte erreicht oder die Karte ganz im
-   Bild steht — dann beginnt die Welle. Ohne JavaScript gibt es sie nicht. */
+   Oberkante der Karte die Bildschirmmitte erreicht oder das Seitenende
+   erreicht ist — dann beginnt die Welle. Ohne JavaScript gibt es sie nicht. */
 .naws-hm.is-pending .naws-hm-c { opacity: 0; }
 
 @media (prefers-reduced-motion: reduce) {

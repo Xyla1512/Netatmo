@@ -130,8 +130,8 @@ check( 'der Titel wird escaped', str_contains( $xss, '<script>x' ), false );
 echo "\nassets/js/heatmap-boot.js + frontend.css -- Aufbau erst im Blick\n" . str_repeat( '-', 74 ) . "\n";
 
 // Die Welle laeuft nicht mehr beim Laden der Seite, sondern erst, wenn die
-// Oberkante der Karte die Bildschirmmitte erreicht — oder die Karte ganz im
-// Bild steht, damit sie am Ende einer kurzen Seite nicht unsichtbar bleibt.
+// Oberkante der Karte die Bildschirmmitte erreicht — oder das Seitenende, damit
+// sie am Ende einer kurzen Seite nicht unsichtbar bleibt.
 // Bis dahin haelt eine Wartestellung die Zellen unsichtbar; ohne JavaScript
 // gibt es sie nicht. Kommentarzeilen zaehlen nicht mit.
 $js  = (string) preg_replace( '/^\s*(?:\/\/|\*|\/\*\*).*$/m', '', (string) file_get_contents( $PLUGIN . 'assets/js/heatmap-boot.js' ) );
@@ -143,9 +143,9 @@ preg_match( '/@media \(prefers-reduced-motion: reduce\) \{.*?\n\}/s', substr( $c
 check( 'boot() startet die Welle nicht mehr selbst',
     str_contains( $boot[1] ?? 'stagger(root)', 'stagger(root)' ), false );
 check( 'die Karte wird beobachtet, bis ihre Oberkante die Bildschirmmitte erreicht',
-    str_contains( $js, 'IntersectionObserver' ) && str_contains( $js, "rootMargin: '0px 0px -50% 0px'" ), true );
-check( 'oder bis sie ganz im Bild steht',
-    str_contains( $js, 'threshold: 0.99' ), true );
+    str_contains( $js, "addEventListener('scroll'" ) && str_contains( $js, 'innerHeight / 2' ), true );
+check( 'oder bis das Seitenende erreicht ist, wo sie die Mitte nie erreichen kann',
+    str_contains( $js, 'scrollHeight' ), true );
 check( 'bis dahin steht sie in Wartestellung',
     str_contains( $js, "'is-pending'" ), true );
 check( 'ein Jahreswechsel beendet die Wartestellung',
