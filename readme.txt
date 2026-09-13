@@ -43,7 +43,7 @@ Connects to the Netatmo API, stores all sensor data locally and displays live da
 
 = Shortcodes =
 
-* `[naws_live]` – Live sensor tiles with 24h trend charts and forecast
+* `[naws_live]` – Live sensor tiles with 24h trend charts and wind rose
 * `[naws_current]` – Current readings of one or all modules as tiles or a list (`module_id`, `parameters`, `layout`, `title`)
 * `[naws_infobar]` – Astronomy bar with sunrise, moon phase, felt temperature
 * `[naws_value]` – Single inline sensor value

@@ -53,7 +53,7 @@ msgid_plural "%d warnings"
 msgstr[0] "%d Warnung"
 msgstr[1] "%d Warnungen"
 
-#: admin/views/shortcodes.php:366 includes/class-naws-shortcodes.php:612 templates/forecast.php:14 templates/live.php:235
+#: admin/views/shortcodes.php:366 includes/class-naws-shortcodes.php:612 templates/forecast.php:14
 msgid "%d-Day Forecast"
 msgstr "%d-Tage-Vorhersage"
 
@@ -249,7 +249,7 @@ msgstr "Nach jedem Abruf prüft das Plugin die unten eingeschalteten Regeln und 
 msgid "After saving your Client ID and Secret, click the button below to authorize:"
 msgstr "Speichere Client ID und Secret, dann klicke auf den Button:"
 
-#: includes/class-naws-helpers.php:330 includes/class-naws-labels.php:257 templates/live.php:347
+#: includes/class-naws-helpers.php:330 includes/class-naws-labels.php:257 templates/live.php:260
 msgid "Air Pressure"
 msgstr "Luftdruck"
 
@@ -373,7 +373,7 @@ msgid "Background"
 msgstr "Hintergrund"
 
 #: admin/views/live-settings.php:78 includes/class-naws-helpers.php:330 includes/class-naws-helpers.php:331 includes/class-naws-helpers.php:332
-#: includes/class-naws-helpers.php:333 includes/class-naws-helpers.php:334 templates/live.php:344
+#: includes/class-naws-helpers.php:333 includes/class-naws-helpers.php:334 templates/live.php:257
 msgid "Base"
 msgstr "Basis"
 
@@ -441,7 +441,7 @@ msgstr "Beide Bedingungen müssen zutreffen. Der Taupunkt-Abstand ist die Differ
 msgid "CO2"
 msgstr "CO₂"
 
-#: includes/class-naws-helpers.php:331 includes/class-naws-labels.php:258 templates/live.php:84 templates/live.php:348
+#: includes/class-naws-helpers.php:331 includes/class-naws-labels.php:258 templates/live.php:84 templates/live.php:261
 msgid "CO₂"
 msgstr "CO₂"
 
@@ -526,7 +526,7 @@ msgstr "Client ID"
 msgid "Client Secret"
 msgstr "Client Secret"
 
-#: templates/live.php:317
+#: templates/live.php:230
 msgid "Close"
 msgstr "Schließen"
 
@@ -706,7 +706,7 @@ msgstr "Datenhaltung"
 msgid "Data Types"
 msgstr "Datentypen"
 
-#: templates/live.php:358
+#: templates/live.php:271
 msgid "Data outdated (%d min.)"
 msgstr "Daten veraltet (%d Min.)"
 
@@ -1109,7 +1109,7 @@ msgid "Gust Speed"
 msgstr "Böengeschwindigkeit"
 
 #: admin/views/appearance.php:34 includes/class-naws-labels.php:263 templates/forecast.php:107 templates/live.php:71
-#: templates/live.php:353 templates/windrose.php:92
+#: templates/live.php:266 templates/windrose.php:92
 msgid "Gusts"
 msgstr "Böen"
 
@@ -1226,8 +1226,8 @@ msgid "How day classes are counted."
 msgstr "Wie Tagesklassen gezählt werden."
 
 #: admin/views/settings.php:373
-msgid "How many days the forecast should display (1–7). This is the default for the shortcode and live dashboard."
-msgstr "Wie viele Tage die Vorhersage anzeigen soll (1–7). Dies ist der Standard für den Shortcode und das Live-Dashboard."
+msgid "How many days the forecast should display (1–7). This is the default for the [naws_forecast] shortcode."
+msgstr "Wie viele Tage die Vorhersage anzeigen soll (1–7). Dies ist der Standard für den Shortcode [naws_forecast]."
 
 #: admin/views/appearance.php:65
 msgid "Hub (calm)"
@@ -1489,7 +1489,7 @@ msgstr "Hauptrichtung"
 msgid "Mainly clear"
 msgstr "Überwiegend klar"
 
-#: templates/live.php:360
+#: templates/live.php:273
 msgid "Make sure the sync function is active."
 msgstr "Stelle sicher, dass die Sync-Funktion aktiv ist."
 
@@ -1505,7 +1505,7 @@ msgstr "Mär"
 msgid "Master switch"
 msgstr "Generalschalter"
 
-#: templates/history.php:135 templates/live.php:354 templates/table.php:60 templates/windrose.php:71
+#: templates/history.php:135 templates/live.php:267 templates/table.php:60 templates/windrose.php:71
 #: templates/windrose.php:183
 msgid "Max"
 msgstr "Max"
@@ -1523,7 +1523,7 @@ msgstr "Max. Ergebnisse (1–5000)"
 msgid "Max. number of records"
 msgstr "Max. Anzahl Datensätze"
 
-#: templates/forecast.php:103 templates/live.php:293
+#: templates/forecast.php:103
 msgid "Max. wind speed"
 msgstr "Max. Windgeschwindigkeit"
 
@@ -1741,7 +1741,7 @@ msgstr "Noch kein früheres Jahr enthält diesen Tag."
 msgid "No forecast data available."
 msgstr "Keine Vorhersagedaten verfügbar."
 
-#: templates/live.php:359
+#: templates/live.php:272
 msgid "No live data available."
 msgstr "Keine Live-Daten verfügbar."
 
@@ -1874,7 +1874,7 @@ msgid "Optional title"
 msgstr "Optionaler Titel"
 
 #: includes/class-naws-helpers.php:326 includes/class-naws-helpers.php:327 includes/class-naws-helpers.php:328 includes/class-naws-helpers.php:329
-#: templates/live.php:343
+#: templates/live.php:256
 msgid "Outdoor"
 msgstr "Außen"
 
@@ -1962,8 +1962,7 @@ msgstr "Schlechtes WLAN an der Basisstation"
 msgid "Possible values"
 msgstr "Mögliche Werte"
 
-#: includes/class-naws-helpers.php:335 includes/class-naws-labels.php:260 templates/forecast.php:101 templates/live.php:291
-#: templates/live.php:350
+#: includes/class-naws-helpers.php:335 includes/class-naws-labels.php:260 templates/forecast.php:101 templates/live.php:263
 msgid "Precipitation"
 msgstr "Niederschlag"
 
@@ -1971,7 +1970,7 @@ msgstr "Niederschlag"
 msgid "Precipitation module"
 msgstr "Niederschlags-Modul"
 
-#: templates/forecast.php:102 templates/live.php:292
+#: templates/forecast.php:102
 msgid "Precipitation probability"
 msgstr "Regenwahrscheinlichkeit"
 
@@ -2343,7 +2342,7 @@ msgstr "Schneeschauer"
 msgid "Solid filled icons for a bolder, modern look."
 msgstr "Ausgefüllte Icons für einen kräftigeren, modernen Look."
 
-#: admin/views/shortcodes.php:408 templates/forecast.php:118 templates/live.php:304
+#: admin/views/shortcodes.php:408 templates/forecast.php:118
 msgid "Source"
 msgstr "Quelle"
 
@@ -2491,11 +2490,11 @@ msgstr "Temp."
 msgid "Temp. Base"
 msgstr "Temp. Basis"
 
-#: includes/class-naws-helpers.php:328 includes/class-naws-labels.php:266 templates/live.php:357
+#: includes/class-naws-helpers.php:328 includes/class-naws-labels.php:266 templates/live.php:270
 msgid "Temp. Max"
 msgstr "Temp. Max"
 
-#: includes/class-naws-helpers.php:327 includes/class-naws-labels.php:265 templates/live.php:356
+#: includes/class-naws-helpers.php:327 includes/class-naws-labels.php:265 templates/live.php:269
 msgid "Temp. Min"
 msgstr "Temp. Min"
 
@@ -2505,7 +2504,7 @@ msgstr "Temp. Außen"
 
 #: admin/views/appearance.php:100 admin/views/live-settings.php:67 admin/views/settings.php:301 includes/class-naws-helpers.php:81
 #: includes/class-naws-helpers.php:326 includes/class-naws-helpers.php:333 includes/class-naws-helpers.php:736 includes/class-naws-labels.php:79
-#: includes/class-naws-labels.php:255 templates/live.php:345
+#: includes/class-naws-labels.php:255 templates/live.php:258
 msgid "Temperature"
 msgstr "Temperatur"
 
@@ -2734,7 +2733,7 @@ msgstr "Bis"
 msgid "To connect, you need a Netatmo Developer account. Create an app at"
 msgstr "Für die Verbindung benötigst du ein Netatmo-Entwicklerkonto. Erstelle eine App auf"
 
-#: templates/forecast.php:57 templates/live.php:256
+#: templates/forecast.php:57
 msgid "Today"
 msgstr "Heute"
 
@@ -2804,7 +2803,7 @@ msgstr "Unbekannt"
 msgid "Unknown record names: %s. The Shortcodes page lists the valid ones."
 msgstr "Unbekannte Rekordnamen: %s. Die Seite „Shortcodes“ nennt die gültigen."
 
-#: templates/forecast.php:39 templates/live.php:246
+#: templates/forecast.php:39
 msgid "Updated: %s"
 msgstr "Aktualisiert: %s"
 
@@ -2937,15 +2936,15 @@ msgid "Width in pixels, 250 to 500. Values outside that range are pulled to the 
 msgstr "Breite in Pixeln, 250 bis 500. Werte außerhalb werden auf die nächste Grenze gezogen."
 
 #: admin/views/appearance.php:33 admin/views/appearance.php:103 includes/class-naws-labels.php:44 includes/class-naws-labels.php:262
-#: templates/live.php:70 templates/live.php:352 templates/windrose.php:92
+#: templates/live.php:70 templates/live.php:265 templates/windrose.php:92
 msgid "Wind"
 msgstr "Wind"
 
-#: includes/class-naws-helpers.php:336 includes/class-naws-labels.php:261 templates/live.php:351
+#: includes/class-naws-helpers.php:336 includes/class-naws-labels.php:261 templates/live.php:264
 msgid "Wind &amp; Gusts"
 msgstr "Wind &amp; Böen"
 
-#: includes/class-naws-helpers.php:337 includes/class-naws-labels.php:264 templates/live.php:355
+#: includes/class-naws-helpers.php:337 includes/class-naws-labels.php:264 templates/live.php:268
 msgid "Wind Direction"
 msgstr "Windrichtung"
 
@@ -2966,7 +2965,7 @@ msgstr "Windrose"
 msgid "Wind Speed"
 msgstr "Windgeschwindigkeit"
 
-#: includes/class-naws-labels.php:88 templates/forecast.php:104 templates/live.php:294
+#: includes/class-naws-labels.php:88 templates/forecast.php:104
 msgid "Wind direction"
 msgstr "Windrichtung"
 
@@ -3111,7 +3110,7 @@ msgstr "extrem heiß"
 msgid "failed"
 msgstr "fehlgeschlagen"
 
-#: templates/live.php:339
+#: templates/live.php:252
 msgid "falling"
 msgstr "fallend"
 
@@ -3189,7 +3188,7 @@ msgstr "Messungen ab %s"
 msgid "record for this day"
 msgstr "Rekord für diesen Tag"
 
-#: templates/live.php:339
+#: templates/live.php:252
 msgid "rising"
 msgstr "steigend"
 
@@ -3209,7 +3208,7 @@ msgstr "gesendet"
 msgid "shorter, for very narrow columns"
 msgstr "kürzer, für sehr schmale Spalten"
 
-#: templates/live.php:339
+#: templates/live.php:252
 msgid "stable"
 msgstr "stabil"
 
@@ -3375,12 +3374,12 @@ msgctxt "calc_feels_like"
 msgid "Feels like"
 msgstr "Gefühlte Temperatur"
 
-#: includes/class-naws-helpers.php:329 includes/class-naws-helpers.php:334 includes/class-naws-labels.php:256 templates/live.php:346
+#: includes/class-naws-helpers.php:329 includes/class-naws-helpers.php:334 includes/class-naws-labels.php:256 templates/live.php:259
 msgctxt "card_humidity"
 msgid "Humidity"
 msgstr "Luftfeuchte"
 
-#: includes/class-naws-helpers.php:332 includes/class-naws-labels.php:259 templates/live.php:349
+#: includes/class-naws-helpers.php:332 includes/class-naws-labels.php:259 templates/live.php:262
 msgctxt "card_noise"
 msgid "Noise"
 msgstr "Lautstärke"

@@ -2,6 +2,11 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [2.0.1]
+
+### Changed
+- **`[naws_live]` no longer carries a forecast strip.** The dashboard fetched the forecast itself and rendered its own copy of the day cards — the same thing `[naws_forecast]` shows, with a second set of markup and forty-six lines of CSS that nothing else used, and on a page carrying both shortcodes the forecast appeared twice. The copy is gone, along with its CSS rules; `templates/live.php` no longer touches `NAWS_Forecast` at all. Whoever wants the forecast under the dashboard places `[naws_forecast]` below it — same cards, same settings, one set of rules. The "forecast days" setting now describes itself as the default for `[naws_forecast]`, and a test keeps the strip from returning: it hands the dashboard a forecast and checks that the dashboard neither asks for one nor renders it.
+
 ## [2.0.0]
 
 ### Added

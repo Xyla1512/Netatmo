@@ -26,6 +26,7 @@ define( 'NAWS_TABLE_READINGS', 'naws_readings' );
 define( 'HOUR_IN_SECONDS', 3600 );
 
 $GLOBALS['opts'] = [];
+$GLOBALS['forecast_calls'] = 0;
 $GLOBALS['mods'] = [
     [ 'module_id' => '70:ee:50:a9:5a:08', 'module_type' => 'NAMain',    'module_name' => 'Basis' ],
     [ 'module_id' => '02:00:00:a9:5a:08', 'module_type' => 'NAModule1', 'module_name' => 'Aussen' ],
@@ -70,8 +71,19 @@ class NAWS_Weather_Icons {
     public static function render_inline( $s, $px = 28 ) { return ''; }
 }
 class NAWS_Forecast {
-    // Keine Vorhersage: der Abschnitt faellt weg und bringt keine Module mit.
-    public static function get_forecast( $days ) { return [ 'error' => 'kein Netz' ]; }
+    // Eine Vorhersage liegt bereit — das Dashboard darf sie trotzdem nicht
+    // anfragen, dafuer gibt es [naws_forecast]. Der Zaehler faellt auf,
+    // sobald der Aufruf zurueckkommt.
+    public static function get_forecast( $days ) {
+        $GLOBALS['forecast_calls']++;
+        return [ 'days' => [ [ 'date' => '2026-09-14', 'weathercode' => 1, 'temp_max' => 21.0, 'temp_min' => 12.0,
+            'wind_max' => 18.0, 'wind_dir' => 270, 'precip_sum' => 0.0, 'precip_prob' => 5 ] ],
+            'location_name' => 'Leipzig', 'fetched_at' => 1789300000, 'provider' => 'open_meteo' ];
+    }
+    public static function wmo_description( $c ) { return [ 'label' => 'klar' ]; }
+    public static function is_today( $d ) { return false; }
+    public static function weekday_short( $d ) { return 'Mo'; }
+    public static function date_short( $d ) { return '14.09.'; }
 }
 
 // Der Drucktrend fragt zwei Werte ab; ohne Antwort meldet er "stabil".
@@ -142,6 +154,18 @@ check( 'MODULE4_INFO nennt nur noch den Anzeigenamen',
 
 check( 'data-indoor ist weg — es hat nie jemand gelesen',
     attr( $html, 'data-indoor' ), null );
+
+// ── Die Vorhersage gehoert [naws_forecast] ───────────────────────────────
+// Das Dashboard trug einen eigenen Abdruck der Vorhersage-Karten — dieselbe
+// Sache noch einmal, mit eigenem Markup und eigenen CSS-Regeln. Wer sie
+// unter dem Dashboard will, setzt den Shortcode darunter.
+check( 'das Dashboard fragt keine Vorhersage mehr an',
+    $GLOBALS['forecast_calls'], 0 );
+check( 'und traegt keinen Vorhersage-Block im Markup',
+    str_contains( $html, 'naws-fc-header' ), false );
+$css = (string) file_get_contents( NAWS_PLUGIN_DIR . 'assets/css/frontend.css' );
+check( 'frontend.css fuehrt die Regeln des alten Blocks nicht mehr',
+    preg_match( '/naws-fcc|naws-live-forecast-grid|naws-fc-header|naws-fc-body-wrap/', $css ), 0 );
 
 // ── Gegenprobe: es muss alles bleiben, wie es war ────────────────────────
 check( 'dieselben Charts wie zuvor, in derselben Reihenfolge',

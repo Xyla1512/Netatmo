@@ -370,7 +370,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; ?>
                                             </option>
                                         <?php endfor; ?>
                                     </select>
-                                    <p class="description"><?php esc_html_e( 'How many days the forecast should display (1–7). This is the default for the shortcode and live dashboard.', 'xtx-integration-for-netatmo' ); ?></p>
+                                    <p class="description"><?php esc_html_e( 'How many days the forecast should display (1–7). This is the default for the [naws_forecast] shortcode.', 'xtx-integration-for-netatmo' ); ?></p>
                                 </td>
                             </tr>
                             <tr>
