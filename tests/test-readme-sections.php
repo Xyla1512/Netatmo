@@ -14,8 +14,12 @@
  *
  * @package NAWS
  */
-$readme = file_get_contents( dirname( __DIR__ ) . '/readme.txt' );
-$main   = file_get_contents( dirname( __DIR__ ) . '/xtx-integration-for-netatmo.php' );
+// Gelesen wird der Inhalt, nicht die Zeilenenden der Arbeitskopie: mit
+// core.autocrlf liegt readme.txt unter Windows als CRLF vor, und die
+// $-Anker unten treffen dann keine Zeile mehr (13.09.2026, 7 von 9 rot
+// auf einem Baum, der mit LF gruen war).
+$readme = str_replace( "\r\n", "\n", file_get_contents( dirname( __DIR__ ) . '/readme.txt' ) );
+$main   = str_replace( "\r\n", "\n", file_get_contents( dirname( __DIR__ ) . '/xtx-integration-for-netatmo.php' ) );
 
 $passed = 0; $failed = 0;
 function check( string $name, $got, $want ): void {
