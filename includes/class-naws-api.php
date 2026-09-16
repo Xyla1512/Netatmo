@@ -17,6 +17,12 @@ class NAWS_API {
     /** Longest wait we are willing to sit out inside a single request. */
     const RETRY_WAIT_MAX = 15;
 
+    /**
+     * Option: per rain gauge, the newest timestamp up to which the stored
+     * `Rain` series is complete. See fill_rain_ticks().
+     */
+    const OPT_RAIN_TICKS = 'naws_rain_ticks';
+
     private string $client_id;
     private string $client_secret;
     private string $access_token;
@@ -550,10 +556,93 @@ class NAWS_API {
             $total_saved = NAWS_Database::bulk_insert_readings( $rows );
         }
 
+        // The rain gauge reports every five minutes and dashboard_data shows
+        // only its newest report; the ones between two fetches are fetched
+        // separately, see fill_rain_ticks().
+        foreach ( $devices as $device ) {
+            foreach ( $device['modules'] ?? [] as $module ) {
+                if ( ( $module['type'] ?? '' ) !== 'NAModule3' ) continue;
+                if ( ! NAWS_Database::is_module_active( $module['_id'] ) ) continue;
+                $total_saved += $this->fill_rain_ticks( $device['_id'], $module['_id'], (array) ( $module['dashboard_data'] ?? [] ) );
+            }
+        }
+
         update_option( 'naws_last_sync', time() );
         update_option( 'naws_last_sync_error', '' );
 
         return $total_saved;
+    }
+
+    /**
+     * Close the holes in a rain gauge's stored `Rain` series.
+     *
+     * The gauge reports every five minutes, and each report carries the rain
+     * of those five minutes. dashboard_data shows only the newest report, so
+     * a fetch every ten minutes stores one report in two — and the rolling
+     * 24-hour sum over the stored readings came out at less than half of
+     * what fell (measured 2026-09-16: 1.6 mm stored, 3.9 mm fallen). The
+     * missing reports come from getmeasure at scale=max, which returns every
+     * report with its real timestamp — the same time_utc the dashboard showed
+     * — so the unique key of the readings table folds both sources into one
+     * series. An option remembers, per gauge, up to when the series is
+     * complete; the first run after an update (or after a long outage) closes
+     * the last 24 hours in one call. A dry hour needs no call at all:
+     * sum_rain_1 covers the last 60 minutes, and while it is zero the reports
+     * the dashboard skipped were zeros too.
+     *
+     * @param  string $device_id  Base station.
+     * @param  string $module_id  The rain gauge.
+     * @param  array  $dashboard  Its dashboard_data from getstationsdata.
+     * @return int                Readings stored.
+     */
+    public function fill_rain_ticks( $device_id, $module_id, array $dashboard ) {
+        $tick = (int) ( $dashboard['time_utc'] ?? 0 );
+        if ( $tick <= 0 ) return 0;
+
+        $marks = get_option( self::OPT_RAIN_TICKS, [] );
+        $marks = is_array( $marks ) ? $marks : [];
+        $known = (int) ( $marks[ $module_id ] ?? 0 );
+        $begin = max( $known, $tick - DAY_IN_SECONDS );
+        if ( $begin >= $tick ) return 0;
+
+        $dry = isset( $dashboard['sum_rain_1'] ) && (float) $dashboard['sum_rain_1'] <= 0;
+        if ( $dry && $begin >= $tick - HOUR_IN_SECONDS ) {
+            $marks[ $module_id ] = $tick;
+            update_option( self::OPT_RAIN_TICKS, $marks, false );
+            return 0;
+        }
+
+        $data = $this->get_measure( $device_id, $module_id, [ 'Rain' ], $begin, $tick, 'max', false, 1024 );
+        if ( is_wp_error( $data ) ) {
+            NAWS_Logger::warning( 'api', 'Rain gauge: the five-minute reports could not be fetched: ' . $data->get_error_message(), [
+                'module_id' => $module_id,
+                'from'      => $begin,
+                'to'        => $tick,
+            ] );
+            return 0;
+        }
+
+        $rows = [];
+        foreach ( (array) $data as $ts => $values ) {
+            $value = is_array( $values ) ? ( $values[0] ?? null ) : $values;
+            if ( ! is_numeric( $ts ) || ! is_numeric( $value ) ) continue;
+            $rows[] = [
+                'module_id'   => $module_id,
+                'station_id'  => $device_id,
+                'recorded_at' => (int) $ts,
+                'parameter'   => 'Rain',
+                'value'       => $value,
+            ];
+        }
+        // Nothing usable: leave the mark where it is, the next run asks again.
+        if ( empty( $rows ) ) return 0;
+
+        $saved = NAWS_Database::bulk_insert_readings( $rows );
+        $marks[ $module_id ] = $tick;
+        update_option( self::OPT_RAIN_TICKS, $marks, false );
+        delete_transient( NAWS_Database::CACHE_PREFIX . 'rain24h_' . md5( $module_id ) );
+
+        return (int) $saved;
     }
 
     /**
