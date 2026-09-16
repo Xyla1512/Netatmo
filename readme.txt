@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -120,6 +120,10 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 
 == Changelog ==
 
+= 2.0.1 =
+* Fix: the 24-hour rain in the dashboard's rain card was far too low. The card sums the plugin's own `Rain` readings over the last 24 hours, because Netatmo's `sum_rain_24` resets at midnight and the card promises a rolling day. But the rain gauge reports every five minutes, each report carrying the rain of those five minutes, and getstationsdata shows only the newest report — so a fetch every ten minutes stored one report in two, and the card showed 1.6 mm on a day with 3.9 mm; a fetch every 30 or 60 minutes lost even more. After every fetch the plugin now asks getmeasure for the five-minute reports since the last one it has and stores them under their own timestamps; the first fetch after the update closes the last 24 hours in one call. A dry hour needs no extra call. The daily, monthly and yearly sums were never affected — they come from Netatmo's own daily counter. The rain rule of the e-mail notifications, which uses the same rolling sum, is corrected along with the card.
+* Changed: `[naws_live]` no longer carries a forecast strip of its own. The dashboard fetched the forecast itself and rendered a copy of the day cards that `[naws_forecast]` shows, and on a page carrying both shortcodes the forecast appeared twice. Whoever wants the forecast under the dashboard places `[naws_forecast]` below it — same cards, same settings. The "forecast days" setting now describes itself as the default for `[naws_forecast]`.
+* Changed: the heatmap builds up when it comes into view, not when the page loads. On a page where `[naws_heatmap]` sits below the fold the wave of tiles was over before anyone scrolled to it. The tiles now stay hidden until the top edge of the map reaches the middle of the screen — or until the page is scrolled to its end, for a map near the bottom of a short page; then the wave runs once. Visitors who ask for reduced motion, and print, get the map at once; without JavaScript nothing is hidden.
 = 2.0.0 =
 * Added: e-mail notifications. After every fetch the plugin checks up to thirteen rules and mails every change of state — once when it begins and, for every rule but rain, once when it is over; all changes of one fetch go into one mail. Seven rules watch the station: battery of a module below a percentage, weak radio link of a module, poor Wi-Fi of the base station, base station not reporting to Netatmo, module not reporting to the base station, three failed fetches in a row, expired credentials. Six watch the weather and the indoor air: frost, heat, a gust above a threshold, rain of the last 24 hours above a threshold, rain starting, CO₂ of the base station or an indoor module above a threshold. Radio, Wi-Fi and the two silence rules hold for a while before they speak or clear; frost and gust wait an hour below the threshold before the all-clear; rain sends no all-clear. All rules ship switched off, and a master switch pauses every mail without touching the rules. The new page XTX Netatmo → Notifications holds the switch, the recipients, the rules with their thresholds in your units, a test-mail button and the last fifty mails.
 * Added: the five status fields Netatmo sends with every module are stored now (schema 1.5): battery percentage, Wi-Fi of the base station, whether a device is reachable, when the base station last reported to Netatmo and when a module last spoke to the base station. The Modules page shows Netatmo's own battery percentage instead of an estimate from the voltage.
@@ -148,27 +152,19 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 * Added: a colour scheme for the sidebar widget. `[naws_weather_widget]` was a white card whatever the sidebar looked like. It now has `light`, `dark` and `transparent` — the last draws no card at all and takes the sidebar's own colours. Chosen under Appearance → Sidebar widget, where the preview shows it on a dark ground, or per placement with `scheme="dark"`.
 * Fix: the purge button under Settings → Manual Data Purge did nothing, and every admin page of the plugin threw "$ is not a function". Since 1.6.4 two handlers in `admin.js` stood behind the line that closes the jQuery block. The purge button works again, and its messages are translated instead of German literals in the script.
 * Fix: the bundled catalogue builder now writes plural forms, so "1 day / 2 days" reads right in German and Norwegian. Both bundled catalogues are complete at 735 strings.
-= 1.9.10 =
-* Added: `[naws_heatmap]` — a year of outdoor daily mean temperatures as a calendar grid: twelve rows of months, thirty-one columns of days, one coloured tile per day, and a row of buttons to page through the years. What a curve makes you read, a grid lets you see: the cold fortnight in February and the hot week in July are shapes on the page rather than wiggles on a line. It reads the daily averages the annual chart already uses, so there is nothing to import. The ten colour stops are settings under Appearance → Heatmap Scale, values between two stops are interpolated, and they are anchored in Celsius even when the display is set to Fahrenheit, because the colour comes from the stored value and the tooltip from the unit you chose. Where a day has no stored average but does have a minimum and a maximum, the tile shows the mean of the two and its tooltip says so. The grid is a table rather than a drawing: the month column stays put while the days scroll sideways on a phone, colours are rendered on the server so the map is complete without JavaScript, and a screen reader reads "March, 14th, 8.2 °C" instead of "image". Attributes: `year`, `title`, `legend`.
-* Changed: the MAC addresses of your modules are no longer written into public pages. A module id in this plugin is the hardware address of a Netatmo module, and until now it travelled into every page carrying `[naws_live]` or `[naws_history]` — in the data block, on every chart configuration, in the `data-module4`, `data-indoor` and `data-outdoor` attributes — and it came back out with every request the dashboard made, whose reply carried the base station's address on every one of its thirty-odd readings as well. What travels now is a public reference: `outdoor`, `indoor`, `wind`, `rain` and `in-<name>`, resolved back on the server. Pages cached from before the update and the documented `NAWS_Chart` JavaScript interface both keep working.
-* Fix: the two language files 1.9.9 shipped were never read. German and Norwegian travelled along as `.mo` files so that an installation with a German interface would not find an English one the day the update arrived — but WordPress refused both, because the address of the hash table in the file header was wrong. A refused catalogue produces no warning, no log line and no visible difference except that everything stays English. Norwegian, which has no language pack yet, therefore read English throughout 1.9.9.
-* Fix: fourteen German and thirteen Norwegian strings had lost their translation in 1.9.9. The table columns from 1.9.8 — time, module, parameter, average — and the card-order screen came through the migration empty, so a German reader without a language pack saw English column headings in a German interface. The texts were taken from the 1.9.8 language files rather than written afresh, so nothing changed wording that a reader had already got used to.
-* Fix: three sentences in the chart script were German whatever language WordPress was set to — the chart that failed to render, the period with no readings, the request that came back with an error code. They sat in the JavaScript as literals, which the move to gettext in 1.9.9 never reached.
-* Fix: `[naws_table]` printed a MAC address in its module column when the reading's module was no longer in the modules table. Readings outlive the module they came from, so this was reachable rather than theoretical. The cell stays empty now, the way the chart legend does.
-* Fix: a chart request that left out `group_by` wrote a PHP notice into the log. The plugin's own scripts always send it; anything else calling the endpoint did not have to.
 
 Older versions: the complete changelog since 1.0.0 is kept in [CHANGELOG.md](https://github.com/Xyla1512/Netatmo/blob/main/CHANGELOG.md) on GitHub.
 
 == Upgrade Notice ==
+
+= 2.0.1 =
+Fix: the 24-hour rain in the dashboard card was far too low — a fetch every ten minutes kept only every second five-minute report of the rain gauge; the gaps are closed now. [naws_live] no longer shows its own forecast strip: place [naws_forecast] below it if you want one. Nothing to reconfigure.
 
 = 2.0.0 =
 New: e-mail notifications — thirteen rules for battery, radio, Wi-Fi, silent station or module, failed fetches, frost, heat, gusts, rain and CO₂; one mail per state change plus all-clear. All rules ship off; five status columns are added automatically. Nothing to reconfigure.
 
 = 1.9.13 =
 Fix: [naws_records] and [naws_on_this_day] stayed empty where the daily summary table had a different collation. Editors now read why a block is empty. Module switches show at once, entity attributes work, Android Chrome no longer blackens the wind rose. Nothing to reconfigure.
-
-= 1.9.12 =
-New: [naws_windrose] shows where the wind comes from, how often and how hard, with a period switcher and seven colours under Appearance. The Wind & Gusts card shows the day's strongest gust. Compass directions are translated. Nothing to reconfigure.
 
 == Privacy & External Services ==
 
