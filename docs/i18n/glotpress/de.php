@@ -13,7 +13,7 @@
  * Die Beispieladresse bleibt "yoursite.com": GlotPress prueft, ob die Links
  * in Original und Uebersetzung uebereinstimmen, und warnt sonst.
  *
- * Stand: 2026-09-12 — 114 Eintraege, alle uebersetzt.
+ * Stand: 2026-09-16 — 114 Eintraege, alle uebersetzt.
  */
 return [
 
@@ -89,7 +89,7 @@ return [
 74 => '<code>[naws_history]</code> – Jahresvergleichsdiagramme (unterstützt den Parameter <code>year</code>)',
 75 => '<code>[naws_value]</code> – Einzelner Sensorwert im Fließtext',
 76 => '<code>[naws_infobar]</code> – Astronomieleiste mit Sonnenaufgang, Mondphase und gefühlter Temperatur',
-77 => '<code>[naws_live]</code> – Live-Sensorkacheln mit 24-Stunden-Verläufen und Vorhersage',
+77 => '<code>[naws_live]</code> – Live-Sensorkacheln mit 24-Stunden-Verläufen und Windrose',
 78 => '<strong>NAModule4</strong> – Zusätzliches Innenmodul (Temperatur, Luftfeuchte, CO2)',
 79 => '<strong>NAModule3</strong> – Regenmesser (stündlich, täglich, rollende 24 Stunden)',
 80 => '<strong>NAModule2</strong> – Wind (Geschwindigkeit, Richtung, Böen)',

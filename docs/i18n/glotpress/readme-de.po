@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Plugins - XTX Integration for Netatmo - Stable Readme (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-09-12 10:05:07+0000\n"
+"PO-Revision-Date: 2026-09-16 16:23:34+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -318,8 +318,8 @@ msgid "<code>[naws_infobar]</code> – Astronomy bar with sunrise, moon phase, f
 msgstr "<code>[naws_infobar]</code> – Astronomieleiste mit Sonnenaufgang, Mondphase und gefühlter Temperatur"
 
 #. Found in description list item.
-msgid "<code>[naws_live]</code> – Live sensor tiles with 24h trend charts and forecast"
-msgstr "<code>[naws_live]</code> – Live-Sensorkacheln mit 24-Stunden-Verläufen und Vorhersage"
+msgid "<code>[naws_live]</code> – Live sensor tiles with 24h trend charts and wind rose"
+msgstr "<code>[naws_live]</code> – Live-Sensorkacheln mit 24-Stunden-Verläufen und Windrose"
 
 #. Found in description list item.
 msgid "<strong>NAModule4</strong> – Additional Indoor (Temperature, Humidity, CO2)"
@@ -471,6 +471,21 @@ msgstr "Live-Dashboard mit Sensorkacheln und 24-Stunden-Verläufen"
 
 #. Found in changelog list item.
 #, gp-priority: low
+msgid "Changed: the heatmap builds up when it comes into view, not when the page loads. On a page where <code>[naws_heatmap]</code> sits below the fold the wave of tiles was over before anyone scrolled to it. The tiles now stay hidden until the top edge of the map reaches the middle of the screen — or until the page is scrolled to its end, for a map near the bottom of a short page; then the wave runs once. Visitors who ask for reduced motion, and print, get the map at once; without JavaScript nothing is hidden."
+msgstr "Changed: Die Heatmap baut sich erst auf, wenn sie ins Bild kommt, nicht schon beim Laden der Seite. Auf einer Seite, auf der <code>[naws_heatmap]</code> unterhalb des sichtbaren Bereichs steht, war die Welle der Kacheln vorbei, bevor jemand hingescrollt hat. Die Kacheln bleiben jetzt verborgen, bis die Oberkante der Karte die Bildschirmmitte erreicht — oder bis die Seite bis zum Ende gescrollt ist, für eine Karte am Fuß einer kurzen Seite; dann läuft die Welle einmal. Wer reduzierte Bewegung wünscht, und der Druck, bekommt die Karte sofort; ohne JavaScript wird nichts verborgen."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Changed: <code>[naws_live]</code> no longer carries a forecast strip of its own. The dashboard fetched the forecast itself and rendered a copy of the day cards that <code>[naws_forecast]</code> shows, and on a page carrying both shortcodes the forecast appeared twice. Whoever wants the forecast under the dashboard places <code>[naws_forecast]</code> below it — same cards, same settings. The \"forecast days\" setting now describes itself as the default for <code>[naws_forecast]</code>."
+msgstr "Changed: <code>[naws_live]</code> zeigt keinen eigenen Vorhersage-Streifen mehr. Das Dashboard holte die Vorhersage selbst und rendert eine Kopie der Tageskarten, die <code>[naws_forecast]</code> zeigt, und auf einer Seite mit beiden Shortcodes stand die Vorhersage doppelt. Wer die Vorhersage unter dem Dashboard möchte, setzt <code>[naws_forecast]</code> darunter — dieselben Karten, dieselben Einstellungen. Die Einstellung „Vorhersagetage\" beschreibt sich jetzt als Vorgabe für <code>[naws_forecast]</code>."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: the 24-hour rain in the dashboard's rain card was far too low. The card sums the plugin's own <code>Rain</code> readings over the last 24 hours, because Netatmo's <code>sum_rain_24</code> resets at midnight and the card promises a rolling day. But the rain gauge reports every five minutes, each report carrying the rain of those five minutes, and getstationsdata shows only the newest report — so a fetch every ten minutes stored one report in two, and the card showed 1.6 mm on a day with 3.9 mm; a fetch every 30 or 60 minutes lost even more. After every fetch the plugin now asks getmeasure for the five-minute reports since the last one it has and stores them under their own timestamps; the first fetch after the update closes the last 24 hours in one call. A dry hour needs no extra call. The daily, monthly and yearly sums were never affected — they come from Netatmo's own daily counter. The rain rule of the e-mail notifications, which uses the same rolling sum, is corrected along with the card."
+msgstr "Fix: Die 24-Stunden-Regenmenge in der Regenkachel des Dashboards war viel zu niedrig. Die Kachel summiert die eigenen <code>Rain</code>-Messwerte der letzten 24 Stunden, weil Netatmos <code>sum_rain_24</code> um Mitternacht auf null springt und die Kachel einen rollenden Tag verspricht. Der Regenmesser meldet aber alle fünf Minuten, jede Meldung trägt den Regen genau dieser fünf Minuten, und getstationsdata zeigt nur die neueste Meldung — ein Abruf alle zehn Minuten speicherte also jede zweite, und die Kachel zeigte 1,6 mm an einem Tag mit 3,9 mm; ein Abruf alle 30 oder 60 Minuten verlor noch mehr. Nach jedem Abruf holt das Plugin jetzt per getmeasure die Fünf-Minuten-Meldungen seit der letzten, die es hat, und speichert sie unter ihren eigenen Zeitstempeln; der erste Abruf nach dem Update schließt die letzten 24 Stunden in einem Aufruf. Eine trockene Stunde braucht keinen zusätzlichen Aufruf. Tages-, Monats- und Jahressummen waren nie betroffen — sie kommen aus Netatmos eigenem Tageszähler. Die Regenregel der E-Mail-Benachrichtigungen, die dieselbe rollende Summe nutzt, ist mit der Kachel korrigiert."
+
+#. Found in changelog list item.
+#, gp-priority: low
 msgid "Fix: Appearance: saving without the icon set in the input no longer logs \"Undefined array key\"."
 msgstr "Fix: Erscheinungsbild: Speichern ohne Icon-Set in der Eingabe schreibt kein „Undefined array key\" mehr ins Log."
 
@@ -578,38 +593,3 @@ msgstr "Neu: <code>[naws_on_this_day]</code> — dieser Kalendertag in jedem fr�
 #, gp-priority: low
 msgid "Added: <code>[naws_records]</code> — fifteen records from the daily summary, each with its date: hottest day, coldest night, warmest night, coldest day, largest daily range, warmest and coldest month, wettest day and month, longest dry and wet spell, strongest gust, longest frost period, longest heat wave and longest run of summer days. As tiles or a table, since the first day with readings or for one year (<code>year=\"2025\"</code>), a subset with <code>records=\"…\"</code>. A tie goes to the earlier date, a month needs twenty days to compete, and a gap in the data breaks a run rather than bridging it."
 msgstr "Neu: <code>[naws_records]</code> — fünfzehn Rekorde aus der Tagesübersicht, jeder mit seinem Datum: heißester Tag, kälteste Nacht, wärmste Nacht, kältester Tag, größte Tagesspanne, wärmster und kältester Monat, nassester Tag und Monat, längste Trocken- und Regenperiode, stärkste Böe, längste Frostperiode, längste Hitzewelle und längste Sommerserie. Als Kacheln oder Tabelle, seit dem ersten Tag mit Messwerten oder für ein Jahr (<code>year=\"2025\"</code>), eine Auswahl mit <code>records=\"…\"</code>. Bei Gleichstand gewinnt das frühere Datum, ein Monat braucht zwanzig Tage, um mitzuzählen, und eine Lücke in den Daten beendet eine Serie, statt sie zu überbrücken."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Fix: a chart request that left out <code>group_by</code> wrote a PHP notice into the log. The plugin's own scripts always send it; anything else calling the endpoint did not have to."
-msgstr "Fix: Eine Chart-Anfrage ohne <code>group_by</code> schrieb eine PHP-Notice ins Log. Die eigenen Skripte des Plugins senden den Wert immer; andere Aufrufer des Endpunkts mussten das nicht."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Fix: <code>[naws_table]</code> printed a MAC address in its module column when the reading's module was no longer in the modules table. Readings outlive the module they came from, so this was reachable rather than theoretical. The cell stays empty now, the way the chart legend does."
-msgstr "Fix: <code>[naws_table]</code> zeigte eine MAC-Adresse in der Modulspalte, wenn das Modul eines Messwerts nicht mehr in der Modultabelle stand. Messwerte überleben das Modul, aus dem sie stammen — der Fall war also erreichbar, nicht theoretisch. Die Zelle bleibt jetzt leer, so wie es die Chart-Legende auch macht."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Fix: three sentences in the chart script were German whatever language WordPress was set to — the chart that failed to render, the period with no readings, the request that came back with an error code. They sat in the JavaScript as literals, which the move to gettext in 1.9.9 never reached."
-msgstr "Fix: Drei Sätze im Chart-Skript waren deutsch, egal welche Sprache in WordPress eingestellt war — das Diagramm, das sich nicht zeichnen ließ, der Zeitraum ohne Messwerte, die Anfrage mit Fehlercode. Sie standen als feste Texte im JavaScript, wohin die Umstellung auf gettext in 1.9.9 nie kam."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Fix: fourteen German and thirteen Norwegian strings had lost their translation in 1.9.9. The table columns from 1.9.8 — time, module, parameter, average — and the card-order screen came through the migration empty, so a German reader without a language pack saw English column headings in a German interface. The texts were taken from the 1.9.8 language files rather than written afresh, so nothing changed wording that a reader had already got used to."
-msgstr "Fix: Vierzehn deutsche und dreizehn norwegische Texte hatten in 1.9.9 ihre Übersetzung verloren. Die Tabellenspalten aus 1.9.8 — Zeitpunkt, Modul, Parameter, Mittel — und die Seite für die Kartenreihenfolge kamen leer durch die Umstellung, sodass ein deutscher Leser ohne Sprachpaket englische Spaltenüberschriften in einer deutschen Oberfläche sah. Die Texte wurden aus den Sprachdateien von 1.9.8 übernommen statt neu geschrieben, damit sich kein Wortlaut ändert, an den sich jemand schon gewöhnt hatte."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Fix: the two language files 1.9.9 shipped were never read. German and Norwegian travelled along as <code>.mo</code> files so that an installation with a German interface would not find an English one the day the update arrived — but WordPress refused both, because the address of the hash table in the file header was wrong. A refused catalogue produces no warning, no log line and no visible difference except that everything stays English. Norwegian, which has no language pack yet, therefore read English throughout 1.9.9."
-msgstr "Fix: Die beiden Sprachdateien, die 1.9.9 mitgeliefert hat, wurden nie gelesen. Deutsch und Norwegisch reisten als <code>.mo</code>-Dateien mit, damit eine Installation mit deutscher Oberfläche am Tag des Updates nicht plötzlich eine englische vorfindet — aber WordPress hat beide abgewiesen, weil die Adresse der Hashtabelle im Dateikopf falsch war. Ein abgewiesener Katalog erzeugt keine Warnung, keine Logzeile und keinen sichtbaren Unterschied, außer dass alles englisch bleibt. Norwegisch, das noch kein Sprachpaket hat, las deshalb in ganz 1.9.9 Englisch."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Changed: the MAC addresses of your modules are no longer written into public pages. A module id in this plugin is the hardware address of a Netatmo module, and until now it travelled into every page carrying <code>[naws_live]</code> or <code>[naws_history]</code> — in the data block, on every chart configuration, in the <code>data-module4</code>, <code>data-indoor</code> and <code>data-outdoor</code> attributes — and it came back out with every request the dashboard made, whose reply carried the base station's address on every one of its thirty-odd readings as well. What travels now is a public reference: <code>outdoor</code>, <code>indoor</code>, <code>wind</code>, <code>rain</code> and <code>in-&lt;name&gt;</code>, resolved back on the server. Pages cached from before the update and the documented <code>NAWS_Chart</code> JavaScript interface both keep working."
-msgstr "Geändert: Die MAC-Adressen deiner Module werden nicht mehr in öffentliche Seiten geschrieben. Eine Modul-ID ist in diesem Plugin die Hardware-Adresse eines Netatmo-Moduls, und bisher reiste sie in jede Seite mit <code>[naws_live]</code> oder <code>[naws_history]</code> — im Datenblock, in jeder Chart-Konfiguration, in den Attributen <code>data-module4</code>, <code>data-indoor</code> und <code>data-outdoor</code> — und kam mit jeder Anfrage des Dashboards wieder zurück, dessen Antwort die Adresse der Basisstation obendrein an jedem ihrer rund dreißig Messwerte mitführte. Unterwegs ist jetzt eine öffentliche Bezeichnung: <code>outdoor</code>, <code>indoor</code>, <code>wind</code>, <code>rain</code> und <code>in-&lt;name&gt;</code>, die der Server wieder auflöst. Seiten, die vor dem Update zwischengespeichert wurden, und die dokumentierte JavaScript-Schnittstelle <code>NAWS_Chart</code> funktionieren beide weiter."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Added: <code>[naws_heatmap]</code> — a year of outdoor daily mean temperatures as a calendar grid: twelve rows of months, thirty-one columns of days, one coloured tile per day, and a row of buttons to page through the years. What a curve makes you read, a grid lets you see: the cold fortnight in February and the hot week in July are shapes on the page rather than wiggles on a line. It reads the daily averages the annual chart already uses, so there is nothing to import. The ten colour stops are settings under Appearance → Heatmap Scale, values between two stops are interpolated, and they are anchored in Celsius even when the display is set to Fahrenheit, because the colour comes from the stored value and the tooltip from the unit you chose. Where a day has no stored average but does have a minimum and a maximum, the tile shows the mean of the two and its tooltip says so. The grid is a table rather than a drawing: the month column stays put while the days scroll sideways on a phone, colours are rendered on the server so the map is complete without JavaScript, and a screen reader reads \"March, 14th, 8.2 °C\" instead of \"image\". Attributes: <code>year</code>, <code>title</code>, <code>legend</code>."
-msgstr "Neu: <code>[naws_heatmap]</code> — ein Jahr Außen-Tagesdurchschnittstemperatur als Kalenderraster: zwölf Zeilen für die Monate, 31 Spalten für die Tage, eine farbige Kachel pro Tag und eine Reihe Knöpfe zum Blättern durch die Jahre. Was eine Kurve zum Ablesen zwingt, lässt das Raster sehen: die kalten zwei Wochen im Februar und die heiße Woche im Juli sind Flächen auf der Seite statt Zacken auf einer Linie. Es liest dieselben Tagesmittel wie das Jahresdiagramm, es gibt also nichts zu importieren. Die zehn Farbstützpunkte sind Einstellungen unter Erscheinungsbild → Heatmap-Skala, Werte zwischen zwei Stützpunkten werden interpoliert, und sie bleiben in Celsius verankert, auch wenn die Anzeige auf Fahrenheit steht, weil die Farbe aus dem gespeicherten Wert kommt und der Tooltip aus der gewählten Einheit. Fehlt einem Tag der gespeicherte Durchschnitt, hat er aber Minimum und Maximum, zeigt die Kachel deren Mittel, und der Tooltip sagt das auch. Das Raster ist eine Tabelle und keine Grafik: Die Monatsspalte bleibt stehen, während die Tage auf dem Handy seitwärts durchlaufen, die Farben rechnet der Server, die Karte ist also auch ohne JavaScript vollständig da, und ein Screenreader liest „14. März, 8,2 °C“ statt „Grafik“. Attribute: <code>year</code>, <code>title</code>, <code>legend</code>."
