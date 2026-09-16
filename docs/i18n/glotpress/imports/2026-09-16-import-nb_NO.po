@@ -1,0 +1,11 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo\n"
+"Language: nb_NO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "How many days the forecast should display (1–7). This is the default for the [naws_forecast] shortcode."
+msgstr "Hvor mange dager varselet skal vise (1–7). Dette er standard for kortkoden [naws_forecast]."
