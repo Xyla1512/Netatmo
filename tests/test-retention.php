@@ -184,6 +184,16 @@ check( 'das alte Versprechen ist weg',
     str_contains( $settings, 'All data is stored permanently' ) || str_contains( $settings, 'No automatic deletion' ), false );
 check( 'Bereinigen-Knopf nimmt die eingestellten Tage als Vorgabe',
     (bool) preg_match( '/id="naws-purge-days"[^>]*value="<\?php/', $settings ), true );
+// Frank, 19.09.: ein eigener Abschnitt, damit die Datenhaltung hervorsticht —
+// nicht eine Zeile zwischen Nachtmodus und Heizgrenze im Panel "Operation".
+check( 'eigenes Panel mit Kopfzeile "Data Retention"',
+    (bool) preg_match( '/<div class="naws-panel-header"><h2><\?php esc_html_e\( \'Data Retention\'/', $settings ), true );
+check( 'Zeile "Automatic deletion" im eigenen Panel',
+    str_contains( $settings, "<th><?php esc_html_e( 'Automatic deletion', 'xtx-integration-for-netatmo' ); ?></th>" ), true );
+check( 'Zeile "Manual purge" im eigenen Panel',
+    str_contains( $settings, "<th><?php esc_html_e( 'Manual purge', 'xtx-integration-for-netatmo' ); ?></th>" ), true );
+check( 'Datenhaltung ist keine Zeile mehr im Panel "Operation"',
+    (bool) preg_match( '/Operation.*?<th><\?php esc_html_e\( \'Data Retention\'.*?<h2><\?php esc_html_e\( \'Units\'/s', $settings ), false );
 check( 'Seitenleiste zeigt nicht mehr die nackte Zahl',
     str_contains( $dashboard, "\$options['data_retention'] ?? 365" ), false );
 check( 'Seitenleiste fragt den Helfer',

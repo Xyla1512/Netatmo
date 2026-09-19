@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: XTX Integration for Netatmo\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/xtx-integration-for-netatmo\n"
-"POT-Creation-Date: 2026-09-19 09:47+0000\n"
+"POT-Creation-Date: 2026-09-19 10:11+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -215,7 +215,7 @@ msgstr ""
 msgid "AUTH_KEY in wp-config.php is the sample value or too short. Your credentials are encrypted, but with a key anyone can reconstruct."
 msgstr ""
 
-#: admin/views/settings.php:468
+#: admin/views/settings.php:481
 msgid "Above the dashboard"
 msgstr ""
 
@@ -331,7 +331,7 @@ msgstr ""
 msgid "Apr"
 msgstr ""
 
-#: admin/views/settings.php:487
+#: admin/views/settings.php:500
 msgid "At or above this rain rate the icon shows heavy rain instead of rain."
 msgstr ""
 
@@ -354,8 +354,12 @@ msgstr ""
 msgid "Auto-refresh in seconds (0 = disabled)"
 msgstr ""
 
-#: admin/views/settings.php:410
+#: admin/views/settings.php:423
 msgid "Automatic (from Netatmo station coordinates)"
+msgstr ""
+
+#: admin/views/settings.php:290
+msgid "Automatic deletion"
 msgstr ""
 
 #: templates/table.php:56
@@ -435,7 +439,7 @@ msgstr ""
 msgid "Border"
 msgstr ""
 
-#: admin/views/settings.php:509
+#: admin/views/settings.php:522
 msgid "Both conditions must hold. The dew-point spread is the difference between air temperature and dew point — the smaller it is, the closer the air is to saturation."
 msgstr ""
 
@@ -500,7 +504,7 @@ msgstr ""
 msgid "Christmas Eve in earlier years"
 msgstr ""
 
-#: admin/views/settings.php:422
+#: admin/views/settings.php:435
 msgid "City / Postal code"
 msgstr ""
 
@@ -632,7 +636,7 @@ msgstr ""
 msgid "Could not load data (HTTP %s)"
 msgstr ""
 
-#: admin/views/settings.php:432
+#: admin/views/settings.php:445
 msgid "Country code"
 msgstr ""
 
@@ -700,7 +704,7 @@ msgstr ""
 msgid "Dashboard — Live Overview & System Status"
 msgstr ""
 
-#: admin/views/dashboard.php:403 admin/views/settings.php:277
+#: admin/views/dashboard.php:403 admin/views/settings.php:281
 msgid "Data Retention"
 msgstr ""
 
@@ -724,7 +728,7 @@ msgstr ""
 msgid "Date Range"
 msgstr ""
 
-#: admin/views/settings.php:396
+#: admin/views/settings.php:409
 msgid "Day"
 msgstr ""
 
@@ -736,7 +740,7 @@ msgstr ""
 msgid "Day without a reading"
 msgstr ""
 
-#: admin/views/settings.php:312 admin/views/settings.php:396
+#: admin/views/settings.php:325 admin/views/settings.php:409
 msgid "Days"
 msgstr ""
 
@@ -763,7 +767,7 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: admin/views/settings.php:311
+#: admin/views/settings.php:324
 msgid "Delete entries older than:"
 msgstr ""
 
@@ -771,7 +775,7 @@ msgstr ""
 msgid "Delete every reading older than %d days? This cannot be undone."
 msgstr ""
 
-#: admin/views/settings.php:289
+#: admin/views/settings.php:297
 msgid "Delete raw readings automatically once they are older than"
 msgstr ""
 
@@ -894,7 +898,7 @@ msgstr ""
 msgid "Enter Client ID and Secret and click \"Connect to Netatmo\"."
 msgstr ""
 
-#: admin/views/settings.php:428
+#: admin/views/settings.php:441
 msgid "Enter a city name, optionally with postal code for better accuracy."
 msgstr ""
 
@@ -1002,7 +1006,7 @@ msgstr ""
 msgid "Fog"
 msgstr ""
 
-#: admin/views/settings.php:500
+#: admin/views/settings.php:513
 msgid "Fog from humidity"
 msgstr ""
 
@@ -1014,7 +1018,7 @@ msgstr ""
 msgid "Font Family"
 msgstr ""
 
-#: admin/views/settings.php:381
+#: admin/views/settings.php:394
 msgid "Forecast Provider"
 msgstr ""
 
@@ -1179,7 +1183,7 @@ msgstr ""
 msgid "Heavy rain"
 msgstr ""
 
-#: admin/views/settings.php:482
+#: admin/views/settings.php:495
 msgid "Heavy rain from"
 msgstr ""
 
@@ -1231,7 +1235,7 @@ msgstr ""
 msgid "How day classes are counted."
 msgstr ""
 
-#: admin/views/settings.php:400
+#: admin/views/settings.php:413
 msgid "How many days the forecast should display (1–7). This is the default for the [naws_forecast] shortcode."
 msgstr ""
 
@@ -1243,7 +1247,7 @@ msgstr ""
 msgid "Humidity Outdoor"
 msgstr ""
 
-#: admin/views/settings.php:438
+#: admin/views/settings.php:451
 msgid "ISO 3166 code (e.g. DE, AT, CH, US, GB)"
 msgstr ""
 
@@ -1343,7 +1347,7 @@ msgstr ""
 msgid "Keep this key secret! Anyone with the key can read your weather data."
 msgstr ""
 
-#: admin/views/settings.php:343
+#: admin/views/settings.php:356
 msgid "Knots"
 msgstr ""
 
@@ -1371,7 +1375,7 @@ msgstr ""
 msgid "Last report"
 msgstr ""
 
-#: admin/views/settings.php:304
+#: admin/views/settings.php:312
 msgid "Last run %1$s: %2$s readings deleted."
 msgstr ""
 
@@ -1459,7 +1463,7 @@ msgstr ""
 msgid "Location not found. Please check city name and country code."
 msgstr ""
 
-#: admin/views/settings.php:404
+#: admin/views/settings.php:417
 msgid "Location source"
 msgstr ""
 
@@ -1503,8 +1507,12 @@ msgstr ""
 msgid "Make sure the sync function is active."
 msgstr ""
 
-#: admin/views/settings.php:415
+#: admin/views/settings.php:428
 msgid "Manual (enter city / postal code)"
+msgstr ""
+
+#: admin/views/settings.php:319
+msgid "Manual purge"
 msgstr ""
 
 #: includes/class-naws-forecast.php:928 templates/history.php:129
@@ -1549,7 +1557,7 @@ msgstr ""
 msgid "Meaning"
 msgstr ""
 
-#: admin/views/settings.php:518
+#: admin/views/settings.php:531
 msgid "Measured on the wind gauge gust peak. Without a wind module the rule is skipped, with no substitute."
 msgstr ""
 
@@ -1863,7 +1871,7 @@ msgstr ""
 msgid "Only visible to logged-in editors."
 msgstr ""
 
-#: admin/views/settings.php:384
+#: admin/views/settings.php:397
 msgid "Open-Meteo (global, open-source)"
 msgstr ""
 
@@ -1980,7 +1988,7 @@ msgstr ""
 msgid "Precipitation probability"
 msgstr ""
 
-#: admin/views/appearance.php:30 admin/views/appearance.php:102 admin/views/settings.php:348 templates/live.php:64
+#: admin/views/appearance.php:30 admin/views/appearance.php:102 admin/views/settings.php:361 templates/live.php:64
 msgid "Pressure"
 msgstr ""
 
@@ -2008,7 +2016,7 @@ msgstr ""
 msgid "Processing import..."
 msgstr ""
 
-#: admin/views/settings.php:313
+#: admin/views/settings.php:326
 msgid "Purge now"
 msgstr ""
 
@@ -2132,7 +2140,7 @@ msgstr ""
 msgid "Reset all colors to defaults?"
 msgstr ""
 
-#: admin/views/settings.php:449
+#: admin/views/settings.php:462
 msgid "Resolved location"
 msgstr ""
 
@@ -2188,7 +2196,7 @@ msgstr ""
 msgid "Rules switched on:"
 msgstr ""
 
-#: admin/views/settings.php:297
+#: admin/views/settings.php:305
 msgid "Runs once a night, after the daily summary. Only the raw readings go: the ten-minute values behind the live dashboard, [naws_table], [naws_chart], the wind rose and the REST readings endpoint. The daily table is never touched, so history, heatmap, records and climate indices keep their full range. At least 30 days."
 msgstr ""
 
@@ -2220,7 +2228,7 @@ msgstr ""
 msgid "Save Notifications"
 msgstr ""
 
-#: admin/views/appearance.php:618 admin/views/appearance.php:725 admin/views/rest-api-docs.php:88 admin/views/settings.php:528
+#: admin/views/appearance.php:618 admin/views/appearance.php:725 admin/views/rest-api-docs.php:88 admin/views/settings.php:541
 msgid "Save Settings"
 msgstr ""
 
@@ -2244,7 +2252,7 @@ msgstr ""
 msgid "Select JSON file"
 msgstr ""
 
-#: admin/views/settings.php:387
+#: admin/views/settings.php:400
 msgid "Select the weather API for the forecast. All providers are free and do not require an API key."
 msgstr ""
 
@@ -2300,7 +2308,7 @@ msgstr ""
 msgid "Show the colour scale below the grid (yes/no)"
 msgstr ""
 
-#: admin/views/settings.php:477
+#: admin/views/settings.php:490
 msgid "Show the icon above the live dashboard. The [naws_weather_icon] shortcode is unaffected by this."
 msgstr ""
 
@@ -2336,7 +2344,7 @@ msgstr ""
 msgid "Snow"
 msgstr ""
 
-#: admin/views/settings.php:491
+#: admin/views/settings.php:504
 msgid "Snow below"
 msgstr ""
 
@@ -2420,7 +2428,7 @@ msgstr ""
 msgid "Storm"
 msgstr ""
 
-#: admin/views/settings.php:513
+#: admin/views/settings.php:526
 msgid "Storm from"
 msgstr ""
 
@@ -2512,7 +2520,7 @@ msgstr ""
 msgid "Temp. Outdoor"
 msgstr ""
 
-#: admin/views/appearance.php:100 admin/views/live-settings.php:67 admin/views/settings.php:328 includes/class-naws-helpers.php:81
+#: admin/views/appearance.php:100 admin/views/live-settings.php:67 admin/views/settings.php:341 includes/class-naws-helpers.php:81
 #: includes/class-naws-helpers.php:326 includes/class-naws-helpers.php:333 includes/class-naws-helpers.php:760 includes/class-naws-labels.php:79
 #: includes/class-naws-labels.php:256 templates/live.php:258
 msgid "Temperature"
@@ -2554,7 +2562,7 @@ msgstr ""
 msgid "Text when no value available"
 msgstr ""
 
-#: admin/views/settings.php:377
+#: admin/views/settings.php:390
 msgid "The 5-day forecast uses the free Open-Meteo API. Choose whether the location is determined automatically from your Netatmo station or entered manually."
 msgstr ""
 
@@ -2615,7 +2623,7 @@ msgstr ""
 msgid "The date range to count or sum over."
 msgstr ""
 
-#: admin/views/settings.php:464
+#: admin/views/settings.php:477
 msgid "The icon shows current weather. Station readings take precedence over the forecast; the forecast only fills in where the station cannot measure — cloud cover, thunderstorms, and precipitation when no rain gauge is present."
 msgstr ""
 
@@ -2801,7 +2809,7 @@ msgstr ""
 msgid "Unit"
 msgstr ""
 
-#: admin/views/settings.php:324
+#: admin/views/settings.php:337
 msgid "Units"
 msgstr ""
 
@@ -2877,11 +2885,11 @@ msgstr ""
 msgid "Weather"
 msgstr ""
 
-#: admin/views/settings.php:375
+#: admin/views/settings.php:388
 msgid "Weather Forecast"
 msgstr ""
 
-#: admin/views/settings.php:462
+#: admin/views/settings.php:475
 msgid "Weather icon"
 msgstr ""
 
@@ -2897,7 +2905,7 @@ msgstr ""
 msgid "Wet-bulb temperature"
 msgstr ""
 
-#: admin/views/settings.php:496
+#: admin/views/settings.php:509
 msgid "Wet-bulb temperature, not air temperature. It decides whether precipitation arrives as rain or snow: in dry air it still snows at 3–4 °C air temperature, while in saturated air it already rains at 1 °C. Computed from outdoor temperature and outdoor humidity."
 msgstr ""
 
@@ -2970,7 +2978,7 @@ msgstr ""
 msgid "Wind Rose"
 msgstr ""
 
-#: admin/views/import.php:26 admin/views/settings.php:337 includes/class-naws-helpers.php:90 includes/class-naws-helpers.php:771
+#: admin/views/import.php:26 admin/views/settings.php:350 includes/class-naws-helpers.php:90 includes/class-naws-helpers.php:771
 #: includes/class-naws-labels.php:72
 msgid "Wind Speed"
 msgstr ""
@@ -3027,7 +3035,7 @@ msgstr ""
 msgid "Your Netatmo Client ID"
 msgstr ""
 
-#: admin/views/settings.php:385
+#: admin/views/settings.php:398
 msgid "Yr.no / MET Norway (accurate for Northern Europe)"
 msgstr ""
 
@@ -3051,7 +3059,7 @@ msgstr ""
 msgid "and copy the Client ID and Secret below."
 msgstr ""
 
-#: admin/views/settings.php:505
+#: admin/views/settings.php:518
 msgid "and dew-point spread up to"
 msgstr ""
 
@@ -3091,11 +3099,11 @@ msgstr ""
 msgid "day classes, sums, index"
 msgstr ""
 
-#: admin/views/settings.php:294
+#: admin/views/settings.php:302
 msgid "days"
 msgstr ""
 
-#: admin/views/settings.php:427
+#: admin/views/settings.php:440
 msgid "e.g. Leipzig"
 msgstr ""
 
@@ -3326,7 +3334,7 @@ msgstr ""
 msgid "−5 °C"
 msgstr ""
 
-#: admin/views/settings.php:309
+#: admin/views/settings.php:322
 msgid "⚠️ Manual Data Purge (Caution!)"
 msgstr ""
 
@@ -3334,11 +3342,11 @@ msgstr ""
 msgid "⚡ [naws_value] — Single Inline Value"
 msgstr ""
 
-#: admin/views/settings.php:300
+#: admin/views/settings.php:308
 msgid "✅ Off — every raw reading is kept."
 msgstr ""
 
-#: admin/views/settings.php:302
+#: admin/views/settings.php:310
 msgid "✅ On — raw readings older than %d days are deleted every night."
 msgstr ""
 
@@ -3606,7 +3614,7 @@ msgctxt "data retention"
 msgid "off"
 msgstr ""
 
-#: admin/views/settings.php:391
+#: admin/views/settings.php:404
 msgctxt "forecast_days_label"
 msgid "Forecast days"
 msgstr ""
@@ -3735,7 +3743,7 @@ msgctxt "time"
 msgid "Time"
 msgstr ""
 
-#: admin/views/settings.php:358
+#: admin/views/settings.php:371
 msgctxt "unit_rain"
 msgid "Rain"
 msgstr ""

@@ -273,14 +273,22 @@ if ( ! defined( 'ABSPATH' ) ) exit; ?>
                                     <p class="description"><?php esc_html_e( 'A day counts as a cooling day when its mean rises above this. There is no single standard here — 18 °C and 21 °C are both in common use.', 'xtx-integration-for-netatmo' ); ?></p>
                                 </td>
                             </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="naws-admin-panel">
+                    <div class="naws-panel-header"><h2><?php esc_html_e( 'Data Retention', 'xtx-integration-for-netatmo' ); ?></h2></div>
+                    <div class="naws-panel-body">
+                        <?php
+                        $naws_retention      = NAWS_Helpers::retention_days( $options );
+                        $naws_retention_last = get_option( 'naws_last_retention' );
+                        $naws_retention_days = (string) ( $options['data_retention'] ?? 365 );
+                        ?>
+                        <table class="form-table naws-form-table">
                             <tr>
-                                <th><?php esc_html_e( 'Data Retention', 'xtx-integration-for-netatmo' ); ?></th>
+                                <th><?php esc_html_e( 'Automatic deletion', 'xtx-integration-for-netatmo' ); ?></th>
                                 <td>
-                                    <?php
-                                    $naws_retention      = NAWS_Helpers::retention_days( $options );
-                                    $naws_retention_last = get_option( 'naws_last_retention' );
-                                    $naws_retention_days = (string) ( $options['data_retention'] ?? 365 );
-                                    ?>
                                     <input type="hidden" name="naws_settings[retention_enabled]" value="0">
                                     <p>
                                         <label>
@@ -305,6 +313,11 @@ if ( ! defined( 'ABSPATH' ) ) exit; ?>
                                         <?php endif; ?>
                                     <?php endif; ?>
                                     </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><?php esc_html_e( 'Manual purge', 'xtx-integration-for-netatmo' ); ?></th>
+                                <td>
                                     <details class="naws-danger-details">
                                         <summary><?php esc_html_e( '⚠️ Manual Data Purge (Caution!)', 'xtx-integration-for-netatmo' ); ?></summary>
                                         <div class="naws-danger-body">
