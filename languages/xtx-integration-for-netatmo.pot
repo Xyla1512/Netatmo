@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: XTX Integration for Netatmo\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/xtx-integration-for-netatmo\n"
-"POT-Creation-Date: 2026-09-19 10:11+0000\n"
+"POT-Creation-Date: 2026-09-19 10:22+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -45,7 +45,7 @@ msgstr ""
 msgid "%d modules"
 msgstr ""
 
-#: includes/class-naws-admin.php:286
+#: includes/class-naws-admin.php:287
 msgid "%d readings deleted."
 msgstr ""
 
@@ -227,7 +227,7 @@ msgstr ""
 msgid "Access Token valid until: %s"
 msgstr ""
 
-#: admin/views/live-settings.php:175 includes/class-naws-admin.php:291
+#: admin/views/live-settings.php:175 includes/class-naws-admin.php:292
 msgid "Activate module"
 msgstr ""
 
@@ -680,7 +680,7 @@ msgstr ""
 msgid "Daily Evaluation"
 msgstr ""
 
-#: admin/views/dashboard.php:104 admin/views/dashboard.php:321 admin/views/dashboard.php:344 includes/class-naws-admin.php:289
+#: admin/views/dashboard.php:104 admin/views/dashboard.php:321 admin/views/dashboard.php:344 includes/class-naws-admin.php:290
 msgid "Daily Summary"
 msgstr ""
 
@@ -744,7 +744,7 @@ msgstr ""
 msgid "Days"
 msgstr ""
 
-#: admin/views/live-settings.php:175 includes/class-naws-admin.php:290
+#: admin/views/live-settings.php:175 includes/class-naws-admin.php:291
 msgid "Deactivate module"
 msgstr ""
 
@@ -772,7 +772,7 @@ msgid "Delete entries older than:"
 msgstr ""
 
 #: includes/class-naws-admin.php:284
-msgid "Delete every reading older than %d days? This cannot be undone."
+msgid "Delete every reading older than %d days? This is permanent and cannot be undone. Afterwards [naws_table], [naws_chart], the wind rose and the REST readings endpoint can only reach back that far. History, heatmap, records and climate indices are not affected."
 msgstr ""
 
 #: admin/views/settings.php:297
@@ -810,7 +810,7 @@ msgstr ""
 msgid "Direction"
 msgstr ""
 
-#: includes/class-naws-admin.php:293
+#: includes/class-naws-admin.php:294
 msgid "Disable 24h chart"
 msgstr ""
 
@@ -866,7 +866,7 @@ msgstr ""
 msgid "Emoji"
 msgstr ""
 
-#: includes/class-naws-admin.php:294
+#: includes/class-naws-admin.php:295
 msgid "Enable 24h chart"
 msgstr ""
 
@@ -982,7 +982,7 @@ msgstr ""
 msgid "Fifteen records from the daily summary — hottest day, coldest night, wettest month, longest dry spell, strongest gust and more — each with its date, as tiles or as a table."
 msgstr ""
 
-#: includes/class-naws-admin.php:693
+#: includes/class-naws-admin.php:694
 msgid "File too large. Maximum size: 100 MB."
 msgstr ""
 
@@ -1323,7 +1323,7 @@ msgstr ""
 msgid "Invalid date format or parameters."
 msgstr ""
 
-#: includes/class-naws-admin.php:672 includes/class-naws-admin.php:687
+#: includes/class-naws-admin.php:673 includes/class-naws-admin.php:688
 msgid "Invalid file. Please select a valid NAWS export file (.json)."
 msgstr ""
 
@@ -2232,7 +2232,7 @@ msgstr ""
 msgid "Save Settings"
 msgstr ""
 
-#: includes/class-naws-admin.php:295
+#: includes/class-naws-admin.php:296
 msgid "Saving…"
 msgstr ""
 
@@ -2474,6 +2474,10 @@ msgstr ""
 
 #: admin/views/notifications.php:53
 msgid "Switch off to pause every mail without losing your rules; the test mail still works."
+msgstr ""
+
+#: includes/class-naws-admin.php:285
+msgid "Switch on automatic deletion? Once you save, raw readings older than the configured number of days will be deleted every night, permanently and beyond recovery. Afterwards [naws_table], [naws_chart], the wind rose and the REST readings endpoint can only reach back that far. History, heatmap, records and climate indices are not affected."
 msgstr ""
 
 #: admin/views/dashboard.php:39
@@ -3043,7 +3047,7 @@ msgstr ""
 msgid "[naws_value] – Attributes"
 msgstr ""
 
-#: admin/views/live-settings.php:195 includes/class-naws-admin.php:292
+#: admin/views/live-settings.php:195 includes/class-naws-admin.php:293
 msgid "active"
 msgstr ""
 
@@ -3350,15 +3354,15 @@ msgstr ""
 msgid "✅ On — raw readings older than %d days are deleted every night."
 msgstr ""
 
-#: includes/class-naws-admin.php:296
+#: includes/class-naws-admin.php:297
 msgid "✅ Saved!"
 msgstr ""
 
-#: includes/class-naws-admin.php:288
+#: includes/class-naws-admin.php:289
 msgid "✓ Copied"
 msgstr ""
 
-#: includes/class-naws-admin.php:297
+#: includes/class-naws-admin.php:298
 msgid "❌ Error."
 msgstr ""
 
@@ -3708,7 +3712,7 @@ msgstr ""
 #: admin/views/shortcodes.php:123 admin/views/shortcodes.php:204 admin/views/shortcodes.php:215 admin/views/shortcodes.php:236
 #: admin/views/shortcodes.php:252 admin/views/shortcodes.php:269 admin/views/shortcodes.php:283 admin/views/shortcodes.php:293
 #: admin/views/shortcodes.php:315 admin/views/shortcodes.php:333 admin/views/shortcodes.php:352 admin/views/shortcodes.php:358
-#: admin/views/shortcodes.php:377 admin/views/shortcodes.php:428 admin/views/shortcodes.php:478 includes/class-naws-admin.php:287
+#: admin/views/shortcodes.php:377 admin/views/shortcodes.php:428 admin/views/shortcodes.php:478 includes/class-naws-admin.php:288
 msgctxt "sc_copy"
 msgid "Copy"
 msgstr ""

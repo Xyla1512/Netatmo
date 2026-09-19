@@ -201,6 +201,25 @@ check( 'Schalter und Tagesfeld stehen in einem Absatz mit eigener Klasse',
     (bool) preg_match( '/<p class="naws-retention-switch">\s*<label>\s*<input type="checkbox" name="naws_settings\[retention_enabled\]"/', $settings ), true );
 check( 'die Klasse hat eine Regel mit Zeilenabstand in admin.css',
     (bool) preg_match( '/\.naws-retention-switch\s*\{[^}]*(row-gap|gap)\s*:/', $admin_css ), true );
+// Frank, 19.09.: Einschalten der Loeschung und der manuelle Knopf verlangen
+// eine zusaetzliche Bestaetigung, die sagt: endgueltig, und welche Bausteine
+// danach nicht mehr den vollen Zeitraum haben.
+$admin_js  = (string) file_get_contents( dirname( __DIR__ ) . '/assets/js/admin.js' );
+$admin_php = (string) file_get_contents( dirname( __DIR__ ) . '/includes/class-naws-admin.php' );
+check( 'admin.js fragt beim Einschalten des Schalters nach',
+    (bool) preg_match( '/\'change\',\s*\'input\[name="naws_settings\[retention_enabled\]"\]\'/', $admin_js )
+    && str_contains( $admin_js, 'nawsAdmin.strings.retention_confirm' ), true );
+check( 'admin.js nimmt den Haken zurueck, wenn nicht bestaetigt wird',
+    (bool) preg_match( '/retention_confirm\)\)\s*\{\s*this\.checked\s*=\s*false;/', $admin_js ), true );
+check( 'der Bereinigen-Knopf fragt weiterhin nach',
+    str_contains( $admin_js, 'confirm(fill(nawsAdmin.strings.purge_confirm, days))' ), true );
+foreach ( [ 'retention_confirm', 'purge_confirm' ] as $key ) {
+    preg_match( "/'" . $key . "'\s*=>\s*__\( '([^']*)'/", $admin_php, $m );
+    $text = $m[1] ?? '';
+    check( "$key: nennt endgueltig",             str_contains( $text, 'permanent' ) || str_contains( $text, 'cannot be undone' ), true );
+    check( "$key: nennt die betroffenen Bausteine", str_contains( $text, '[naws_table]' ) && str_contains( $text, '[naws_chart]' ) && str_contains( $text, 'wind rose' ) && str_contains( $text, 'REST' ), true );
+    check( "$key: nennt die unberuehrten Bausteine", str_contains( $text, 'not affected' ), true );
+}
 check( 'Seitenleiste zeigt nicht mehr die nackte Zahl',
     str_contains( $dashboard, "\$options['data_retention'] ?? 365" ), false );
 check( 'Seitenleiste fragt den Helfer',

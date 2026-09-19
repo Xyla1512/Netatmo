@@ -43,7 +43,7 @@ msgstr "%d Min."
 msgid "%d modules"
 msgstr "%d Module"
 
-#: includes/class-naws-admin.php:286
+#: includes/class-naws-admin.php:287
 msgid "%d readings deleted."
 msgstr "%d Messwerte gelöscht."
 
@@ -225,7 +225,7 @@ msgstr "Access Token abgelaufen – wird beim nächsten Sync automatisch erneuer
 msgid "Access Token valid until: %s"
 msgstr "Access Token gültig bis: %s"
 
-#: admin/views/live-settings.php:175 includes/class-naws-admin.php:291
+#: admin/views/live-settings.php:175 includes/class-naws-admin.php:292
 msgid "Activate module"
 msgstr "Modul aktivieren"
 
@@ -678,7 +678,7 @@ msgstr "Tagesdurchschnittstemperatur"
 msgid "Daily Evaluation"
 msgstr "Tagesauswertung"
 
-#: admin/views/dashboard.php:104 admin/views/dashboard.php:321 admin/views/dashboard.php:344 includes/class-naws-admin.php:289
+#: admin/views/dashboard.php:104 admin/views/dashboard.php:321 admin/views/dashboard.php:344 includes/class-naws-admin.php:290
 msgid "Daily Summary"
 msgstr "Tagesauswertung"
 
@@ -742,7 +742,7 @@ msgstr "Tag ohne Messwert"
 msgid "Days"
 msgstr "Tage"
 
-#: admin/views/live-settings.php:175 includes/class-naws-admin.php:290
+#: admin/views/live-settings.php:175 includes/class-naws-admin.php:291
 msgid "Deactivate module"
 msgstr "Modul deaktivieren"
 
@@ -770,8 +770,8 @@ msgid "Delete entries older than:"
 msgstr "Einträge älter als:"
 
 #: includes/class-naws-admin.php:284
-msgid "Delete every reading older than %d days? This cannot be undone."
-msgstr "Alle Messwerte löschen, die älter als %d Tage sind? Das lässt sich nicht rückgängig machen."
+msgid "Delete every reading older than %d days? This is permanent and cannot be undone. Afterwards [naws_table], [naws_chart], the wind rose and the REST readings endpoint can only reach back that far. History, heatmap, records and climate indices are not affected."
+msgstr "Alle Messungen löschen, die älter als %d Tage sind? Das ist endgültig und lässt sich nicht rückgängig machen. Danach reichen [naws_table], [naws_chart], die Windrose und der REST-Endpunkt „readings“ nur noch so weit zurück. Verlauf, Heatmap, Rekorde und Klimaindizes sind nicht betroffen."
 
 #: admin/views/settings.php:297
 msgid "Delete raw readings automatically once they are older than"
@@ -808,7 +808,7 @@ msgstr "Taupunkt"
 msgid "Direction"
 msgstr "Richtung"
 
-#: includes/class-naws-admin.php:293
+#: includes/class-naws-admin.php:294
 msgid "Disable 24h chart"
 msgstr "24h-Verlauf deaktivieren"
 
@@ -864,7 +864,7 @@ msgstr "Kantenlänge in Pixeln. Kleinere Werte als 64 werden auf 64 angehoben, d
 msgid "Emoji"
 msgstr "Emoji"
 
-#: includes/class-naws-admin.php:294
+#: includes/class-naws-admin.php:295
 msgid "Enable 24h chart"
 msgstr "24h-Verlauf aktivieren"
 
@@ -980,7 +980,7 @@ msgstr "Abruf scheitert"
 msgid "Fifteen records from the daily summary — hottest day, coldest night, wettest month, longest dry spell, strongest gust and more — each with its date, as tiles or as a table."
 msgstr "Fünfzehn Rekorde aus der Tagesübersicht — heißester Tag, kälteste Nacht, nassester Monat, längste Trockenperiode, stärkste Böe und mehr — jeweils mit Datum, als Kacheln oder als Tabelle."
 
-#: includes/class-naws-admin.php:693
+#: includes/class-naws-admin.php:694
 msgid "File too large. Maximum size: 100 MB."
 msgstr "Datei zu groß. Maximale Größe: 100 MB."
 
@@ -1321,7 +1321,7 @@ msgstr "Interaktive Jahresvergleichs-Diagramme für Temperatur, Luftdruck und Ni
 msgid "Invalid date format or parameters."
 msgstr "Ungültiges Datumsformat oder Parameter."
 
-#: includes/class-naws-admin.php:672 includes/class-naws-admin.php:687
+#: includes/class-naws-admin.php:673 includes/class-naws-admin.php:688
 msgid "Invalid file. Please select a valid NAWS export file (.json)."
 msgstr "Ungültige Datei. Bitte eine gültige NAWS-Export-Datei (.json) auswählen."
 
@@ -2230,7 +2230,7 @@ msgstr "Benachrichtigungen speichern"
 msgid "Save Settings"
 msgstr "Einstellungen speichern"
 
-#: includes/class-naws-admin.php:295
+#: includes/class-naws-admin.php:296
 msgid "Saving…"
 msgstr "Speichern…"
 
@@ -2473,6 +2473,10 @@ msgstr "Sonnenuntergang"
 #: admin/views/notifications.php:53
 msgid "Switch off to pause every mail without losing your rules; the test mail still works."
 msgstr "Ausschalten, um alle Mails auszusetzen, ohne die Regeln zu verlieren; die Testmail funktioniert weiterhin."
+
+#: includes/class-naws-admin.php:285
+msgid "Switch on automatic deletion? Once you save, raw readings older than the configured number of days will be deleted every night, permanently and beyond recovery. Afterwards [naws_table], [naws_chart], the wind rose and the REST readings endpoint can only reach back that far. History, heatmap, records and climate indices are not affected."
+msgstr "Automatische Löschung einschalten? Nach dem Speichern werden Rohmessungen, die älter als die eingestellte Zahl von Tagen sind, jede Nacht gelöscht, endgültig und ohne Wiederherstellung. Danach reichen [naws_table], [naws_chart], die Windrose und der REST-Endpunkt „readings“ nur noch so weit zurück. Verlauf, Heatmap, Rekorde und Klimaindizes sind nicht betroffen."
 
 #: admin/views/dashboard.php:39
 msgid "Sync Now"
@@ -3041,7 +3045,7 @@ msgstr "Yr.no / MET Norway (genau für Nordeuropa)"
 msgid "[naws_value] – Attributes"
 msgstr "[naws_value] – Attribute"
 
-#: admin/views/live-settings.php:195 includes/class-naws-admin.php:292
+#: admin/views/live-settings.php:195 includes/class-naws-admin.php:293
 msgid "active"
 msgstr "aktiv"
 
@@ -3348,15 +3352,15 @@ msgstr "✅ Aus — alle Rohmessungen bleiben erhalten."
 msgid "✅ On — raw readings older than %d days are deleted every night."
 msgstr "✅ An — Rohmessungen, die älter als %d Tage sind, werden jede Nacht gelöscht."
 
-#: includes/class-naws-admin.php:296
+#: includes/class-naws-admin.php:297
 msgid "✅ Saved!"
 msgstr "✅ Gespeichert!"
 
-#: includes/class-naws-admin.php:288
+#: includes/class-naws-admin.php:289
 msgid "✓ Copied"
 msgstr "✓ Kopiert"
 
-#: includes/class-naws-admin.php:297
+#: includes/class-naws-admin.php:298
 msgid "❌ Error."
 msgstr "❌ Fehler."
 
@@ -3706,7 +3710,7 @@ msgstr "Schreibweise"
 #: admin/views/shortcodes.php:123 admin/views/shortcodes.php:204 admin/views/shortcodes.php:215 admin/views/shortcodes.php:236
 #: admin/views/shortcodes.php:252 admin/views/shortcodes.php:269 admin/views/shortcodes.php:283 admin/views/shortcodes.php:293
 #: admin/views/shortcodes.php:315 admin/views/shortcodes.php:333 admin/views/shortcodes.php:352 admin/views/shortcodes.php:358
-#: admin/views/shortcodes.php:377 admin/views/shortcodes.php:428 admin/views/shortcodes.php:478 includes/class-naws-admin.php:287
+#: admin/views/shortcodes.php:377 admin/views/shortcodes.php:428 admin/views/shortcodes.php:478 includes/class-naws-admin.php:288
 msgctxt "sc_copy"
 msgid "Copy"
 msgstr "Copy"
