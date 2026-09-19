@@ -1,6 +1,20 @@
 {
-    "aktualisiert": "2026-09-12",
+    "aktualisiert": "2026-09-19",
     "vorhaben": [
+        {
+            "id": "sparkline",
+            "titel": "Sparklines: a curve the size of a word",
+            "satz": "[naws_sparkline] draws the course of a reading as a tiny curve, as tall as a line of text: next to the number in running text, in the widget's tiles, in the infobar. From the raw readings of the last hours or from the daily table with the span between low and high, rain as bars. Server-side SVG without JavaScript, colours from the appearance settings.",
+            "ab": null,
+            "bild": null
+        },
+        {
+            "id": "aufbewahrung",
+            "titel": "Retention policy for raw readings",
+            "satz": "Until now every ten-minute reading stays forever. Soon you decide: a number of days, 30 at least, and a switch. When it is on, the plugin deletes older raw readings once a night. The daily table stays untouched, so history, heatmap, records and climate indices keep their full range. Before the switch goes on and before every manual purge, the plugin asks.",
+            "ab": null,
+            "bild": null
+        },
         {
             "id": "email-benachrichtigungen",
             "titel": "Email notifications for events and outages",
