@@ -215,6 +215,7 @@ function naws_label( string $key ): string {
         case 'wr_col_dir':                         return __( 'Direction', 'xtx-integration-for-netatmo' );
         case 'wr_col_share':                       return __( 'Share', 'xtx-integration-for-netatmo' );
         case 'wr_empty':                           return __( 'No wind readings in this period.', 'xtx-integration-for-netatmo' );
+        case 'wr_calm_only':                       return /* translators: 1: number of readings, 2: wind speed with unit, e.g. "1 km/h". */ __( 'Calm the whole time: %1$s readings, all below %2$s.', 'xtx-integration-for-netatmo' );
         case 'wr_switch_period':                   return _x( 'Period', 'wind rose switcher', 'xtx-integration-for-netatmo' );
         case 'wr_switch_measure':                  return _x( 'Measure', 'wind rose switcher', 'xtx-integration-for-netatmo' );
 

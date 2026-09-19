@@ -7,7 +7,9 @@ define( 'ABSPATH', __DIR__ );
 // Vom Ort dieser Datei aus, nicht ueber einen festen Pfad: das Werkzeug
 // liegt jetzt im Projekt und wird auch aus einem Arbeitsbaum heraus
 // aufgerufen, der anderswo steht.
-$root   = str_replace( DIRECTORY_SEPARATOR, '/', dirname( __DIR__, 3 ) ) . '/';
+// Ein anderes Wurzelverzeichnis als erstes Argument: so pruefen die Tests
+// das Skript an einer Fixture, ohne die .pot des Plugins anzufassen.
+$root   = str_replace( DIRECTORY_SEPARATOR, '/', isset( $argv[1] ) && is_dir( $argv[1] ) ? realpath( $argv[1] ) : dirname( __DIR__, 3 ) ) . '/';
 $domain = 'xtx-integration-for-netatmo';
 
 $fns = [
@@ -55,6 +57,29 @@ foreach ( $files as $path ) {
         for ( $j = $i + 1; $j < $n && is_array( $tokens[ $j ] ) && $tokens[ $j ][0] === T_WHITESPACE; $j++ );
         if ( $j >= $n || $tokens[ $j ] !== '(' ) continue;
 
+        // Der translators-Kommentar steht nach WordPress-Konvention VOR dem
+        // Aufruf: direkt davor (return /* ... */ __( ...)), in den Argumenten
+        // des umschliessenden sprintf, oder auf der Zeile darueber. Rueckwaerts
+        // suchen, aber nicht ueber einen Anweisungs- oder Listenanfang
+        // (; { } , [ ]) auf der eigenen Ebene und nicht mehr als eine Zeile
+        // weit -- sonst erbt ein Aufruf den Kommentar des vorigen.
+        $before = null; $depth = 0; $nl = 0;
+        for ( $b = $i - 1; $b >= 0; $b-- ) {
+            $tb = $tokens[ $b ];
+            if ( ! is_array( $tb ) ) {
+                if ( $tb === ')' ) { $depth++; continue; }
+                if ( $tb === '(' ) { if ( $depth > 0 ) $depth--; continue; }
+                if ( $depth === 0 && in_array( $tb, [ ';', '{', '}', ',', '[', ']' ], true ) ) break;
+                continue;
+            }
+            if ( $tb[0] === T_WHITESPACE ) { $nl += substr_count( $tb[1], "\n" ); if ( $nl > 1 ) break; continue; }
+            if ( $tb[0] === T_OPEN_TAG ) break;
+            if ( in_array( $tb[0], [ T_COMMENT, T_DOC_COMMENT ], true ) ) {
+                if ( str_contains( $tb[1], 'translators:' ) ) $before = trim( $tb[1] );
+                break;
+            }
+        }
+
         // Argumente auf Top-Level einsammeln
         $args = []; $cur = null; $depth = 0; $comment = null; $ok = true;
         for ( $k = $j + 1; $k < $n; $k++ ) {
@@ -71,6 +96,7 @@ foreach ( $files as $path ) {
             if ( $depth === 0 ) { $cur = false; } // kein reines Literal
         }
         $args[] = $cur;
+        if ( $comment === null && $before !== null ) $comment = $before;
 
         $spec = $fns[ $t[1] ];
         $text = $args[ $spec['text'] ] ?? null;
@@ -126,7 +152,7 @@ $out .= "\"X-Domain: $domain\\n\"\n";
 foreach ( $entries as $e ) {
     $out .= "\n";
     foreach ( array_keys( $e['comments'] ) as $c ) {
-        $c = preg_replace( '#^/\*+\s*|\s*\*+/$#', '', $c );
+        $c = preg_replace( '~^(/\*+|//|#)\s*|\s*\*+/$~', '', $c );
         $out .= "#. " . trim( $c ) . "\n";
     }
     $refs = array_unique( $e['refs'] );

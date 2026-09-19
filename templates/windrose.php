@@ -110,7 +110,9 @@ $naws_wr_tip = static function ( int $i, array $s ) use ( $sectors, $unit, $pct 
 ?>
   <div class="naws-wr-panel" data-period="<?php echo esc_attr( $k ); ?>" data-measure="<?php echo esc_attr( $m ); ?>"<?php if ( ! $active ) : ?> hidden<?php endif; ?>>
     <p class="naws-wr-meta"><?php echo esc_html( $meta ); ?></p>
-<?php if ( $n === 0 || $main === null ) : ?>
+<?php if ( $n > 0 && $main === null && (int) $rose['calm'] === $n ) : ?>
+    <p class="naws-wr-empty"><?php echo esc_html( sprintf( naws_label( 'wr_calm_only' ), number_format_i18n( $n ), NAWS_Windrose::speed( (float) NAWS_Windrose::BINS[0] ) . ' ' . $unit ) ); ?></p>
+<?php elseif ( $n === 0 || $main === null ) : ?>
     <p class="naws-wr-empty"><?php echo esc_html( naws_label( 'wr_empty' ) ); ?></p>
 <?php else : ?>
     <figure class="naws-wr-figure">

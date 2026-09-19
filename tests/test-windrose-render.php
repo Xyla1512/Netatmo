@@ -167,6 +167,21 @@ check( 'leer: keine Kennzahlen',           str_contains( $h, 'naws-wr-summary' )
 $late = NAWS_Windrose::shape( $rows, 16, 1779602428 );
 $h = render_windrose( atts( [ 'switcher' => 'no', 'period' => 'all' ] ), [ '*' => $late ] );
 check( 'all: Bildunterschrift „readings from 21.04.2026"', str_contains( $h, '<figcaption class="naws-wr-caption">readings from ' . wp_date( 'd.m.Y', 1776771809 ) . '</figcaption>' ), true );
+// Nur Windstille im Zeitraum (Kantenfall, geparkt seit 08.09.): bisher stand
+// "20 readings" in der Meta-Zeile neben "No wind readings in this period." —
+// jetzt sagt der Satz, was los war.
+echo "\nNur Windstille\n" . str_repeat( '-', 74 ) . "\n";
+$calm_rows = [ [ 'sector' => '-1', 'bin' => '-1', 'n' => '20', 'sum_v' => '0', 'max_v' => '0.5', 'first_at' => '1778000000' ] ];
+$h = render_windrose( atts( [ 'switcher' => 'no' ] ), [ '*' => NAWS_Windrose::shape( $calm_rows, 16 ) ] );
+check( 'Windstille: Meta-Zeile zaehlt die Messungen', str_contains( $h, '· 20 readings</p>' ), true );
+check( 'Windstille: der Satz zur Windstille',      str_contains( $h, '<p class="naws-wr-empty">Calm the whole time: 20 readings, all below 1 km/h.</p>' ), true );
+check( 'Windstille: nicht "keine Messungen"',      str_contains( $h, 'No wind readings in this period.' ), false );
+check( 'Windstille: kein SVG',                     str_contains( $h, '<svg' ), false );
+// Messungen ohne gueltige Richtung, keine Windstille: weiter der alte Satz.
+$odd_rows = [ [ 'sector' => '-2', 'bin' => '0', 'n' => '5', 'sum_v' => '15', 'max_v' => '4', 'first_at' => '1778000000' ] ];
+$h = render_windrose( atts( [ 'switcher' => 'no' ] ), [ '*' => NAWS_Windrose::shape( $odd_rows, 16 ) ] );
+check( 'ohne Richtung: der alte Satz bleibt',      str_contains( $h, '<p class="naws-wr-empty">No wind readings in this period.</p>' ), true );
+
 $h = render_windrose( atts(), [ 'wind|90d' => $rose16, 'wind|7d' => NAWS_Windrose::shape( [], 16 ), 'wind|30d' => $rose16, 'wind|year' => $rose16, 'wind|all' => $rose16 ] );
 check( 'je Panel seine Rose: 7d ist leer', substr_count( $h, 'naws-wr-empty' ), 1 );
 
