@@ -194,6 +194,13 @@ check( 'Zeile "Manual purge" im eigenen Panel',
     str_contains( $settings, "<th><?php esc_html_e( 'Manual purge', 'xtx-integration-for-netatmo' ); ?></th>" ), true );
 check( 'Datenhaltung ist keine Zeile mehr im Panel "Operation"',
     (bool) preg_match( '/Operation.*?<th><\?php esc_html_e\( \'Data Retention\'.*?<h2><\?php esc_html_e\( \'Units\'/s', $settings ), false );
+// Frank, 19.09.: der Schalter braucht Abstand nach unten zum Tagesfeld, wenn
+// der Satz umbricht — der Absatz bekommt eine Klasse, die CSS den Zeilenabstand.
+$admin_css = (string) file_get_contents( dirname( __DIR__ ) . '/assets/css/admin.css' );
+check( 'Schalter und Tagesfeld stehen in einem Absatz mit eigener Klasse',
+    (bool) preg_match( '/<p class="naws-retention-switch">\s*<label>\s*<input type="checkbox" name="naws_settings\[retention_enabled\]"/', $settings ), true );
+check( 'die Klasse hat eine Regel mit Zeilenabstand in admin.css',
+    (bool) preg_match( '/\.naws-retention-switch\s*\{[^}]*(row-gap|gap)\s*:/', $admin_css ), true );
 check( 'Seitenleiste zeigt nicht mehr die nackte Zahl',
     str_contains( $dashboard, "\$options['data_retention'] ?? 365" ), false );
 check( 'Seitenleiste fragt den Helfer',

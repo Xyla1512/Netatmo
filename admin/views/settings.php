@@ -290,7 +290,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; ?>
                                 <th><?php esc_html_e( 'Automatic deletion', 'xtx-integration-for-netatmo' ); ?></th>
                                 <td>
                                     <input type="hidden" name="naws_settings[retention_enabled]" value="0">
-                                    <p>
+                                    <p class="naws-retention-switch">
                                         <label>
                                             <input type="checkbox" name="naws_settings[retention_enabled]" value="1"
                                                 <?php checked( ! empty( $options['retention_enabled'] ) ); ?>>
