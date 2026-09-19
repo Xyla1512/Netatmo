@@ -193,6 +193,7 @@ function naws_label( string $key ): string {
         case 'wr_meta_gust':                       return __( 'Gusts, 10-minute peak', 'xtx-integration-for-netatmo' );
         case 'wr_period_year':                     return _x( 'this year', 'wind rose period', 'xtx-integration-for-netatmo' );
         case 'wr_period_all':                      return __( 'everything recorded', 'xtx-integration-for-netatmo' );
+        case 'wr_period_kept':                     return /* translators: %d: number of days the raw readings are kept. */ __( 'everything kept (last %d days)', 'xtx-integration-for-netatmo' );
         case 'wr_period_fixed':                    return /* translators: 1: first day, 2: last day. */ __( '%1$s to %2$s', 'xtx-integration-for-netatmo' );
         case 'wr_period_first':                    return __( 'the first reading', 'xtx-integration-for-netatmo' );
         case 'wr_button_all':                      return _x( 'all', 'wind rose switcher', 'xtx-integration-for-netatmo' );

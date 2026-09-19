@@ -132,7 +132,14 @@ class NAWS_Admin {
         // Snap to a real WP-Cron schedule: an unlisted value such as 45 would
         // make wp_schedule_event() fail silently and stop polling altogether.
         if ( $sent( 'cron_interval' ) )  $clean['cron_interval']  = NAWS_Cron::normalise_interval( $input['cron_interval'] );
-        if ( $sent( 'data_retention' ) ) $clean['data_retention'] = max( 30, intval( $input['data_retention'] ) );
+        // Retention of raw readings (2.1.0): the switch is a hidden-zero
+        // checkbox; the days never go below 30, and a cleared field means
+        // the default, not max( 30, 0 ).
+        if ( $sent( 'retention_enabled' ) ) $clean['retention_enabled'] = empty( $input['retention_enabled'] ) ? 0 : 1;
+        if ( $sent( 'data_retention' ) ) {
+            $retention_days          = intval( $input['data_retention'] );
+            $clean['data_retention'] = $retention_days > 0 ? max( 30, $retention_days ) : 365;
+        }
 
         if ( $sent( 'temperature_unit' ) ) $clean['temperature_unit'] = in_array( $input['temperature_unit'], ['C','F'], true ) ? $input['temperature_unit'] : 'C';
         if ( $sent( 'wind_unit' ) )        $clean['wind_unit']        = in_array( $input['wind_unit'], ['kmh','ms','mph','kn'], true ) ? $input['wind_unit'] : 'kmh';
@@ -274,7 +281,8 @@ class NAWS_Admin {
                 'hide'             => __( 'Hide', 'xtx-integration-for-netatmo' ),
                 'purge_min_days'   => __( 'Please enter at least 30 days.', 'xtx-integration-for-netatmo' ),
                 /* translators: %d: number of days */
-                'purge_confirm'    => __( 'Delete every reading older than %d days? This cannot be undone.', 'xtx-integration-for-netatmo' ),
+                'purge_confirm'    => __( 'Delete every reading older than %d days? This is permanent and cannot be undone. Afterwards [naws_table], [naws_chart], the wind rose and the REST readings endpoint can only reach back that far. History, heatmap, records and climate indices are not affected.', 'xtx-integration-for-netatmo' ),
+                'retention_confirm' => __( 'Switch on automatic deletion? Once you save, raw readings older than the configured number of days will be deleted every night, permanently and beyond recovery. Afterwards [naws_table], [naws_chart], the wind rose and the REST readings endpoint can only reach back that far. History, heatmap, records and climate indices are not affected.', 'xtx-integration-for-netatmo' ),
                 /* translators: %d: number of deleted readings */
                 'purge_done'       => __( '%d readings deleted.', 'xtx-integration-for-netatmo' ),
                 'sc_copy'          => _x( 'Copy', 'sc_copy', 'xtx-integration-for-netatmo' ),

@@ -61,6 +61,15 @@
             if (station) $('#naws-import-device').val(station);
         });
 
+        // Automatic deletion in settings: switching it on asks once, and says
+        // what is gone for good and which shortcodes lose their reach. The
+        // sentence comes from PHP like every other. "No" puts the box back.
+        $(document).on('change', 'input[name="naws_settings[retention_enabled]"]', function() {
+            if (this.checked && !confirm(nawsAdmin.strings.retention_confirm)) {
+                this.checked = false;
+            }
+        });
+
         // Manual purge button in settings. The daily-summary button has its
         // own handler in admin/views/dashboard.php and is not repeated here.
         $(document).on('click', '#naws-purge-btn', function() {

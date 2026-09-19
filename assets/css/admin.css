@@ -656,6 +656,16 @@
 
 .naws-text-ok { color: var(--naws-admin-success); font-weight: 600; }
 
+/* Data retention — the switch and the days field share one sentence
+   ("delete … older than [365] days"). When the sentence wraps, the two
+   lines need air between them; on one line the column gap is all there is. */
+.naws-retention-switch {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem 0.4rem;
+}
+
 /* Manual data purge — folded away because it deletes readings. */
 .naws-danger-details > summary {
   cursor: pointer;

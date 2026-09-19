@@ -483,6 +483,10 @@ class NAWS_Cron {
 
         update_option( 'naws_last_daily_summary', $yesterday, false );
 
+        // Retention of raw readings: once a night, after the summary, and
+        // before the caches go so no query keeps rows that are gone.
+        $this->run_retention();
+
         // Flush daily caches after summary computation
         NAWS_Database::flush_caches();
 
@@ -557,6 +561,40 @@ class NAWS_Cron {
             'status'  => 'ok',
             'message' => sprintf( /* translators: %d: minutes since the last sync. */ __( 'Sync OK (%d min ago)', 'xtx-integration-for-netatmo' ), intval( $since_last / 60 ) ),
         ];
+    }
+
+    // ────────────────────────────────────────────────────────────────
+    // Retention of raw readings (runs once a night, after the summary)
+    // ────────────────────────────────────────────────────────────────
+
+    /** Option: when the retention last ran, with how many days, and how many rows went. */
+    const OPT_LAST_RETENTION = 'naws_last_retention';
+
+    /**
+     * Delete raw readings older than the configured number of days — but
+     * only while the switch in the settings is on. The daily table is
+     * never touched: history, heatmap, records and climate indices read
+     * that one and keep their full range.
+     *
+     * Called from run_daily_summary(), so readings vanish once a night and
+     * nowhere else; the purge button on the settings page is the manual way.
+     *
+     * @return int|null Rows deleted, or null while the retention is off.
+     */
+    public function run_retention(): ?int {
+        $days = NAWS_Helpers::retention_days();
+        if ( $days === null ) {
+            return null;
+        }
+        $deleted = NAWS_Database::purge_old_readings( $days );
+        if ( $deleted === false ) {
+            $this->log( 'error', sprintf( 'Retention: deleting readings older than %d days failed.', $days ) );
+            return 0;
+        }
+        $deleted = (int) $deleted;
+        update_option( self::OPT_LAST_RETENTION, [ 'time' => time(), 'days' => $days, 'deleted' => $deleted ], false );
+        $this->log( 'daily', sprintf( 'Retention: %d reading(s) older than %d days deleted.', $deleted, $days ) );
+        return $deleted;
     }
 
     // ────────────────────────────────────────────────────────────────

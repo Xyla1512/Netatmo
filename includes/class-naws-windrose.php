@@ -312,7 +312,12 @@ final class NAWS_Windrose {
             return naws_label( 'wr_period_year' );
         }
         if ( $key === 'all' ) {
-            return naws_label( 'wr_period_all' );
+            // With the retention on, "everything recorded" would promise more
+            // than the table holds: say what is actually there.
+            $kept = NAWS_Helpers::retention_days();
+            return $kept === null
+                ? naws_label( 'wr_period_all' )
+                : sprintf( naws_label( 'wr_period_kept' ), $kept );
         }
         $n = (int) $key;
         /* translators: %d: number of days. */
