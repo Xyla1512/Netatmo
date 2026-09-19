@@ -268,5 +268,13 @@ check( 'Knopf all',                          NAWS_Windrose::button_label( 'all' 
 check( 'Messgroesse Wind',                   NAWS_Windrose::meta_label( 'wind' ), 'Wind, 10-minute mean' );
 check( 'Messgroesse Boeen',                  NAWS_Windrose::meta_label( 'gust' ), 'Gusts, 10-minute peak' );
 
+
+// ── Aufbewahrung (2.1.0): "alles" heisst ehrlich "alles Aufbewahrte" ─────
+$GLOBALS['naws_test_options']['naws_settings'] = [ 'wind_unit' => 'kmh', 'retention_enabled' => 1, 'data_retention' => 365 ];
+check( 'Zeitraum all mit Aufbewahrung',      NAWS_Windrose::period_label( [ 'key' => 'all', 'from' => 0, 'to' => 0 ] ), 'everything kept (last 365 days)' );
+check( 'Knopf all bleibt "all"',             NAWS_Windrose::button_label( 'all' ), 'all' );
+$GLOBALS['naws_test_options']['naws_settings'] = [ 'wind_unit' => 'kmh', 'retention_enabled' => 0, 'data_retention' => 365 ];
+check( 'Zeitraum all ohne Aufbewahrung',     NAWS_Windrose::period_label( [ 'key' => 'all', 'from' => 0, 'to' => 0 ] ), 'everything recorded' );
+
 printf( "\n%d ok, %d fehlgeschlagen\n", $passed, $failed );
 exit( $failed ? 1 : 0 );

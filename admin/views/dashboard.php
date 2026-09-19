@@ -401,7 +401,8 @@ $module_type_colors = [
                     </div>
                     <div class="naws-cron-item">
                         <span class="naws-cron-label"><?php esc_html_e( 'Data Retention', 'xtx-integration-for-netatmo' ); ?></span>
-                        <span class="naws-cron-value"><?php echo esc_html( ( $options['data_retention'] ?? 365 )  ); ?></span>
+                        <?php $naws_retention = NAWS_Helpers::retention_days( $options ); ?>
+                        <span class="naws-cron-value"><?php echo esc_html( $naws_retention === null ? _x( 'off', 'data retention', 'xtx-integration-for-netatmo' ) : sprintf( /* translators: %d: number of days */ _n( '%d day', '%d days', $naws_retention, 'xtx-integration-for-netatmo' ), $naws_retention ) ); ?></span>
                     </div>
                 </div>
             </div>

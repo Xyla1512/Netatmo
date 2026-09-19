@@ -132,7 +132,14 @@ class NAWS_Admin {
         // Snap to a real WP-Cron schedule: an unlisted value such as 45 would
         // make wp_schedule_event() fail silently and stop polling altogether.
         if ( $sent( 'cron_interval' ) )  $clean['cron_interval']  = NAWS_Cron::normalise_interval( $input['cron_interval'] );
-        if ( $sent( 'data_retention' ) ) $clean['data_retention'] = max( 30, intval( $input['data_retention'] ) );
+        // Retention of raw readings (2.1.0): the switch is a hidden-zero
+        // checkbox; the days never go below 30, and a cleared field means
+        // the default, not max( 30, 0 ).
+        if ( $sent( 'retention_enabled' ) ) $clean['retention_enabled'] = empty( $input['retention_enabled'] ) ? 0 : 1;
+        if ( $sent( 'data_retention' ) ) {
+            $retention_days          = intval( $input['data_retention'] );
+            $clean['data_retention'] = $retention_days > 0 ? max( 30, $retention_days ) : 365;
+        }
 
         if ( $sent( 'temperature_unit' ) ) $clean['temperature_unit'] = in_array( $input['temperature_unit'], ['C','F'], true ) ? $input['temperature_unit'] : 'C';
         if ( $sent( 'wind_unit' ) )        $clean['wind_unit']        = in_array( $input['wind_unit'], ['kmh','ms','mph','kn'], true ) ? $input['wind_unit'] : 'kmh';

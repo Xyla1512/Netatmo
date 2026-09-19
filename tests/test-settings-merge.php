@@ -44,6 +44,8 @@ $GLOBALS['naws_stored'] = [
     'heating_limit' => 16.5,
     'room_temp'     => 21.0,
     'cooling_limit' => 19.0,
+    'retention_enabled' => 1,
+    'data_retention'    => 200,
 ];
 
 // ── Minimal WordPress surface ────────────────────────────────────────────
@@ -243,6 +245,42 @@ scenario(
     [ 'heating_limit' => '' ],
     [ 'room_temp', 'cooling_limit' ],
     [ 'heating_limit' => 15.0 ]
+);
+
+// ── 2.1.0: die Aufbewahrung der Rohwerte ────────────────────────────────
+// Stored: on with 200 days. Switching on must be tested from off, or the
+// stored 1 would satisfy the expectation without the sanitizer doing anything.
+$GLOBALS['naws_stored']['retention_enabled'] = 0;
+scenario(
+    'Aufbewahrung einschalten mit 400 Tagen',
+    [ 'retention_enabled' => '1', 'data_retention' => 400 ],
+    [ 'cron_interval', 'night_mode', 'forecast_days', 'heating_limit' ],
+    [ 'retention_enabled' => 1, 'data_retention' => 400 ]
+);
+
+$GLOBALS['naws_stored']['retention_enabled'] = 1;
+
+// A cleared field falls back to the default, not to 30 (max( 30, intval( '' ) )).
+scenario(
+    'Leeres Tagesfeld faellt auf 365 zurueck',
+    [ 'data_retention' => '' ],
+    [ 'retention_enabled', 'cron_interval' ],
+    [ 'data_retention' => 365 ]
+);
+
+// The hidden-zero pattern again, and the floor: nothing below 30 days.
+scenario(
+    'Aufbewahrung ausschalten, Tage unter 30 werden 30',
+    [ 'retention_enabled' => '0', 'data_retention' => 10 ],
+    [ 'cron_interval', 'night_mode' ],
+    [ 'retention_enabled' => 0, 'data_retention' => 30 ]
+);
+
+scenario(
+    'Zugangsdaten speichern laesst die Aufbewahrung stehen',
+    [ 'client_id' => 'newid', 'client_secret' => 'newsecret' ],
+    [ 'retention_enabled', 'data_retention' ],
+    [ 'client_id' => 'ENC:newid' ]
 );
 
 echo str_repeat( '-', 70 ) . "\n";

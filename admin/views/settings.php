@@ -276,13 +276,40 @@ if ( ! defined( 'ABSPATH' ) ) exit; ?>
                             <tr>
                                 <th><?php esc_html_e( 'Data Retention', 'xtx-integration-for-netatmo' ); ?></th>
                                 <td>
-                                    <p><span class="naws-text-ok"><?php esc_html_e( '✅ All data is stored permanently.', 'xtx-integration-for-netatmo' ); ?></span><br>
-                                    <span class="description"><?php esc_html_e( 'No automatic deletion. You can manually purge old data below if needed.', 'xtx-integration-for-netatmo' ); ?></span></p>
+                                    <?php
+                                    $naws_retention      = NAWS_Helpers::retention_days( $options );
+                                    $naws_retention_last = get_option( 'naws_last_retention' );
+                                    $naws_retention_days = (string) ( $options['data_retention'] ?? 365 );
+                                    ?>
+                                    <input type="hidden" name="naws_settings[retention_enabled]" value="0">
+                                    <p>
+                                        <label>
+                                            <input type="checkbox" name="naws_settings[retention_enabled]" value="1"
+                                                <?php checked( ! empty( $options['retention_enabled'] ) ); ?>>
+                                            <?php esc_html_e( 'Delete raw readings automatically once they are older than', 'xtx-integration-for-netatmo' ); ?>
+                                        </label>
+                                        <label>
+                                            <input type="number" name="naws_settings[data_retention]" min="30" step="1" class="small-text"
+                                                value="<?php echo esc_attr( $naws_retention_days ); ?>">
+                                            <?php esc_html_e( 'days', 'xtx-integration-for-netatmo' ); ?>
+                                        </label>
+                                    </p>
+                                    <p class="description"><?php esc_html_e( 'Runs once a night, after the daily summary. Only the raw readings go: the ten-minute values behind the live dashboard, [naws_table], [naws_chart], the wind rose and the REST readings endpoint. The daily table is never touched, so history, heatmap, records and climate indices keep their full range. At least 30 days.', 'xtx-integration-for-netatmo' ); ?></p>
+                                    <p>
+                                    <?php if ( $naws_retention === null ) : ?>
+                                        <span class="naws-text-ok"><?php esc_html_e( '✅ Off — every raw reading is kept.', 'xtx-integration-for-netatmo' ); ?></span>
+                                    <?php else : ?>
+                                        <span class="naws-text-ok"><?php echo esc_html( sprintf( /* translators: %d: number of days. */ __( '✅ On — raw readings older than %d days are deleted every night.', 'xtx-integration-for-netatmo' ), $naws_retention ) ); ?></span>
+                                        <?php if ( is_array( $naws_retention_last ) && ! empty( $naws_retention_last['time'] ) ) : ?>
+                                            <br><span class="description"><?php echo esc_html( sprintf( /* translators: 1: date and time of the last run, 2: number of readings deleted. */ __( 'Last run %1$s: %2$s readings deleted.', 'xtx-integration-for-netatmo' ), wp_date( get_option( 'date_format', 'd.m.Y' ) . ' ' . get_option( 'time_format', 'H:i' ), (int) $naws_retention_last['time'] ), number_format_i18n( (int) ( $naws_retention_last['deleted'] ?? 0 ) ) ) ); ?></span>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+                                    </p>
                                     <details class="naws-danger-details">
                                         <summary><?php esc_html_e( '⚠️ Manual Data Purge (Caution!)', 'xtx-integration-for-netatmo' ); ?></summary>
                                         <div class="naws-danger-body">
                                             <label><?php esc_html_e( 'Delete entries older than:', 'xtx-integration-for-netatmo' ); ?>
-                                            <input type="number" id="naws-purge-days" value="365" min="30" class="small-text"> <?php esc_html_e( 'Days', 'xtx-integration-for-netatmo' ); ?></label>
+                                            <input type="number" id="naws-purge-days" value="<?php echo esc_attr( $naws_retention_days ); ?>" min="30" class="small-text"> <?php esc_html_e( 'Days', 'xtx-integration-for-netatmo' ); ?></label>
                                             <button type="button" id="naws-purge-btn" class="button naws-btn-danger"><?php esc_html_e( 'Purge now', 'xtx-integration-for-netatmo' ); ?></button>
                                             <span id="naws-purge-result"></span>
                                         </div>

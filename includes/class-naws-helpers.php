@@ -604,6 +604,30 @@ class NAWS_Helpers {
         return $defs;
     }
 
+    /**
+     * How many days of raw readings to keep, or null while the retention
+     * is switched off.
+     *
+     * Two settings speak here: the switch `retention_enabled` (off unless
+     * set — an update must not start deleting anything) and the number of
+     * days `data_retention`, never below 30 and 365 when unset or unusable.
+     * The nightly purge and the wind rose's "everything kept" label both
+     * read the pair through this one method.
+     *
+     * @param array|null $settings The naws_settings array, or null to load it.
+     */
+    public static function retention_days( ?array $settings = null ): ?int {
+        if ( $settings === null ) {
+            $settings = get_option( 'naws_settings', [] );
+            $settings = is_array( $settings ) ? $settings : [];
+        }
+        if ( empty( $settings['retention_enabled'] ) ) {
+            return null;
+        }
+        $days = intval( $settings['data_retention'] ?? 0 );
+        return $days > 0 ? max( 30, $days ) : 365;
+    }
+
     public static function get_unit( $parameter ) {
         $options  = get_option( 'naws_settings', [] );
         $temp_u   = $options['temperature_unit'] ?? 'C';

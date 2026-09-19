@@ -2,6 +2,11 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [2.1.0]
+
+### Added
+- **Retention of raw readings, switchable.** The settings page promised "all data is stored permanently" while the dashboard sidebar showed a "Data Retention: 365" that nothing applied — the value had no field and no effect, and the purge button was the only way to delete anything. Retention is a real thing now, off by default: switch it on, give it a number of days (365 by default, never fewer than 30), and once a night, after the daily summary, the plugin deletes raw readings older than that and notes the run on the settings page and in the cron log. Only the raw readings go — the ten-minute values behind the live dashboard, `[naws_table]`, `[naws_chart]`, the wind rose and the REST readings endpoint. The daily table is never touched, so history, heatmap, records and climate indices keep their full range. With the retention on, the wind rose's "everything recorded" period calls itself "everything kept (last 365 days)". An update changes nothing: the switch is off until you turn it on. The purge button stays for the manual case and takes the configured days as its default.
+
 ## [2.0.1]
 
 ### Fixed
