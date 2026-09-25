@@ -1101,8 +1101,35 @@
 .naws-pv-wind-section{border:1px solid #e0eeee;border-radius:10px;padding:0.75rem 0.85rem;}
 .naws-pv-wind-row{display:flex;align-items:center;gap:0.75rem;margin-top:0.3rem;}
 .naws-pv-rose-wrap{position:relative;width:110px;height:110px;flex-shrink:0;}
-.naws-pv-rose-bg,.naws-pv-rose-arrow{position:absolute;top:0;left:0;width:100%;height:100%;}
-.naws-pv-rose-arrow{transform-origin:50% 50%;transition:transform 0.8s ease;}
+/* Live dashboard: wind — the preview carries the same naws-lw-* classes as
+   the frontend and reads the variables the pane sets on #naws-preview-livewind
+   (since 2.0.2). Same colours, same rules, only the scope differs. */
+.naws-pv-livewind{display:flex;flex-direction:column;gap:0.75rem;}
+.naws-pv-livewind .naws-pv-wind-section{background:var(--card,#fff);border-color:var(--line,#e0eeee);}
+.naws-pv-livewind .naws-pv-card-label{color:var(--muted,#7aa0a0);}
+.naws-pv-lw-rose,.naws-pv-lw-arrow{position:absolute;top:0;left:0;width:100%;height:100%;}
+.naws-pv-lw-arrow{transform-origin:50% 50%;}
+.naws-pv-lw-dir{font-size:12.5px;font-weight:700;font-style:italic;color:var(--ink2,#2d5252);letter-spacing:.04em;}
+.naws-pv-lw-gauge{display:block;width:100%;max-width:200px;margin:0.25rem auto 0;overflow:visible;}
+.naws-pv-lw-values{display:flex;justify-content:center;gap:16px;margin-top:6px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted,#7aa0a0);text-align:center;}
+.naws-pv-lw-values b{display:block;font-size:16px;font-weight:800;font-style:italic;letter-spacing:-.02em;text-transform:none;color:var(--ink2,#2d5252);}
+.naws-pv-livewind .naws-lw-face{fill:var(--naws-live-compass-bg);stroke:var(--line)}
+.naws-pv-livewind .naws-lw-ring{stroke:var(--line)}
+.naws-pv-livewind .naws-lw-main{fill:var(--naws-live-compass-rose)}
+.naws-pv-livewind .naws-lw-hub{fill:var(--naws-live-compass-rose);stroke:var(--card)}
+.naws-pv-livewind .naws-lw-shade{fill:var(--line)}
+.naws-pv-livewind .naws-lw-minor{fill:var(--muted)}
+.naws-pv-livewind .naws-lw-letter{fill:var(--ink2);font-family:sans-serif}
+.naws-pv-livewind .naws-lw-letter-minor{fill:var(--muted);font-family:sans-serif}
+.naws-pv-livewind .naws-lw-needle{fill:var(--naws-compass-needle);stroke:var(--naws-compass-needle)}
+.naws-pv-livewind .naws-lw-tail{stroke:var(--muted)}
+.naws-pv-livewind .naws-lw-track{stroke:var(--naws-live-compass-bg)}
+.naws-pv-livewind .naws-lw-gust{stroke:var(--naws-live-gauge-gust)}
+.naws-pv-livewind .naws-lw-wind{stroke:var(--naws-live-gauge-wind)}
+.naws-pv-livewind .naws-lw-tick{stroke:var(--muted)}
+.naws-pv-livewind .naws-lw-tick-label{fill:var(--muted);font-family:sans-serif}
+.naws-pv-livewind .naws-lw-peak{stroke:var(--naws-live-gauge-peak)}
+.naws-pv-livewind .naws-lw-gauge-hub{fill:var(--naws-live-gauge-wind);stroke:var(--card)}
 .naws-pv-wind-info{flex:1;}
 .naws-pv-chart-lines{display:flex;flex-direction:column;gap:0.35rem;}
 .naws-pv-chart-line-item{display:flex;align-items:center;gap:0.6rem;padding:0.2rem 0;}

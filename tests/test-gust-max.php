@@ -64,7 +64,8 @@ check( 'er steht hinter Wind und Boeen',                            strpos( $js,
 check( 'Wind und Boeen bleiben, wo sie sind',                       substr_count( $js, "WID+'-wv" ) >= 2 && substr_count( $js, "WID+'-gv" ) >= 2, true );
 check( 'der Tacho nimmt die Tagesboee als dritten Wert',          (bool) preg_match( '/function gaugeSVG\(wv,gv,gm\)/', $js ), true );
 check( 'und richtet seine Skala auch nach ihr',                    str_contains( $js, 'Math.max(+wv||0,+gv||0,+gm||0)' ), true );
-check( 'ein dritter Zeiger: duenn, rot, gestrichelt',              (bool) preg_match( '/if\(gm>0\) s\+=\'<line [^\n]*stroke="#c0392b"[^\n]*stroke-dasharray=/', $js ), true );
+// Seit 2.0.2 traegt der Zeiger eine Klasse statt einer festen Farbe; frontend.css faerbt ihn aus live_gauge_peak (test-live-wind-colors.php).
+check( 'ein dritter Zeiger: duenn, in der Spitzenfarbe, gestrichelt', (bool) preg_match( '/if\(gm>0\) s\+=\'<line class="naws-lw-peak" [^\n]*stroke-dasharray=/', $js ), true );
 check( 'beide Aufrufe reichen die Tagesboee an den Tacho durch',   preg_match_all( '/(?<!function )gaugeSVG\(wv,gv(\|\|0)?,gm\)/', $js ), 2 );
 
 $css = (string) file_get_contents( $PLUGIN . 'assets/css/frontend.css' );

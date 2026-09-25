@@ -37,7 +37,12 @@ class NAWS_Colors {
         'theme_text_light'    => '#a0b8b8',
         'theme_border'        => '#e0eeee',
         'theme_shadow'        => '#28484814', // rgba(40,72,72,0.08) as 8-digit hex
-        'theme_compass_needle'=> '#ef4444',
+        // The pointer of the live dashboard's compass. Since 2.0.2 it sits
+        // on the tab "Live dashboard: wind" (see LIVE_WIND_KEYS) but keeps
+        // its key, so a saved colour survives the move. The default is the
+        // red live-boot.js used to hard-code — not the #ef4444 the preview
+        // promised, because the frontend is what people actually saw.
+        'theme_compass_needle'=> '#c0392b',
 
         // The dark bar above the live widget, both forecast variants and
         // the history block. It used to be three separate things: one bar
@@ -152,6 +157,17 @@ class NAWS_Colors {
         'icon_color_rain'     => '#3585b0',
         'icon_color_co2'      => '#4a9848',
         'icon_color_noise'    => '#b88030',
+
+        // ── Live-Dashboard: Windkacheln (since 2.0.2) ──────────────────
+        // The compass and the wind/gust gauge of [naws_live] were drawn in
+        // live-boot.js with literal colours and read no setting at all.
+        // These are those literals, so nothing moves until somebody changes
+        // them. The pointer is theme_compass_needle, up in the theme block.
+        'live_compass_bg'     => '#f4fafa',
+        'live_compass_rose'   => '#427272',
+        'live_gauge_wind'     => '#427272',
+        'live_gauge_gust'     => '#7aa0a0',
+        'live_gauge_peak'     => '#c0392b',
 
         // ── Gruppe 7: Heatmap ──────────────────────────────────────────
         //
@@ -380,6 +396,16 @@ class NAWS_Colors {
         foreach ( $icon_sensors as $s ) {
             $css .= "  --naws-ico-{$s}: {$c['icon_color_' . $s]};\n";
         }
+
+        // [naws_live] wind cards (since 2.0.2): live-boot.js draws the
+        // compass and the gauge without a single colour; frontend.css paints
+        // their classes from these. live_gauge_wind -> --naws-live-gauge-wind
+        // and so on; the pointer reads --naws-compass-needle, set further up.
+        foreach ( self::LIVE_WIND_KEYS as $key ) {
+            if ( str_starts_with( $key, 'live_' ) ) {
+                $css .= '  --naws-live-' . str_replace( '_', '-', substr( $key, 5 ) ) . ": {$c[ $key ]};\n";
+            }
+        }
         $css .= "}\n";
 
         // The header bar and the font reach further than the two wrappers
@@ -486,6 +512,16 @@ class NAWS_Colors {
     ];
 
     /**
+     * The keys of the tab "Live dashboard: wind", in the order the page
+     * shows them: compass first (background, rose, pointer), then the
+     * gauge (wind, gusts, the day's peak gust). The pointer keeps its old
+     * key from the theme group; the others are new in 2.0.2.
+     */
+    const LIVE_WIND_KEYS = [
+        'live_compass_bg', 'live_compass_rose', 'theme_compass_needle',
+        'live_gauge_wind', 'live_gauge_gust', 'live_gauge_peak',
+    ];
+    /**
      * Die Skala als Paare aus Temperatur und Farbe.
      *
      * Die Legende zeichnet ihren Verlauf daraus, damit sie das Bild der
@@ -591,7 +627,6 @@ class NAWS_Colors {
                     'theme_text', 'theme_text_dark', 'theme_text_darkest',
                     'theme_text_muted', 'theme_text_light',
                     'theme_border', 'theme_shadow',
-                    'theme_compass_needle',
                     'header_bg', 'header_text',
                 ],
             ],
@@ -637,6 +672,10 @@ class NAWS_Colors {
             'windrose' => [
                 'label' => 'appearance_group_windrose',
                 'keys'  => self::WINDROSE_KEYS,
+            ],
+            'live_wind' => [
+                'label' => 'appearance_group_live_wind',
+                'keys'  => self::LIVE_WIND_KEYS,
             ],
         ];
     }
