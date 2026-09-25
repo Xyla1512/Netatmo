@@ -1148,6 +1148,27 @@
 .naws-wx .naws-wv-unit{font-size:11px;font-weight:400;color:var(--muted);}
 .naws-wx .naws-rose-wrap{position:relative;width:clamp(120px, 35vw, 160px);height:clamp(120px, 35vw, 160px);}
 .naws-wx .naws-rose-dir{font-size:12.5px;font-weight:700;font-style:italic;color:var(--ink);text-align:center;margin-top:8px;letter-spacing:.04em;}
+/* Wind cards — compass and gauge. live-boot.js draws them without a single
+   colour; these rules paint the classes from Appearance › Live dashboard:
+   wind (since 2.0.2). The fallbacks are the colours the script used to
+   hard-code, so a page without the inline CSS looks as it always did. */
+.naws-wx .naws-lw-face{fill:var(--naws-live-compass-bg,#f4fafa);stroke:var(--line)}
+.naws-wx .naws-lw-ring{stroke:var(--line)}
+.naws-wx .naws-lw-main{fill:var(--naws-live-compass-rose,#427272)}
+.naws-wx .naws-lw-hub{fill:var(--naws-live-compass-rose,#427272);stroke:var(--card)}
+.naws-wx .naws-lw-shade{fill:var(--line)}
+.naws-wx .naws-lw-minor{fill:var(--muted)}
+.naws-wx .naws-lw-letter{fill:var(--ink2)}
+.naws-wx .naws-lw-letter-minor{fill:var(--muted)}
+.naws-wx .naws-lw-needle{fill:var(--naws-compass-needle,#c0392b);stroke:var(--naws-compass-needle,#c0392b)}
+.naws-wx .naws-lw-tail{stroke:var(--muted)}
+.naws-wx .naws-lw-track{stroke:var(--line)}
+.naws-wx .naws-lw-gust{stroke:var(--naws-live-gauge-gust,#7aa0a0)}
+.naws-wx .naws-lw-wind{stroke:var(--naws-live-gauge-wind,#427272)}
+.naws-wx .naws-lw-tick{stroke:var(--muted)}
+.naws-wx .naws-lw-tick-label{fill:var(--muted)}
+.naws-wx .naws-lw-peak{stroke:var(--naws-live-gauge-peak,#c0392b)}
+.naws-wx .naws-lw-gauge-hub{fill:var(--naws-live-gauge-wind,#427272);stroke:var(--card)}
 .naws-wx .naws-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:16px 0 10px;padding-top:14px;border-top:1px solid var(--line);}
 @media (min-width: 600px) { .naws-wx .naws-section-title { margin:20px 0 12px;padding-top:16px; } }
 

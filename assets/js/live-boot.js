@@ -89,45 +89,52 @@ var ICO=NAWS_LIVE.ICO;
 var NAWS_ICON_SET=NAWS_LIVE.ICON_SET;
 
 /* ── COMPASS ─────────────────────────── */
+/* No colour in here. Every part carries a naws-lw-* class and frontend.css
+   paints it from Appearance › "Live dashboard: wind" (since 2.0.2); the
+   theme's line, muted and dark text colours do the rest. Until 2.0.1 the
+   colours were literals, and the settings page promised what never came. */
 var ROSE='<svg style="position:absolute;top:0;left:0;width:100%;height:100%" viewBox="-4 -4 168 168" xmlns="http://www.w3.org/2000/svg">'
-  +'<circle cx="80" cy="80" r="72" fill="#f4fafa" stroke="#c0d4d4" stroke-width="1.5"/>'
-  +'<circle cx="80" cy="80" r="54" fill="none" stroke="#daeaea" stroke-width="1"/>'
-  +'<circle cx="80" cy="80" r="34" fill="none" stroke="#e5f0f0" stroke-width="1" stroke-dasharray="3 4"/>'
-  +'<polygon points="80,8 88,80 80,92 72,80" fill="#427272"/>'
-  +'<polygon points="80,8 80,92 88,80" fill="#c0d8d8"/>'
-  +'<polygon points="80,152 72,80 80,68 88,80" fill="#427272"/>'
-  +'<polygon points="80,152 80,68 72,80" fill="#c0d8d8"/>'
-  +'<polygon points="152,80 80,72 68,80 80,88" fill="#427272"/>'
-  +'<polygon points="152,80 68,80 80,88" fill="#c0d8d8"/>'
-  +'<polygon points="8,80 80,88 92,80 80,72" fill="#427272"/>'
-  +'<polygon points="8,80 92,80 80,72" fill="#c0d8d8"/>'
-  +'<polygon points="129,31 76,76 80,80" fill="#7aa0a0"/>'
-  +'<polygon points="129,31 84,84 80,80" fill="#c0d8d8"/>'
-  +'<polygon points="129,129 84,76 80,80" fill="#7aa0a0"/>'
-  +'<polygon points="129,129 76,84 80,80" fill="#c0d8d8"/>'
-  +'<polygon points="31,129 84,84 80,80" fill="#7aa0a0"/>'
-  +'<polygon points="31,129 76,76 80,80" fill="#c0d8d8"/>'
-  +'<polygon points="31,31 76,84 80,80" fill="#7aa0a0"/>'
-  +'<polygon points="31,31 84,76 80,80" fill="#c0d8d8"/>'
-  +'<circle cx="80" cy="80" r="9" fill="#427272" stroke="#fff" stroke-width="2.5"/>'
-  +'<text x="80" y="9" text-anchor="middle" dominant-baseline="middle" font-size="13" font-weight="800" fill="#2d5252">N</text>'
-  +'<text x="80" y="153" text-anchor="middle" dominant-baseline="middle" font-size="13" font-weight="800" fill="#2d5252">S</text>'
-  +'<text x="153" y="80" text-anchor="middle" dominant-baseline="middle" font-size="13" font-weight="800" fill="#2d5252">E</text>'
-  +'<text x="7" y="80" text-anchor="middle" dominant-baseline="middle" font-size="13" font-weight="800" fill="#2d5252">W</text>'
-  +'<text x="133" y="27" text-anchor="middle" font-size="10" font-weight="600" fill="#7aa0a0">NE</text>'
-  +'<text x="133" y="136" text-anchor="middle" font-size="10" font-weight="600" fill="#7aa0a0">SE</text>'
-  +'<text x="27" y="136" text-anchor="middle" font-size="10" font-weight="600" fill="#7aa0a0">SW</text>'
-  +'<text x="27" y="27" text-anchor="middle" font-size="10" font-weight="600" fill="#7aa0a0">NW</text>'
+  +'<circle class="naws-lw-face" cx="80" cy="80" r="72" stroke-width="1.5"/>'
+  +'<circle class="naws-lw-ring" cx="80" cy="80" r="54" fill="none" stroke-width="1"/>'
+  +'<circle class="naws-lw-ring" cx="80" cy="80" r="34" fill="none" stroke-width="1" stroke-dasharray="3 4"/>'
+  +'<polygon class="naws-lw-main" points="80,8 88,80 80,92 72,80"/>'
+  +'<polygon class="naws-lw-shade" points="80,8 80,92 88,80"/>'
+  +'<polygon class="naws-lw-main" points="80,152 72,80 80,68 88,80"/>'
+  +'<polygon class="naws-lw-shade" points="80,152 80,68 72,80"/>'
+  +'<polygon class="naws-lw-main" points="152,80 80,72 68,80 80,88"/>'
+  +'<polygon class="naws-lw-shade" points="152,80 68,80 80,88"/>'
+  +'<polygon class="naws-lw-main" points="8,80 80,88 92,80 80,72"/>'
+  +'<polygon class="naws-lw-shade" points="8,80 92,80 80,72"/>'
+  +'<polygon class="naws-lw-minor" points="129,31 76,76 80,80"/>'
+  +'<polygon class="naws-lw-shade" points="129,31 84,84 80,80"/>'
+  +'<polygon class="naws-lw-minor" points="129,129 84,76 80,80"/>'
+  +'<polygon class="naws-lw-shade" points="129,129 76,84 80,80"/>'
+  +'<polygon class="naws-lw-minor" points="31,129 84,84 80,80"/>'
+  +'<polygon class="naws-lw-shade" points="31,129 76,76 80,80"/>'
+  +'<polygon class="naws-lw-minor" points="31,31 76,84 80,80"/>'
+  +'<polygon class="naws-lw-shade" points="31,31 84,76 80,80"/>'
+  +'<circle class="naws-lw-hub" cx="80" cy="80" r="9" stroke-width="2.5"/>'
+  +'<text class="naws-lw-letter" x="80" y="9" text-anchor="middle" dominant-baseline="middle" font-size="13" font-weight="800">N</text>'
+  +'<text class="naws-lw-letter" x="80" y="153" text-anchor="middle" dominant-baseline="middle" font-size="13" font-weight="800">S</text>'
+  +'<text class="naws-lw-letter" x="153" y="80" text-anchor="middle" dominant-baseline="middle" font-size="13" font-weight="800">E</text>'
+  +'<text class="naws-lw-letter" x="7" y="80" text-anchor="middle" dominant-baseline="middle" font-size="13" font-weight="800">W</text>'
+  +'<text class="naws-lw-letter-minor" x="133" y="27" text-anchor="middle" font-size="10" font-weight="600">NE</text>'
+  +'<text class="naws-lw-letter-minor" x="133" y="136" text-anchor="middle" font-size="10" font-weight="600">SE</text>'
+  +'<text class="naws-lw-letter-minor" x="27" y="136" text-anchor="middle" font-size="10" font-weight="600">SW</text>'
+  +'<text class="naws-lw-letter-minor" x="27" y="27" text-anchor="middle" font-size="10" font-weight="600">NW</text>'
   +'</svg>';
 function arrowSVG(deg){
   return '<svg id="'+WID+'-arr" style="position:absolute;top:0;left:0;width:100%;height:100%;transform:rotate('+deg+'deg);transform-origin:50% 50%;transition:transform 1.2s ease" viewBox="-4 -4 168 168" xmlns="http://www.w3.org/2000/svg">'
-    +'<polygon points="80,18 87,38 80,32 73,38" fill="#c0392b"/>'
-    +'<line x1="80" y1="32" x2="80" y2="88" stroke="#c0392b" stroke-width="5" stroke-linecap="round"/>'
-    +'<line x1="80" y1="88" x2="80" y2="106" stroke="#7aa0a0" stroke-width="3" stroke-linecap="round" opacity=".4"/>'
+    +'<polygon class="naws-lw-needle" points="80,18 87,38 80,32 73,38"/>'
+    +'<line class="naws-lw-needle" x1="80" y1="32" x2="80" y2="88" stroke-width="5" stroke-linecap="round"/>'
+    +'<line class="naws-lw-tail" x1="80" y1="88" x2="80" y2="106" stroke-width="3" stroke-linecap="round" opacity=".4"/>'
     +'</svg>';
 }
 
 /* ── GAUGE ───────────────────────────── */
+/* Same rule as the compass: classes, no colours. The wind arc and the wind
+   needle share naws-lw-wind, the gust arc and gust needle naws-lw-gust —
+   one setting each; the arcs keep their opacity so the needle reads darker. */
 function gaugeSVG(wv,gv,gm){
   // Dynamic scale based on actual wind/gust values
   var rawMax=Math.max(+wv||0,+gv||0,+gm||0);
@@ -150,28 +157,27 @@ function gaugeSVG(wv,gv,gm){
   }
   var w=pt(wv),g=pt(gv),m=pt(gm);
   var s='<svg class="naws-gauge-svg" viewBox="14 12 172 86" xmlns="http://www.w3.org/2000/svg">';
-  s+='<path d="M'+(CX-R)+','+CY+' A'+R+','+R+',0,0,1,'+(CX+R)+','+CY+'" fill="none" stroke="#e0eeee" stroke-width="9" stroke-linecap="round"/>';
-  if(gv>0) s+='<path d="M'+(CX-R)+','+CY+' A'+R+','+R+',0,0,1,'+g.x+','+g.y+'" fill="none" stroke="#7aa0a0" stroke-width="5" stroke-linecap="round" opacity=".45" stroke-dasharray="5 3"/>';
-  if(wv>0) s+='<path d="M'+(CX-R)+','+CY+' A'+R+','+R+',0,0,1,'+w.x+','+w.y+'" fill="none" stroke="#427272" stroke-width="9" stroke-linecap="round" opacity=".7"/>';
+  s+='<path class="naws-lw-track" d="M'+(CX-R)+','+CY+' A'+R+','+R+',0,0,1,'+(CX+R)+','+CY+'" fill="none" stroke-width="9" stroke-linecap="round"/>';
+  if(gv>0) s+='<path class="naws-lw-gust" d="M'+(CX-R)+','+CY+' A'+R+','+R+',0,0,1,'+g.x+','+g.y+'" fill="none" stroke-width="5" stroke-linecap="round" opacity=".45" stroke-dasharray="5 3"/>';
+  if(wv>0) s+='<path class="naws-lw-wind" d="M'+(CX-R)+','+CY+' A'+R+','+R+',0,0,1,'+w.x+','+w.y+'" fill="none" stroke-width="9" stroke-linecap="round" opacity=".7"/>';
   for(var i=0;i<=numTicks;i++){
     var val=i*tickStep;
     var a=Math.PI+(val/maxVal)*Math.PI;
     var r1=R-10,r2=R-20;
-    s+='<line x1="'+(CX+r1*Math.cos(a)).toFixed(1)+'" y1="'+(CY+r1*Math.sin(a)).toFixed(1)+'"'
+    s+='<line class="naws-lw-tick" x1="'+(CX+r1*Math.cos(a)).toFixed(1)+'" y1="'+(CY+r1*Math.sin(a)).toFixed(1)+'"'
       +' x2="'+(CX+r2*Math.cos(a)).toFixed(1)+'" y2="'+(CY+r2*Math.sin(a)).toFixed(1)+'"'
-      +' stroke="#7aa0a0" stroke-width="1.8"/>';
+      +' stroke-width="1.8"/>';
     var lx=(CX+(R-29)*Math.cos(a)).toFixed(1),ly=(CY+(R-29)*Math.sin(a)).toFixed(1);
-    s+='<text x="'+lx+'" y="'+ly+'" text-anchor="middle" dominant-baseline="middle"'
-      +' font-size="9" font-weight="700" fill="#7aa0a0">'+Math.round(val)+'</text>';
+    s+='<text class="naws-lw-tick-label" x="'+lx+'" y="'+ly+'" text-anchor="middle" dominant-baseline="middle"'
+      +' font-size="9" font-weight="700">'+Math.round(val)+'</text>';
   }
-  if(gm>0) s+='<line x1="'+CX+'" y1="'+CY+'" x2="'+m.x+'" y2="'+m.y+'" stroke="#c0392b" stroke-width="1.5" stroke-linecap="round" opacity=".85" stroke-dasharray="3 3"/>';
-  s+='<line x1="'+CX+'" y1="'+CY+'" x2="'+w.x+'" y2="'+w.y+'" stroke="#2d5252" stroke-width="3.5" stroke-linecap="round"/>';
-  if(gv>0) s+='<line x1="'+CX+'" y1="'+CY+'" x2="'+g.x+'" y2="'+g.y+'" stroke="#7aa0a0" stroke-width="2.5" stroke-linecap="round" opacity=".55" stroke-dasharray="4 3"/>';
-  s+='<circle cx="'+CX+'" cy="'+CY+'" r="7" fill="#427272" stroke="#fff" stroke-width="2.5"/>';
+  if(gm>0) s+='<line class="naws-lw-peak" x1="'+CX+'" y1="'+CY+'" x2="'+m.x+'" y2="'+m.y+'" stroke-width="1.5" stroke-linecap="round" opacity=".85" stroke-dasharray="3 3"/>';
+  s+='<line class="naws-lw-wind" x1="'+CX+'" y1="'+CY+'" x2="'+w.x+'" y2="'+w.y+'" stroke-width="3.5" stroke-linecap="round"/>';
+  if(gv>0) s+='<line class="naws-lw-gust" x1="'+CX+'" y1="'+CY+'" x2="'+g.x+'" y2="'+g.y+'" stroke-width="2.5" stroke-linecap="round" opacity=".55" stroke-dasharray="4 3"/>';
+  s+='<circle class="naws-lw-gauge-hub" cx="'+CX+'" cy="'+CY+'" r="7" stroke-width="2.5"/>';
   s+='</svg>';
   return s;
 }
-
 /* ── INDEX READINGS ──────────────────── */
 function indexReadings(rows){
   var p={};

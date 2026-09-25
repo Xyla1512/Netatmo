@@ -20,7 +20,13 @@ $color_labels = [
     'theme_text_light'    => __( 'Text (Light)', 'xtx-integration-for-netatmo' ),
     'theme_border'        => __( 'Border', 'xtx-integration-for-netatmo' ),
     'theme_shadow'        => __( 'Shadow', 'xtx-integration-for-netatmo' ),
-    'theme_compass_needle'=> __( 'Compass Needle (Wind Rose)', 'xtx-integration-for-netatmo' ),
+    // Live dashboard: wind (since 2.0.2). The pointer keeps its old key.
+    'live_compass_bg'     => __( 'Compass – background', 'xtx-integration-for-netatmo' ),
+    'live_compass_rose'   => __( 'Compass – rose', 'xtx-integration-for-netatmo' ),
+    'theme_compass_needle'=> __( 'Compass – pointer', 'xtx-integration-for-netatmo' ),
+    'live_gauge_wind'     => __( 'Gauge – wind', 'xtx-integration-for-netatmo' ),
+    'live_gauge_gust'     => __( 'Gauge – gusts', 'xtx-integration-for-netatmo' ),
+    'live_gauge_peak'     => __( 'Gauge – peak gust of the day', 'xtx-integration-for-netatmo' ),
     'header_bg'           => __( 'Header Bar – Background', 'xtx-integration-for-netatmo' ),
     'header_text'         => __( 'Header Bar – Text', 'xtx-integration-for-netatmo' ),
     // Chart 24h
@@ -86,6 +92,7 @@ $chart_short_labels = [
 $tabs = [
     'theme'     => __( 'Base Theme', 'xtx-integration-for-netatmo' ),
     'icons'     => __( 'Icons', 'xtx-integration-for-netatmo' ),
+    'live_wind' => __( 'Live dashboard: wind', 'xtx-integration-for-netatmo' ),
     'chart24h'  => __( '24h Chart Colors', 'xtx-integration-for-netatmo' ),
     'charttheme'=> __( 'Chart Theming', 'xtx-integration-for-netatmo' ),
     'history'   => __( 'Year Comparison Palette', 'xtx-integration-for-netatmo' ),
@@ -242,54 +249,6 @@ $icon_color_keys = [
                             <div class="naws-pv-fcard-time" style="color:<?php echo esc_attr( $colors['theme_text_light'] ); ?>;">vor 2 Min.</div>
                         </div>
 
-                        <!-- Windrose (echte SVG wie im Frontend) -->
-                        <div class="naws-pv-wind-section" style="background:<?php echo esc_attr( $colors['theme_surface'] ); ?>; border-color:<?php echo esc_attr( $colors['theme_border'] ); ?>;">
-                            <div class="naws-pv-card-label" style="color:<?php echo esc_attr( $colors['theme_text_muted'] ); ?>;">💨 WIND</div>
-                            <div class="naws-pv-wind-row">
-                                <div class="naws-pv-rose-wrap">
-                                    <svg class="naws-pv-rose-bg" viewBox="-4 -4 168 168" xmlns="http://www.w3.org/2000/svg">
-                                        <circle cx="80" cy="80" r="72" fill="<?php echo esc_attr( $colors['theme_surface_alt'] ); ?>" stroke="<?php echo esc_attr( $colors['theme_border'] ); ?>" stroke-width="1.5"/>
-                                        <circle cx="80" cy="80" r="54" fill="none" stroke="<?php echo esc_attr( $colors['theme_border'] ); ?>" stroke-width="1"/>
-                                        <circle cx="80" cy="80" r="34" fill="none" stroke="<?php echo esc_attr( $colors['theme_border'] ); ?>" stroke-width="1" stroke-dasharray="3 4"/>
-                                        <polygon points="80,8 88,80 80,92 72,80" fill="<?php echo esc_attr( $colors['theme_text'] ); ?>"/>
-                                        <polygon points="80,8 80,92 88,80" fill="<?php echo esc_attr( $colors['theme_border'] ); ?>"/>
-                                        <polygon points="80,152 72,80 80,68 88,80" fill="<?php echo esc_attr( $colors['theme_text'] ); ?>"/>
-                                        <polygon points="80,152 80,68 72,80" fill="<?php echo esc_attr( $colors['theme_border'] ); ?>"/>
-                                        <polygon points="152,80 80,72 68,80 80,88" fill="<?php echo esc_attr( $colors['theme_text'] ); ?>"/>
-                                        <polygon points="152,80 68,80 80,88" fill="<?php echo esc_attr( $colors['theme_border'] ); ?>"/>
-                                        <polygon points="8,80 80,88 92,80 80,72" fill="<?php echo esc_attr( $colors['theme_text'] ); ?>"/>
-                                        <polygon points="8,80 92,80 80,72" fill="<?php echo esc_attr( $colors['theme_border'] ); ?>"/>
-                                        <polygon points="129,31 76,76 80,80" fill="<?php echo esc_attr( $colors['theme_text_muted'] ); ?>"/>
-                                        <polygon points="129,31 84,84 80,80" fill="<?php echo esc_attr( $colors['theme_border'] ); ?>"/>
-                                        <polygon points="129,129 84,76 80,80" fill="<?php echo esc_attr( $colors['theme_text_muted'] ); ?>"/>
-                                        <polygon points="129,129 76,84 80,80" fill="<?php echo esc_attr( $colors['theme_border'] ); ?>"/>
-                                        <polygon points="31,129 84,84 80,80" fill="<?php echo esc_attr( $colors['theme_text_muted'] ); ?>"/>
-                                        <polygon points="31,129 76,76 80,80" fill="<?php echo esc_attr( $colors['theme_border'] ); ?>"/>
-                                        <polygon points="31,31 76,84 80,80" fill="<?php echo esc_attr( $colors['theme_text_muted'] ); ?>"/>
-                                        <polygon points="31,31 84,76 80,80" fill="<?php echo esc_attr( $colors['theme_border'] ); ?>"/>
-                                        <circle cx="80" cy="80" r="9" fill="<?php echo esc_attr( $colors['theme_text'] ); ?>" stroke="<?php echo esc_attr( $colors['theme_surface'] ); ?>" stroke-width="2.5"/>
-                                        <text x="80" y="9" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-size="13" font-weight="800" fill="<?php echo esc_attr( $colors['theme_text_darkest'] ); ?>">N</text>
-                                        <text x="80" y="153" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-size="13" font-weight="800" fill="<?php echo esc_attr( $colors['theme_text_darkest'] ); ?>">S</text>
-                                        <text x="153" y="80" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-size="13" font-weight="800" fill="<?php echo esc_attr( $colors['theme_text_darkest'] ); ?>">E</text>
-                                        <text x="7" y="80" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-size="13" font-weight="800" fill="<?php echo esc_attr( $colors['theme_text_darkest'] ); ?>">W</text>
-                                        <text x="133" y="27" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="600" fill="<?php echo esc_attr( $colors['theme_text_muted'] ); ?>">NE</text>
-                                        <text x="133" y="136" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="600" fill="<?php echo esc_attr( $colors['theme_text_muted'] ); ?>">SE</text>
-                                        <text x="27" y="136" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="600" fill="<?php echo esc_attr( $colors['theme_text_muted'] ); ?>">SW</text>
-                                        <text x="27" y="27" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="600" fill="<?php echo esc_attr( $colors['theme_text_muted'] ); ?>">NW</text>
-                                    </svg>
-                                    <svg class="naws-pv-rose-arrow" viewBox="-4 -4 168 168" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(225deg);">
-                                        <polygon points="80,18 87,38 80,32 73,38" fill="<?php echo esc_attr( $colors['theme_compass_needle'] ); ?>"/>
-                                        <line x1="80" y1="32" x2="80" y2="88" stroke="<?php echo esc_attr( $colors['theme_compass_needle'] ); ?>" stroke-width="5" stroke-linecap="round"/>
-                                        <line x1="80" y1="88" x2="80" y2="106" stroke="<?php echo esc_attr( $colors['theme_text_muted'] ); ?>" stroke-width="3" stroke-linecap="round" opacity=".4"/>
-                                    </svg>
-                                </div>
-                                <div class="naws-pv-wind-info">
-                                    <div style="color:<?php echo esc_attr( $colors['theme_text_darkest'] ); ?>; font-size:1.3rem; font-weight:800; font-style:italic;">12 <span style="color:<?php echo esc_attr( $colors['theme_text_muted'] ); ?>; font-size:0.7rem; font-weight:400;">km/h</span></div>
-                                    <div style="color:<?php echo esc_attr( $colors['theme_text_dark'] ); ?>; font-size:0.72rem; font-weight:700; font-style:italic; margin-top:2px;">225° · SW</div>
-                                    <div style="color:<?php echo esc_attr( $colors['theme_text_light'] ); ?>; font-size:0.62rem; margin-top:4px;">Böen: 18 km/h</div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -363,6 +322,111 @@ $icon_color_keys = [
                             <span class="naws-pv-icon-label"><?php echo esc_html( $label ); ?></span>
                         </div>
                         <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+             Tab: Live-Dashboard — Windkacheln (since 2.0.2)
+             ============================================================ -->
+        <div class="naws-appearance-pane" data-pane="live_wind">
+            <p class="description"><?php esc_html_e( 'Colours of the two wind cards in [naws_live]: the compass with its rose and pointer, and the half-circle gauge for wind, gusts and the peak gust of the day. Rings, letters and ticks follow the base theme. The defaults are the colours the dashboard has always used.', 'xtx-integration-for-netatmo' ); ?></p>
+            <div class="naws-appearance-row">
+                <div class="naws-appearance-controls">
+                    <table class="form-table naws-color-table">
+                        <tbody>
+                        <?php foreach ( $groups['live_wind']['keys'] as $key ) : ?>
+                            <tr>
+                                <th><label for="naws-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $color_labels[ $key ] ?? $key ); ?></label></th>
+                                <td>
+                                    <input type="text"
+                                           id="naws-<?php echo esc_attr( $key ); ?>"
+                                           name="naws_appearance[<?php echo esc_attr( $key ); ?>]"
+                                           value="<?php echo esc_attr( $colors[ $key ] ); ?>"
+                                           class="naws-color-picker"
+                                           data-preview="livewind"
+                                           data-key="<?php echo esc_attr( $key ); ?>"
+                                           data-default-color="<?php echo esc_attr( $defaults[ $key ] ); ?>">
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="naws-appearance-preview naws-preview-sticky">
+                    <div class="naws-preview-label"><?php esc_html_e( 'Live preview — wind cards', 'xtx-integration-for-netatmo' ); ?></div>
+                    <?php
+                    // The compass as live-boot.js draws it, and the gauge with sample values:
+                    // wind 12, gusts 18, peak 27 — a scale to 30 in six steps, the same
+                    // arithmetic as gaugeSVG(). Every part carries the frontend's naws-lw-*
+                    // class and takes its colour from the variables on the frame below, so a
+                    // picker only has to move one variable.
+                    $naws_lw_main  = [ '80,8 88,80 80,92 72,80' => '80,8 80,92 88,80', '80,152 72,80 80,68 88,80' => '80,152 80,68 72,80', '152,80 80,72 68,80 80,88' => '152,80 68,80 80,88', '8,80 80,88 92,80 80,72' => '8,80 92,80 80,72' ];
+                    $naws_lw_minor = [ '129,31 76,76 80,80' => '129,31 84,84 80,80', '129,129 84,76 80,80' => '129,129 76,84 80,80', '31,129 84,84 80,80' => '31,129 76,76 80,80', '31,31 76,84 80,80' => '31,31 84,76 80,80' ];
+                    $naws_lw_pt    = static function ( float $v, float $r ): array {
+                        $a = M_PI + ( $v / 30 ) * M_PI;
+                        return [ number_format( 100 + $r * cos( $a ), 1, '.', '' ), number_format( 98 + $r * sin( $a ), 1, '.', '' ) ];
+                    };
+                    $naws_lw_arc   = static fn( float $v ): string => 'M22,98 A78,78,0,0,1,' . implode( ',', $naws_lw_pt( $v, 78.0 ) );
+                    $naws_lw_unit  = NAWS_Helpers::get_unit( 'WindStrength' );
+                    ?>
+                    <div id="naws-preview-livewind" class="naws-pv-livewind" style="--naws-live-compass-bg:<?php echo esc_attr( $colors['live_compass_bg'] ); ?>;--naws-live-compass-rose:<?php echo esc_attr( $colors['live_compass_rose'] ); ?>;--naws-compass-needle:<?php echo esc_attr( $colors['theme_compass_needle'] ); ?>;--naws-live-gauge-wind:<?php echo esc_attr( $colors['live_gauge_wind'] ); ?>;--naws-live-gauge-gust:<?php echo esc_attr( $colors['live_gauge_gust'] ); ?>;--naws-live-gauge-peak:<?php echo esc_attr( $colors['live_gauge_peak'] ); ?>;--line:<?php echo esc_attr( $colors['theme_border'] ); ?>;--muted:<?php echo esc_attr( $colors['theme_text_muted'] ); ?>;--ink2:<?php echo esc_attr( $colors['theme_text_dark'] ); ?>;--card:<?php echo esc_attr( $colors['theme_surface'] ); ?>;">
+                        <div class="naws-pv-wind-section">
+                            <div class="naws-pv-card-label"><?php esc_html_e( 'Wind Direction', 'xtx-integration-for-netatmo' ); ?></div>
+                            <div class="naws-pv-wind-row">
+                                <div class="naws-pv-rose-wrap">
+                                    <svg class="naws-pv-lw-rose" viewBox="-4 -4 168 168" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <circle class="naws-lw-face" cx="80" cy="80" r="72" stroke-width="1.5"/>
+                                        <circle class="naws-lw-ring" cx="80" cy="80" r="54" fill="none" stroke-width="1"/>
+                                        <circle class="naws-lw-ring" cx="80" cy="80" r="34" fill="none" stroke-width="1" stroke-dasharray="3 4"/>
+                                        <?php foreach ( $naws_lw_main as $naws_lw_p => $naws_lw_s ) : ?>
+                                        <polygon class="naws-lw-main" points="<?php echo esc_attr( $naws_lw_p ); ?>"/><polygon class="naws-lw-shade" points="<?php echo esc_attr( $naws_lw_s ); ?>"/>
+                                        <?php endforeach; ?>
+                                        <?php foreach ( $naws_lw_minor as $naws_lw_p => $naws_lw_s ) : ?>
+                                        <polygon class="naws-lw-minor" points="<?php echo esc_attr( $naws_lw_p ); ?>"/><polygon class="naws-lw-shade" points="<?php echo esc_attr( $naws_lw_s ); ?>"/>
+                                        <?php endforeach; ?>
+                                        <circle class="naws-lw-hub" cx="80" cy="80" r="9" stroke-width="2.5"/>
+                                        <?php foreach ( [ 'N' => [ 80, 9 ], 'S' => [ 80, 153 ], 'E' => [ 153, 80 ], 'W' => [ 7, 80 ] ] as $naws_lw_l => $naws_lw_xy ) : ?>
+                                        <text class="naws-lw-letter" x="<?php echo esc_attr( (string) $naws_lw_xy[0] ); ?>" y="<?php echo esc_attr( (string) $naws_lw_xy[1] ); ?>" text-anchor="middle" dominant-baseline="middle" font-size="13" font-weight="800"><?php echo esc_html( $naws_lw_l ); ?></text>
+                                        <?php endforeach; ?>
+                                        <?php foreach ( [ 'NE' => [ 133, 27 ], 'SE' => [ 133, 136 ], 'SW' => [ 27, 136 ], 'NW' => [ 27, 27 ] ] as $naws_lw_l => $naws_lw_xy ) : ?>
+                                        <text class="naws-lw-letter-minor" x="<?php echo esc_attr( (string) $naws_lw_xy[0] ); ?>" y="<?php echo esc_attr( (string) $naws_lw_xy[1] ); ?>" text-anchor="middle" font-size="10" font-weight="600"><?php echo esc_html( $naws_lw_l ); ?></text>
+                                        <?php endforeach; ?>
+                                    </svg>
+                                    <svg class="naws-pv-lw-arrow" viewBox="-4 -4 168 168" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(225deg);" aria-hidden="true">
+                                        <polygon class="naws-lw-needle" points="80,18 87,38 80,32 73,38"/>
+                                        <line class="naws-lw-needle" x1="80" y1="32" x2="80" y2="88" stroke-width="5" stroke-linecap="round"/>
+                                        <line class="naws-lw-tail" x1="80" y1="88" x2="80" y2="106" stroke-width="3" stroke-linecap="round" opacity=".4"/>
+                                    </svg>
+                                </div>
+                                <div class="naws-pv-wind-info">
+                                    <div class="naws-pv-lw-dir">225° &nbsp;·&nbsp; SW</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="naws-pv-wind-section">
+                            <div class="naws-pv-card-label"><?php echo esc_html( html_entity_decode( __( 'Wind &amp; Gusts', 'xtx-integration-for-netatmo' ), ENT_QUOTES, 'UTF-8' ) ); ?></div>
+                            <svg class="naws-pv-lw-gauge" viewBox="14 12 172 86" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path class="naws-lw-track" d="M22,98 A78,78,0,0,1,178,98" fill="none" stroke-width="9" stroke-linecap="round"/>
+                                <path class="naws-lw-gust" d="<?php echo esc_attr( $naws_lw_arc( 18.0 ) ); ?>" fill="none" stroke-width="5" stroke-linecap="round" opacity=".45" stroke-dasharray="5 3"/>
+                                <path class="naws-lw-wind" d="<?php echo esc_attr( $naws_lw_arc( 12.0 ) ); ?>" fill="none" stroke-width="9" stroke-linecap="round" opacity=".7"/>
+                                <?php for ( $naws_lw_i = 0; $naws_lw_i <= 6; $naws_lw_i++ ) : $naws_lw_v = $naws_lw_i * 5.0; $naws_lw_a = $naws_lw_pt( $naws_lw_v, 68.0 ); $naws_lw_b = $naws_lw_pt( $naws_lw_v, 58.0 ); $naws_lw_c = $naws_lw_pt( $naws_lw_v, 49.0 ); ?>
+                                <line class="naws-lw-tick" x1="<?php echo esc_attr( $naws_lw_a[0] ); ?>" y1="<?php echo esc_attr( $naws_lw_a[1] ); ?>" x2="<?php echo esc_attr( $naws_lw_b[0] ); ?>" y2="<?php echo esc_attr( $naws_lw_b[1] ); ?>" stroke-width="1.8"/>
+                                <text class="naws-lw-tick-label" x="<?php echo esc_attr( $naws_lw_c[0] ); ?>" y="<?php echo esc_attr( $naws_lw_c[1] ); ?>" text-anchor="middle" dominant-baseline="middle" font-size="9" font-weight="700"><?php echo esc_html( (string) (int) $naws_lw_v ); ?></text>
+                                <?php endfor; ?>
+                                <?php $naws_lw_m = $naws_lw_pt( 27.0, 78.0 ); $naws_lw_w = $naws_lw_pt( 12.0, 78.0 ); $naws_lw_g = $naws_lw_pt( 18.0, 78.0 ); ?>
+                                <line class="naws-lw-peak" x1="100" y1="98" x2="<?php echo esc_attr( $naws_lw_m[0] ); ?>" y2="<?php echo esc_attr( $naws_lw_m[1] ); ?>" stroke-width="1.5" stroke-linecap="round" opacity=".85" stroke-dasharray="3 3"/>
+                                <line class="naws-lw-wind" x1="100" y1="98" x2="<?php echo esc_attr( $naws_lw_w[0] ); ?>" y2="<?php echo esc_attr( $naws_lw_w[1] ); ?>" stroke-width="3.5" stroke-linecap="round"/>
+                                <line class="naws-lw-gust" x1="100" y1="98" x2="<?php echo esc_attr( $naws_lw_g[0] ); ?>" y2="<?php echo esc_attr( $naws_lw_g[1] ); ?>" stroke-width="2.5" stroke-linecap="round" opacity=".55" stroke-dasharray="4 3"/>
+                                <circle class="naws-lw-gauge-hub" cx="100" cy="98" r="7" stroke-width="2.5"/>
+                            </svg>
+                            <div class="naws-pv-lw-values">
+                                <span><?php esc_html_e( 'Wind', 'xtx-integration-for-netatmo' ); ?><b>12 <?php echo esc_html( $naws_lw_unit ); ?></b></span>
+                                <span><?php esc_html_e( 'Gusts', 'xtx-integration-for-netatmo' ); ?><b>18 <?php echo esc_html( $naws_lw_unit ); ?></b></span>
+                                <span><?php esc_html_e( 'Max', 'xtx-integration-for-netatmo' ); ?><b>27 <?php echo esc_html( $naws_lw_unit ); ?></b></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -773,59 +837,36 @@ jQuery(document).ready(function($) {
         // ── Theme preview ──
         if (group === 'theme') {
             var box = $('#naws-preview-theme');
-            var roseBg = box.find('.naws-pv-rose-bg');
-            var roseArr = box.find('.naws-pv-rose-arrow');
             var fc = box.find('.naws-pv-fcard');
+            // The wind preview on its own tab borrows four theme colours; keep it in step.
+            var lw = document.getElementById('naws-preview-livewind');
             var map = {
                 'theme_bg':           function(v){ box.css('background', v); },
                 'theme_surface':      function(v){
                     fc.css('background', v);
-                    box.find('.naws-pv-wind-section').css('background', v);
-                    roseBg.find('circle[stroke-width="2.5"]').attr('stroke', v);
-                },
-                'theme_surface_alt':  function(v){
-                    roseBg.find('circle').first().attr('fill', v);
+                    if (lw) lw.style.setProperty('--card', v);
                 },
                 'theme_border':       function(v){
                     box.css('border-color', v);
                     fc.css('border-color', v);
-                    box.find('.naws-pv-wind-section').css('border-color', v);
-                    roseBg.find('circle').first().attr('stroke', v);
-                    roseBg.find('circle').eq(1).attr('stroke', v);
-                    roseBg.find('circle').eq(2).attr('stroke', v);
-                    roseBg.find('polygon').each(function(i){ if(i % 2 === 1) $(this).attr('fill', v); });
+                    if (lw) lw.style.setProperty('--line', v);
                 },
                 'theme_text':         function(v){
                     fc.find('.naws-pv-fcard-sub-val').css('color', v);
-                    roseBg.find('polygon').each(function(i){ if(i % 2 === 0 && i < 8) $(this).attr('fill', v); });
-                    roseBg.find('circle[stroke-width="2.5"]').attr('fill', v);
                 },
                 'theme_text_dark':    function(v){
                     fc.find('.naws-pv-fcard-val').css('color', v);
-                    box.find('.naws-pv-wind-info div').eq(1).css('color', v);
-                },
-                'theme_text_darkest': function(v){
-                    box.find('.naws-pv-wind-info div').first().css('color', v);
-                    roseBg.find('text[font-size="13"]').attr('fill', v);
+                    if (lw) lw.style.setProperty('--ink2', v);
                 },
                 'theme_text_muted':   function(v){
                     fc.find('.naws-pv-fcard-lbl, .naws-pv-fcard-unit').css('color', v);
                     fc.find('.naws-pv-fcard-sub-val span').css('color', v);
-                    box.find('.naws-pv-card-label').css('color', v);
-                    box.find('.naws-pv-wind-info span').css('color', v);
-                    roseBg.find('polygon').each(function(i){ if(i % 2 === 0 && i >= 8) $(this).attr('fill', v); });
-                    roseBg.find('text[font-size="10"]').attr('fill', v);
-                    roseArr.find('line').last().attr('stroke', v);
+                    if (lw) lw.style.setProperty('--muted', v);
                 },
                 'theme_text_light':   function(v){
                     fc.find('.naws-pv-fcard-time, .naws-pv-fcard-sub-lbl').css('color', v);
-                    box.find('.naws-pv-wind-info div').eq(2).css('color', v);
                 },
                 'theme_shadow':       function(v){ box.css('box-shadow', '0 2px 10px ' + v); },
-                'theme_compass_needle': function(v){
-                    roseArr.find('polygon').attr('fill', v);
-                    roseArr.find('line').first().attr('stroke', v);
-                },
                 'header_bg':   function(v){ $('#naws-pv-header').css('background', v); },
                 'header_text': function(v){ $('#naws-pv-header').find('span').css('color', v); },
             };
@@ -871,6 +912,20 @@ jQuery(document).ready(function($) {
         if (group === 'heatmap') {
             var stop = $('.naws-pv-heatmap-stop[data-key="'+key+'"]');
             stop.find('.naws-pv-heatmap-swatch').css('background', val);
+        }
+
+        // ── Live dashboard: wind — one variable per field, the stylesheet does the painting ──
+        if (group === 'livewind') {
+            var lwBox = document.getElementById('naws-preview-livewind');
+            var lwVars = {
+                live_compass_bg:      '--naws-live-compass-bg',
+                live_compass_rose:    '--naws-live-compass-rose',
+                theme_compass_needle: '--naws-compass-needle',
+                live_gauge_wind:      '--naws-live-gauge-wind',
+                live_gauge_gust:      '--naws-live-gauge-gust',
+                live_gauge_peak:      '--naws-live-gauge-peak'
+            };
+            if (lwBox && lwVars[key]) lwBox.style.setProperty(lwVars[key], val);
         }
 
         // ── Wind rose preview ──
