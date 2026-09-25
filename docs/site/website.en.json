@@ -1,5 +1,5 @@
 {
-    "aktualisiert": "2026-09-19",
+    "aktualisiert": "2026-09-25",
     "vorhaben": [
         {
             "id": "sparkline",
@@ -12,7 +12,7 @@
             "id": "aufbewahrung",
             "titel": "Retention policy for raw readings",
             "satz": "Until now every ten-minute reading stays forever. Soon you decide: a number of days, 30 at least, and a switch. When it is on, the plugin deletes older raw readings once a night. The daily table stays untouched, so history, heatmap, records and climate indices keep their full range. Before the switch goes on and before every manual purge, the plugin asks.",
-            "ab": null,
+            "ab": "2.0.2",
             "bild": null
         },
         {

@@ -1,5 +1,5 @@
 {
-    "aktualisiert": "2026-09-19",
+    "aktualisiert": "2026-09-25",
     "vorhaben": [
         {
             "id": "sparkline",
@@ -12,7 +12,7 @@
             "id": "aufbewahrung",
             "titel": "Aufbewahrungsrichtlinie für Rohmessungen",
             "satz": "Bisher bleibt jede Zehn-Minuten-Messung für immer. Künftig entscheidest du: eine Frist in Tagen, ab 30, und ein Schalter. Ist er an, löscht das Plugin einmal pro Nacht die Rohmessungen, die älter sind. Die Tagestabelle bleibt unangetastet, Verlauf, Heatmap, Rekorde und Klimaindizes behalten ihren vollen Zeitraum. Vor dem Einschalten und vor jeder Löschung von Hand fragt das Plugin nach.",
-            "ab": null,
+            "ab": "2.0.2",
             "bild": null
         },
         {

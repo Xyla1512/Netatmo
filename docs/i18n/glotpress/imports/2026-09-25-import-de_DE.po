@@ -1,0 +1,75 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "Automatic deletion"
+msgstr "Automatische Löschung"
+
+msgid "Background (compass and gauge)"
+msgstr "Hintergrund (Kompass und Skala)"
+
+msgid "Calm the whole time: %1$s readings, all below %2$s."
+msgstr "Die ganze Zeit Windstille: %1$s Messungen, alle unter %2$s."
+
+msgid "Colours of the two wind cards in [naws_live]: the compass with its rose and pointer, and the half-circle gauge for wind, gusts and the peak gust of the day. Rings, letters and ticks follow the base theme. The defaults are the colours the dashboard has always used."
+msgstr "Farben der beiden Windkacheln in [naws_live]: der Kompass mit Rose und Zeiger sowie die Halbkreis-Skala für Wind, Böen und die Tagesspitze der Böen. Ringe, Buchstaben und Striche folgen dem Basis-Theme. Die Vorgaben sind die Farben, die das Dashboard schon immer verwendet hat."
+
+msgid "Compass – pointer"
+msgstr "Kompass – Zeiger"
+
+msgid "Compass – rose"
+msgstr "Kompass – Rose"
+
+msgid "Delete every reading older than %d days? This is permanent and cannot be undone. Afterwards [naws_table], [naws_chart], the wind rose and the REST readings endpoint can only reach back that far. History, heatmap, records and climate indices are not affected."
+msgstr "Alle Messungen löschen, die älter als %d Tage sind? Das ist endgültig und lässt sich nicht rückgängig machen. Danach reichen [naws_table], [naws_chart], die Windrose und der REST-Endpunkt „readings“ nur noch so weit zurück. Verlauf, Heatmap, Rekorde und Klimaindizes sind nicht betroffen."
+
+msgid "Delete raw readings automatically once they are older than"
+msgstr "Rohmessungen automatisch löschen, sobald sie älter sind als"
+
+msgid "Gauge – gusts"
+msgstr "Skala – Böen"
+
+msgid "Gauge – peak gust of the day"
+msgstr "Skala – Tagesspitze der Böen"
+
+msgid "Gauge – wind"
+msgstr "Skala – Wind"
+
+msgid "Last run %1$s: %2$s readings deleted."
+msgstr "Letzter Lauf %1$s: %2$s Messungen gelöscht."
+
+msgid "Live dashboard: wind"
+msgstr "Live-Dashboard: Wind"
+
+msgid "Live preview — wind cards"
+msgstr "Live-Vorschau — Windkacheln"
+
+msgid "Manual purge"
+msgstr "Manuelle Bereinigung"
+
+msgid "Runs once a night, after the daily summary. Only the raw readings go: the ten-minute values behind the live dashboard, [naws_table], [naws_chart], the wind rose and the REST readings endpoint. The daily table is never touched, so history, heatmap, records and climate indices keep their full range. At least 30 days."
+msgstr "Läuft einmal pro Nacht nach der Tagesauswertung. Nur die Rohmessungen gehen: die Zehn-Minuten-Werte hinter dem Live-Dashboard, [naws_table], [naws_chart], der Windrose und dem REST-Endpunkt „readings“. Die Tagestabelle wird nie angefasst, Verlauf, Heatmap, Rekorde und Klimaindizes behalten also ihren vollen Zeitraum. Mindestens 30 Tage."
+
+msgid "Switch on automatic deletion? Once you save, raw readings older than the configured number of days will be deleted every night, permanently and beyond recovery. Afterwards [naws_table], [naws_chart], the wind rose and the REST readings endpoint can only reach back that far. History, heatmap, records and climate indices are not affected."
+msgstr "Automatische Löschung einschalten? Nach dem Speichern werden Rohmessungen, die älter als die eingestellte Zahl von Tagen sind, jede Nacht gelöscht, endgültig und ohne Wiederherstellung. Danach reichen [naws_table], [naws_chart], die Windrose und der REST-Endpunkt „readings“ nur noch so weit zurück. Verlauf, Heatmap, Rekorde und Klimaindizes sind nicht betroffen."
+
+msgid "days"
+msgstr "Tage"
+
+msgid "everything kept (last %d days)"
+msgstr "alles Aufbewahrte (letzte %d Tage)"
+
+msgid "✅ Off — every raw reading is kept."
+msgstr "✅ Aus — alle Rohmessungen bleiben erhalten."
+
+msgid "✅ On — raw readings older than %d days are deleted every night."
+msgstr "✅ An — Rohmessungen, die älter als %d Tage sind, werden jede Nacht gelöscht."
+
+msgctxt "data retention"
+msgid "off"
+msgstr "aus"

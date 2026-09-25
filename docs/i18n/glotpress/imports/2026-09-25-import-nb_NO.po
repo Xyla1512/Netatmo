@@ -1,0 +1,75 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo\n"
+"Language: nb_NO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "Automatic deletion"
+msgstr "Automatisk sletting"
+
+msgid "Background (compass and gauge)"
+msgstr "Bakgrunn (kompass og skala)"
+
+msgid "Calm the whole time: %1$s readings, all below %2$s."
+msgstr "Vindstille hele tiden: %1$s målinger, alle under %2$s."
+
+msgid "Colours of the two wind cards in [naws_live]: the compass with its rose and pointer, and the half-circle gauge for wind, gusts and the peak gust of the day. Rings, letters and ticks follow the base theme. The defaults are the colours the dashboard has always used."
+msgstr "Farger for de to vindkortene i [naws_live]: kompasset med rose og peker, og halvsirkelskalaen for vind, vindkast og dagens kraftigste vindkast. Ringer, bokstaver og streker følger grunntemaet. Standardverdiene er fargene dashbordet alltid har brukt."
+
+msgid "Compass – pointer"
+msgstr "Kompass – peker"
+
+msgid "Compass – rose"
+msgstr "Kompass – rose"
+
+msgid "Delete every reading older than %d days? This is permanent and cannot be undone. Afterwards [naws_table], [naws_chart], the wind rose and the REST readings endpoint can only reach back that far. History, heatmap, records and climate indices are not affected."
+msgstr "Slette alle målinger eldre enn %d dager? Dette er endelig og kan ikke angres. Etterpå rekker [naws_table], [naws_chart], vindrosen og REST-endepunktet «readings» bare så langt tilbake. Historikk, heatmap, rekorder og klimaindekser berøres ikke."
+
+msgid "Delete raw readings automatically once they are older than"
+msgstr "Slett råmålinger automatisk når de er eldre enn"
+
+msgid "Gauge – gusts"
+msgstr "Skala – vindkast"
+
+msgid "Gauge – peak gust of the day"
+msgstr "Skala – dagens kraftigste vindkast"
+
+msgid "Gauge – wind"
+msgstr "Skala – vind"
+
+msgid "Last run %1$s: %2$s readings deleted."
+msgstr "Siste kjøring %1$s: %2$s målinger slettet."
+
+msgid "Live dashboard: wind"
+msgstr "Live-dashbord: vind"
+
+msgid "Live preview — wind cards"
+msgstr "Forhåndsvisning — vindkort"
+
+msgid "Manual purge"
+msgstr "Manuell opprydding"
+
+msgid "Runs once a night, after the daily summary. Only the raw readings go: the ten-minute values behind the live dashboard, [naws_table], [naws_chart], the wind rose and the REST readings endpoint. The daily table is never touched, so history, heatmap, records and climate indices keep their full range. At least 30 days."
+msgstr "Kjøres én gang per natt, etter dagssammendraget. Bare råmålingene forsvinner: timinuttersverdiene bak live-dashbordet, [naws_table], [naws_chart], vindrosen og REST-endepunktet «readings». Dagstabellen røres aldri, så historikk, heatmap, rekorder og klimaindekser beholder hele tidsrommet sitt. Minst 30 dager."
+
+msgid "Switch on automatic deletion? Once you save, raw readings older than the configured number of days will be deleted every night, permanently and beyond recovery. Afterwards [naws_table], [naws_chart], the wind rose and the REST readings endpoint can only reach back that far. History, heatmap, records and climate indices are not affected."
+msgstr "Slå på automatisk sletting? Etter lagring slettes råmålinger eldre enn det innstilte antallet dager hver natt, endelig og uten mulighet for gjenoppretting. Etterpå rekker [naws_table], [naws_chart], vindrosen og REST-endepunktet «readings» bare så langt tilbake. Historikk, heatmap, rekorder og klimaindekser berøres ikke."
+
+msgid "days"
+msgstr "dager"
+
+msgid "everything kept (last %d days)"
+msgstr "alt som er beholdt (siste %d dager)"
+
+msgid "✅ Off — every raw reading is kept."
+msgstr "✅ Av — alle råmålinger beholdes."
+
+msgid "✅ On — raw readings older than %d days are deleted every night."
+msgstr "✅ På — råmålinger eldre enn %d dager slettes hver natt."
+
+msgctxt "data retention"
+msgid "off"
+msgstr "av"

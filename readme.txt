@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 2.0.1
+Stable tag: 2.0.2
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -120,6 +120,12 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 
 == Changelog ==
 
+= 2.0.2 =
+* Added: retention of raw readings, switchable. The settings page promised "all data is stored permanently" while the dashboard sidebar showed a "Data Retention: 365" that nothing applied. Retention is a real thing now, in a section of its own on the settings page and off by default: switch it on, give it a number of days (365 by default, never fewer than 30), and once a night, after the daily summary, the plugin deletes raw readings older than that and notes the run on the settings page and in the cron log. Only the raw readings go — the ten-minute values behind the live dashboard, `[naws_table]`, `[naws_chart]`, the wind rose and the REST readings endpoint. The daily table is never touched, so history, heatmap, records and climate indices keep their full range. Switching it on, and the manual purge, ask once more and say what is lost. An update changes nothing: the switch is off until you turn it on.
+* Fix: the wind cards of the live dashboard ignored every colour setting. `[naws_live]` drew its compass, the pointer and the half-circle gauge for wind and gusts with literal colours; the "Compass Needle" colour went into the page as a variable nothing read, and for wind and gusts there was no field at all. The two cards now take their colours from a tab of their own, Appearance › Live dashboard: wind — background (compass face and the empty part of the gauge), compass rose, compass pointer (the old "Compass Needle", same key, so a saved colour survives), gauge wind, gauge gusts, gauge peak gust of the day — with a preview built from the real compass and gauge. The defaults are the colours the dashboard has always used.
+* Fix: the wind rose said "no wind readings" for a period that had readings — all of them calm. It now says "Calm the whole time: 20 readings, all below 1 km/h."
+* Fix: the translators comments never reached the catalogues; the extractor looked for them inside the call's parentheses, where WordPress convention never puts them. The `.pot` and both `.po` files carry them now.
+
 = 2.0.1 =
 * Fix: the 24-hour rain in the dashboard's rain card was far too low. The card sums the plugin's own `Rain` readings over the last 24 hours, because Netatmo's `sum_rain_24` resets at midnight and the card promises a rolling day. But the rain gauge reports every five minutes, each report carrying the rain of those five minutes, and getstationsdata shows only the newest report — so a fetch every ten minutes stored one report in two, and the card showed 1.6 mm on a day with 3.9 mm; a fetch every 30 or 60 minutes lost even more. After every fetch the plugin now asks getmeasure for the five-minute reports since the last one it has and stores them under their own timestamps; the first fetch after the update closes the last 24 hours in one call. A dry hour needs no extra call. The daily, monthly and yearly sums were never affected — they come from Netatmo's own daily counter. The rain rule of the e-mail notifications, which uses the same rolling sum, is corrected along with the card.
 * Changed: `[naws_live]` no longer carries a forecast strip of its own. The dashboard fetched the forecast itself and rendered a copy of the day cards that `[naws_forecast]` shows, and on a page carrying both shortcodes the forecast appeared twice. Whoever wants the forecast under the dashboard places `[naws_forecast]` below it — same cards, same settings. The "forecast days" setting now describes itself as the default for `[naws_forecast]`.
@@ -145,26 +151,18 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 * Fix: the frontend stylesheet and scripts carry the file's modification time in their version, so a changed file is fetched even when the plugin version stays the same — the admin assets have done this since 1.9.7.
 * Changed: this readme carries only the five most recent versions of the changelog; the full history since 1.0.0 lives in CHANGELOG.md on GitHub.
 
-= 1.9.11 =
-* Added: `[naws_records]` — fifteen records from the daily summary, each with its date: hottest day, coldest night, warmest night, coldest day, largest daily range, warmest and coldest month, wettest day and month, longest dry and wet spell, strongest gust, longest frost period, longest heat wave and longest run of summer days. As tiles or a table, since the first day with readings or for one year (`year="2025"`), a subset with `records="…"`. A tie goes to the earlier date, a month needs twenty days to compete, and a gap in the data breaks a run rather than bridging it.
-* Added: `[naws_on_this_day]` — this calendar day in every earlier year: low, high, mean and rain, newest year first, with the day's record marked in each column. The running year is left out.
-* Added: `[naws_sunpath]` — the sun on its arc over the station as an inline SVG: sunrise, solar noon and sunset, the part of the day already travelled, and the sun where it stands; at night below the horizon. Under it the day length, the change since yesterday and the year's longest and shortest day at the station's latitude. No script — a page cache shows the sun where it stood when the cache was filled.
-* Added: a colour scheme for the sidebar widget. `[naws_weather_widget]` was a white card whatever the sidebar looked like. It now has `light`, `dark` and `transparent` — the last draws no card at all and takes the sidebar's own colours. Chosen under Appearance → Sidebar widget, where the preview shows it on a dark ground, or per placement with `scheme="dark"`.
-* Fix: the purge button under Settings → Manual Data Purge did nothing, and every admin page of the plugin threw "$ is not a function". Since 1.6.4 two handlers in `admin.js` stood behind the line that closes the jQuery block. The purge button works again, and its messages are translated instead of German literals in the script.
-* Fix: the bundled catalogue builder now writes plural forms, so "1 day / 2 days" reads right in German and Norwegian. Both bundled catalogues are complete at 735 strings.
-
 Older versions: the complete changelog since 1.0.0 is kept in [CHANGELOG.md](https://github.com/Xyla1512/Netatmo/blob/main/CHANGELOG.md) on GitHub.
 
 == Upgrade Notice ==
+
+= 2.0.2 =
+New: switchable retention of raw readings (off by default; the daily table is never touched). Fix: the wind cards of the live dashboard take their colours from a new Appearance tab — compass, pointer, wind and gust gauge. Nothing to reconfigure.
 
 = 2.0.1 =
 Fix: the 24-hour rain in the dashboard card was far too low — a fetch every ten minutes kept only every second five-minute report of the rain gauge; the gaps are closed now. [naws_live] no longer shows its own forecast strip: place [naws_forecast] below it if you want one. Nothing to reconfigure.
 
 = 2.0.0 =
 New: e-mail notifications — thirteen rules for battery, radio, Wi-Fi, silent station or module, failed fetches, frost, heat, gusts, rain and CO₂; one mail per state change plus all-clear. All rules ship off; five status columns are added automatically. Nothing to reconfigure.
-
-= 1.9.13 =
-Fix: [naws_records] and [naws_on_this_day] stayed empty where the daily summary table had a different collation. Editors now read why a block is empty. Module switches show at once, entity attributes work, Android Chrome no longer blackens the wind rose. Nothing to reconfigure.
 
 == Privacy & External Services ==
 
