@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Plugins - XTX Integration for Netatmo - Stable Readme (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-09-16 16:23:34+0000\n"
+"PO-Revision-Date: 2026-09-25 17:27:13+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -471,6 +471,26 @@ msgstr "Live-Dashboard mit Sensorkacheln und 24-Stunden-Verläufen"
 
 #. Found in changelog list item.
 #, gp-priority: low
+msgid "Fix: the translators comments never reached the catalogues; the extractor looked for them inside the call's parentheses, where WordPress convention never puts them. The <code>.pot</code> and both <code>.po</code> files carry them now."
+msgstr "Fix: Die Übersetzerkommentare kamen nie in den Katalogen an; der Extraktor suchte sie innerhalb der Klammern des Aufrufs, wo WordPress sie nie hinschreibt. <code>.pot</code> und beide <code>.po</code> tragen sie jetzt."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: the wind rose said \"no wind readings\" for a period that had readings — all of them calm. It now says \"Calm the whole time: 20 readings, all below 1 km/h.\""
+msgstr "Fix: Die Windrose meldete „keine Windmessungen\" für einen Zeitraum mit Messungen — alle davon Windstille. Sie sagt jetzt „Die ganze Zeit Windstille: 20 Messungen, alle unter 1 km/h.\""
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: the wind cards of the live dashboard ignored every colour setting. <code>[naws_live]</code> drew its compass, the pointer and the half-circle gauge for wind and gusts with literal colours; the \"Compass Needle\" colour went into the page as a variable nothing read, and for wind and gusts there was no field at all. The two cards now take their colours from a tab of their own, Appearance › Live dashboard: wind — background (compass face and the empty part of the gauge), compass rose, compass pointer (the old \"Compass Needle\", same key, so a saved colour survives), gauge wind, gauge gusts, gauge peak gust of the day — with a preview built from the real compass and gauge. The defaults are the colours the dashboard has always used."
+msgstr "Fix: Die Windkacheln des Live-Dashboards ignorierten jede Farbeinstellung. <code>[naws_live]</code> zeichnete Kompass, Zeiger und die Halbkreis-Skala für Wind und Böen mit festen Farben; die Farbe „Kompassnadel\" ging als Variable in die Seite, die nichts las, und für Wind und Böen gab es gar kein Feld. Die beiden Kacheln nehmen ihre Farben jetzt aus einem eigenen Reiter, Erscheinungsbild › Live-Dashboard: Wind — Hintergrund (Kompassfläche und leerer Teil der Skala), Kompass-Rose, Kompass-Zeiger (das alte Feld „Kompassnadel\", gleicher Schlüssel, ein gespeicherter Wert bleibt), Skala Wind, Skala Böen, Skala Tagesspitze der Böen — mit einer Vorschau aus dem echten Kompass und der echten Skala. Die Vorgaben sind die Farben, die das Dashboard schon immer verwendet hat."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Added: retention of raw readings, switchable. The settings page promised \"all data is stored permanently\" while the dashboard sidebar showed a \"Data Retention: 365\" that nothing applied. Retention is a real thing now, in a section of its own on the settings page and off by default: switch it on, give it a number of days (365 by default, never fewer than 30), and once a night, after the daily summary, the plugin deletes raw readings older than that and notes the run on the settings page and in the cron log. Only the raw readings go — the ten-minute values behind the live dashboard, <code>[naws_table]</code>, <code>[naws_chart]</code>, the wind rose and the REST readings endpoint. The daily table is never touched, so history, heatmap, records and climate indices keep their full range. Switching it on, and the manual purge, ask once more and say what is lost. An update changes nothing: the switch is off until you turn it on."
+msgstr "Added: Aufbewahrung der Rohmessungen, schaltbar. Die Einstellungsseite versprach „alle Daten werden dauerhaft gespeichert\", während die Seitenleiste des Dashboards eine „Datenhaltung: 365\" zeigte, die nirgends galt. Die Aufbewahrung ist jetzt eine echte Funktion, in einem eigenen Abschnitt der Einstellungsseite und ab Werk aus: einschalten, eine Zahl von Tagen setzen (Vorgabe 365, nie unter 30), und einmal pro Nacht, nach der Tagesverdichtung, löscht das Plugin die Rohmessungen, die älter sind, und vermerkt den Lauf auf der Einstellungsseite und im Cron-Protokoll. Es gehen nur die Rohmessungen — die Zehn-Minuten-Werte hinter dem Live-Dashboard, <code>[naws_table]</code>, <code>[naws_chart]</code>, der Windrose und dem REST-Endpunkt readings. Die Tagestabelle bleibt unangetastet, Verlauf, Heatmap, Rekorde und Klimaindizes behalten ihren vollen Zeitraum. Das Einschalten und die Bereinigung von Hand fragen noch einmal nach und sagen, was verloren geht. Ein Update ändert nichts: der Schalter bleibt aus, bis du ihn einschaltest."
+
+#. Found in changelog list item.
+#, gp-priority: low
 msgid "Changed: the heatmap builds up when it comes into view, not when the page loads. On a page where <code>[naws_heatmap]</code> sits below the fold the wave of tiles was over before anyone scrolled to it. The tiles now stay hidden until the top edge of the map reaches the middle of the screen — or until the page is scrolled to its end, for a map near the bottom of a short page; then the wave runs once. Visitors who ask for reduced motion, and print, get the map at once; without JavaScript nothing is hidden."
 msgstr "Changed: Die Heatmap baut sich erst auf, wenn sie ins Bild kommt, nicht schon beim Laden der Seite. Auf einer Seite, auf der <code>[naws_heatmap]</code> unterhalb des sichtbaren Bereichs steht, war die Welle der Kacheln vorbei, bevor jemand hingescrollt hat. Die Kacheln bleiben jetzt verborgen, bis die Oberkante der Karte die Bildschirmmitte erreicht — oder bis die Seite bis zum Ende gescrollt ist, für eine Karte am Fuß einer kurzen Seite; dann läuft die Welle einmal. Wer reduzierte Bewegung wünscht, und der Druck, bekommt die Karte sofort; ohne JavaScript wird nichts verborgen."
 
@@ -563,33 +583,3 @@ msgstr "Neu: <code>[naws_windrose]</code> — woher der Wind kommt, wie oft und 
 #, gp-priority: low
 msgid "Older versions: the complete changelog since 1.0.0 is kept in <a href=\"https://github.com/Xyla1512/Netatmo/blob/main/CHANGELOG.md\">CHANGELOG.md</a> on GitHub."
 msgstr "Ältere Versionen: der vollständige Changelog seit 1.0.0 liegt in <a href=\"https://github.com/Xyla1512/Netatmo/blob/main/CHANGELOG.md\">CHANGELOG.md</a> auf GitHub."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Fix: the bundled catalogue builder now writes plural forms, so \"1 day / 2 days\" reads right in German and Norwegian. Both bundled catalogues are complete at 735 strings."
-msgstr "Fix: Der mitgelieferte Katalogbauer schreibt jetzt Pluralformen, damit „1 Tag / 2 Tage“ auf Deutsch und Norwegisch richtig steht. Beide mitgelieferten Kataloge sind vollständig mit 735 Sätzen."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Fix: the purge button under Settings → Manual Data Purge did nothing, and every admin page of the plugin threw \"$ is not a function\". Since 1.6.4 two handlers in <code>admin.js</code> stood behind the line that closes the jQuery block. The purge button works again, and its messages are translated instead of German literals in the script."
-msgstr "Fix: Der Knopf „Jetzt bereinigen“ unter Einstellungen → Manuelle Datenbereinigung tat nichts, und jede Admin-Seite des Plugins warf „$ is not a function“. Seit 1.6.4 standen zwei Handler in <code>admin.js</code> hinter der Zeile, die den jQuery-Block schließt. Der Knopf funktioniert wieder, und seine Meldungen sind übersetzt statt als deutsche Texte im Skript."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Added: a colour scheme for the sidebar widget. <code>[naws_weather_widget]</code> was a white card whatever the sidebar looked like. It now has <code>light</code>, <code>dark</code> and <code>transparent</code> — the last draws no card at all and takes the sidebar's own colours. Chosen under Appearance → Sidebar widget, where the preview shows it on a dark ground, or per placement with <code>scheme=\"dark\"</code>."
-msgstr "Neu: ein Farbschema für das Seitenleisten-Widget. <code>[naws_weather_widget]</code> war eine weiße Karte, ganz gleich, wie die Seitenleiste aussah. Jetzt gibt es <code>light</code>, <code>dark</code> und <code>transparent</code> — das letzte zeichnet gar keine Karte und übernimmt die Farben der Seitenleiste. Wählbar unter Erscheinungsbild → Seitenleisten-Widget, wo die Vorschau es auf dunklem Grund zeigt, oder je Platzierung mit <code>scheme=\"dark\"</code>."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Added: <code>[naws_sunpath]</code> — the sun on its arc over the station as an inline SVG: sunrise, solar noon and sunset, the part of the day already travelled, and the sun where it stands; at night below the horizon. Under it the day length, the change since yesterday and the year's longest and shortest day at the station's latitude. No script — a page cache shows the sun where it stood when the cache was filled."
-msgstr "Neu: <code>[naws_sunpath]</code> — die Sonne auf ihrem Bogen über der Station als Inline-SVG: Aufgang, Kulmination und Untergang, der schon vergangene Teil des Tages und die Sonne dort, wo sie steht; nachts unter dem Horizont. Darunter Tageslänge, die Änderung seit gestern und der längste und kürzeste Tag des Jahres auf der Breite der Station. Kein Skript — ein Seiten-Cache zeigt die Sonne dort, wo sie beim Füllen des Caches stand."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Added: <code>[naws_on_this_day]</code> — this calendar day in every earlier year: low, high, mean and rain, newest year first, with the day's record marked in each column. The running year is left out."
-msgstr "Neu: <code>[naws_on_this_day]</code> — dieser Kalendertag in jedem früheren Jahr: Tiefst-, Höchst- und Mitteltemperatur und Regen, das neueste Jahr zuerst, die Rekorde des Tages in jeder Spalte markiert. Das laufende Jahr bleibt draußen."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Added: <code>[naws_records]</code> — fifteen records from the daily summary, each with its date: hottest day, coldest night, warmest night, coldest day, largest daily range, warmest and coldest month, wettest day and month, longest dry and wet spell, strongest gust, longest frost period, longest heat wave and longest run of summer days. As tiles or a table, since the first day with readings or for one year (<code>year=\"2025\"</code>), a subset with <code>records=\"…\"</code>. A tie goes to the earlier date, a month needs twenty days to compete, and a gap in the data breaks a run rather than bridging it."
-msgstr "Neu: <code>[naws_records]</code> — fünfzehn Rekorde aus der Tagesübersicht, jeder mit seinem Datum: heißester Tag, kälteste Nacht, wärmste Nacht, kältester Tag, größte Tagesspanne, wärmster und kältester Monat, nassester Tag und Monat, längste Trocken- und Regenperiode, stärkste Böe, längste Frostperiode, längste Hitzewelle und längste Sommerserie. Als Kacheln oder Tabelle, seit dem ersten Tag mit Messwerten oder für ein Jahr (<code>year=\"2025\"</code>), eine Auswahl mit <code>records=\"…\"</code>. Bei Gleichstand gewinnt das frühere Datum, ein Monat braucht zwanzig Tage, um mitzuzählen, und eine Lücke in den Daten beendet eine Serie, statt sie zu überbrücken."
