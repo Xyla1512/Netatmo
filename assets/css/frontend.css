@@ -1162,7 +1162,7 @@
 .naws-wx .naws-lw-letter-minor{fill:var(--muted)}
 .naws-wx .naws-lw-needle{fill:var(--naws-compass-needle,#c0392b);stroke:var(--naws-compass-needle,#c0392b)}
 .naws-wx .naws-lw-tail{stroke:var(--muted)}
-.naws-wx .naws-lw-track{stroke:var(--line)}
+.naws-wx .naws-lw-track{stroke:var(--naws-live-compass-bg,#f4fafa)}
 .naws-wx .naws-lw-gust{stroke:var(--naws-live-gauge-gust,#7aa0a0)}
 .naws-wx .naws-lw-wind{stroke:var(--naws-live-gauge-wind,#427272)}
 .naws-wx .naws-lw-tick{stroke:var(--muted)}

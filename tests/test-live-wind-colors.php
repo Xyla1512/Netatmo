@@ -145,6 +145,7 @@ foreach ( array_merge( ...array_values( $CLASSES ) ) as $c ) {
 /** Klasse -> [ Eigenschaft, Schluessel ] fuer die sechs einstellbaren Farben. */
 $BOUND = [
     'face'      => [ 'fill',   'live_compass_bg' ],
+    'track'     => [ 'stroke', 'live_compass_bg' ], // Franks Wunsch 25.09.: die leere Laufbahn der Skala wie der Kompasshintergrund
     'main'      => [ 'fill',   'live_compass_rose' ],
     'hub'       => [ 'fill',   'live_compass_rose' ],
     'needle'    => [ 'stroke', 'theme_compass_needle' ],
@@ -203,7 +204,7 @@ echo "\nKataloge: die neuen Texte sind uebersetzt\n" . str_repeat( '-', 74 ) . "
 
 $LABELS = [
     'Live dashboard: wind',
-    'Compass – background',
+    'Background (compass and gauge)',
     'Compass – rose',
     'Compass – pointer',
     'Gauge – wind',
@@ -223,6 +224,7 @@ foreach ( [ 'de_DE', 'nb_NO' ] as $loc ) {
     }
 }
 check( 'die alte Beschriftung ist aus der .pot verschwunden', str_contains( $pot, 'msgid "Compass Needle (Wind Rose)"' ), false );
+check( 'und "Compass – background" auch (seit die Skala den Hintergrund teilt)', str_contains( $pot, 'msgid "Compass – background"' ), false );
 
 printf( "\n%d bestanden, %d fehlgeschlagen\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );

@@ -21,7 +21,7 @@ $color_labels = [
     'theme_border'        => __( 'Border', 'xtx-integration-for-netatmo' ),
     'theme_shadow'        => __( 'Shadow', 'xtx-integration-for-netatmo' ),
     // Live dashboard: wind (since 2.0.2). The pointer keeps its old key.
-    'live_compass_bg'     => __( 'Compass – background', 'xtx-integration-for-netatmo' ),
+    'live_compass_bg'     => __( 'Background (compass and gauge)', 'xtx-integration-for-netatmo' ),
     'live_compass_rose'   => __( 'Compass – rose', 'xtx-integration-for-netatmo' ),
     'theme_compass_needle'=> __( 'Compass – pointer', 'xtx-integration-for-netatmo' ),
     'live_gauge_wind'     => __( 'Gauge – wind', 'xtx-integration-for-netatmo' ),

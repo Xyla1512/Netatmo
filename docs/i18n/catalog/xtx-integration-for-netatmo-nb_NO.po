@@ -391,6 +391,10 @@ msgstr "Aksetittel"
 msgid "Background"
 msgstr "Bakgrunn"
 
+#: admin/views/appearance.php:24
+msgid "Background (compass and gauge)"
+msgstr "Bakgrunn (kompass og skala)"
+
 #: admin/views/live-settings.php:78 includes/class-naws-helpers.php:330 includes/class-naws-helpers.php:331 includes/class-naws-helpers.php:332
 #: includes/class-naws-helpers.php:333 includes/class-naws-helpers.php:334 templates/live.php:257
 msgid "Base"
@@ -618,10 +622,6 @@ msgstr "Kompakt værwidget for smale spalter. Viser ikon og utetemperatur, under
 #: admin/views/shortcodes.php:426
 msgid "Compact weather widget for sidebars"
 msgstr "Kompakt værwidget for sidefelt"
-
-#: admin/views/appearance.php:24
-msgid "Compass – background"
-msgstr "Kompass – bakgrunn"
 
 #: admin/views/appearance.php:26
 msgid "Compass – pointer"

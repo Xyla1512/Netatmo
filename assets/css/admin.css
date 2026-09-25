@@ -1123,7 +1123,7 @@
 .naws-pv-livewind .naws-lw-letter-minor{fill:var(--muted);font-family:sans-serif}
 .naws-pv-livewind .naws-lw-needle{fill:var(--naws-compass-needle);stroke:var(--naws-compass-needle)}
 .naws-pv-livewind .naws-lw-tail{stroke:var(--muted)}
-.naws-pv-livewind .naws-lw-track{stroke:var(--line)}
+.naws-pv-livewind .naws-lw-track{stroke:var(--naws-live-compass-bg)}
 .naws-pv-livewind .naws-lw-gust{stroke:var(--naws-live-gauge-gust)}
 .naws-pv-livewind .naws-lw-wind{stroke:var(--naws-live-gauge-wind)}
 .naws-pv-livewind .naws-lw-tick{stroke:var(--muted)}

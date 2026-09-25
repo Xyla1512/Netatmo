@@ -391,6 +391,10 @@ msgstr "Achsen-Titel"
 msgid "Background"
 msgstr "Hintergrund"
 
+#: admin/views/appearance.php:24
+msgid "Background (compass and gauge)"
+msgstr "Hintergrund (Kompass und Skala)"
+
 #: admin/views/live-settings.php:78 includes/class-naws-helpers.php:330 includes/class-naws-helpers.php:331 includes/class-naws-helpers.php:332
 #: includes/class-naws-helpers.php:333 includes/class-naws-helpers.php:334 templates/live.php:257
 msgid "Base"
@@ -618,10 +622,6 @@ msgstr "Kompaktes Wetter-Widget für schmale Spalten. Zeigt Icon und Außentempe
 #: admin/views/shortcodes.php:426
 msgid "Compact weather widget for sidebars"
 msgstr "Kompaktes Wetter-Widget für Seitenleisten"
-
-#: admin/views/appearance.php:24
-msgid "Compass – background"
-msgstr "Kompass – Hintergrund"
 
 #: admin/views/appearance.php:26
 msgid "Compass – pointer"
