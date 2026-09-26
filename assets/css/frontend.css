@@ -2029,3 +2029,4 @@
   background:var(--naws-sl-tip-bg, #2d5252); color:var(--naws-sl-tip-text, #fff);
 }
 .naws-sl-tip[hidden] { display:none; }
+.naws-sl-tip.is-below { transform:translate(-50%, 0); margin-top:6px; }

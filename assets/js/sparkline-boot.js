@@ -68,7 +68,13 @@
         var vw = document.documentElement.clientWidth;
         var x = r.left + d.x[best] / vb * r.width;
         t.style.left = Math.max(half + 4, Math.min(vw - half - 4, x)) + 'px';
-        t.style.top = r.top + 'px';
+        if (r.top - t.offsetHeight - 6 < 4) {
+            t.classList.add('is-below');
+            t.style.top = r.bottom + 'px';
+        } else {
+            t.classList.remove('is-below');
+            t.style.top = r.top + 'px';
+        }
     }
 
     function target(e) {
@@ -85,4 +91,9 @@
         if (svg) { show(svg, e.clientX); } else { hide(); }
     });
     window.addEventListener('scroll', hide, { passive: true });
+    // Leaving the window sends pointerout without a relatedTarget.
+    document.addEventListener('pointerout', function (e) {
+        if (!e.relatedTarget) { hide(); }
+    });
+    window.addEventListener('blur', hide);
 })();

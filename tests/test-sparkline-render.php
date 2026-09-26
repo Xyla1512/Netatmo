@@ -126,6 +126,8 @@ check( 'dunkler Grund liest die Dunkel-Farben', str_contains( $css, 'var(--naws-
 $js = (string) file_get_contents( dirname( __DIR__ ) . '/assets/js/sparkline-boot.js' );
 check( 'das Skript setzt Text, nie HTML',       [ str_contains( $js, 'textContent' ), str_contains( $js, 'innerHTML' ) ], [ true, false ] );
 check( 'Delegation am Dokument',                str_contains( $js, "document.addEventListener('pointermove'" ), true );
+check( 'die Sprechblase geht, wenn der Zeiger das Fenster verlaesst', str_contains( $js, "document.addEventListener('pointerout'" ) && str_contains( $js, "window.addEventListener('blur', hide)" ), true );
+check( 'am oberen Rand klappt sie nach unten', str_contains( $js, "classList.add('is-below')" ) && str_contains( $css, '.naws-sl-tip.is-below {' ), true );
 
 echo "\n" . str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
