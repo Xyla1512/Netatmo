@@ -64,7 +64,7 @@
    "only light" takes exactly these blocks out of that and nothing else on
    the page; plain "light" is ignored by Chrome (measured 2026-09-09). */
 .naws-wrap, .naws-rec, .naws-otd, .naws-sun, .naws-hm, .naws-hist, .naws-wx,
-.naws-fc-wrap, .naws-wgt, .naws-weather-icon {
+.naws-fc-wrap, .naws-wgt, .naws-weather-icon, .naws-sl {
   color-scheme: only light;
 }
 

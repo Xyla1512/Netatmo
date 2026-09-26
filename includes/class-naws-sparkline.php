@@ -573,6 +573,54 @@ final class NAWS_Sparkline {
         return ( new DateTimeImmutable( $ymd . ' 12:00:00', wp_timezone() ) )->getTimestamp();
     }
 
+    // ── Markup ──────────────────────────────────────────────────────
+
+    /**
+     * One sparkline as HTML: the geometry for the prepared data, then the
+     * template. $a comes from normalise_atts(), $d from prepare() — or is
+     * built by hand for the Appearance preview, see sample().
+     */
+    public static function markup( array $a, array $d ): string {
+        if ( $d['kind'] === 'bars' ) {
+            $geo = self::bar_geometry( $d['sums'], $a['w'], $a['h'] );
+            $mod = 'bars';
+        } else {
+            $band = ! empty( $d['band'] );
+            $geo  = self::geometry( $d['pts'], $a['w'], $a['h'], $band );
+            $mod  = $band ? 'band' : 'line';
+        }
+
+        $naws_sl = [
+            'kind'   => $d['kind'],
+            'mod'    => $mod,
+            'w'      => $a['w'],
+            'h'      => $a['h'],
+            'style'  => ( $a['sized_w'] ? '--naws-sl-w:' . $a['w'] . 'px;' : '' ) . ( $a['sized_h'] ? '--naws-sl-h:' . $a['h'] . 'px;' : '' ),
+            'geo'    => $geo,
+            'minmax' => $a['show'] === 'minmax' && $d['kind'] === 'line',
+            'hover'  => [ 'x' => $geo['xs'], 't' => array_values( $d['tips'] ) ],
+            'aria'   => $d['aria'],
+            'value'  => $a['show'] === 'value' ? $d['value'] : '',
+        ];
+
+        ob_start();
+        include NAWS_PLUGIN_DIR . 'templates/sparkline.php';
+        return trim( (string) ob_get_clean() );
+    }
+
+    /**
+     * The entry for the shortcode and the widget: attributes in, HTML out,
+     * '' whenever there is nothing to draw.
+     */
+    public static function render( array $atts ): string {
+        $a = self::normalise_atts( $atts );
+        if ( $a === null ) {
+            return '';
+        }
+        $d = self::prepare( $a, self::fetch( $a, time() ) );
+        return $d === null ? '' : self::markup( $a, $d );
+    }
+
     private static function clamp( int $v, int $lo, int $hi ): int {
         return max( $lo, min( $hi, $v ) );
     }
