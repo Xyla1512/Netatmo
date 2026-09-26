@@ -454,7 +454,11 @@ final class NAWS_Sparkline {
             $raw_total = 0.0;
             if ( $a['source'] === 'raw' ) {
                 $weekday = $a['hours'] > 24;
-                foreach ( self::buckets( $f['rows'], $f['from'], $f['to'] ) as $w ) {
+                // Fewer windows for a short span: at 48 fixed windows, one
+                // or two hours split into slices shorter than the rain
+                // gauge's five-minute reports, and most bars stay empty.
+                $n = (int) max( 1, min( self::RAIN_BARS, intdiv( $f['to'] - $f['from'], self::SLOT ) ) );
+                foreach ( self::buckets( $f['rows'], $f['from'], $f['to'], $n ) as $w ) {
                     $v         = $conv( $w[2] );
                     $raw_total += $w[2];
                     $sums[]    = $v;

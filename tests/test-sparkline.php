@@ -256,6 +256,10 @@ check( 'Regen: show=value ist die Summe',     $pr['value'], '0.5 mm' );
 check( 'trocken, aber gemeldet: gueltig',     NAWS_Sparkline::prepare( $ar, [ 'from' => 0, 'to' => 86400, 'rows' => [ [ 900, 0.0 ] ] ] )['value'], '0.0 mm' );
 check( 'Regenmesser stumm: nichts',           NAWS_Sparkline::prepare( $ar, [ 'from' => 0, 'to' => 86400, 'rows' => [] ] ), null );
 
+$ar1 = NAWS_Sparkline::normalise_atts( [ 'param' => 'Rain', 'hours' => '1' ] );
+$pr1 = NAWS_Sparkline::prepare( $ar1, [ 'from' => 0, 'to' => 3600, 'rows' => [ [ 900, 0.2 ] ] ] );
+check( 'Regen ueber 1 Stunde: zwoelf Fenster von 5 Minuten, keine leere Kette', count( $pr1['sums'] ), 12 );
+
 $tage = [ '2026-09-24', '2026-09-25', '2026-09-26' ];
 $ab   = NAWS_Sparkline::normalise_atts( [ 'param' => 'temp_avg', 'days' => '3', 'band' => 'minmax' ] );
 $pb   = NAWS_Sparkline::prepare( $ab, [ 'dates' => $tage, 'rows' => [ '2026-09-24' => [ 12.0, 8.0, 16.0 ], '2026-09-26' => [ 14.0, 9.0, 19.0 ] ] ] );

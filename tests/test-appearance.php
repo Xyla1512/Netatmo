@@ -171,7 +171,7 @@ check( 'die Vorgaben', array_intersect_key( NAWS_Colors::DEFAULTS, array_flip( N
     'sparkline_line_dark' => '#7cc7c7',
     'sparkline_rain'      => '#3585b0',
     'sparkline_rain_dark' => '#78ace8',
-    'sparkline_band'      => '#42727229',
+    'sparkline_band'      => '#427272',
     'sparkline_dots'      => '#7aa0a0',
     'sparkline_tip_bg'    => '#2d5252',
     'sparkline_tip_text'  => '#ffffff',
@@ -182,7 +182,7 @@ $sl = NAWS_Colors::sparkline_css();
 check( 'eine Regel fuer Kurve und Sprechblase', str_starts_with( $sl, ".naws-sl, .naws-sl-tip {\n" ), true );
 check( 'Linie als Variable',                   str_contains( $sl, "  --naws-sl-line: #427272;\n" ), true );
 check( 'Linie auf dunklem Grund',              str_contains( $sl, "  --naws-sl-line-dark: #7cc7c7;\n" ), true );
-check( 'Band mit Deckung',                     str_contains( $sl, "  --naws-sl-band: #42727229;\n" ), true );
+check( 'Band mit Deckung',                     str_contains( $sl, "  --naws-sl-band: #427272;\n" ), true );
 check( 'Sprechblase',                          str_contains( $sl, "  --naws-sl-tip-bg: #2d5252;\n" ), true );
 check( 'get_inline_css() haengt die Regel an', str_contains( NAWS_Colors::get_inline_css(), $sl ), true );
 

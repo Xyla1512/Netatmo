@@ -1181,5 +1181,10 @@
 #naws-preview-sparkline{max-width:260px;}
 .naws-pv-sl-ground{padding:10px 14px;border:1px solid #cbd4e0;border-radius:8px;background:#fff;color:#1e293b;margin-bottom:10px;}
 .naws-pv-sl-ground.naws-sl-dark{background:#1c2433;color:#e8edf5;border-color:#39465c;}
+/* The ring's default is transparent (frontend.css) since running text has no
+   --naws-surface to fall back to; the light ground here is a real
+   background, so its ring gets a colour of its own. The dark ground already
+   has one, .naws-sl-dark .naws-sl-ring. */
+.naws-pv-sl-ground .naws-sl { --naws-sl-ring:#fff; }
 .naws-pv-sl-row{margin:6px 0;line-height:0;}
 .naws-pv-sl-tip.naws-sl-tip{position:static;transform:none;margin:0;display:inline-block;}

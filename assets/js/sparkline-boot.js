@@ -90,10 +90,16 @@
         var svg = target(e);
         if (svg) { show(svg, e.clientX); } else { hide(); }
     });
-    window.addEventListener('scroll', hide, { passive: true });
-    // Leaving the window sends pointerout without a relatedTarget.
+    // Any container's scroll, not only the window's: an off-canvas sidebar
+    // or an Elementor popup scrolls without the window moving at all.
+    document.addEventListener('scroll', hide, { capture: true, passive: true });
+    // A mouse leaving the window sends pointerout without a relatedTarget;
+    // touch sends the same pointerout, with no relatedTarget, after every
+    // pointerup, which would hide a tap's bubble the instant the finger
+    // lifts. Only a real leave — never touch — hides from here.
     document.addEventListener('pointerout', function (e) {
-        if (!e.relatedTarget) { hide(); }
+        if (e.pointerType === 'touch' || e.relatedTarget) { return; }
+        hide();
     });
     window.addEventListener('blur', hide);
 })();

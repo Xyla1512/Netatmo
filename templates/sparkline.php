@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 $naws_sl_geo = $naws_sl['geo'];
 $naws_sl_dot = static fn( array $xy ): string => 'M' . $xy[0] . ' ' . $xy[1] . ' h0';
 ?>
-<span class="naws-sl naws-sl--<?php echo esc_attr( $naws_sl['mod'] ); ?>"<?php if ( $naws_sl['style'] !== '' ) : ?> style="<?php echo esc_attr( $naws_sl['style'] ); ?>"<?php endif; ?>><svg viewBox="0 0 <?php echo absint( $naws_sl['w'] ); ?> <?php echo absint( $naws_sl['h'] ); ?>" preserveAspectRatio="none" role="img" focusable="false" aria-label="<?php echo esc_attr( $naws_sl['aria'] ); ?>" data-naws-sl="<?php echo esc_attr( (string) wp_json_encode( $naws_sl['hover'] ) ); ?>">
+<span class="naws-sl naws-sl--<?php echo esc_attr( $naws_sl['mod'] ); ?>"<?php if ( $naws_sl['style'] !== '' ) : ?> style="<?php echo esc_attr( $naws_sl['style'] ); ?>"<?php endif; ?>><svg viewBox="0 0 <?php echo absint( $naws_sl['w'] ); ?> <?php echo absint( $naws_sl['h'] ); ?>" width="<?php echo absint( $naws_sl['w'] ); ?>" height="<?php echo absint( $naws_sl['h'] ); ?>" preserveAspectRatio="none" role="img" focusable="false" aria-label="<?php echo esc_attr( $naws_sl['aria'] ); ?>" data-naws-sl="<?php echo esc_attr( (string) wp_json_encode( $naws_sl['hover'] ) ); ?>">
 <?php if ( $naws_sl['kind'] === 'bars' ) : ?>
 <path class="naws-sl-base" d="M0 <?php echo esc_attr( $naws_sl_geo['base'] ); ?> H<?php echo absint( $naws_sl['w'] ); ?>" vector-effect="non-scaling-stroke"/>
 <?php foreach ( $naws_sl_geo['rects'] as $naws_sl_r ) : ?>
@@ -39,9 +39,9 @@ $naws_sl_dot = static fn( array $xy ): string => 'M' . $xy[0] . ' ' . $xy[1] . '
 <?php if ( $naws_sl_geo['band'] !== '' ) : ?>
 <path class="naws-sl-band" d="<?php echo esc_attr( $naws_sl_geo['band'] ); ?>"/>
 <?php else : ?>
-<path class="naws-sl-area" d="<?php echo esc_attr( $naws_sl_geo['area'] ); ?>"/>
+<path class="naws-sl-area" d="<?php echo esc_attr( $naws_sl_geo['area'] ); ?>" fill-opacity=".14"/>
 <?php endif; ?>
-<path class="naws-sl-line" d="<?php echo esc_attr( $naws_sl_geo['line'] ); ?>" vector-effect="non-scaling-stroke"/>
+<path class="naws-sl-line" d="<?php echo esc_attr( $naws_sl_geo['line'] ); ?>" fill="none" vector-effect="non-scaling-stroke"/>
 <?php if ( $naws_sl['minmax'] ) : ?>
 <path class="naws-sl-mm" d="<?php echo esc_attr( $naws_sl_dot( $naws_sl_geo['lo'] ) ); ?>" vector-effect="non-scaling-stroke"/>
 <path class="naws-sl-mm" d="<?php echo esc_attr( $naws_sl_dot( $naws_sl_geo['hi'] ) ); ?>" vector-effect="non-scaling-stroke"/>

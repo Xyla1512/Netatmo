@@ -203,16 +203,18 @@ class NAWS_Colors {
         'windrose_calm' => '#e9eff5',
         'windrose_switch' => '#1c5cab',
 
-        // [naws_sparkline] and the widget's curves (since 2.1.0): one line
-        // colour for every quantity and a second for the widget's dark
+        // [naws_sparkline] and the widget's curves (since 2.1.0): the same
+        // line colour for all quantities and a second for the widget's dark
         // scheme, the rain bars likewise, the band between daily low and
         // high, the low/high dots, and the hover bubble. The area under a
-        // line is the line colour, lightly filled, and has no key.
+        // line is the line colour, lightly filled, and has no key. The band
+        // is an opaque colour too — the WordPress colour picker (Iris) has
+        // no alpha channel — filled at fixed opacity in the stylesheet.
         'sparkline_line'      => '#427272',
         'sparkline_line_dark' => '#7cc7c7',
         'sparkline_rain'      => '#3585b0',
         'sparkline_rain_dark' => '#78ace8',
-        'sparkline_band'      => '#42727229',
+        'sparkline_band'      => '#427272',
         'sparkline_dots'      => '#7aa0a0',
         'sparkline_tip_bg'    => '#2d5252',
         'sparkline_tip_text'  => '#ffffff',
@@ -564,6 +566,7 @@ class NAWS_Colors {
         'sparkline_line', 'sparkline_line_dark', 'sparkline_rain', 'sparkline_rain_dark',
         'sparkline_band', 'sparkline_dots', 'sparkline_tip_bg', 'sparkline_tip_text',
     ];
+
     /**
      * Die Skala als Paare aus Temperatur und Farbe.
      *

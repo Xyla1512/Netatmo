@@ -56,18 +56,19 @@ echo "\nLinie\n" . str_repeat( '-', 74 ) . "\n";
 $d    = [ 'kind' => 'line', 'pts' => [ [ 0, 0.0 ], [ 10, 10.0 ] ], 'band' => false, 'tips' => [ '01:00 · 0.0 °C', '01:10 · 10.0 °C' ], 'aria' => 'Temperature <x> & "y"', 'value' => '10.0 °C' ];
 $html = NAWS_Sparkline::markup( NAWS_Sparkline::normalise_atts( [] ), $d );
 check( 'Wurzel ohne Groessenangabe',          str_starts_with( $html, '<span class="naws-sl naws-sl--line"><svg ' ), true );
-check( 'viewBox 80 x 18, gestreckt',          str_contains( $html, 'viewBox="0 0 80 18" preserveAspectRatio="none"' ), true );
+check( 'viewBox 80 x 18, gestreckt',          str_contains( $html, 'viewBox="0 0 80 18" width="80" height="18" preserveAspectRatio="none"' ), true );
 check( 'Rolle img',                           str_contains( $html, 'role="img"' ), true );
 check( 'Vorlesetext escaped',                 str_contains( $html, 'aria-label="Temperature &lt;x&gt; &amp; &quot;y&quot;"' ), true );
 check( 'Sprechblase: x-Positionen (JSON ohne .0)', hover( $html )['x'], [ 2, 78 ] );
 check( 'Sprechblase: Texte',                  hover( $html )['t'], [ '01:00 · 0.0 °C', '01:10 · 10.0 °C' ] );
-check( 'Linienpfad',                          str_contains( $html, '<path class="naws-sl-line" d="M2.00 16.00 L78.00 2.00" vector-effect="non-scaling-stroke"/>' ), true );
-check( 'Flaeche darunter',                    str_contains( $html, '<path class="naws-sl-area" d="M2.00 16.00 L78.00 2.00 L78.00 16.00 L2.00 16.00 Z"/>' ), true );
+check( 'Linienpfad',                          str_contains( $html, '<path class="naws-sl-line" d="M2.00 16.00 L78.00 2.00" fill="none" vector-effect="non-scaling-stroke"/>' ), true );
+check( 'Flaeche darunter',                    str_contains( $html, '<path class="naws-sl-area" d="M2.00 16.00 L78.00 2.00 L78.00 16.00 L2.00 16.00 Z" fill-opacity=".14"/>' ), true );
 check( 'Ring und Endpunkt als runde Striche', substr_count( $html, 'd="M78.00 2.00 h0"' ), 2 );
 check( 'ohne minmax keine Punkte',            str_contains( $html, 'naws-sl-mm' ), false );
 check( 'ohne value keine Zahl',               str_contains( $html, 'naws-sl-val' ), false );
 check( 'kein Kreis',                          str_contains( $html, '<circle' ), false );
 check( 'keine Farbe im Markup',               (bool) preg_match( '/(fill|stroke)="#|style="[^"]*(color|fill|stroke)/', $html ), false );
+check( 'ohne CSS: feste Groesse und keine schwarze Flaeche', str_contains( $html, 'width="80" height="18"' ) && str_contains( $html, 'fill="none"' ), true );
 // Review Focus 5: zwei Sparklines auf einer Seite duerfen sich keine id teilen.
 check( 'keine id',                            str_contains( $html, ' id=' ), false );
 check( 'kein Skript',                         str_contains( $html, '<script' ), false );
@@ -127,6 +128,7 @@ $js = (string) file_get_contents( dirname( __DIR__ ) . '/assets/js/sparkline-boo
 check( 'das Skript setzt Text, nie HTML',       [ str_contains( $js, 'textContent' ), str_contains( $js, 'innerHTML' ) ], [ true, false ] );
 check( 'Delegation am Dokument',                str_contains( $js, "document.addEventListener('pointermove'" ), true );
 check( 'die Sprechblase geht, wenn der Zeiger das Fenster verlaesst', str_contains( $js, "document.addEventListener('pointerout'" ) && str_contains( $js, "window.addEventListener('blur', hide)" ), true );
+check( 'Loslassen nach Antippen blendet nicht aus', str_contains( $js, "e.pointerType === 'touch' || e.relatedTarget" ), true );
 check( 'am oberen Rand klappt sie nach unten', str_contains( $js, "classList.add('is-below')" ) && str_contains( $css, '.naws-sl-tip.is-below {' ), true );
 
 echo "\nVorschau im Erscheinungsbild\n" . str_repeat( '-', 74 ) . "\n";
