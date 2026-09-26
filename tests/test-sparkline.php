@@ -91,6 +91,68 @@ check( 'height 3 wird 10',                    NAWS_Sparkline::normalise_atts( [ 
 check( 'show VALUE wird value',               NAWS_Sparkline::normalise_atts( [ 'show' => 'VALUE' ] )['show'], 'value' );
 check( 'show Unsinn wird none',               NAWS_Sparkline::normalise_atts( [ 'show' => 'x' ] )['show'], 'none' );
 
+echo "\nslot_end()\n" . str_repeat( '-', 74 ) . "\n";
+check( 'mitten im Schritt: dessen Ende',      NAWS_Sparkline::slot_end( 1000 ), 1200 );
+check( 'auf der Grenze: der naechste',        NAWS_Sparkline::slot_end( 1200 ), 1500 );
+
+echo "\nthin()\n" . str_repeat( '-', 74 ) . "\n";
+$zehn = [];
+for ( $i = 0; $i < 10; $i++ ) { $zehn[] = [ $i, (float) $i ]; }
+check( 'unter der Grenze unveraendert',       NAWS_Sparkline::thin( [ [ 0, 1.0 ], [ 5, 2.0 ] ], 5 ), [ [ 0, 1.0 ], [ 5, 2.0 ] ] );
+check( 'zehn auf fuenf: Mittel je Fenster',   NAWS_Sparkline::thin( $zehn, 5 ), [ [ 1, 0.5 ], [ 3, 2.5 ], [ 5, 4.5 ], [ 7, 6.5 ], [ 9, 8.5 ] ] );
+$band4 = [ [ 0, 10.0, 8.0, 12.0 ], [ 1, 11.0, 5.0, 13.0 ], [ 2, 12.0, 9.0, 20.0 ], [ 3, 13.0, 10.0, 14.0 ] ];
+check( 'Band: Tief ist das Minimum, Hoch das Maximum',
+    NAWS_Sparkline::thin( $band4, 2 ), [ [ 1, 10.5, 5.0, 13.0 ], [ 3, 12.5, 9.0, 20.0 ] ] );
+$tausend = [];
+for ( $i = 0; $i < 1000; $i++ ) { $tausend[] = [ $i * 600, (float) ( $i % 7 ) ]; }
+check( 'tausend auf hoechstens zweihundert',  count( NAWS_Sparkline::thin( $tausend ) ) <= 200, true );
+
+echo "\nbuckets()\n" . str_repeat( '-', 74 ) . "\n";
+$eimer = NAWS_Sparkline::buckets( [ [ 0, 1.0 ], [ 24, 2.0 ], [ 25, 0.5 ], [ 99, 1.0 ], [ 100, 3.0 ], [ -1, 9.0 ], [ 101, 9.0 ] ], 0, 100, 4 );
+check( 'vier Fenster mit Summen, Rand $to zaehlt ins letzte, ausserhalb in keins',
+    $eimer, [ [ 0, 25, 3.0 ], [ 25, 50, 0.5 ], [ 50, 75, 0.0 ], [ 75, 100, 4.0 ] ] );
+check( 'ohne Meldung: lauter Nullen',         NAWS_Sparkline::buckets( [], 0, 100, 2 ), [ [ 0, 50, 0.0 ], [ 50, 100, 0.0 ] ] );
+check( 'leeres Fenster: keine Eimer',         NAWS_Sparkline::buckets( [ [ 5, 1.0 ] ], 100, 100, 4 ), [] );
+
+echo "\ngeometry()\n" . str_repeat( '-', 74 ) . "\n";
+$g = NAWS_Sparkline::geometry( [ [ 0, 0.0 ], [ 10, 10.0 ] ], 80, 18 );
+check( 'Linie von links unten nach rechts oben', $g['line'], 'M2.00 16.00 L78.00 2.00' );
+check( 'Flaeche bis zur Grundlinie',          $g['area'], 'M2.00 16.00 L78.00 2.00 L78.00 16.00 L2.00 16.00 Z' );
+check( 'kein Band',                           $g['band'], '' );
+check( 'Endpunkt ist der letzte',             $g['end'], [ '78.00', '2.00' ] );
+check( 'Tief am ersten Punkt',                $g['lo'], [ '2.00', '16.00' ] );
+check( 'Hoch am letzten Punkt',               $g['hi'], [ '78.00', '2.00' ] );
+check( 'x-Positionen fuer die Sprechblase',   $g['xs'], [ 2.0, 78.0 ] );
+
+check( 'flache Reihe liegt auf halber Hoehe', NAWS_Sparkline::geometry( [ [ 0, 5.0 ], [ 10, 5.0 ] ], 80, 18 )['line'], 'M2.00 9.00 L78.00 9.00' );
+
+$luecke = NAWS_Sparkline::geometry( [ [ 0, 1.0 ], [ 10, 1.0 ], [ 20, 1.0 ], [ 100, 1.0 ], [ 110, 1.0 ] ], 80, 18 );
+check( 'eine Luecke bricht die Linie',        substr_count( $luecke['line'], 'M' ), 2 );
+check( 'und die Flaeche',                     substr_count( $luecke['area'], 'Z' ), 2 );
+
+$erst = NAWS_Sparkline::geometry( [ [ 0, 3.0 ], [ 1, 1.0 ], [ 2, 1.0 ], [ 3, 5.0 ], [ 4, 5.0 ] ], 80, 18 );
+check( 'Tief beim ersten Auftreten',          $erst['lo'][0], '21.00' );
+check( 'Hoch beim ersten Auftreten',          $erst['hi'][0], '59.00' );
+
+$bg = NAWS_Sparkline::geometry( [ [ 0, 10.0, 8.0, 12.0 ], [ 10, 11.0, 9.0, 14.0 ] ], 80, 18, true );
+check( 'Band: oben die Hochs, zurueck die Tiefs', $bg['band'], 'M2.00 6.67 L78.00 2.00 L78.00 13.67 L2.00 16.00 Z' );
+check( 'Band: die Mittellinie im selben Massstab', $bg['line'], 'M2.00 11.33 L78.00 9.00' );
+
+// Review Focus 1: ein deutsches Gebietsschema darf kein Komma in den Pfad schreiben.
+$vorher = setlocale( LC_NUMERIC, '0' );
+setlocale( LC_NUMERIC, 'de_DE.UTF-8', 'de_DE', 'German_Germany', 'deu' );
+$de = NAWS_Sparkline::geometry( [ [ 0, 0.5 ], [ 7, 1.25 ], [ 13, 0.75 ] ], 80, 18 );
+setlocale( LC_NUMERIC, $vorher );
+check( 'kein Komma im Pfad unter de_DE',      str_contains( $de['line'] . $de['area'], ',' ), false );
+
+echo "\nbar_geometry()\n" . str_repeat( '-', 74 ) . "\n";
+$b = NAWS_Sparkline::bar_geometry( [ 0.0, 2.0, 1.0, 0.0 ], 80, 18 );
+check( 'nur Fenster mit Regen werden Balken', $b['rects'], [ [ '20.50', '1.00', '18.50', '16.00' ], [ '40.00', '9.00', '18.50', '8.00' ] ] );
+check( 'Grundlinie',                          $b['base'], '17.50' );
+check( 'x-Mitte jedes Fensters',              $b['xs'], [ 10.8, 30.3, 49.8, 69.3 ] );
+check( 'kein Regen: keine Balken',            NAWS_Sparkline::bar_geometry( [ 0.0, 0.0 ], 80, 18 )['rects'], [] );
+check( 'keine Fenster: nichts',               NAWS_Sparkline::bar_geometry( [], 80, 18 )['rects'], [] );
+
 echo "\n" . str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );
