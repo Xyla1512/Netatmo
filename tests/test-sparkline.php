@@ -273,6 +273,61 @@ check( 'Regen je Tag: fehlende Tage sind 0',  $pd['sums'], [ 0.0, 4.2, 0.0 ] );
 check( 'Regen je Tag: Vorlesetext',           $pd['aria'], 'Rain per day, last 3 days: 4.2 mm in total' );
 check( 'Regen je Tag ohne Zeilen: nichts',    NAWS_Sparkline::prepare( NAWS_Sparkline::normalise_atts( [ 'param' => 'rain_sum', 'days' => '3' ] ), [ 'dates' => $tage, 'rows' => [] ] ), null );
 
+echo "\nlayout und title\n" . str_repeat( '-', 74 ) . "\n";
+check( 'Vorgabe: inline',                    NAWS_Sparkline::normalise_atts( [] )['layout'], 'inline' );
+check( 'Unsinn wird inline',                 NAWS_Sparkline::normalise_atts( [ 'layout' => 'kachel' ] )['layout'], 'inline' );
+$t = NAWS_Sparkline::normalise_atts( [ 'layout' => 'TILE', 'width' => '500', 'height' => '10', 'show' => 'value', 'title' => '<b>Aussen</b>' ] );
+check( 'tile erkannt',                       $t['layout'], 'tile' );
+check( 'Kachel: feste viewBox 200 x 44',     [ $t['w'], $t['h'], $t['sized_w'], $t['sized_h'] ], [ 200, 44, false, false ] );
+check( 'Kachel: Tief/Hoch-Punkte immer an',  $t['show'], 'minmax' );
+check( 'title ohne Tags',                    $t['title'], 'Aussen' );
+check( 'month erkannt',                      NAWS_Sparkline::normalise_atts( [ 'layout' => 'month' ] )['layout'], 'month' );
+
+echo "\ntile_facts()\n" . str_repeat( '-', 74 ) . "\n";
+$at = NAWS_Sparkline::normalise_atts( [ 'layout' => 'tile' ] );
+$dt = NAWS_Sparkline::prepare( $at, [ 'from' => 0, 'to' => 86400, 'rows' => [ [ 1000, 10.0 ], [ 2000, 12.5 ], [ 3000, 11.0 ] ] ] );
+check( 'prepare: Name, Einheit, Zeitraum',   [ $dt['name'], $dt['unit'], $dt['period'] ], [ 'Temperature', '°C', '24 hours' ] );
+check( 'Linie: Name, Wert, Einheit, Tief/Hoch', NAWS_Sparkline::tile_facts( $at, $dt ), [ 'name' => 'Temperature', 'value' => '11.0', 'unit' => '°C', 'sub' => 'Low 10.0 · High 12.5 °C' ] );
+$at2 = NAWS_Sparkline::normalise_atts( [ 'layout' => 'tile', 'title' => 'Temperatur außen' ] );
+check( 'title ersetzt den Namen',            NAWS_Sparkline::tile_facts( $at2, $dt )['name'], 'Temperatur außen' );
+
+$ar = NAWS_Sparkline::normalise_atts( [ 'param' => 'Rain', 'layout' => 'tile' ] );
+$dr = NAWS_Sparkline::prepare( $ar, [ 'from' => 0, 'to' => 86400, 'rows' => [ [ 900, 0.2 ], [ 1200, 0.3 ], [ 4000, 0.6 ] ] ] );
+check( 'prepare: Regensumme als Zahl',       $dr['total'], 1.1 );
+check( 'Regen: Summe, Zeitraum, nassestes Fenster', NAWS_Sparkline::tile_facts( $ar, $dr ), [ 'name' => 'Rain', 'value' => '1.1', 'unit' => 'mm in 24 hours', 'sub' => 'Most: 02:00–02:30 · 0.6 mm' ] );
+$dtrocken = NAWS_Sparkline::prepare( $ar, [ 'from' => 0, 'to' => 86400, 'rows' => [ [ 900, 0.0 ] ] ] );
+check( 'trocken: keine Nebenzeile',          NAWS_Sparkline::tile_facts( $ar, $dtrocken )['sub'], '' );
+
+$tage = [ '2026-09-24', '2026-09-25', '2026-09-26' ];
+$ab = NAWS_Sparkline::normalise_atts( [ 'param' => 'temp_avg', 'days' => '3', 'band' => 'minmax', 'layout' => 'tile' ] );
+$db = NAWS_Sparkline::prepare( $ab, [ 'dates' => $tage, 'rows' => [ '2026-09-24' => [ 12.0, 8.0, 16.0 ], '2026-09-26' => [ 14.0, 9.0, 19.0 ] ] ] );
+check( 'Band: Tief/Hoch aus den Tagesspalten', NAWS_Sparkline::tile_facts( $ab, $db )['sub'], 'Low 8.0 · High 19.0 °C' );
+// Review Focus 5: Tageswerte in der Kachel, Plural im Zeitraum.
+$ars = NAWS_Sparkline::normalise_atts( [ 'param' => 'rain_sum', 'days' => '3', 'layout' => 'tile' ] );
+$drs = NAWS_Sparkline::prepare( $ars, [ 'dates' => $tage, 'rows' => [ '2026-09-25' => [ 4.2 ] ] ] );
+check( 'Regen je Tag: Summe in Tagen',       [ NAWS_Sparkline::tile_facts( $ars, $drs )['value'], NAWS_Sparkline::tile_facts( $ars, $drs )['unit'] ], [ '4.2', 'mm in 3 days' ] );
+check( 'Regen je Tag: nassester Tag',        NAWS_Sparkline::tile_facts( $ars, $drs )['sub'], 'Most: 25.09.2026 · 4.2 mm' );
+
+// Review Focus 4: imperiale Einheiten in der Kachel.
+$GLOBALS['naws_test_options']['naws_settings'] = [ 'temperature_unit' => 'F', 'rain_unit' => 'in' ];
+$dtf = NAWS_Sparkline::prepare( $at, [ 'from' => 0, 'to' => 86400, 'rows' => [ [ 1000, 10.0 ], [ 2000, 20.0 ] ] ] );
+check( 'Fahrenheit: Wert und Tief/Hoch',     NAWS_Sparkline::tile_facts( $at, $dtf ), [ 'name' => 'Temperature', 'value' => '68.0', 'unit' => '°F', 'sub' => 'Low 50.0 · High 68.0 °F' ] );
+$dri = NAWS_Sparkline::prepare( $ar, [ 'from' => 0, 'to' => 86400, 'rows' => [ [ 900, 25.4 ] ] ] );
+check( 'Zoll: Summe',                        NAWS_Sparkline::tile_facts( $ar, $dri )['value'], '1.00' );
+$GLOBALS['naws_test_options']['naws_settings'] = [];
+
+echo "\nmonth_facts()\n" . str_repeat( '-', 74 ) . "\n";
+$am  = NAWS_Sparkline::normalise_atts( [ 'param' => 'temp_avg', 'days' => '3', 'band' => 'minmax' ] );
+$dm  = NAWS_Sparkline::prepare( $am, [ 'dates' => $tage, 'rows' => [ '2026-09-24' => [ 12.0, 8.0, 16.0 ], '2026-09-26' => [ 14.0, 9.0, 19.0 ] ] ] );
+$amr = NAWS_Sparkline::normalise_atts( [ 'param' => 'rain_sum', 'days' => '3' ] );
+$dmr = NAWS_Sparkline::prepare( $amr, [ 'dates' => $tage, 'rows' => [ '2026-09-25' => [ 4.2 ] ] ] );
+check( 'Monat: Mittel, Regen, Achse', NAWS_Sparkline::month_facts( $dm, $dmr, $tage, 3 ), [
+    'mean_value' => '14.0 °C', 'mean_label' => 'Daily mean on 9/26',
+    'rain_value' => '4.2 mm',  'rain_label' => 'Rain in 3 days',
+    'axis_from'  => '9/24',    'axis_to'    => '9/26',
+] );
+check( 'Monat ohne Regenmesser: keine Regenfelder', [ NAWS_Sparkline::month_facts( $dm, null, $tage, 3 )['rain_value'], NAWS_Sparkline::month_facts( $dm, null, $tage, 3 )['rain_label'] ], [ '', '' ] );
+
 echo "\n" . str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );

@@ -72,6 +72,7 @@ final class NAWS_Sparkline {
      * was asked for). Bars are forced to line for non-rain quantities,
      * because a bar is a sum and a sum of temperatures or pressures means
      * nothing; only multiplicative conversions (mm→in) are valid for bars.
+     * A tile fixes its own viewBox (200 × 44) and always marks low and high.
      */
     public static function normalise_atts( array $atts ): ?array {
         $param    = trim( (string) ( $atts['param'] ?? 'Temperature' ) );
@@ -120,6 +121,13 @@ final class NAWS_Sparkline {
             }
         }
 
+        // layout (since the addendum): inline is the curve in running text
+        // as before; tile is the card from the demo; month is the month
+        // block, which render() sends to render_month() before it gets here.
+        $layout = strtolower( trim( (string) ( $atts['layout'] ?? '' ) ) );
+        $layout = in_array( $layout, [ 'tile', 'month' ], true ) ? $layout : 'inline';
+        $tile   = $layout === 'tile';
+
         return [
             'param'   => $param,
             'base'    => $base,
@@ -127,13 +135,15 @@ final class NAWS_Sparkline {
             'hours'   => $hours_raw === '' ? 24 : self::clamp( intval( $hours_raw ), 1, 168 ),
             'days'    => $source === 'day' ? ( $days_raw === '' ? 30 : self::clamp( intval( $days_raw ), 2, 366 ) ) : 0,
             'module'  => $module,
-            'w'       => $w_raw === '' ? self::VIEW_W : self::clamp( intval( $w_raw ), 20, 600 ),
-            'h'       => $h_raw === '' ? self::VIEW_H : self::clamp( intval( $h_raw ), 10, 200 ),
-            'sized_w' => $w_raw !== '',
-            'sized_h' => $h_raw !== '',
-            'show'    => $show,
+            'w'       => $tile ? 200 : ( $w_raw === '' ? self::VIEW_W : self::clamp( intval( $w_raw ), 20, 600 ) ),
+            'h'       => $tile ? 44 : ( $h_raw === '' ? self::VIEW_H : self::clamp( intval( $h_raw ), 10, 200 ) ),
+            'sized_w' => ! $tile && $w_raw !== '',
+            'sized_h' => ! $tile && $h_raw !== '',
+            'show'    => $tile ? 'minmax' : $show,
             'type'    => $type,
             'band'    => $band,
+            'layout'  => $layout,
+            'title'   => sanitize_text_field( (string) ( $atts['title'] ?? '' ) ),
         ];
     }
 
@@ -430,6 +440,8 @@ final class NAWS_Sparkline {
      * is nothing to draw: fewer than two points on a line, or not a
      * single rain report in the window. A window in which the gauge
      * reported but no rain fell is a valid result and draws a baseline.
+     * Also returns name, unit and period for the tile and the month block
+     * (bars also carry the total as a number).
      */
     public static function prepare( array $a, array $f ): ?array {
         $base = $a['base'];
@@ -480,6 +492,10 @@ final class NAWS_Sparkline {
                 'tips'  => $tips,
                 'aria'  => sprintf( naws_label( 'sl_aria_bars' ), $name, $period, $total ),
                 'value' => $total,
+                'name'   => $name,
+                'unit'   => $unit,
+                'period' => $period,
+                'total'  => $conv( $raw_total ),
             ];
         }
 
@@ -529,6 +545,9 @@ final class NAWS_Sparkline {
             'tips'  => $tips,
             'aria'  => $aria,
             'value' => $with( $vals[ count( $vals ) - 1 ] ),
+            'name'   => $name,
+            'unit'   => $unit,
+            'period' => $period,
         ];
     }
 
@@ -680,6 +699,66 @@ final class NAWS_Sparkline {
             'line' => $line !== '' ? $line : self::sample( 'line' ),
             'bars' => str_contains( $bars, 'naws-sl-bar' ) ? $bars : self::sample( 'bars' ),
             'band' => $band !== '' ? $band : self::sample( 'band' ),
+        ];
+    }
+
+    // ── Tile and month block (addendum) ─────────────────────────────
+
+    /**
+     * The words on a tile, from what prepare() returned: the name (or the
+     * title), the figure, its unit, and the line under it — low and high
+     * for a line or a band, the wettest window for rain (none on a dry
+     * span). No query, no markup.
+     */
+    public static function tile_facts( array $a, array $d ): array {
+        $name = $a['title'] !== '' ? $a['title'] : $d['name'];
+
+        if ( $d['kind'] === 'bars' ) {
+            if ( $a['source'] === 'raw' ) {
+                /* translators: 1: unit such as "mm", 2: number of hours. */
+                $unit = sprintf( _n( '%1$s in %2$d hour', '%1$s in %2$d hours', $a['hours'], 'xtx-integration-for-netatmo' ), $d['unit'], $a['hours'] );
+            } else {
+                /* translators: 1: unit such as "mm", 2: number of days. */
+                $unit = sprintf( _n( '%1$s in %2$d day', '%1$s in %2$d days', $a['days'], 'xtx-integration-for-netatmo' ), $d['unit'], $a['days'] );
+            }
+            $max = $d['sums'] ? max( $d['sums'] ) : 0.0;
+            $sub = '';
+            if ( $max > 0 ) {
+                $i   = (int) array_search( $max, $d['sums'], true );
+                $sub = sprintf( naws_label( 'sl_tile_peak' ), $d['tips'][ $i ] );
+            }
+            return [ 'name' => $name, 'value' => self::number( $a['base'], (float) $d['total'] ), 'unit' => $unit, 'sub' => $sub ];
+        }
+
+        $vals = array_column( $d['pts'], 1 );
+        $lo   = $d['band'] ? min( array_column( $d['pts'], 2 ) ) : min( $vals );
+        $hi   = $d['band'] ? max( array_column( $d['pts'], 3 ) ) : max( $vals );
+        return [
+            'name'  => $name,
+            'value' => self::number( $a['base'], (float) $vals[ count( $vals ) - 1 ] ),
+            'unit'  => $d['unit'],
+            'sub'   => sprintf( naws_label( 'sl_tile_range' ), self::number( $a['base'], (float) $lo ), self::number( $a['base'], (float) $hi ) . ' ' . $d['unit'] ),
+        ];
+    }
+
+    /**
+     * The words around the month block: the daily mean of the last day
+     * with data and its date, the rain total over the span, and the
+     * first and last day for the axis. $dr is null when the station has
+     * no rain gauge; the rain fields are empty then.
+     */
+    public static function month_facts( array $dt, ?array $dr, array $dates, int $days ): array {
+        $fmt  = naws_label( 'sl_month_axis_format' );
+        $last = $dt['pts'][ count( $dt['pts'] ) - 1 ];
+        $rain = $dr !== null;
+        return [
+            'mean_value' => self::number( 'Temperature', (float) $last[1] ) . ' ' . $dt['unit'],
+            'mean_label' => sprintf( naws_label( 'sl_month_mean' ), wp_date( $fmt, (int) $last[0] ) ),
+            'rain_value' => $rain ? $dr['value'] : '',
+            /* translators: %d: number of days. */
+            'rain_label' => $rain ? sprintf( _n( 'Rain in %d day', 'Rain in %d days', $days, 'xtx-integration-for-netatmo' ), $days ) : '',
+            'axis_from'  => wp_date( $fmt, self::noon( $dates[0] ) ),
+            'axis_to'    => wp_date( $fmt, self::noon( $dates[ count( $dates ) - 1 ] ) ),
         ];
     }
 
