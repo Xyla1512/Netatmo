@@ -738,6 +738,14 @@ $icon_color_keys = [
                             <p class="description"><?php echo esc_html( naws_label( 'wgt_scheme_desc' ) ); ?></p>
                         </td>
                     </tr>
+                    <tr>
+                        <th><?php echo esc_html( naws_label( 'wgt_sparklines_label' ) ); ?></th>
+                        <td>
+                            <input type="hidden" name="naws_settings[wgt_sparklines]" value="0">
+                            <label><input type="checkbox" name="naws_settings[wgt_sparklines]" value="1" <?php checked( ! empty( $naws_wgt_opts['wgt_sparklines'] ) ); ?>> <?php echo esc_html( naws_label( 'wgt_sparklines_check' ) ); ?></label>
+                            <p class="description"><?php echo esc_html( naws_label( 'wgt_sparklines_desc' ) ); ?></p>
+                        </td>
+                    </tr>
                 </table>
 
                 <?php
@@ -778,6 +786,7 @@ $icon_color_keys = [
                         $naws_wgt_state  = $naws_prev_state['state'];
                         $naws_wgt_width  = $naws_prev_width;
                         $naws_wgt_scheme = $naws_wgt_scheme_now;
+                        $naws_wgt_spark  = ! empty( $naws_wgt_opts['wgt_sparklines'] ) ? NAWS_Sparkline::widget_set() : [];
                         $naws_wgt_place = (string) ( $naws_prev_fc['location_name'] ?? '' );
                         $naws_wgt_time  = empty( $naws_prev_fc['fetched_at'] ) ? '' : wp_date( get_option( 'time_format', 'H:i' ), (int) $naws_prev_fc['fetched_at'] );
                         include NAWS_PLUGIN_DIR . 'templates/weather-widget.php';

@@ -621,6 +621,15 @@ final class NAWS_Sparkline {
         return $d === null ? '' : self::markup( $a, $d );
     }
 
+    /** The widget's three curves over 24 hours; '' where a module is missing or silent. */
+    public static function widget_set(): array {
+        return [
+            'temp' => self::render( [ 'param' => 'Temperature' ] ),
+            'rain' => self::render( [ 'param' => 'Rain' ] ),
+            'wind' => self::render( [ 'param' => 'WindStrength' ] ),
+        ];
+    }
+
     private static function clamp( int $v, int $lo, int $hi ): int {
         return max( $lo, min( $hi, $v ) );
     }

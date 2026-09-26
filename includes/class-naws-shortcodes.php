@@ -683,7 +683,7 @@ class NAWS_Shortcodes {
     }
 
     // ----------------------------------------------------------------
-    // [naws_weather_widget days="3|5" width="250..500"]
+    // [naws_weather_widget days="3|5" width="250..500" scheme="light|dark|transparent" sparklines="0|1"]
     // Compact sidebar widget: icon and temperature, rain and wind,
     // three or five forecast days.
     // ----------------------------------------------------------------
@@ -694,6 +694,7 @@ class NAWS_Shortcodes {
             'days'   => (string) ( $opts['wgt_days'] ?? 5 ),
             'width'  => (string) ( $opts['wgt_width'] ?? NAWS_Widget_Data::DEFAULT_WIDTH ),
             'scheme' => (string) ( $opts['wgt_scheme'] ?? NAWS_Widget_Data::SCHEMES[0] ),
+            'sparklines' => (string) ( $opts['wgt_sparklines'] ?? 0 ),
         ], $atts, 'naws_weather_widget' );
 
         $station = NAWS_Weather_State::read_station();
@@ -735,6 +736,14 @@ class NAWS_Shortcodes {
         $naws_wgt_state  = $state['state'];
         $naws_wgt_width  = $atts['width'];
         $naws_wgt_scheme = NAWS_Widget_Data::normalise_scheme( $atts['scheme'] );
+        // Sparklines (since 2.1.0, off unless switched on): 24 hours of
+        // temperature, rain and wind. A missing module drops its curve.
+        $naws_wgt_spark = NAWS_Widget_Data::sparklines_on( $atts['sparklines'] )
+            ? NAWS_Sparkline::widget_set()
+            : [ 'temp' => '', 'rain' => '', 'wind' => '' ];
+        if ( implode( '', $naws_wgt_spark ) !== '' ) {
+            wp_enqueue_script( 'naws-sparkline-boot' );
+        }
         $naws_wgt_place = (string) ( $forecast['location_name'] ?? '' );
         // The station's newest measurement, not the forecast fetch. The
         // forecast is cached for three hours, so printing its fetch time put

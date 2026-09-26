@@ -135,6 +135,17 @@ class NAWS_Widget_Data {
         return in_array( $scheme, self::SCHEMES, true ) ? $scheme : self::SCHEMES[0];
     }
 
+    /**
+     * Whether the widget draws its sparklines (since 2.1.0). The setting
+     * stores 0 or 1; the shortcode attribute may also say yes, true or on.
+     * Anything else is off, so a typo never switches curves on.
+     *
+     * @param mixed $raw
+     */
+    public static function sparklines_on( $raw ): bool {
+        return in_array( strtolower( trim( (string) $raw ) ), [ '1', 'yes', 'true', 'on' ], true );
+    }
+
     /** Validate a value/unit pair, returning null for anything unusable. */
     private static function pair( $raw ): ?array {
         if ( ! is_array( $raw ) || ! isset( $raw['value'] ) || $raw['value'] === '' ) {
