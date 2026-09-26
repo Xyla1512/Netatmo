@@ -310,6 +310,29 @@ $value_params = [
     </div>
 
     <div class="naws-sc-card">
+        <h3><code>[naws_sparkline]</code></h3>
+        <p><?php esc_html_e( 'A curve the size of a word: how a reading got to where it is, drawn next to the number in running text. The raw readings of the last hours, or a column of the daily summary with the band between daily low and high; rain as bars. Rendered on the server as SVG; hovering shows time and value. Colours on the Appearance page, tab Sparkline.', 'xtx-integration-for-netatmo' ); ?></p>
+        <div class="naws-copy-wrap"><pre>[naws_sparkline param="Temperature"]</pre><button class="naws-copy-btn" data-copy='[naws_sparkline param="Temperature"]'><?php echo esc_html( _x( 'Copy', 'sc_copy', 'xtx-integration-for-netatmo' ) ); ?></button></div>
+        <table class="naws-attr-table" style="margin-top:10px">
+            <tr><th><?php esc_html_e( 'Attribute', 'xtx-integration-for-netatmo' ); ?></th><th><?php esc_html_e( 'Description', 'xtx-integration-for-netatmo' ); ?></th><th><?php esc_html_e( 'Default', 'xtx-integration-for-netatmo' ); ?></th></tr>
+            <tr><td><code>param</code></td><td><?php esc_html_e( 'Raw readings: Temperature, Humidity, Pressure, WindStrength, GustStrength, Rain, CO2, Noise. Daily summary: temp_avg, temp_min, temp_max, humidity_avg, pressure_avg, rain_sum, wind_avg, gust_max, co2_avg, noise_avg.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">Temperature</span></td></tr>
+            <tr><td><code>hours</code></td><td><?php esc_html_e( 'Window of raw readings in hours, 1–168.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">24</span></td></tr>
+            <tr><td><code>days</code></td><td><?php esc_html_e( 'Window in days from the daily summary, 2–366. For the daily columns; 30 if left out. Not allowed with a raw reading.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php esc_html_e( 'empty', 'xtx-integration-for-netatmo' ); ?></span></td></tr>
+            <tr><td><code>module</code></td><td><?php esc_html_e( 'outdoor, indoor, wind, rain, in-<name> or a MAC address. Left out, the module that measures the reading. Ignored with days.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php esc_html_e( 'from param', 'xtx-integration-for-netatmo' ); ?></span></td></tr>
+            <tr><td><code>width</code>, <code>height</code></td><td><?php esc_html_e( 'Size in pixels, width 20–600 and height 10–200. Left out, the curve is 4.6 × 1.05 em and grows with the text.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">4.6 × 1.05 em</span></td></tr>
+            <tr><td><code>show</code></td><td><?php esc_html_e( 'none, value (the latest value, or the rain total, after the curve) or minmax (dots on the lowest and the highest point).', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">none</span></td></tr>
+            <tr><td><code>type</code></td><td><?php esc_html_e( 'line or bars. Bars are for rain only; left out, rain gets bars and everything else a line.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php esc_html_e( 'automatic', 'xtx-integration-for-netatmo' ); ?></span></td></tr>
+            <tr><td><code>band</code></td><td><?php esc_html_e( 'minmax: with days and temp_avg, the band between daily low and high under the line of daily means.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php esc_html_e( 'empty', 'xtx-integration-for-netatmo' ); ?></span></td></tr>
+        </table>
+        <div class="naws-inline-examples">
+            <div class="naws-inline-ex"><code>[naws_sparkline param="Temperature"]</code> &rarr; <?php esc_html_e( 'temperature of the last 24 hours, the size of a word', 'xtx-integration-for-netatmo' ); ?></div>
+            <div class="naws-inline-ex"><code>[naws_sparkline param="Pressure" hours="48" show="value"]</code> &rarr; <?php esc_html_e( 'pressure over two days, the latest value after it', 'xtx-integration-for-netatmo' ); ?></div>
+            <div class="naws-inline-ex"><code>[naws_sparkline param="Rain" width="120" height="24"]</code> &rarr; <?php esc_html_e( 'rain of the last day as bars, 120 × 24 pixels', 'xtx-integration-for-netatmo' ); ?></div>
+            <div class="naws-inline-ex"><code>[naws_sparkline param="temp_avg" days="30" band="minmax"]</code> &rarr; <?php esc_html_e( 'the last 30 days: daily means with the band from low to high', 'xtx-integration-for-netatmo' ); ?></div>
+        </div>
+    </div>
+
+    <div class="naws-sc-card">
         <h3><code>[naws_current]</code></h3>
         <p><?php esc_html_e( 'Shows animated metric cards with the latest sensor values from all or specific modules.', 'xtx-integration-for-netatmo' ); ?></p>
         <div class="naws-copy-wrap"><pre>[naws_current]</pre><button class="naws-copy-btn" data-copy='[naws_current]'><?php echo esc_html( _x( 'Copy', 'sc_copy', 'xtx-integration-for-netatmo' ) ); ?></button></div>
@@ -435,12 +458,14 @@ $value_params = [
             <tr><td><code>days</code></td><td><?php esc_html_e( 'Forecast length. Only 3 or 5; other values are pulled to the nearer one.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php echo intval( get_option('naws_settings', [])['wgt_days'] ?? 5 ); ?></span></td></tr>
             <tr><td><code>width</code></td><td><?php esc_html_e( 'Width in pixels, 250 to 500. Values outside that range are pulled to the nearer bound.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php echo absint( NAWS_Widget_Data::normalise_width( get_option('naws_settings', [])['wgt_width'] ?? null ) ); ?></span></td></tr>
             <tr><td><code>scheme</code></td><td><?php esc_html_e( 'Colour scheme: light, dark or transparent. Dark is the card in dark colours; transparent draws no card and takes the colours of whatever it is placed on. Anything else counts as light.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php echo esc_html( NAWS_Widget_Data::normalise_scheme( get_option('naws_settings', [])['wgt_scheme'] ?? null ) ); ?></span></td></tr>
+            <tr><td><code>sparklines</code></td><td><?php esc_html_e( 'Small curves of the last 24 hours for temperature, rain and wind: 1 shows them, 0 hides them.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php echo absint( ! empty( get_option( 'naws_settings', [] )['wgt_sparklines'] ) ); ?></span></td></tr>
         </table>
         <div class="naws-inline-examples">
             <div class="naws-inline-ex"><code>[naws_weather_widget]</code> <?php esc_html_e( 'uses the backend setting', 'xtx-integration-for-netatmo' ); ?></div>
             <div class="naws-inline-ex"><code>[naws_weather_widget days="3"]</code> <?php esc_html_e( 'shorter, for very narrow columns', 'xtx-integration-for-netatmo' ); ?></div>
             <div class="naws-inline-ex"><code>[naws_weather_widget width="400"]</code> <?php esc_html_e( 'wider, with a larger icon and larger figures', 'xtx-integration-for-netatmo' ); ?></div>
             <div class="naws-inline-ex"><code>[naws_weather_widget scheme="dark"]</code> <?php esc_html_e( 'for a dark sidebar', 'xtx-integration-for-netatmo' ); ?></div>
+            <div class="naws-inline-ex"><code>[naws_weather_widget sparklines="1"]</code> <?php esc_html_e( 'with small curves of the last 24 hours', 'xtx-integration-for-netatmo' ); ?></div>
         </div>
     </div>
     </div><!-- /.naws-panel-body -->

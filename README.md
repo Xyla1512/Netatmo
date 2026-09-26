@@ -35,7 +35,7 @@ Data then syncs on its own. Drop a shortcode on any page to display it.
 | Shortcode | What it renders |
 |---|---|
 | `[naws_live]` | Live sensor tiles with 24-hour trend charts and wind rose |
-| `[naws_weather_widget days="3\|5"]` | Compact sidebar widget: weather icon, outdoor temperature, rain and wind, plus a three- or five-day forecast, in a light, dark or transparent scheme |
+| `[naws_weather_widget days="3\|5"]` | Compact sidebar widget: weather icon, outdoor temperature, rain and wind, plus a three- or five-day forecast, in a light, dark or transparent scheme, optionally with small curves of the last 24 hours |
 | `[naws_weather_icon size="96"]` | The animated current-weather icon on its own |
 | `[naws_forecast]` | Multi-day weather forecast |
 | `[naws_history]` | Year-over-year comparison charts |
@@ -46,6 +46,7 @@ Data then syncs on its own. Drop a shortcode on any page to display it.
 | `[naws_on_this_day]` | This calendar day in every earlier year, low/high/mean/rain, records marked |
 | `[naws_sunpath]` | The sun on its arc over the station: sunrise, solar noon, sunset, day length and its change since yesterday |
 | `[naws_windrose]` | Where the wind comes from and how hard: a rose of 16 or 8 directions stacked by Beaufort class, switchable between 7/30/90 days, this year and everything recorded, or a fixed range |
+| `[naws_sparkline param="Temperature"]` | A curve the size of a word: the raw readings of the last hours or a column of the daily summary, rain as bars, the band between daily low and high; time and value on hover |
 | `[naws_infobar]` | Astronomy bar: sunrise, moon phase, felt temperature |
 | `[naws_value]` | A single sensor value, inline |
 | `[naws_calc]` | A single computed value (dew point, felt temperature, sunrise, moon phase, …), for running text or a table; full list on the Shortcodes page in the backend |
