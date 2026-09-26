@@ -323,12 +323,16 @@ $value_params = [
             <tr><td><code>show</code></td><td><?php esc_html_e( 'none, value (the latest value, or the rain total, after the curve) or minmax (dots on the lowest and the highest point).', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">none</span></td></tr>
             <tr><td><code>type</code></td><td><?php esc_html_e( 'line or bars. Bars are for rain only; left out, rain gets bars and everything else a line.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php esc_html_e( 'automatic', 'xtx-integration-for-netatmo' ); ?></span></td></tr>
             <tr><td><code>band</code></td><td><?php esc_html_e( 'minmax: with days and temp_avg, the band between daily low and high under the line of daily means.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php esc_html_e( 'empty', 'xtx-integration-for-netatmo' ); ?></span></td></tr>
+            <tr><td><code>layout</code></td><td><?php esc_html_e( 'inline (the curve in running text), tile (a card: name, current value, low and high, a large curve) or month (daily means with the band from low to high and rain per day, with a date axis; needs no param, days 7–366).', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">inline</span></td></tr>
+            <tr><td><code>title</code></td><td><?php esc_html_e( 'Only with layout="tile": the name at the top of the card instead of the name of the quantity.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php esc_html_e( 'empty', 'xtx-integration-for-netatmo' ); ?></span></td></tr>
         </table>
         <div class="naws-inline-examples">
             <div class="naws-inline-ex"><code>[naws_sparkline param="Temperature"]</code> &rarr; <?php esc_html_e( 'temperature of the last 24 hours, the size of a word', 'xtx-integration-for-netatmo' ); ?></div>
             <div class="naws-inline-ex"><code>[naws_sparkline param="Pressure" hours="48" show="value"]</code> &rarr; <?php esc_html_e( 'pressure over two days, the latest value after it', 'xtx-integration-for-netatmo' ); ?></div>
             <div class="naws-inline-ex"><code>[naws_sparkline param="Rain" width="120" height="24"]</code> &rarr; <?php esc_html_e( 'rain of the last day as bars, 120 × 24 pixels', 'xtx-integration-for-netatmo' ); ?></div>
             <div class="naws-inline-ex"><code>[naws_sparkline param="temp_avg" days="30" band="minmax"]</code> &rarr; <?php esc_html_e( 'the last 30 days: daily means with the band from low to high', 'xtx-integration-for-netatmo' ); ?></div>
+            <div class="naws-inline-ex"><code>[naws_sparkline param="Temperature" layout="tile" title="Temperatur außen"]</code> &rarr; <?php esc_html_e( 'a card: name, current value, low and high, a large curve', 'xtx-integration-for-netatmo' ); ?></div>
+            <div class="naws-inline-ex"><code>[naws_sparkline layout="month" days="32"]</code> &rarr; <?php esc_html_e( 'the last 32 days in one block: daily means with the band, rain per day, dates', 'xtx-integration-for-netatmo' ); ?></div>
         </div>
     </div>
 

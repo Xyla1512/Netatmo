@@ -54,7 +54,7 @@ Connects to the Netatmo API, stores all sensor data locally and displays live da
 * `[naws_on_this_day]` – This calendar day in every earlier year, with the day's records marked (`date`, `title`)
 * `[naws_sunpath]` – The sun on its arc over the station, with sunrise, solar noon, sunset and the day length (`title`)
 * `[naws_windrose]` – Where the wind comes from and how hard, as a rose of 16 or 8 directions stacked by Beaufort class, with a period switcher (`period`, `from`, `to`, `measure`, `sectors`, `show`, `switcher`, `size`, `title`)
-* `[naws_sparkline]` – A curve the size of a word: the raw readings of the last hours or a column of the daily summary, rain as bars, the band between daily low and high, time and value on hover (`param`, `hours`, `days`, `module`, `width`, `height`, `show`, `type`, `band`)
+* `[naws_sparkline]` – A curve the size of a word: the raw readings of the last hours or a column of the daily summary, rain as bars, the band between daily low and high, time and value on hover; as a card or a month block too (`param`, `hours`, `days`, `module`, `width`, `height`, `show`, `type`, `band`, `layout`, `title`)
 * `[naws_forecast]` – Multi-day weather forecast
 * `[naws_table]` – Readings as a table over a period, grouped by hour, day, week, month or year (`module_id`, `parameters`, `period`, `limit`, `group_by`, `title`)
 * `[naws_weather_widget]` – Compact forecast widget for a sidebar (`days` 3 or 5, `width` 250–500, `scheme` light, dark or transparent, `sparklines` 0 or 1)
