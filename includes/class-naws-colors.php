@@ -202,6 +202,20 @@ class NAWS_Colors {
         'windrose_grid' => '#dbe3ea',
         'windrose_calm' => '#e9eff5',
         'windrose_switch' => '#1c5cab',
+
+        // [naws_sparkline] and the widget's curves (since 2.1.0): one line
+        // colour for every quantity and a second for the widget's dark
+        // scheme, the rain bars likewise, the band between daily low and
+        // high, the low/high dots, and the hover bubble. The area under a
+        // line is the line colour, lightly filled, and has no key.
+        'sparkline_line'      => '#427272',
+        'sparkline_line_dark' => '#7cc7c7',
+        'sparkline_rain'      => '#3585b0',
+        'sparkline_rain_dark' => '#78ace8',
+        'sparkline_band'      => '#42727229',
+        'sparkline_dots'      => '#7aa0a0',
+        'sparkline_tip_bg'    => '#2d5252',
+        'sparkline_tip_text'  => '#ffffff',
     ];
 
     public static function instance() {
@@ -419,7 +433,30 @@ class NAWS_Colors {
         $css .= '  --naws-font: ' . NAWS_Fonts::stack( (string) $c['font_family'], (string) $c['font_custom'] ) . ";\n";
         $css .= "}\n";
 
+        // [naws_sparkline]: its own rule, see sparkline_css().
+        $css .= self::sparkline_css();
+
         return $css;
+    }
+
+    /**
+     * The sparkline colours as variables on .naws-sl and .naws-sl-tip
+     * themselves. A sparkline usually sits in theme text outside every
+     * plugin wrapper, and the bubble hangs on <body>, so the variables
+     * cannot come from .naws-wrap like the others. An empty value writes
+     * no variable; the stylesheet's fallback, the default, applies then.
+     * The Appearance page adds the same rule to its own stylesheet.
+     */
+    public static function sparkline_css(): string {
+        $c   = self::get_all();
+        $css = ".naws-sl, .naws-sl-tip {\n";
+        foreach ( self::SPARKLINE_KEYS as $key ) {
+            if ( (string) $c[ $key ] === '' ) {
+                continue;
+            }
+            $css .= '  --naws-sl-' . str_replace( '_', '-', substr( $key, 10 ) ) . ": {$c[ $key ]};\n";
+        }
+        return $css . "}\n";
     }
 
     // ================================================================
@@ -520,6 +557,12 @@ class NAWS_Colors {
     const LIVE_WIND_KEYS = [
         'live_compass_bg', 'live_compass_rose', 'theme_compass_needle',
         'live_gauge_wind', 'live_gauge_gust', 'live_gauge_peak',
+    ];
+
+    /** The [naws_sparkline] keys, in the order the Appearance page shows them. */
+    const SPARKLINE_KEYS = [
+        'sparkline_line', 'sparkline_line_dark', 'sparkline_rain', 'sparkline_rain_dark',
+        'sparkline_band', 'sparkline_dots', 'sparkline_tip_bg', 'sparkline_tip_text',
     ];
     /**
      * Die Skala als Paare aus Temperatur und Farbe.
@@ -676,6 +719,10 @@ class NAWS_Colors {
             'live_wind' => [
                 'label' => 'appearance_group_live_wind',
                 'keys'  => self::LIVE_WIND_KEYS,
+            ],
+            'sparkline' => [
+                'label' => 'appearance_group_sparkline',
+                'keys'  => self::SPARKLINE_KEYS,
             ],
         ];
     }
