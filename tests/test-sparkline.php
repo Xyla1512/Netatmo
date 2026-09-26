@@ -21,6 +21,26 @@ require_once __DIR__ . '/i18n-stubs.php';
 require_once dirname( __DIR__ ) . '/includes/class-naws-helpers.php';
 require_once dirname( __DIR__ ) . '/includes/class-naws-sparkline.php';
 
+/** Stand-in for the database: records what was asked, answers from $GLOBALS. */
+class NAWS_Database {
+    public static array $asked = [];
+    public static function get_modules( $active_only = false ) { return $GLOBALS['naws_test_modules']; }
+    public static function get_readings( $args = [] ) { self::$asked[] = [ 'readings', $args ]; return $GLOBALS['naws_test_readings']; }
+    public static function get_daily_summaries( $args = [] ) { self::$asked[] = [ 'daily', $args ]; return $GLOBALS['naws_test_daily']; }
+}
+class NAWS_Calc {
+    public static function station_row_id( array $atts ): ?string { return $GLOBALS['naws_test_station']; }
+}
+$GLOBALS['naws_test_modules'] = [
+    [ 'module_id' => '70:ee:50:00:00:01', 'module_type' => 'NAMain',    'module_name' => 'Wohnzimmer', 'station_id' => '70:ee:50:00:00:01' ],
+    [ 'module_id' => '02:00:00:00:00:02', 'module_type' => 'NAModule1', 'module_name' => 'Aussen',     'station_id' => '70:ee:50:00:00:01' ],
+    [ 'module_id' => '05:00:00:00:00:03', 'module_type' => 'NAModule3', 'module_name' => 'Regen',      'station_id' => '70:ee:50:00:00:01' ],
+    [ 'module_id' => '03:00:00:00:00:04', 'module_type' => 'NAModule4', 'module_name' => 'Keller',     'station_id' => '70:ee:50:00:00:01' ],
+];
+$GLOBALS['naws_test_readings'] = [];
+$GLOBALS['naws_test_daily']    = [];
+$GLOBALS['naws_test_station']  = '70:ee:50:00:00:01';
+
 $passed = 0; $failed = 0;
 function check( string $name, $got, $want ): void {
     global $passed, $failed;
@@ -153,6 +173,99 @@ check( 'Grundlinie',                          $b['base'], '17.50' );
 check( 'x-Mitte jedes Fensters',              $b['xs'], [ 10.8, 30.3, 49.8, 69.3 ] );
 check( 'kein Regen: keine Balken',            NAWS_Sparkline::bar_geometry( [ 0.0, 0.0 ], 80, 18 )['rects'], [] );
 check( 'keine Fenster: nichts',               NAWS_Sparkline::bar_geometry( [], 80, 18 )['rects'], [] );
+
+echo "\nfetch()\n" . str_repeat( '-', 74 ) . "\n";
+$now = 1790000123;
+$GLOBALS['naws_test_readings'] = [ [ 'module_id' => '02:00:00:00:00:02', 'parameter' => 'Temperature', 'recorded_at' => '1789990000', 'value' => '12.5' ] ];
+$f = NAWS_Sparkline::fetch( NAWS_Sparkline::normalise_atts( [] ), $now );
+$gefragt = NAWS_Database::$asked[0][1];
+check( 'Rohwerte vom Aussenmodul',            $gefragt['module_id'], '02:00:00:00:00:02' );
+check( 'nur die eine Groesse',                $gefragt['parameter'], 'Temperature' );
+check( 'Fenster endet am Ende des 5-Minuten-Schritts', $gefragt['date_to'], 1790000400 );
+check( 'Fenster ist 24 Stunden lang',         $gefragt['date_from'], 1790000400 - 86400 );
+check( 'ungebuendelt, ohne Kappung',          [ $gefragt['group_by'], $gefragt['limit'] ], [ 'raw', 0 ] );
+check( 'Zeilen als [ts, Wert]',               $f['rows'], [ [ 1789990000, 12.5 ] ] );
+// Review Focus 2: im selben 5-Minuten-Schritt dieselben Argumente, also derselbe Cache-Eintrag.
+NAWS_Sparkline::fetch( NAWS_Sparkline::normalise_atts( [] ), $now + 100 );
+check( 'gleicher Schritt, gleiche Frage',     NAWS_Database::$asked[1][1], $gefragt );
+
+$vorher = count( NAWS_Database::$asked );
+$f = NAWS_Sparkline::fetch( NAWS_Sparkline::normalise_atts( [ 'param' => 'WindStrength' ] ), $now );
+check( 'kein Windmesser: keine Zeilen',       $f['rows'], [] );
+check( '… und keine Abfrage',                 count( NAWS_Database::$asked ), $vorher );
+NAWS_Sparkline::fetch( NAWS_Sparkline::normalise_atts( [ 'module' => 'in-keller' ] ), $now );
+check( 'in-keller loest zum Innenmodul auf',  end( NAWS_Database::$asked )[1]['module_id'], '03:00:00:00:00:04' );
+
+$GLOBALS['naws_test_daily'] = [
+    [ 'day_date' => '2026-09-24', 'temp_avg' => '12.0', 'temp_min' => '8.0', 'temp_max' => '16.0' ],
+    [ 'day_date' => '2026-09-25', 'temp_avg' => null,   'temp_min' => null,  'temp_max' => null ],
+    [ 'day_date' => '2026-09-26', 'temp_avg' => '14.0', 'temp_min' => '9.0', 'temp_max' => '19.0' ],
+];
+$tag = gmmktime( 10, 0, 0, 9, 26, 2026 );
+$f   = NAWS_Sparkline::fetch( NAWS_Sparkline::normalise_atts( [ 'param' => 'temp_avg', 'days' => '3', 'band' => 'minmax' ] ), $tag );
+$gefragt = end( NAWS_Database::$asked )[1];
+check( 'Tage: die Stationszeile',             $gefragt['module_id'], '70:ee:50:00:00:01' );
+check( 'Tage: drei Kalendertage bis heute',   [ $gefragt['date_from'], $gefragt['date_to'] ], [ '2026-09-24', '2026-09-26' ] );
+check( 'Band: Mittel, Tief und Hoch',         $gefragt['fields'], [ 'temp_avg', 'temp_min', 'temp_max' ] );
+check( 'die Tage des Fensters',               $f['dates'], [ '2026-09-24', '2026-09-25', '2026-09-26' ] );
+check( 'ein Tag ohne Wert faellt weg',        $f['rows'], [ '2026-09-24' => [ 12.0, 8.0, 16.0 ], '2026-09-26' => [ 14.0, 9.0, 19.0 ] ] );
+$GLOBALS['naws_test_station'] = null;
+check( 'keine Station: keine Zeilen',         NAWS_Sparkline::fetch( NAWS_Sparkline::normalise_atts( [ 'param' => 'temp_avg' ] ), $tag )['rows'], [] );
+$GLOBALS['naws_test_station'] = '70:ee:50:00:00:01';
+
+$db = (string) file_get_contents( dirname( __DIR__ ) . '/includes/class-naws-database.php' );
+check( 'get_daily_summaries() kennt die vier neuen Spalten',
+    (bool) preg_match( "/\\\$allowed_fields\s*=\s*\[[^\]]*'humidity_avg'[^\]]*'wind_avg'[^\]]*'co2_avg'[^\]]*'noise_avg'/", $db ), true );
+
+echo "\nprepare()\n" . str_repeat( '-', 74 ) . "\n";
+$a = NAWS_Sparkline::normalise_atts( [] );
+$p = NAWS_Sparkline::prepare( $a, [ 'from' => 0, 'to' => 86400, 'rows' => [ [ 1000, 10.0 ], [ 2000, 12.5 ], [ 3000, 11.0 ] ] ] );
+check( 'eine Linie',                          $p['kind'], 'line' );
+check( 'drei Punkte',                         count( $p['pts'] ), 3 );
+check( 'Vorlesetext',                         $p['aria'], 'Temperature, last 24 hours: from 10.0 °C to 12.5 °C, latest 11.0 °C' );
+check( 'show=value: der letzte Wert',         $p['value'], '11.0 °C' );
+check( 'Sprechblase: Uhrzeit und Wert',       $p['tips'][0], '01:16 · 10.0 °C' );
+check( 'ein Punkt ist keine Linie',           NAWS_Sparkline::prepare( $a, [ 'from' => 0, 'to' => 86400, 'rows' => [ [ 1000, 10.0 ] ] ] ), null );
+// Review Focus 3: eine stumme Station ergibt nichts.
+check( 'keine Zeilen: nichts',                NAWS_Sparkline::prepare( $a, [ 'from' => 0, 'to' => 86400, 'rows' => [] ] ), null );
+
+$lang = NAWS_Sparkline::prepare( NAWS_Sparkline::normalise_atts( [ 'hours' => '48' ] ), [ 'from' => 0, 'to' => 172800, 'rows' => [ [ 1000, 10.0 ], [ 2000, 12.5 ] ] ] );
+check( 'ueber 24 Stunden mit Wochentag',      $lang['tips'][0], 'Thu 01:16 · 10.0 °C' );
+
+// Review Focus 4: imperiale Einheiten.
+$GLOBALS['naws_test_options']['naws_settings'] = [ 'temperature_unit' => 'F', 'rain_unit' => 'in' ];
+$pf = NAWS_Sparkline::prepare( $a, [ 'from' => 0, 'to' => 86400, 'rows' => [ [ 1000, 10.0 ], [ 2000, 20.0 ] ] ] );
+check( 'Fahrenheit im Vorlesetext',           $pf['aria'], 'Temperature, last 24 hours: from 50.0 °F to 68.0 °F, latest 68.0 °F' );
+$pi = NAWS_Sparkline::prepare( NAWS_Sparkline::normalise_atts( [ 'param' => 'Rain' ] ), [ 'from' => 0, 'to' => 86400, 'rows' => [ [ 900, 25.4 ] ] ] );
+check( 'Zoll mit zwei Stellen',               $pi['value'], '1.00 in' );
+$GLOBALS['naws_test_options']['naws_settings'] = [];
+
+$pw = NAWS_Sparkline::prepare( NAWS_Sparkline::normalise_atts( [ 'param' => 'WindStrength' ] ), [ 'from' => 0, 'to' => 86400, 'rows' => [ [ 1, 12.0 ], [ 2, 13.0 ] ] ] );
+check( 'Wind: ganze Zahl ohne Stelle',        $pw['value'], '13 km/h' );
+
+$ar = NAWS_Sparkline::normalise_atts( [ 'param' => 'Rain' ] );
+$pr = NAWS_Sparkline::prepare( $ar, [ 'from' => 0, 'to' => 86400, 'rows' => [ [ 900, 0.2 ], [ 1200, 0.3 ] ] ] );
+check( 'Regen: Balken',                       $pr['kind'], 'bars' );
+check( 'Regen: 48 Fenster',                   count( $pr['sums'] ), 48 );
+check( 'Regen: erstes Fenster summiert',      $pr['sums'][0], 0.5 );
+check( 'Regen: Sprechblase mit Spanne',       $pr['tips'][0], '01:00–01:30 · 0.5 mm' );
+check( 'Regen: Vorlesetext mit Summe',        $pr['aria'], 'Rain, last 24 hours: 0.5 mm in total' );
+check( 'Regen: show=value ist die Summe',     $pr['value'], '0.5 mm' );
+check( 'trocken, aber gemeldet: gueltig',     NAWS_Sparkline::prepare( $ar, [ 'from' => 0, 'to' => 86400, 'rows' => [ [ 900, 0.0 ] ] ] )['value'], '0.0 mm' );
+check( 'Regenmesser stumm: nichts',           NAWS_Sparkline::prepare( $ar, [ 'from' => 0, 'to' => 86400, 'rows' => [] ] ), null );
+
+$tage = [ '2026-09-24', '2026-09-25', '2026-09-26' ];
+$ab   = NAWS_Sparkline::normalise_atts( [ 'param' => 'temp_avg', 'days' => '3', 'band' => 'minmax' ] );
+$pb   = NAWS_Sparkline::prepare( $ab, [ 'dates' => $tage, 'rows' => [ '2026-09-24' => [ 12.0, 8.0, 16.0 ], '2026-09-26' => [ 14.0, 9.0, 19.0 ] ] ] );
+check( 'Band: eine Linie mit Band',           [ $pb['kind'], $pb['band'] ], [ 'line', true ] );
+check( 'Band: zwei Tage, vier Werte je Punkt', [ count( $pb['pts'] ), count( $pb['pts'][0] ) ], [ 2, 4 ] );
+check( 'Band: Vorlesetext',                   $pb['aria'], 'Daily mean temperature, last 3 days: daily means from 12.0 °C to 14.0 °C, range 8.0 °C to 19.0 °C' );
+check( 'Band: Sprechblase mit Spanne',        $pb['tips'][0], '24.09.2026 · 12.0 °C · 8.0–16.0 °C' );
+
+$pd = NAWS_Sparkline::prepare( NAWS_Sparkline::normalise_atts( [ 'param' => 'rain_sum', 'days' => '3' ] ), [ 'dates' => $tage, 'rows' => [ '2026-09-25' => [ 4.2 ] ] ] );
+check( 'Regen je Tag: fehlende Tage sind 0',  $pd['sums'], [ 0.0, 4.2, 0.0 ] );
+check( 'Regen je Tag: Vorlesetext',           $pd['aria'], 'Rain per day, last 3 days: 4.2 mm in total' );
+check( 'Regen je Tag ohne Zeilen: nichts',    NAWS_Sparkline::prepare( NAWS_Sparkline::normalise_atts( [ 'param' => 'rain_sum', 'days' => '3' ] ), [ 'dates' => $tage, 'rows' => [] ] ), null );
 
 echo "\n" . str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );

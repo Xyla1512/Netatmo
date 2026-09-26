@@ -342,6 +342,228 @@ final class NAWS_Sparkline {
         return sprintf( '%.2F', $v );
     }
 
+    // ── Data ────────────────────────────────────────────────────────
+
+    /**
+     * The rows behind one sparkline, in the units Netatmo stores.
+     *
+     * Raw: [ 'from', 'to', 'rows' => [ [ts, value], … ] ] for the module
+     * the attributes name. Daily: [ 'dates' => [ 'Y-m-d', … ], 'rows' =>
+     * [ 'Y-m-d' => [ value ] or [ value, low, high ] ] ] from the station
+     * row, because compute_daily_summary() writes outdoor, rain, wind and
+     * base-station values into one row per station — the same row
+     * [naws_records] reads. A day without a value is left out.
+     */
+    public static function fetch( array $a, int $now ): array {
+        if ( $a['source'] === 'raw' ) {
+            $to   = self::slot_end( $now );
+            $from = $to - $a['hours'] * 3600;
+            $id   = NAWS_Helpers::resolve_module_ref( (string) $a['module'] );
+            if ( $id === null ) {
+                return [ 'from' => $from, 'to' => $to, 'rows' => [] ];
+            }
+            $rows = NAWS_Database::get_readings( [
+                'module_id' => $id,
+                'parameter' => $a['param'],
+                'date_from' => $from,
+                'date_to'   => $to,
+                'group_by'  => 'raw',
+                'limit'     => 0,
+            ] );
+            $out = [];
+            foreach ( $rows as $r ) {
+                $out[] = [ (int) $r['recorded_at'], (float) $r['value'] ];
+            }
+            return [ 'from' => $from, 'to' => $to, 'rows' => $out ];
+        }
+
+        $today = new DateTimeImmutable( wp_date( 'Y-m-d', $now ), wp_timezone() );
+        $dates = [];
+        for ( $i = $a['days'] - 1; $i >= 0; $i-- ) {
+            $dates[] = $today->modify( '-' . $i . ' days' )->format( 'Y-m-d' );
+        }
+
+        $station = NAWS_Calc::station_row_id( [] );
+        if ( $station === null ) {
+            return [ 'dates' => $dates, 'rows' => [] ];
+        }
+        $rows = NAWS_Database::get_daily_summaries( [
+            'module_id' => $station,
+            'date_from' => $dates[0],
+            'date_to'   => $dates[ count( $dates ) - 1 ],
+            'fields'    => $a['band'] ? [ 'temp_avg', 'temp_min', 'temp_max' ] : [ $a['param'] ],
+            'group_by'  => 'day',
+        ] );
+
+        $out = [];
+        foreach ( $rows as $r ) {
+            $v = $r[ $a['param'] ] ?? null;
+            if ( $v === null || $v === '' ) {
+                continue;
+            }
+            $row = [ (float) $v ];
+            if ( $a['band'] ) {
+                if ( ( $r['temp_min'] ?? null ) === null || ( $r['temp_max'] ?? null ) === null ) {
+                    continue;
+                }
+                $row[] = (float) $r['temp_min'];
+                $row[] = (float) $r['temp_max'];
+            }
+            $out[ (string) $r['day_date'] ] = $row;
+        }
+        return [ 'dates' => $dates, 'rows' => $out ];
+    }
+
+    /**
+     * What the template draws, in display units: the series (thinned) or
+     * the bars (bucketed), a hover text per point, the text a screen
+     * reader hears, and the figure show="value" prints. Null when there
+     * is nothing to draw: fewer than two points on a line, or not a
+     * single rain report in the window. A window in which the gauge
+     * reported but no rain fell is a valid result and draws a baseline.
+     */
+    public static function prepare( array $a, array $f ): ?array {
+        $base = $a['base'];
+        $unit = NAWS_Helpers::get_unit( $base );
+        $name = naws_label( 'sl_name_' . strtolower( $a['param'] ) );
+        if ( $a['source'] === 'raw' ) {
+            /* translators: %d: number of hours. */
+            $period = sprintf( _n( '%d hour', '%d hours', $a['hours'], 'xtx-integration-for-netatmo' ), $a['hours'] );
+        } else {
+            /* translators: %d: number of days. */
+            $period = sprintf( _n( '%d day', '%d days', $a['days'], 'xtx-integration-for-netatmo' ), $a['days'] );
+        }
+        $with = static fn( float $v ): string => self::number( $base, $v ) . ' ' . $unit;
+        $conv = static fn( float $v ): float => (float) NAWS_Helpers::format_value( $base, $v );
+
+        if ( $a['type'] === 'bars' ) {
+            if ( ! $f['rows'] ) {
+                return null;
+            }
+            $sums = [];
+            $tips = [];
+            $raw_total = 0.0;
+            if ( $a['source'] === 'raw' ) {
+                $weekday = $a['hours'] > 24;
+                foreach ( self::buckets( $f['rows'], $f['from'], $f['to'] ) as $w ) {
+                    $v         = $conv( $w[2] );
+                    $raw_total += $w[2];
+                    $sums[]    = $v;
+                    $tips[]    = self::stamp( $w[0], $weekday ) . '–' . self::stamp( $w[1], false ) . ' · ' . $with( $v );
+                }
+            } else {
+                foreach ( $f['dates'] as $d ) {
+                    $raw        = (float) ( $f['rows'][ $d ][0] ?? 0.0 );
+                    $v          = $conv( $raw );
+                    $raw_total += $raw;
+                    $sums[]     = $v;
+                    $tips[]     = self::day( $d ) . ' · ' . $with( $v );
+                }
+            }
+            $total = $with( $conv( $raw_total ) );
+            return [
+                'kind'  => 'bars',
+                'sums'  => $sums,
+                'tips'  => $tips,
+                'aria'  => sprintf( naws_label( 'sl_aria_bars' ), $name, $period, $total ),
+                'value' => $total,
+            ];
+        }
+
+        $pts = [];
+        if ( $a['source'] === 'raw' ) {
+            foreach ( $f['rows'] as $r ) {
+                $pts[] = [ $r[0], $conv( $r[1] ) ];
+            }
+        } else {
+            foreach ( $f['dates'] as $d ) {
+                if ( ! isset( $f['rows'][ $d ] ) ) {
+                    continue;
+                }
+                $row = $f['rows'][ $d ];
+                $p   = [ self::noon( $d ), $conv( $row[0] ) ];
+                if ( $a['band'] ) {
+                    $p[] = $conv( $row[1] );
+                    $p[] = $conv( $row[2] );
+                }
+                $pts[] = $p;
+            }
+        }
+        $pts = self::thin( $pts );
+        if ( count( $pts ) < 2 ) {
+            return null;
+        }
+
+        $tips    = [];
+        $weekday = $a['source'] === 'raw' && $a['hours'] > 24;
+        foreach ( $pts as $p ) {
+            $when   = $a['source'] === 'raw' ? self::stamp( $p[0], $weekday ) : wp_date( (string) get_option( 'date_format', 'Y-m-d' ), $p[0] );
+            $tip    = $when . ' · ' . $with( $p[1] );
+            $tips[] = $a['band'] ? $tip . ' · ' . self::number( $base, $p[2] ) . '–' . $with( $p[3] ) : $tip;
+        }
+
+        $vals = array_column( $pts, 1 );
+        if ( $a['band'] ) {
+            $aria = sprintf( naws_label( 'sl_aria_band' ), $name, $period, $with( min( $vals ) ), $with( max( $vals ) ), $with( min( array_column( $pts, 2 ) ) ), $with( max( array_column( $pts, 3 ) ) ) );
+        } else {
+            $aria = sprintf( naws_label( 'sl_aria_line' ), $name, $period, $with( min( $vals ) ), $with( max( $vals ) ), $with( $vals[ count( $vals ) - 1 ] ) );
+        }
+
+        return [
+            'kind'  => 'line',
+            'pts'   => $pts,
+            'band'  => (bool) $a['band'],
+            'tips'  => $tips,
+            'aria'  => $aria,
+            'value' => $with( $vals[ count( $vals ) - 1 ] ),
+        ];
+    }
+
+    /**
+     * A value as text with as many decimals as the quantity deserves:
+     * none for humidity, CO₂ and noise, none for a whole wind speed, two
+     * for inches of rain and inches of mercury, one for everything else.
+     */
+    public static function number( string $base, float $v ): string {
+        $opts = get_option( 'naws_settings', [] );
+        switch ( $base ) {
+            case 'Humidity':
+            case 'CO2':
+            case 'Noise':
+                $d = 0;
+                break;
+            case 'Rain':
+                $d = ( $opts['rain_unit'] ?? 'mm' ) === 'in' ? 2 : 1;
+                break;
+            case 'Pressure':
+                $d = ( $opts['pressure_unit'] ?? 'mbar' ) === 'inHg' ? 2 : 1;
+                break;
+            case 'WindStrength':
+            case 'GustStrength':
+                $d = abs( $v - round( $v ) ) < 0.05 ? 0 : 1;
+                break;
+            default:
+                $d = 1;
+        }
+        return number_format_i18n( $v, $d );
+    }
+
+    /** The clock time of $ts in the site's format, with the weekday in front if asked. */
+    private static function stamp( int $ts, bool $weekday ): string {
+        $time = wp_date( (string) get_option( 'time_format', 'H:i' ), $ts );
+        return $weekday ? wp_date( 'D', $ts ) . ' ' . $time : $time;
+    }
+
+    /** A day of the daily table in the site's date format. */
+    private static function day( string $ymd ): string {
+        return wp_date( (string) get_option( 'date_format', 'Y-m-d' ), self::noon( $ymd ) );
+    }
+
+    /** Noon of a day in the site's timezone: evenly spaced, and never across midnight by DST. */
+    private static function noon( string $ymd ): int {
+        return ( new DateTimeImmutable( $ymd . ' 12:00:00', wp_timezone() ) )->getTimestamp();
+    }
+
     private static function clamp( int $v, int $lo, int $hi ): int {
         return max( $lo, min( $hi, $v ) );
     }

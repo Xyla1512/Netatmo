@@ -219,6 +219,30 @@ function naws_label( string $key ): string {
         case 'wr_switch_period':                   return _x( 'Period', 'wind rose switcher', 'xtx-integration-for-netatmo' );
         case 'wr_switch_measure':                  return _x( 'Measure', 'wind rose switcher', 'xtx-integration-for-netatmo' );
 
+        // [naws_sparkline] (since 2.1.0): what a curve is called in the text a screen reader hears.
+        case 'sl_name_temperature':                return _x( 'Temperature', 'sparkline', 'xtx-integration-for-netatmo' );
+        case 'sl_name_humidity':                   return _x( 'Humidity', 'sparkline', 'xtx-integration-for-netatmo' );
+        case 'sl_name_pressure':                   return _x( 'Pressure', 'sparkline', 'xtx-integration-for-netatmo' );
+        case 'sl_name_co2':                        return _x( 'CO2', 'sparkline', 'xtx-integration-for-netatmo' );
+        case 'sl_name_noise':                      return _x( 'Noise', 'sparkline', 'xtx-integration-for-netatmo' );
+        case 'sl_name_windstrength':               return _x( 'Wind', 'sparkline', 'xtx-integration-for-netatmo' );
+        case 'sl_name_guststrength':               return _x( 'Gusts', 'sparkline', 'xtx-integration-for-netatmo' );
+        case 'sl_name_rain':                       return _x( 'Rain', 'sparkline', 'xtx-integration-for-netatmo' );
+        case 'sl_name_temp_avg':                   return __( 'Daily mean temperature', 'xtx-integration-for-netatmo' );
+        case 'sl_name_temp_min':                   return __( 'Daily low', 'xtx-integration-for-netatmo' );
+        case 'sl_name_temp_max':                   return __( 'Daily high', 'xtx-integration-for-netatmo' );
+        case 'sl_name_humidity_avg':               return __( 'Daily mean humidity', 'xtx-integration-for-netatmo' );
+        case 'sl_name_pressure_avg':               return __( 'Daily mean pressure', 'xtx-integration-for-netatmo' );
+        case 'sl_name_rain_sum':                   return __( 'Rain per day', 'xtx-integration-for-netatmo' );
+        case 'sl_name_wind_avg':                   return __( 'Daily mean wind', 'xtx-integration-for-netatmo' );
+        case 'sl_name_gust_max':                   return __( 'Strongest gust per day', 'xtx-integration-for-netatmo' );
+        case 'sl_name_co2_avg':                    return __( 'Daily mean CO2', 'xtx-integration-for-netatmo' );
+        case 'sl_name_noise_avg':                  return __( 'Daily mean noise', 'xtx-integration-for-netatmo' );
+        case 'sl_aria_line':                       return /* translators: 1: what is measured, 2: period such as "24 hours", 3: lowest value, 4: highest value, 5: latest value; each value carries its unit. */ __( '%1$s, last %2$s: from %3$s to %4$s, latest %5$s', 'xtx-integration-for-netatmo' );
+        case 'sl_aria_bars':                       return /* translators: 1: what is measured, 2: period such as "24 hours", 3: the total with its unit. */ __( '%1$s, last %2$s: %3$s in total', 'xtx-integration-for-netatmo' );
+        case 'sl_aria_band':                       return /* translators: 1: what is measured, 2: period such as "30 days", 3 and 4: lowest and highest daily mean, 5 and 6: lowest low and highest high; each value carries its unit. */ __( '%1$s, last %2$s: daily means from %3$s to %4$s, range %5$s to %6$s', 'xtx-integration-for-netatmo' );
+        case 'sl_preview_aria':                    return __( 'Sample sparkline in the chosen colours', 'xtx-integration-for-netatmo' );
+
         // [naws_sunpath] (since 1.9.11).
         case 'sun_title':                          return __( 'Sun path', 'xtx-integration-for-netatmo' );
         case 'sun_aria':                           return /* translators: 1: sunrise time, 2: sunset time, 3: day length. */ __( 'Sun path: sunrise %1$s, sunset %2$s, day length %3$s.', 'xtx-integration-for-netatmo' );
