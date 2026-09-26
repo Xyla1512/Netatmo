@@ -144,6 +144,7 @@ setlocale( LC_NUMERIC, 'de_DE.UTF-8', 'de_DE', 'German_Germany', 'deu' );
 $de = NAWS_Sparkline::geometry( [ [ 0, 0.5 ], [ 7, 1.25 ], [ 13, 0.75 ] ], 80, 18 );
 setlocale( LC_NUMERIC, $vorher );
 check( 'kein Komma im Pfad unter de_DE',      str_contains( $de['line'] . $de['area'], ',' ), false );
+check( 'keine Punkte: alles leer', NAWS_Sparkline::geometry( [], 80, 18 ), [ 'line' => '', 'area' => '', 'band' => '', 'end' => [], 'lo' => [], 'hi' => [], 'xs' => [] ] );
 
 echo "\nbar_geometry()\n" . str_repeat( '-', 74 ) . "\n";
 $b = NAWS_Sparkline::bar_geometry( [ 0.0, 2.0, 1.0, 0.0 ], 80, 18 );

@@ -223,11 +223,16 @@ final class NAWS_Sparkline {
      *   xs    – x of every point, one decimal, for the hover script
      * A gap is a step longer than three times the median step. A flat
      * series sits at half height instead of dividing by zero.
+     * Callers draw nothing below two points (prepare() returns null), so
+     * an empty series only ever comes back empty.
      *
      * @param array $pts [[ts, value], …] or, with $band, [[ts, value, low, high], …].
      */
     public static function geometry( array $pts, int $w, int $h, bool $band = false ): array {
         $n    = count( $pts );
+        if ( $n === 0 ) {
+            return [ 'line' => '', 'area' => '', 'band' => '', 'end' => [], 'lo' => [], 'hi' => [], 'xs' => [] ];
+        }
         $pad  = max( 2.0, $h / 9 );
         $vals = array_column( $pts, 1 );
         $lo   = min( $vals );
