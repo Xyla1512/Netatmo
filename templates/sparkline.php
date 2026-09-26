@@ -37,11 +37,11 @@ $naws_sl_dot = static fn( array $xy ): string => 'M' . $xy[0] . ' ' . $xy[1] . '
 <?php endforeach; ?>
 <?php else : ?>
 <?php if ( $naws_sl_geo['band'] !== '' ) : ?>
-<path class="naws-sl-band" d="<?php echo esc_attr( $naws_sl_geo['band'] ); ?>"/>
+<path class="naws-sl-band" d="<?php echo esc_attr( $naws_sl_geo['band'] ); ?>" fill-opacity=".16"/>
 <?php else : ?>
 <path class="naws-sl-area" d="<?php echo esc_attr( $naws_sl_geo['area'] ); ?>" fill-opacity=".14"/>
 <?php endif; ?>
-<path class="naws-sl-line" d="<?php echo esc_attr( $naws_sl_geo['line'] ); ?>" fill="none" vector-effect="non-scaling-stroke"/>
+<path class="naws-sl-line" d="<?php echo esc_attr( $naws_sl_geo['line'] ); ?>" fill="none" stroke="currentColor" vector-effect="non-scaling-stroke"/>
 <?php if ( $naws_sl['minmax'] ) : ?>
 <path class="naws-sl-mm" d="<?php echo esc_attr( $naws_sl_dot( $naws_sl_geo['lo'] ) ); ?>" vector-effect="non-scaling-stroke"/>
 <path class="naws-sl-mm" d="<?php echo esc_attr( $naws_sl_dot( $naws_sl_geo['hi'] ) ); ?>" vector-effect="non-scaling-stroke"/>

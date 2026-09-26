@@ -61,7 +61,7 @@ check( 'Rolle img',                           str_contains( $html, 'role="img"' 
 check( 'Vorlesetext escaped',                 str_contains( $html, 'aria-label="Temperature &lt;x&gt; &amp; &quot;y&quot;"' ), true );
 check( 'Sprechblase: x-Positionen (JSON ohne .0)', hover( $html )['x'], [ 2, 78 ] );
 check( 'Sprechblase: Texte',                  hover( $html )['t'], [ '01:00 · 0.0 °C', '01:10 · 10.0 °C' ] );
-check( 'Linienpfad',                          str_contains( $html, '<path class="naws-sl-line" d="M2.00 16.00 L78.00 2.00" fill="none" vector-effect="non-scaling-stroke"/>' ), true );
+check( 'Linienpfad',                          str_contains( $html, '<path class="naws-sl-line" d="M2.00 16.00 L78.00 2.00" fill="none" stroke="currentColor" vector-effect="non-scaling-stroke"/>' ), true );
 check( 'Flaeche darunter',                    str_contains( $html, '<path class="naws-sl-area" d="M2.00 16.00 L78.00 2.00 L78.00 16.00 L2.00 16.00 Z" fill-opacity=".14"/>' ), true );
 check( 'Ring und Endpunkt als runde Striche', substr_count( $html, 'd="M78.00 2.00 h0"' ), 2 );
 check( 'ohne minmax keine Punkte',            str_contains( $html, 'naws-sl-mm' ), false );
@@ -69,6 +69,7 @@ check( 'ohne value keine Zahl',               str_contains( $html, 'naws-sl-val'
 check( 'kein Kreis',                          str_contains( $html, '<circle' ), false );
 check( 'keine Farbe im Markup',               (bool) preg_match( '/(fill|stroke)="#|style="[^"]*(color|fill|stroke)/', $html ), false );
 check( 'ohne CSS: feste Groesse und keine schwarze Flaeche', str_contains( $html, 'width="80" height="18"' ) && str_contains( $html, 'fill="none"' ), true );
+check( 'ohne CSS: Linie in Textfarbe, Band durchscheinend', str_contains( $html, 'stroke="currentColor"' ), true );
 // Review Focus 5: zwei Sparklines auf einer Seite duerfen sich keine id teilen.
 check( 'keine id',                            str_contains( $html, ' id=' ), false );
 check( 'kein Skript',                         str_contains( $html, '<script' ), false );
@@ -91,7 +92,7 @@ $b = NAWS_Sparkline::markup(
     [ 'kind' => 'line', 'pts' => [ [ 0, 10.0, 8.0, 12.0 ], [ 10, 11.0, 9.0, 14.0 ] ], 'band' => true, 'tips' => [ 'a', 'b' ], 'aria' => 'x', 'value' => '' ]
 );
 check( 'Modifikator band',                    str_starts_with( $b, '<span class="naws-sl naws-sl--band">' ), true );
-check( 'das Band',                            str_contains( $b, '<path class="naws-sl-band" d="M2.00 6.67 L78.00 2.00 L78.00 13.67 L2.00 16.00 Z"/>' ), true );
+check( 'das Band',                            str_contains( $b, '<path class="naws-sl-band" d="M2.00 6.67 L78.00 2.00 L78.00 13.67 L2.00 16.00 Z" fill-opacity=".16"/>' ), true );
 check( 'statt der Flaeche',                   str_contains( $b, 'naws-sl-area' ), false );
 
 echo "\nBalken\n" . str_repeat( '-', 74 ) . "\n";
@@ -121,6 +122,7 @@ foreach ( [ 'naws-sl-line', 'naws-sl-area', 'naws-sl-band', 'naws-sl-bar', 'naws
     check( "Regel fuer .$klasse", str_contains( $css, ".$klasse" ), true );
 }
 check( 'Groesse aus Variablen mit em-Vorgabe', str_contains( $css, 'width:var(--naws-sl-w, 4.6em); height:var(--naws-sl-h, 1.05em);' ), true );
+check( 'feste Breite schrumpft mit der Spalte', str_contains( $css, '.naws-sl { display:inline-flex;' ) && str_contains( $css, 'max-width:100%; min-width:0;' ), true );
 check( 'jede Farbvariable hat die Vorgabe als Rueckfall',
     str_contains( $css, 'var(--naws-sl-line, #427272)' ) && str_contains( $css, 'var(--naws-sl-rain, #3585b0)' ) && str_contains( $css, 'var(--naws-sl-tip-bg, #2d5252)' ), true );
 check( 'dunkler Grund liest die Dunkel-Farben', str_contains( $css, 'var(--naws-sl-line-dark, #7cc7c7)' ) && str_contains( $css, 'var(--naws-sl-rain-dark, #78ace8)' ), true );

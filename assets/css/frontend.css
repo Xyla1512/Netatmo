@@ -1996,8 +1996,8 @@
    fallback. Without width/height on the shortcode the curve is sized in
    em and grows with the text around it. Dots are round-capped strokes
    of zero length; their size is the stroke width, in pixels. */
-.naws-sl { display:inline-flex; align-items:center; gap:.3em; vertical-align:-.18em; line-height:1; white-space:nowrap; }
-.naws-sl svg { display:block; width:var(--naws-sl-w, 4.6em); height:var(--naws-sl-h, 1.05em); max-width:none; overflow:visible; }
+.naws-sl { display:inline-flex; align-items:center; gap:.3em; vertical-align:-.18em; line-height:1; white-space:nowrap; max-width:100%; }
+.naws-sl svg { display:block; width:var(--naws-sl-w, 4.6em); height:var(--naws-sl-h, 1.05em); max-width:100%; min-width:0; overflow:visible; }
 .naws-sl-line { fill:none; stroke:var(--naws-sl-line, #427272); stroke-width:1.5px; stroke-linejoin:round; stroke-linecap:round; }
 .naws-sl-area { fill:var(--naws-sl-line, #427272); fill-opacity:.14; stroke:none; }
 .naws-sl-band { fill:var(--naws-sl-band, #427272); fill-opacity:.16; stroke:none; }
