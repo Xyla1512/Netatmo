@@ -195,6 +195,30 @@ check( 'Hex bleibt',                           $san['sparkline_line'] ?? null, '
 check( 'ein Farbname faellt weg',              array_key_exists( 'sparkline_dots', $san ), false );
 saved( [] );
 
+echo "\nReiter des Erscheinungsbilds\n";
+
+check( 'acht Reiter, Basis zuerst', array_keys( NAWS_Colors::appearance_tabs() ), [
+    'theme', 'icons', 'live_wind', 'chart24h', 'charttheme', 'history', 'heatmap', 'windrose',
+] );
+check( 'ein bekannter Reiter bleibt',         NAWS_Colors::appearance_tab( 'windrose' ), 'windrose' );
+check( 'ein unbekannter wird Basis',          NAWS_Colors::appearance_tab( 'nonsense' ), 'theme' );
+check( 'leer wird Basis',                     NAWS_Colors::appearance_tab( '' ), 'theme' );
+
+$admin_src = (string) file_get_contents( __DIR__ . '/../includes/class-naws-admin.php' );
+check( 'Speichern liest den Reiter sanitiert', str_contains( $admin_src, "NAWS_Colors::appearance_tab( isset( \$_POST['naws_tab'] ) ? sanitize_key( wp_unslash( \$_POST['naws_tab'] ) ) : '' )" ), true );
+check( '… und kehrt dorthin zurueck',         str_contains( $admin_src, "admin_url( 'admin.php?page=naws-appearance&updated=1&tab=' . \$tab )" ), true );
+
+$view = (string) file_get_contents( __DIR__ . '/../admin/views/appearance.php' );
+check( 'Reiterleiste im WordPress-Stil',      str_contains( $view, '<nav class="nav-tab-wrapper naws-appearance-tabs"' ), true );
+check( 'der View liest die Liste aus NAWS_Colors', str_contains( $view, '$tabs = NAWS_Colors::appearance_tabs();' ), true );
+check( 'jede Flaeche kennt ihren Zustand',    substr_count( $view, 'class="naws-appearance-pane<?php echo esc_attr( $naws_pane_class(' ), count( NAWS_Colors::appearance_tabs() ) );
+check( 'keine fest aktive Flaeche mehr',      str_contains( $view, 'class="naws-appearance-pane active"' ), false );
+check( 'verstecktes Feld fuer den Reiter',    str_contains( $view, '<input type="hidden" name="naws_tab" id="naws-tab-field"' ), true );
+
+$rest = (string) file_get_contents( __DIR__ . '/../admin/views/rest-api-docs.php' );
+check( 'REST-Seite: zwei Reiterleisten im WordPress-Stil', substr_count( $rest, 'class="nav-tab-wrapper naws-tab-bar"' ), 2 );
+check( 'REST-Seite: aktive Reiter markiert',  substr_count( $rest, 'class="nav-tab naws-tab nav-tab-active active"' ), 2 );
+
 echo str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );

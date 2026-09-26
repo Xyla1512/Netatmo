@@ -153,13 +153,13 @@ $base_url   = rest_url( 'naws/v1' );
 <div class="naws-api-panel">
 <h2>📖 <?php esc_html_e( 'Endpoint Reference', 'xtx-integration-for-netatmo' ); ?></h2>
 
-<div class="naws-tab-bar">
-    <button class="naws-tab active" data-tab="ep-overview">Übersicht</button>
-    <button class="naws-tab" data-tab="ep-station">Station</button>
-    <button class="naws-tab" data-tab="ep-modules">Module</button>
-    <button class="naws-tab" data-tab="ep-current">Aktuell</button>
-    <button class="naws-tab" data-tab="ep-readings">Messwerte</button>
-    <button class="naws-tab" data-tab="ep-daily">Tagesdaten</button>
+<div class="nav-tab-wrapper naws-tab-bar">
+    <button type="button" class="nav-tab naws-tab nav-tab-active active" data-tab="ep-overview">Übersicht</button>
+    <button type="button" class="nav-tab naws-tab" data-tab="ep-station">Station</button>
+    <button type="button" class="nav-tab naws-tab" data-tab="ep-modules">Module</button>
+    <button type="button" class="nav-tab naws-tab" data-tab="ep-current">Aktuell</button>
+    <button type="button" class="nav-tab naws-tab" data-tab="ep-readings">Messwerte</button>
+    <button type="button" class="nav-tab naws-tab" data-tab="ep-daily">Tagesdaten</button>
 </div>
 
 <!-- Tab: Overview -->
@@ -367,12 +367,12 @@ $base_url   = rest_url( 'naws/v1' );
 <div class="naws-api-panel">
 <h2>🧪 <?php esc_html_e( 'Usage Examples', 'xtx-integration-for-netatmo' ); ?></h2>
 
-<div class="naws-tab-bar">
-    <button class="naws-tab active" data-tab="ex-curl">cURL</button>
-    <button class="naws-tab" data-tab="ex-js">JavaScript</button>
-    <button class="naws-tab" data-tab="ex-php">PHP</button>
-    <button class="naws-tab" data-tab="ex-google">Chart.js</button>
-    <button class="naws-tab" data-tab="ex-python">Python</button>
+<div class="nav-tab-wrapper naws-tab-bar">
+    <button type="button" class="nav-tab naws-tab nav-tab-active active" data-tab="ex-curl">cURL</button>
+    <button type="button" class="nav-tab naws-tab" data-tab="ex-js">JavaScript</button>
+    <button type="button" class="nav-tab naws-tab" data-tab="ex-php">PHP</button>
+    <button type="button" class="nav-tab naws-tab" data-tab="ex-google">Chart.js</button>
+    <button type="button" class="nav-tab naws-tab" data-tab="ex-python">Python</button>
 </div>
 
 <!-- cURL -->
@@ -539,9 +539,9 @@ wp_add_inline_script( 'naws-admin', '(function(){
     document.querySelectorAll(\'.naws-tab\').forEach(function(tab){
         tab.addEventListener(\'click\', function(){
             var panel = this.closest(\'.naws-api-panel\');
-            panel.querySelectorAll(\'.naws-tab\').forEach(function(t){ t.classList.remove(\'active\'); });
+            panel.querySelectorAll(\'.naws-tab\').forEach(function(t){ t.classList.remove(\'active\', \'nav-tab-active\'); });
             panel.querySelectorAll(\'.naws-tab-content\').forEach(function(c){ c.classList.remove(\'active\'); });
-            this.classList.add(\'active\');
+            this.classList.add(\'active\', \'nav-tab-active\');
             var target = document.getElementById(this.dataset.tab);
             if(target) target.classList.add(\'active\');
         });

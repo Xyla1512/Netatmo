@@ -88,17 +88,11 @@ $chart_short_labels = [
     'chart_module4_co2'      => 'Module4 CO2',
 ];
 
-// Tab definitions
-$tabs = [
-    'theme'     => __( 'Base Theme', 'xtx-integration-for-netatmo' ),
-    'icons'     => __( 'Icons', 'xtx-integration-for-netatmo' ),
-    'live_wind' => __( 'Live dashboard: wind', 'xtx-integration-for-netatmo' ),
-    'chart24h'  => __( '24h Chart Colors', 'xtx-integration-for-netatmo' ),
-    'charttheme'=> __( 'Chart Theming', 'xtx-integration-for-netatmo' ),
-    'history'   => __( 'Year Comparison Palette', 'xtx-integration-for-netatmo' ),
-    'heatmap'   => __( 'Heatmap Scale', 'xtx-integration-for-netatmo' ),
-    'windrose'  => __( 'Wind Rose', 'xtx-integration-for-netatmo' ),
-];
+// Tab definitions: one list with the handler that returns to the open tab.
+$tabs = NAWS_Colors::appearance_tabs();
+// The open tab: after a save the handler passes it back as ?tab=.
+$naws_tab_now    = NAWS_Colors::appearance_tab( isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- which tab is open, read-only UI state, validated against the tab list
+$naws_pane_class = static fn( string $id ): string => $id === $naws_tab_now ? ' active' : '';
 
 // Icon sets data
 $icon_sets     = NAWS_Icons::get_all_sets();
@@ -142,18 +136,19 @@ $icon_color_keys = [
         <input type="hidden" name="action" value="naws_save_appearance">
 
         <!-- ── Tab Navigation ── -->
-        <div class="naws-appearance-tabs">
+        <nav class="nav-tab-wrapper naws-appearance-tabs" aria-label="<?php esc_attr_e( 'Appearance sections', 'xtx-integration-for-netatmo' ); ?>">
             <?php foreach ( $tabs as $tab_id => $tab_label ) : ?>
-                <button type="button" class="naws-appearance-tab<?php echo $tab_id === 'theme' ? ' active' : ''; ?>" data-tab="<?php echo esc_attr( $tab_id ); ?>">
+                <button type="button" class="nav-tab naws-appearance-tab<?php echo esc_attr( $tab_id === $naws_tab_now ? ' nav-tab-active active' : '' ); ?>" data-tab="<?php echo esc_attr( $tab_id ); ?>" aria-pressed="<?php echo esc_attr( $tab_id === $naws_tab_now ? 'true' : 'false' ); ?>">
                     <?php echo esc_html( $tab_label ); ?>
                 </button>
             <?php endforeach; ?>
-        </div>
+        </nav>
+        <input type="hidden" name="naws_tab" id="naws-tab-field" value="<?php echo esc_attr( $naws_tab_now ); ?>">
 
         <!-- ============================================================
              Tab 1: Basis-Theme
              ============================================================ -->
-        <div class="naws-appearance-pane active" data-pane="theme">
+        <div class="naws-appearance-pane<?php echo esc_attr( $naws_pane_class( 'theme' ) ); ?>" data-pane="theme">
             <p class="description"><?php esc_html_e( 'Base colors for background, surfaces, text and borders. Applied to all shortcodes.', 'xtx-integration-for-netatmo' ); ?></p>
             <div class="naws-appearance-row">
                 <div class="naws-appearance-controls">
@@ -257,7 +252,7 @@ $icon_color_keys = [
         <!-- ============================================================
              Tab 2: Icon-Sets & Icon-Farben
              ============================================================ -->
-        <div class="naws-appearance-pane" data-pane="icons">
+        <div class="naws-appearance-pane<?php echo esc_attr( $naws_pane_class( 'icons' ) ); ?>" data-pane="icons">
             <p class="description"><?php esc_html_e( 'Choose an icon set for the frontend and customize colors per sensor.', 'xtx-integration-for-netatmo' ); ?></p>
 
             <h3 style="margin:0 0 0.75rem;"><?php esc_html_e( 'Choose Icon Set', 'xtx-integration-for-netatmo' ); ?></h3>
@@ -330,7 +325,7 @@ $icon_color_keys = [
         <!-- ============================================================
              Tab: Live-Dashboard — Windkacheln (since 2.0.2)
              ============================================================ -->
-        <div class="naws-appearance-pane" data-pane="live_wind">
+        <div class="naws-appearance-pane<?php echo esc_attr( $naws_pane_class( 'live_wind' ) ); ?>" data-pane="live_wind">
             <p class="description"><?php esc_html_e( 'Colours of the two wind cards in [naws_live]: the compass with its rose and pointer, and the half-circle gauge for wind, gusts and the peak gust of the day. Rings, letters and ticks follow the base theme. The defaults are the colours the dashboard has always used.', 'xtx-integration-for-netatmo' ); ?></p>
             <div class="naws-appearance-row">
                 <div class="naws-appearance-controls">
@@ -435,7 +430,7 @@ $icon_color_keys = [
         <!-- ============================================================
              Tab 3: 24h-Chart-Farben
              ============================================================ -->
-        <div class="naws-appearance-pane" data-pane="chart24h">
+        <div class="naws-appearance-pane<?php echo esc_attr( $naws_pane_class( 'chart24h' ) ); ?>" data-pane="chart24h">
             <p class="description"><?php esc_html_e( 'Line color per sensor in the 24-hour charts.', 'xtx-integration-for-netatmo' ); ?></p>
             <div class="naws-appearance-row">
                 <div class="naws-appearance-controls">
@@ -485,7 +480,7 @@ $icon_color_keys = [
         <!-- ============================================================
              Tab 3: Chart-Theming
              ============================================================ -->
-        <div class="naws-appearance-pane" data-pane="charttheme">
+        <div class="naws-appearance-pane<?php echo esc_attr( $naws_pane_class( 'charttheme' ) ); ?>" data-pane="charttheme">
             <p class="description"><?php esc_html_e( 'Grid, axis and tooltip colors for all charts.', 'xtx-integration-for-netatmo' ); ?></p>
             <div class="naws-appearance-row">
                 <div class="naws-appearance-controls">
@@ -544,7 +539,7 @@ $icon_color_keys = [
         <!-- ============================================================
              Tab 4: Jahresvergleich-Palette
              ============================================================ -->
-        <div class="naws-appearance-pane" data-pane="history">
+        <div class="naws-appearance-pane<?php echo esc_attr( $naws_pane_class( 'history' ) ); ?>" data-pane="history">
             <p class="description"><?php esc_html_e( '15 colors for the year lines in the history chart.', 'xtx-integration-for-netatmo' ); ?></p>
 
             <div class="naws-preview-label">Live-Vorschau — Jahresvergleich</div>
@@ -582,7 +577,7 @@ $icon_color_keys = [
         <!-- ============================================================
              Tab 6: Heatmap-Skala
              ============================================================ -->
-        <div class="naws-appearance-pane" data-pane="heatmap">
+        <div class="naws-appearance-pane<?php echo esc_attr( $naws_pane_class( 'heatmap' ) ); ?>" data-pane="heatmap">
             <p class="description"><?php esc_html_e( 'Colour scale for [naws_heatmap]. The stops are degrees Celsius; values in between are interpolated. They stay in Celsius even when the display unit is Fahrenheit, because the colour is taken from the stored value.', 'xtx-integration-for-netatmo' ); ?></p>
             <div class="naws-appearance-row">
                 <div class="naws-appearance-controls">
@@ -624,7 +619,7 @@ $icon_color_keys = [
         <!-- ============================================================
              Tab 7: Windrose
              ============================================================ -->
-        <div class="naws-appearance-pane" data-pane="windrose">
+        <div class="naws-appearance-pane<?php echo esc_attr( $naws_pane_class( 'windrose' ) ); ?>" data-pane="windrose">
             <p class="description"><?php esc_html_e( 'Colours for [naws_windrose]: one class per Beaufort step from the centre outwards, the rings behind the rays, the hub that carries the calm share, and the active button of the period switcher — the other buttons borrow that colour when the mouse is over them. Pick one hue that gets darker step by step; the rose is read by length first and by colour second.', 'xtx-integration-for-netatmo' ); ?></p>
             <div class="naws-appearance-row">
                 <div class="naws-appearance-controls">
@@ -808,10 +803,22 @@ jQuery(document).ready(function($) {
     // ── Tab switching ──
     $('.naws-appearance-tab').on('click', function() {
         var tab = $(this).data('tab');
-        $('.naws-appearance-tab').removeClass('active');
-        $(this).addClass('active');
+        $('.naws-appearance-tab').removeClass('active nav-tab-active').attr('aria-pressed', 'false');
+        $(this).addClass('active nav-tab-active').attr('aria-pressed', 'true');
         $('.naws-appearance-pane').removeClass('active');
         $('.naws-appearance-pane[data-pane="'+tab+'"]').addClass('active');
+        // Remember the tab: the colour form sends it back through its hidden
+        // field, the address carries it for a reload, and the referer fields
+        // follow, so the widget form further down returns here as well.
+        $('#naws-tab-field').val(tab);
+        if (window.history && window.history.replaceState && window.URL) {
+            var u = new URL(window.location.href);
+            u.searchParams.set('tab', tab);
+            u.searchParams.delete('updated');
+            u.searchParams.delete('reset');
+            window.history.replaceState(null, '', u.toString());
+            $('input[name="_wp_http_referer"]').val(u.pathname + u.search);
+        }
         // Re-init color pickers in newly visible pane (WP Color Picker needs visible container)
         var pane = $('.naws-appearance-pane[data-pane="'+tab+'"]');
         pane.find('.naws-color-picker').each(function() {

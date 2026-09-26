@@ -631,7 +631,11 @@ class NAWS_Admin {
         update_option( NAWS_Colors::OPTION_KEY, NAWS_Colors::sanitize( $input ) );
         NAWS_Colors::flush_cache();
 
-        wp_safe_redirect( admin_url( 'admin.php?page=naws-appearance&updated=1' ) );
+        // Back to the tab that was open (since 2.1.0). The tab switcher keeps
+        // the field current; anything that is not a tab id becomes the first.
+        $tab = NAWS_Colors::appearance_tab( isset( $_POST['naws_tab'] ) ? sanitize_key( wp_unslash( $_POST['naws_tab'] ) ) : '' );
+
+        wp_safe_redirect( admin_url( 'admin.php?page=naws-appearance&updated=1&tab=' . $tab ) );
         exit;
     }
 

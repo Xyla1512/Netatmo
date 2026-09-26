@@ -931,10 +931,8 @@
 .naws-copy-btn{position:absolute;top:8px;right:8px;background:#475569;color:#fff;border:none;padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;opacity:.7;transition:all .15s}
 .naws-copy-btn:hover{opacity:1;background:#3b82f6}
 .naws-copy-btn.copied{background:#10b981;opacity:1}
-.naws-tab-bar{display:flex;gap:0;border-bottom:2px solid #e2e8f0;margin-bottom:16px}
-.naws-tab{padding:8px 18px;font-size:13px;font-weight:600;color:#64748b;cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
-.naws-tab:hover{color:#334155}
-.naws-tab.active{color:#3b82f6;border-bottom-color:#3b82f6}
+.naws-tab-bar.nav-tab-wrapper{margin-bottom:16px}
+.naws-tab-bar .nav-tab{font-family:inherit;cursor:pointer}
 .naws-tab-content{display:none}
 .naws-tab-content.active{display:block}
 
@@ -1070,10 +1068,13 @@
 /* ============================================================
    Appearance page
    ============================================================ */
-.naws-appearance-tabs{display:flex;gap:0;border-bottom:2px solid #e2e8f0;margin:1rem 0 0;}
-.naws-appearance-tab{padding:10px 20px;border:none;background:none;font-size:13px;font-weight:600;color:#646970;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color 0.15s,border-color 0.15s;white-space:nowrap;}
-.naws-appearance-tab:hover{color:#1d2327;}
-.naws-appearance-tab.active{color:#2271b1;border-bottom-color:#2271b1;}
+/* The Appearance tabs are WordPress's own nav-tabs since 2.1.0: grey file
+   cards, the active one joined to the page, floating and wrapping like the
+   core ones. They are buttons rather than links, so they need the font and
+   the cursor a link would bring. */
+.naws-appearance-tabs.nav-tab-wrapper{margin:1rem 0 0;}
+.naws-appearance-tabs .nav-tab{font-family:inherit;cursor:pointer;}
+.naws-appearance-tabs .nav-tab:focus{outline:2px solid #2271b1;outline-offset:-2px;box-shadow:none;}
 .naws-appearance-pane{display:none;padding:1.25rem 0 0;}
 .naws-appearance-pane.active{display:block;}
 .naws-appearance-row{display:grid;grid-template-columns:1fr 340px;gap:1.5rem;padding:0.5rem 0 1rem;align-items:start;}

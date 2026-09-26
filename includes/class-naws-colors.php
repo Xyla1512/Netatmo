@@ -659,6 +659,29 @@ class NAWS_Colors {
     // ================================================================
 
     /**
+     * The tabs of the Appearance page, id => label, in display order. One
+     * list for the view that draws them and for the handler that returns
+     * to the one that was open, so the two cannot disagree.
+     */
+    public static function appearance_tabs(): array {
+        return [
+            'theme'      => __( 'Base Theme', 'xtx-integration-for-netatmo' ),
+            'icons'      => __( 'Icons', 'xtx-integration-for-netatmo' ),
+            'live_wind'  => __( 'Live dashboard: wind', 'xtx-integration-for-netatmo' ),
+            'chart24h'   => __( '24h Chart Colors', 'xtx-integration-for-netatmo' ),
+            'charttheme' => __( 'Chart Theming', 'xtx-integration-for-netatmo' ),
+            'history'    => __( 'Year Comparison Palette', 'xtx-integration-for-netatmo' ),
+            'heatmap'    => __( 'Heatmap Scale', 'xtx-integration-for-netatmo' ),
+            'windrose'   => __( 'Wind Rose', 'xtx-integration-for-netatmo' ),
+        ];
+    }
+
+    /** A tab id that exists, or 'theme'. */
+    public static function appearance_tab( string $id ): string {
+        return array_key_exists( $id, self::appearance_tabs() ) ? $id : 'theme';
+    }
+
+    /**
      * Get color groups with their keys, for rendering the admin form.
      */
     public static function get_groups() {

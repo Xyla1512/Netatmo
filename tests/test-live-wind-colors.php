@@ -173,7 +173,7 @@ check( 'der Zeiger nimmt die Nadelfarbe auch als Fuellung (Pfeilkopf)', (bool) p
 echo "\nErscheinungsbild: eigener Reiter mit Vorschau\n" . str_repeat( '-', 74 ) . "\n";
 
 $view = file_get_contents( $PLUGIN . 'admin/views/appearance.php' );
-check( 'der Reiter live_wind ist definiert', (bool) preg_match( "/'live_wind'\s*=>\s*__\(/", $view ), true );
+check( 'der Reiter live_wind ist definiert', array_key_exists( 'live_wind', NAWS_Colors::appearance_tabs() ), true );
 check( 'es gibt den Bereich data-pane="live_wind"', str_contains( $view, 'data-pane="live_wind"' ), true );
 check( 'die Felder kommen aus der Gruppe', str_contains( $view, "\$groups['live_wind']['keys']" ), true );
 check( 'die Felder melden sich als Vorschau livewind', str_contains( $view, 'data-preview="livewind"' ), true );
