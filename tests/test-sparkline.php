@@ -94,10 +94,12 @@ check( 'rain_sum wird zu Balken',             NAWS_Sparkline::normalise_atts( [ 
 
 check( 'Band bei temp_avg',                   NAWS_Sparkline::normalise_atts( [ 'param' => 'temp_avg', 'band' => 'minmax' ] )['band'], true );
 check( 'Band nicht bei temp_max',             NAWS_Sparkline::normalise_atts( [ 'param' => 'temp_max', 'band' => 'minmax' ] )['band'], false );
-check( 'Band nicht bei Balken',               NAWS_Sparkline::normalise_atts( [ 'param' => 'temp_avg', 'band' => 'minmax', 'type' => 'bars' ] )['band'], false );
+check( 'Balken gibt es fuer temp_avg nicht, also gilt das Band', NAWS_Sparkline::normalise_atts( [ 'param' => 'temp_avg', 'band' => 'minmax', 'type' => 'bars' ] )['band'], true );
 check( 'Band nicht bei Rohwerten',            NAWS_Sparkline::normalise_atts( [ 'band' => 'minmax' ] )['band'], false );
 
-check( 'type bars gilt auch fuer Temperatur', NAWS_Sparkline::normalise_atts( [ 'type' => 'bars' ] )['type'], 'bars' );
+check( 'type bars bei Temperatur wird Linie', NAWS_Sparkline::normalise_atts( [ 'type' => 'bars' ] )['type'], 'line' );
+check( 'type bars bei Tagesspalte temp_avg wird Linie', NAWS_Sparkline::normalise_atts( [ 'param' => 'temp_avg', 'type' => 'bars' ] )['type'], 'line' );
+check( 'type line gilt auch fuer Regen',    NAWS_Sparkline::normalise_atts( [ 'param' => 'Rain', 'type' => 'line' ] )['type'], 'line' );
 check( 'type Unsinn wird automatisch',        NAWS_Sparkline::normalise_atts( [ 'type' => 'pie' ] )['type'], 'line' );
 
 $s = NAWS_Sparkline::normalise_atts( [ 'width' => '5', 'height' => '500' ] );

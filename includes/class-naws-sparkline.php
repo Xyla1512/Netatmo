@@ -69,7 +69,9 @@ final class NAWS_Sparkline {
      * there is nothing sensible to draw: an unknown parameter, or a raw
      * parameter together with days (the daily table knows rain_sum, not
      * Rain, and a silent reinterpretation would draw something else than
-     * was asked for).
+     * was asked for). Bars are forced to line for non-rain quantities,
+     * because a bar is a sum and a sum of temperatures or pressures means
+     * nothing; only multiplicative conversions (mm→in) are valid for bars.
      */
     public static function normalise_atts( array $atts ): ?array {
         $param    = trim( (string) ( $atts['param'] ?? 'Temperature' ) );
@@ -98,6 +100,13 @@ final class NAWS_Sparkline {
         $type = strtolower( trim( (string) ( $atts['type'] ?? '' ) ) );
         if ( ! in_array( $type, [ 'line', 'bars' ], true ) ) {
             $type = $base === 'Rain' ? 'bars' : 'line';
+        }
+
+        // Bars exist for rain only: a bar is a sum, and a sum of temperatures
+        // or pressures means nothing. Only multiplicative conversions (mm→in)
+        // are valid for bars.
+        if ( $type === 'bars' && $base !== 'Rain' ) {
+            $type = 'line';
         }
 
         $band = $source === 'day' && $param === 'temp_avg' && $type === 'line'
