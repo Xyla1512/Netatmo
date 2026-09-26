@@ -143,6 +143,49 @@ check( 'feste Groesse 200 x 40',              str_contains( $pv['line'], 'style=
 check( 'Vorlesetext der Beispiele',           str_contains( $pv['bars'], 'aria-label="Sample sparkline in the chosen colours"' ), true );
 check( 'das Beispiel ist fest',               NAWS_Sparkline::sample( 'line' ), NAWS_Sparkline::sample( 'line' ) );
 
+echo "\nKachel\n" . str_repeat( '-', 74 ) . "\n";
+$ta = NAWS_Sparkline::normalise_atts( [ 'layout' => 'tile', 'title' => 'Aussen "Garten" & Hof' ] );
+$td = [ 'kind' => 'line', 'pts' => [ [ 0, 10.0 ], [ 10, 12.5 ], [ 20, 11.0 ] ], 'band' => false, 'tips' => [ 'a', 'b', 'c' ], 'aria' => 'x', 'value' => '11.0 °C', 'name' => 'Temperature', 'unit' => '°C', 'period' => '24 hours' ];
+$tile = NAWS_Sparkline::tile_markup( $ta, $td );
+check( 'Wurzel der Karte',                    str_starts_with( $tile, '<div class="naws-sl-card naws-sl-tile">' ), true );
+// Review Focus 3: title wird escaped.
+check( 'Name escaped',                        str_contains( $tile, '<div class="naws-sl-tile-name">Aussen &quot;Garten&quot; &amp; Hof</div>' ), true );
+check( 'Wert mit kleiner Einheit',            str_contains( $tile, '<div class="naws-sl-tile-val">11.0<small>°C</small></div>' ), true );
+check( 'Nebenzeile Tief/Hoch',                str_contains( $tile, '<div class="naws-sl-tile-sub">Low 10.0 · High 12.5 °C</div>' ), true );
+check( 'Kurve 200 x 44 mit Tief/Hoch',        str_contains( $tile, 'viewBox="0 0 200 44"' ) && substr_count( $tile, 'class="naws-sl-mm"' ) === 2, true );
+check( 'Kurve in der Kachel',                 str_contains( $tile, '<div class="naws-sl-tile-plot"><span class="naws-sl naws-sl--line">' ), true );
+check( 'Karte: keine Farben, keine id',       (bool) preg_match( '/(fill|stroke)="#|style="[^"]*(color|background)| id=/', $tile ), false );
+check( 'endet mit der Karte',                 str_ends_with( $tile, '</div>' ), true );
+$trocken = NAWS_Sparkline::tile_markup( NAWS_Sparkline::normalise_atts( [ 'param' => 'Rain', 'layout' => 'tile' ] ), [ 'kind' => 'bars', 'sums' => [ 0.0, 0.0 ], 'tips' => [ '', '' ], 'aria' => 'x', 'value' => '0.0 mm', 'name' => 'Rain', 'unit' => 'mm', 'period' => '24 hours', 'total' => 0.0 ] );
+check( 'trockene Regenkachel ohne Nebenzeile', str_contains( $trocken, 'naws-sl-tile-sub' ), false );
+
+echo "\nMonatsblock\n" . str_repeat( '-', 74 ) . "\n";
+$tage = [ '2026-09-24', '2026-09-25', '2026-09-26' ];
+$ma   = NAWS_Sparkline::normalise_atts( [ 'param' => 'temp_avg', 'days' => '3', 'band' => 'minmax' ] );
+$ma['w'] = 680; $ma['h'] = 64;
+$md   = NAWS_Sparkline::prepare( $ma, [ 'dates' => $tage, 'rows' => [ '2026-09-24' => [ 12.0, 8.0, 16.0 ], '2026-09-26' => [ 14.0, 9.0, 19.0 ] ] ] );
+$mra  = NAWS_Sparkline::normalise_atts( [ 'param' => 'rain_sum', 'days' => '3' ] );
+$mra['w'] = 680; $mra['h'] = 40;
+$mrd  = NAWS_Sparkline::prepare( $mra, [ 'dates' => $tage, 'rows' => [ '2026-09-25' => [ 4.2 ] ] ] );
+$month = NAWS_Sparkline::month_markup( $ma, $md, $mra, $mrd, $tage, 3 );
+check( 'Wurzel des Blocks',                   str_starts_with( $month, '<div class="naws-sl-card naws-sl-month">' ), true );
+check( 'Band-Zeile mit Mittel',               str_contains( $month, '<div class="naws-sl-month-k"><b>14.0 °C</b>Daily mean on 9/26</div>' ), true );
+check( 'Band 680 x 64',                       str_contains( $month, 'viewBox="0 0 680 64"' ), true );
+check( 'Regen-Zeile',                         str_contains( $month, '<div class="naws-sl-month-k"><b>4.2 mm</b>Rain in 3 days</div>' ) && str_contains( $month, 'viewBox="0 0 680 40"' ), true );
+check( 'Achse',                               str_contains( $month, '<div class="naws-sl-month-axis"><div></div><div><span>9/24</span><span>9/26</span></div></div>' ), true );
+// Review Focus 2: ohne Regenmesser nur Temperatur und Achse.
+$ohne = NAWS_Sparkline::month_markup( $ma, $md, $mra, null, $tage, 3 );
+check( 'ohne Regen: eine Zeile',              substr_count( $ohne, 'class="naws-sl-month-row' ), 1 );
+check( 'ohne Regen: Achse bleibt',            str_contains( $ohne, 'naws-sl-month-axis' ), true );
+check( 'leere Station: Monat leer',           NAWS_Sparkline::render( [ 'layout' => 'month' ] ), '' );
+check( 'leere Station: Kachel leer',          NAWS_Sparkline::render( [ 'layout' => 'tile' ] ), '' );
+
+$css = (string) file_get_contents( dirname( __DIR__ ) . '/assets/css/frontend.css' );
+// Review Focus 1: Karte und Kurve füllen jede Spalte.
+check( 'Karte füllt die Spalte',              str_contains( $css, '.naws-sl-card { display:block; box-sizing:border-box; width:100%;' ), true );
+check( 'Kurve in der Karte über die volle Breite', str_contains( $css, '.naws-sl-tile-plot .naws-sl svg { width:100%; height:44px; }' ), true );
+check( 'Monat auf dem Handy einspaltig',       str_contains( $css, '@media (max-width:520px) { .naws-sl-month-row, .naws-sl-month-axis { grid-template-columns:1fr;' ), true );
+
 echo "\n" . str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );

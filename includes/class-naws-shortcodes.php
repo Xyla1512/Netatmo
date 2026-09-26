@@ -401,7 +401,7 @@ class NAWS_Shortcodes {
     }
 
     // ----------------------------------------------------------------
-    // [naws_sparkline param="Temperature" hours="24" days="" module="" width="" height="" show="none" type="" band=""]
+    // [naws_sparkline param="Temperature" hours="24" days="" module="" width="" height="" show="none" type="" band="" layout="inline|tile|month" title=""]
     // A curve the size of a word, since 2.1.0
     // ----------------------------------------------------------------
     public function sc_sparkline( $atts ) {
@@ -415,6 +415,8 @@ class NAWS_Shortcodes {
             'show'   => 'none',
             'type'   => '',
             'band'   => '',
+            'layout' => '',
+            'title'  => '',
         ], $atts, 'naws_sparkline' );
 
         $html = NAWS_Sparkline::render( $atts );

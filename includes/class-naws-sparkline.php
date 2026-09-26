@@ -633,15 +633,22 @@ final class NAWS_Sparkline {
 
     /**
      * The entry for the shortcode and the widget: attributes in, HTML out,
-     * '' whenever there is nothing to draw.
+     * '' whenever there is nothing to draw. layout="month" has its own
+     * data path; layout="tile" wraps the curve in a card.
      */
     public static function render( array $atts ): string {
+        if ( strtolower( trim( (string) ( $atts['layout'] ?? '' ) ) ) === 'month' ) {
+            return self::render_month( $atts );
+        }
         $a = self::normalise_atts( $atts );
         if ( $a === null ) {
             return '';
         }
         $d = self::prepare( $a, self::fetch( $a, time() ) );
-        return $d === null ? '' : self::markup( $a, $d );
+        if ( $d === null ) {
+            return '';
+        }
+        return $a['layout'] === 'tile' ? self::tile_markup( $a, $d ) : self::markup( $a, $d );
     }
 
     /** The widget's three curves over 24 hours; '' where a module is missing or silent. */
@@ -760,6 +767,58 @@ final class NAWS_Sparkline {
             'axis_from'  => wp_date( $fmt, self::noon( $dates[0] ) ),
             'axis_to'    => wp_date( $fmt, self::noon( $dates[ count( $dates ) - 1 ] ) ),
         ];
+    }
+
+    /** One tile: the curve from markup(), laid into the card template. */
+    public static function tile_markup( array $a, array $d ): string {
+        $naws_slt          = self::tile_facts( $a, $d );
+        $naws_slt['curve'] = self::markup( $a, $d );
+
+        ob_start();
+        include NAWS_PLUGIN_DIR . 'templates/sparkline-tile.php';
+        return trim( (string) ob_get_clean() );
+    }
+
+    /**
+     * The month block: the band row, the rain row when there is rain data,
+     * and the date axis. $at/$ar come from normalise_atts() with their
+     * viewBox set (680 × 64, 680 × 40), $dt/$dr from prepare().
+     */
+    public static function month_markup( array $at, array $dt, array $ar, ?array $dr, array $dates, int $days ): string {
+        $naws_slm         = self::month_facts( $dt, $dr, $dates, $days );
+        $naws_slm['band'] = self::markup( $at, $dt );
+        $naws_slm['rain'] = $dr !== null ? self::markup( $ar, $dr ) : '';
+
+        ob_start();
+        include NAWS_PLUGIN_DIR . 'templates/sparkline-month.php';
+        return trim( (string) ob_get_clean() );
+    }
+
+    /**
+     * [naws_sparkline layout="month" days="30"]: temperature (band) and
+     * rain per day from the station's daily row, 7–366 days. Nothing
+     * when there is no temperature to draw; no rain row without rain data.
+     */
+    public static function render_month( array $atts ): string {
+        $days_raw = trim( (string) ( $atts['days'] ?? '' ) );
+        $days     = $days_raw === '' ? 30 : self::clamp( intval( $days_raw ), 7, 366 );
+        $now      = time();
+
+        $at = self::normalise_atts( [ 'param' => 'temp_avg', 'days' => (string) $days, 'band' => 'minmax' ] );
+        $at['w'] = 680;
+        $at['h'] = 64;
+        $ft = self::fetch( $at, $now );
+        $dt = self::prepare( $at, $ft );
+        if ( $dt === null ) {
+            return '';
+        }
+
+        $ar = self::normalise_atts( [ 'param' => 'rain_sum', 'days' => (string) $days ] );
+        $ar['w'] = 680;
+        $ar['h'] = 40;
+        $dr = self::prepare( $ar, self::fetch( $ar, $now ) );
+
+        return self::month_markup( $at, $dt, $ar, $dr, $ft['dates'], $days );
     }
 
     private static function clamp( int $v, int $lo, int $hi ): int {

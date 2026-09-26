@@ -222,6 +222,11 @@ $rest = (string) file_get_contents( __DIR__ . '/../admin/views/rest-api-docs.php
 check( 'REST-Seite: zwei Reiterleisten im WordPress-Stil', substr_count( $rest, 'class="nav-tab-wrapper naws-tab-bar"' ), 2 );
 check( 'REST-Seite: aktive Reiter markiert',  substr_count( $rest, 'class="nav-tab naws-tab nav-tab-active active"' ), 2 );
 
+echo "\nSparkline-Karten nehmen die Basis-Theme-Farben\n";
+saved( [] );
+check( 'Theme-Variablen auch an .naws-sl-card', str_contains( NAWS_Colors::get_inline_css(), ".naws-wrap, .naws-wx, .naws-hm, .naws-sl-card {\n" ), true );
+check( 'Schrift und Kopfleiste auch dort',      str_contains( NAWS_Colors::get_inline_css(), '.naws-fc-wrap, .naws-sl-card {' ), true );
+
 echo str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );

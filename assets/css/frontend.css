@@ -64,7 +64,7 @@
    "only light" takes exactly these blocks out of that and nothing else on
    the page; plain "light" is ignored by Chrome (measured 2026-09-09). */
 .naws-wrap, .naws-rec, .naws-otd, .naws-sun, .naws-hm, .naws-hist, .naws-wx,
-.naws-fc-wrap, .naws-wgt, .naws-weather-icon, .naws-sl {
+.naws-fc-wrap, .naws-wgt, .naws-weather-icon, .naws-sl, .naws-sl-card {
   color-scheme: only light;
 }
 
@@ -2046,3 +2046,30 @@
 .naws-wgt--transparent .naws-sl-area, .naws-wgt--transparent .naws-sl-bar { fill:currentColor; }
 .naws-wgt--transparent .naws-sl-mm, .naws-wgt--transparent .naws-sl-base { stroke:var(--naws-wgt-muted); }
 .naws-wgt--transparent .naws-sl-ring { stroke:transparent; }
+
+/* [naws_sparkline layout="tile|month"] — the card and the month block from
+   the demo (since 2.1.0). The card's colours are the Base Theme variables,
+   which .naws-sl-card receives with .naws-wrap (NAWS_Colors::get_inline_css());
+   the curves keep the Sparkline tab's colours. A card fills its column; the
+   page builder makes the grid. */
+.naws-sl-card { display:block; box-sizing:border-box; width:100%; max-width:100%; background:var(--naws-surface, #fff); border:1px solid var(--naws-border, #e0eeee); border-radius:8px; color:var(--naws-text, #427272); font-family:var(--naws-font, inherit); }
+.naws-sl-card .naws-sl { --naws-sl-ring:var(--naws-surface, #fff); }
+.naws-sl-tile { padding:12px 14px 10px; }
+.naws-sl-tile-name { font-size:.78rem; font-weight:500; letter-spacing:.04em; text-transform:uppercase; color:var(--naws-text-muted, #7aa0a0); }
+.naws-sl-tile-val { margin-top:2px; font-size:1.55rem; font-weight:500; line-height:1.15; font-variant-numeric:tabular-nums; color:var(--naws-text-dark, #2d5252); }
+.naws-sl-tile-val small { margin-left:.15em; font-size:.85rem; font-weight:400; color:var(--naws-text-muted, #7aa0a0); }
+.naws-sl-tile-sub { margin-top:2px; font-size:.8rem; font-variant-numeric:tabular-nums; color:var(--naws-text-muted, #7aa0a0); }
+.naws-sl-tile-plot, .naws-sl-month-plot { line-height:0; }
+.naws-sl-tile-plot { margin-top:8px; }
+.naws-sl-tile-plot .naws-sl, .naws-sl-month-plot .naws-sl { display:flex; width:100%; }
+.naws-sl-tile-plot .naws-sl svg { width:100%; height:44px; }
+.naws-sl-month { padding:14px 16px 10px; }
+.naws-sl-month-row { display:grid; grid-template-columns:7.5em 1fr; gap:12px; align-items:center; }
+.naws-sl-month-row + .naws-sl-month-row { margin-top:6px; }
+.naws-sl-month-k { font-size:.85rem; color:var(--naws-text-muted, #7aa0a0); }
+.naws-sl-month-k b { display:block; font-size:1rem; font-weight:500; font-variant-numeric:tabular-nums; color:var(--naws-text-dark, #2d5252); }
+.naws-sl-month-plot .naws-sl svg { width:100%; height:40px; }
+.naws-sl-month-row--band .naws-sl-month-plot .naws-sl svg { height:64px; }
+.naws-sl-month-axis { display:grid; grid-template-columns:7.5em 1fr; gap:12px; margin-top:4px; font-size:.74rem; color:var(--naws-text-muted, #7aa0a0); }
+.naws-sl-month-axis > div:last-child { display:flex; justify-content:space-between; }
+@media (max-width:520px) { .naws-sl-month-row, .naws-sl-month-axis { grid-template-columns:1fr; gap:4px; } .naws-sl-month-axis > div:first-child { display:none; } }
