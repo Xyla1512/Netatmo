@@ -916,7 +916,7 @@ class NAWS_Database {
         }
 
         // Only select requested fields + join with active modules
-        $allowed_fields = [ 'temp_min', 'temp_max', 'temp_avg', 'pressure_avg', 'rain_sum', 'gust_max' ];
+        $allowed_fields = [ 'temp_min', 'temp_max', 'temp_avg', 'pressure_avg', 'rain_sum', 'gust_max', 'humidity_avg', 'wind_avg', 'co2_avg', 'noise_avg' ];
         $fields = array_intersect( (array)$args['fields'], $allowed_fields );
         if ( empty( $fields ) ) $fields = $allowed_fields;
 
@@ -987,6 +987,13 @@ class NAWS_Database {
         }
 
         $agg_sql = implode( ', ', $agg_parts );
+
+        // The aggregated branch knows only the five fields of $agg_map. A
+        // request made of nothing else would leave "SELECT …, FROM" behind.
+        if ( $agg_sql === '' ) {
+            return [];
+        }
+
         $sql = "SELECT d.module_id, d.station_id, {$date_sel}, {$agg_sql}
                 FROM {$t} d {$where_sql}
                 GROUP BY d.module_id, {$date_expr}

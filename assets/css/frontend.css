@@ -64,7 +64,7 @@
    "only light" takes exactly these blocks out of that and nothing else on
    the page; plain "light" is ignored by Chrome (measured 2026-09-09). */
 .naws-wrap, .naws-rec, .naws-otd, .naws-sun, .naws-hm, .naws-hist, .naws-wx,
-.naws-fc-wrap, .naws-wgt, .naws-weather-icon {
+.naws-fc-wrap, .naws-wgt, .naws-weather-icon, .naws-sl, .naws-sl-card {
   color-scheme: only light;
 }
 
@@ -1986,3 +1986,90 @@
 @media (prefers-reduced-motion: reduce) {
   .naws-wr-sector { transition: none; }
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   [naws_sparkline] — a curve the size of a word (since 2.1.0)
+   ══════════════════════════════════════════════════════════════════
+   The colours arrive as variables on .naws-sl itself (NAWS_Colors::
+   sparkline_css()), because a sparkline usually sits in theme text
+   outside every plugin wrapper. Every var() carries the default as its
+   fallback. Without width/height on the shortcode the curve is sized in
+   em and grows with the text around it. Dots are round-capped strokes
+   of zero length; their size is the stroke width, in pixels. */
+.naws-sl { display:inline-flex; align-items:center; gap:.3em; vertical-align:-.18em; line-height:1; white-space:nowrap; max-width:100%; }
+.naws-sl svg { display:block; width:var(--naws-sl-w, 4.6em); height:var(--naws-sl-h, 1.05em); max-width:100%; min-width:0; overflow:visible; }
+.naws-sl-line { fill:none; stroke:var(--naws-sl-line, #427272); stroke-width:1.5px; stroke-linejoin:round; stroke-linecap:round; }
+.naws-sl-area { fill:var(--naws-sl-line, #427272); fill-opacity:.14; stroke:none; }
+.naws-sl-band { fill:var(--naws-sl-band, #427272); fill-opacity:.16; stroke:none; }
+.naws-sl-bar  { fill:var(--naws-sl-rain, #3585b0); stroke:none; }
+.naws-sl-base { fill:none; stroke:var(--naws-sl-dots, #7aa0a0); stroke-width:1px; opacity:.5; }
+.naws-sl-mm, .naws-sl-ring, .naws-sl-end { fill:none; stroke-linecap:round; }
+.naws-sl-mm   { stroke:var(--naws-sl-dots, #7aa0a0); stroke-width:3px; }
+.naws-sl-ring { stroke:var(--naws-sl-ring, transparent); stroke-width:7px; }
+.naws-sl-end  { stroke:var(--naws-sl-line, #427272); stroke-width:4px; }
+.naws-sl-val  { font-variant-numeric:tabular-nums; }
+
+/* Dark grounds: the sidebar widget's dark scheme and the dark half of the
+   Appearance preview read the "on dark ground" colours. The variables are
+   not redirected, the drawing rules read another one — so the preview can
+   set any variable on the element without undoing this. */
+.naws-wgt--dark .naws-sl-line, .naws-wgt--dark .naws-sl-end,
+.naws-sl-dark .naws-sl-line, .naws-sl-dark .naws-sl-end { stroke:var(--naws-sl-line-dark, #7cc7c7); }
+.naws-wgt--dark .naws-sl-area, .naws-sl-dark .naws-sl-area { fill:var(--naws-sl-line-dark, #7cc7c7); }
+.naws-wgt--dark .naws-sl-bar, .naws-sl-dark .naws-sl-bar { fill:var(--naws-sl-rain-dark, #78ace8); }
+.naws-sl-dark .naws-sl-ring { stroke:#1c2433; }
+
+/* The hover bubble: one element for the whole page, hung on <body> by
+   sparkline-boot.js and placed above the point. */
+.naws-sl-tip {
+  position:fixed; z-index:99999; pointer-events:none;
+  transform:translate(-50%, -100%); margin-top:-6px;
+  padding:3px 7px; border-radius:4px;
+  font-family:var(--naws-font, inherit); font-size:12px; line-height:1.3; white-space:nowrap;
+  background:var(--naws-sl-tip-bg, #2d5252); color:var(--naws-sl-tip-text, #fff);
+}
+.naws-sl-tip[hidden] { display:none; }
+.naws-sl-tip.is-below { transform:translate(-50%, 0); margin-top:6px; }
+
+/* Sparklines in the sidebar widget (since 2.1.0, off by default). The
+   curve fills its box; the viewBox stretches with it and the strokes keep
+   their weight. The ring under the end dot takes the colour of what it
+   sits on: the card in the head, the chip in the tiles. */
+.naws-wgt-spark { margin-top:4px; line-height:0; }
+.naws-wgt-spark .naws-sl { display:flex; width:100%; }
+.naws-wgt-spark .naws-sl svg { width:100%; height:20px; }
+.naws-wgt-spark--head .naws-sl svg { height:16px; }
+.naws-wgt-head-txt:has(> .naws-wgt-spark) { flex:1 1 auto; min-width:0; }
+.naws-wgt .naws-sl { --naws-sl-ring:var(--naws-wgt-bg, #fff); }
+.naws-wgt-chip .naws-sl { --naws-sl-ring:var(--naws-wgt-chip, #f2f6fc); }
+.naws-wgt--transparent .naws-sl-line, .naws-wgt--transparent .naws-sl-end { stroke:currentColor; }
+.naws-wgt--transparent .naws-sl-area, .naws-wgt--transparent .naws-sl-bar { fill:currentColor; }
+.naws-wgt--transparent .naws-sl-mm, .naws-wgt--transparent .naws-sl-base { stroke:var(--naws-wgt-muted); }
+.naws-wgt--transparent .naws-sl-ring { stroke:transparent; }
+
+/* [naws_sparkline layout="tile|month"] — the card and the month block from
+   the demo (since 2.1.0). The card's colours are the Base Theme variables,
+   which .naws-sl-card receives with .naws-wrap (NAWS_Colors::get_inline_css());
+   the curves keep the Sparkline tab's colours. A card fills its column; the
+   page builder makes the grid. */
+.naws-sl-card { display:block; box-sizing:border-box; width:100%; max-width:100%; background:var(--naws-surface, #fff); border:1px solid var(--naws-border, #e0eeee); border-radius:8px; color:var(--naws-text, #427272); font-family:var(--naws-font, inherit); }
+.naws-sl-card .naws-sl { --naws-sl-ring:var(--naws-surface, #fff); }
+.naws-sl-tile { padding:12px 14px 10px; }
+.naws-sl-tile-name { font-size:.78rem; font-weight:500; letter-spacing:.04em; text-transform:uppercase; color:var(--naws-text-muted, #7aa0a0); }
+.naws-sl-tile-val { margin-top:2px; font-size:1.55rem; font-weight:500; line-height:1.15; font-variant-numeric:tabular-nums; color:var(--naws-text-dark, #2d5252); }
+.naws-sl-tile-val small { margin-left:.15em; font-size:.85rem; font-weight:400; color:var(--naws-text-muted, #7aa0a0); }
+.naws-sl-tile-sub { margin-top:2px; font-size:.8rem; font-variant-numeric:tabular-nums; color:var(--naws-text-muted, #7aa0a0); }
+.naws-sl-tile-plot, .naws-sl-month-plot { line-height:0; }
+.naws-sl-tile-plot { margin-top:8px; }
+.naws-sl-tile-plot .naws-sl, .naws-sl-month-plot .naws-sl { display:flex; width:100%; }
+.naws-sl-tile-plot .naws-sl svg { width:100%; height:44px; }
+.naws-sl-month { padding:14px 16px 10px; }
+.naws-sl-month-row { display:grid; grid-template-columns:7.5em 1fr; gap:12px; align-items:center; }
+.naws-sl-month-row + .naws-sl-month-row { margin-top:6px; }
+.naws-sl-month-k { font-size:.85rem; color:var(--naws-text-muted, #7aa0a0); }
+.naws-sl-month-k b { display:block; font-size:1rem; font-weight:500; font-variant-numeric:tabular-nums; color:var(--naws-text-dark, #2d5252); }
+.naws-sl-month-plot .naws-sl svg { width:100%; height:40px; }
+.naws-sl-month-row--band .naws-sl-month-plot .naws-sl svg { height:64px; }
+.naws-sl-month-axis { display:grid; grid-template-columns:7.5em 1fr; gap:12px; margin-top:4px; font-size:.74rem; color:var(--naws-text-muted, #7aa0a0); }
+.naws-sl-month-axis > div:last-child { display:flex; justify-content:space-between; }
+@media (max-width:520px) { .naws-sl-month-row, .naws-sl-month-axis { grid-template-columns:1fr; gap:4px; } .naws-sl-month-axis > div:first-child { display:none; } }

@@ -168,6 +168,12 @@ foreach ( [ 'de_DE', 'nb_NO' ] as $locale ) {
 // Zeitraum-Umschalter. Seit den E-Mail-Benachrichtigungen (Task 8) kommen
 // drei weitere hinzu: "%d warning"/"%d all-clear" aus der Zusammenfassung
 // einer Mail und "%d invalid address was dropped." aus der Empfaenger-Liste.
+// Seit der Sparkline (Plan 2026-09-26, Task 11) kommt "%d hour"/"%d hours"
+// aus dem Zeitraum-Text der Sparkline hinzu. Seit der Sparkline-Kachel und
+// dem Monatsblock (Plan 2026-09-26-sparkline-tiles, Task 3) kommen drei
+// weitere hinzu: "%1$s in %2$d hour"/"%1$s in %2$d hours" und
+// "%1$s in %2$d day"/"%1$s in %2$d days" aus dem Achsentext der Kachel,
+// "Rain in %d day"/"Rain in %d days" aus dem Regen-Label des Monatsblocks.
 echo "\nPlural-Eintraege sind richtig kompiliert\n" . str_repeat( '-', 74 ) . "\n";
 
 $plural_formen = [
@@ -190,6 +196,22 @@ $plural_formen = [
     "%d invalid address was dropped.\0%d invalid addresses were dropped." => [
         'de_DE' => [ '%d ungültige Adresse wurde verworfen.', '%d ungültige Adressen wurden verworfen.' ],
         'nb_NO' => [ '%d ugyldig adresse ble forkastet.', '%d ugyldige adresser ble forkastet.' ],
+    ],
+    "%d hour\0%d hours"         => [
+        'de_DE' => [ '%d Stunde', '%d Stunden' ],
+        'nb_NO' => [ '%d time', '%d timer' ],
+    ],
+    "%1\$s in %2\$d hour\0%1\$s in %2\$d hours" => [
+        'de_DE' => [ '%1$s in %2$d Stunde', '%1$s in %2$d Stunden' ],
+        'nb_NO' => [ '%1$s på %2$d time', '%1$s på %2$d timer' ],
+    ],
+    "%1\$s in %2\$d day\0%1\$s in %2\$d days" => [
+        'de_DE' => [ '%1$s in %2$d Tag', '%1$s in %2$d Tagen' ],
+        'nb_NO' => [ '%1$s på %2$d døgn', '%1$s på %2$d døgn' ],
+    ],
+    "Rain in %d day\0Rain in %d days" => [
+        'de_DE' => [ 'Regen in %d Tag', 'Regen in %d Tagen' ],
+        'nb_NO' => [ 'Nedbør på %d døgn', 'Nedbør på %d døgn' ],
     ],
 ];
 

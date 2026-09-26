@@ -159,6 +159,74 @@ $css = NAWS_Colors::get_inline_css();
 check( 'eine Schrift, die es nicht mehr gibt, erbt',
     (bool) preg_match( '/--naws-font:\s*inherit;/', $css ), true );
 
+echo "\nSparkline-Farben\n";
+
+saved( [] );
+check( 'acht Schluessel in fester Reihenfolge', NAWS_Colors::SPARKLINE_KEYS, [
+    'sparkline_line', 'sparkline_line_dark', 'sparkline_rain', 'sparkline_rain_dark',
+    'sparkline_band', 'sparkline_dots', 'sparkline_tip_bg', 'sparkline_tip_text',
+] );
+check( 'die Vorgaben', array_intersect_key( NAWS_Colors::DEFAULTS, array_flip( NAWS_Colors::SPARKLINE_KEYS ) ), [
+    'sparkline_line'      => '#427272',
+    'sparkline_line_dark' => '#7cc7c7',
+    'sparkline_rain'      => '#3585b0',
+    'sparkline_rain_dark' => '#78ace8',
+    'sparkline_band'      => '#427272',
+    'sparkline_dots'      => '#7aa0a0',
+    'sparkline_tip_bg'    => '#2d5252',
+    'sparkline_tip_text'  => '#ffffff',
+] );
+check( 'eigene Gruppe',                        NAWS_Colors::get_groups()['sparkline']['keys'], NAWS_Colors::SPARKLINE_KEYS );
+
+$sl = NAWS_Colors::sparkline_css();
+check( 'eine Regel fuer Kurve und Sprechblase', str_starts_with( $sl, ".naws-sl, .naws-sl-tip {\n" ), true );
+check( 'Linie als Variable',                   str_contains( $sl, "  --naws-sl-line: #427272;\n" ), true );
+check( 'Linie auf dunklem Grund',              str_contains( $sl, "  --naws-sl-line-dark: #7cc7c7;\n" ), true );
+check( 'Band mit Deckung',                     str_contains( $sl, "  --naws-sl-band: #427272;\n" ), true );
+check( 'Sprechblase',                          str_contains( $sl, "  --naws-sl-tip-bg: #2d5252;\n" ), true );
+check( 'get_inline_css() haengt die Regel an', str_contains( NAWS_Colors::get_inline_css(), $sl ), true );
+
+saved( [ 'sparkline_line' => '#123456', 'sparkline_rain' => '' ] );
+check( 'gespeicherte Farbe',                   str_contains( NAWS_Colors::sparkline_css(), '--naws-sl-line: #123456;' ), true );
+check( 'leere Farbe schreibt keine Variable',  str_contains( NAWS_Colors::sparkline_css(), '--naws-sl-rain:' ), false );
+
+$san = NAWS_Colors::sanitize( [ 'sparkline_line' => '#abcdef', 'sparkline_dots' => 'red' ] );
+check( 'Hex bleibt',                           $san['sparkline_line'] ?? null, '#abcdef' );
+check( 'ein Farbname faellt weg',              array_key_exists( 'sparkline_dots', $san ), false );
+saved( [] );
+
+echo "\nReiter des Erscheinungsbilds\n";
+
+check( 'neun Reiter, Basis zuerst', array_keys( NAWS_Colors::appearance_tabs() ), [
+    'theme', 'icons', 'live_wind', 'chart24h', 'charttheme', 'history', 'heatmap', 'windrose', 'sparkline',
+] );
+check( 'ein bekannter Reiter bleibt',         NAWS_Colors::appearance_tab( 'windrose' ), 'windrose' );
+check( 'ein unbekannter wird Basis',          NAWS_Colors::appearance_tab( 'nonsense' ), 'theme' );
+check( 'leer wird Basis',                     NAWS_Colors::appearance_tab( '' ), 'theme' );
+
+$admin_src = (string) file_get_contents( __DIR__ . '/../includes/class-naws-admin.php' );
+check( 'Speichern liest den Reiter sanitiert', str_contains( $admin_src, "NAWS_Colors::appearance_tab( isset( \$_POST['naws_tab'] ) ? sanitize_key( wp_unslash( \$_POST['naws_tab'] ) ) : '' )" ), true );
+check( '… und kehrt dorthin zurueck',         str_contains( $admin_src, "admin_url( 'admin.php?page=naws-appearance&updated=1&tab=' . \$tab )" ), true );
+
+$view = (string) file_get_contents( __DIR__ . '/../admin/views/appearance.php' );
+check( 'Reiterleiste im WordPress-Stil',      str_contains( $view, '<nav class="nav-tab-wrapper naws-appearance-tabs"' ), true );
+check( 'der View liest die Liste aus NAWS_Colors', str_contains( $view, '$tabs = NAWS_Colors::appearance_tabs();' ), true );
+check( 'jede Flaeche kennt ihren Zustand',    substr_count( $view, 'class="naws-appearance-pane<?php echo esc_attr( $naws_pane_class(' ), count( NAWS_Colors::appearance_tabs() ) );
+check( 'keine fest aktive Flaeche mehr',      str_contains( $view, 'class="naws-appearance-pane active"' ), false );
+check( 'verstecktes Feld fuer den Reiter',    str_contains( $view, '<input type="hidden" name="naws_tab" id="naws-tab-field"' ), true );
+check( 'die Sparkline-Flaeche liest ihre Gruppe', str_contains( $view, "\$groups['sparkline']['keys']" ), true );
+check( 'Vorschau-Container',                   str_contains( $view, '<div id="naws-preview-sparkline">' ), true );
+check( 'das Skript kennt die Gruppe',          str_contains( $view, "if (group === 'sparkline') {" ), true );
+
+$rest = (string) file_get_contents( __DIR__ . '/../admin/views/rest-api-docs.php' );
+check( 'REST-Seite: zwei Reiterleisten im WordPress-Stil', substr_count( $rest, 'class="nav-tab-wrapper naws-tab-bar"' ), 2 );
+check( 'REST-Seite: aktive Reiter markiert',  substr_count( $rest, 'class="nav-tab naws-tab nav-tab-active active"' ), 2 );
+
+echo "\nSparkline-Karten nehmen die Basis-Theme-Farben\n";
+saved( [] );
+check( 'Theme-Variablen auch an .naws-sl-card', str_contains( NAWS_Colors::get_inline_css(), ".naws-wrap, .naws-wx, .naws-hm, .naws-sl-card {\n" ), true );
+check( 'Schrift und Kopfleiste auch dort',      str_contains( NAWS_Colors::get_inline_css(), '.naws-fc-wrap, .naws-sl-card {' ), true );
+
 echo str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );

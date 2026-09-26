@@ -44,7 +44,7 @@ foreach ( glob( $root . '/templates/*.php' ) as $file ) {
 
 echo "\ncolor-scheme: only light auf den Wurzelelementen\n" . str_repeat( '-', 74 ) . "\n";
 check( 'es gibt eine Regel mit color-scheme: only light', count( $covered ) > 0, true );
-check( 'alle Templates mit Wurzelelement erfasst', count( $roots ), 13 );
+check( 'alle Templates mit Wurzelelement erfasst', count( $roots ), 16 );
 foreach ( $roots as $base => $classes ) {
     $hit = false;
     foreach ( $classes as $k ) { if ( in_array( '.' . $k, $covered, true ) ) { $hit = true; break; } }

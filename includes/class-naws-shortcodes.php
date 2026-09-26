@@ -3,6 +3,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 require_once NAWS_PLUGIN_DIR . 'includes/class-naws-helpers.php';
+require_once NAWS_PLUGIN_DIR . 'includes/class-naws-sparkline.php';
 
 class NAWS_Shortcodes {
 
@@ -16,6 +17,7 @@ class NAWS_Shortcodes {
         'naws_on_this_day'    => 'sc_on_this_day',
         'naws_sunpath'        => 'sc_sunpath',
         'naws_windrose'       => 'sc_windrose',
+        'naws_sparkline'      => 'sc_sparkline',
         'naws_live'           => 'sc_live',
         'naws_infobar'        => 'sc_infobar',
         'naws_value'          => 'sc_value',
@@ -35,7 +37,7 @@ class NAWS_Shortcodes {
     }
 
     private function __construct() {
-        // One wrapper for all fifteen: decode the attributes before a handler
+        // One wrapper for all sixteen: decode the attributes before a handler
         // sees them. Page builders write quotes as &quot;, WordPress passes that
         // through as it is, and sanitize_key() then turns "dewpoint" into
         // quotdewpointquot — the shortcode shows only its fallback.
@@ -101,6 +103,12 @@ class NAWS_Shortcodes {
         wp_register_script( 'naws-windrose-boot',
             NAWS_PLUGIN_URL . 'assets/js/windrose-boot.js',
             [], NAWS_Helpers::asset_version( 'assets/js/windrose-boot.js' ), true );
+
+        // [naws_sparkline]: the hover bubble. The curves are complete
+        // without it; it needs neither jQuery nor the charts.
+        wp_register_script( 'naws-sparkline-boot',
+            NAWS_PLUGIN_URL . 'assets/js/sparkline-boot.js',
+            [], NAWS_Helpers::asset_version( 'assets/js/sparkline-boot.js' ), true );
     }
 
     private function enqueue_frontend() {
@@ -393,6 +401,37 @@ class NAWS_Shortcodes {
     }
 
     // ----------------------------------------------------------------
+    // [naws_sparkline param="Temperature" hours="24" days="" module="" width="" height="" show="none" type="" band="" layout="inline|tile|month" title=""]
+    // A curve the size of a word, since 2.1.0
+    // ----------------------------------------------------------------
+    public function sc_sparkline( $atts ) {
+        $atts = shortcode_atts( [
+            'param'  => 'Temperature',
+            'hours'  => '',
+            'days'   => '',
+            'module' => '',
+            'width'  => '',
+            'height' => '',
+            'show'   => 'none',
+            'type'   => '',
+            'band'   => '',
+            'layout' => '',
+            'title'  => '',
+        ], $atts, 'naws_sparkline' );
+
+        $html = NAWS_Sparkline::render( $atts );
+        if ( $html === '' ) {
+            return '';
+        }
+
+        // Styles and the hover script only for a sparkline that is drawn.
+        $this->enqueue_frontend_styles();
+        wp_enqueue_script( 'naws-sparkline-boot' );
+
+        return $html;
+    }
+
+    // ----------------------------------------------------------------
     // [naws_live title="" refresh="60"]
     // Live dashboard with animated wind rose, light mode
     // ----------------------------------------------------------------
@@ -646,7 +685,7 @@ class NAWS_Shortcodes {
     }
 
     // ----------------------------------------------------------------
-    // [naws_weather_widget days="3|5" width="250..500"]
+    // [naws_weather_widget days="3|5" width="250..500" scheme="light|dark|transparent" sparklines="0|1"]
     // Compact sidebar widget: icon and temperature, rain and wind,
     // three or five forecast days.
     // ----------------------------------------------------------------
@@ -657,6 +696,7 @@ class NAWS_Shortcodes {
             'days'   => (string) ( $opts['wgt_days'] ?? 5 ),
             'width'  => (string) ( $opts['wgt_width'] ?? NAWS_Widget_Data::DEFAULT_WIDTH ),
             'scheme' => (string) ( $opts['wgt_scheme'] ?? NAWS_Widget_Data::SCHEMES[0] ),
+            'sparklines' => (string) ( $opts['wgt_sparklines'] ?? 0 ),
         ], $atts, 'naws_weather_widget' );
 
         $station = NAWS_Weather_State::read_station();
@@ -698,6 +738,14 @@ class NAWS_Shortcodes {
         $naws_wgt_state  = $state['state'];
         $naws_wgt_width  = $atts['width'];
         $naws_wgt_scheme = NAWS_Widget_Data::normalise_scheme( $atts['scheme'] );
+        // Sparklines (since 2.1.0, off unless switched on): 24 hours of
+        // temperature, rain and wind. A missing module drops its curve.
+        $naws_wgt_spark = NAWS_Widget_Data::sparklines_on( $atts['sparklines'] )
+            ? NAWS_Sparkline::widget_set()
+            : [ 'temp' => '', 'rain' => '', 'wind' => '' ];
+        if ( implode( '', $naws_wgt_spark ) !== '' ) {
+            wp_enqueue_script( 'naws-sparkline-boot' );
+        }
         $naws_wgt_place = (string) ( $forecast['location_name'] ?? '' );
         // The station's newest measurement, not the forecast fetch. The
         // forecast is cached for three hours, so printing its fetch time put

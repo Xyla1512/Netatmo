@@ -190,6 +190,11 @@ class NAWS_Admin {
             $clean['wgt_scheme'] = NAWS_Widget_Data::normalise_scheme( $input['wgt_scheme'] );
         }
 
+        // Sparklines in the widget (since 2.1.0): a hidden-zero checkbox.
+        if ( $sent( 'wgt_sparklines' ) ) {
+            $clean['wgt_sparklines'] = empty( $input['wgt_sparklines'] ) ? 0 : 1;
+        }
+
         // Auto-resolved location name is written by NAWS_Forecast, never by
         // a form, so it is carried over untouched.
         $clean['forecast_auto_name'] = $old_opts['forecast_auto_name'] ?? '';
@@ -259,6 +264,13 @@ class NAWS_Admin {
         // does not exist in the admin, so the file gets its own handle.
         if ( strpos( $hook, 'naws-shortcodes' ) !== false || strpos( $hook, 'naws-appearance' ) !== false ) {
             wp_enqueue_style( 'naws-weather-icon', NAWS_PLUGIN_URL . 'assets/css/frontend.css', [], self::asset_version( 'assets/css/frontend.css' ) );
+        }
+
+        // The sparklines on the Appearance page — the Sparkline tab and the
+        // widget preview — read their colours from the variables that the
+        // frontend gets inline. The same method writes them here.
+        if ( strpos( $hook, 'naws-appearance' ) !== false ) {
+            wp_add_inline_style( 'naws-weather-icon', NAWS_Colors::sparkline_css() );
         }
 
         wp_enqueue_script( 'naws-admin', NAWS_PLUGIN_URL . 'assets/js/admin.js', $js_deps, self::asset_version( 'assets/js/admin.js' ), true );
@@ -619,7 +631,11 @@ class NAWS_Admin {
         update_option( NAWS_Colors::OPTION_KEY, NAWS_Colors::sanitize( $input ) );
         NAWS_Colors::flush_cache();
 
-        wp_safe_redirect( admin_url( 'admin.php?page=naws-appearance&updated=1' ) );
+        // Back to the tab that was open (since 2.1.0). The tab switcher keeps
+        // the field current; anything that is not a tab id becomes the first.
+        $tab = NAWS_Colors::appearance_tab( isset( $_POST['naws_tab'] ) ? sanitize_key( wp_unslash( $_POST['naws_tab'] ) ) : '' );
+
+        wp_safe_redirect( admin_url( 'admin.php?page=naws-appearance&updated=1&tab=' . $tab ) );
         exit;
     }
 

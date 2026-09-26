@@ -44,7 +44,7 @@ Einsatzorte: frei im Fließtext per Shortcode, und auf Wunsch in `[naws_weather_
 | `width` | 20–600 | leer | Pixel, auf die Grenzen gesetzt. Leer → viewBox-Breite 80, dargestellt als `4.6em` (wächst mit der Schrift, siehe 5.3). |
 | `height` | 10–200 | leer | Pixel, auf die Grenzen gesetzt. Leer → viewBox-Höhe 18, dargestellt als `1.05em`. |
 | `show` | `none`, `value`, `minmax` | `none` | `value`: der letzte Wert mit Einheit hinter der Kurve (bei Regen die Summe des Zeitraums). `minmax`: Tief- und Hoch-Punkt auf der Linie. Unbekannt → `none`. |
-| `type` | `line`, `bars` | leer | Leer → `bars` für `Rain`/`rain_sum`, sonst `line`. Ausdrücklich gesetzt gilt es für jede Größe. |
+| `type` | `line`, `bars` | leer | Leer → `bars` für `Rain`/`rain_sum`, sonst `line`. `line` gilt für jede Größe; `bars` nur für Regen (ein Balken ist eine Summe, und eine Summe von Temperaturen oder Drücken hat keine Bedeutung) — bei allen anderen Größen wird `bars` zu `line`. |
 | `band` | `minmax` | leer | Nur mit `days` und `param="temp_avg"`: Fläche `temp_min`–`temp_max` unter der Mittelwertlinie. In jedem anderen Fall still ignoriert. |
 
 Die Attribute gehen durch `shortcode_atts()` und werden in `NAWS_Sparkline::normalise_atts()` gecastet, begrenzt und gegen Positivlisten geprüft (rein, testbar). Das Ergebnis ist ein Array mit festen Typen; nichts davon gelangt ungeprüft in eine Abfrage oder ins Markup.
@@ -94,7 +94,7 @@ Statische Methoden, keine Instanz, wie `NAWS_Windrose`. Laden per `naws_require(
 Koordinatensystem = `viewBox="0 0 {width} {height}"`, `preserveAspectRatio="none"`; die Linie trägt `vector-effect="non-scaling-stroke"`, damit sie beim Strecken nicht dicker wird.
 
 - **Innenabstand** `pad = max(2, height/9)` rundum, damit Endpunkt und Tief/Hoch-Punkte nicht abgeschnitten werden.
-- **X** linear über `[ts_erster, ts_letzter]`, **Y** linear über `[min, max]` der Reihe (bzw. `[min(temp_min), max(temp_max)]` beim Band). **Flache Reihe** (`max − min < 1e−9`): `max = min + 1`, die Linie liegt dann auf halber Höhe statt einer Division durch null.
+- **X** linear über `[ts_erster, ts_letzter]`, **Y** linear über `[min, max]` der Reihe (bzw. `[min(temp_min), max(temp_max)]` beim Band). **Flache Reihe** (`max − min < 1e−9`): `min − 0,5` / `max + 0,5`, die Linie liegt dann auf halber Höhe statt einer Division durch null.
 - **Lückenbruch:** Liegt zwischen zwei Punkten mehr als das Dreifache des Median-Abstands der Reihe, beginnt ein neues Teilstück (`M` statt `L`). Die Fläche unter der Linie wird je Teilstück geschlossen.
 - **Punkte** werden nicht als `<circle>` gezeichnet, sondern als Pfad der Länge null mit runder Kappe (`d="M x y h0"`, `stroke-linecap:round`, `vector-effect:non-scaling-stroke`). Ein `<circle>` würde bei `preserveAspectRatio="none"` zur Ellipse gestreckt, sobald die Sparkline breiter dargestellt wird als ihre viewBox (im Widget immer); ein Strich mit runder Kappe bleibt rund und behält seine Pixelgröße. Größen im CSS: Endpunkt 4 px, Ring darunter 7 px, Tief/Hoch 3 px.
 - **Endpunkt:** am letzten Punkt, in Linienfarbe, darunter der Ring in der Grundfarbe.
@@ -131,16 +131,16 @@ Koordinatensystem = `viewBox="0 0 {width} {height}"`, `preserveAspectRatio="none
 
 Registriert in `enqueue_frontend_assets()` als `naws-sparkline-boot` (ohne Abhängigkeiten, `NAWS_Helpers::asset_version()`, im Footer), eingereiht vom Shortcode-Handler und vom Widget, sobald eine Sparkline ausgegeben wird. Kein Inline-Skript, keine globalen Variablen.
 
-- **Ein** `pointermove`-, ein `pointerdown`- und ein `pointerleave`-Horcher auf `document` (Delegation), gleich wie viele Sparklines auf der Seite stehen.
-- Nächster Punkt zur Zeigerposition über die X-Positionen aus `data-naws-sl`; die Sprechblase ist ein einziges `<div class="naws-sl-tip" role="tooltip">`, das beim ersten Bedarf an `body` gehängt und wiederverwendet wird; Position `fixed` über dem Punkt, am Bildschirmrand eingefangen.
-- Touch: Antippen zeigt, Antippen außerhalb schließt.
+- **Ein** `pointermove`-, ein `pointerdown`- und ein `pointerout`-Horcher auf `document` (Delegation), gleich wie viele Sparklines auf der Seite stehen.
+- Nächster Punkt zur Zeigerposition über die X-Positionen aus `data-naws-sl`; die Sprechblase ist ein einziges `<div class="naws-sl-tip" role="tooltip">`, das beim ersten Bedarf an `body` gehängt und wiederverwendet wird; Position `fixed` über dem Punkt, am Bildschirmrand eingefangen; steht sie am oberen Bildschirmrand zu dicht, klappt sie unter den Punkt (`is-below`).
+- Sie geht beim Scrollen — jedes Containers, nicht nur des Fensters, per `capture` auf `document` — und beim Verlassen des Fensters. Touch: Antippen zeigt, Antippen außerhalb schließt; das Loslassen nach dem Antippen selbst schließt sie **nicht** — Touch schickt dabei dasselbe `pointerout` ohne `relatedTarget` wie ein verlassenes Fenster, und dieser Horcher ignoriert es ausdrücklich für `pointerType === 'touch'`.
 - Text wird mit `textContent` gesetzt, nie mit `innerHTML`.
 - Tastatur: Die Sparkline ist kein Bedienelement und bekommt keinen Fokus; Screenreader lesen `aria-label`.
 
 ### 5.3 CSS (`frontend.css`)
 
 - `.naws-sl` : `display:inline-flex; align-items:center; gap:.3em; vertical-align:-.18em;` Größe aus `--naws-sl-w/-h`, Vorgabe `4.6em`/`1.05em`: Ohne `width`/`height` am Shortcode **skaliert die Kurve mit der Schrift**. Das `style`-Attribut mit Pixelwerten schreibt das Template nur, wenn sie ausdrücklich angegeben sind (je Maß einzeln).
-- Linie `stroke: var(--naws-sl-line)`, Fläche `fill: var(--naws-sl-line)` mit `fill-opacity: .14`, Balken `fill: var(--naws-sl-rain)`, Band `fill: var(--naws-sl-band)`, Tief/Hoch `fill: var(--naws-sl-dots)`, Ring `fill: var(--naws-sl-ring, var(--naws-surface, #fff))`, Grundlinie der Balken `stroke: var(--naws-sl-dots)` mit `opacity:.5`.
+- Linie `stroke: var(--naws-sl-line)`, Fläche `fill: var(--naws-sl-line)` mit `fill-opacity: .14`, Balken `fill: var(--naws-sl-rain)`, Band `fill: var(--naws-sl-band)` (eine deckende Farbe — Iris kennt keinen Alphakanal — mit `fill-opacity: .16` im Stylesheet), Tief/Hoch `stroke: var(--naws-sl-dots)`, Ring `stroke: var(--naws-sl-ring, transparent)` — im Fließtext also unsichtbar, weil dort kein `--naws-surface` zum Rückfallen bereitsteht; das Widget und die Erscheinungsbild-Vorschau setzen die Variable auf ihren jeweiligen Grund —, Grundlinie der Balken `stroke: var(--naws-sl-dots)` mit `opacity:.5`.
 - Sprechblase `.naws-sl-tip`: `background: var(--naws-sl-tip-bg); color: var(--naws-sl-tip-text);` kleine Schrift, `pointer-events:none`, `white-space:nowrap`.
 - **Die Farbvariablen hängen an `.naws-sl` und `.naws-sl-tip` selbst**, nicht an `.naws-wrap`: Eine Sparkline steht oft außerhalb jedes Plugin-Containers im Theme-Text, und die Sprechblase hängt an `body`.
 - Keine Knöpfe, also keine Hover-Regel nach Franks Knopf-Regel nötig; die Sprechblase ist kein interaktives Element.
@@ -155,7 +155,7 @@ Acht neue Schlüssel in `NAWS_Colors::DEFAULTS`, Konstante `SPARKLINE_KEYS` in d
 | `sparkline_line_dark` | `--naws-sl-line-dark` | `#7cc7c7` | helles Petrol für das dunkle Widget |
 | `sparkline_rain` | `--naws-sl-rain` | `#3585b0` | wie `chart_rain` |
 | `sparkline_rain_dark` | `--naws-sl-rain-dark` | `#78ace8` | helleres Blau für dunklen Grund |
-| `sparkline_band` | `--naws-sl-band` | `#42727229` | Linienfarbe mit ca. 16 % Deckung |
+| `sparkline_band` | `--naws-sl-band` | `#427272` | deckende Linienfarbe; 16 % Deckung über `fill-opacity` im Stylesheet, nicht im Farbwert (Iris kennt keinen Alphakanal) |
 | `sparkline_dots` | `--naws-sl-dots` | `#7aa0a0` | gedämpftes Petrol, wie `theme_text_muted` |
 | `sparkline_tip_bg` | `--naws-sl-tip-bg` | `#2d5252` | wie `header_bg` |
 | `sparkline_tip_text` | `--naws-sl-tip-text` | `#ffffff` | |
@@ -163,7 +163,7 @@ Acht neue Schlüssel in `NAWS_Colors::DEFAULTS`, Konstante `SPARKLINE_KEYS` in d
 - Eine neue Methode `NAWS_Colors::sparkline_css(): string` liefert die Regel `.naws-sl, .naws-sl-tip { … }` mit den acht Variablen (siehe 5.3). `get_inline_css()` hängt sie an; die Admin-Seite „Erscheinungsbild" hängt sie an ihr Frontend-Stylesheet (`naws-weather-icon`), damit Widget- und Reiter-Vorschau die Sparklines in den gespeicherten Farben zeigen.
 - Die Kontraste der Vorgaben werden bei der Umsetzung gemessen (Linie gegen `#ffffff` und gegen `#1c2433` für die Dunkel-Varianten, Ziel ≥ 3:1 für grafische Elemente nach WCAG 1.4.11).
 - `sanitize()` braucht keine Änderung: Die Schlüssel stehen in `DEFAULTS` und laufen durch die vorhandene Hex-Prüfung.
-- **Vorschau** oben im Reiter: je eine Linie mit Tief/Hoch-Punkten, Regenbalken und ein Band, nebeneinander auf hellem (`#ffffff`) und dunklem (`#1c2433`) Grund, gerendert mit `NAWS_Sparkline` aus den echten Stationsdaten; ohne Daten aus einer eingebauten Beispielreihe (fester Array im Admin-View, keine Zufallswerte). Die Vorschau folgt dem Farbwähler über die vorhandene `updatePreview()`-Logik, indem sie die CSS-Variablen am Vorschau-Container setzt.
+- **Vorschau** oben im Reiter: je eine Linie mit Tief/Hoch-Punkten, Regenbalken und ein Band, nebeneinander auf hellem (`#ffffff`) und dunklem (`#1c2433`) Grund, gerendert mit `NAWS_Sparkline` aus den echten Stationsdaten; ohne Daten aus einer eingebauten Beispielreihe (`NAWS_Sparkline::sample()`, keine Zufallswerte). Die Vorschau folgt dem Farbwähler über die vorhandene `updatePreview()`-Logik, indem sie die CSS-Variablen am Vorschau-Container setzt.
 
 ## 7. Sprache
 
@@ -171,7 +171,7 @@ Neue Katalogsätze über `naws_label()` bzw. direkt `__()`/`_x()` wie in den Nac
 
 - Vorlesetext Linie: „%1$s, last %2$s: from %3$s to %4$s, latest %5$s" (Größe, Zeitraum, Tief, Hoch, letzter Wert — Werte mit Einheit).
 - Vorlesetext Balken: „%1$s, last %2$s: %3$s in total".
-- Vorlesetext Band: „%1$s, last %2$d days: daily means from %3$s to %4$s, range %5$s to %6$s".
+- Vorlesetext Band: „%1$s, last %2$s: daily means from %3$s to %4$s, range %5$s to %6$s" — %2$s ist dieselbe Zeitraum-Phrase wie bei Linie und Balken, nicht `%d days` für sich.
 - Zeiträume: „%d hours", „%d days" (mit `_n()`), „24 hours" ergibt sich daraus.
 - Größennamen: vorhandene Labels wiederverwenden, wo es sie gibt (Temperatur, Luftfeuchte, Luftdruck, Wind, Böen, Regen, CO₂, Lärm), sonst neu.
 - Sprechblase Regen: „%1$s–%2$s · %3$s" (Beginn, Ende, Menge).
@@ -235,6 +235,65 @@ Im Stil der vorhandenen Dateien unter `tests/` (eigenständige PHP-Skripte mit S
 - `color`-Attribut am Shortcode (Frank, 26.09.).
 - Sparklines in der Infobar (Frank, 26.09.).
 - Sparklines im Live-Dashboard `[naws_live]` oder in `[naws_current]`.
-- Mehrere Größen in einer Sparkline, Achsen, Beschriftungen, Zoom.
+- Mehrere Größen in einer einzelnen Inline-Sparkline, Achsen an Inline-Sparklines, Zoom. (Kachel und Monatsblock mit Beschriftung und Achse: siehe 14.)
 - Live-Umschalten der Widget-Vorschau ohne Speichern.
 - Innenraum-Tagesspalten (`indoor_temp_avg`, `indoor_humidity_avg`) und Zusatzmodule (Module 4) als Tagesquelle; über `module` + Rohwerte sind sie erreichbar.
+
+## 14. Nachtrag (26.09.2026, abends): Kachel und Monatsblock wie in der Demo
+
+**Auslöser:** Frank nach der dev-Abnahme: „wo sind die Kacheln in der gebauten Version?" — „Ich ging davon aus, dass Du Dich an die Demo hältst." Die Demo „Sparkline Leipzig" zeigt zwei Darstellungen, die der Entwurf nicht übernommen hatte: sechs Kacheln mit Name, Wert, Tief/Hoch und großer Kurve, und den Block „Monat in einer Zeile". Beide kommen jetzt dazu, **die Demo ist die Vorlage**. Abweichungen nur dort, wo Frank anders entschieden hat: Farben aus dem Erscheinungsbild (keine festen Demo-Farben), keine Infobar. Form: **eine Kachel pro Shortcode** (Frank), das Raster baut der Seitenbaukasten.
+
+### 14.1 Attribute
+
+`[naws_sparkline]` bekommt zwei Attribute:
+
+| Attribut | Werte | Standard | Regel |
+|---|---|---|---|
+| `layout` | `inline`, `tile`, `month` | `inline` | Unbekannt → `inline`. `inline` ist das bisherige Verhalten, unverändert. |
+| `title` | Text | leer | Nur bei `tile`: ersetzt den Namen der Größe (z. B. `title="Temperatur außen"`). `sanitize_text_field()`, Ausgabe `esc_html()`. |
+
+`normalise_atts()` liefert zusätzlich `layout` und `title`. Bei `layout="month"` wird `param` nicht gebraucht (siehe 14.3); `days` gilt dort mit den Grenzen 7–366, Vorgabe 30.
+
+### 14.2 Kachel `layout="tile"`
+
+Eine Kachel füllt die Breite ihres Containers (`display:block; width:100%`). Aufbau wie in der Demo, von oben nach unten:
+
+1. **Name** in Großbuchstaben (CSS `text-transform:uppercase`, klein, gesperrt, gedämpfte Farbe): `title` oder `naws_label( 'sl_name_' … )` wie im Vorlesetext.
+2. **Wert** groß, Einheit klein dahinter.
+   - Linie: der letzte Wert (`$d['value']` ohne Einheit + Einheit getrennt gesetzt).
+   - Regen: die Summe und der Zeitraum, „4,2 mm in 24 Stunden" (neues Label `sl_tile_total`: „%1$s in %2$s", 1 = Summe mit Einheit, 2 = Zeitraum wie im Vorlesetext).
+3. **Nebenzeile** klein, gedämpft.
+   - Linie: „Tief 16,3 · Hoch 24,5 °C" (neues Label `sl_tile_range`: „Low %1$s · High %2$s", 1 = Tief ohne Einheit, 2 = Hoch mit Einheit), aus den Werten der vorbereiteten Reihe.
+   - Regen: das nasseste Fenster mit seiner Sprechblasen-Beschriftung, „Am meisten: 14:00–14:30 · 0,6 mm" (neues Label `sl_tile_peak`: „Most: %s"). Ohne Regen im Zeitraum entfällt die Zeile.
+   - Band (`days` + `band="minmax"`): „Tief 8,9 · Hoch 29,0 °C" aus den Tief/Hoch-Spalten.
+4. **Kurve**: dieselbe Sparkline wie bisher mit viewBox 200 × 44, Tief/Hoch-Punkte bei Linien immer an, CSS-Höhe 44 px, Breite 100 %. Sprechblase wie gehabt.
+
+Rechnung: neue reine Methode `NAWS_Sparkline::tile_facts( array $a, array $d ): array` mit `name`, `value`, `unit`, `sub` (Nebenzeile, `''` erlaubt) — aus den Daten von `prepare()`, ohne neue Abfrage. Markup: neues Template `templates/sparkline-tile.php`, Wurzel `<div class="naws-sl-card naws-sl-tile">`. Nichts zu zeichnen → leere Ausgabe wie bisher.
+
+### 14.3 Monatsblock `layout="month"`
+
+```
+[naws_sparkline layout="month" days="32"]
+```
+
+Ein Block mit zwei Zeilen und Achse, volle Containerbreite, wie in der Demo:
+
+- **Zeile Temperatur:** links groß das Tagesmittel des letzten Tages mit Daten („19,0 °C"), darunter klein „Tagesmittel am 16.09." (Label `sl_month_mean`: „Daily mean on %s", Datum im Achsenformat). Rechts das Band `temp_min`–`temp_max` mit der Linie `temp_avg`, viewBox 680 × 64, CSS-Höhe 64 px, Endpunkt.
+- **Zeile Regen:** links groß die Summe („34,0 mm"), darunter „Regen in 32 Tagen" (Label `sl_month_rain`: „Rain in %s", Zeitraum wie im Vorlesetext). Rechts die Balken je Tag, viewBox 680 × 40, CSS-Höhe 40 px.
+- **Achse:** unter der rechten Spalte links der erste, rechts der letzte Tag, Format übersetzbar (`_x( 'j.n.', 'month axis date', … )`, englisch `n/j`).
+- **Raster:** zwei Spalten (Beschriftung 7,5em | Kurve), auf schmalen Bildschirmen (≤ 520 px) eine Spalte, Beschriftung über der Kurve.
+- **Sprechblasen:** wie bei den Einzel-Sparklines (Datum · Mittel · Spanne bzw. Datum · Menge).
+- **Daten:** zwei Durchläufe durch `normalise_atts()`/`fetch()`/`prepare()`: `temp_avg` mit `band="minmax"` und `rain_sum`, beide mit demselben `days`. Fehlt die Temperatur, gibt der Block nichts aus; fehlt nur der Regen, entfällt die Regenzeile.
+- Markup: neues Template `templates/sparkline-month.php`, Wurzel `<div class="naws-sl-card naws-sl-month">`; neue Methode `NAWS_Sparkline::render_month( array $atts ): string`.
+
+### 14.4 Farben
+
+Keine neuen Farbschlüssel. Karte und Schrift kommen aus „Basis-Theme": `get_inline_css()` nimmt `.naws-sl-card` in die Regel mit den Theme-Variablen auf (`.naws-wrap, .naws-wx, .naws-hm, .naws-sl-card { … }`), Kartenhintergrund `--naws-surface`, Rand `--naws-border`, Wert `--naws-text-dark`, Name/Nebenzeile/Achse `--naws-text-muted`. Kurven, Balken, Band und Punkte wie gehabt aus dem Reiter „Sparkline". Der Endpunkt-Ring nimmt in der Karte den Kartenhintergrund (`--naws-sl-ring: var(--naws-surface)`).
+
+### 14.5 Tests, Doku, Sprache
+
+- Reine Tests für `normalise_atts()` (`layout`, `title`, Monatsgrenzen) und `tile_facts()` (Linie, Regen mit/ohne Regen, Band, Fahrenheit).
+- Render-Tests für beide Templates: Wurzelklassen, Name/Wert/Nebenzeile escaped, Kurve mit viewBox 200 × 44 bzw. 680 × 64/40, Achse, keine Farben im Markup, keine ids, leere Ausgabe ohne Daten, Monatsblock ohne Regen ohne Regenzeile.
+- Shortcode-Seite: zwei Zeilen in der Attributtabelle und zwei Beispiele; readme/README/CHANGELOG ergänzen.
+- Neue Labels in `.pot`, Deutsch und Norwegisch vollständig.
+- Abnahme auf dev: Testseite um ein Kachelraster (drei Elementor-Spalten bzw. HTML-Raster mit sechs Kacheln wie in der Demo) und den Monatsblock ergänzen, Desktop und Handy, Sprechblase, neben der Demo verglichen.

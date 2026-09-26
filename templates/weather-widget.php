@@ -13,6 +13,7 @@
  * @var string  $naws_wgt_time  Formatted time of last fetch, '' to omit
  * @var int     $naws_wgt_width Widget width in px, 250–500; optional
  * @var string  $naws_wgt_scheme light|dark|transparent; optional, light if absent
+ * @var array   $naws_wgt_spark  temp|rain|wind => sparkline HTML or ''; optional (since 2.1.0)
  *
  * @package NAWS
  * @since   1.8.0
@@ -34,6 +35,9 @@ $naws_wgt_max = NAWS_Widget_Data::normalise_width( $naws_wgt_width ?? null );
 // byte for byte.
 $naws_wgt_scheme = NAWS_Widget_Data::normalise_scheme( $naws_wgt_scheme ?? null );
 $naws_wgt_class  = 'naws-wgt' . ( 'light' === $naws_wgt_scheme ? '' : ' naws-wgt--' . $naws_wgt_scheme );
+
+// Absent before 2.1.0 and in every caller that does not ask for curves.
+$naws_wgt_spark = isset( $naws_wgt_spark ) && is_array( $naws_wgt_spark ) ? $naws_wgt_spark : [];
 ?>
 <div class="<?php echo esc_attr( $naws_wgt_class ); ?>" style="--naws-wgt-max:<?php echo absint( $naws_wgt_max ); ?>px">
 
@@ -53,6 +57,9 @@ $naws_wgt_class  = 'naws-wgt' . ( 'light' === $naws_wgt_scheme ? '' : ' naws-wgt
       <?php if ( $naws_wgt_state !== '' ) : ?>
         <div class="naws-wgt-cond"><?php echo esc_html( NAWS_Weather_Icons::label( $naws_wgt_state ) ); ?></div>
       <?php endif; ?>
+      <?php if ( ( $naws_wgt_spark['temp'] ?? '' ) !== '' ) : ?>
+        <div class="naws-wgt-spark naws-wgt-spark--head"><?php echo $naws_wgt_spark['temp']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- markup from NAWS_Sparkline::markup(), every value escaped in templates/sparkline.php ?></div>
+      <?php endif; ?>
     </div>
   </div>
 
@@ -62,6 +69,9 @@ $naws_wgt_class  = 'naws-wgt' . ( 'light' === $naws_wgt_scheme ? '' : ' naws-wgt
         <div class="naws-wgt-chip">
           <span class="naws-wgt-k"><?php echo esc_html( naws_label( 'wgt_' . $naws_wgt_tile['key'] ) ); ?></span>
           <span class="naws-wgt-v"><?php echo esc_html( $naws_wgt_tile['value'] ); ?><span class="naws-wgt-sub"> <?php echo esc_html( $naws_wgt_tile['unit'] ); ?></span></span>
+          <?php if ( ( $naws_wgt_spark[ $naws_wgt_tile['key'] ] ?? '' ) !== '' ) : ?>
+            <div class="naws-wgt-spark"><?php echo $naws_wgt_spark[ $naws_wgt_tile['key'] ]; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- markup from NAWS_Sparkline::markup(), every value escaped in templates/sparkline.php ?></div>
+          <?php endif; ?>
         </div>
       <?php endforeach; ?>
     </div>

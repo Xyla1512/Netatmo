@@ -1,10 +1,10 @@
 {
-    "aktualisiert": "2026-09-25",
+    "aktualisiert": "2026-09-26",
     "vorhaben": [
         {
             "id": "sparkline",
             "titel": "Sparklines: eine Kurve in Wortgröße",
-            "satz": "[naws_sparkline] zeichnet den Verlauf einer Messgröße als winzige Kurve, so hoch wie eine Textzeile: neben der Zahl im Fließtext, in den Kacheln des Widgets, in der Infobar. Aus den Rohmessungen der letzten Stunden oder aus der Tagestabelle mit der Spanne zwischen Tief und Hoch, Regen als Balken. Serverseitiges SVG ohne JavaScript, Farben aus dem Erscheinungsbild.",
+            "satz": "[naws_sparkline] zeichnet den Verlauf einer Messgröße als winzige Kurve, so hoch wie eine Textzeile: neben der Zahl im Fließtext und auf Wunsch in den Kacheln des Widgets. Aus den Rohmessungen der letzten Stunden oder aus der Tagestabelle mit der Spanne zwischen Tief und Hoch, Regen als Balken. Serverseitiges SVG, beim Überfahren Uhrzeit und Wert, Farben aus dem Erscheinungsbild.",
             "ab": null,
             "bild": null
         },

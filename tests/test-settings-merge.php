@@ -46,6 +46,7 @@ $GLOBALS['naws_stored'] = [
     'cooling_limit' => 19.0,
     'retention_enabled' => 1,
     'data_retention'    => 200,
+    'wgt_sparklines'    => 1,
 ];
 
 // ── Minimal WordPress surface ────────────────────────────────────────────
@@ -280,6 +281,13 @@ scenario(
     'Zugangsdaten speichern laesst die Aufbewahrung stehen',
     [ 'client_id' => 'newid', 'client_secret' => 'newsecret' ],
     [ 'retention_enabled', 'data_retention' ],
+    [ 'client_id' => 'ENC:newid' ]
+);
+
+scenario(
+    'Zugangsdaten speichern laesst den Sparkline-Haken stehen',
+    [ 'client_id' => 'newid' ],
+    [ 'wgt_sparklines' ],
     [ 'client_id' => 'ENC:newid' ]
 );
 
