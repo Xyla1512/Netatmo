@@ -129,6 +129,16 @@ check( 'Delegation am Dokument',                str_contains( $js, "document.add
 check( 'die Sprechblase geht, wenn der Zeiger das Fenster verlaesst', str_contains( $js, "document.addEventListener('pointerout'" ) && str_contains( $js, "window.addEventListener('blur', hide)" ), true );
 check( 'am oberen Rand klappt sie nach unten', str_contains( $js, "classList.add('is-below')" ) && str_contains( $css, '.naws-sl-tip.is-below {' ), true );
 
+echo "\nVorschau im Erscheinungsbild\n" . str_repeat( '-', 74 ) . "\n";
+$pv = NAWS_Sparkline::preview_set();
+check( 'drei Kurven',                         array_keys( $pv ), [ 'line', 'bars', 'band' ] );
+check( 'ohne Stationsdaten: Beispiel-Linie mit Tief und Hoch', [ str_contains( $pv['line'], 'naws-sl--line' ), substr_count( $pv['line'], 'class="naws-sl-mm"' ) ], [ true, 2 ] );
+check( 'Beispiel-Regen: sechs Balken',        substr_count( $pv['bars'], '<rect class="naws-sl-bar"' ), 6 );
+check( 'Beispiel-Band',                       str_contains( $pv['band'], 'class="naws-sl-band"' ), true );
+check( 'feste Groesse 200 x 40',              str_contains( $pv['line'], 'style="--naws-sl-w:200px;--naws-sl-h:40px;"' ), true );
+check( 'Vorlesetext der Beispiele',           str_contains( $pv['bars'], 'aria-label="Sample sparkline in the chosen colours"' ), true );
+check( 'das Beispiel ist fest',               NAWS_Sparkline::sample( 'line' ), NAWS_Sparkline::sample( 'line' ) );
+
 echo "\n" . str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );

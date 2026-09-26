@@ -70,6 +70,15 @@ $color_labels = [
     'windrose_grid' => __( 'Rings', 'xtx-integration-for-netatmo' ),
     'windrose_calm' => __( 'Hub (calm)', 'xtx-integration-for-netatmo' ),
     'windrose_switch' => __( 'Period switcher (active button)', 'xtx-integration-for-netatmo' ),
+    // [naws_sparkline] (since 2.1.0)
+    'sparkline_line'      => __( 'Line', 'xtx-integration-for-netatmo' ),
+    'sparkline_line_dark' => __( 'Line on dark ground', 'xtx-integration-for-netatmo' ),
+    'sparkline_rain'      => __( 'Rain bars', 'xtx-integration-for-netatmo' ),
+    'sparkline_rain_dark' => __( 'Rain bars on dark ground', 'xtx-integration-for-netatmo' ),
+    'sparkline_band'      => __( 'Band (daily low to high)', 'xtx-integration-for-netatmo' ),
+    'sparkline_dots'      => __( 'Low and high dots', 'xtx-integration-for-netatmo' ),
+    'sparkline_tip_bg'    => __( 'Hover bubble – background', 'xtx-integration-for-netatmo' ),
+    'sparkline_tip_text'  => __( 'Hover bubble – text', 'xtx-integration-for-netatmo' ),
 ];
 
 // Short labels for 24h chart preview legend
@@ -673,6 +682,50 @@ $icon_color_keys = [
             </div>
         </div>
 
+        <!-- ============================================================
+             Tab 9: Sparkline (since 2.1.0)
+             ============================================================ -->
+        <div class="naws-appearance-pane<?php echo esc_attr( $naws_pane_class( 'sparkline' ) ); ?>" data-pane="sparkline">
+            <p class="description"><?php esc_html_e( 'Colours for [naws_sparkline] and the curves in the sidebar widget. One line colour serves every quantity; the dark scheme of the widget uses the two colours "on dark ground". The area under a line is the line colour, lightly filled.', 'xtx-integration-for-netatmo' ); ?></p>
+            <div class="naws-appearance-row">
+                <div class="naws-appearance-controls">
+                    <table class="form-table naws-color-table">
+                        <tbody>
+                        <?php foreach ( $groups['sparkline']['keys'] as $key ) : ?>
+                            <tr>
+                                <th><label for="naws-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $color_labels[ $key ] ?? $key ); ?></label></th>
+                                <td>
+                                    <input type="text"
+                                           id="naws-<?php echo esc_attr( $key ); ?>"
+                                           name="naws_appearance[<?php echo esc_attr( $key ); ?>]"
+                                           value="<?php echo esc_attr( $colors[ $key ] ); ?>"
+                                           class="naws-color-picker"
+                                           data-preview="sparkline"
+                                           data-key="<?php echo esc_attr( $key ); ?>"
+                                           data-default-color="<?php echo esc_attr( $defaults[ $key ] ); ?>">
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="naws-appearance-preview naws-preview-sticky">
+                    <div class="naws-preview-label"><?php esc_html_e( 'Live preview — sparkline', 'xtx-integration-for-netatmo' ); ?></div>
+                    <?php $naws_pv_sl = NAWS_Sparkline::preview_set(); ?>
+                    <div id="naws-preview-sparkline">
+                        <?php foreach ( [ 'light', 'dark' ] as $naws_pv_ground ) : ?>
+                        <div class="naws-pv-sl-ground<?php echo esc_attr( 'dark' === $naws_pv_ground ? ' naws-sl-dark' : '' ); ?>">
+                            <?php foreach ( $naws_pv_sl as $naws_pv_html ) : ?>
+                            <div class="naws-pv-sl-row"><?php echo $naws_pv_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- markup from NAWS_Sparkline::markup(), every value escaped in templates/sparkline.php ?></div>
+                            <?php endforeach; ?>
+                        </div>
+                        <?php endforeach; ?>
+                        <span class="naws-sl-tip naws-pv-sl-tip"><?php echo esc_html( wp_date( 'D ' . get_option( 'time_format', 'H:i' ) ) . ' · ' . NAWS_Sparkline::number( 'Temperature', (float) NAWS_Helpers::format_value( 'Temperature', 18.2 ) ) . ' ' . NAWS_Helpers::get_unit( 'Temperature' ) ); ?></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <p class="submit">
             <button type="submit" class="button button-primary"><?php esc_html_e( 'Save Settings', 'xtx-integration-for-netatmo' ); ?></button>
         </p>
@@ -953,6 +1006,17 @@ jQuery(document).ready(function($) {
             } else {
                 wr.find('.naws-pv-wr-' + suffix).css(suffix === 'grid' ? 'stroke' : 'fill', val);
             }
+        }
+
+        // ── Sparkline: the variable the key names, set on every curve, on
+        // the sample bubble and on the curves in the widget preview. Only
+        // that one variable is touched, so the dark half keeps reading its
+        // "on dark ground" colours.
+        if (group === 'sparkline') {
+            var slVar = '--naws-sl-' + String(key).replace('sparkline_', '').replace(/_/g, '-');
+            document.querySelectorAll('#naws-preview-sparkline .naws-sl, #naws-preview-sparkline .naws-sl-tip, .naws-wgt .naws-sl').forEach(function (el) {
+                el.style.setProperty(slVar, val);
+            });
         }
     }
 

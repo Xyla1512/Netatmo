@@ -630,6 +630,55 @@ final class NAWS_Sparkline {
         ];
     }
 
+    /**
+     * A fixed curve for the Appearance preview, for a station that has
+     * nothing to show yet: a mild day for the line, a shower for the bars,
+     * twelve days for the band. Never random, so the preview does not
+     * change between two looks.
+     */
+    public static function sample( string $kind ): string {
+        $v = [ 14.2, 13.1, 12.4, 12.0, 13.5, 16.8, 19.4, 21.0, 21.6, 20.2, 18.1, 16.0 ];
+        $a = self::normalise_atts( [
+            'param'  => $kind === 'bars' ? 'Rain' : ( $kind === 'band' ? 'temp_avg' : 'Temperature' ),
+            'days'   => $kind === 'band' ? '12' : '',
+            'band'   => 'minmax',
+            'show'   => 'minmax',
+            'width'  => '200',
+            'height' => '40',
+        ] );
+        $tips = array_fill( 0, count( $v ), '' );
+        $aria = naws_label( 'sl_preview_aria' );
+
+        if ( $kind === 'bars' ) {
+            $d = [ 'kind' => 'bars', 'sums' => [ 0.0, 0.0, 0.4, 1.2, 0.2, 0.0, 0.0, 0.0, 0.8, 2.1, 1.0, 0.0 ], 'tips' => $tips, 'aria' => $aria, 'value' => '' ];
+        } else {
+            $pts = [];
+            foreach ( $v as $i => $x ) {
+                $pts[] = $kind === 'band'
+                    ? [ $i * 86400, $x, $x - 3.5 - ( $i % 3 ), $x + 4.0 + ( $i % 2 ) ]
+                    : [ $i * 3600, $x ];
+            }
+            $d = [ 'kind' => 'line', 'pts' => $pts, 'band' => $kind === 'band', 'tips' => $tips, 'aria' => $aria, 'value' => '' ];
+        }
+        return self::markup( $a, $d );
+    }
+
+    /**
+     * The three curves on the Sparkline tab: the station's own where it has
+     * them, the sample otherwise. Bars count only with rain in them — a dry
+     * day would show the baseline and none of the colour being chosen.
+     */
+    public static function preview_set(): array {
+        $line = self::render( [ 'param' => 'Temperature', 'show' => 'minmax', 'width' => '200', 'height' => '40' ] );
+        $bars = self::render( [ 'param' => 'Rain', 'width' => '200', 'height' => '40' ] );
+        $band = self::render( [ 'param' => 'temp_avg', 'days' => '30', 'band' => 'minmax', 'width' => '200', 'height' => '40' ] );
+        return [
+            'line' => $line !== '' ? $line : self::sample( 'line' ),
+            'bars' => str_contains( $bars, 'naws-sl-bar' ) ? $bars : self::sample( 'bars' ),
+            'band' => $band !== '' ? $band : self::sample( 'band' ),
+        ];
+    }
+
     private static function clamp( int $v, int $lo, int $hi ): int {
         return max( $lo, min( $hi, $v ) );
     }

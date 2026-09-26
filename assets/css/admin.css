@@ -1174,3 +1174,12 @@
 .naws-pv-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;border-radius:8px;padding:8px 12px;margin:-0.25rem 0 0.15rem;}
 .naws-pv-header-title{font-size:13px;font-weight:800;font-style:italic;}
 .naws-pv-header-meta{font-size:11px;font-weight:600;}
+
+/* Sparkline tab preview (since 2.1.0): the three curves on a light and a
+   dark ground, the dark one reading the "on dark ground" colours through
+   .naws-sl-dark (frontend.css), and the bubble standing still below. */
+#naws-preview-sparkline{max-width:260px;}
+.naws-pv-sl-ground{padding:10px 14px;border:1px solid #cbd4e0;border-radius:8px;background:#fff;color:#1e293b;margin-bottom:10px;}
+.naws-pv-sl-ground.naws-sl-dark{background:#1c2433;color:#e8edf5;border-color:#39465c;}
+.naws-pv-sl-row{margin:6px 0;line-height:0;}
+.naws-pv-sl-tip.naws-sl-tip{position:static;transform:none;margin:0;display:inline-block;}

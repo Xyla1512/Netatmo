@@ -673,6 +673,7 @@ class NAWS_Colors {
             'history'    => __( 'Year Comparison Palette', 'xtx-integration-for-netatmo' ),
             'heatmap'    => __( 'Heatmap Scale', 'xtx-integration-for-netatmo' ),
             'windrose'   => __( 'Wind Rose', 'xtx-integration-for-netatmo' ),
+            'sparkline'  => __( 'Sparkline', 'xtx-integration-for-netatmo' ),
         ];
     }
 

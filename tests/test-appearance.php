@@ -197,8 +197,8 @@ saved( [] );
 
 echo "\nReiter des Erscheinungsbilds\n";
 
-check( 'acht Reiter, Basis zuerst', array_keys( NAWS_Colors::appearance_tabs() ), [
-    'theme', 'icons', 'live_wind', 'chart24h', 'charttheme', 'history', 'heatmap', 'windrose',
+check( 'neun Reiter, Basis zuerst', array_keys( NAWS_Colors::appearance_tabs() ), [
+    'theme', 'icons', 'live_wind', 'chart24h', 'charttheme', 'history', 'heatmap', 'windrose', 'sparkline',
 ] );
 check( 'ein bekannter Reiter bleibt',         NAWS_Colors::appearance_tab( 'windrose' ), 'windrose' );
 check( 'ein unbekannter wird Basis',          NAWS_Colors::appearance_tab( 'nonsense' ), 'theme' );
@@ -214,6 +214,9 @@ check( 'der View liest die Liste aus NAWS_Colors', str_contains( $view, '$tabs =
 check( 'jede Flaeche kennt ihren Zustand',    substr_count( $view, 'class="naws-appearance-pane<?php echo esc_attr( $naws_pane_class(' ), count( NAWS_Colors::appearance_tabs() ) );
 check( 'keine fest aktive Flaeche mehr',      str_contains( $view, 'class="naws-appearance-pane active"' ), false );
 check( 'verstecktes Feld fuer den Reiter',    str_contains( $view, '<input type="hidden" name="naws_tab" id="naws-tab-field"' ), true );
+check( 'die Sparkline-Flaeche liest ihre Gruppe', str_contains( $view, "\$groups['sparkline']['keys']" ), true );
+check( 'Vorschau-Container',                   str_contains( $view, '<div id="naws-preview-sparkline">' ), true );
+check( 'das Skript kennt die Gruppe',          str_contains( $view, "if (group === 'sparkline') {" ), true );
 
 $rest = (string) file_get_contents( __DIR__ . '/../admin/views/rest-api-docs.php' );
 check( 'REST-Seite: zwei Reiterleisten im WordPress-Stil', substr_count( $rest, 'class="nav-tab-wrapper naws-tab-bar"' ), 2 );
