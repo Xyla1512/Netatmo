@@ -44,7 +44,7 @@ Einsatzorte: frei im Fließtext per Shortcode, und auf Wunsch in `[naws_weather_
 | `width` | 20–600 | leer | Pixel, auf die Grenzen gesetzt. Leer → viewBox-Breite 80, dargestellt als `4.6em` (wächst mit der Schrift, siehe 5.3). |
 | `height` | 10–200 | leer | Pixel, auf die Grenzen gesetzt. Leer → viewBox-Höhe 18, dargestellt als `1.05em`. |
 | `show` | `none`, `value`, `minmax` | `none` | `value`: der letzte Wert mit Einheit hinter der Kurve (bei Regen die Summe des Zeitraums). `minmax`: Tief- und Hoch-Punkt auf der Linie. Unbekannt → `none`. |
-| `type` | `line`, `bars` | leer | Leer → `bars` für `Rain`/`rain_sum`, sonst `line`. Ausdrücklich gesetzt gilt es für jede Größe. |
+| `type` | `line`, `bars` | leer | Leer → `bars` für `Rain`/`rain_sum`, sonst `line`. `line` gilt für jede Größe; `bars` nur für Regen (ein Balken ist eine Summe, und eine Summe von Temperaturen oder Drücken hat keine Bedeutung) — bei allen anderen Größen wird `bars` zu `line`. |
 | `band` | `minmax` | leer | Nur mit `days` und `param="temp_avg"`: Fläche `temp_min`–`temp_max` unter der Mittelwertlinie. In jedem anderen Fall still ignoriert. |
 
 Die Attribute gehen durch `shortcode_atts()` und werden in `NAWS_Sparkline::normalise_atts()` gecastet, begrenzt und gegen Positivlisten geprüft (rein, testbar). Das Ergebnis ist ein Array mit festen Typen; nichts davon gelangt ungeprüft in eine Abfrage oder ins Markup.

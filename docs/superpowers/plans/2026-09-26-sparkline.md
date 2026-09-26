@@ -2543,7 +2543,7 @@ git commit -m "Appearance: the Sparkline tab, with the station's curves on light
             <tr><td><code>module</code></td><td><?php esc_html_e( 'outdoor, indoor, wind, rain, in-<name> or a MAC address. Left out, the module that measures the reading. Ignored with days.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php esc_html_e( 'from param', 'xtx-integration-for-netatmo' ); ?></span></td></tr>
             <tr><td><code>width</code>, <code>height</code></td><td><?php esc_html_e( 'Size in pixels, width 20–600 and height 10–200. Left out, the curve is 4.6 × 1.05 em and grows with the text.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">4.6 × 1.05 em</span></td></tr>
             <tr><td><code>show</code></td><td><?php esc_html_e( 'none, value (the latest value, or the rain total, after the curve) or minmax (dots on the lowest and the highest point).', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">none</span></td></tr>
-            <tr><td><code>type</code></td><td><?php esc_html_e( 'line or bars. Left out, bars for rain and a line for everything else.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php esc_html_e( 'automatic', 'xtx-integration-for-netatmo' ); ?></span></td></tr>
+            <tr><td><code>type</code></td><td><?php esc_html_e( 'line or bars. Bars are for rain only; left out, rain gets bars and everything else a line.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php esc_html_e( 'automatic', 'xtx-integration-for-netatmo' ); ?></span></td></tr>
             <tr><td><code>band</code></td><td><?php esc_html_e( 'minmax: with days and temp_avg, the band between daily low and high under the line of daily means.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php esc_html_e( 'empty', 'xtx-integration-for-netatmo' ); ?></span></td></tr>
         </table>
         <div class="naws-inline-examples">
@@ -2702,7 +2702,7 @@ return [
     'from param' => 'aus param',
     'Size in pixels, width 20–600 and height 10–200. Left out, the curve is 4.6 × 1.05 em and grows with the text.' => 'Größe in Pixeln, Breite 20–600 und Höhe 10–200. Ohne Angabe ist die Kurve 4,6 × 1,05 em groß und wächst mit der Schrift.',
     'none, value (the latest value, or the rain total, after the curve) or minmax (dots on the lowest and the highest point).' => 'none, value (der letzte Wert oder die Regensumme hinter der Kurve) oder minmax (Punkte am tiefsten und am höchsten Wert).',
-    'line or bars. Left out, bars for rain and a line for everything else.' => 'line oder bars. Ohne Angabe Balken für Regen und eine Linie für alles andere.',
+    'line or bars. Bars are for rain only; left out, rain gets bars and everything else a line.' => 'line oder bars. Balken gibt es nur für Regen; ohne Angabe bekommt Regen Balken und alles andere eine Linie.',
     'automatic' => 'automatisch',
     'minmax: with days and temp_avg, the band between daily low and high under the line of daily means.' => 'minmax: mit days und temp_avg das Band zwischen Tagestief und Tageshoch unter der Linie der Tagesmittel.',
     'temperature of the last 24 hours, the size of a word' => 'Temperatur der letzten 24 Stunden, so groß wie ein Wort',
@@ -2766,7 +2766,7 @@ return [
     'from param' => 'fra param',
     'Size in pixels, width 20–600 and height 10–200. Left out, the curve is 4.6 × 1.05 em and grows with the text.' => 'Størrelse i piksler, bredde 20–600 og høyde 10–200. Utelatt er kurven 4,6 × 1,05 em og vokser med teksten.',
     'none, value (the latest value, or the rain total, after the curve) or minmax (dots on the lowest and the highest point).' => 'none, value (siste verdi eller nedbørssummen etter kurven) eller minmax (punkter på laveste og høyeste verdi).',
-    'line or bars. Left out, bars for rain and a line for everything else.' => 'line eller bars. Utelatt: søyler for nedbør og linje for alt annet.',
+    'line or bars. Bars are for rain only; left out, rain gets bars and everything else a line.' => 'line eller bars. Søyler finnes bare for nedbør; utelatt får nedbør søyler og alt annet linje.',
     'automatic' => 'automatisk',
     'minmax: with days and temp_avg, the band between daily low and high under the line of daily means.' => 'minmax: med days og temp_avg, båndet mellom døgnets laveste og høyeste under linjen for døgnmiddel.',
     'temperature of the last 24 hours, the size of a word' => 'temperatur de siste 24 timene, på størrelse med et ord',
