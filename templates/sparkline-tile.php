@@ -11,8 +11,9 @@
  * carries a colour.
  *
  * Expected variables:
- * @var array $naws_slt name, value, unit, sub ('' for none), curve (markup
- *                      from NAWS_Sparkline::markup(), already escaped there)
+ * @var array $naws_slt name, value, unit, sub ('' for none), curve (SVG
+ *                      markup from NAWS_Sparkline::markup(); every value in
+ *                      it is escaped in templates/sparkline.php)
  *
  * @package NAWS
  * @since   2.1.0

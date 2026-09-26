@@ -145,7 +145,7 @@ check( 'das Beispiel ist fest',               NAWS_Sparkline::sample( 'line' ), 
 
 echo "\nKachel\n" . str_repeat( '-', 74 ) . "\n";
 $ta = NAWS_Sparkline::normalise_atts( [ 'layout' => 'tile', 'title' => 'Aussen "Garten" & Hof' ] );
-$td = [ 'kind' => 'line', 'pts' => [ [ 0, 10.0 ], [ 10, 12.5 ], [ 20, 11.0 ] ], 'band' => false, 'tips' => [ 'a', 'b', 'c' ], 'aria' => 'x', 'value' => '11.0 °C', 'name' => 'Temperature', 'unit' => '°C', 'period' => '24 hours' ];
+$td = [ 'kind' => 'line', 'pts' => [ [ 0, 10.0 ], [ 10, 12.5 ], [ 20, 11.0 ] ], 'band' => false, 'tips' => [ 'a', 'b', 'c' ], 'aria' => 'x', 'value' => '11.0 °C', 'last' => 11.0, 'lo' => 10.0, 'hi' => 12.5, 'name' => 'Temperature', 'unit' => '°C', 'period' => '24 hours' ];
 $tile = NAWS_Sparkline::tile_markup( $ta, $td );
 check( 'Wurzel der Karte',                    str_starts_with( $tile, '<div class="naws-sl-card naws-sl-tile">' ), true );
 // Review Focus 3: title wird escaped.
@@ -179,6 +179,19 @@ check( 'ohne Regen: eine Zeile',              substr_count( $ohne, 'class="naws-
 check( 'ohne Regen: Achse bleibt',            str_contains( $ohne, 'naws-sl-month-axis' ), true );
 check( 'leere Station: Monat leer',           NAWS_Sparkline::render( [ 'layout' => 'month' ] ), '' );
 check( 'leere Station: Kachel leer',          NAWS_Sparkline::render( [ 'layout' => 'tile' ] ), '' );
+
+// Review Focus 1: fehlen die ersten Tage, teilen sich Band, Regen und Achse dieselbe Zeitspanne.
+$mg = NAWS_Sparkline::normalise_atts( [ 'param' => 'temp_avg', 'days' => '3', 'band' => 'minmax' ] );
+$dg = NAWS_Sparkline::prepare( $mg, [ 'dates' => $tage, 'rows' => [ '2026-09-25' => [ 12.0, 8.0, 16.0 ], '2026-09-26' => [ 14.0, 9.0, 19.0 ] ] ] );
+$dg['domain'] = [
+    ( new DateTimeImmutable( '2026-09-24 12:00:00', wp_timezone() ) )->getTimestamp(),
+    ( new DateTimeImmutable( '2026-09-26 12:00:00', wp_timezone() ) )->getTimestamp(),
+];
+$month_luecke = NAWS_Sparkline::month_markup( $mg, $dg, $mra, null, $tage, 3 );
+check( 'Luecke am Anfang: Band beginnt bei der Zeitspanne, nicht beim ersten Messwert',
+    str_contains( $month_luecke, '<path class="naws-sl-band" d="M40.00' ), true );
+check( 'Luecke am Anfang: Band beginnt nicht am Rand wie ohne Zeitspanne',
+    str_contains( $month_luecke, '<path class="naws-sl-band" d="M2.00' ), false );
 
 $css = (string) file_get_contents( dirname( __DIR__ ) . '/assets/css/frontend.css' );
 // Review Focus 1: Karte und Kurve füllen jede Spalte.

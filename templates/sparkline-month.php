@@ -11,8 +11,10 @@
  *
  * Expected variables:
  * @var array $naws_slm mean_value, mean_label, rain_value, rain_label,
- *                      axis_from, axis_to (strings), band and rain
- *                      (markup from NAWS_Sparkline::markup(), rain '' for none)
+ *                      axis_from, axis_to (strings), band and rain (SVG
+ *                      markup from NAWS_Sparkline::markup(); every value in
+ *                      it is escaped in templates/sparkline.php; rain '' for
+ *                      none)
  *
  * @package NAWS
  * @since   2.1.0

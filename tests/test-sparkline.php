@@ -168,6 +168,13 @@ setlocale( LC_NUMERIC, $vorher );
 check( 'kein Komma im Pfad unter de_DE',      str_contains( $de['line'] . $de['area'], ',' ), false );
 check( 'keine Punkte: alles leer', NAWS_Sparkline::geometry( [], 80, 18 ), [ 'line' => '', 'area' => '', 'band' => '', 'end' => [], 'lo' => [], 'hi' => [], 'xs' => [] ] );
 
+// Review Focus 1 (Monatsblock): eine feste Zeitspanne ersetzt die aus den Punkten geschaetzte.
+$fest = NAWS_Sparkline::geometry( [ [ 50, 1.0 ], [ 100, 2.0 ] ], 80, 18, false, 0.0, 100.0 );
+check( 'feste Spanne: Beginn bei 50/100',      $fest['xs'][0], 40.0 );
+check( 'feste Spanne: Ende bei 100/100',       $fest['xs'][1], 78.0 );
+check( 'feste Spanne: die Linie folgt',        $fest['line'], 'M40.00 16.00 L78.00 2.00' );
+check( 'ohne feste Spanne: unveraendert',      NAWS_Sparkline::geometry( [ [ 50, 1.0 ], [ 100, 2.0 ] ], 80, 18 )['line'], 'M2.00 16.00 L78.00 2.00' );
+
 echo "\nbar_geometry()\n" . str_repeat( '-', 74 ) . "\n";
 $b = NAWS_Sparkline::bar_geometry( [ 0.0, 2.0, 1.0, 0.0 ], 80, 18 );
 check( 'nur Fenster mit Regen werden Balken', $b['rects'], [ [ '20.50', '1.00', '18.50', '16.00' ], [ '40.00', '9.00', '18.50', '8.00' ] ] );
@@ -273,6 +280,20 @@ check( 'Regen je Tag: fehlende Tage sind 0',  $pd['sums'], [ 0.0, 4.2, 0.0 ] );
 check( 'Regen je Tag: Vorlesetext',           $pd['aria'], 'Rain per day, last 3 days: 4.2 mm in total' );
 check( 'Regen je Tag ohne Zeilen: nichts',    NAWS_Sparkline::prepare( NAWS_Sparkline::normalise_atts( [ 'param' => 'rain_sum', 'days' => '3' ] ), [ 'dates' => $tage, 'rows' => [] ] ), null );
 
+// Review Focus 6: Tief, Hoch und der aktuelle Wert kommen aus den Messwerten, nicht aus dem Ausduennfenster.
+$viele_wind = [];
+for ( $i = 0; $i < 300; $i++ ) {
+    $wert = 5.0;
+    if ( $i === 150 ) { $wert = 40.0; }
+    if ( $i === 299 ) { $wert = 7.0; }
+    $viele_wind[] = [ $i * 300, $wert ];
+}
+$aw  = NAWS_Sparkline::normalise_atts( [ 'param' => 'WindStrength' ] );
+$pw2 = NAWS_Sparkline::prepare( $aw, [ 'from' => 0, 'to' => 300 * 300, 'rows' => $viele_wind ] );
+check( 'ausgeduennt auf hoechstens 200 Punkte', count( $pw2['pts'] ) <= 200, true );
+check( 'aktueller Wert ist der letzte Messwert, nicht das Fenstermittel', $pw2['value'], '7 km/h' );
+check( 'Vorlesetext nennt den echten Ausschlag, nicht das verwaschene Fenster', str_contains( $pw2['aria'], 'to 40 km/h' ), true );
+
 echo "\nlayout und title\n" . str_repeat( '-', 74 ) . "\n";
 check( 'Vorgabe: inline',                    NAWS_Sparkline::normalise_atts( [] )['layout'], 'inline' );
 check( 'Unsinn wird inline',                 NAWS_Sparkline::normalise_atts( [ 'layout' => 'kachel' ] )['layout'], 'inline' );
@@ -297,6 +318,12 @@ check( 'prepare: Regensumme als Zahl',       $dr['total'], 1.1 );
 check( 'Regen: Summe, Zeitraum, nassestes Fenster', NAWS_Sparkline::tile_facts( $ar, $dr ), [ 'name' => 'Rain', 'value' => '1.1', 'unit' => 'mm in 24 hours', 'sub' => 'Most: 02:00–02:30 · 0.6 mm' ] );
 $dtrocken = NAWS_Sparkline::prepare( $ar, [ 'from' => 0, 'to' => 86400, 'rows' => [ [ 900, 0.0 ] ] ] );
 check( 'trocken: keine Nebenzeile',          NAWS_Sparkline::tile_facts( $ar, $dtrocken )['sub'], '' );
+
+// Review Focus 6: die Kachel zeigt den echten Ausschlag und den letzten Messwert, nicht das Ausduennfenster.
+$awt = NAWS_Sparkline::normalise_atts( [ 'param' => 'WindStrength', 'layout' => 'tile' ] );
+$pwt = NAWS_Sparkline::prepare( $awt, [ 'from' => 0, 'to' => 300 * 300, 'rows' => $viele_wind ] );
+check( 'Kachel: Tief/Hoch aus den Messwerten, nicht dem Ausduennfenster',
+    NAWS_Sparkline::tile_facts( $awt, $pwt ), [ 'name' => 'Wind', 'value' => '7', 'unit' => 'km/h', 'sub' => 'Low 5 · High 40 km/h' ] );
 
 $tage = [ '2026-09-24', '2026-09-25', '2026-09-26' ];
 $ab = NAWS_Sparkline::normalise_atts( [ 'param' => 'temp_avg', 'days' => '3', 'band' => 'minmax', 'layout' => 'tile' ] );
@@ -327,6 +354,12 @@ check( 'Monat: Mittel, Regen, Achse', NAWS_Sparkline::month_facts( $dm, $dmr, $t
     'axis_from'  => '9/24',    'axis_to'    => '9/26',
 ] );
 check( 'Monat ohne Regenmesser: keine Regenfelder', [ NAWS_Sparkline::month_facts( $dm, null, $tage, 3 )['rain_value'], NAWS_Sparkline::month_facts( $dm, null, $tage, 3 )['rain_label'] ], [ '', '' ] );
+
+echo "\nmonth_days()\n" . str_repeat( '-', 74 ) . "\n";
+check( 'leer wird 30',                        NAWS_Sparkline::month_days( '' ), 30 );
+check( '3 wird auf 7 angehoben',              NAWS_Sparkline::month_days( '3' ), 7 );
+check( '999 wird auf 366 gekappt',            NAWS_Sparkline::month_days( '999' ), 366 );
+check( '32 bleibt 32',                        NAWS_Sparkline::month_days( '32' ), 32 );
 
 echo "\n" . str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );

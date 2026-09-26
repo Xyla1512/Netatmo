@@ -245,9 +245,15 @@ final class NAWS_Sparkline {
      * Callers draw nothing below two points (prepare() returns null), so
      * an empty series only ever comes back empty.
      *
+     * $t0/$t1, when both given, fix the x-domain instead of letting it
+     * follow the first and last point with data. render_month() needs
+     * this: with days missing at the start of the span, the band's own
+     * points would otherwise start later than the rain bars and the axis,
+     * which always cover the whole span.
+     *
      * @param array $pts [[ts, value], …] or, with $band, [[ts, value, low, high], …].
      */
-    public static function geometry( array $pts, int $w, int $h, bool $band = false ): array {
+    public static function geometry( array $pts, int $w, int $h, bool $band = false, ?float $t0 = null, ?float $t1 = null ): array {
         $n    = count( $pts );
         if ( $n === 0 ) {
             return [ 'line' => '', 'area' => '', 'band' => '', 'end' => [], 'lo' => [], 'hi' => [], 'xs' => [] ];
@@ -264,11 +270,16 @@ final class NAWS_Sparkline {
             $lo -= 0.5;
             $hi += 0.5;
         }
-        $t0    = (float) $pts[0][0];
-        $tspan = (float) $pts[ $n - 1 ][0] - $t0;
+        if ( $t0 !== null && $t1 !== null ) {
+            $dom0  = $t0;
+            $tspan = $t1 - $t0;
+        } else {
+            $dom0  = (float) $pts[0][0];
+            $tspan = (float) $pts[ $n - 1 ][0] - $dom0;
+        }
         $tspan = $tspan > 0 ? $tspan : 1.0;
 
-        $x = static fn( $t ): float => $pad + ( $t - $t0 ) / $tspan * ( $w - 2 * $pad );
+        $x = static fn( $t ): float => $pad + ( $t - $dom0 ) / $tspan * ( $w - 2 * $pad );
         $y = static fn( $v ): float => $pad + ( 1 - ( $v - $lo ) / ( $hi - $lo ) ) * ( $h - 2 * $pad );
 
         $steps = [];
@@ -441,7 +452,9 @@ final class NAWS_Sparkline {
      * single rain report in the window. A window in which the gauge
      * reported but no rain fell is a valid result and draws a baseline.
      * Also returns name, unit and period for the tile and the month block
-     * (bars also carry the total as a number).
+     * (bars also carry the total as a number; lines also carry last,
+     * last_ts, lo and hi — the latest reading and the real extremes from
+     * every point that came in, not the thinned curve).
      */
     public static function prepare( array $a, array $f ): ?array {
         $base = $a['base'];
@@ -518,10 +531,29 @@ final class NAWS_Sparkline {
                 $pts[] = $p;
             }
         }
-        $pts = self::thin( $pts );
         if ( count( $pts ) < 2 ) {
             return null;
         }
+
+        // The latest reading and the real extremes, from every point that
+        // came in — before thin() below narrows the series to at most
+        // MAX_POINTS for the curve's geometry. Otherwise a spike gets
+        // averaged away and "latest" turns into a window mean.
+        $last_pt  = $pts[ count( $pts ) - 1 ];
+        $last     = (float) $last_pt[1];
+        $last_ts  = (int) $last_pt[0];
+        $raw_vals = array_column( $pts, 1 );
+        $mean_lo  = min( $raw_vals );
+        $mean_hi  = max( $raw_vals );
+        if ( $a['band'] ) {
+            $lo = min( array_column( $pts, 2 ) );
+            $hi = max( array_column( $pts, 3 ) );
+        } else {
+            $lo = $mean_lo;
+            $hi = $mean_hi;
+        }
+
+        $pts = self::thin( $pts );
 
         $tips    = [];
         $weekday = $a['source'] === 'raw' && $a['hours'] > 24;
@@ -531,23 +563,26 @@ final class NAWS_Sparkline {
             $tips[] = $a['band'] ? $tip . ' · ' . self::number( $base, $p[2] ) . '–' . $with( $p[3] ) : $tip;
         }
 
-        $vals = array_column( $pts, 1 );
         if ( $a['band'] ) {
-            $aria = sprintf( naws_label( 'sl_aria_band' ), $name, $period, $with( min( $vals ) ), $with( max( $vals ) ), $with( min( array_column( $pts, 2 ) ) ), $with( max( array_column( $pts, 3 ) ) ) );
+            $aria = sprintf( naws_label( 'sl_aria_band' ), $name, $period, $with( $mean_lo ), $with( $mean_hi ), $with( $lo ), $with( $hi ) );
         } else {
-            $aria = sprintf( naws_label( 'sl_aria_line' ), $name, $period, $with( min( $vals ) ), $with( max( $vals ) ), $with( $vals[ count( $vals ) - 1 ] ) );
+            $aria = sprintf( naws_label( 'sl_aria_line' ), $name, $period, $with( $lo ), $with( $hi ), $with( $last ) );
         }
 
         return [
-            'kind'  => 'line',
-            'pts'   => $pts,
-            'band'  => (bool) $a['band'],
-            'tips'  => $tips,
-            'aria'  => $aria,
-            'value' => $with( $vals[ count( $vals ) - 1 ] ),
-            'name'   => $name,
-            'unit'   => $unit,
-            'period' => $period,
+            'kind'    => 'line',
+            'pts'     => $pts,
+            'band'    => (bool) $a['band'],
+            'tips'    => $tips,
+            'aria'    => $aria,
+            'value'   => $with( $last ),
+            'last'    => $last,
+            'last_ts' => $last_ts,
+            'lo'      => $lo,
+            'hi'      => $hi,
+            'name'    => $name,
+            'unit'    => $unit,
+            'period'  => $period,
         ];
     }
 
@@ -609,7 +644,9 @@ final class NAWS_Sparkline {
             $mod = 'bars';
         } else {
             $band = ! empty( $d['band'] );
-            $geo  = self::geometry( $d['pts'], $a['w'], $a['h'], $band );
+            $geo  = isset( $d['domain'] )
+                ? self::geometry( $d['pts'], $a['w'], $a['h'], $band, (float) $d['domain'][0], (float) $d['domain'][1] )
+                : self::geometry( $d['pts'], $a['w'], $a['h'], $band );
             $mod  = $band ? 'band' : 'line';
         }
 
@@ -737,14 +774,11 @@ final class NAWS_Sparkline {
             return [ 'name' => $name, 'value' => self::number( $a['base'], (float) $d['total'] ), 'unit' => $unit, 'sub' => $sub ];
         }
 
-        $vals = array_column( $d['pts'], 1 );
-        $lo   = $d['band'] ? min( array_column( $d['pts'], 2 ) ) : min( $vals );
-        $hi   = $d['band'] ? max( array_column( $d['pts'], 3 ) ) : max( $vals );
         return [
             'name'  => $name,
-            'value' => self::number( $a['base'], (float) $vals[ count( $vals ) - 1 ] ),
+            'value' => self::number( $a['base'], (float) $d['last'] ),
             'unit'  => $d['unit'],
-            'sub'   => sprintf( naws_label( 'sl_tile_range' ), self::number( $a['base'], (float) $lo ), self::number( $a['base'], (float) $hi ) . ' ' . $d['unit'] ),
+            'sub'   => sprintf( naws_label( 'sl_tile_range' ), self::number( $a['base'], (float) $d['lo'] ), self::number( $a['base'], (float) $d['hi'] ) . ' ' . $d['unit'] ),
         ];
     }
 
@@ -756,11 +790,10 @@ final class NAWS_Sparkline {
      */
     public static function month_facts( array $dt, ?array $dr, array $dates, int $days ): array {
         $fmt  = naws_label( 'sl_month_axis_format' );
-        $last = $dt['pts'][ count( $dt['pts'] ) - 1 ];
         $rain = $dr !== null;
         return [
-            'mean_value' => self::number( 'Temperature', (float) $last[1] ) . ' ' . $dt['unit'],
-            'mean_label' => sprintf( naws_label( 'sl_month_mean' ), wp_date( $fmt, (int) $last[0] ) ),
+            'mean_value' => self::number( 'Temperature', (float) $dt['last'] ) . ' ' . $dt['unit'],
+            'mean_label' => sprintf( naws_label( 'sl_month_mean' ), wp_date( $fmt, $dt['last_ts'] ) ),
             'rain_value' => $rain ? $dr['value'] : '',
             /* translators: %d: number of days. */
             'rain_label' => $rain ? sprintf( _n( 'Rain in %d day', 'Rain in %d days', $days, 'xtx-integration-for-netatmo' ), $days ) : '',
@@ -794,31 +827,42 @@ final class NAWS_Sparkline {
         return trim( (string) ob_get_clean() );
     }
 
+    /** Days for the month block from the shortcode attribute: '' becomes 30, otherwise clamped to 7–366. */
+    public static function month_days( $raw ): int {
+        $raw = trim( (string) $raw );
+        return $raw === '' ? 30 : self::clamp( intval( $raw ), 7, 366 );
+    }
+
     /**
      * [naws_sparkline layout="month" days="30"]: temperature (band) and
      * rain per day from the station's daily row, 7–366 days. Nothing
      * when there is no temperature to draw; no rain row without rain data.
      */
     public static function render_month( array $atts ): string {
-        $days_raw = trim( (string) ( $atts['days'] ?? '' ) );
-        $days     = $days_raw === '' ? 30 : self::clamp( intval( $days_raw ), 7, 366 );
-        $now      = time();
+        $days = self::month_days( $atts['days'] ?? '' );
+        $now  = time();
 
         $at = self::normalise_atts( [ 'param' => 'temp_avg', 'days' => (string) $days, 'band' => 'minmax' ] );
         $at['w'] = 680;
         $at['h'] = 64;
-        $ft = self::fetch( $at, $now );
-        $dt = self::prepare( $at, $ft );
+        $ft    = self::fetch( $at, $now );
+        $dates = $ft['dates'];
+        $dt    = self::prepare( $at, $ft );
         if ( $dt === null ) {
             return '';
         }
+        // The band's own points may start later (or end earlier) than the
+        // full span when days are missing — a fresh install, an outage.
+        // Rain bars and the axis always cover every day, so the band's
+        // geometry is pinned to the same span here.
+        $dt['domain'] = [ self::noon( $dates[0] ), self::noon( $dates[ count( $dates ) - 1 ] ) ];
 
         $ar = self::normalise_atts( [ 'param' => 'rain_sum', 'days' => (string) $days ] );
         $ar['w'] = 680;
         $ar['h'] = 40;
         $dr = self::prepare( $ar, self::fetch( $ar, $now ) );
 
-        return self::month_markup( $at, $dt, $ar, $dr, $ft['dates'], $days );
+        return self::month_markup( $at, $dt, $ar, $dr, $dates, $days );
     }
 
     private static function clamp( int $v, int $lo, int $hi ): int {
