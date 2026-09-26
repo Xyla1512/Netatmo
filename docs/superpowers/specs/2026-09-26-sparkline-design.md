@@ -23,7 +23,7 @@ Einsatzorte: frei im Fließtext per Shortcode, und auf Wunsch in `[naws_weather_
 
 1. **Serverseitiges SVG, Skript nur als Aufsatz.** Die Kurve ist ohne JavaScript vollständig (RSS, Seitencache, abgeschaltetes JS). `sparkline-boot.js` ergänzt ausschließlich die Sprechblase. Kein AJAX, keine Nonce. Gleiches Muster wie Windrose und Sonnenbahn.
 2. **Farben nur im Backend.** Eigener Reiter „Sparkline" im Erscheinungsbild mit acht Schlüsseln (Abschnitt 6). **Kein `color`-Attribut am Shortcode** (Frank, 26.09.). Eine Linienfarbe für alle Größen (Frank, 26.09.), dazu eine zweite für dunklen Grund.
-3. **Kein eigener Transient.** Die Rohwerte kommen über `NAWS_Database::get_readings()`, die Tageswerte über `get_daily_summaries()`; beide cachen bereits als `naws_cache_`-Transient (10 min bzw. `TTL_DAILY`) und werden beim Sync von `flush_caches()` geleert. Die Umrechnung in Geometrie ist bei höchstens 200 Punkten billiger als ein weiterer Options-Zugriff. (Im Entwurfsgespräch war ein eigener 5-Minuten-Transient genannt; er brächte nur eine zweite Cache-Schicht mit eigener Ablaufzeit.)
+3. **Kein eigener Transient.** Die Rohwerte kommen über `NAWS_Database::get_readings()`, die Tageswerte über `get_daily_summaries()`; beide cachen bereits als `naws_cache_`-Transient (10 min bzw. `TTL_DAILY`) und werden beim Sync von `flush_caches()` geleert. Der Cache-Schlüssel dort ist der Hash der Abfrage-Argumente; deshalb wird das Zeitfenster der Rohwerte auf 5-Minuten-Schritte gerundet (Ende = nächste volle 5 Minuten), sonst entstünde bei jedem Seitenaufruf ein neuer Transient. Die Umrechnung in Geometrie ist bei höchstens 200 Punkten billiger als ein weiterer Options-Zugriff. (Im Entwurfsgespräch war ein eigener 5-Minuten-Transient genannt; er brächte nur eine zweite Cache-Schicht mit eigener Ablaufzeit.)
 4. **Modul aus `param` abgeleitet.** Ohne `module` sucht sich die Sparkline das Modul, das die Größe misst. `[naws_value]` gibt fest `outdoor` vor, was bei Druck jedes Mal `module="indoor"` erzwingt; das wird hier nicht wiederholt.
 5. **Anzeige-Einheit vor der Geometrie.** Jeder Wert läuft durch `NAWS_Helpers::format_value()` (°F, mph, m/s, kn, inHg, in), bevor Kurve, Sprechblase und Vorlesetext entstehen. Alle drei zeigen dieselben Zahlen wie der Rest der Seite.
 6. **Nichts statt Fehlermeldung.** Eine Sparkline ohne Daten gibt einen leeren String zurück. Sie steht mitten im Fließtext; ein Rahmen oder „Keine Daten" würde den Satz zerreißen.
@@ -40,7 +40,7 @@ Einsatzorte: frei im Fließtext per Shortcode, und auf Wunsch in `[naws_weather_
 | `param` | Rohwerte: `Temperature`, `Humidity`, `Pressure`, `WindStrength`, `GustStrength`, `Rain`, `CO2`, `Noise`. Tagesspalten: `temp_avg`, `temp_min`, `temp_max`, `humidity_avg`, `pressure_avg`, `rain_sum`, `wind_avg`, `gust_max`, `co2_avg`, `noise_avg` | `Temperature` | Positivliste, Groß-/Kleinschreibung wie angegeben. Unbekannt → leere Ausgabe. Eine Tagesspalte ohne `days` bekommt `days="30"`; eine Rohgröße mit `days` wird zur leeren Ausgabe (die Tagestabelle kennt `Rain`, nicht `rain_sum`; kein stilles Umdeuten). |
 | `hours` | 1–168 | `24` | Ganzzahl, auf die Grenzen gesetzt (500 → 168, 0 → 1). Nur für Rohwerte. |
 | `days` | 2–366 | leer | Ganzzahl, auf die Grenzen gesetzt. Gesetzt → Quelle ist die Tagestabelle; `hours` wird ignoriert. Zeitraum: die letzten `days` Kalendertage bis einschließlich heute. |
-| `module` | `outdoor`, `indoor`, `wind`, `rain`, `in-<name>`, MAC | leer | Auflösung über `NAWS_Calc::module_id()` wie bei `[naws_value]`. Leer → Ableitung nach 4.2. Modul nicht vorhanden oder inaktiv → leere Ausgabe. |
+| `module` | `outdoor`, `indoor`, `wind`, `rain`, `in-<name>`, MAC | leer | Nur für Rohwerte. Auflösung über `NAWS_Helpers::resolve_module_ref()` (kennt die vier Aliase, `in-<name>` und die MAC ohne Rücksicht auf Groß-/Kleinschreibung). Leer → Ableitung nach 4.2. Modul nicht vorhanden oder inaktiv → leere Ausgabe. Mit `days` ohne Wirkung (Stationszeile, siehe 4.2). |
 | `width` | 20–600 | leer | Pixel, auf die Grenzen gesetzt. Leer → viewBox-Breite 80, dargestellt als `4.6em` (wächst mit der Schrift, siehe 5.3). |
 | `height` | 10–200 | leer | Pixel, auf die Grenzen gesetzt. Leer → viewBox-Höhe 18, dargestellt als `1.05em`. |
 | `show` | `none`, `value`, `minmax` | `none` | `value`: der letzte Wert mit Einheit hinter der Kurve (bei Regen die Summe des Zeitraums). `minmax`: Tief- und Hoch-Punkt auf der Linie. Unbekannt → `none`. |
@@ -71,18 +71,16 @@ Statische Methoden, keine Instanz, wie `NAWS_Windrose`. Laden per `naws_require(
 
 **Rohwerte** (`hours`): `NAWS_Database::get_readings( [ 'module_id' => $id, 'parameter' => $param, 'date_from' => now − hours·3600, 'date_to' => now, 'group_by' => 'raw', 'limit' => 0 ] )`. Bei 168 h sind das rund 1.000 Zeilen (10-min-Takt) bzw. 2.000 (Regen, 5-min-Takt); `limit` 0 statt der Vorgabe 5.000, damit ein dichter getakteter Regenmesser nicht abgeschnitten wird.
 
-**Tageswerte** (`days`): `NAWS_Database::get_daily_summaries( [ 'module_id' => $id, 'fields' => [ $spalte ] bzw. [ 'temp_avg', 'temp_min', 'temp_max' ], 'date_from' => …, 'date_to' => heute, 'group_by' => 'day' ] )`. Die Positivliste `$allowed_fields` dort umfasst heute nur `temp_min, temp_max, temp_avg, pressure_avg, rain_sum, gust_max`; sie wird um `humidity_avg, wind_avg, co2_avg, noise_avg` erweitert. Der Tageszweig (`group_by = 'day'`) setzt Spalten nur als `%i`-Platzhalter ein, die Aggregat-Zweige (`week`/`month`/`year`) bleiben unverändert und nutzen die neuen Felder nicht.
+**Tageswerte** (`days`): Die Tagestabelle führt **eine Zeile je Station**, nicht je Modul: `compute_daily_summary()` sammelt Außen-, Regen-, Wind- und Basiswerte in eine Zeile mit `module_id = station_id` (nur Zusatz-Innenmodule haben eigene Zeilen). Die Quelle ist deshalb immer `NAWS_Calc::station_row_id( [] )`, genau wie bei `[naws_records]`; `module` hat mit `days` keine Wirkung. `NAWS_Database::get_daily_summaries( [ 'module_id' => $station, 'fields' => [ $spalte ] bzw. [ 'temp_avg', 'temp_min', 'temp_max' ], 'date_from' => …, 'date_to' => heute, 'group_by' => 'day' ] )`. Die Positivliste `$allowed_fields` dort umfasst heute nur `temp_min, temp_max, temp_avg, pressure_avg, rain_sum, gust_max`; sie wird um `humidity_avg, wind_avg, co2_avg, noise_avg` erweitert. Der Tageszweig (`group_by = 'day'`) setzt Spalten nur als `%i`-Platzhalter ein, die Aggregat-Zweige (`week`/`month`/`year`) bleiben unverändert und nutzen die neuen Felder nicht.
 
-**Modul-Ableitung** ohne `module`:
+**Modul-Ableitung** ohne `module` (nur für Rohwerte):
 
 | Größe | Alias |
 |---|---|
-| `Temperature`, `Humidity`, `temp_*`, `humidity_avg` | `outdoor` |
-| `Pressure`, `CO2`, `Noise`, `pressure_avg`, `co2_avg`, `noise_avg` | `indoor` |
-| `WindStrength`, `GustStrength`, `wind_avg`, `gust_max` | `wind` |
-| `Rain`, `rain_sum` | `rain` |
-
-Hinweis für die Umsetzung: In welcher Modulzeile der Tagestabelle eine Spalte steht, bestimmt `compute_daily_summary()`. Die Tabelle oben ist daran zu prüfen (Test gegen die dortige Zuordnung, nicht gegen Annahmen).
+| `Temperature`, `Humidity` | `outdoor` |
+| `Pressure`, `CO2`, `Noise` | `indoor` |
+| `WindStrength`, `GustStrength` | `wind` |
+| `Rain` | `rain` |
 
 ### 4.3 Umrechnung
 
@@ -98,8 +96,9 @@ Koordinatensystem = `viewBox="0 0 {width} {height}"`, `preserveAspectRatio="none
 - **Innenabstand** `pad = max(2, height/9)` rundum, damit Endpunkt und Tief/Hoch-Punkte nicht abgeschnitten werden.
 - **X** linear über `[ts_erster, ts_letzter]`, **Y** linear über `[min, max]` der Reihe (bzw. `[min(temp_min), max(temp_max)]` beim Band). **Flache Reihe** (`max − min < 1e−9`): `max = min + 1`, die Linie liegt dann auf halber Höhe statt einer Division durch null.
 - **Lückenbruch:** Liegt zwischen zwei Punkten mehr als das Dreifache des Median-Abstands der Reihe, beginnt ein neues Teilstück (`M` statt `L`). Die Fläche unter der Linie wird je Teilstück geschlossen.
-- **Endpunkt:** Kreis `r = max(1.8, height/9)` in Linienfarbe mit einem um 1 größeren Ring in der Grundfarbe darunter.
-- **Tief/Hoch** (`show="minmax"`): je ein Kreis `0,9·r` in der Punktfarbe am ersten Auftreten von Minimum und Maximum.
+- **Punkte** werden nicht als `<circle>` gezeichnet, sondern als Pfad der Länge null mit runder Kappe (`d="M x y h0"`, `stroke-linecap:round`, `vector-effect:non-scaling-stroke`). Ein `<circle>` würde bei `preserveAspectRatio="none"` zur Ellipse gestreckt, sobald die Sparkline breiter dargestellt wird als ihre viewBox (im Widget immer); ein Strich mit runder Kappe bleibt rund und behält seine Pixelgröße. Größen im CSS: Endpunkt 4 px, Ring darunter 7 px, Tief/Hoch 3 px.
+- **Endpunkt:** am letzten Punkt, in Linienfarbe, darunter der Ring in der Grundfarbe.
+- **Tief/Hoch** (`show="minmax"`): je ein Punkt in der Punktfarbe am ersten Auftreten von Minimum und Maximum.
 - **Balken:** Breite `(width − 2) / n`, Zwischenraum `min(1, 0,25·Breite)`, Höhe proportional zum größten Fenster (größtes Fenster = 0 → Skala 1, alle Balken fehlen, Grundlinie bleibt). Eine Grundlinie über die ganze Breite.
 - Alle Koordinaten werden mit `sprintf( '%.2F', … )` geschrieben (Punkt als Dezimaltrenner unabhängig vom Gebietsschema).
 
@@ -116,8 +115,8 @@ Koordinatensystem = `viewBox="0 0 {width} {height}"`, `preserveAspectRatio="none
        data-naws-sl='{"x":[…],"t":[…]}'>
     <path class="naws-sl-area" d="…"/>
     <path class="naws-sl-line" d="…" vector-effect="non-scaling-stroke"/>
-    <circle class="naws-sl-mm" …/><circle class="naws-sl-mm" …/>   <!-- nur show=minmax -->
-    <circle class="naws-sl-ring" …/><circle class="naws-sl-end" …/>
+    <path class="naws-sl-mm" d="M x y h0"/><path class="naws-sl-mm" …/>   <!-- nur show=minmax -->
+    <path class="naws-sl-ring" d="M x y h0"/><path class="naws-sl-end" …/>
   </svg>
   <span class="naws-sl-val">17,6 °C</span>                          <!-- nur show=value -->
 </span>
@@ -161,7 +160,7 @@ Acht neue Schlüssel in `NAWS_Colors::DEFAULTS`, Konstante `SPARKLINE_KEYS` in d
 | `sparkline_tip_bg` | `--naws-sl-tip-bg` | `#2d5252` | wie `header_bg` |
 | `sparkline_tip_text` | `--naws-sl-tip-text` | `#ffffff` | |
 
-- `get_inline_css()` schreibt die acht Variablen in eine eigene Regel `.naws-sl, .naws-sl-tip { … }` (siehe 5.3).
+- Eine neue Methode `NAWS_Colors::sparkline_css(): string` liefert die Regel `.naws-sl, .naws-sl-tip { … }` mit den acht Variablen (siehe 5.3). `get_inline_css()` hängt sie an; die Admin-Seite „Erscheinungsbild" hängt sie an ihr Frontend-Stylesheet (`naws-weather-icon`), damit Widget- und Reiter-Vorschau die Sparklines in den gespeicherten Farben zeigen.
 - Die Kontraste der Vorgaben werden bei der Umsetzung gemessen (Linie gegen `#ffffff` und gegen `#1c2433` für die Dunkel-Varianten, Ziel ≥ 3:1 für grafische Elemente nach WCAG 1.4.11).
 - `sanitize()` braucht keine Änderung: Die Schlüssel stehen in `DEFAULTS` und laufen durch die vorhandene Hex-Prüfung.
 - **Vorschau** oben im Reiter: je eine Linie mit Tief/Hoch-Punkten, Regenbalken und ein Band, nebeneinander auf hellem (`#ffffff`) und dunklem (`#1c2433`) Grund, gerendert mit `NAWS_Sparkline` aus den echten Stationsdaten; ohne Daten aus einer eingebauten Beispielreihe (fester Array im Admin-View, keine Zufallswerte). Die Vorschau folgt dem Farbwähler über die vorhandene `updatePreview()`-Logik, indem sie die CSS-Variablen am Vorschau-Container setzt.
@@ -189,11 +188,10 @@ Kataloge `.pot`/`.po`/`.mo` (de, nb) vollständig nachziehen; `tests/test-mo-fil
   - Kachel Regen: `Rain`, Balken, unten in der Kachel, volle Kachelbreite, Höhe 20 px.
   - Kachel Wind: `WindStrength`, Linie, unten in der Kachel, volle Kachelbreite, Höhe 20 px.
   - Breite fließend über CSS (`width:100%` im Widget-Kontext), die viewBox bleibt fest; `non-scaling-stroke` hält die Linie gleich dick.
-- **Schemata** (in `frontend.css`):
-  - hell: `.naws-wgt .naws-sl { --naws-sl-ring: var(--naws-wgt-bg); }`, sonst die Standardvariablen.
-  - `.naws-wgt--dark .naws-sl { --naws-sl-line: var(--naws-sl-line-dark); --naws-sl-rain: var(--naws-sl-rain-dark); }`
-  - `.naws-wgt--transparent .naws-sl { --naws-sl-line: currentColor; --naws-sl-rain: currentColor; --naws-sl-dots: var(--naws-wgt-muted); --naws-sl-ring: transparent; }`
-  - Warum das greift: Die Inline-Regel aus `get_inline_css()` setzt alle acht Variablen auf `.naws-sl` (Spezifität 0,1,0). Die Widget-Regeln haben 0,2,0 und gewinnen unabhängig von der Reihenfolge; `var(--naws-sl-line-dark)` löst am selben Element auf, weil die Inline-Regel es dort definiert. Ein Test prüft die Spezifität nicht; die Abnahme auf dev prüft das Ergebnis in allen drei Schemata.
+- **Schemata** (in `frontend.css`): Die Variablen werden nicht umgebogen, sondern die Zeichenregeln lesen im dunklen Kontext eine andere Variable. So kann die Live-Vorschau im Backend jede Variable direkt am Element setzen, ohne eine Umleitung zu überschreiben.
+  - hell: Ring `var(--naws-wgt-bg)`, sonst die Standardregeln.
+  - dunkel (`.naws-wgt--dark` und die dunkle Hälfte der Backend-Vorschau `.naws-sl-dark`): Linie, Fläche und Endpunkt lesen `--naws-sl-line-dark`, Balken `--naws-sl-rain-dark`.
+  - transparent: Linie, Fläche, Endpunkt und Balken in `currentColor`, Punkte in `--naws-wgt-muted`, kein Ring.
 - **Ohne Daten** fällt die jeweilige Kurve weg; die Kachel sieht aus wie heute.
 - **Vorschau** im Erscheinungsbild zeigt die Kurven, wenn der Haken gesetzt ist (die Vorschau wird serverseitig gerendert und nach dem Speichern aktualisiert; ein Live-Umschalten ohne Speichern ist nicht Teil dieses Umfangs).
 - `NAWS_Widget_Data::build()` bleibt frei von WordPress: Die Sparkline-Strings werden in `sc_weather_widget()` erzeugt und dem Template als eigene Variable `$naws_wgt_spark = [ 'temp' => '', 'rain' => '', 'wind' => '' ]` übergeben.
@@ -206,7 +204,7 @@ Kataloge `.pot`/`.po`/`.mo` (de, nb) vollständig nachziehen; `tests/test-mo-fil
 
 ## 10. Sicherheit (WordPress-Vorgaben)
 
-- Jedes Shortcode-Attribut: Positivliste (`param`, `show`, `type`, `band`, `module`-Alias) oder `intval()` mit Klemmung (`hours`, `days`, `width`, `height`). `module` als MAC geht durch `sanitize_text_field()` und `NAWS_Calc::module_id()`; die Abfrage vergleicht gegen die Liste aktiver Module (`active_module_ids()`), ein erfundener Wert trifft nichts.
+- Jedes Shortcode-Attribut: Positivliste (`param`, `show`, `type`, `band`, `module`-Alias) oder `intval()` mit Klemmung (`hours`, `days`, `width`, `height`). `module` geht durch `sanitize_text_field()` und `NAWS_Helpers::resolve_module_ref()`, das nur bekannte Module zurückgibt; die Abfrage vergleicht gegen die Liste aktiver Module (`active_module_ids()`), ein erfundener Wert trifft nichts.
 - Abfragen ausschließlich über die vorhandenen `NAWS_Database`-Funktionen (`$wpdb->prepare`, `%i` für Spaltennamen aus der Positivliste).
 - SVG: Koordinaten nur als `sprintf( '%.2F' )`, Größen als `absint()`; `aria-label` über `esc_attr()`; `data-naws-sl` über `esc_attr( wp_json_encode( … ) )`; `show="value"` über `esc_html()`.
 - Skript als Datei über `wp_enqueue_script()`, kein Inline-JS, keine Nonce nötig (keine Anfrage an den Server). Sprechblasentext per `textContent`.
@@ -228,7 +226,8 @@ Im Stil der vorhandenen Dateien unter `tests/` (eigenständige PHP-Skripte mit S
 ## 12. Dokumentation
 
 - `admin/views/shortcodes.php`: Eintrag `[naws_sparkline]` mit allen Attributen und vier Beispielen.
-- `readme.txt`: Shortcode-Liste, Changelog 2.1.0; `CHANGELOG.md`.
+- `readme.txt`: Shortcode-Liste und Widget-Zeile; `README.md`: Shortcode-Tabelle; `CHANGELOG.md`: Abschnitt `[Unreleased]`. Der readme-Changelog 2.1.0 entsteht beim Schnitt.
+- `docs/site/website.{de,en}.json`: Der Satz des Vorhabens `sparkline` nennt noch „in der Infobar" — streichen (bleibt `"ab": null` bis zum Schnitt).
 - Website beim Schnitt (nicht Teil dieser Umsetzung): Vorhaben `sparkline` → `"ab": "2.1.0"`, „Alle 15 Shortcodes" → 16, Startseiten-Block, Live-Demos 109/183, GlotPress-Readme-Kette.
 
 ## 13. Nicht enthalten
