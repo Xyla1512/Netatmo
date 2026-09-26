@@ -114,6 +114,19 @@ check( 'unbekannte Groesse: leer',            NAWS_Sparkline::render( [ 'param' 
 check( 'Station ohne Daten: leer',            NAWS_Sparkline::render( [ 'param' => 'Temperature' ] ), '' );
 check( 'ohne Stationszeile: leer',            NAWS_Sparkline::render( [ 'param' => 'temp_avg', 'days' => '30' ] ), '' );
 
+echo "\nStylesheet und Skript\n" . str_repeat( '-', 74 ) . "\n";
+$css = (string) file_get_contents( dirname( __DIR__ ) . '/assets/css/frontend.css' );
+foreach ( [ 'naws-sl-line', 'naws-sl-area', 'naws-sl-band', 'naws-sl-bar', 'naws-sl-base', 'naws-sl-mm', 'naws-sl-ring', 'naws-sl-end', 'naws-sl-val', 'naws-sl-tip' ] as $klasse ) {
+    check( "Regel fuer .$klasse", str_contains( $css, ".$klasse" ), true );
+}
+check( 'Groesse aus Variablen mit em-Vorgabe', str_contains( $css, 'width:var(--naws-sl-w, 4.6em); height:var(--naws-sl-h, 1.05em);' ), true );
+check( 'jede Farbvariable hat die Vorgabe als Rueckfall',
+    str_contains( $css, 'var(--naws-sl-line, #427272)' ) && str_contains( $css, 'var(--naws-sl-rain, #3585b0)' ) && str_contains( $css, 'var(--naws-sl-tip-bg, #2d5252)' ), true );
+check( 'dunkler Grund liest die Dunkel-Farben', str_contains( $css, 'var(--naws-sl-line-dark, #7cc7c7)' ) && str_contains( $css, 'var(--naws-sl-rain-dark, #78ace8)' ), true );
+$js = (string) file_get_contents( dirname( __DIR__ ) . '/assets/js/sparkline-boot.js' );
+check( 'das Skript setzt Text, nie HTML',       [ str_contains( $js, 'textContent' ), str_contains( $js, 'innerHTML' ) ], [ true, false ] );
+check( 'Delegation am Dokument',                str_contains( $js, "document.addEventListener('pointermove'" ), true );
+
 echo "\n" . str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );

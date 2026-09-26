@@ -1986,3 +1986,46 @@
 @media (prefers-reduced-motion: reduce) {
   .naws-wr-sector { transition: none; }
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   [naws_sparkline] — a curve the size of a word (since 2.1.0)
+   ══════════════════════════════════════════════════════════════════
+   The colours arrive as variables on .naws-sl itself (NAWS_Colors::
+   sparkline_css()), because a sparkline usually sits in theme text
+   outside every plugin wrapper. Every var() carries the default as its
+   fallback. Without width/height on the shortcode the curve is sized in
+   em and grows with the text around it. Dots are round-capped strokes
+   of zero length; their size is the stroke width, in pixels. */
+.naws-sl { display:inline-flex; align-items:center; gap:.3em; vertical-align:-.18em; line-height:1; white-space:nowrap; }
+.naws-sl svg { display:block; width:var(--naws-sl-w, 4.6em); height:var(--naws-sl-h, 1.05em); max-width:none; overflow:visible; }
+.naws-sl-line { fill:none; stroke:var(--naws-sl-line, #427272); stroke-width:1.5px; stroke-linejoin:round; stroke-linecap:round; }
+.naws-sl-area { fill:var(--naws-sl-line, #427272); fill-opacity:.14; stroke:none; }
+.naws-sl-band { fill:var(--naws-sl-band, #42727229); stroke:none; }
+.naws-sl-bar  { fill:var(--naws-sl-rain, #3585b0); stroke:none; }
+.naws-sl-base { fill:none; stroke:var(--naws-sl-dots, #7aa0a0); stroke-width:1px; opacity:.5; }
+.naws-sl-mm, .naws-sl-ring, .naws-sl-end { fill:none; stroke-linecap:round; }
+.naws-sl-mm   { stroke:var(--naws-sl-dots, #7aa0a0); stroke-width:3px; }
+.naws-sl-ring { stroke:var(--naws-sl-ring, var(--naws-surface, #fff)); stroke-width:7px; }
+.naws-sl-end  { stroke:var(--naws-sl-line, #427272); stroke-width:4px; }
+.naws-sl-val  { font-variant-numeric:tabular-nums; }
+
+/* Dark grounds: the sidebar widget's dark scheme and the dark half of the
+   Appearance preview read the "on dark ground" colours. The variables are
+   not redirected, the drawing rules read another one — so the preview can
+   set any variable on the element without undoing this. */
+.naws-wgt--dark .naws-sl-line, .naws-wgt--dark .naws-sl-end,
+.naws-sl-dark .naws-sl-line, .naws-sl-dark .naws-sl-end { stroke:var(--naws-sl-line-dark, #7cc7c7); }
+.naws-wgt--dark .naws-sl-area, .naws-sl-dark .naws-sl-area { fill:var(--naws-sl-line-dark, #7cc7c7); }
+.naws-wgt--dark .naws-sl-bar, .naws-sl-dark .naws-sl-bar { fill:var(--naws-sl-rain-dark, #78ace8); }
+.naws-sl-dark .naws-sl-ring { stroke:#1c2433; }
+
+/* The hover bubble: one element for the whole page, hung on <body> by
+   sparkline-boot.js and placed above the point. */
+.naws-sl-tip {
+  position:fixed; z-index:99999; pointer-events:none;
+  transform:translate(-50%, -100%); margin-top:-6px;
+  padding:3px 7px; border-radius:4px;
+  font-family:var(--naws-font, inherit); font-size:12px; line-height:1.3; white-space:nowrap;
+  background:var(--naws-sl-tip-bg, #2d5252); color:var(--naws-sl-tip-text, #fff);
+}
+.naws-sl-tip[hidden] { display:none; }

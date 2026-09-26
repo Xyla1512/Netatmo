@@ -103,6 +103,12 @@ class NAWS_Shortcodes {
         wp_register_script( 'naws-windrose-boot',
             NAWS_PLUGIN_URL . 'assets/js/windrose-boot.js',
             [], NAWS_Helpers::asset_version( 'assets/js/windrose-boot.js' ), true );
+
+        // [naws_sparkline]: the hover bubble. The curves are complete
+        // without it; it needs neither jQuery nor the charts.
+        wp_register_script( 'naws-sparkline-boot',
+            NAWS_PLUGIN_URL . 'assets/js/sparkline-boot.js',
+            [], NAWS_Helpers::asset_version( 'assets/js/sparkline-boot.js' ), true );
     }
 
     private function enqueue_frontend() {
