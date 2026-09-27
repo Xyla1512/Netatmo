@@ -2054,7 +2054,7 @@
    page builder makes the grid. */
 .naws-sl-card { display:block; box-sizing:border-box; width:100%; max-width:100%; background:var(--naws-surface, #fff); border:1px solid var(--naws-border, #e0eeee); border-radius:8px; color:var(--naws-text, #427272); font-family:var(--naws-font, inherit); }
 .naws-sl-card .naws-sl { --naws-sl-ring:var(--naws-surface, #fff); }
-.naws-sl-tiles { display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); gap:12px; }
+.naws-sl-tiles { display:grid; grid-template-columns:repeat(auto-fit, minmax(max(190px, calc((100% - 24px) / 3)), 1fr)); gap:12px; }
 .naws-sl-tile { padding:12px 14px 10px; }
 .naws-sl-tile-name { font-size:.78rem; font-weight:500; letter-spacing:.04em; text-transform:uppercase; color:var(--naws-text-muted, #7aa0a0); }
 .naws-sl-tile-val { margin-top:2px; font-size:1.55rem; font-weight:500; line-height:1.15; font-variant-numeric:tabular-nums; color:var(--naws-text-dark, #2d5252); }

@@ -204,7 +204,7 @@ check( 'keine Karte: kein Raster',             NAWS_Sparkline::tiles_markup( [ '
 check( 'leere Station: Raster leer',           NAWS_Sparkline::render_tiles( [] ), '' );
 
 $css = (string) file_get_contents( dirname( __DIR__ ) . '/assets/css/frontend.css' );
-check( 'Raster bricht selbst um',              str_contains( $css, '.naws-sl-tiles { display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); gap:12px; }' ), true );
+check( 'Raster bricht selbst um',              str_contains( $css, '.naws-sl-tiles { display:grid; grid-template-columns:repeat(auto-fit, minmax(max(190px, calc((100% - 24px) / 3)), 1fr)); gap:12px; }' ), true );
 // Review Focus 1: Karte und Kurve füllen jede Spalte.
 check( 'Karte füllt die Spalte',              str_contains( $css, '.naws-sl-card { display:block; box-sizing:border-box; width:100%;' ), true );
 check( 'Kurve in der Karte über die volle Breite', str_contains( $css, '.naws-sl-tile-plot .naws-sl svg { width:100%; height:44px; }' ), true );
