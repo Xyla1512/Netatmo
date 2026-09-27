@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: XTX Integration for Netatmo\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/xtx-integration-for-netatmo\n"
-"POT-Creation-Date: 2026-09-27 16:49+0000\n"
+"POT-Creation-Date: 2026-09-27 16:52+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -103,6 +103,11 @@ msgstr[1] ""
 #. translators: %d: number of forecast days.
 #: admin/views/shortcodes.php:408 includes/class-naws-shortcodes.php:674 templates/forecast.php:14
 msgid "%d-Day Forecast"
+msgstr ""
+
+#. translators: %s: a duration such as "11 minutes", from human_time_diff().
+#: admin/views/modules.php:94 templates/current.php:48
+msgid "%s ago"
 msgstr ""
 
 #. translators: %s: minutes longer than yesterday, e.g. "3 min".
@@ -2026,6 +2031,7 @@ msgstr ""
 msgid "Not connected"
 msgstr ""
 
+#. translators: %s: a duration such as "5 minutes", from human_time_diff().
 #: admin/views/dashboard.php:334
 msgid "Not scheduled"
 msgstr ""
@@ -3490,6 +3496,11 @@ msgstr ""
 
 #: includes/class-naws-labels.php:273
 msgid "hot"
+msgstr ""
+
+#. translators: %s: a duration such as "5 minutes", from human_time_diff().
+#: admin/views/dashboard.php:142 admin/views/dashboard.php:333
+msgid "in %s"
 msgstr ""
 
 #: admin/views/shortcodes.php:155

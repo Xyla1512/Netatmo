@@ -18,6 +18,7 @@ All notable changes to the XTX Netatmo plugin are documented here.
 ### Fixed
 - **Numbers follow the language of the page.** A German page showed "23.4 °C" and "1019.1 mbar" wherever a reading was printed straight from the conversion — the sidebar widget's head, `[naws_table]`, `[naws_value]`, `[naws_calc]`, `[naws_current]`, the infobar, the heatmap labels, the e-mail notifications, the live dashboard and the admin dashboard. They now use the site's decimal mark and thousands separator: "23,4 °C" and "1.019,1 mbar" in German, "23.4 °C" and "1,019.1 mbar" in English. Charts and JSON (AJAX, REST API) keep plain numbers.
 - **`[naws_current]` shows its icons again.** Since 1.6.4 the cards printed the SVG of their icon as text — "<svg viewBox=…" above every figure — because the template escaped it as plain text. The icon now goes through the SVG allowlist and has a size in the stylesheet.
+- "11 Minuten ago": `[naws_current]` and, in the backend, the Modules page added a fixed English "ago" to a duration WordPress had already translated, and the Dashboard a fixed "in". Both are translatable now — "vor 11 Minuten", "in 5 Minuten".
 
 ## [2.0.2]
 

@@ -139,7 +139,7 @@ $module_type_colors = [
             <div class="naws-stat-body">
                 <div class="naws-stat-value naws-stat-value--date"><?php echo $next_run ? esc_html( wp_date('H:i', $next_run) ) : '—'; ?></div>
                 <div class="naws-stat-label"><?php esc_html_e( 'Next run:', 'xtx-integration-for-netatmo' ); ?></div>
-                <div class="naws-stat-sub"><?php echo $next_run ? esc_html( 'in ' . human_time_diff($next_run) ) : ''; ?></div>
+                <div class="naws-stat-sub"><?php echo $next_run ? esc_html( sprintf( /* translators: %s: a duration such as "5 minutes", from human_time_diff(). */ __( 'in %s', 'xtx-integration-for-netatmo' ), human_time_diff( $next_run ) ) ) : ''; ?></div>
             </div>
         </div>
 
@@ -330,7 +330,7 @@ $module_type_colors = [
                             <?php
                             $next_daily = NAWS_Cron::get_next_daily_run();
                             echo $next_daily
-                                 ? esc_html( wp_date('d.m.Y H:i', $next_daily) . ' — in ' . human_time_diff($next_daily) )
+                                 ? esc_html( wp_date('d.m.Y H:i', $next_daily) . ' — ' . sprintf( /* translators: %s: a duration such as "5 minutes", from human_time_diff(). */ __( 'in %s', 'xtx-integration-for-netatmo' ), human_time_diff( $next_daily ) ) )
                                  : esc_html( __( 'Not scheduled', 'xtx-integration-for-netatmo' ) );
                             ?>
                         </p>

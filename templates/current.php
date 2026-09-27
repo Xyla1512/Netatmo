@@ -45,7 +45,7 @@ $animate = $atts['animate'] !== 'false';
                     </span>
                 <?php endif; ?>
                 <div class="naws-card-meta">
-                    <?php echo esc_html(human_time_diff($data['time']) . ' ago'); ?>
+                    <?php echo esc_html( sprintf( /* translators: %s: a duration such as "11 minutes", from human_time_diff(). */ __( '%s ago', 'xtx-integration-for-netatmo' ), human_time_diff( $data['time'] ) ) ); ?>
                 </div>
             </div>
             <?php endforeach; ?>

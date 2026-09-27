@@ -91,7 +91,7 @@ $modules = NAWS_Database::get_modules( false );
                     </td>
                     <td>
                         <?php echo $m['last_seen']
-                            ? esc_html( wp_date('d.m.Y H:i', $m['last_seen'] ) . ' (' . human_time_diff( $m['last_seen'] ) . ' ago)' )
+                            ? esc_html( wp_date('d.m.Y H:i', $m['last_seen'] ) . ' (' . sprintf( /* translators: %s: a duration such as "11 minutes", from human_time_diff(). */ __( '%s ago', 'xtx-integration-for-netatmo' ), human_time_diff( $m['last_seen'] ) ) . ')' )
                             : '—'; ?>
                     </td>
                 </tr>

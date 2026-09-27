@@ -103,6 +103,11 @@ msgstr[1] "%d varsler"
 msgid "%d-Day Forecast"
 msgstr "%d-dagers varsel"
 
+#. translators: %s: a duration such as "11 minutes", from human_time_diff().
+#: admin/views/modules.php:94 templates/current.php:48
+msgid "%s ago"
+msgstr "for %s siden"
+
 #. translators: %s: minutes longer than yesterday, e.g. "3 min".
 #: includes/class-naws-labels.php:261
 msgid "%s longer than yesterday"
@@ -2024,6 +2029,7 @@ msgstr "Støynivå"
 msgid "Not connected"
 msgstr "Ikke tilkoblet"
 
+#. translators: %s: a duration such as "5 minutes", from human_time_diff().
 #: admin/views/dashboard.php:334
 msgid "Not scheduled"
 msgstr "Ikke planlagt"
@@ -3489,6 +3495,11 @@ msgstr "fra param"
 #: includes/class-naws-labels.php:273
 msgid "hot"
 msgstr "hett"
+
+#. translators: %s: a duration such as "5 minutes", from human_time_diff().
+#: admin/views/dashboard.php:142 admin/views/dashboard.php:333
+msgid "in %s"
+msgstr "om %s"
 
 #: admin/views/shortcodes.php:155
 msgid "index only"
