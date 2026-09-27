@@ -207,6 +207,8 @@
   margin-bottom: 0.5rem;
   display: block;
 }
+/* The icon set is SVG since 1.6.4; an emoji fallback keeps the font size. */
+.naws-card-icon svg { width:1.75rem; height:1.75rem; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
 
 .naws-card-label {
   font-size: 0.75rem;

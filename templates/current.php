@@ -27,7 +27,7 @@ $animate = $atts['animate'] !== 'false';
         <div class="naws-grid <?php echo $atts['layout'] === 'list' ? 'naws-grid-list' : 'naws-grid-3'; ?>">
             <?php foreach ($readings as $param => $data) : ?>
             <div class="naws-card <?php echo esc_attr($data['css_class']); ?>">
-                <span class="naws-card-icon"><?php echo esc_html($data['icon']); ?></span>
+                <span class="naws-card-icon"><?php echo wp_kses( $data['icon'], naws_svg_kses_args() ); ?></span>
                 <div class="naws-card-label"><?php echo esc_html($data['label']); ?></div>
                 <div class="naws-card-value">
                     <?php if ($animate) : ?>
