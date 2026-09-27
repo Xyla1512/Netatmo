@@ -1246,7 +1246,7 @@
 .naws-fc-wrap .naws-fc-hdr-meta { display: flex; align-items: center; gap: 12px; color: color-mix(in srgb, var(--naws-header-text, #fff) 75%, transparent); font-size: 12px; font-weight: 600; }
 .naws-fc-wrap .naws-fc-hdr-loc { white-space: nowrap; }
 .naws-fc-wrap .naws-fc-body {
-  background: #ffffff; border: 1.5px solid #e0eeee;
+  background: var(--naws-surface, #ffffff); border: 1.5px solid var(--naws-border, #e0eeee);
   border-top: none; border-radius: 0 0 16px 16px; padding: 12px;
 }
 @media (min-width: 600px) { .naws-fc-wrap .naws-fc-body { padding: 16px; } }
@@ -1257,7 +1257,7 @@
 @media (min-width: 768px) { .naws-fc-grid { grid-template-columns: repeat(var(--naws-fc-days, 5), 1fr); } }
 
 .naws-fc-wrap .naws-fc-card {
-  background: #ffffff; border: 1.5px solid #e0eeee; border-radius: 14px;
+  background: var(--naws-surface, #ffffff); border: 1.5px solid var(--naws-border, #e0eeee); border-radius: 14px;
   padding: 14px 8px 12px; text-align: center; transition: transform .2s ease;
   display: flex; flex-direction: column; align-items: center; gap: 2px;
   box-shadow: 0 2px 10px rgba(40,72,72,.10); position: relative; overflow: hidden;
@@ -1265,28 +1265,28 @@
 @media (min-width: 600px) { .naws-fc-wrap .naws-fc-card { padding: 18px 10px 14px; } }
 .naws-fc-wrap .naws-fc-card::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0;
-  height: 3.5px; background: #427272; border-radius: 14px 14px 0 0;
+  height: 3.5px; background: var(--naws-fc-bar, #427272); border-radius: 14px 14px 0 0;
 }
 .naws-fc-wrap .naws-fc-card:hover { transform: translateY(-4px); box-shadow: 0 4px 16px rgba(40,72,72,.15); }
-.naws-fc-wrap .naws-fc-card-today { border-color: #427272; box-shadow: 0 2px 12px rgba(45,82,82,.18); }
-.naws-fc-wrap .naws-fc-card-today::before { height: 4px; background: #3d9e74; }
-.naws-fc-wrap .naws-fc-day { font-weight: 800; font-size: 13px; color: #2d5252; }
-.naws-fc-wrap .naws-fc-card-today .naws-fc-day { color: #3d9e74; }
-.naws-fc-wrap .naws-fc-date { font-size: 10px; color: #7aa0a0; margin-bottom: 4px; }
+.naws-fc-wrap .naws-fc-card-today { border-color: var(--naws-fc-today-border, #427272); box-shadow: 0 2px 12px rgba(45,82,82,.18); }
+.naws-fc-wrap .naws-fc-card-today::before { height: 4px; background: var(--naws-fc-today-bar, #3d9e74); }
+.naws-fc-wrap .naws-fc-day { font-weight: 800; font-size: 13px; color: var(--naws-text-dark, #2d5252); }
+.naws-fc-wrap .naws-fc-card-today .naws-fc-day { color: var(--naws-fc-today-day, #3d9e74); }
+.naws-fc-wrap .naws-fc-date { font-size: 10px; color: var(--naws-text-muted, #7aa0a0); margin-bottom: 4px; }
 .naws-fc-wrap .naws-fc-svg { width: 36px; height: 36px; margin: 2px 0; }
 @media (min-width: 600px) { .naws-fc-wrap .naws-fc-svg { width: 44px; height: 44px; } }
 .naws-fc-wrap .naws-fc-svg svg { width: 100%; height: 100%; }
-.naws-fc-wrap .naws-fc-cond { font-size: 10px; color: #7aa0a0; font-weight: 600; min-height: 2.4em; line-height: 1.2; display: flex; align-items: center; }
+.naws-fc-wrap .naws-fc-cond { font-size: 10px; color: var(--naws-text-muted, #7aa0a0); font-weight: 600; min-height: 2.4em; line-height: 1.2; display: flex; align-items: center; }
 .naws-fc-wrap .naws-fc-temps { margin: 4px 0; }
-.naws-fc-wrap .naws-fc-tmax { font-size: 20px; font-weight: 800; font-style: italic; color: #2d5252; }
+.naws-fc-wrap .naws-fc-tmax { font-size: 20px; font-weight: 800; font-style: italic; color: var(--naws-text-dark, #2d5252); }
 @media (min-width: 600px) { .naws-fc-wrap .naws-fc-tmax { font-size: 22px; } }
-.naws-fc-wrap .naws-fc-sep { font-size: 13px; color: #7aa0a0; margin: 0 2px; }
-.naws-fc-wrap .naws-fc-tmin { font-size: 14px; font-weight: 600; color: #7aa0a0; }
-.naws-fc-wrap .naws-fc-tunit { font-size: 10px; color: #7aa0a0; }
-.naws-fc-wrap .naws-fc-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 8px; font-size: 10px; color: #7aa0a0; padding-top: 6px; border-top: 1px solid #e0eeee; width: 100%; }
-.naws-fc-wrap .naws-fc-gust { font-size: 9px; color: #a0b8b8; margin-top: 3px; }
-.naws-fc-wrap .naws-fc-footer { text-align: center; margin-top: 8px; font-size: 10px; color: #a0b8b8; }
-.naws-fc-wrap .naws-fc-error { text-align: center; padding: 40px 20px; color: #7aa0a0; font-style: italic; }
+.naws-fc-wrap .naws-fc-sep { font-size: 13px; color: var(--naws-text-muted, #7aa0a0); margin: 0 2px; }
+.naws-fc-wrap .naws-fc-tmin { font-size: 14px; font-weight: 600; color: var(--naws-text-muted, #7aa0a0); }
+.naws-fc-wrap .naws-fc-tunit { font-size: 10px; color: var(--naws-text-muted, #7aa0a0); }
+.naws-fc-wrap .naws-fc-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 8px; font-size: 10px; color: var(--naws-text-muted, #7aa0a0); padding-top: 6px; border-top: 1px solid var(--naws-border, #e0eeee); width: 100%; }
+.naws-fc-wrap .naws-fc-gust { font-size: 9px; color: var(--naws-text-light, #a0b8b8); margin-top: 3px; }
+.naws-fc-wrap .naws-fc-footer { text-align: center; margin-top: 8px; font-size: 10px; color: var(--naws-text-light, #a0b8b8); }
+.naws-fc-wrap .naws-fc-error { text-align: center; padding: 40px 20px; color: var(--naws-text-muted, #7aa0a0); font-style: italic; }
 
 /* ============================================================
    History Charts (extracted from history.php)

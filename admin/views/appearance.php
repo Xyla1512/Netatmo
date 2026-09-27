@@ -79,6 +79,11 @@ $color_labels = [
     'sparkline_dots'      => __( 'Low and high dots', 'xtx-integration-for-netatmo' ),
     'sparkline_tip_bg'    => __( 'Hover bubble – background', 'xtx-integration-for-netatmo' ),
     'sparkline_tip_text'  => __( 'Hover bubble – text', 'xtx-integration-for-netatmo' ),
+    // Forecast
+    'forecast_bar'          => __( 'Bar above each day', 'xtx-integration-for-netatmo' ),
+    'forecast_today_bar'    => __( 'Today – bar', 'xtx-integration-for-netatmo' ),
+    'forecast_today_border' => __( 'Today – frame', 'xtx-integration-for-netatmo' ),
+    'forecast_today_day'    => __( 'Today – weekday', 'xtx-integration-for-netatmo' ),
 ];
 
 // Short labels for 24h chart preview legend
@@ -683,6 +688,53 @@ $icon_color_keys = [
         </div>
 
         <!-- ============================================================
+             Tab 10: Forecast (since 2.1.0)
+             ============================================================ -->
+        <div class="naws-appearance-pane<?php echo esc_attr( $naws_pane_class( 'forecast' ) ); ?>" data-pane="forecast">
+            <p class="description"><?php esc_html_e( 'Colours for [naws_forecast]: the thin bar above each day, and the bar, frame and weekday of today. Texts, frames and the background of the cards follow the base theme. The defaults are the colours the forecast has always used.', 'xtx-integration-for-netatmo' ); ?></p>
+            <div class="naws-appearance-row">
+                <div class="naws-appearance-controls">
+                    <table class="form-table naws-color-table">
+                        <tbody>
+                        <?php foreach ( $groups['forecast']['keys'] as $key ) : ?>
+                            <tr>
+                                <th><label for="naws-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $color_labels[ $key ] ?? $key ); ?></label></th>
+                                <td>
+                                    <input type="text"
+                                           id="naws-<?php echo esc_attr( $key ); ?>"
+                                           name="naws_appearance[<?php echo esc_attr( $key ); ?>]"
+                                           value="<?php echo esc_attr( $colors[ $key ] ); ?>"
+                                           class="naws-color-picker"
+                                           data-preview="forecast"
+                                           data-key="<?php echo esc_attr( $key ); ?>"
+                                           data-default-color="<?php echo esc_attr( $defaults[ $key ] ); ?>">
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="naws-appearance-preview naws-preview-sticky">
+                    <div class="naws-preview-label"><?php esc_html_e( 'Live preview — forecast', 'xtx-integration-for-netatmo' ); ?></div>
+                    <?php
+                    // Three days as [naws_forecast] draws them, today first. Every colour is
+                    // a variable on the frame, so a picker only has to move one of them.
+                    ?>
+                    <div id="naws-preview-forecast" style="--naws-fc-bar:<?php echo esc_attr( $colors['forecast_bar'] ); ?>;--naws-fc-today-bar:<?php echo esc_attr( $colors['forecast_today_bar'] ); ?>;--naws-fc-today-border:<?php echo esc_attr( $colors['forecast_today_border'] ); ?>;--naws-fc-today-day:<?php echo esc_attr( $colors['forecast_today_day'] ); ?>;--naws-surface:<?php echo esc_attr( $colors['theme_surface'] ); ?>;--naws-border:<?php echo esc_attr( $colors['theme_border'] ); ?>;--naws-text-dark:<?php echo esc_attr( $colors['theme_text_dark'] ); ?>;--naws-text-muted:<?php echo esc_attr( $colors['theme_text_muted'] ); ?>;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:330px;">
+                        <?php foreach ( [ [ 0, 21, 12 ], [ 1, 19, 11 ], [ 2, 23, 13 ] ] as [ $naws_pv_fc_i, $naws_pv_fc_hi, $naws_pv_fc_lo ] ) : $naws_pv_fc_today = 0 === $naws_pv_fc_i; ?>
+                        <div style="position:relative;overflow:hidden;background:var(--naws-surface);border:1.5px solid var(<?php echo $naws_pv_fc_today ? '--naws-fc-today-border' : '--naws-border'; ?>);border-radius:12px;padding:14px 6px 10px;text-align:center;box-shadow:0 2px 10px rgba(40,72,72,.10);">
+                            <span style="position:absolute;top:0;left:0;right:0;height:<?php echo $naws_pv_fc_today ? '4px' : '3.5px'; ?>;background:var(<?php echo $naws_pv_fc_today ? '--naws-fc-today-bar' : '--naws-fc-bar'; ?>);"></span>
+                            <div style="font-weight:800;font-size:13px;color:var(<?php echo $naws_pv_fc_today ? '--naws-fc-today-day' : '--naws-text-dark'; ?>);"><?php echo esc_html( wp_date( 'D', time() + $naws_pv_fc_i * DAY_IN_SECONDS ) ); ?></div>
+                            <div style="margin-top:6px;font-size:20px;font-weight:800;font-style:italic;color:var(--naws-text-dark);"><?php echo esc_html( $naws_pv_fc_hi . '°' ); ?></div>
+                            <div style="font-size:12px;font-weight:600;color:var(--naws-text-muted);"><?php echo esc_html( $naws_pv_fc_lo . '°' ); ?></div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
              Tab 9: Sparkline (since 2.1.0)
              ============================================================ -->
         <div class="naws-appearance-pane<?php echo esc_attr( $naws_pane_class( 'sparkline' ) ); ?>" data-pane="sparkline">
@@ -1017,6 +1069,12 @@ jQuery(document).ready(function($) {
             document.querySelectorAll('#naws-preview-sparkline .naws-sl, #naws-preview-sparkline .naws-sl-tip, .naws-wgt .naws-sl').forEach(function (el) {
                 el.style.setProperty(slVar, val);
             });
+        }
+
+        // ── Forecast: forecast_today_bar -> --naws-fc-today-bar on the frame.
+        if (group === 'forecast') {
+            var fc = document.getElementById('naws-preview-forecast');
+            if (fc) { fc.style.setProperty('--naws-fc-' + String(key).replace('forecast_', '').replace(/_/g, '-'), val); }
         }
     }
 

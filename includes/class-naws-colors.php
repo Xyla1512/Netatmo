@@ -218,6 +218,15 @@ class NAWS_Colors {
         'sparkline_dots'      => '#7aa0a0',
         'sparkline_tip_bg'    => '#2d5252',
         'sparkline_tip_text'  => '#ffffff',
+
+        // [naws_forecast] (since 2.1.0): the thin bar above every card and
+        // the card of today — its bar, its frame and its weekday. The
+        // defaults are the colours frontend.css used to hard-code; texts,
+        // frames and the card background follow the base theme.
+        'forecast_bar'          => '#427272',
+        'forecast_today_bar'    => '#3d9e74',
+        'forecast_today_border' => '#427272',
+        'forecast_today_day'    => '#3d9e74',
     ];
 
     public static function instance() {
@@ -435,6 +444,18 @@ class NAWS_Colors {
         $css .= '  --naws-font: ' . NAWS_Fonts::stack( (string) $c['font_family'], (string) $c['font_custom'] ) . ";\n";
         $css .= "}\n";
 
+        // [naws_forecast] stands on its own, outside .naws-wrap: the base
+        // theme it now follows and its four colours (since 2.1.0).
+        // forecast_today_bar -> --naws-fc-today-bar and so on.
+        $css .= ".naws-fc-wrap {\n";
+        foreach ( [ 'surface' => 'theme_surface', 'border' => 'theme_border', 'text-dark' => 'theme_text_dark', 'text-muted' => 'theme_text_muted', 'text-light' => 'theme_text_light' ] as $var => $key ) {
+            $css .= "  --naws-{$var}: {$c[ $key ]};\n";
+        }
+        foreach ( self::FORECAST_KEYS as $key ) {
+            $css .= '  --naws-fc-' . str_replace( '_', '-', substr( $key, 9 ) ) . ": {$c[ $key ]};\n";
+        }
+        $css .= "}\n";
+
         // [naws_sparkline]: its own rule, see sparkline_css().
         $css .= self::sparkline_css();
 
@@ -567,6 +588,11 @@ class NAWS_Colors {
         'sparkline_band', 'sparkline_dots', 'sparkline_tip_bg', 'sparkline_tip_text',
     ];
 
+    /** The [naws_forecast] keys, in the order the Appearance page shows them. */
+    const FORECAST_KEYS = [
+        'forecast_bar', 'forecast_today_bar', 'forecast_today_border', 'forecast_today_day',
+    ];
+
     /**
      * Die Skala als Paare aus Temperatur und Farbe.
      *
@@ -677,6 +703,7 @@ class NAWS_Colors {
             'heatmap'    => __( 'Heatmap Scale', 'xtx-integration-for-netatmo' ),
             'windrose'   => __( 'Wind Rose', 'xtx-integration-for-netatmo' ),
             'sparkline'  => __( 'Sparkline', 'xtx-integration-for-netatmo' ),
+            'forecast'   => __( 'Forecast', 'xtx-integration-for-netatmo' ),
         ];
     }
 
@@ -750,6 +777,10 @@ class NAWS_Colors {
             'sparkline' => [
                 'label' => 'appearance_group_sparkline',
                 'keys'  => self::SPARKLINE_KEYS,
+            ],
+            'forecast' => [
+                'label' => 'appearance_group_forecast',
+                'keys'  => self::FORECAST_KEYS,
             ],
         ];
     }
