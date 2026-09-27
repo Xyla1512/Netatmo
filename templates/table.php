@@ -70,10 +70,10 @@ $naws_param_labels = NAWS_Helpers::get_all_parameters();
                     <td><?php echo esc_html( wp_date( $naws_fmt, intval( $naws_row['recorded_at'] ) ) ); ?></td>
                     <td><?php echo esc_html( $naws_module_names[ $naws_row['module_id'] ] ?? '' ); ?></td>
                     <td><?php echo esc_html( $naws_param_labels[ $naws_param ] ?? $naws_param ); ?></td>
-                    <td><?php echo esc_html( NAWS_Helpers::format_value( $naws_param, $naws_row['value'] ) . ' ' . $naws_unit ); ?></td>
+                    <td><?php echo esc_html( NAWS_Helpers::display_value( $naws_param, $naws_row['value'] ) . ' ' . $naws_unit ); ?></td>
                     <?php if ( $naws_grouped ) : ?>
-                        <td><?php echo esc_html( NAWS_Helpers::format_value( $naws_param, $naws_row['min_value'] ) . ' ' . $naws_unit ); ?></td>
-                        <td><?php echo esc_html( NAWS_Helpers::format_value( $naws_param, $naws_row['max_value'] ) . ' ' . $naws_unit ); ?></td>
+                        <td><?php echo esc_html( NAWS_Helpers::display_value( $naws_param, $naws_row['min_value'] ) . ' ' . $naws_unit ); ?></td>
+                        <td><?php echo esc_html( NAWS_Helpers::display_value( $naws_param, $naws_row['max_value'] ) . ' ' . $naws_unit ); ?></td>
                     <?php endif; ?>
                 </tr>
             <?php endforeach; ?>

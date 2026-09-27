@@ -710,6 +710,38 @@ class NAWS_Helpers {
     }
 
     /**
+     * A reading as text in the site's language: converted and rounded like
+     * format_value(), which stays a number for JSON and arithmetic, then
+     * written with the locale's separators — "1.019,1" in German, "1,019.1"
+     * in English. See display_number() for the decimals.
+     *
+     * @param string   $parameter Netatmo parameter name.
+     * @param float    $value     Value in the base unit.
+     * @param int|null $decimals  Fixed decimals; null keeps what format_value() left.
+     */
+    public static function display_value( $parameter, $value, $decimals = null ): string {
+        return self::display_number( self::format_value( $parameter, (float) $value ), $decimals );
+    }
+
+    /**
+     * A number with the locale's separators. Without $decimals (or with a
+     * negative one) it keeps the decimals it has: 23.4 stays one, 23.0 has
+     * none — the way the number printed before, only with the right mark.
+     *
+     * @param float|int $value
+     * @param int|null  $decimals
+     */
+    public static function display_number( $value, $decimals = null ): string {
+        $value = (float) $value;
+        if ( $decimals === null || $decimals < 0 ) {
+            $s        = rtrim( rtrim( sprintf( '%.6F', $value ), '0' ), '.' );
+            $dot      = strpos( $s, '.' );
+            $decimals = $dot === false ? 0 : strlen( $s ) - $dot - 1;
+        }
+        return number_format_i18n( $value, $decimals );
+    }
+
+    /**
      * Was im Tooltip einer Heatmap-Kachel steht.
      *
      * Die Farbe der Kachel kommt aus dem gespeicherten Celsius-Wert, die
@@ -726,7 +758,7 @@ class NAWS_Helpers {
             return __( 'No reading', 'xtx-integration-for-netatmo' );
         }
 
-        $text = self::format_value( 'Temperature', $value ) . ' ' . self::get_unit( 'Temperature' );
+        $text = self::display_value( 'Temperature', $value ) . ' ' . self::get_unit( 'Temperature' );
 
         if ( $source === 'minmax' ) {
             /* translators: %s is a temperature that already carries its unit, e.g. "6 °C". */

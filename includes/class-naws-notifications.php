@@ -383,7 +383,7 @@ final class NAWS_Notifications {
             case 'rain':
             case 'ppm':
                 $p = $def['reading'];
-                return NAWS_Helpers::format_value( $p, (float) $value ) . ' ' . NAWS_Helpers::get_unit( $p );
+                return NAWS_Helpers::display_value( $p, (float) $value ) . ' ' . NAWS_Helpers::get_unit( $p );
         }
         return (string) $value;
     }
@@ -408,7 +408,7 @@ final class NAWS_Notifications {
             case 'rain':
             case 'ppm':
                 $p = $def['reading'];
-                return NAWS_Helpers::format_value( $p, (float) $threshold ) . ' ' . NAWS_Helpers::get_unit( $p );
+                return NAWS_Helpers::display_value( $p, (float) $threshold ) . ' ' . NAWS_Helpers::get_unit( $p );
         }
         return (string) $threshold;
     }

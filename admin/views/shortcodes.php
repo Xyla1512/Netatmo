@@ -23,7 +23,7 @@ foreach ( $latest as $r ) {
 function naws_live_val( $map, $type, $param ) {
     $key = $type . '_' . $param;
     if ( ! isset( $map[ $key ] ) ) return '--';
-    $val  = NAWS_Helpers::format_value( $param, floatval( $map[ $key ]['value'] ) );
+    $val  = NAWS_Helpers::display_value( $param, floatval( $map[ $key ]['value'] ) );
     $unit = NAWS_Helpers::get_unit( $param );
     return esc_html( $val . ( $unit ? ' ' . $unit : '' ) );
 }
@@ -102,7 +102,7 @@ $value_params = [
                 foreach ( $modules as $mm ) {
                     if ( $mm['module_type'] === 'NAModule3' ) {
                         $rv   = NAWS_Database::get_rain_rolling_24h( $mm['module_id'] );
-                        $live = $rv !== null ? esc_html( NAWS_Helpers::format_value( 'Rain', $rv ) . ' ' . $unit ) : '--';
+                        $live = $rv !== null ? esc_html( NAWS_Helpers::display_value( 'Rain', $rv ) . ' ' . $unit ) : '--';
                         break;
                     }
                 }

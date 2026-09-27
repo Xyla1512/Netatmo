@@ -193,6 +193,7 @@ class NAWS_Shortcodes {
             $readings_by_module[ $r['module_id'] ][ $r['parameter'] ] = [
                 'raw'      => $r['value'],
                 'value'    => NAWS_Helpers::format_value( $r['parameter'], floatval( $r['value'] ) ),
+                'display'  => NAWS_Helpers::display_value( $r['parameter'], floatval( $r['value'] ) ),
                 'unit'     => NAWS_Helpers::get_unit( $r['parameter'] ),
                 'icon'     => NAWS_Helpers::get_icon( $r['parameter'] ),
                 'label'    => NAWS_Helpers::get_label( $r['parameter'] ),
@@ -553,7 +554,7 @@ class NAWS_Shortcodes {
         }
 
         $unit_str = $show_unit ? ' ' . NAWS_Helpers::get_unit( $param ) : '';
-        $output   = esc_html( $value . $unit_str );
+        $output   = esc_html( NAWS_Helpers::display_number( $value, $dec ) . $unit_str );
 
         $tag = sanitize_key( $atts['tag'] );
         if ( $tag === 'none' || $tag === '' ) {
@@ -629,7 +630,7 @@ class NAWS_Shortcodes {
 
             $unit_label = NAWS_Calc::unit_for( $key );
             $unit_str   = ( $atts['unit'] !== '0' && $unit_label !== '' ) ? ' ' . $unit_label : '';
-            $output   = esc_html( $value . $unit_str );
+            $output   = esc_html( NAWS_Helpers::display_number( $value, $dec ) . $unit_str );
         }
 
         if ( $atts['note'] === '1' ) {
@@ -732,7 +733,7 @@ class NAWS_Shortcodes {
                 return null;
             }
             return [
-                'value' => (string) NAWS_Helpers::format_value( $param, $raw ),
+                'value' => NAWS_Helpers::display_value( $param, $raw ),
                 'unit'  => NAWS_Helpers::get_unit( $param ),
             ];
         };

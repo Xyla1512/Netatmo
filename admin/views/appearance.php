@@ -808,7 +808,7 @@ $icon_color_keys = [
                 $naws_prev_fc      = NAWS_Forecast::get_forecast( $naws_prev_days );
                 $naws_prev_fmt     = static function ( ?float $raw, string $param ): ?array {
                     if ( $raw === null ) return null;
-                    return [ 'value' => (string) NAWS_Helpers::format_value( $param, $raw ), 'unit' => NAWS_Helpers::get_unit( $param ) ];
+                    return [ 'value' => NAWS_Helpers::display_value( $param, $raw ), 'unit' => NAWS_Helpers::get_unit( $param ) ];
                 };
                 $naws_wgt = NAWS_Widget_Data::build(
                     [

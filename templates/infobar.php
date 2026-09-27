@@ -68,7 +68,7 @@ if ( $feels_like !== null ) {
     $rows[] = [
         'icon'  => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>',
         'label' => _x( 'Feels like', 'infobar_feels_like', 'xtx-integration-for-netatmo' ),
-        'value' => $feels_like . ' ' . $temp_unit,
+        'value' => NAWS_Helpers::display_number( $feels_like ) . ' ' . $temp_unit,
         'group' => 'weather',
     ];
 }
@@ -77,7 +77,7 @@ if ( $dew_point !== null ) {
     $rows[] = [
         'icon'  => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>',
         'label' => __( 'Dew Point', 'xtx-integration-for-netatmo' ),
-        'value' => $dew_point . ' ' . $temp_unit,
+        'value' => NAWS_Helpers::display_number( $dew_point ) . ' ' . $temp_unit,
         'group' => 'weather',
     ];
 }
@@ -86,7 +86,7 @@ if ( $heat_index !== null ) {
     $rows[] = [
         'icon'  => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>',
         'label' => __( 'Heat Index', 'xtx-integration-for-netatmo' ),
-        'value' => $heat_index . ' ' . $temp_unit,
+        'value' => NAWS_Helpers::display_number( $heat_index ) . ' ' . $temp_unit,
         'group' => 'weather',
     ];
 }

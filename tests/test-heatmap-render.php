@@ -14,6 +14,7 @@ $GLOBALS['opts'] = [];
 function get_option( $k, $d = false ) { return $GLOBALS['opts'][ $k ] ?? $d; }
 function esc_attr( $s ) { return htmlspecialchars( (string) $s, ENT_QUOTES ); }
 function esc_html( $s ) { return htmlspecialchars( (string) $s, ENT_QUOTES ); }
+function number_format_i18n( $n, $d = 0 ) { return number_format( (float) $n, (int) $d, '.', ',' ); }
 function esc_url( $s ) { return (string) $s; }
 function sanitize_text_field( $s ) { return is_string( $s ) ? trim( $s ) : $s; }
 require_once __DIR__ . '/i18n-stubs.php';

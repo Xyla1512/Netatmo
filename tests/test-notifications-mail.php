@@ -35,6 +35,7 @@ function restore_previous_locale()           { $GLOBALS['naws_test_locale_calls'
 require_once __DIR__ . '/i18n-stubs.php';
 class NAWS_Helpers {
     public static function format_value( $p, $v ) { return $p === 'CO2' ? (int) $v : round( $v, 1 ); }
+    public static function display_value( $p, $v ) { return (string) self::format_value( $p, $v ); }
     public static function get_unit( $p ) { return [ 'Temperature' => '°C', 'GustStrength' => 'km/h', 'sum_rain_24' => 'mm', 'CO2' => 'ppm' ][ $p ] ?? ''; }
     public static function module_type_label( $t ) { return [ 'NAModule1' => 'Outdoor Module', 'NAModule4' => 'Indoor module' ][ $t ] ?? $t; }
 }

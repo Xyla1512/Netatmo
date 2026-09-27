@@ -30,6 +30,13 @@ var NAWS_FONT=getComputedStyle(document.getElementById(WID)).fontFamily
             ||'sans-serif';
 var TIME_FMT=NAWS_LIVE.TIME_FMT||'%s';
 function fmtTime(t){return TIME_FMT.replace('%s',t);}
+/* A reading with the decimal mark of the page's language; the decimals it came with stay. */
+function num(v){
+  if(v===null||v===undefined||v==='') return '—';
+  var n=parseFloat(v); if(isNaN(n)) return String(v);
+  var d=(String(v).split('.')[1]||'').length;
+  try{return new Intl.NumberFormat(document.documentElement.lang||undefined,{minimumFractionDigits:d,maximumFractionDigits:d}).format(n);}catch(e){return String(v);}
+}
 var AJAX=NAWS_LIVE.AJAX;
 var NONCE=document.getElementById(WID).dataset.nonce;
 var RFSH=(parseInt(document.getElementById(WID).dataset.refresh,10)||60)*1000;
@@ -213,14 +220,14 @@ function mkCard(cls,icoKey,lbl,param,val,unit,ts,subs,extra,cardId){
   var h='<div class="naws-card '+cls+'" data-card="'+esc(cardId||param)+'">'
     +'<div class="naws-ico">'+ICO[icoKey]+'</div>'
     +'<div class="naws-lbl">'+lbl+'</div>'
-    +'<div class="naws-val" data-param="'+esc(param)+'">'+esc(String(val??'—'))+'</div>'
+    +'<div class="naws-val" data-param="'+esc(param)+'">'+esc(num(val))+'</div>'
     +'<div class="naws-unit">'+esc(unit)+'</div>'
     +(extra||'');
   if(subs&&subs.length){
     h+='<div class="naws-subs">';
     subs.forEach(function(s){
       h+='<div class="naws-sub"><div class="naws-sub-lbl">'+esc(s.l)+'</div>'
-        +'<div class="naws-sub-val">'+esc(String(s.v??'—'))+'<span class="naws-sub-u"> '+esc(s.u||'')+'</span></div>';
+        +'<div class="naws-sub-val">'+esc(num(s.v))+'<span class="naws-sub-u"> '+esc(s.u||'')+'</span></div>';
       if(s.t) h+='<div class="naws-sub-time">'+sfmt(s.t)+'</div>';
       h+='</div>';
     });
@@ -297,9 +304,9 @@ function buildLive(rows){
       +'<div class="naws-lbl">'+NAWS_I18N.card_wind_gusts+'</div>'
       +'<div id="'+WID+'-gauge" style="width:100%;display:flex;justify-content:center">'+gaugeSVG(wv,gv,gm)+'</div>'
       +'<div class="naws-wvrow">'
-      +'<div class="naws-wvblk"><div class="naws-wv-lbl">'+NAWS_I18N.card_wind+'</div><div class="naws-wv-num" id="'+WID+'-wv" style="color:var(--ink2)">'+esc(String(wv))+'</div><div class="naws-wv-unit">'+wu+'</div></div>'
-      +'<div class="naws-wvblk"><div class="naws-wv-lbl">'+NAWS_I18N.card_gusts+'</div><div class="naws-wv-num" id="'+WID+'-gv" style="color:var(--muted)">'+esc(String(gv))+'</div><div class="naws-wv-unit">'+gu+'</div></div>'
-      +(gm===null?'':'<div class="naws-wvblk"><div class="naws-wv-lbl">'+NAWS_I18N.card_gust_max+'</div><div class="naws-wv-num" id="'+WID+'-gm" style="color:var(--muted)">'+esc(String(gm))+'</div><div class="naws-wv-unit">'+gmu+'</div></div>')
+      +'<div class="naws-wvblk"><div class="naws-wv-lbl">'+NAWS_I18N.card_wind+'</div><div class="naws-wv-num" id="'+WID+'-wv" style="color:var(--ink2)">'+esc(num(wv))+'</div><div class="naws-wv-unit">'+wu+'</div></div>'
+      +'<div class="naws-wvblk"><div class="naws-wv-lbl">'+NAWS_I18N.card_gusts+'</div><div class="naws-wv-num" id="'+WID+'-gv" style="color:var(--muted)">'+esc(num(gv))+'</div><div class="naws-wv-unit">'+gu+'</div></div>'
+      +(gm===null?'':'<div class="naws-wvblk"><div class="naws-wv-lbl">'+NAWS_I18N.card_gust_max+'</div><div class="naws-wv-num" id="'+WID+'-gm" style="color:var(--muted)">'+esc(num(gm))+'</div><div class="naws-wv-unit">'+gmu+'</div></div>')
       +'</div>';
     if(p.WindStrength&&p.WindStrength.recorded_at)
       h+='<div class="naws-time" style="text-align:center;margin-top:7px">'+fmt(p.WindStrength.recorded_at)+'</div>';
@@ -364,7 +371,7 @@ function softUpdate(rows){
   var p=indexReadings(rows);
   document.querySelectorAll('#'+WID+' .naws-val[data-param]').forEach(function(el){
     var k=el.dataset.param; if(!k||!p[k]) return;
-    var nv=String(p[k].value??'—');
+    var nv=num(p[k].value);
     if(el.textContent!==nv){el.textContent=nv;el.classList.remove('naws-flash');void el.offsetWidth;el.classList.add('naws-flash');}
     var c=el.closest('.naws-card');if(c){var t=c.querySelector('.naws-time');if(t)t.textContent=fmt(p[k].recorded_at);}
   });
@@ -373,9 +380,9 @@ function softUpdate(rows){
   var wDeg=p.WindAngle?parseFloat(p.WindAngle.value)||0:null;
   var gm=p.max_wind_str?parseFloat(p.max_wind_str.value)||0:null;
   var gauge=document.getElementById(WID+'-gauge'); if(gauge&&wv!==null) gauge.innerHTML=gaugeSVG(wv,gv||0,gm);
-  var wvEl=document.getElementById(WID+'-wv'); if(wvEl&&wv!==null) wvEl.textContent=String(wv);
-  var gvEl=document.getElementById(WID+'-gv'); if(gvEl&&gv!==null) gvEl.textContent=String(gv);
-  var gmEl=document.getElementById(WID+'-gm'); if(gmEl&&gm!==null) gmEl.textContent=String(gm);
+  var wvEl=document.getElementById(WID+'-wv'); if(wvEl&&wv!==null) wvEl.textContent=num(wv);
+  var gvEl=document.getElementById(WID+'-gv'); if(gvEl&&gv!==null) gvEl.textContent=num(gv);
+  var gmEl=document.getElementById(WID+'-gm'); if(gmEl&&gm!==null) gmEl.textContent=num(gm);
   var arr=document.getElementById(WID+'-arr'); if(arr&&wDeg!==null) arr.style.transform='rotate('+wDeg+'deg)';
   var dir=document.getElementById(WID+'-dir'); if(dir&&wDeg!==null) dir.innerHTML=Math.round(wDeg)+'° &nbsp;·&nbsp; '+cdir(wDeg);
 }

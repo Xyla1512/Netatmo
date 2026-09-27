@@ -230,16 +230,16 @@ $module_type_colors = [
                         $summary_parts = [];
                         if ( $has_data ) {
                             if ( isset( $mod_readings['Temperature'] ) ) {
-                                $summary_parts[] = '🌡️ ' . NAWS_Helpers::format_value('Temperature', $mod_readings['Temperature']) . ' °C';
+                                $summary_parts[] = '🌡️ ' . NAWS_Helpers::display_value('Temperature', $mod_readings['Temperature']) . ' °C';
                             }
                             if ( isset( $mod_readings['Humidity'] ) ) {
-                                $summary_parts[] = '💧 ' . NAWS_Helpers::format_value('Humidity', $mod_readings['Humidity']) . ' %';
+                                $summary_parts[] = '💧 ' . NAWS_Helpers::display_value('Humidity', $mod_readings['Humidity']) . ' %';
                             }
                             if ( isset( $mod_readings['WindSpeed'] ) ) {
-                                $summary_parts[] = '💨 ' . NAWS_Helpers::format_value('WindSpeed', $mod_readings['WindSpeed']) . ' km/h';
+                                $summary_parts[] = '💨 ' . NAWS_Helpers::display_value('WindSpeed', $mod_readings['WindSpeed']) . ' km/h';
                             }
                             if ( isset( $mod_readings['Rain'] ) ) {
-                                $summary_parts[] = '🌧️ ' . NAWS_Helpers::format_value('Rain', $mod_readings['Rain']) . ' mm';
+                                $summary_parts[] = '🌧️ ' . NAWS_Helpers::display_value('Rain', $mod_readings['Rain']) . ' mm';
                             }
                         }
                     ?>
@@ -294,7 +294,7 @@ $module_type_colors = [
                                             ?>
                                             <tr>
                                                 <td class="naws-param-cell"><?php echo wp_kses( NAWS_Helpers::get_icon( $param ), naws_svg_kses_args() ); ?> <?php echo esc_html( NAWS_Helpers::get_label($param) ); ?></td>
-                                                <td class="naws-value-cell"><strong><?php echo esc_html( NAWS_Helpers::format_value($param, $val) ); ?></strong></td>
+                                                <td class="naws-value-cell"><strong><?php echo esc_html( NAWS_Helpers::display_value($param, $val) ); ?></strong></td>
                                                 <td class="naws-unit-cell"><?php echo esc_html( NAWS_Helpers::get_unit($param) ); ?></td>
                                             </tr>
                                             <?php endforeach; ?>

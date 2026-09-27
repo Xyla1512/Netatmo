@@ -30,6 +30,7 @@ $GLOBALS['mods'] = [
 function get_option( $k, $d = false ) { return $GLOBALS['opts'][ $k ] ?? $d; }
 function esc_attr( $s ) { return htmlspecialchars( (string) $s, ENT_QUOTES ); }
 function esc_html( $s ) { return htmlspecialchars( (string) $s, ENT_QUOTES ); }
+function number_format_i18n( $n, $d = 0 ) { return number_format( (float) $n, (int) $d, '.', ',' ); }
 require_once __DIR__ . '/i18n-stubs.php';
 function wp_date( $fmt, $ts ) { return gmdate( $fmt, $ts ); }
 

@@ -33,7 +33,7 @@ $animate = $atts['animate'] !== 'false';
                     <?php if ($animate) : ?>
                         <span class="naws-count-up" data-value="<?php echo esc_attr($data['value']); ?>">0</span>
                     <?php else : ?>
-                        <span><?php echo esc_html($data['value']); ?></span>
+                        <span><?php echo esc_html($data['display']); ?></span>
                     <?php endif; ?>
                     <span class="naws-card-unit"><?php echo esc_html($data['unit']); ?></span>
                 </div>

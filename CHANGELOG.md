@@ -14,6 +14,9 @@ All notable changes to the XTX Netatmo plugin are documented here.
 - **The Appearance tabs look like tabs.** They were a row of words with a line under the active one, and with nine of them they ran off the edge of a narrow window. They are WordPress's own tabs now — grey file cards, the active one joined to the page — and wrap into a second row when there is no room. After "Save Settings" the tab that was open stays open; it used to jump back to Base Theme. The tabs on the REST API page look the same.
 - The REST endpoint `/daily` now actually returns `humidity_avg`, `wind_avg`, `co2_avg` and `noise_avg` when asked for them — they used to fall back silently to the default fields. A weekly, monthly or yearly grouping asked only for these fields returns an empty list instead of a broken query.
 
+### Fixed
+- **Numbers follow the language of the page.** A German page showed "23.4 °C" and "1019.1 mbar" wherever a reading was printed straight from the conversion — the sidebar widget's head, `[naws_table]`, `[naws_value]`, `[naws_calc]`, `[naws_current]`, the infobar, the heatmap labels, the e-mail notifications, the live dashboard and the admin dashboard. They now use the site's decimal mark and thousands separator: "23,4 °C" and "1.019,1 mbar" in German, "23.4 °C" and "1,019.1 mbar" in English. Charts and JSON (AJAX, REST API) keep plain numbers.
+
 ## [2.0.2]
 
 ### Added

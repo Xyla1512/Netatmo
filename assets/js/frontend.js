@@ -80,8 +80,18 @@
     /* ============================================================
        Utility: Animated Number Counter
        ============================================================ */
+    /* A number with the decimal mark of the page's language: a comma on a
+       German page, a point on an English one. */
+    function nawsNum(v, decimals) {
+        try {
+            return new Intl.NumberFormat(document.documentElement.lang || undefined, { minimumFractionDigits: decimals, maximumFractionDigits: decimals }).format(v);
+        } catch (e) {
+            return v.toFixed(decimals);
+        }
+    }
+
     function animateNumber(el, end, duration) {
-        const start = parseFloat(el.textContent) || 0;
+        const start = parseFloat(el.dataset.nawsShown || '0') || 0;
         const range = end - start;
         const startTime = performance.now();
         const decimals = (String(end).split('.')[1] || '').length;
@@ -90,8 +100,9 @@
             const elapsed = currentTime - startTime;
             const progress = Math.min(elapsed / duration, 1);
             const eased = 1 - Math.pow(1 - progress, 3);
-            el.textContent = (start + range * eased).toFixed(decimals);
+            el.textContent = nawsNum(start + range * eased, decimals);
             if (progress < 1) requestAnimationFrame(update);
+            else el.dataset.nawsShown = String(end);
         }
         requestAnimationFrame(update);
     }
