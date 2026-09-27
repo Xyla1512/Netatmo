@@ -688,6 +688,48 @@ final class NAWS_Sparkline {
         return $a['layout'] === 'tile' ? self::tile_markup( $a, $d ) : self::markup( $a, $d );
     }
 
+    /** The six tiles of the demo, in its order: [naws_sparkline_tiles] without params. */
+    const TILE_PARAMS = [ 'Temperature', 'Humidity', 'Pressure', 'WindStrength', 'Rain', 'CO2' ];
+
+    /**
+     * The quantities for [naws_sparkline_tiles]: a comma list of raw
+     * parameters, case ignored, each once, in the order given. Daily
+     * columns and unknown names drop out; an empty list is the demo's six.
+     */
+    public static function tile_params( string $raw ): array {
+        if ( trim( $raw ) === '' ) {
+            return self::TILE_PARAMS;
+        }
+        $known = [];
+        foreach ( array_keys( self::RAW ) as $p ) {
+            $known[ strtolower( $p ) ] = $p;
+        }
+        $out = [];
+        foreach ( explode( ',', $raw ) as $p ) {
+            $p = $known[ strtolower( trim( $p ) ) ] ?? null;
+            if ( $p !== null && ! in_array( $p, $out, true ) ) {
+                $out[] = $p;
+            }
+        }
+        return $out;
+    }
+
+    /** The grid around the cards; a card that drew nothing leaves no gap, no card leaves no grid. */
+    public static function tiles_markup( array $cards ): string {
+        $cards = array_values( array_filter( $cards, static function ( $c ) { return $c !== ''; } ) );
+        return $cards === [] ? '' : '<div class="naws-sl-tiles">' . implode( "\n", $cards ) . '</div>';
+    }
+
+    /** [naws_sparkline_tiles params="" hours="24"]: one tile per quantity, side by side. */
+    public static function render_tiles( array $atts ): string {
+        $hours = (string) ( $atts['hours'] ?? '' );
+        $cards = [];
+        foreach ( self::tile_params( (string) ( $atts['params'] ?? '' ) ) as $p ) {
+            $cards[] = self::render( [ 'param' => $p, 'hours' => $hours, 'layout' => 'tile' ] );
+        }
+        return self::tiles_markup( $cards );
+    }
+
     /** The widget's three curves over 24 hours; '' where a module is missing or silent. */
     public static function widget_set(): array {
         return [

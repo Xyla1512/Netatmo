@@ -10,14 +10,14 @@ msgstr ""
 "X-Domain: xtx-integration-for-netatmo\n"
 
 #. translators: 1: unit such as "mm", 2: number of days.
-#: includes/class-naws-sparkline.php:729
+#: includes/class-naws-sparkline.php:808
 msgid "%1$s in %2$d day"
 msgid_plural "%1$s in %2$d days"
 msgstr[0] "%1$s in %2$d Tag"
 msgstr[1] "%1$s in %2$d Tagen"
 
 #. translators: 1: unit such as "mm", 2: number of hours.
-#: includes/class-naws-sparkline.php:726
+#: includes/class-naws-sparkline.php:805
 msgid "%1$s in %2$d hour"
 msgid_plural "%1$s in %2$d hours"
 msgstr[0] "%1$s in %2$d Stunde"
@@ -51,7 +51,7 @@ msgstr[1] "%d Entwarnungen"
 
 #. translators: %d: number of days
 #. translators: %d: number of days.
-#: admin/views/dashboard.php:405 includes/class-naws-sparkline.php:455 includes/class-naws-windrose.php:337 templates/records.php:59
+#: admin/views/dashboard.php:405 includes/class-naws-sparkline.php:468 includes/class-naws-windrose.php:337 templates/records.php:59
 #: templates/records.php:140
 msgid "%d day"
 msgid_plural "%d days"
@@ -64,7 +64,7 @@ msgid "%d error(s) in the last hour"
 msgstr "%d Fehler in der letzten Stunde"
 
 #. translators: %d: number of hours.
-#: includes/class-naws-sparkline.php:452
+#: includes/class-naws-sparkline.php:465
 msgid "%d hour"
 msgid_plural "%d hours"
 msgstr[0] "%d Stunde"
@@ -99,7 +99,7 @@ msgstr[0] "%d Warnung"
 msgstr[1] "%d Warnungen"
 
 #. translators: %d: number of forecast days.
-#: admin/views/shortcodes.php:393 includes/class-naws-shortcodes.php:651 templates/forecast.php:14
+#: admin/views/shortcodes.php:408 includes/class-naws-shortcodes.php:673 templates/forecast.php:14
 msgid "%d-Day Forecast"
 msgstr "%d-Tage-Vorhersage"
 
@@ -129,7 +129,7 @@ msgid "%s · computed from min and max"
 msgstr "%s · aus Min und Max berechnet"
 
 #. translators: 1: number of days with data, 2: number of days in the period.
-#: includes/class-naws-labels.php:113 includes/class-naws-shortcodes.php:620
+#: includes/class-naws-labels.php:113 includes/class-naws-shortcodes.php:642
 msgid "(from %1$d of %2$d days)"
 msgstr "(bei %1$d von %2$d Tagen)"
 
@@ -201,7 +201,7 @@ msgstr "5 °C"
 msgid "7d, 30d, 90d or any number of days with a d; year for the running calendar year; all for everything recorded. Ignored when from or to is set."
 msgstr "7d, 30d, 90d oder eine beliebige Zahl Tage mit d; year für das laufende Kalenderjahr; all für alles Aufgezeichnete. Wird ignoriert, sobald from oder to gesetzt ist."
 
-#: admin/views/shortcodes.php:414
+#: admin/views/shortcodes.php:429
 msgid "96 px, centred"
 msgstr "96 px, zentriert"
 
@@ -286,7 +286,7 @@ msgstr "Access Token gültig bis: %s"
 msgid "Activate module"
 msgstr "Modul aktivieren"
 
-#: admin/views/modules.php:31 admin/views/rest-api-docs.php:75 admin/views/shortcodes.php:490
+#: admin/views/modules.php:31 admin/views/rest-api-docs.php:75 admin/views/shortcodes.php:505
 msgid "Active"
 msgstr "Aktiv"
 
@@ -310,7 +310,7 @@ msgstr "Speichere Client ID und Secret, dann klicke auf den Button:"
 msgid "Air Pressure"
 msgstr "Luftdruck"
 
-#: admin/views/shortcodes.php:488
+#: admin/views/shortcodes.php:503
 msgid "Alias"
 msgstr "Alias"
 
@@ -396,8 +396,8 @@ msgstr "Ab dieser Regenrate zeigt das Icon Starkregen statt Regen."
 
 #: admin/views/shortcodes.php:63 admin/views/shortcodes.php:142 admin/views/shortcodes.php:206 admin/views/shortcodes.php:217
 #: admin/views/shortcodes.php:238 admin/views/shortcodes.php:254 admin/views/shortcodes.php:271 admin/views/shortcodes.php:285
-#: admin/views/shortcodes.php:295 admin/views/shortcodes.php:317 admin/views/shortcodes.php:344 admin/views/shortcodes.php:362
-#: admin/views/shortcodes.php:388 admin/views/shortcodes.php:407 admin/views/shortcodes.php:458
+#: admin/views/shortcodes.php:295 admin/views/shortcodes.php:317 admin/views/shortcodes.php:344 admin/views/shortcodes.php:359
+#: admin/views/shortcodes.php:377 admin/views/shortcodes.php:403 admin/views/shortcodes.php:422 admin/views/shortcodes.php:473
 msgid "Attribute"
 msgstr "Attribut"
 
@@ -557,7 +557,7 @@ msgstr "Karten-Hintergrund"
 msgid "Chart Theming"
 msgstr "Chart-Theming"
 
-#: includes/class-naws-shortcodes.php:138
+#: includes/class-naws-shortcodes.php:139
 msgid "Chart could not be rendered."
 msgstr "Chart konnte nicht gerendert werden."
 
@@ -629,7 +629,7 @@ msgstr "Farbskala für [naws_heatmap]. Die Stützpunkte sind Grad Celsius; Werte
 msgid "Colour scheme"
 msgstr "Farbschema"
 
-#: admin/views/shortcodes.php:464
+#: admin/views/shortcodes.php:479
 msgid "Colour scheme: light, dark or transparent. Dark is the card in dark colours; transparent draws no card and takes the colours of whatever it is placed on. Anything else counts as light."
 msgstr "Farbschema: light, dark oder transparent. Dunkel ist die Karte in dunklen Farben; transparent zeichnet keine Karte und übernimmt die Farben des Untergrunds. Alles andere zählt als hell."
 
@@ -657,15 +657,19 @@ msgstr "Kommagetrennte Schlüssel in der gewünschten Reihenfolge: hottest_day, 
 msgid "Comma-separated list of fields to return"
 msgstr "Kommagetrennte Liste der gewünschten Felder"
 
-#: admin/views/shortcodes.php:346 admin/views/shortcodes.php:364
+#: admin/views/shortcodes.php:361 admin/views/shortcodes.php:379
 msgid "Comma-separated parameters to filter"
 msgstr "Kommagetrennte Parameter zum Filtern"
+
+#: admin/views/shortcodes.php:345
+msgid "Comma-separated, in the order of the tiles: Temperature, Humidity, Pressure, WindStrength, GustStrength, Rain, CO2, Noise."
+msgstr "Durch Kommas getrennt, in der Reihenfolge der Kacheln: Temperature, Humidity, Pressure, WindStrength, GustStrength, Rain, CO2, Noise."
 
 #: admin/views/shortcodes.php:300
 msgid "Comma-separated: legend, summary, table. The table is always in the page for screen readers; naming it makes it visible."
 msgstr "Durch Komma getrennt: legend, summary, table. Die Tabelle steht für Screenreader immer in der Seite; wer sie nennt, macht sie sichtbar."
 
-#: admin/views/shortcodes.php:378
+#: admin/views/shortcodes.php:393
 msgid "Compact info bar with calculated values (feels like, dew point) and astronomical data (rise/set, moon phase, supermoon, lunar eclipse)."
 msgstr "Kompakte Infoleiste mit berechneten Werten (Gefühlte Temp., Taupunkt) und astronomischen Daten (Auf-/Untergang, Mondphase, Supermond, Mondfinsternis)."
 
@@ -673,7 +677,7 @@ msgstr "Kompakte Infoleiste mit berechneten Werten (Gefühlte Temp., Taupunkt) u
 msgid "Compact weather widget for narrow columns. Shows the icon and outdoor temperature, rain and wind below that, then the forecast. Placed with the [naws_weather_widget] shortcode."
 msgstr "Kompaktes Wetter-Widget für schmale Spalten. Zeigt Icon und Außentemperatur, darunter Regen und Wind, darunter die Vorhersage. Einzufügen über den Shortcode [naws_weather_widget]."
 
-#: admin/views/shortcodes.php:453
+#: admin/views/shortcodes.php:468
 msgid "Compact weather widget for sidebars"
 msgstr "Kompaktes Wetter-Widget für Seitenleisten"
 
@@ -718,7 +722,7 @@ msgid "Cooling limit (°C)"
 msgstr "Kühlgrenztemperatur (°C)"
 
 #. translators: %s is the HTTP status code the request came back with.
-#: includes/class-naws-shortcodes.php:141
+#: includes/class-naws-shortcodes.php:142
 msgid "Could not load data (HTTP %s)"
 msgstr "Daten konnten nicht geladen werden (HTTP %s)"
 
@@ -750,15 +754,15 @@ msgstr "Cron-Status"
 msgid "Current Readings"
 msgstr "Aktuelle Messwerte"
 
-#: admin/views/shortcodes.php:402
+#: admin/views/shortcodes.php:417
 msgid "Current weather as an animated icon"
 msgstr "Aktuelles Wetter als animiertes Icon"
 
-#: admin/views/shortcodes.php:393
+#: admin/views/shortcodes.php:408
 msgid "Custom title for the forecast header."
 msgstr "Eigener Titel für den Vorhersage-Header."
 
-#: admin/views/shortcodes.php:240 includes/class-naws-shortcodes.php:297
+#: admin/views/shortcodes.php:240 includes/class-naws-shortcodes.php:298
 msgid "Daily Average Temperature"
 msgstr "Tagesdurchschnittstemperatur"
 
@@ -887,8 +891,8 @@ msgstr "Nachkommastellen"
 
 #: admin/views/shortcodes.php:66 admin/views/shortcodes.php:206 admin/views/shortcodes.php:217 admin/views/shortcodes.php:238
 #: admin/views/shortcodes.php:254 admin/views/shortcodes.php:271 admin/views/shortcodes.php:285 admin/views/shortcodes.php:295
-#: admin/views/shortcodes.php:317 admin/views/shortcodes.php:344 admin/views/shortcodes.php:362 admin/views/shortcodes.php:390
-#: admin/views/shortcodes.php:409 admin/views/shortcodes.php:460
+#: admin/views/shortcodes.php:317 admin/views/shortcodes.php:344 admin/views/shortcodes.php:359 admin/views/shortcodes.php:377
+#: admin/views/shortcodes.php:405 admin/views/shortcodes.php:424 admin/views/shortcodes.php:475
 msgid "Default"
 msgstr "Standard"
 
@@ -920,8 +924,8 @@ msgstr "Raureif-Nebel"
 #: admin/views/notifications.php:73 admin/views/shortcodes.php:64 admin/views/shortcodes.php:91 admin/views/shortcodes.php:143
 #: admin/views/shortcodes.php:206 admin/views/shortcodes.php:217 admin/views/shortcodes.php:238 admin/views/shortcodes.php:254
 #: admin/views/shortcodes.php:271 admin/views/shortcodes.php:285 admin/views/shortcodes.php:295 admin/views/shortcodes.php:317
-#: admin/views/shortcodes.php:344 admin/views/shortcodes.php:362 admin/views/shortcodes.php:389 admin/views/shortcodes.php:408
-#: admin/views/shortcodes.php:459
+#: admin/views/shortcodes.php:344 admin/views/shortcodes.php:359 admin/views/shortcodes.php:377 admin/views/shortcodes.php:404
+#: admin/views/shortcodes.php:423 admin/views/shortcodes.php:474
 msgid "Description"
 msgstr "Beschreibung"
 
@@ -961,7 +965,7 @@ msgstr "Verbindung getrennt. Du kannst die App jetzt neu verbinden."
 msgid "Displayed as default title in the live dashboard and shortcodes. Leave empty to use the WordPress site title."
 msgstr "Wird als Standard-Titel im Live-Dashboard und in Shortcodes angezeigt. Leer lassen, um den WordPress-Seitentitel zu verwenden."
 
-#: admin/views/shortcodes.php:384
+#: admin/views/shortcodes.php:399
 msgid "Displays a multi-day weather forecast with temperature, precipitation, wind and weather condition. The number of days and location are configurable in the plugin settings."
 msgstr "Zeigt eine mehrtägige Wettervorhersage mit Temperatur, Niederschlag, Wind und Wetterlage. Anzahl der Tage und Standort sind in den Plugin-Einstellungen konfigurierbar."
 
@@ -985,7 +989,7 @@ msgstr "Nieselregen"
 msgid "During night hours every second fetch is skipped, doubling the interval. The window follows the timezone configured in WordPress."
 msgstr "In den Nachtstunden wird jede zweite Abfrage übersprungen, das Intervall also verdoppelt. Maßgeblich ist die in WordPress eingestellte Zeitzone."
 
-#: admin/views/shortcodes.php:411
+#: admin/views/shortcodes.php:426
 msgid "Edge length in pixels. Values below 64 are raised to 64; below that the states are no longer distinguishable."
 msgstr "Kantenlänge in Pixeln. Kleinere Werte als 64 werden auf 64 angehoben, darunter sind die Zustände nicht mehr unterscheidbar."
 
@@ -1001,7 +1005,7 @@ msgstr "24h-Verlauf aktivieren"
 msgid "Enable REST API"
 msgstr "REST API aktivieren"
 
-#: admin/views/shortcodes.php:349
+#: admin/views/shortcodes.php:364
 msgid "Enable animation (true/false)"
 msgstr "Animation aktivieren (true/false)"
 
@@ -1152,7 +1156,7 @@ msgstr "Schriftfamilie"
 msgid "Forecast Provider"
 msgstr "Vorhersage-Anbieter"
 
-#: admin/views/shortcodes.php:462
+#: admin/views/shortcodes.php:477
 msgid "Forecast length. Only 3 or 5; other values are pulled to the nearer one."
 msgstr "Länge der Vorhersage. Nur 3 oder 5; andere Werte werden auf den nächstliegenden gezogen."
 
@@ -1241,7 +1245,7 @@ msgstr "Grid, Achsen und Tooltip-Farben für alle Charts."
 msgid "Grouping: day, week, month, year"
 msgstr "Gruppierung: day, week, month, year"
 
-#: admin/views/shortcodes.php:367
+#: admin/views/shortcodes.php:382
 msgid "Grouping: hour, day, week, month, year. Any other value lists single readings."
 msgstr "Gruppierung: hour, day, week, month, year. Jeder andere Wert listet Einzelmesswerte."
 
@@ -1350,7 +1354,7 @@ msgstr "Starkes Gewitter/Hagel"
 msgid "Hide"
 msgstr "Verbergen"
 
-#: admin/views/shortcodes.php:222 includes/class-naws-shortcodes.php:272
+#: admin/views/shortcodes.php:222 includes/class-naws-shortcodes.php:273
 msgid "Historical Weather Data"
 msgstr "Historical Weather Data"
 
@@ -1411,7 +1415,7 @@ msgstr "Eistage"
 msgid "Icon Colors"
 msgstr "Icon-Farben"
 
-#: admin/views/shortcodes.php:454
+#: admin/views/shortcodes.php:469
 msgid "Icon and outdoor temperature, rain and wind below that, then the forecast. Width adjustable between 250 and 500 pixels, with the contents scaling to match. A missing add-on module drops its value entirely. Rendered on page load and does not refresh by itself — the time in the footer shows its age."
 msgstr "Icon und Außentemperatur, darunter Regen und Wind, darunter die Vorhersage. Breite zwischen 250 und 500 Pixel einstellbar; der Inhalt skaliert mit. Fehlt ein Zusatzmodul, entfällt der zugehörige Wert ersatzlos. Wird beim Seitenaufbau erzeugt und aktualisiert sich nicht von selbst — die Uhrzeit in der Fußzeile zeigt das Alter."
 
@@ -1536,7 +1540,7 @@ msgstr "Letzter Lauf %1$s: %2$s Messungen gelöscht."
 msgid "Latest sensor reading per module/parameter"
 msgstr "Aktuellster Messwert pro Modul/Parameter"
 
-#: admin/views/shortcodes.php:347
+#: admin/views/shortcodes.php:362
 msgid "Layout: grid or list"
 msgstr "Layout: grid oder list"
 
@@ -1719,7 +1723,7 @@ msgstr "Max-Temperatur (Tag)"
 msgid "Max results (1–5000)"
 msgstr "Max. Ergebnisse (1–5000)"
 
-#: admin/views/shortcodes.php:366
+#: admin/views/shortcodes.php:381
 msgid "Max. number of records"
 msgstr "Max. Anzahl Datensätze"
 
@@ -1772,7 +1776,7 @@ msgstr "Modul"
 msgid "Module ID (MAC)"
 msgstr "Modul-ID (MAC)"
 
-#: admin/views/shortcodes.php:345 admin/views/shortcodes.php:363
+#: admin/views/shortcodes.php:360 admin/views/shortcodes.php:378
 msgid "Module MAC (empty = all modules)"
 msgstr "Modul-MAC (leer = alle Module)"
 
@@ -1792,7 +1796,7 @@ msgstr "Modul4 Feuchte"
 msgid "Module4 Temperature"
 msgstr "Modul4 Temperatur"
 
-#: admin/views/dashboard.php:79 admin/views/export.php:83 admin/views/modules.php:9 admin/views/shortcodes.php:486
+#: admin/views/dashboard.php:79 admin/views/export.php:83 admin/views/modules.php:9 admin/views/shortcodes.php:501
 #: includes/class-naws-admin.php:54
 msgid "Modules"
 msgstr "Module"
@@ -1918,7 +1922,7 @@ msgstr "Kein Ort angegeben. Bitte tragen Sie eine Stadt in den Vorhersage-Einste
 msgid "No data available yet."
 msgstr "Noch keine Daten vorhanden."
 
-#: includes/class-naws-shortcodes.php:139 templates/heatmap.php:70
+#: includes/class-naws-shortcodes.php:140 templates/heatmap.php:70
 msgid "No data for this period."
 msgstr "Keine Daten für diesen Zeitraum."
 
@@ -1970,7 +1974,7 @@ msgstr "Kein Messwert"
 msgid "No record can be computed from these rows."
 msgstr "Aus diesen Zeilen lässt sich kein Rekord berechnen."
 
-#: admin/views/shortcodes.php:446
+#: admin/views/shortcodes.php:461
 msgid "No state determinable right now — neither station readings nor forecast are available. Nothing would be output."
 msgstr "Zurzeit kein Zustand bestimmbar — weder Stationswerte noch Vorhersage liegen vor. Es würde nichts ausgegeben."
 
@@ -2026,7 +2030,7 @@ msgstr "Nov"
 msgid "Number of comparison years"
 msgstr "Anzahl Vergleichsjahre"
 
-#: admin/views/shortcodes.php:392
+#: admin/views/shortcodes.php:407
 msgid "Number of forecast days (1–7). Defaults to value from settings."
 msgstr "Anzahl der Vorhersage-Tage (1–7). Standard aus den Einstellungen."
 
@@ -2070,11 +2074,11 @@ msgstr "Open-Meteo (weltweit, Open-Source)"
 msgid "Operation"
 msgstr "Betrieb"
 
-#: admin/views/shortcodes.php:368
+#: admin/views/shortcodes.php:383
 msgid "Optional table title"
 msgstr "Optionaler Tabellen-Titel"
 
-#: admin/views/shortcodes.php:348
+#: admin/views/shortcodes.php:363
 msgid "Optional title"
 msgstr "Optionaler Titel"
 
@@ -2256,7 +2260,7 @@ msgid "Rain has fallen in the last hour, at or above the threshold. No all-clear
 msgstr "In der letzten Stunde ist Regen gefallen, auf oder über der Schwelle. Keine Entwarnung: Schauer innerhalb einer Stunde zählen als ein Regen."
 
 #. translators: %d: number of days.
-#: includes/class-naws-sparkline.php:766
+#: includes/class-naws-sparkline.php:841
 msgid "Rain in %d day"
 msgid_plural "Rain in %d days"
 msgstr[0] "Regen in %d Tag"
@@ -2536,15 +2540,15 @@ msgstr "Icon über dem Live-Dashboard anzeigen. Der Shortcode [naws_weather_icon
 msgid "Show the last 24 hours as small curves"
 msgstr "Die letzten 24 Stunden als kleine Kurven zeigen"
 
-#: admin/views/shortcodes.php:383
+#: admin/views/shortcodes.php:398
 msgid "Shows a weather forecast based on station location."
 msgstr "Zeigt eine Wettervorhersage basierend auf dem Stationsstandort."
 
-#: admin/views/shortcodes.php:341
+#: admin/views/shortcodes.php:356
 msgid "Shows animated metric cards with the latest sensor values from all or specific modules."
 msgstr "Zeigt animierte Messkarten mit den aktuellen Sensorwerten aller oder einzelner Module."
 
-#: admin/views/shortcodes.php:403
+#: admin/views/shortcodes.php:418
 msgid "Shows the current weather state as an animated icon. Deliberately without a visible caption — the state is carried by the aria-label for screen readers. If the icon sits on the same page as the live dashboard it refreshes along with that page's polling cycle. When no state can be determined, nothing is output."
 msgstr "Zeigt den aktuellen Wetterzustand als animiertes Icon. Bewusst ohne sichtbare Beschriftung — der Zustand steckt im aria-label für Screenreader. Steht das Icon auf derselben Seite wie das Live-Dashboard, aktualisiert es sich über dessen Abfragezyklus mit. Lässt sich kein Zustand bestimmen, wird nichts ausgegeben."
 
@@ -2570,7 +2574,7 @@ msgstr "Größe in Pixeln, Breite 20–600 und Höhe 10–200. Ohne Angabe ist d
 msgid "Sleet or hail"
 msgstr "Graupel oder Hagel"
 
-#: admin/views/shortcodes.php:465
+#: admin/views/shortcodes.php:480
 msgid "Small curves of the last 24 hours for temperature, rain and wind: 1 shows them, 0 hides them."
 msgstr "Kleine Kurven der letzten 24 Stunden für Temperatur, Regen und Wind: 1 zeigt sie, 0 blendet sie aus."
 
@@ -2594,7 +2598,7 @@ msgstr "Schneeschauer"
 msgid "Solid filled icons for a bolder, modern look."
 msgstr "Ausgefüllte Icons für einen kräftigeren, modernen Look."
 
-#: admin/views/shortcodes.php:435 templates/forecast.php:118
+#: admin/views/shortcodes.php:450 templates/forecast.php:118
 msgid "Source"
 msgstr "Quelle"
 
@@ -2744,7 +2748,7 @@ msgstr "Synchronisation abgeschlossen!"
 msgid "Syncing…"
 msgstr "Synchronisiere…"
 
-#: admin/views/shortcodes.php:359
+#: admin/views/shortcodes.php:374
 msgid "Tabular view of historical readings with configurable time period and grouping."
 msgstr "Tabellarische Ansicht der historischen Messwerte mit konfigurierbarem Zeitraum und Gruppierung."
 
@@ -2908,6 +2912,10 @@ msgstr "Der Regen der letzten 24 Stunden liegt auf oder über der Schwelle. Kein
 msgid "The refresh token has been revoked or expired. Cron sync is paused until reconnected. Please click \"Connect to Netatmo\" below."
 msgstr "Der Refresh Token wurde von Netatmo widerrufen oder ist abgelaufen. Der Cron-Sync ist bis zur erneuten Verbindung gestoppt. Bitte klicke unten auf \"Mit Netatmo verbinden\"."
 
+#: admin/views/shortcodes.php:341
+msgid "The sparkline tiles side by side: one card per quantity with its name, the current value, low and high of the last hours and a large curve. Without attributes, the six tiles temperature, humidity, pressure, wind, rain and CO2. The grid wraps by itself, one below the other on a phone. A quantity whose module is missing or silent is left out."
+msgstr "Die Sparkline-Kacheln nebeneinander: je Messgröße eine Karte mit Namen, aktuellem Wert, Tief und Hoch der letzten Stunden und einer großen Kurve. Ohne Attribute die sechs Kacheln Temperatur, Luftfeuchte, Luftdruck, Wind, Regen und CO2. Das Raster bricht selbst um, auf dem Handy stehen die Kacheln untereinander. Eine Größe, deren Modul fehlt oder schweigt, fällt weg."
+
 #: admin/views/shortcodes.php:282
 msgid "The sun on its arc over the station: sunrise, solar noon and sunset, the part of the day already travelled, and the sun where it stands. Below it the day length, the change since yesterday, and the year’s longest and shortest day. Computed from the station’s coordinates. No script: the sun stands where it stood when the page was built, so a page cache shows it until the cache is refreshed."
 msgstr "Die Sonne auf ihrem Bogen über der Station: Aufgang, Sonnenmittag und Untergang, der bereits zurückgelegte Teil des Tages und die Sonne, wo sie gerade steht. Darunter die Tageslänge, die Änderung seit gestern und der längste und kürzeste Tag des Jahres. Berechnet aus den Koordinaten der Station. Kein Skript: Die Sonne steht dort, wo sie beim Aufbau der Seite stand — ein Seiten-Cache zeigt sie also so lange, bis der Cache erneuert wird."
@@ -2940,7 +2948,7 @@ msgstr "Schriften des Themes"
 msgid "Thermal sensation"
 msgstr "Bioklimatisches Empfinden"
 
-#: admin/views/shortcodes.php:482
+#: admin/views/shortcodes.php:497
 msgid "These module IDs can be used directly in shortcodes as module_id= or module=\"MAC-address\"."
 msgstr "Diese Modul-IDs können direkt in Shortcodes als module_id= oder module=\"MAC-Adresse\" verwendet werden."
 
@@ -2989,7 +2997,7 @@ msgstr "Gewitter mit Hagel"
 msgid "Thursday"
 msgstr "Donnerstag"
 
-#: admin/views/shortcodes.php:365
+#: admin/views/shortcodes.php:380
 msgid "Time period, e.g. 24h, 7d, 30d"
 msgstr "Zeitraum, z.B. 24h, 7d, 30d"
 
@@ -3051,7 +3059,7 @@ msgstr "Di"
 msgid "Tuesday"
 msgstr "Dienstag"
 
-#: admin/views/modules.php:33 admin/views/shortcodes.php:487
+#: admin/views/modules.php:33 admin/views/shortcodes.php:502
 msgid "Type"
 msgstr "Typ"
 
@@ -3211,7 +3219,7 @@ msgstr "WLAN"
 msgid "Width"
 msgstr "Breite"
 
-#: admin/views/shortcodes.php:463
+#: admin/views/shortcodes.php:478
 msgid "Width in pixels, 250 to 500. Values outside that range are pulled to the nearer bound."
 msgstr "Breite in Pixeln, 250 bis 500. Werte außerhalb werden auf die nächste Grenze gezogen."
 
@@ -3270,7 +3278,7 @@ msgstr "Wind, 10-Minuten-Mittel"
 msgid "Window in days from the daily summary, 2–366. For the daily columns; 30 if left out. Not allowed with a raw reading."
 msgstr "Zeitfenster in Tagen aus der Tagestabelle, 2–366. Für die Tagesspalten; ohne Angabe 30. Mit einem Rohwert nicht erlaubt."
 
-#: admin/views/shortcodes.php:319
+#: admin/views/shortcodes.php:319 admin/views/shortcodes.php:346
 msgid "Window of raw readings in hours, 1–168."
 msgstr "Zeitfenster der Rohwerte in Stunden, 1–168."
 
@@ -3423,11 +3431,11 @@ msgstr "fehlgeschlagen"
 msgid "falling"
 msgstr "fallend"
 
-#: admin/views/shortcodes.php:471
+#: admin/views/shortcodes.php:486
 msgid "for a dark sidebar"
 msgstr "für eine dunkle Seitenleiste"
 
-#: admin/views/shortcodes.php:441
+#: admin/views/shortcodes.php:456
 msgid "forecast stale, last known value"
 msgstr "Vorhersage veraltet, letzter bekannter Wert"
 
@@ -3451,7 +3459,7 @@ msgstr "inline (die Kurve im Fließtext), tile (eine Karte: Name, aktueller Wert
 msgid "instant values"
 msgstr "Momentanwerte"
 
-#: admin/views/shortcodes.php:415
+#: admin/views/shortcodes.php:430
 msgid "larger, e.g. as a header graphic"
 msgstr "größer, z. B. als Kopfgrafik"
 
@@ -3548,7 +3556,7 @@ msgstr "Regel aus"
 msgid "sent"
 msgstr "gesendet"
 
-#: admin/views/shortcodes.php:469
+#: admin/views/shortcodes.php:484
 msgid "shorter, for very narrow columns"
 msgstr "kürzer, für sehr schmale Spalten"
 
@@ -3588,6 +3596,10 @@ msgstr "die letzten 32 Tage in einem Block: Tagesmittel mit Band, Regen je Tag, 
 msgid "the records of 2025"
 msgstr "die Rekorde von 2025"
 
+#: admin/views/shortcodes.php:349
+msgid "the six tiles of the last 24 hours"
+msgstr "die sechs Kacheln der letzten 24 Stunden"
+
 #: admin/views/shortcodes.php:306
 msgid "this year, with a Wind / Gusts switch"
 msgstr "dieses Jahr, mit Schalter Wind / Böen"
@@ -3595,6 +3607,10 @@ msgstr "dieses Jahr, mit Schalter Wind / Böen"
 #: admin/views/shortcodes.php:262
 msgid "three records as a table"
 msgstr "drei Rekorde als Tabelle"
+
+#: admin/views/shortcodes.php:350
+msgid "three tiles over two days"
+msgstr "drei Kacheln über zwei Tage"
 
 #. translators: %s: the threshold with its unit
 #: includes/class-naws-labels.php:357
@@ -3609,7 +3625,7 @@ msgstr "heute"
 msgid "true = convert to user units (°F, inHg etc.), false = raw metric values"
 msgstr "true = in Benutzer-Einheiten umrechnen (°F, inHg etc.), false = metrische Rohwerte"
 
-#: admin/views/shortcodes.php:468
+#: admin/views/shortcodes.php:483
 msgid "uses the backend setting"
 msgstr "nutzt die Einstellung aus dem Backend"
 
@@ -3621,7 +3637,7 @@ msgstr "sehr kalt"
 msgid "warm"
 msgstr "warm"
 
-#: admin/views/shortcodes.php:470
+#: admin/views/shortcodes.php:485
 msgid "wider, with a larger icon and larger figures"
 msgstr "breiter, mit größerem Icon und größeren Zahlen"
 
@@ -3629,7 +3645,7 @@ msgstr "breiter, mit größerem Icon und größeren Zahlen"
 msgid "wind for the ten-minute mean, gust for the gusts, both for a Wind / Gusts switch."
 msgstr "wind für das Zehn-Minuten-Mittel, gust für die Böen, both für einen Schalter Wind / Böen."
 
-#: admin/views/shortcodes.php:472
+#: admin/views/shortcodes.php:487
 msgid "with small curves of the last 24 hours"
 msgstr "mit kleinen Kurven der letzten 24 Stunden"
 
@@ -3637,11 +3653,11 @@ msgstr "mit kleinen Kurven der letzten 24 Stunden"
 msgid "yes or no: the buttons for 7, 30 and 90 days, this year and everything recorded. Every period is rendered on the server; the script only swaps."
 msgstr "yes oder no: die Knöpfe für 7, 30 und 90 Tage, dieses Jahr und alles Aufgezeichnete. Jeder Zeitraum wird auf dem Server gerendert; das Skript schaltet nur um."
 
-#: admin/views/shortcodes.php:397
+#: admin/views/shortcodes.php:412
 msgid "→ 3 days with custom title"
 msgstr "→ 3 Tage mit eigenem Titel"
 
-#: admin/views/shortcodes.php:396
+#: admin/views/shortcodes.php:411
 msgid "→ Uses days and location from settings"
 msgstr "→ Nutzt Tage und Standort aus den Einstellungen"
 
@@ -3698,7 +3714,7 @@ msgstr "✓ Kopiert"
 msgid "❌ Error."
 msgstr "❌ Fehler."
 
-#: admin/views/shortcodes.php:480
+#: admin/views/shortcodes.php:495
 msgid "📡 Available Modules (current installation)"
 msgstr "📡 Verfügbare Module (aktuelle Installation)"
 
@@ -4044,9 +4060,9 @@ msgstr "Schreibweise"
 
 #: admin/views/shortcodes.php:123 admin/views/shortcodes.php:204 admin/views/shortcodes.php:215 admin/views/shortcodes.php:236
 #: admin/views/shortcodes.php:252 admin/views/shortcodes.php:269 admin/views/shortcodes.php:283 admin/views/shortcodes.php:293
-#: admin/views/shortcodes.php:315 admin/views/shortcodes.php:342 admin/views/shortcodes.php:360 admin/views/shortcodes.php:379
-#: admin/views/shortcodes.php:385 admin/views/shortcodes.php:404 admin/views/shortcodes.php:455 admin/views/shortcodes.php:507
-#: includes/class-naws-admin.php:300
+#: admin/views/shortcodes.php:315 admin/views/shortcodes.php:342 admin/views/shortcodes.php:357 admin/views/shortcodes.php:375
+#: admin/views/shortcodes.php:394 admin/views/shortcodes.php:400 admin/views/shortcodes.php:419 admin/views/shortcodes.php:470
+#: admin/views/shortcodes.php:522 includes/class-naws-admin.php:300
 msgctxt "sc_copy"
 msgid "Copy"
 msgstr "Copy"

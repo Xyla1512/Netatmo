@@ -61,7 +61,8 @@ function logged_key( $atts ): string {
 }
 
 echo "\nEntities in Shortcode-Attributen\n" . str_repeat( '-', 74 ) . "\n";
-check( 'alle 16 Shortcodes sind registriert', count( $GLOBALS['naws_test_shortcodes'] ), 16 );
+check( 'alle 17 Shortcodes sind registriert', count( $GLOBALS['naws_test_shortcodes'] ), 17 );
+check( 'Kachel-Raster ist registriert',       isset( $GLOBALS['naws_test_shortcodes']['naws_sparkline_tiles'] ), true );
 check( 'sauberes value="daylength" kommt als daylength an',         logged_key( [ 'value' => 'daylength' ] ),              'daylength' );
 check( 'value=&quot;dewpoint&quot; (Elementor) kommt als dewpoint an', logged_key( [ 'value' => '&quot;dewpoint&quot;' ] ), 'dewpoint' );
 check( 'value=&#039;moon_phase&#039; kommt als moon_phase an',       logged_key( [ 'value' => '&#039;moon_phase&#039;' ] ), 'moon_phase' );

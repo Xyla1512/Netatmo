@@ -18,6 +18,7 @@ class NAWS_Shortcodes {
         'naws_sunpath'        => 'sc_sunpath',
         'naws_windrose'       => 'sc_windrose',
         'naws_sparkline'      => 'sc_sparkline',
+        'naws_sparkline_tiles' => 'sc_sparkline_tiles',
         'naws_live'           => 'sc_live',
         'naws_infobar'        => 'sc_infobar',
         'naws_value'          => 'sc_value',
@@ -37,7 +38,7 @@ class NAWS_Shortcodes {
     }
 
     private function __construct() {
-        // One wrapper for all sixteen: decode the attributes before a handler
+        // One wrapper for all seventeen: decode the attributes before a handler
         // sees them. Page builders write quotes as &quot;, WordPress passes that
         // through as it is, and sanitize_key() then turns "dewpoint" into
         // quotdewpointquot — the shortcode shows only its fallback.
@@ -425,6 +426,27 @@ class NAWS_Shortcodes {
         }
 
         // Styles and the hover script only for a sparkline that is drawn.
+        $this->enqueue_frontend_styles();
+        wp_enqueue_script( 'naws-sparkline-boot' );
+
+        return $html;
+    }
+
+    // ----------------------------------------------------------------
+    // [naws_sparkline_tiles params="Temperature,Humidity,Pressure,WindStrength,Rain,CO2" hours="24"]
+    // The tiles from the demo side by side, since 2.1.0
+    // ----------------------------------------------------------------
+    public function sc_sparkline_tiles( $atts ) {
+        $atts = shortcode_atts( [
+            'params' => '',
+            'hours'  => '',
+        ], $atts, 'naws_sparkline_tiles' );
+
+        $html = NAWS_Sparkline::render_tiles( $atts );
+        if ( $html === '' ) {
+            return '';
+        }
+
         $this->enqueue_frontend_styles();
         wp_enqueue_script( 'naws-sparkline-boot' );
 

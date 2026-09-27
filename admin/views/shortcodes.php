@@ -337,6 +337,21 @@ $value_params = [
     </div>
 
     <div class="naws-sc-card">
+        <h3><code>[naws_sparkline_tiles]</code></h3>
+        <p><?php esc_html_e( 'The sparkline tiles side by side: one card per quantity with its name, the current value, low and high of the last hours and a large curve. Without attributes, the six tiles temperature, humidity, pressure, wind, rain and CO2. The grid wraps by itself, one below the other on a phone. A quantity whose module is missing or silent is left out.', 'xtx-integration-for-netatmo' ); ?></p>
+        <div class="naws-copy-wrap"><pre>[naws_sparkline_tiles]</pre><button class="naws-copy-btn" data-copy='[naws_sparkline_tiles]'><?php echo esc_html( _x( 'Copy', 'sc_copy', 'xtx-integration-for-netatmo' ) ); ?></button></div>
+        <table class="naws-attr-table" style="margin-top:10px">
+            <tr><th><?php esc_html_e( 'Attribute', 'xtx-integration-for-netatmo' ); ?></th><th><?php esc_html_e( 'Description', 'xtx-integration-for-netatmo' ); ?></th><th><?php esc_html_e( 'Default', 'xtx-integration-for-netatmo' ); ?></th></tr>
+            <tr><td><code>params</code></td><td><?php esc_html_e( 'Comma-separated, in the order of the tiles: Temperature, Humidity, Pressure, WindStrength, GustStrength, Rain, CO2, Noise.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">Temperature,Humidity,Pressure,WindStrength,Rain,CO2</span></td></tr>
+            <tr><td><code>hours</code></td><td><?php esc_html_e( 'Window of raw readings in hours, 1–168.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">24</span></td></tr>
+        </table>
+        <div class="naws-inline-examples">
+            <div class="naws-inline-ex"><code>[naws_sparkline_tiles]</code> &rarr; <?php esc_html_e( 'the six tiles of the last 24 hours', 'xtx-integration-for-netatmo' ); ?></div>
+            <div class="naws-inline-ex"><code>[naws_sparkline_tiles params="Temperature,Rain,WindStrength" hours="48"]</code> &rarr; <?php esc_html_e( 'three tiles over two days', 'xtx-integration-for-netatmo' ); ?></div>
+        </div>
+    </div>
+
+    <div class="naws-sc-card">
         <h3><code>[naws_current]</code></h3>
         <p><?php esc_html_e( 'Shows animated metric cards with the latest sensor values from all or specific modules.', 'xtx-integration-for-netatmo' ); ?></p>
         <div class="naws-copy-wrap"><pre>[naws_current]</pre><button class="naws-copy-btn" data-copy='[naws_current]'><?php echo esc_html( _x( 'Copy', 'sc_copy', 'xtx-integration-for-netatmo' ) ); ?></button></div>

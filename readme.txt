@@ -26,7 +26,7 @@ Connects to the Netatmo API, stores all sensor data locally and displays live da
 * **Encrypted Storage** – All credentials (OAuth tokens, client secret, API keys) are AES-256-GCM encrypted at rest
 * **Configurable Units** – C/F, mm/inch, mbar/inHg/mmHg, km/h/m/s/mph/kn
 * **Multilingual** – Full German, English and Norwegian interface
-* **16 Shortcodes** – Dashboard, current readings, infobar, single value, computed value, sparkline, history charts, heatmap, records, this day in earlier years, sun path, wind rose, forecast, table, widget, weather icon
+* **17 Shortcodes** – Dashboard, current readings, infobar, single value, computed value, sparkline, sparkline tiles, history charts, heatmap, records, this day in earlier years, sun path, wind rose, forecast, table, widget, weather icon
 * **Export / Import** – Full backup and restore of weather data, modules and settings
 * **E-Mail Notifications** – battery, radio and Wi-Fi, station offline, failed syncs, frost, heat, gusts, rain, rain starting, CO₂; per-rule thresholds, one mail per state change and an all-clear when the state ends, and a master switch
 * **Mobile-First Responsive** – All views optimized for smartphones, tablets and desktops
@@ -55,6 +55,7 @@ Connects to the Netatmo API, stores all sensor data locally and displays live da
 * `[naws_sunpath]` – The sun on its arc over the station, with sunrise, solar noon, sunset and the day length (`title`)
 * `[naws_windrose]` – Where the wind comes from and how hard, as a rose of 16 or 8 directions stacked by Beaufort class, with a period switcher (`period`, `from`, `to`, `measure`, `sectors`, `show`, `switcher`, `size`, `title`)
 * `[naws_sparkline]` – A curve the size of a word: the raw readings of the last hours or a column of the daily summary, rain as bars, the band between daily low and high, time and value on hover; as a card or a month block too (`param`, `hours`, `days`, `module`, `width`, `height`, `show`, `type`, `band`, `layout`, `title`)
+* `[naws_sparkline_tiles]` – The sparkline cards side by side in a grid that wraps by itself: temperature, humidity, pressure, wind, rain and CO2 by default (`params`, `hours`)
 * `[naws_forecast]` – Multi-day weather forecast
 * `[naws_table]` – Readings as a table over a period, grouped by hour, day, week, month or year (`module_id`, `parameters`, `period`, `limit`, `group_by`, `title`)
 * `[naws_weather_widget]` – Compact forecast widget for a sidebar (`days` 3 or 5, `width` 250–500, `scheme` light, dark or transparent, `sparklines` 0 or 1)

@@ -193,7 +193,18 @@ check( 'Luecke am Anfang: Band beginnt bei der Zeitspanne, nicht beim ersten Mes
 check( 'Luecke am Anfang: Band beginnt nicht am Rand wie ohne Zeitspanne',
     str_contains( $month_luecke, '<path class="naws-sl-band" d="M2.00' ), false );
 
+echo "\nKachel-Raster\n" . str_repeat( '-', 74 ) . "\n";
+check( 'Vorgabe: die sechs Kacheln der Demo',  NAWS_Sparkline::tile_params( '' ), [ 'Temperature', 'Humidity', 'Pressure', 'WindStrength', 'Rain', 'CO2' ] );
+check( 'eigene Liste, Leerzeichen egal',       NAWS_Sparkline::tile_params( ' Rain , Temperature' ), [ 'Rain', 'Temperature' ] );
+check( 'Gross/klein egal, doppelt einmal',     NAWS_Sparkline::tile_params( 'pressure,Pressure,co2' ), [ 'Pressure', 'CO2' ] );
+check( 'Unbekanntes und Tagesspalten fallen weg', NAWS_Sparkline::tile_params( 'Unsinn,temp_avg,Noise' ), [ 'Noise' ] );
+check( 'nur Unbekanntes: leer',                NAWS_Sparkline::tile_params( 'Unsinn' ), [] );
+check( 'Raster um die Karten',                 NAWS_Sparkline::tiles_markup( [ '<div>A</div>', '', '<div>B</div>' ] ), '<div class="naws-sl-tiles"><div>A</div>' . "\n" . '<div>B</div></div>' );
+check( 'keine Karte: kein Raster',             NAWS_Sparkline::tiles_markup( [ '', '' ] ), '' );
+check( 'leere Station: Raster leer',           NAWS_Sparkline::render_tiles( [] ), '' );
+
 $css = (string) file_get_contents( dirname( __DIR__ ) . '/assets/css/frontend.css' );
+check( 'Raster bricht selbst um',              str_contains( $css, '.naws-sl-tiles { display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); gap:12px; }' ), true );
 // Review Focus 1: Karte und Kurve füllen jede Spalte.
 check( 'Karte füllt die Spalte',              str_contains( $css, '.naws-sl-card { display:block; box-sizing:border-box; width:100%;' ), true );
 check( 'Kurve in der Karte über die volle Breite', str_contains( $css, '.naws-sl-tile-plot .naws-sl svg { width:100%; height:44px; }' ), true );
