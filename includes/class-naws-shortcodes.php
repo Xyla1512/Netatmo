@@ -761,11 +761,12 @@ class NAWS_Shortcodes {
         $naws_wgt_width  = $atts['width'];
         $naws_wgt_scheme = NAWS_Widget_Data::normalise_scheme( $atts['scheme'] );
         // Sparklines (since 2.1.0, off unless switched on): 24 hours of
-        // temperature, rain and wind. A missing module drops its curve.
+        // temperature in the head, and tiles for humidity, pressure, wind,
+        // rain and CO2. A missing module drops its curve or its tile.
         $naws_wgt_spark = NAWS_Widget_Data::sparklines_on( $atts['sparklines'] )
             ? NAWS_Sparkline::widget_set()
-            : [ 'temp' => '', 'rain' => '', 'wind' => '' ];
-        if ( implode( '', $naws_wgt_spark ) !== '' ) {
+            : [ 'temp' => '', 'chips' => [] ];
+        if ( $naws_wgt_spark['temp'] !== '' || $naws_wgt_spark['chips'] ) {
             wp_enqueue_script( 'naws-sparkline-boot' );
         }
         $naws_wgt_place = (string) ( $forecast['location_name'] ?? '' );

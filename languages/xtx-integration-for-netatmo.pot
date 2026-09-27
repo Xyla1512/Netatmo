@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: XTX Integration for Netatmo\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/xtx-integration-for-netatmo\n"
-"POT-Creation-Date: 2026-09-27 15:38+0000\n"
+"POT-Creation-Date: 2026-09-27 15:52+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,14 +12,14 @@ msgstr ""
 "X-Domain: xtx-integration-for-netatmo\n"
 
 #. translators: 1: unit such as "mm", 2: number of days.
-#: includes/class-naws-sparkline.php:808
+#: includes/class-naws-sparkline.php:846
 msgid "%1$s in %2$d day"
 msgid_plural "%1$s in %2$d days"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: 1: unit such as "mm", 2: number of hours.
-#: includes/class-naws-sparkline.php:805
+#: includes/class-naws-sparkline.php:843
 msgid "%1$s in %2$d hour"
 msgid_plural "%1$s in %2$d hours"
 msgstr[0] ""
@@ -2262,7 +2262,7 @@ msgid "Rain has fallen in the last hour, at or above the threshold. No all-clear
 msgstr ""
 
 #. translators: %d: number of days.
-#: includes/class-naws-sparkline.php:841
+#: includes/class-naws-sparkline.php:879
 msgid "Rain in %d day"
 msgid_plural "Rain in %d days"
 msgstr[0] ""
@@ -2576,10 +2576,6 @@ msgstr ""
 msgid "Sleet or hail"
 msgstr ""
 
-#: admin/views/shortcodes.php:480
-msgid "Small curves of the last 24 hours for temperature, rain and wind: 1 shows them, 0 hides them."
-msgstr ""
-
 #: includes/class-naws-forecast.php:860 includes/class-naws-labels.php:282
 msgid "Snow"
 msgstr ""
@@ -2788,10 +2784,6 @@ msgstr ""
 msgid "Temperature Min / Max"
 msgstr ""
 
-#: includes/class-naws-labels.php:59
-msgid "Temperature under the figure in the head, rain as bars and wind as a line in their tiles. Colours on the Sparkline tab above. sparklines=\"1\" or sparklines=\"0\" on the shortcode overrides this for one placement."
-msgstr ""
-
 #: includes/class-naws-labels.php:363
 msgid "Test mail"
 msgstr ""
@@ -2894,6 +2886,10 @@ msgstr ""
 msgid "The key belongs in the header so it never shows up in server logs or browser history."
 msgstr ""
 
+#: admin/views/shortcodes.php:480
+msgid "The last 24 hours as small curves: the temperature in the head, and tiles for humidity, pressure, wind, rain and CO2 with low and high. 1 shows them, 0 hides them."
+msgstr ""
+
 #: includes/class-naws-labels.php:323
 msgid "The outdoor temperature is at or above the threshold."
 msgstr ""
@@ -2920,6 +2916,10 @@ msgstr ""
 
 #: admin/views/shortcodes.php:282
 msgid "The sun on its arc over the station: sunrise, solar noon and sunset, the part of the day already travelled, and the sun where it stands. Below it the day length, the change since yesterday, and the year’s longest and shortest day. Computed from the station’s coordinates. No script: the sun stands where it stood when the page was built, so a page cache shows it until the cache is refreshed."
+msgstr ""
+
+#: includes/class-naws-labels.php:59
+msgid "The temperature under the figure in the head; below it humidity, pressure, wind, rain and CO2 as tiles, two to a row, each with low and high and its curve. Colours on the Sparkline tab above. sparklines=\"1\" or sparklines=\"0\" on the shortcode overrides this for one placement."
 msgstr ""
 
 #: admin/views/notifications.php:34

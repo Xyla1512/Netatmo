@@ -730,12 +730,50 @@ final class NAWS_Sparkline {
         return self::tiles_markup( $cards );
     }
 
-    /** The widget's three curves over 24 hours; '' where a module is missing or silent. */
-    public static function widget_set(): array {
+    /** The widget's tiles under the head, key => raw parameter; the temperature stays in the head. */
+    const WIDGET_CHIPS = [
+        'humidity' => 'Humidity',
+        'pressure' => 'Pressure',
+        'wind'     => 'WindStrength',
+        'rain'     => 'Rain',
+        'co2'      => 'CO2',
+    ];
+
+    /**
+     * One widget tile from what prepare() returned: the words of a tile
+     * card and the curve. Rain keeps its bare unit, because "mm in 24
+     * hours" does not fit half a sidebar.
+     */
+    public static function widget_chip( string $key, array $a, array $d ): array {
+        $facts = self::tile_facts( $a, $d );
         return [
-            'temp' => self::render( [ 'param' => 'Temperature' ] ),
-            'rain' => self::render( [ 'param' => 'Rain' ] ),
-            'wind' => self::render( [ 'param' => 'WindStrength' ] ),
+            'key'   => $key,
+            'name'  => $facts['name'],
+            'value' => $facts['value'],
+            'unit'  => $d['kind'] === 'bars' ? $d['unit'] : $facts['unit'],
+            'sub'   => $facts['sub'],
+            'curve' => self::markup( $a, $d ),
+        ];
+    }
+
+    /**
+     * The widget's curves over 24 hours: the temperature for the head,
+     * and a tile for each of WIDGET_CHIPS whose module has something to
+     * show. '' and [] where there is nothing.
+     */
+    public static function widget_set(): array {
+        $now   = time();
+        $chips = [];
+        foreach ( self::WIDGET_CHIPS as $key => $param ) {
+            $a = self::normalise_atts( [ 'param' => $param, 'show' => 'minmax' ] );
+            $d = self::prepare( $a, self::fetch( $a, $now ) );
+            if ( $d !== null ) {
+                $chips[] = self::widget_chip( $key, $a, $d );
+            }
+        }
+        return [
+            'temp'  => self::render( [ 'param' => 'Temperature' ] ),
+            'chips' => $chips,
         ];
     }
 

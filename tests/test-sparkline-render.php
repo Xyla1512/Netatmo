@@ -203,6 +203,23 @@ check( 'Raster um die Karten',                 NAWS_Sparkline::tiles_markup( [ '
 check( 'keine Karte: kein Raster',             NAWS_Sparkline::tiles_markup( [ '', '' ] ), '' );
 check( 'leere Station: Raster leer',           NAWS_Sparkline::render_tiles( [] ), '' );
 
+echo "\nWidget-Kacheln\n" . str_repeat( '-', 74 ) . "\n";
+check( 'fuenf Groessen unter dem Kopf, Reihenfolge wie besprochen', NAWS_Sparkline::WIDGET_CHIPS, [ 'humidity' => 'Humidity', 'pressure' => 'Pressure', 'wind' => 'WindStrength', 'rain' => 'Rain', 'co2' => 'CO2' ] );
+$wa = NAWS_Sparkline::normalise_atts( [ 'param' => 'Humidity', 'show' => 'minmax' ] );
+$wd = [ 'kind' => 'line', 'pts' => [ [ 0, 40.0 ], [ 10, 60.0 ] ], 'band' => false, 'tips' => [ 'a', 'b' ], 'aria' => 'x', 'value' => '60 %', 'name' => 'Humidity', 'unit' => '%', 'period' => '24 hours', 'last' => 60.0, 'last_ts' => 10, 'lo' => 40.0, 'hi' => 60.0 ];
+$chip = NAWS_Sparkline::widget_chip( 'humidity', $wa, $wd );
+check( 'Kachel: Schluessel',                   $chip['key'], 'humidity' );
+check( 'Kachel: Name',                         $chip['name'], 'Humidity' );
+check( 'Kachel: Wert und Einheit',             [ $chip['value'], $chip['unit'] ], [ '60', '%' ] );
+check( 'Kachel: Tief/Hoch',                    $chip['sub'], 'Low 40 · High 60 %' );
+check( 'Kachel: Kurve mit Tief/Hoch-Punkten',  substr_count( $chip['curve'], 'class="naws-sl-mm"' ), 2 );
+$ra = NAWS_Sparkline::normalise_atts( [ 'param' => 'Rain', 'show' => 'minmax' ] );
+$rd = [ 'kind' => 'bars', 'sums' => [ 0.0, 0.6 ], 'tips' => [ 'x', '14:00–14:30 · 0.6 mm' ], 'aria' => 'x', 'value' => '0.6 mm', 'name' => 'Rain', 'unit' => 'mm', 'period' => '24 hours', 'total' => 0.6 ];
+$rchip = NAWS_Sparkline::widget_chip( 'rain', $ra, $rd );
+check( 'Regen: Summe, Einheit kurz',           [ $rchip['value'], $rchip['unit'] ], [ '0.6', 'mm' ] );
+check( 'Regen: staerkste halbe Stunde',        $rchip['sub'], 'Most: 14:00–14:30 · 0.6 mm' );
+check( 'leere Station: Kopf und Kacheln leer', NAWS_Sparkline::widget_set(), [ 'temp' => '', 'chips' => [] ] );
+
 $css = (string) file_get_contents( dirname( __DIR__ ) . '/assets/css/frontend.css' );
 check( 'Raster bricht selbst um',              str_contains( $css, '.naws-sl-tiles { display:grid; grid-template-columns:repeat(auto-fit, minmax(max(190px, calc((100% - 24px) / 3)), 1fr)); gap:12px; }' ), true );
 // Review Focus 1: Karte und Kurve füllen jede Spalte.

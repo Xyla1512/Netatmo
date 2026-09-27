@@ -2040,6 +2040,10 @@
 .naws-wgt-spark .naws-sl svg { width:100%; height:20px; }
 .naws-wgt-spark--head .naws-sl svg { height:16px; }
 .naws-wgt-head-txt:has(> .naws-wgt-spark) { flex:1 1 auto; min-width:0; }
+.naws-wgt-chips--spark { display:grid; grid-template-columns:1fr 1fr; }
+.naws-wgt-chips--spark .naws-wgt-chip { min-width:0; }
+.naws-wgt-range { font-size:10px; font-variant-numeric:tabular-nums; color:var(--naws-wgt-muted); }
+.naws-wgt-range { font-size:clamp(10px, 4cqw, 12.5px); }
 .naws-wgt .naws-sl { --naws-sl-ring:var(--naws-wgt-bg, #fff); }
 .naws-wgt-chip .naws-sl { --naws-sl-ring:var(--naws-wgt-chip, #f2f6fc); }
 .naws-wgt--transparent .naws-sl-line, .naws-wgt--transparent .naws-sl-end { stroke:currentColor; }
