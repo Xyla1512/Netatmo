@@ -740,18 +740,38 @@ final class NAWS_Sparkline {
     ];
 
     /**
-     * One widget tile from what prepare() returned: the words of a tile
-     * card and the curve. Rain keeps its bare unit, because "mm in 24
-     * hours" does not fit half a sidebar.
+     * One widget tile from what prepare() returned: name, figure, unit,
+     * the curve, and the line under the figure in two parts — low and
+     * high, or for rain the peak and its window — which the stylesheet
+     * stacks in a narrow widget and joins with a dot in a wide one. The
+     * parts carry no unit (it stands at the figure above them), and rain
+     * keeps its bare unit, because "mm in 24 hours" does not fit half a
+     * sidebar. A dry window has no parts.
      */
     public static function widget_chip( string $key, array $a, array $d ): array {
         $facts = self::tile_facts( $a, $d );
+        $lines = [];
+        if ( $d['kind'] === 'bars' ) {
+            $max = $d['sums'] ? max( $d['sums'] ) : 0.0;
+            if ( $max > 0 ) {
+                $i     = (int) array_search( $max, $d['sums'], true );
+                $lines = [
+                    sprintf( naws_label( 'sl_wgt_peak' ), self::number( $a['base'], $max ) . ' ' . $d['unit'] ),
+                    explode( ' · ', (string) $d['tips'][ $i ], 2 )[0],
+                ];
+            }
+        } else {
+            $lines = [
+                sprintf( naws_label( 'sl_wgt_low' ), self::number( $a['base'], (float) $d['lo'] ) ),
+                sprintf( naws_label( 'sl_wgt_high' ), self::number( $a['base'], (float) $d['hi'] ) ),
+            ];
+        }
         return [
             'key'   => $key,
             'name'  => $facts['name'],
             'value' => $facts['value'],
             'unit'  => $d['kind'] === 'bars' ? $d['unit'] : $facts['unit'],
-            'sub'   => $facts['sub'],
+            'lines' => $lines,
             'curve' => self::markup( $a, $d ),
         ];
     }

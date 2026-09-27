@@ -2044,6 +2044,9 @@
 .naws-wgt-chips--spark .naws-wgt-chip { min-width:0; }
 .naws-wgt-range { font-size:10px; font-variant-numeric:tabular-nums; color:var(--naws-wgt-muted); }
 .naws-wgt-range { font-size:clamp(10px, 4cqw, 12.5px); }
+/* Low and high stack in a narrow widget and share a line in a wide one. */
+.naws-wgt-range > span { display:block; }
+@container (min-width: 460px) { .naws-wgt-range > span { display:inline; white-space:nowrap; } .naws-wgt-range > span + span::before { content:" · "; } }
 .naws-wgt .naws-sl { --naws-sl-ring:var(--naws-wgt-bg, #fff); }
 .naws-wgt-chip .naws-sl { --naws-sl-ring:var(--naws-wgt-chip, #f2f6fc); }
 .naws-wgt--transparent .naws-sl-line, .naws-wgt--transparent .naws-sl-end { stroke:currentColor; }

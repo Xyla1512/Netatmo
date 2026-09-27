@@ -247,6 +247,9 @@ function naws_label( string $key ): string {
         case 'sl_preview_aria':                    return __( 'Sample sparkline in the chosen colours', 'xtx-integration-for-netatmo' );
         case 'sl_tile_range':                      return /* translators: 1: lowest value, 2: highest value with its unit, e.g. "Low 16.3 · High 24.5 °C". */ __( 'Low %1$s · High %2$s', 'xtx-integration-for-netatmo' );
         case 'sl_tile_peak':                       return /* translators: %s: the wettest window with its amount, e.g. "14:00–14:30 · 0.6 mm". */ __( 'Most: %s', 'xtx-integration-for-netatmo' );
+        case 'sl_wgt_low':                         return /* translators: %s: the lowest value, without unit, e.g. "16.3". */ __( 'Low %s', 'xtx-integration-for-netatmo' );
+        case 'sl_wgt_high':                        return /* translators: %s: the highest value, without unit, e.g. "24.5". */ __( 'High %s', 'xtx-integration-for-netatmo' );
+        case 'sl_wgt_peak':                        return /* translators: %s: the most rain in one window with its unit, e.g. "0.6 mm". */ __( 'Peak %s', 'xtx-integration-for-netatmo' );
         case 'sl_month_mean':                      return /* translators: %s: a short date, e.g. "9/16". */ __( 'Daily mean on %s', 'xtx-integration-for-netatmo' );
         case 'sl_month_axis_format':               return /* translators: PHP date format for the short dates on the month block's axis; German "j.n.", English "n/j". */ _x( 'n/j', 'sparkline month axis date format', 'xtx-integration-for-netatmo' );
 

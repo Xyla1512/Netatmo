@@ -78,10 +78,10 @@ $leer = render_widget( [ 'naws_wgt_spark' => [ 'temp' => '', 'chips' => [] ] ] )
 check( 'leere Kurven: kein Kasten',              str_contains( $leer, 'naws-wgt-spark' ), false );
 check( 'leere Kacheln: Regen und Wind wie bisher', substr_count( $leer, 'class="naws-wgt-chip"' ), 2 );
 
-function chip( string $key, string $sub ): array {
-    return [ 'key' => $key, 'name' => strtoupper( $key ), 'value' => '1.5', 'unit' => 'u', 'sub' => $sub, 'curve' => '<span class="naws-sl">' . $key . '</span>' ];
+function chip( string $key, array $lines ): array {
+    return [ 'key' => $key, 'name' => strtoupper( $key ), 'value' => '1.5', 'unit' => 'u', 'lines' => $lines, 'curve' => '<span class="naws-sl">' . $key . '</span>' ];
 }
-$fuenf = [ chip( 'humidity', 'Low 1 · High 2 u' ), chip( 'pressure', 'L' ), chip( 'wind', 'W' ), chip( 'rain', '' ), chip( 'co2', 'C <b>' ) ];
+$fuenf = [ chip( 'humidity', [ 'Low 1', 'High 2' ] ), chip( 'pressure', [ 'L', 'H' ] ), chip( 'wind', [ 'W', 'X' ] ), chip( 'rain', [] ), chip( 'co2', [ 'C <b>', 'D' ] ) ];
 $mit = render_widget( [ 'naws_wgt_spark' => [ 'temp' => '<span class="naws-sl">T</span>', 'chips' => $fuenf ] ] );
 check( 'Temperatur im Kopf',                     str_contains( $mit, '<div class="naws-wgt-spark naws-wgt-spark--head"><span class="naws-sl">T</span></div>' ), true );
 check( 'fuenf Kacheln im Raster',                substr_count( $mit, 'class="naws-wgt-chip"' ), 5 );
@@ -89,11 +89,11 @@ check( 'Raster hat eigene Klasse',               str_contains( $mit, '<div class
 check( 'alte Regen/Wind-Werte weichen',          str_contains( $mit, '4.2' ), false );
 check( 'Name der Kachel',                        str_contains( $mit, '<span class="naws-wgt-k">HUMIDITY</span>' ), true );
 check( 'Wert mit Einheit',                       str_contains( $mit, '<span class="naws-wgt-v">1.5<span class="naws-wgt-sub"> u</span></span>' ), true );
-check( 'Tief/Hoch-Zeile',                        str_contains( $mit, '<span class="naws-wgt-range">Low 1 · High 2 u</span>' ), true );
+check( 'Tief/Hoch als zwei Teile',               str_contains( $mit, '<span class="naws-wgt-range"><span>Low 1</span><span>High 2</span></span>' ), true );
 check( 'Tief/Hoch escaped',                      str_contains( $mit, 'C &lt;b&gt;' ), true );
 check( 'leere Nebenzeile faellt weg',            substr_count( $mit, 'naws-wgt-range' ), 4 );
 check( 'Kurve in der Kachel',                    str_contains( $mit, '<div class="naws-wgt-spark"><span class="naws-sl">co2</span></div>' ), true );
-check( 'Kurve steht unter der Nebenzeile',       strpos( $mit, 'High 2 u' ) < strpos( $mit, '>humidity<' ), true );
+check( 'Kurve steht unter der Nebenzeile',       strpos( $mit, 'High 2' ) < strpos( $mit, '>humidity<' ), true );
 
 $nurkopf = render_widget( [ 'naws_wgt_spark' => [ 'temp' => '<span class="naws-sl">T</span>', 'chips' => [] ] ] );
 check( 'ohne Kacheldaten: Kopfkurve, Regen und Wind wie bisher', [ substr_count( $nurkopf, 'class="naws-wgt-spark' ), substr_count( $nurkopf, 'class="naws-wgt-chip"' ) ], [ 1, 2 ] );
@@ -111,6 +111,8 @@ check( 'der Schalter entscheidet',                 str_contains( $sc, "NAWS_Widg
 check( 'das Skript nur mit Kurven',                str_contains( $sc, "if ( \$naws_wgt_spark['temp'] !== '' || \$naws_wgt_spark['chips'] ) {" ), true );
 $css = (string) file_get_contents( $PLUGIN . 'assets/css/frontend.css' );
 check( 'Kurven fuellen ihre Kachel',               str_contains( $css, '.naws-wgt-spark .naws-sl svg { width:100%;' ), true );
+check( 'schmal: Teile untereinander',            str_contains( $css, '.naws-wgt-range > span { display:block; }' ), true );
+check( 'breit: Teile in einer Zeile',            str_contains( $css, '@container (min-width: 460px) { .naws-wgt-range > span { display:inline; white-space:nowrap; } .naws-wgt-range > span + span::before { content:" · "; } }' ), true );
 check( 'Kacheln zweispaltig',                     str_contains( $css, '.naws-wgt-chips--spark { display:grid; grid-template-columns:1fr 1fr; }' ), true );
 check( 'transparent zeichnet in der Textfarbe',    str_contains( $css, '.naws-wgt--transparent .naws-sl-line' ), true );
 

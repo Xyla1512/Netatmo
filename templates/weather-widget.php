@@ -75,8 +75,8 @@ $naws_wgt_spark = isset( $naws_wgt_spark ) && is_array( $naws_wgt_spark ) ? $naw
         <div class="naws-wgt-chip">
           <span class="naws-wgt-k"><?php echo esc_html( $naws_wgt_chip['name'] ); ?></span>
           <span class="naws-wgt-v"><?php echo esc_html( $naws_wgt_chip['value'] ); ?><span class="naws-wgt-sub"> <?php echo esc_html( $naws_wgt_chip['unit'] ); ?></span></span>
-          <?php if ( $naws_wgt_chip['sub'] !== '' ) : ?>
-            <span class="naws-wgt-range"><?php echo esc_html( $naws_wgt_chip['sub'] ); ?></span>
+          <?php if ( $naws_wgt_chip['lines'] ) : ?>
+            <span class="naws-wgt-range"><?php foreach ( $naws_wgt_chip['lines'] as $naws_wgt_line ) : ?><span><?php echo esc_html( $naws_wgt_line ); ?></span><?php endforeach; ?></span>
           <?php endif; ?>
           <div class="naws-wgt-spark"><?php echo $naws_wgt_chip['curve']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- markup from NAWS_Sparkline::markup(), every value escaped in templates/sparkline.php ?></div>
         </div>

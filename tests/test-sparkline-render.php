@@ -211,13 +211,15 @@ $chip = NAWS_Sparkline::widget_chip( 'humidity', $wa, $wd );
 check( 'Kachel: Schluessel',                   $chip['key'], 'humidity' );
 check( 'Kachel: Name',                         $chip['name'], 'Humidity' );
 check( 'Kachel: Wert und Einheit',             [ $chip['value'], $chip['unit'] ], [ '60', '%' ] );
-check( 'Kachel: Tief/Hoch',                    $chip['sub'], 'Low 40 · High 60 %' );
+check( 'Kachel: Tief und Hoch als zwei Teile ohne Einheit', $chip['lines'], [ 'Low 40', 'High 60' ] );
 check( 'Kachel: Kurve mit Tief/Hoch-Punkten',  substr_count( $chip['curve'], 'class="naws-sl-mm"' ), 2 );
 $ra = NAWS_Sparkline::normalise_atts( [ 'param' => 'Rain', 'show' => 'minmax' ] );
 $rd = [ 'kind' => 'bars', 'sums' => [ 0.0, 0.6 ], 'tips' => [ 'x', '14:00–14:30 · 0.6 mm' ], 'aria' => 'x', 'value' => '0.6 mm', 'name' => 'Rain', 'unit' => 'mm', 'period' => '24 hours', 'total' => 0.6 ];
 $rchip = NAWS_Sparkline::widget_chip( 'rain', $ra, $rd );
 check( 'Regen: Summe, Einheit kurz',           [ $rchip['value'], $rchip['unit'] ], [ '0.6', 'mm' ] );
-check( 'Regen: staerkste halbe Stunde',        $rchip['sub'], 'Most: 14:00–14:30 · 0.6 mm' );
+check( 'Regen: Spitze und Zeitfenster',        $rchip['lines'], [ 'Peak 0.6 mm', '14:00–14:30' ] );
+$trocken_chip = NAWS_Sparkline::widget_chip( 'rain', $ra, array_merge( $rd, [ 'sums' => [ 0.0, 0.0 ], 'total' => 0.0 ] ) );
+check( 'Regen trocken: keine Nebenzeilen',     $trocken_chip['lines'], [] );
 check( 'leere Station: Kopf und Kacheln leer', NAWS_Sparkline::widget_set(), [ 'temp' => '', 'chips' => [] ] );
 
 $css = (string) file_get_contents( dirname( __DIR__ ) . '/assets/css/frontend.css' );
