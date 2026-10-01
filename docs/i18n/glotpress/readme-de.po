@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Plugins - XTX Integration for Netatmo - Stable Readme (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-09-25 17:27:13+0000\n"
+"PO-Revision-Date: 2026-10-01 16:34:13+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -21,6 +21,14 @@ msgstr "Verbindet sich mit der Netatmo-API, speichert alle Sensordaten lokal und
 msgid "XTX Integration for Netatmo"
 msgstr "XTX Integration for Netatmo"
 
+#. Found in description list item.
+msgid "<code>[naws_sparkline_tiles]</code> – The sparkline cards side by side in a grid that wraps by itself: temperature, humidity, pressure, wind, rain and CO2 by default (<code>params</code>, <code>hours</code>)"
+msgstr "<code>[naws_sparkline_tiles]</code> – Die Sparkline-Karten nebeneinander in einem Raster, das von selbst umbricht: ab Werk Temperatur, Luftfeuchte, Luftdruck, Wind, Regen und CO2 (<code>params</code>, <code>hours</code>)"
+
+#. Found in description list item.
+msgid "<code>[naws_sparkline]</code> – A curve the size of a word: the raw readings of the last hours or a column of the daily summary, rain as bars, the band between daily low and high, time and value on hover; as a card or a month block too (<code>param</code>, <code>hours</code>, <code>days</code>, <code>module</code>, <code>width</code>, <code>height</code>, <code>show</code>, <code>type</code>, <code>band</code>, <code>layout</code>, <code>title</code>)"
+msgstr "<code>[naws_sparkline]</code> – Eine Kurve so groß wie ein Wort: die Rohmessungen der letzten Stunden oder eine Spalte der Tagesübersicht, Regen als Balken, das Band zwischen Tagestief und Tageshoch, Uhrzeit und Wert beim Überfahren; auch als Karte oder Monatsblock (<code>param</code>, <code>hours</code>, <code>days</code>, <code>module</code>, <code>width</code>, <code>height</code>, <code>show</code>, <code>type</code>, <code>band</code>, <code>layout</code>, <code>title</code>)"
+
 #. Found in faq paragraph.
 msgid "Open XTX Netatmo → Notifications and press \"Send test mail\". If the page reports that the mail could not be sent, your server sends no mail at all: an SMTP plugin or your hosting provider fixes that, not the plugin. If the test mail arrives but no notifications do, check that the master switch and the rule are switched on and look at the log on the same page. Notifications go out only when a state changes; a battery that has been low since before you switched the rule on is reported at the next fetch, not again afterwards."
 msgstr "Öffne XTX Netatmo → Benachrichtigungen und drücke „Testmail senden\". Meldet die Seite, dass die Mail nicht gesendet werden konnte, verschickt dein Server gar keine Mails: ein SMTP-Plugin oder dein Hoster behebt das, nicht das Plugin. Kommt die Testmail an, aber keine Benachrichtigung, prüfe, ob Generalschalter und Regel eingeschaltet sind, und sieh ins Protokoll auf derselben Seite. Benachrichtigungen gehen nur bei einem Zustandswechsel raus; eine Batterie, die schon vor dem Einschalten der Regel schwach war, wird beim nächsten Abruf gemeldet, danach nicht mehr."
@@ -38,8 +46,8 @@ msgid "<code>[naws_windrose]</code> – Where the wind comes from and how hard, 
 msgstr "<code>[naws_windrose]</code> – Woher der Wind kommt und wie kräftig, als Rose mit 16 oder 8 Richtungen, nach Beaufort-Klassen gestapelt, mit Zeitraum-Umschaltung (<code>period</code>, <code>from</code>, <code>to</code>, <code>measure</code>, <code>sectors</code>, <code>show</code>, <code>switcher</code>, <code>size</code>, <code>title</code>)"
 
 #. Found in description list item.
-msgid "<code>[naws_weather_widget]</code> – Compact forecast widget for a sidebar (<code>days</code> 3 or 5, <code>width</code> 250–500, <code>scheme</code> light, dark or transparent)"
-msgstr "<code>[naws_weather_widget]</code> – Kompaktes Vorhersage-Widget für eine Seitenleiste (<code>days</code> 3 oder 5, <code>width</code> 250–500, <code>scheme</code> light, dark oder transparent)"
+msgid "<code>[naws_weather_widget]</code> – Compact forecast widget for a sidebar (<code>days</code> 3 or 5, <code>width</code> 250–500, <code>scheme</code> light, dark or transparent, <code>sparklines</code> 0 or 1)"
+msgstr "<code>[naws_weather_widget]</code> – Kompaktes Vorhersage-Widget für eine Seitenleiste (<code>days</code> 3 oder 5, <code>width</code> 250–500, <code>scheme</code> light, dark oder transparent, <code>sparklines</code> 0 oder 1)"
 
 #. Found in description list item.
 msgid "<code>[naws_sunpath]</code> – The sun on its arc over the station, with sunrise, solar noon, sunset and the day length (<code>title</code>)"
@@ -54,8 +62,8 @@ msgid "<code>[naws_records]</code> – Fifteen records from the daily summary wi
 msgstr "<code>[naws_records]</code> – Fünfzehn Rekorde aus der Tagesübersicht mit ihren Daten, als Kacheln oder Tabelle (<code>year</code>, <code>records</code>, <code>layout</code>, <code>title</code>)"
 
 #. Found in description list item.
-msgid "<strong>15 Shortcodes</strong> – Dashboard, current readings, infobar, single value, computed value, history charts, heatmap, records, this day in earlier years, sun path, wind rose, forecast, table, widget, weather icon"
-msgstr "<strong>15 Shortcodes</strong> – Dashboard, aktuelle Messwerte, Infoleiste, Einzelwert, berechneter Wert, Verlaufsdiagramme, Heatmap, Rekorde, dieser Tag in früheren Jahren, Sonnenbahn, Windrose, Vorhersage, Tabelle, Widget, Wettersymbol"
+msgid "<strong>17 Shortcodes</strong> – Dashboard, current readings, infobar, single value, computed value, sparkline, sparkline tiles, history charts, heatmap, records, this day in earlier years, sun path, wind rose, forecast, table, widget, weather icon"
+msgstr "<strong>17 Shortcodes</strong> – Dashboard, aktuelle Messwerte, Infoleiste, Einzelwert, berechneter Wert, Sparkline, Sparkline-Kacheln, Verlaufsdiagramme, Heatmap, Rekorde, dieser Tag in früheren Jahren, Sonnenbahn, Windrose, Vorhersage, Tabelle, Widget, Wettersymbol"
 
 #. Found in description list item.
 msgid "<code>[naws_heatmap]</code> – One year of outdoor daily average temperature as a calendar grid, one tile per day, with a year selector (<code>year</code>, <code>title</code>, <code>legend</code>)"
@@ -471,6 +479,51 @@ msgstr "Live-Dashboard mit Sensorkacheln und 24-Stunden-Verläufen"
 
 #. Found in changelog list item.
 #, gp-priority: low
+msgid "Fix: \"11 Minuten ago\" — relative times are translatable now (\"vor 11 Minuten\")."
+msgstr "Fix: „11 Minuten ago“ — relative Zeitangaben sind jetzt übersetzbar („vor 11 Minuten“)."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: <code>[naws_current]</code> shows its icons again instead of their SVG source as text."
+msgstr "Fix: <code>[naws_current]</code> zeigt seine Symbole wieder statt ihres SVG-Quelltexts als Text."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: the heatmap no longer colours today. The running mean of a day that is not over looked like a finished day; the cell now gets its colour the next day."
+msgstr "Fix: Die Heatmap färbt den heutigen Tag nicht mehr. Das laufende Mittel eines Tages, der noch nicht vorbei ist, sah aus wie ein fertiger Tag; die Zelle bekommt ihre Farbe jetzt am nächsten Tag."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: numbers follow the language of the page — \"23,4 °C\" and \"1.019,1 mbar\" on a German page — in the widget, the tables, single and computed values, the infobar, the heatmap, the e-mails and the axes and tooltips of the charts."
+msgstr "Fix: Zahlen folgen der Sprache der Seite — „23,4 °C“ und „1.019,1 mbar“ auf einer deutschen Seite — im Widget, in den Tabellen, in Einzel- und Rechenwerten, in der Infoleiste, der Heatmap, den E-Mails und in Achsen und Sprechblasen der Diagramme."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Changed: the REST endpoint <code>/daily</code> returns <code>humidity_avg</code>, <code>wind_avg</code>, <code>co2_avg</code> and <code>noise_avg</code> when asked for them."
+msgstr "Changed: Der REST-Endpunkt <code>/daily</code> liefert <code>humidity_avg</code>, <code>wind_avg</code>, <code>co2_avg</code> und <code>noise_avg</code>, wenn sie verlangt werden."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Changed: the forecast's colours can be set on a new Appearance tab, Forecast; texts, frames and the card background follow the base theme. The Appearance tabs are WordPress tabs now, wrap on a narrow screen and stay open after saving."
+msgstr "Changed: Die Farben der Vorhersage lassen sich auf einem neuen Reiter im Erscheinungsbild einstellen, Vorhersage; Texte, Rahmen und Kartenhintergrund folgen dem Basis-Theme. Die Reiter im Erscheinungsbild sind jetzt WordPress-Reiter, brechen auf schmalen Bildschirmen um und bleiben nach dem Speichern offen."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Added: sparklines in the sidebar widget. A switch under Appearance › Sidebar widget, or <code>sparklines=\"1\"</code> on the shortcode, adds a 24-hour curve under the temperature and five tiles for humidity, pressure, wind, rain and CO2. Off by default."
+msgstr "Added: Sparklines im Seitenleisten-Widget. Ein Schalter unter Erscheinungsbild › Seitenleisten-Widget oder <code>sparklines=\"1\"</code> am Shortcode fügt eine 24-Stunden-Kurve unter der Temperatur und fünf Kacheln für Luftfeuchte, Luftdruck, Wind, Regen und CO2 hinzu. Ab Werk aus."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Added: <code>[naws_sparkline_tiles]</code> — the sparkline cards as a grid that wraps by itself: temperature, humidity, pressure, wind, rain and CO2 by default (<code>params</code>, <code>hours</code>)."
+msgstr "Added: <code>[naws_sparkline_tiles]</code> — die Sparkline-Karten als Raster, das von selbst umbricht: ab Werk Temperatur, Luftfeuchte, Luftdruck, Wind, Regen und CO2 (<code>params</code>, <code>hours</code>)."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Added: <code>[naws_sparkline]</code> — a curve the size of a word, next to the number in running text: the raw readings of the last hours or a column of the daily summary, rain as bars, the band between daily low and high, a bubble with time and value on hover. <code>layout=\"tile\"</code> draws it as a card with value, low and high; <code>layout=\"month\"</code> as a block of daily means with the rain per day. Server-side SVG, complete without JavaScript; eight colours on a new Appearance tab, Sparkline."
+msgstr "Added: <code>[naws_sparkline]</code> — eine Kurve so groß wie ein Wort, neben der Zahl im Fließtext: die Rohmessungen der letzten Stunden oder eine Spalte der Tagesübersicht, Regen als Balken, das Band zwischen Tagestief und Tageshoch, eine Sprechblase mit Uhrzeit und Wert beim Überfahren. <code>layout=\"tile\"</code> zeichnet sie als Karte mit Wert, Tief und Hoch, <code>layout=\"month\"</code> als Block aus Tagesmitteln mit dem Regen pro Tag. Serverseitiges SVG, vollständig ohne JavaScript; acht Farben auf einem neuen Reiter im Erscheinungsbild, Sparkline."
+
+#. Found in changelog list item.
+#, gp-priority: low
 msgid "Fix: the translators comments never reached the catalogues; the extractor looked for them inside the call's parentheses, where WordPress convention never puts them. The <code>.pot</code> and both <code>.po</code> files carry them now."
 msgstr "Fix: Die Übersetzerkommentare kamen nie in den Katalogen an; der Extraktor suchte sie innerhalb der Klammern des Aufrufs, wo WordPress sie nie hinschreibt. <code>.pot</code> und beide <code>.po</code> tragen sie jetzt."
 
@@ -553,31 +606,6 @@ msgstr "Fix: Hat ein Block nichts zu zeigen, liest ein angemeldeter Redakteur im
 #, gp-priority: low
 msgid "Fix: <code>[naws_records]</code> and <code>[naws_on_this_day]</code> stayed empty on an installation whose daily summary table carried a different collation than the modules table. The three big queries compared <code>module_id</code> across two tables; MySQL refuses that as soon as the collations differ, the query failed, and the plugin returned nothing without a word. The active modules now go into every query as an id list from PHP, so no comparison crosses a table any more — <code>[naws_live]</code>, <code>[naws_infobar]</code> and the history are read the same way."
 msgstr "Fix: <code>[naws_records]</code> und <code>[naws_on_this_day]</code> blieben auf einer Installation leer, deren Tagesübersicht eine andere Kollation trug als die Modultabelle. Die drei großen Abfragen verglichen <code>module_id</code> über zwei Tabellen hinweg; MySQL verweigert das, sobald die Kollationen abweichen, die Abfrage scheiterte, und das Plugin gab wortlos nichts zurück. Die aktiven Module wandern jetzt als ID-Liste aus PHP in jede Abfrage, kein Vergleich kreuzt mehr eine Tabelle — <code>[naws_live]</code>, <code>[naws_infobar]</code> und der Verlauf werden genauso gelesen."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Changed: this readme carries only the five most recent versions of the changelog; the full history since 1.0.0 lives in CHANGELOG.md on GitHub."
-msgstr "Geändert: diese readme führt nur noch die fünf jüngsten Versionen des Changelogs; die vollständige Geschichte seit 1.0.0 steht in CHANGELOG.md auf GitHub."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Fix: the frontend stylesheet and scripts carry the file's modification time in their version, so a changed file is fetched even when the plugin version stays the same — the admin assets have done this since 1.9.7."
-msgstr "Fix: Stylesheet und Skripte des Frontends tragen die Änderungszeit der Datei in ihrer Version, sodass eine geänderte Datei auch dann geladen wird, wenn die Plugin-Version gleich bleibt — die Admin-Dateien tun das seit 1.9.7."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Fix: the compass directions are translated. The forecast in <code>[naws_live]</code> and <code>[naws_forecast]</code> showed a German visitor \"ESE\" where \"OSO\" belongs; the sixteen codes go through gettext now, in German and Norwegian."
-msgstr "Fix: die Himmelsrichtungen sind übersetzt. Die Vorhersage in <code>[naws_live]</code> und <code>[naws_forecast]</code> zeigte einem deutschen Besucher \"ESE\", wo \"OSO\" hingehört; die sechzehn Kürzel laufen jetzt durch gettext, auf Deutsch und Norwegisch."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Added: the \"Wind &amp; Gusts\" card of <code>[naws_live]</code> shows the day's strongest gust as a third value, in the configured wind unit, and the gauge gets a third, red needle for it."
-msgstr "Neu: die Karte \"Wind &amp; Böen\" von <code>[naws_live]</code> zeigt die stärkste Böe des Tages als dritten Wert, in der eingestellten Windeinheit, und der Tacho bekommt dafür einen dritten, roten Zeiger."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Added: <code>[naws_windrose]</code> — where the wind comes from, how often, and how hard: one ray per compass direction (16 or 8), its length the share of readings from there, stacked by Beaufort class from the centre outwards, calm in the hub. Below it the main directions, mean, peak and calm share, a legend, and a table for screen readers. Built from the raw ten-minute readings with one grouped query per period, cached as a transient. <code>period</code> (<code>7d</code>, <code>30d</code>, <code>90d</code>, <code>year</code>, <code>all</code>), <code>from</code>/<code>to</code> for a fixed range, <code>measure</code> (<code>wind</code>, <code>gust</code>, <code>both</code>), <code>sectors</code>, <code>show</code>, <code>switcher</code>, <code>size</code>, <code>title</code>. Every period of the switcher is rendered on the server; the script only swaps panels and dresses the tooltips. Seven colours on a new Appearance tab."
-msgstr "Neu: <code>[naws_windrose]</code> — woher der Wind kommt, wie oft und wie kräftig: ein Strahl je Himmelsrichtung (16 oder 8), seine Länge der Anteil der Messungen von dort, von innen nach außen nach Beaufort-Klassen gestapelt, Windstille in der Nabe. Darunter die Hauptrichtungen, Mittel, Spitze und Anteil der Windstille, eine Legende und eine Tabelle für Screenreader. Aus den Zehn-Minuten-Rohwerten gebaut, eine gruppierende Abfrage je Zeitraum, als Transient zwischengespeichert. <code>period</code> (<code>7d</code>, <code>30d</code>, <code>90d</code>, <code>year</code>, <code>all</code>), <code>from</code>/<code>to</code> für einen festen Zeitraum, <code>measure</code> (<code>wind</code>, <code>gust</code>, <code>both</code>), <code>sectors</code>, <code>show</code>, <code>switcher</code>, <code>size</code>, <code>title</code>. Jeder Zeitraum der Umschaltung wird auf dem Server gerendert; das Skript blendet nur die Panels um und kümmert sich um die Tooltips. Sieben Farben auf einem neuen Reiter im Erscheinungsbild."
 
 #. Found in changelog paragraph.
 #, gp-priority: low

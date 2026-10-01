@@ -34,8 +34,8 @@ foreach ( $alle as $e ) {
 
 $fehler = [];
 
-if ( count( $liste ) !== 114 ) {
-    $fehler[] = 'Erwartet 114 Eintraege, gefunden ' . count( $liste );
+if ( count( $liste ) !== 116 ) {
+    $fehler[] = 'Erwartet 116 Eintraege, gefunden ' . count( $liste );
 }
 $fehlend = array_diff( range( 1, count( $liste ) ), array_keys( $de ) );
 if ( $fehlend ) {
@@ -45,13 +45,13 @@ if ( $fehlend ) {
 // ── Stichproben gegen eine Verschiebung ─────────────────────────────────
 $anker = [
     1   => 'Connects to the Netatmo API',
-    25  => 'Which forecast providers',
-    40  => '/wp-content/plugins/',
-    54  => 'MET Norway',
-    72  => 'Authenticate via OAuth2',
-    96  => 'Full Netatmo Integration',
-    107 => 'Key Features',
-    114 => 'Live dashboard with sensor cards',
+    27  => 'Which forecast providers',
+    42  => '/wp-content/plugins/',
+    56  => 'MET Norway',
+    74  => 'Authenticate via OAuth2',
+    98  => 'Full Netatmo Integration',
+    109 => 'Key Features',
+    116 => 'Live dashboard with sensor cards',
 ];
 foreach ( $anker as $nr => $erwartet ) {
     $ist = $liste[ $nr - 1 ]['msgid'] ?? '';
