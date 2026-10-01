@@ -146,7 +146,7 @@ function baseOpts(unit, type, isModal, isMonthly){
             }
             return x;
           },
-          label:function(c){return ' '+c.dataset.label+': '+c.parsed.y+' '+unit;}
+          label:function(c){return ' '+c.dataset.label+': '+c.formattedValue+' '+unit;}
         }
       }
     },
@@ -155,8 +155,7 @@ function baseOpts(unit, type, isModal, isMonthly){
       y:{
         grid:{color:CHART_THEME.grid},
         ticks:{
-          color:CHART_THEME.tick,font:{family:NAWS_FONT,size:fs},
-          callback:function(v){return v;}
+          color:CHART_THEME.tick,font:{family:NAWS_FONT,size:fs}
         },
         title:{display:true,text:unit,color:CHART_THEME.axis_title,font:{family:NAWS_FONT,size:fs,weight:'600'}}
       }

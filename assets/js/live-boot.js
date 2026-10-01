@@ -417,7 +417,7 @@ function chartOpts(unit, type){
         titleFont:{family:NAWS_FONT,size:fs+1},
         bodyFont:{family:NAWS_FONT,size:fs+3,weight:'bold'},
         padding:10,cornerRadius:8,displayColors:false,
-        callbacks:{label:function(c){return (Math.round(c.parsed.y*10)/10)+' '+unit;}}
+        callbacks:{label:function(c){return num(Math.round(c.parsed.y*10)/10)+' '+unit;}}
       }
     },
     scales:{
@@ -429,7 +429,7 @@ function chartOpts(unit, type){
         grid:{color:'rgba(218,240,240,.5)'},
         ticks:{
           color:'#7aa0a0',font:{family:NAWS_FONT,size:fs},
-          callback:function(v){return Math.round(v*10)/10;}
+          callback:function(v){return num(Math.round(v*10)/10);}
         },
         title:{display:true,text:unit,color:'#a0b8b8',font:{family:NAWS_FONT,size:fs,weight:'600'}}
       }

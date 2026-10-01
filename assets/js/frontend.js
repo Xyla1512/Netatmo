@@ -90,6 +90,15 @@
         }
     }
 
+    /* Chart.js formats its axes and tooltips in en-US unless told otherwise;
+       the page's language gives a German page its comma there too. */
+    if (window.Chart && document.documentElement.lang) {
+        try {
+            new Intl.NumberFormat(document.documentElement.lang);
+            Chart.defaults.locale = document.documentElement.lang;
+        } catch (e) { /* not a language Intl knows: stay with the default */ }
+    }
+
     function animateNumber(el, end, duration) {
         const start = parseFloat(el.dataset.nawsShown || '0') || 0;
         const range = end - start;
