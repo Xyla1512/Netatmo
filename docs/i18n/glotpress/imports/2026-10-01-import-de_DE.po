@@ -1,0 +1,271 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "%1$s in %2$d day"
+msgid_plural "%1$s in %2$d days"
+msgstr[0] "%1$s in %2$d Tag"
+msgstr[1] "%1$s in %2$d Tagen"
+
+msgid "%1$s in %2$d hour"
+msgid_plural "%1$s in %2$d hours"
+msgstr[0] "%1$s in %2$d Stunde"
+msgstr[1] "%1$s in %2$d Stunden"
+
+msgid "%1$s, last %2$s: %3$s in total"
+msgstr "%1$s, letzte %2$s: insgesamt %3$s"
+
+msgid "%1$s, last %2$s: daily means from %3$s to %4$s, range %5$s to %6$s"
+msgstr "%1$s, letzte %2$s: Tagesmittel von %3$s bis %4$s, Spanne %5$s bis %6$s"
+
+msgid "%1$s, last %2$s: from %3$s to %4$s, latest %5$s"
+msgstr "%1$s, letzte %2$s: von %3$s bis %4$s, zuletzt %5$s"
+
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d Stunde"
+msgstr[1] "%d Stunden"
+
+msgid "%s ago"
+msgstr "vor %s"
+
+msgid "A curve the size of a word: how a reading got to where it is, drawn next to the number in running text. The raw readings of the last hours, or a column of the daily summary with the band between daily low and high; rain as bars. Rendered on the server as SVG; hovering shows time and value. Colours on the Appearance page, tab Sparkline."
+msgstr "Eine Kurve in Wortgröße: wie ein Messwert dahin kam, wo er steht, neben der Zahl im Fließtext. Die Rohwerte der letzten Stunden oder eine Spalte der Tagestabelle mit dem Band zwischen Tagestief und Tageshoch; Regen als Balken. Auf dem Server als SVG gezeichnet; beim Überfahren erscheinen Uhrzeit und Wert. Farben im Erscheinungsbild, Reiter Sparkline."
+
+msgid "Appearance sections"
+msgstr "Bereiche des Erscheinungsbilds"
+
+msgid "Band (daily low to high)"
+msgstr "Band (Tagestief bis Tageshoch)"
+
+msgid "Bar above each day"
+msgstr "Balken über jedem Tag"
+
+msgid "Colours for [naws_forecast]: the thin bar above each day, and the bar, frame and weekday of today. Texts, frames and the background of the cards follow the base theme. The defaults are the colours the forecast has always used."
+msgstr "Farben für [naws_forecast]: der schmale Balken über jedem Tag sowie Balken, Rahmen und Wochentag von heute. Texte, Rahmen und Hintergrund der Karten folgen dem Basis-Theme. Die Vorgaben sind die Farben, die die Vorhersage schon immer hatte."
+
+msgid "Colours for [naws_sparkline] and the curves in the sidebar widget. One line colour serves every quantity; the dark scheme of the widget uses the two colours \"on dark ground\". The area under a line is the line colour, lightly filled."
+msgstr "Farben für [naws_sparkline] und die Kurven im Seitenleisten-Widget. Eine Linienfarbe gilt für alle Größen; das dunkle Schema des Widgets nimmt die beiden Farben „auf dunklem Grund“. Die Fläche unter einer Linie ist die Linienfarbe, leicht gefüllt."
+
+msgid "Comma-separated, in the order of the tiles: Temperature, Humidity, Pressure, WindStrength, GustStrength, Rain, CO2, Noise."
+msgstr "Durch Kommas getrennt, in der Reihenfolge der Kacheln: Temperature, Humidity, Pressure, WindStrength, GustStrength, Rain, CO2, Noise."
+
+msgid "Daily high"
+msgstr "Tageshoch"
+
+msgid "Daily low"
+msgstr "Tagestief"
+
+msgid "Daily mean CO2"
+msgstr "Tagesmittel CO2"
+
+msgid "Daily mean humidity"
+msgstr "Tagesmittel der Luftfeuchte"
+
+msgid "Daily mean noise"
+msgstr "Tagesmittel Lärm"
+
+msgid "Daily mean on %s"
+msgstr "Tagesmittel am %s"
+
+msgid "Daily mean pressure"
+msgstr "Tagesmittel des Luftdrucks"
+
+msgid "Daily mean temperature"
+msgstr "Tagesmittel der Temperatur"
+
+msgid "Daily mean wind"
+msgstr "Tagesmittel des Windes"
+
+msgid "Forecast"
+msgstr "Vorhersage"
+
+msgid "High %s"
+msgstr "Hoch %s"
+
+msgid "Hover bubble – background"
+msgstr "Sprechblase – Hintergrund"
+
+msgid "Hover bubble – text"
+msgstr "Sprechblase – Text"
+
+msgid "Line"
+msgstr "Linie"
+
+msgid "Line on dark ground"
+msgstr "Linie auf dunklem Grund"
+
+msgid "Live preview — forecast"
+msgstr "Live-Vorschau – Vorhersage"
+
+msgid "Live preview — sparkline"
+msgstr "Live-Vorschau — Sparkline"
+
+msgid "Low %1$s · High %2$s"
+msgstr "Tief %1$s · Hoch %2$s"
+
+msgid "Low %s"
+msgstr "Tief %s"
+
+msgid "Low and high dots"
+msgstr "Tief- und Hochpunkte"
+
+msgid "Most: %s"
+msgstr "Am meisten: %s"
+
+msgid "Only with layout=\"tile\": the name at the top of the card instead of the name of the quantity."
+msgstr "Nur mit layout=\"tile\": der Name oben auf der Karte statt des Namens der Größe."
+
+msgid "Peak %s"
+msgstr "Spitze %s"
+
+msgid "Rain bars"
+msgstr "Regenbalken"
+
+msgid "Rain bars on dark ground"
+msgstr "Regenbalken auf dunklem Grund"
+
+msgid "Rain in %d day"
+msgid_plural "Rain in %d days"
+msgstr[0] "Regen in %d Tag"
+msgstr[1] "Regen in %d Tagen"
+
+msgid "Rain per day"
+msgstr "Regen je Tag"
+
+msgid "Raw readings: Temperature, Humidity, Pressure, WindStrength, GustStrength, Rain, CO2, Noise. Daily summary: temp_avg, temp_min, temp_max, humidity_avg, pressure_avg, rain_sum, wind_avg, gust_max, co2_avg, noise_avg."
+msgstr "Rohwerte: Temperature, Humidity, Pressure, WindStrength, GustStrength, Rain, CO2, Noise. Tagestabelle: temp_avg, temp_min, temp_max, humidity_avg, pressure_avg, rain_sum, wind_avg, gust_max, co2_avg, noise_avg."
+
+msgid "Sample sparkline in the chosen colours"
+msgstr "Beispiel-Sparkline in den gewählten Farben"
+
+msgid "Show the last 24 hours as small curves"
+msgstr "Die letzten 24 Stunden als kleine Kurven zeigen"
+
+msgid "Size in pixels, width 20–600 and height 10–200. Left out, the curve is 4.6 × 1.05 em and grows with the text."
+msgstr "Größe in Pixeln, Breite 20–600 und Höhe 10–200. Ohne Angabe ist die Kurve 4,6 × 1,05 em groß und wächst mit der Schrift."
+
+msgid "Sparkline"
+msgstr "Sparkline"
+
+msgid "Sparklines"
+msgstr "Sparklines"
+
+msgid "Strongest gust per day"
+msgstr "Stärkste Böe je Tag"
+
+msgid "The last 24 hours as small curves: the temperature in the head, and tiles for humidity, pressure, wind, rain and CO2 with low and high. 1 shows them, 0 hides them."
+msgstr "Die letzten 24 Stunden als kleine Kurven: die Temperatur im Kopf und Kacheln für Luftfeuchte, Luftdruck, Wind, Regen und CO2 mit Tief und Hoch. 1 zeigt sie, 0 blendet sie aus."
+
+msgid "The sparkline tiles side by side: one card per quantity with its name, the current value, low and high of the last hours and a large curve. Without attributes, the six tiles temperature, humidity, pressure, wind, rain and CO2. The grid wraps by itself, one below the other on a phone. A quantity whose module is missing or silent is left out."
+msgstr "Die Sparkline-Kacheln nebeneinander: je Messgröße eine Karte mit Namen, aktuellem Wert, Tief und Hoch der letzten Stunden und einer großen Kurve. Ohne Attribute die sechs Kacheln Temperatur, Luftfeuchte, Luftdruck, Wind, Regen und CO2. Das Raster bricht selbst um, auf dem Handy stehen die Kacheln untereinander. Eine Größe, deren Modul fehlt oder schweigt, fällt weg."
+
+msgid "The temperature under the figure in the head; below it humidity, pressure, wind, rain and CO2 as tiles, two to a row, each with low and high and its curve. Colours on the Sparkline tab above. sparklines=\"1\" or sparklines=\"0\" on the shortcode overrides this for one placement."
+msgstr "Die Temperatur unter der Zahl im Kopf; darunter Luftfeuchte, Luftdruck, Wind, Regen und CO2 als Kacheln, zwei je Reihe, jede mit Tief und Hoch und ihrer Kurve. Farben im Reiter „Sparkline“ oben. sparklines=\"1\" oder sparklines=\"0\" am Shortcode überschreibt das für eine Stelle."
+
+msgid "Today – bar"
+msgstr "Heute – Balken"
+
+msgid "Today – frame"
+msgstr "Heute – Rahmen"
+
+msgid "Today – weekday"
+msgstr "Heute – Wochentag"
+
+msgid "Window in days from the daily summary, 2–366. For the daily columns; 30 if left out. Not allowed with a raw reading."
+msgstr "Zeitfenster in Tagen aus der Tagestabelle, 2–366. Für die Tagesspalten; ohne Angabe 30. Mit einem Rohwert nicht erlaubt."
+
+msgid "Window of raw readings in hours, 1–168."
+msgstr "Zeitfenster der Rohwerte in Stunden, 1–168."
+
+msgid "a card: name, current value, low and high, a large curve"
+msgstr "eine Karte: Name, aktueller Wert, Tief und Hoch, große Kurve"
+
+msgid "automatic"
+msgstr "automatisch"
+
+msgid "from param"
+msgstr "aus param"
+
+msgid "in %s"
+msgstr "in %s"
+
+msgid "inline (the curve in running text), tile (a card: name, current value, low and high, a large curve) or month (daily means with the band from low to high and rain per day, with a date axis; needs no param, days 7–366)."
+msgstr "inline (die Kurve im Fließtext), tile (eine Karte: Name, aktueller Wert, Tief und Hoch, große Kurve) oder month (Tagesmittel mit dem Band von Tief bis Hoch und Regen je Tag, mit Datumsachse; braucht kein param, days 7–366)."
+
+msgid "line or bars. Bars are for rain only; left out, rain gets bars and everything else a line."
+msgstr "line oder bars. Balken gibt es nur für Regen; ohne Angabe bekommt Regen Balken und alles andere eine Linie."
+
+msgid "minmax: with days and temp_avg, the band between daily low and high under the line of daily means."
+msgstr "minmax: mit days und temp_avg das Band zwischen Tagestief und Tageshoch unter der Linie der Tagesmittel."
+
+msgid "none, value (the latest value, or the rain total, after the curve) or minmax (dots on the lowest and the highest point)."
+msgstr "none, value (der letzte Wert oder die Regensumme hinter der Kurve) oder minmax (Punkte am tiefsten und am höchsten Wert)."
+
+msgid "outdoor, indoor, wind, rain, in-<name> or a MAC address. Left out, the module that measures the reading. Ignored with days."
+msgstr "outdoor, indoor, wind, rain, in-<name> oder eine MAC-Adresse. Ohne Angabe das Modul, das den Wert misst. Mit days ohne Wirkung."
+
+msgid "pressure over two days, the latest value after it"
+msgstr "Luftdruck über zwei Tage, dahinter der letzte Wert"
+
+msgid "rain of the last day as bars, 120 × 24 pixels"
+msgstr "Regen des letzten Tages als Balken, 120 × 24 Pixel"
+
+msgid "temperature of the last 24 hours, the size of a word"
+msgstr "Temperatur der letzten 24 Stunden, so groß wie ein Wort"
+
+msgid "the last 30 days: daily means with the band from low to high"
+msgstr "die letzten 30 Tage: Tagesmittel mit dem Band von Tief bis Hoch"
+
+msgid "the last 32 days in one block: daily means with the band, rain per day, dates"
+msgstr "die letzten 32 Tage in einem Block: Tagesmittel mit Band, Regen je Tag, Datum"
+
+msgid "the six tiles of the last 24 hours"
+msgstr "die sechs Kacheln der letzten 24 Stunden"
+
+msgid "three tiles over two days"
+msgstr "drei Kacheln über zwei Tage"
+
+msgid "with small curves of the last 24 hours"
+msgstr "mit kleinen Kurven der letzten 24 Stunden"
+
+msgctxt "sparkline"
+msgid "CO2"
+msgstr "CO2"
+
+msgctxt "sparkline"
+msgid "Gusts"
+msgstr "Böen"
+
+msgctxt "sparkline"
+msgid "Humidity"
+msgstr "Luftfeuchte"
+
+msgctxt "sparkline"
+msgid "Noise"
+msgstr "Lärm"
+
+msgctxt "sparkline"
+msgid "Pressure"
+msgstr "Luftdruck"
+
+msgctxt "sparkline"
+msgid "Rain"
+msgstr "Regen"
+
+msgctxt "sparkline"
+msgid "Temperature"
+msgstr "Temperatur"
+
+msgctxt "sparkline"
+msgid "Wind"
+msgstr "Wind"
+
+msgctxt "sparkline month axis date format"
+msgid "n/j"
+msgstr "j.n."

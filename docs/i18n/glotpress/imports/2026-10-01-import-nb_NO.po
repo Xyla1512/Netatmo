@@ -1,0 +1,271 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo\n"
+"Language: nb_NO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "%1$s in %2$d day"
+msgid_plural "%1$s in %2$d days"
+msgstr[0] "%1$s på %2$d døgn"
+msgstr[1] "%1$s på %2$d døgn"
+
+msgid "%1$s in %2$d hour"
+msgid_plural "%1$s in %2$d hours"
+msgstr[0] "%1$s på %2$d time"
+msgstr[1] "%1$s på %2$d timer"
+
+msgid "%1$s, last %2$s: %3$s in total"
+msgstr "%1$s, siste %2$s: totalt %3$s"
+
+msgid "%1$s, last %2$s: daily means from %3$s to %4$s, range %5$s to %6$s"
+msgstr "%1$s, siste %2$s: døgnmiddel fra %3$s til %4$s, spenn %5$s til %6$s"
+
+msgid "%1$s, last %2$s: from %3$s to %4$s, latest %5$s"
+msgstr "%1$s, siste %2$s: fra %3$s til %4$s, sist %5$s"
+
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d time"
+msgstr[1] "%d timer"
+
+msgid "%s ago"
+msgstr "for %s siden"
+
+msgid "A curve the size of a word: how a reading got to where it is, drawn next to the number in running text. The raw readings of the last hours, or a column of the daily summary with the band between daily low and high; rain as bars. Rendered on the server as SVG; hovering shows time and value. Colours on the Appearance page, tab Sparkline."
+msgstr "En kurve på størrelse med et ord: hvordan en måling kom dit den er, tegnet ved siden av tallet i løpende tekst. Råmålingene fra de siste timene, eller en kolonne i døgnoversikten med båndet mellom døgnets laveste og høyeste; nedbør som søyler. Tegnet på serveren som SVG; når musen er over, vises tid og verdi. Farger på siden Utseende, fanen Sparkline."
+
+msgid "Appearance sections"
+msgstr "Deler av utseendet"
+
+msgid "Band (daily low to high)"
+msgstr "Bånd (døgnets laveste til høyeste)"
+
+msgid "Bar above each day"
+msgstr "Stolpe over hver dag"
+
+msgid "Colours for [naws_forecast]: the thin bar above each day, and the bar, frame and weekday of today. Texts, frames and the background of the cards follow the base theme. The defaults are the colours the forecast has always used."
+msgstr "Farger for [naws_forecast]: den smale stolpen over hver dag, og stolpe, ramme og ukedag for i dag. Tekster, rammer og bakgrunnen til kortene følger basistemaet. Standardverdiene er fargene varselet alltid har brukt."
+
+msgid "Colours for [naws_sparkline] and the curves in the sidebar widget. One line colour serves every quantity; the dark scheme of the widget uses the two colours \"on dark ground\". The area under a line is the line colour, lightly filled."
+msgstr "Farger for [naws_sparkline] og kurvene i sidefelt-widgeten. Én linjefarge gjelder for alle måleverdier; widgetens mørke fargeskjema bruker de to fargene «på mørk bakgrunn». Flaten under en linje er linjefargen, svakt fylt."
+
+msgid "Comma-separated, in the order of the tiles: Temperature, Humidity, Pressure, WindStrength, GustStrength, Rain, CO2, Noise."
+msgstr "Kommaseparert, i rekkefølgen til flisene: Temperature, Humidity, Pressure, WindStrength, GustStrength, Rain, CO2, Noise."
+
+msgid "Daily high"
+msgstr "Døgnets høyeste"
+
+msgid "Daily low"
+msgstr "Døgnets laveste"
+
+msgid "Daily mean CO2"
+msgstr "Døgnmiddel CO2"
+
+msgid "Daily mean humidity"
+msgstr "Døgnmiddel for luftfuktighet"
+
+msgid "Daily mean noise"
+msgstr "Døgnmiddel støy"
+
+msgid "Daily mean on %s"
+msgstr "Døgnmiddel %s"
+
+msgid "Daily mean pressure"
+msgstr "Døgnmiddel for lufttrykk"
+
+msgid "Daily mean temperature"
+msgstr "Døgnmiddeltemperatur"
+
+msgid "Daily mean wind"
+msgstr "Døgnmiddel for vind"
+
+msgid "Forecast"
+msgstr "Varsel"
+
+msgid "High %s"
+msgstr "Høyest %s"
+
+msgid "Hover bubble – background"
+msgstr "Boble – bakgrunn"
+
+msgid "Hover bubble – text"
+msgstr "Boble – tekst"
+
+msgid "Line"
+msgstr "Linje"
+
+msgid "Line on dark ground"
+msgstr "Linje på mørk bakgrunn"
+
+msgid "Live preview — forecast"
+msgstr "Live-forhåndsvisning – varsel"
+
+msgid "Live preview — sparkline"
+msgstr "Forhåndsvisning — sparkline"
+
+msgid "Low %1$s · High %2$s"
+msgstr "Lavest %1$s · Høyest %2$s"
+
+msgid "Low %s"
+msgstr "Lavest %s"
+
+msgid "Low and high dots"
+msgstr "Punkter for laveste og høyeste"
+
+msgid "Most: %s"
+msgstr "Mest: %s"
+
+msgid "Only with layout=\"tile\": the name at the top of the card instead of the name of the quantity."
+msgstr "Bare med layout=\"tile\": navnet øverst på kortet i stedet for navnet på måleverdien."
+
+msgid "Peak %s"
+msgstr "Topp %s"
+
+msgid "Rain bars"
+msgstr "Nedbørsøyler"
+
+msgid "Rain bars on dark ground"
+msgstr "Nedbørsøyler på mørk bakgrunn"
+
+msgid "Rain in %d day"
+msgid_plural "Rain in %d days"
+msgstr[0] "Nedbør på %d døgn"
+msgstr[1] "Nedbør på %d døgn"
+
+msgid "Rain per day"
+msgstr "Nedbør per døgn"
+
+msgid "Raw readings: Temperature, Humidity, Pressure, WindStrength, GustStrength, Rain, CO2, Noise. Daily summary: temp_avg, temp_min, temp_max, humidity_avg, pressure_avg, rain_sum, wind_avg, gust_max, co2_avg, noise_avg."
+msgstr "Råmålinger: Temperature, Humidity, Pressure, WindStrength, GustStrength, Rain, CO2, Noise. Døgnoversikt: temp_avg, temp_min, temp_max, humidity_avg, pressure_avg, rain_sum, wind_avg, gust_max, co2_avg, noise_avg."
+
+msgid "Sample sparkline in the chosen colours"
+msgstr "Eksempel på sparkline i de valgte fargene"
+
+msgid "Show the last 24 hours as small curves"
+msgstr "Vis de siste 24 timene som små kurver"
+
+msgid "Size in pixels, width 20–600 and height 10–200. Left out, the curve is 4.6 × 1.05 em and grows with the text."
+msgstr "Størrelse i piksler, bredde 20–600 og høyde 10–200. Utelatt er kurven 4,6 × 1,05 em og vokser med teksten."
+
+msgid "Sparkline"
+msgstr "Sparkline"
+
+msgid "Sparklines"
+msgstr "Sparklines"
+
+msgid "Strongest gust per day"
+msgstr "Sterkeste vindkast per døgn"
+
+msgid "The last 24 hours as small curves: the temperature in the head, and tiles for humidity, pressure, wind, rain and CO2 with low and high. 1 shows them, 0 hides them."
+msgstr "De siste 24 timene som små kurver: temperaturen øverst, og fliser for luftfuktighet, lufttrykk, vind, nedbør og CO2 med laveste og høyeste. 1 viser dem, 0 skjuler dem."
+
+msgid "The sparkline tiles side by side: one card per quantity with its name, the current value, low and high of the last hours and a large curve. Without attributes, the six tiles temperature, humidity, pressure, wind, rain and CO2. The grid wraps by itself, one below the other on a phone. A quantity whose module is missing or silent is left out."
+msgstr "Sparkline-flisene side om side: ett kort per størrelse med navn, gjeldende verdi, laveste og høyeste de siste timene og en stor kurve. Uten attributter de seks flisene temperatur, luftfuktighet, lufttrykk, vind, nedbør og CO2. Rutenettet brytes av seg selv, på mobilen står flisene under hverandre. En størrelse der modulen mangler eller er stille, utelates."
+
+msgid "The temperature under the figure in the head; below it humidity, pressure, wind, rain and CO2 as tiles, two to a row, each with low and high and its curve. Colours on the Sparkline tab above. sparklines=\"1\" or sparklines=\"0\" on the shortcode overrides this for one placement."
+msgstr "Temperaturen under tallet øverst; under den luftfuktighet, lufttrykk, vind, nedbør og CO2 som fliser, to per rad, hver med laveste og høyeste og sin kurve. Farger i fanen «Sparkline» ovenfor. sparklines=\"1\" eller sparklines=\"0\" på kortkoden overstyrer dette for én plassering."
+
+msgid "Today – bar"
+msgstr "I dag – stolpe"
+
+msgid "Today – frame"
+msgstr "I dag – ramme"
+
+msgid "Today – weekday"
+msgstr "I dag – ukedag"
+
+msgid "Window in days from the daily summary, 2–366. For the daily columns; 30 if left out. Not allowed with a raw reading."
+msgstr "Tidsvindu i dager fra døgnoversikten, 2–366. For døgnkolonnene; 30 hvis utelatt. Ikke tillatt med en råmåling."
+
+msgid "Window of raw readings in hours, 1–168."
+msgstr "Tidsvindu for råmålinger i timer, 1–168."
+
+msgid "a card: name, current value, low and high, a large curve"
+msgstr "et kort: navn, gjeldende verdi, lavest og høyest, en stor kurve"
+
+msgid "automatic"
+msgstr "automatisk"
+
+msgid "from param"
+msgstr "fra param"
+
+msgid "in %s"
+msgstr "om %s"
+
+msgid "inline (the curve in running text), tile (a card: name, current value, low and high, a large curve) or month (daily means with the band from low to high and rain per day, with a date axis; needs no param, days 7–366)."
+msgstr "inline (kurven i løpende tekst), tile (et kort: navn, gjeldende verdi, lavest og høyest, en stor kurve) eller month (døgnmiddel med båndet fra lavest til høyest og nedbør per døgn, med datoakse; trenger ikke param, days 7–366)."
+
+msgid "line or bars. Bars are for rain only; left out, rain gets bars and everything else a line."
+msgstr "line eller bars. Søyler finnes bare for nedbør; utelatt får nedbør søyler og alt annet linje."
+
+msgid "minmax: with days and temp_avg, the band between daily low and high under the line of daily means."
+msgstr "minmax: med days og temp_avg, båndet mellom døgnets laveste og høyeste under linjen for døgnmiddel."
+
+msgid "none, value (the latest value, or the rain total, after the curve) or minmax (dots on the lowest and the highest point)."
+msgstr "none, value (siste verdi eller nedbørssummen etter kurven) eller minmax (punkter på laveste og høyeste verdi)."
+
+msgid "outdoor, indoor, wind, rain, in-<name> or a MAC address. Left out, the module that measures the reading. Ignored with days."
+msgstr "outdoor, indoor, wind, rain, in-<name> eller en MAC-adresse. Utelatt: modulen som måler verdien. Ignoreres med days."
+
+msgid "pressure over two days, the latest value after it"
+msgstr "lufttrykk over to dager, med siste verdi etter"
+
+msgid "rain of the last day as bars, 120 × 24 pixels"
+msgstr "nedbør det siste døgnet som søyler, 120 × 24 piksler"
+
+msgid "temperature of the last 24 hours, the size of a word"
+msgstr "temperatur de siste 24 timene, på størrelse med et ord"
+
+msgid "the last 30 days: daily means with the band from low to high"
+msgstr "de siste 30 dagene: døgnmiddel med båndet fra laveste til høyeste"
+
+msgid "the last 32 days in one block: daily means with the band, rain per day, dates"
+msgstr "de siste 32 dagene i én blokk: døgnmiddel med bånd, nedbør per døgn, datoer"
+
+msgid "the six tiles of the last 24 hours"
+msgstr "de seks flisene for de siste 24 timene"
+
+msgid "three tiles over two days"
+msgstr "tre fliser over to døgn"
+
+msgid "with small curves of the last 24 hours"
+msgstr "med små kurver for de siste 24 timene"
+
+msgctxt "sparkline"
+msgid "CO2"
+msgstr "CO2"
+
+msgctxt "sparkline"
+msgid "Gusts"
+msgstr "Vindkast"
+
+msgctxt "sparkline"
+msgid "Humidity"
+msgstr "Luftfuktighet"
+
+msgctxt "sparkline"
+msgid "Noise"
+msgstr "Støy"
+
+msgctxt "sparkline"
+msgid "Pressure"
+msgstr "Lufttrykk"
+
+msgctxt "sparkline"
+msgid "Rain"
+msgstr "Nedbør"
+
+msgctxt "sparkline"
+msgid "Temperature"
+msgstr "Temperatur"
+
+msgctxt "sparkline"
+msgid "Wind"
+msgstr "Vind"
+
+msgctxt "sparkline month axis date format"
+msgid "n/j"
+msgstr "j.n."

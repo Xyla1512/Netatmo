@@ -2,7 +2,7 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
-## [Unreleased]
+## [2.1.0]
 
 ### Added
 - **`[naws_sparkline]`: a curve the size of a word.** How a reading got to where it is, drawn next to the number in running text — no axes, no labels, a dot on the latest value. From the raw readings of the last `hours` (1–168, 24 by default) of any of eight quantities, or from a column of the daily summary over `days` (2–366); rain as bars, the daily means of the temperature optionally over the band between daily low and high (`band="minmax"`). `show="value"` puts the latest value or the rain total after the curve, `show="minmax"` marks the lowest and highest point. Without `width`/`height` the curve is 4.6 × 1.05 em and grows with the text around it. Rendered on the server as SVG and complete without JavaScript; a small script adds a bubble with time and value on hover or tap. A screen reader hears the range and the latest value. The module follows from the quantity (pressure from the base station, rain from the gauge), and a station that has nothing to show renders nothing. Eight colours on a new Appearance tab, Sparkline — the same line colour for all quantities, and a second one each for the line and the rain bars on a dark ground.

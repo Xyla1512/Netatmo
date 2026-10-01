@@ -1,11 +1,11 @@
 {
-    "aktualisiert": "2026-09-26",
+    "aktualisiert": "2026-10-01",
     "vorhaben": [
         {
             "id": "sparkline",
             "titel": "Sparklines: a curve the size of a word",
-            "satz": "[naws_sparkline] draws the course of a reading as a tiny curve, as tall as a line of text: next to the number in running text and, if you like, in the widget's tiles. From the raw readings of the last hours or from the daily table with the span between low and high, rain as bars. Server-side SVG, time and value on hover, colours from the appearance settings.",
-            "ab": null,
+            "satz": "[naws_sparkline] draws the course of a reading as a tiny curve, as tall as a line of text: next to the number in running text and, if you like, in the widget's tiles. From the raw readings of the last hours or from the daily table with the span between low and high, rain as bars. Plus cards with value, low and high, a month block, and [naws_sparkline_tiles] for six cards at once. Server-side SVG, time and value on hover, colours from the appearance settings.",
+            "ab": "2.1.0",
             "bild": null
         },
         {

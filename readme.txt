@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 2.0.2
+Stable tag: 2.1.0
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -122,6 +122,17 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 
 == Changelog ==
 
+= 2.1.0 =
+* Added: `[naws_sparkline]` — a curve the size of a word, next to the number in running text: the raw readings of the last hours or a column of the daily summary, rain as bars, the band between daily low and high, a bubble with time and value on hover. `layout="tile"` draws it as a card with value, low and high; `layout="month"` as a block of daily means with the rain per day. Server-side SVG, complete without JavaScript; eight colours on a new Appearance tab, Sparkline.
+* Added: `[naws_sparkline_tiles]` — the sparkline cards as a grid that wraps by itself: temperature, humidity, pressure, wind, rain and CO2 by default (`params`, `hours`).
+* Added: sparklines in the sidebar widget. A switch under Appearance › Sidebar widget, or `sparklines="1"` on the shortcode, adds a 24-hour curve under the temperature and five tiles for humidity, pressure, wind, rain and CO2. Off by default.
+* Changed: the forecast's colours can be set on a new Appearance tab, Forecast; texts, frames and the card background follow the base theme. The Appearance tabs are WordPress tabs now, wrap on a narrow screen and stay open after saving.
+* Changed: the REST endpoint `/daily` returns `humidity_avg`, `wind_avg`, `co2_avg` and `noise_avg` when asked for them.
+* Fix: numbers follow the language of the page — "23,4 °C" and "1.019,1 mbar" on a German page — in the widget, the tables, single and computed values, the infobar, the heatmap, the e-mails and the axes and tooltips of the charts.
+* Fix: the heatmap no longer colours today. The running mean of a day that is not over looked like a finished day; the cell now gets its colour the next day.
+* Fix: `[naws_current]` shows its icons again instead of their SVG source as text.
+* Fix: "11 Minuten ago" — relative times are translatable now ("vor 11 Minuten").
+
 = 2.0.2 =
 * Added: retention of raw readings, switchable. The settings page promised "all data is stored permanently" while the dashboard sidebar showed a "Data Retention: 365" that nothing applied. Retention is a real thing now, in a section of its own on the settings page and off by default: switch it on, give it a number of days (365 by default, never fewer than 30), and once a night, after the daily summary, the plugin deletes raw readings older than that and notes the run on the settings page and in the cron log. Only the raw readings go — the ten-minute values behind the live dashboard, `[naws_table]`, `[naws_chart]`, the wind rose and the REST readings endpoint. The daily table is never touched, so history, heatmap, records and climate indices keep their full range. Switching it on, and the manual purge, ask once more and say what is lost. An update changes nothing: the switch is off until you turn it on.
 * Fix: the wind cards of the live dashboard ignored every colour setting. `[naws_live]` drew its compass, the pointer and the half-circle gauge for wind and gusts with literal colours; the "Compass Needle" colour went into the page as a variable nothing read, and for wind and gusts there was no field at all. The two cards now take their colours from a tab of their own, Appearance › Live dashboard: wind — background (compass face and the empty part of the gauge), compass rose, compass pointer (the old "Compass Needle", same key, so a saved colour survives), gauge wind, gauge gusts, gauge peak gust of the day — with a preview built from the real compass and gauge. The defaults are the colours the dashboard has always used.
@@ -132,6 +143,7 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 * Fix: the 24-hour rain in the dashboard's rain card was far too low. The card sums the plugin's own `Rain` readings over the last 24 hours, because Netatmo's `sum_rain_24` resets at midnight and the card promises a rolling day. But the rain gauge reports every five minutes, each report carrying the rain of those five minutes, and getstationsdata shows only the newest report — so a fetch every ten minutes stored one report in two, and the card showed 1.6 mm on a day with 3.9 mm; a fetch every 30 or 60 minutes lost even more. After every fetch the plugin now asks getmeasure for the five-minute reports since the last one it has and stores them under their own timestamps; the first fetch after the update closes the last 24 hours in one call. A dry hour needs no extra call. The daily, monthly and yearly sums were never affected — they come from Netatmo's own daily counter. The rain rule of the e-mail notifications, which uses the same rolling sum, is corrected along with the card.
 * Changed: `[naws_live]` no longer carries a forecast strip of its own. The dashboard fetched the forecast itself and rendered a copy of the day cards that `[naws_forecast]` shows, and on a page carrying both shortcodes the forecast appeared twice. Whoever wants the forecast under the dashboard places `[naws_forecast]` below it — same cards, same settings. The "forecast days" setting now describes itself as the default for `[naws_forecast]`.
 * Changed: the heatmap builds up when it comes into view, not when the page loads. On a page where `[naws_heatmap]` sits below the fold the wave of tiles was over before anyone scrolled to it. The tiles now stay hidden until the top edge of the map reaches the middle of the screen — or until the page is scrolled to its end, for a map near the bottom of a short page; then the wave runs once. Visitors who ask for reduced motion, and print, get the map at once; without JavaScript nothing is hidden.
+
 = 2.0.0 =
 * Added: e-mail notifications. After every fetch the plugin checks up to thirteen rules and mails every change of state — once when it begins and, for every rule but rain, once when it is over; all changes of one fetch go into one mail. Seven rules watch the station: battery of a module below a percentage, weak radio link of a module, poor Wi-Fi of the base station, base station not reporting to Netatmo, module not reporting to the base station, three failed fetches in a row, expired credentials. Six watch the weather and the indoor air: frost, heat, a gust above a threshold, rain of the last 24 hours above a threshold, rain starting, CO₂ of the base station or an indoor module above a threshold. Radio, Wi-Fi and the two silence rules hold for a while before they speak or clear; frost and gust wait an hour below the threshold before the all-clear; rain sends no all-clear. All rules ship switched off, and a master switch pauses every mail without touching the rules. The new page XTX Netatmo → Notifications holds the switch, the recipients, the rules with their thresholds in your units, a test-mail button and the last fifty mails.
 * Added: the five status fields Netatmo sends with every module are stored now (schema 1.5): battery percentage, Wi-Fi of the base station, whether a device is reachable, when the base station last reported to Netatmo and when a module last spoke to the base station. The Modules page shows Netatmo's own battery percentage instead of an estimate from the voltage.
@@ -146,25 +158,18 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 * Fix: attributes that a page builder writes with HTML entities (`value=&quot;dewpoint&quot;`) reach the shortcode as intended; they used to arrive as `quotdewpointquot` and fall back to `--`. All fifteen shortcodes decode them first.
 * Fix: on Android, Chrome's automatic dark theme inverted the wind rose and the sun's arc into black shapes. The blocks declare `color-scheme: only light` now, which takes exactly them out of that and leaves the page alone.
 
-= 1.9.12 =
-* Added: `[naws_windrose]` — where the wind comes from, how often, and how hard: one ray per compass direction (16 or 8), its length the share of readings from there, stacked by Beaufort class from the centre outwards, calm in the hub. Below it the main directions, mean, peak and calm share, a legend, and a table for screen readers. Built from the raw ten-minute readings with one grouped query per period, cached as a transient. `period` (`7d`, `30d`, `90d`, `year`, `all`), `from`/`to` for a fixed range, `measure` (`wind`, `gust`, `both`), `sectors`, `show`, `switcher`, `size`, `title`. Every period of the switcher is rendered on the server; the script only swaps panels and dresses the tooltips. Seven colours on a new Appearance tab.
-* Added: the "Wind & Gusts" card of `[naws_live]` shows the day's strongest gust as a third value, in the configured wind unit, and the gauge gets a third, red needle for it.
-* Fix: the compass directions are translated. The forecast in `[naws_live]` and `[naws_forecast]` showed a German visitor "ESE" where "OSO" belongs; the sixteen codes go through gettext now, in German and Norwegian.
-* Fix: the frontend stylesheet and scripts carry the file's modification time in their version, so a changed file is fetched even when the plugin version stays the same — the admin assets have done this since 1.9.7.
-* Changed: this readme carries only the five most recent versions of the changelog; the full history since 1.0.0 lives in CHANGELOG.md on GitHub.
-
 Older versions: the complete changelog since 1.0.0 is kept in [CHANGELOG.md](https://github.com/Xyla1512/Netatmo/blob/main/CHANGELOG.md) on GitHub.
 
 == Upgrade Notice ==
+
+= 2.1.0 =
+New: sparklines — [naws_sparkline] inline, as a card or a month block, [naws_sparkline_tiles], and optional curves in the sidebar widget. Forecast colours on their own Appearance tab. Fix: decimal commas on German pages, charts included; the heatmap leaves today empty.
 
 = 2.0.2 =
 New: switchable retention of raw readings (off by default; the daily table is never touched). Fix: the wind cards of the live dashboard take their colours from a new Appearance tab — compass, pointer, wind and gust gauge. Nothing to reconfigure.
 
 = 2.0.1 =
 Fix: the 24-hour rain in the dashboard card was far too low — a fetch every ten minutes kept only every second five-minute report of the rain gauge; the gaps are closed now. [naws_live] no longer shows its own forecast strip: place [naws_forecast] below it if you want one. Nothing to reconfigure.
-
-= 2.0.0 =
-New: e-mail notifications — thirteen rules for battery, radio, Wi-Fi, silent station or module, failed fetches, frost, heat, gusts, rain and CO₂; one mail per state change plus all-clear. All rules ship off; five status columns are added automatically. Nothing to reconfigure.
 
 == Privacy & External Services ==
 
