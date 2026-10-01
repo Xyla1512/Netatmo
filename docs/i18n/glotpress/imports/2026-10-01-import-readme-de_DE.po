@@ -1,0 +1,48 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo - Stable Readme\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "<code>[naws_sparkline_tiles]</code> – The sparkline cards side by side in a grid that wraps by itself: temperature, humidity, pressure, wind, rain and CO2 by default (<code>params</code>, <code>hours</code>)"
+msgstr "<code>[naws_sparkline_tiles]</code> – Die Sparkline-Karten nebeneinander in einem Raster, das von selbst umbricht: ab Werk Temperatur, Luftfeuchte, Luftdruck, Wind, Regen und CO2 (<code>params</code>, <code>hours</code>)"
+
+msgid "<code>[naws_sparkline]</code> – A curve the size of a word: the raw readings of the last hours or a column of the daily summary, rain as bars, the band between daily low and high, time and value on hover; as a card or a month block too (<code>param</code>, <code>hours</code>, <code>days</code>, <code>module</code>, <code>width</code>, <code>height</code>, <code>show</code>, <code>type</code>, <code>band</code>, <code>layout</code>, <code>title</code>)"
+msgstr "<code>[naws_sparkline]</code> – Eine Kurve so groß wie ein Wort: die Rohmessungen der letzten Stunden oder eine Spalte der Tagesübersicht, Regen als Balken, das Band zwischen Tagestief und Tageshoch, Uhrzeit und Wert beim Überfahren; auch als Karte oder Monatsblock (<code>param</code>, <code>hours</code>, <code>days</code>, <code>module</code>, <code>width</code>, <code>height</code>, <code>show</code>, <code>type</code>, <code>band</code>, <code>layout</code>, <code>title</code>)"
+
+msgid "<code>[naws_weather_widget]</code> – Compact forecast widget for a sidebar (<code>days</code> 3 or 5, <code>width</code> 250–500, <code>scheme</code> light, dark or transparent, <code>sparklines</code> 0 or 1)"
+msgstr "<code>[naws_weather_widget]</code> – Kompaktes Vorhersage-Widget für eine Seitenleiste (<code>days</code> 3 oder 5, <code>width</code> 250–500, <code>scheme</code> light, dark oder transparent, <code>sparklines</code> 0 oder 1)"
+
+msgid "<strong>17 Shortcodes</strong> – Dashboard, current readings, infobar, single value, computed value, sparkline, sparkline tiles, history charts, heatmap, records, this day in earlier years, sun path, wind rose, forecast, table, widget, weather icon"
+msgstr "<strong>17 Shortcodes</strong> – Dashboard, aktuelle Messwerte, Infoleiste, Einzelwert, berechneter Wert, Sparkline, Sparkline-Kacheln, Verlaufsdiagramme, Heatmap, Rekorde, dieser Tag in früheren Jahren, Sonnenbahn, Windrose, Vorhersage, Tabelle, Widget, Wettersymbol"
+
+msgid "Fix: \"11 Minuten ago\" — relative times are translatable now (\"vor 11 Minuten\")."
+msgstr "Fix: „11 Minuten ago“ — relative Zeitangaben sind jetzt übersetzbar („vor 11 Minuten“)."
+
+msgid "Fix: <code>[naws_current]</code> shows its icons again instead of their SVG source as text."
+msgstr "Fix: <code>[naws_current]</code> zeigt seine Symbole wieder statt ihres SVG-Quelltexts als Text."
+
+msgid "Fix: the heatmap no longer colours today. The running mean of a day that is not over looked like a finished day; the cell now gets its colour the next day."
+msgstr "Fix: Die Heatmap färbt den heutigen Tag nicht mehr. Das laufende Mittel eines Tages, der noch nicht vorbei ist, sah aus wie ein fertiger Tag; die Zelle bekommt ihre Farbe jetzt am nächsten Tag."
+
+msgid "Fix: numbers follow the language of the page — \"23,4 °C\" and \"1.019,1 mbar\" on a German page — in the widget, the tables, single and computed values, the infobar, the heatmap, the e-mails and the axes and tooltips of the charts."
+msgstr "Fix: Zahlen folgen der Sprache der Seite — „23,4 °C“ und „1.019,1 mbar“ auf einer deutschen Seite — im Widget, in den Tabellen, in Einzel- und Rechenwerten, in der Infoleiste, der Heatmap, den E-Mails und in Achsen und Sprechblasen der Diagramme."
+
+msgid "Changed: the REST endpoint <code>/daily</code> returns <code>humidity_avg</code>, <code>wind_avg</code>, <code>co2_avg</code> and <code>noise_avg</code> when asked for them."
+msgstr "Changed: Der REST-Endpunkt <code>/daily</code> liefert <code>humidity_avg</code>, <code>wind_avg</code>, <code>co2_avg</code> und <code>noise_avg</code>, wenn sie verlangt werden."
+
+msgid "Changed: the forecast's colours can be set on a new Appearance tab, Forecast; texts, frames and the card background follow the base theme. The Appearance tabs are WordPress tabs now, wrap on a narrow screen and stay open after saving."
+msgstr "Changed: Die Farben der Vorhersage lassen sich auf einem neuen Reiter im Erscheinungsbild einstellen, Vorhersage; Texte, Rahmen und Kartenhintergrund folgen dem Basis-Theme. Die Reiter im Erscheinungsbild sind jetzt WordPress-Reiter, brechen auf schmalen Bildschirmen um und bleiben nach dem Speichern offen."
+
+msgid "Added: sparklines in the sidebar widget. A switch under Appearance › Sidebar widget, or <code>sparklines=\"1\"</code> on the shortcode, adds a 24-hour curve under the temperature and five tiles for humidity, pressure, wind, rain and CO2. Off by default."
+msgstr "Added: Sparklines im Seitenleisten-Widget. Ein Schalter unter Erscheinungsbild › Seitenleisten-Widget oder <code>sparklines=\"1\"</code> am Shortcode fügt eine 24-Stunden-Kurve unter der Temperatur und fünf Kacheln für Luftfeuchte, Luftdruck, Wind, Regen und CO2 hinzu. Ab Werk aus."
+
+msgid "Added: <code>[naws_sparkline_tiles]</code> — the sparkline cards as a grid that wraps by itself: temperature, humidity, pressure, wind, rain and CO2 by default (<code>params</code>, <code>hours</code>)."
+msgstr "Added: <code>[naws_sparkline_tiles]</code> — die Sparkline-Karten als Raster, das von selbst umbricht: ab Werk Temperatur, Luftfeuchte, Luftdruck, Wind, Regen und CO2 (<code>params</code>, <code>hours</code>)."
+
+msgid "Added: <code>[naws_sparkline]</code> — a curve the size of a word, next to the number in running text: the raw readings of the last hours or a column of the daily summary, rain as bars, the band between daily low and high, a bubble with time and value on hover. <code>layout=\"tile\"</code> draws it as a card with value, low and high; <code>layout=\"month\"</code> as a block of daily means with the rain per day. Server-side SVG, complete without JavaScript; eight colours on a new Appearance tab, Sparkline."
+msgstr "Added: <code>[naws_sparkline]</code> — eine Kurve so groß wie ein Wort, neben der Zahl im Fließtext: die Rohmessungen der letzten Stunden oder eine Spalte der Tagesübersicht, Regen als Balken, das Band zwischen Tagestief und Tageshoch, eine Sprechblase mit Uhrzeit und Wert beim Überfahren. <code>layout=\"tile\"</code> zeichnet sie als Karte mit Wert, Tief und Hoch, <code>layout=\"month\"</code> als Block aus Tagesmitteln mit dem Regen pro Tag. Serverseitiges SVG, vollständig ohne JavaScript; acht Farben auf einem neuen Reiter im Erscheinungsbild, Sparkline."
+
