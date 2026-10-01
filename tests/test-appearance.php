@@ -172,7 +172,7 @@ check( 'die Vorgaben', array_intersect_key( NAWS_Colors::DEFAULTS, array_flip( N
     'sparkline_rain'      => '#3585b0',
     'sparkline_rain_dark' => '#78ace8',
     'sparkline_band'      => '#427272',
-    'sparkline_dots'      => '#7aa0a0',
+    'sparkline_dots'      => '#638a8a',
     'sparkline_tip_bg'    => '#2d5252',
     'sparkline_tip_text'  => '#ffffff',
 ] );

@@ -2004,9 +2004,9 @@
 .naws-sl-area { fill:var(--naws-sl-line, #427272); fill-opacity:.14; stroke:none; }
 .naws-sl-band { fill:var(--naws-sl-band, #427272); fill-opacity:.16; stroke:none; }
 .naws-sl-bar  { fill:var(--naws-sl-rain, #3585b0); stroke:none; }
-.naws-sl-base { fill:none; stroke:var(--naws-sl-dots, #7aa0a0); stroke-width:1px; opacity:.5; }
+.naws-sl-base { fill:none; stroke:var(--naws-sl-dots, #638a8a); stroke-width:1px; opacity:.5; }
 .naws-sl-mm, .naws-sl-ring, .naws-sl-end { fill:none; stroke-linecap:round; }
-.naws-sl-mm   { stroke:var(--naws-sl-dots, #7aa0a0); stroke-width:3px; }
+.naws-sl-mm   { stroke:var(--naws-sl-dots, #638a8a); stroke-width:3px; }
 .naws-sl-ring { stroke:var(--naws-sl-ring, transparent); stroke-width:7px; }
 .naws-sl-end  { stroke:var(--naws-sl-line, #427272); stroke-width:4px; }
 .naws-sl-val  { font-variant-numeric:tabular-nums; }

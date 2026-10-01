@@ -156,7 +156,7 @@ Acht neue Schlüssel in `NAWS_Colors::DEFAULTS`, Konstante `SPARKLINE_KEYS` in d
 | `sparkline_rain` | `--naws-sl-rain` | `#3585b0` | wie `chart_rain` |
 | `sparkline_rain_dark` | `--naws-sl-rain-dark` | `#78ace8` | helleres Blau für dunklen Grund |
 | `sparkline_band` | `--naws-sl-band` | `#427272` | deckende Linienfarbe; 16 % Deckung über `fill-opacity` im Stylesheet, nicht im Farbwert (Iris kennt keinen Alphakanal) |
-| `sparkline_dots` | `--naws-sl-dots` | `#7aa0a0` | gedämpftes Petrol, wie `theme_text_muted` |
+| `sparkline_dots` | `--naws-sl-dots` | `#638a8a` | gedämpftes Petrol, dunkler als `theme_text_muted` (3,8:1 auf Weiß) |
 | `sparkline_tip_bg` | `--naws-sl-tip-bg` | `#2d5252` | wie `header_bg` |
 | `sparkline_tip_text` | `--naws-sl-tip-text` | `#ffffff` | |
 
