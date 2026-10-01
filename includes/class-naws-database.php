@@ -1117,11 +1117,17 @@ class NAWS_Database {
      * Modul eine Zeile, also koennen fuer einen Tag mehrere Zeilen kommen;
      * so gewinnt der gespeicherte Wert unabhaengig von ihrer Reihenfolge.
      *
-     * @param array $rows  Zeilen mit day_date, temp_avg, temp_min, temp_max.
-     * @param int   $year
+     * Mit $today bleibt dieser Tag leer, und alles danach auch. Der Cron
+     * schreibt nach jedem Abruf eine laufende Zeile fuer heute; ihr Mittel
+     * kennt erst einen Teil des Tages und saehe auf der Karte trotzdem aus
+     * wie ein fertiger Tag.
+     *
+     * @param array       $rows   Zeilen mit day_date, temp_avg, temp_min, temp_max.
+     * @param int         $year
+     * @param string|null $today  Y-m-d des laufenden Tages, oder null fuer keinen Stichtag.
      * @return array{values:array,sources:array}
      */
-    public static function shape_heatmap_year( array $rows, $year ) {
+    public static function shape_heatmap_year( array $rows, $year, $today = null ) {
         $year    = (int) $year;
         $values  = [];
         $sources = [];
@@ -1132,9 +1138,10 @@ class NAWS_Database {
             $sources[ $m - 1 ] = array_fill( 0, $days, null );
         }
 
-        $place = static function ( $row ) use ( $year, &$values ) {
+        $place = static function ( $row ) use ( $year, $today, &$values ) {
             $date = substr( (string) ( $row['day_date'] ?? '' ), 0, 10 );
             if ( ! preg_match( '/^(\d{4})-(\d{2})-(\d{2})$/', $date, $p ) ) return null;
+            if ( $today !== null && $date >= $today ) return null;
             if ( (int) $p[1] !== $year ) return null;
             $mi = (int) $p[2] - 1;
             $di = (int) $p[3] - 1;
@@ -1183,7 +1190,9 @@ class NAWS_Database {
 
         $rows = $wpdb->get_results( $wpdb->prepare( "SELECT day_date, temp_avg, temp_min, temp_max FROM {$t} WHERE YEAR(day_date) = %d ORDER BY day_date ASC", $year ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name is prefix + constant
 
-        return self::shape_heatmap_year( is_array( $rows ) ? $rows : [], $year );
+        // Der laufende Tag in der Zeitzone der Seite — dieselbe, in der der
+        // Cron ihn schreibt (wp_date in NAWS_Cron).
+        return self::shape_heatmap_year( is_array( $rows ) ? $rows : [], $year, wp_date( 'Y-m-d' ) );
     }
 
     public static function count_readings() {

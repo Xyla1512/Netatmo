@@ -113,6 +113,31 @@ $b = NAWS_Database::shape_heatmap_year( [
 check( 'der Durchschnitt gewinnt, egal wer zuerst kommt', [ $a['values'][4][0], $b['values'][4][0] ], [ 9.9, 9.9 ] );
 check( 'und die Herkunft sagt das auch',                  [ $a['sources'][4][0], $b['sources'][4][0] ], [ 'avg', 'avg' ] );
 
+echo "\nDer laufende Tag\n" . str_repeat( '-', 74 ) . "\n";
+
+// Der Cron schreibt nach jedem Abruf eine laufende Zeile fuer heute. Ihr
+// Mittel kennt erst einen Teil des Tages — morgens nur die kalte Nacht —
+// und sieht auf der Karte trotzdem aus wie ein fertiger Tag. Erst ab dem
+// Tag nach "heute" bekommt die Zelle ihre Farbe.
+$r = NAWS_Database::shape_heatmap_year( [
+    row( '2025-10-01', '12.4' ),
+    row( '2025-10-02', '6.1' ),
+    row( '2025-10-03', '7.0' ),
+], 2025, '2025-10-02' );
+
+check( 'gestern bleibt',                       $r['values'][9][0], 12.4 );
+check( 'heute bleibt leer',                    $r['values'][9][1], null );
+check( 'und hat keine Herkunft',               $r['sources'][9][1], null );
+check( 'ein Tag nach heute ebenso',            $r['values'][9][2], null );
+
+$r = NAWS_Database::shape_heatmap_year( [
+    row( '2025-10-02', null, '2.0', '10.0' ),
+], 2025, '2025-10-02' );
+check( 'auch der Rueckgriff auf min/max nicht', $r['values'][9][1], null );
+
+$r = NAWS_Database::shape_heatmap_year( [ row( '2025-10-02', '6.1' ) ], 2025 );
+check( 'ohne Stichtag bleibt alles wie bisher', $r['values'][9][1], 6.1 );
+
 echo "\n" . str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );
