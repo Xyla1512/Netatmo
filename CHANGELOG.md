@@ -2,6 +2,11 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [Unreleased]
+
+### Added
+- **Signal strength on the Modules page.** A new column, Signal, shows the last value from the sync: the Wi-Fi of the base station as a Wi-Fi fan, the radio link of every other module to the base station as four rising bars. Both come with a word — Excellent, Good, Fair, Weak — and Netatmo's raw value on hover (`wifi_status`, `rf_status`, lower is better). The weak and fair limits are those of the e-mail rules (Wi-Fi 86 and 71, radio 90 and 80); below 56 and 70 the signal counts as excellent. A device Netatmo reports as unreachable shows "Not reachable" in red instead of its last, stale level; a device that has not reported a value yet shows a dash. Nothing new is stored — the values were already kept for the notifications.
+
 ## [2.1.0]
 
 ### Added

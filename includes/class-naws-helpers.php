@@ -777,6 +777,45 @@ class NAWS_Helpers {
     }
 
     /**
+     * The last signal of a device as 1–4 bars, for the Modules page.
+     *
+     * The base station reports its Wi-Fi (wifi_status), every other module
+     * its radio link to the base station (rf_status). Both are Netatmo's raw
+     * values, lower is better. The weak and fair limits are the ones the
+     * e-mail rules use (86/71 for Wi-Fi, 90/80 for radio); 56 and 70 split
+     * the rest into good and excellent.
+     *
+     * @param  string          $module_type NAMain, NAModule1 …
+     * @param  int|string|null $wifi        wifi_status as stored.
+     * @param  int|string|null $rf          rf_status as stored.
+     * @return array{kind:string,kind_label:string,raw:int,bars:int,color:string,label:string}|null
+     *         Null when the device has not reported the value yet.
+     */
+    public static function signal_level( $module_type, $wifi, $rf ) {
+        $is_main = ( $module_type === 'NAMain' );
+        $raw     = $is_main ? $wifi : $rf;
+        if ( $raw === null || $raw === '' ) {
+            return null;
+        }
+        $raw    = (int) $raw;
+        $limits = $is_main ? [ 86, 71, 56 ] : [ 90, 80, 70 ];
+
+        if ( $raw >= $limits[0] )     { $bars = 1; $color = '#ef4444'; $label = _x( 'Weak', 'signal strength', 'xtx-integration-for-netatmo' ); }
+        elseif ( $raw >= $limits[1] ) { $bars = 2; $color = '#f59e0b'; $label = _x( 'Fair', 'signal strength', 'xtx-integration-for-netatmo' ); }
+        elseif ( $raw >= $limits[2] ) { $bars = 3; $color = '#10b981'; $label = _x( 'Good', 'signal strength', 'xtx-integration-for-netatmo' ); }
+        else                          { $bars = 4; $color = '#10b981'; $label = _x( 'Excellent', 'signal strength', 'xtx-integration-for-netatmo' ); }
+
+        return [
+            'kind'       => $is_main ? 'wifi' : 'rf',
+            'kind_label' => $is_main ? __( 'Wi-Fi', 'xtx-integration-for-netatmo' ) : _x( 'Radio', 'signal type', 'xtx-integration-for-netatmo' ),
+            'raw'        => $raw,
+            'bars'       => $bars,
+            'color'      => $color,
+            'label'      => $label,
+        ];
+    }
+
+    /**
      * The compass code of a direction in degrees, translated (since 1.9.12:
      * a German visitor reads "OSO", not "ESE"). The codes stay the keys of
      * naws_label(), so nothing that compares against them changes.

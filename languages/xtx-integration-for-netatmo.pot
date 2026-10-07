@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: XTX Integration for Netatmo\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/xtx-integration-for-netatmo\n"
-"POT-Creation-Date: 2026-10-01 15:58+0000\n"
+"POT-Creation-Date: 2026-10-07 17:46+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -106,7 +106,7 @@ msgid "%d-Day Forecast"
 msgstr ""
 
 #. translators: %s: a duration such as "11 minutes", from human_time_diff().
-#: admin/views/modules.php:94 templates/current.php:48
+#: admin/views/modules.php:136 templates/current.php:48
 msgid "%s ago"
 msgstr ""
 
@@ -469,7 +469,7 @@ msgstr ""
 msgid "Base colors for background, surfaces, text and borders. Applied to all shortcodes."
 msgstr ""
 
-#: admin/views/import.php:24 admin/views/live-settings.php:79 includes/class-naws-helpers.php:813
+#: admin/views/import.php:24 admin/views/live-settings.php:79 includes/class-naws-helpers.php:852
 msgid "Base station (Indoor)"
 msgstr ""
 
@@ -534,7 +534,7 @@ msgstr ""
 msgid "CO₂ Base"
 msgstr ""
 
-#: admin/views/live-settings.php:69 includes/class-naws-helpers.php:82 includes/class-naws-helpers.php:793 includes/class-naws-labels.php:67
+#: admin/views/live-settings.php:69 includes/class-naws-helpers.php:82 includes/class-naws-helpers.php:832 includes/class-naws-labels.php:67
 #: includes/class-naws-labels.php:83
 msgid "CO₂ Concentration"
 msgstr ""
@@ -1276,11 +1276,11 @@ msgstr ""
 msgid "Growing degree days"
 msgstr ""
 
-#: admin/views/live-settings.php:111 includes/class-naws-helpers.php:93 includes/class-naws-helpers.php:806 includes/class-naws-labels.php:78
+#: admin/views/live-settings.php:111 includes/class-naws-helpers.php:93 includes/class-naws-helpers.php:845 includes/class-naws-labels.php:78
 msgid "Gust Direction"
 msgstr ""
 
-#: admin/views/live-settings.php:109 includes/class-naws-helpers.php:92 includes/class-naws-helpers.php:805 includes/class-naws-labels.php:76
+#: admin/views/live-settings.php:109 includes/class-naws-helpers.php:92 includes/class-naws-helpers.php:844 includes/class-naws-labels.php:76
 msgid "Gust Speed"
 msgstr ""
 
@@ -1487,7 +1487,7 @@ msgstr ""
 msgid "Indoor Temperature"
 msgstr ""
 
-#: admin/views/live-settings.php:63 includes/class-naws-helpers.php:817
+#: admin/views/live-settings.php:63 includes/class-naws-helpers.php:856
 msgid "Indoor module (NAModule4)"
 msgstr ""
 
@@ -1543,7 +1543,7 @@ msgstr ""
 msgid "Last Quarter"
 msgstr ""
 
-#: admin/views/modules.php:37
+#: admin/views/modules.php:38
 msgid "Last Seen"
 msgstr ""
 
@@ -1747,7 +1747,7 @@ msgstr ""
 msgid "Max"
 msgstr ""
 
-#: includes/class-naws-database.php:1031 includes/class-naws-helpers.php:95 includes/class-naws-helpers.php:97 includes/class-naws-helpers.php:802
+#: includes/class-naws-database.php:1031 includes/class-naws-helpers.php:95 includes/class-naws-helpers.php:97 includes/class-naws-helpers.php:841
 #: includes/class-naws-labels.php:73
 msgid "Max Temperature (day)"
 msgstr ""
@@ -1788,7 +1788,7 @@ msgstr ""
 msgid "Min"
 msgstr ""
 
-#: includes/class-naws-database.php:1030 includes/class-naws-helpers.php:94 includes/class-naws-helpers.php:96 includes/class-naws-helpers.php:801
+#: includes/class-naws-database.php:1030 includes/class-naws-helpers.php:94 includes/class-naws-helpers.php:96 includes/class-naws-helpers.php:840
 #: includes/class-naws-labels.php:70
 msgid "Min Temperature (day)"
 msgstr ""
@@ -2023,12 +2023,16 @@ msgstr ""
 msgid "Noise Base"
 msgstr ""
 
-#: admin/views/live-settings.php:87 includes/class-naws-helpers.php:84 includes/class-naws-helpers.php:795 includes/class-naws-labels.php:68
+#: admin/views/live-settings.php:87 includes/class-naws-helpers.php:84 includes/class-naws-helpers.php:834 includes/class-naws-labels.php:68
 msgid "Noise Level"
 msgstr ""
 
 #: admin/views/settings.php:121
 msgid "Not connected"
+msgstr ""
+
+#: admin/views/modules.php:123
+msgid "Not reachable"
 msgstr ""
 
 #. translators: %s: a duration such as "5 minutes", from human_time_diff().
@@ -2129,7 +2133,7 @@ msgstr ""
 msgid "Outdoor Humidity (Annual Mean)"
 msgstr ""
 
-#: admin/views/import.php:23 admin/views/live-settings.php:92 includes/class-naws-helpers.php:814
+#: admin/views/import.php:23 admin/views/live-settings.php:92 includes/class-naws-helpers.php:853
 msgid "Outdoor Module"
 msgstr ""
 
@@ -2230,11 +2234,11 @@ msgstr ""
 msgid "Pressure (Annual Mean)"
 msgstr ""
 
-#: includes/class-naws-helpers.php:86 includes/class-naws-helpers.php:797 includes/class-naws-labels.php:66
+#: includes/class-naws-helpers.php:86 includes/class-naws-helpers.php:836 includes/class-naws-labels.php:66
 msgid "Pressure (absolute)"
 msgstr ""
 
-#: admin/views/import.php:24 includes/class-naws-helpers.php:85 includes/class-naws-helpers.php:796 includes/class-naws-labels.php:65
+#: admin/views/import.php:24 includes/class-naws-helpers.php:85 includes/class-naws-helpers.php:835 includes/class-naws-labels.php:65
 msgid "Pressure (relative)"
 msgstr ""
 
@@ -2282,7 +2286,7 @@ msgstr ""
 msgid "Rain (last hour)"
 msgstr ""
 
-#: admin/views/import.php:25 includes/class-naws-helpers.php:816
+#: admin/views/import.php:25 includes/class-naws-helpers.php:855
 msgid "Rain Gauge"
 msgstr ""
 
@@ -2595,6 +2599,10 @@ msgstr ""
 msgid "Sidebar widget"
 msgstr ""
 
+#: admin/views/modules.php:37
+msgid "Signal"
+msgstr ""
+
 #. translators: 1: first date with readings, 2: "365 days" or similar.
 #: includes/class-naws-labels.php:145
 msgid "Since %1$s · %2$s with readings"
@@ -2812,7 +2820,7 @@ msgid "Temp. Outdoor"
 msgstr ""
 
 #: admin/views/appearance.php:115 admin/views/live-settings.php:67 admin/views/settings.php:341 includes/class-naws-helpers.php:81
-#: includes/class-naws-helpers.php:326 includes/class-naws-helpers.php:333 includes/class-naws-helpers.php:792 includes/class-naws-labels.php:82
+#: includes/class-naws-helpers.php:326 includes/class-naws-helpers.php:333 includes/class-naws-helpers.php:831 includes/class-naws-labels.php:82
 #: includes/class-naws-labels.php:291 templates/live.php:258
 msgid "Temperature"
 msgstr ""
@@ -3088,13 +3096,13 @@ msgstr ""
 msgid "Total"
 msgstr ""
 
-#: admin/views/import.php:25 includes/class-naws-database.php:1034 includes/class-naws-helpers.php:89 includes/class-naws-helpers.php:800
+#: admin/views/import.php:25 includes/class-naws-database.php:1034 includes/class-naws-helpers.php:89 includes/class-naws-helpers.php:839
 #: includes/class-naws-labels.php:81
 msgid "Total last 24h"
 msgstr ""
 
-#: admin/views/live-settings.php:121 includes/class-naws-helpers.php:87 includes/class-naws-helpers.php:88 includes/class-naws-helpers.php:798
-#: includes/class-naws-helpers.php:799 includes/class-naws-labels.php:80
+#: admin/views/live-settings.php:121 includes/class-naws-helpers.php:87 includes/class-naws-helpers.php:88 includes/class-naws-helpers.php:837
+#: includes/class-naws-helpers.php:838 includes/class-naws-labels.php:80
 msgid "Total last hour"
 msgstr ""
 
@@ -3262,7 +3270,7 @@ msgstr ""
 msgid "Which station to read, by module or station ID."
 msgstr ""
 
-#: includes/class-naws-labels.php:333
+#: includes/class-naws-helpers.php:810 includes/class-naws-labels.php:333
 msgid "Wi-Fi"
 msgstr ""
 
@@ -3287,11 +3295,11 @@ msgstr ""
 msgid "Wind Direction"
 msgstr ""
 
-#: admin/views/live-settings.php:110 includes/class-naws-helpers.php:91 includes/class-naws-helpers.php:804 includes/class-naws-labels.php:77
+#: admin/views/live-settings.php:110 includes/class-naws-helpers.php:91 includes/class-naws-helpers.php:843 includes/class-naws-labels.php:77
 msgid "Wind Direction (compass)"
 msgstr ""
 
-#: admin/views/import.php:26 admin/views/live-settings.php:104 includes/class-naws-helpers.php:815
+#: admin/views/import.php:26 admin/views/live-settings.php:104 includes/class-naws-helpers.php:854
 msgid "Wind Gauge"
 msgstr ""
 
@@ -3299,7 +3307,7 @@ msgstr ""
 msgid "Wind Rose"
 msgstr ""
 
-#: admin/views/import.php:26 admin/views/settings.php:350 includes/class-naws-helpers.php:90 includes/class-naws-helpers.php:803
+#: admin/views/import.php:26 admin/views/settings.php:350 includes/class-naws-helpers.php:90 includes/class-naws-helpers.php:842
 #: includes/class-naws-labels.php:75
 msgid "Wind Speed"
 msgstr ""
@@ -3828,7 +3836,7 @@ msgid "Humidity"
 msgstr ""
 
 #. translators: %s is a clock time such as 06:12. Add a suffix if your language uses one; German renders "06:12 Uhr".
-#: includes/class-naws-helpers.php:873
+#: includes/class-naws-helpers.php:912
 msgctxt "clock time"
 msgid "%s"
 msgstr ""
@@ -4089,7 +4097,7 @@ msgid "ok"
 msgstr ""
 
 #: admin/views/live-settings.php:68 admin/views/live-settings.php:83 admin/views/live-settings.php:99 includes/class-naws-helpers.php:83
-#: includes/class-naws-helpers.php:794 includes/class-naws-labels.php:74
+#: includes/class-naws-helpers.php:833 includes/class-naws-labels.php:74
 msgctxt "param_humidity"
 msgid "Humidity"
 msgstr ""
@@ -4127,6 +4135,31 @@ msgstr ""
 #: includes/class-naws-forecast.php:932
 msgctxt "short date"
 msgid "%2$s %1$s"
+msgstr ""
+
+#: includes/class-naws-helpers.php:806
+msgctxt "signal strength"
+msgid "Excellent"
+msgstr ""
+
+#: includes/class-naws-helpers.php:804
+msgctxt "signal strength"
+msgid "Fair"
+msgstr ""
+
+#: includes/class-naws-helpers.php:805
+msgctxt "signal strength"
+msgid "Good"
+msgstr ""
+
+#: includes/class-naws-helpers.php:803
+msgctxt "signal strength"
+msgid "Weak"
+msgstr ""
+
+#: includes/class-naws-helpers.php:810
+msgctxt "signal type"
+msgid "Radio"
 msgstr ""
 
 #: includes/class-naws-labels.php:229

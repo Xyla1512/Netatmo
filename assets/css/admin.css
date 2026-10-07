@@ -820,6 +820,31 @@
   background: #10b981;
 }
 
+/* Signal column on the Modules page: Wi-Fi fan for the base station,
+   rising bars for the radio modules. Lit parts take the level colour
+   from the wrapper (currentColor), unlit ones stay a quiet grey. */
+.naws-signal {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  white-space: nowrap;
+}
+.naws-signal-icon { flex: none; overflow: visible; }
+.naws-signal-icon circle.on,
+.naws-signal-icon rect.on  { fill: currentColor; }
+.naws-signal-icon circle.off,
+.naws-signal-icon rect.off { fill: #dcdcde; }
+.naws-signal-icon path {
+  fill: none;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+.naws-signal-icon path.on  { stroke: currentColor; }
+.naws-signal-icon path.off { stroke: #dcdcde; }
+.naws-signal-text { color: #1d2327; }
+.naws-signal-kind { color: #646970; }
+.naws-signal-down .naws-signal-text { color: #b32d2e; font-weight: 600; }
+
 /* ============================================================
    Empty state / Info table
    ============================================================ */

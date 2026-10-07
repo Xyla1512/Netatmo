@@ -34,6 +34,7 @@ $modules = NAWS_Database::get_modules( false );
                     <th><?php esc_html_e( 'Module ID (MAC)', 'xtx-integration-for-netatmo' ); ?></th>
                     <th><?php esc_html_e( 'Data Types', 'xtx-integration-for-netatmo' ); ?></th>
                     <th><?php esc_html_e( 'Battery', 'xtx-integration-for-netatmo' ); ?></th>
+                    <th><?php esc_html_e( 'Signal', 'xtx-integration-for-netatmo' ); ?></th>
                     <th><?php esc_html_e( 'Last Seen', 'xtx-integration-for-netatmo' ); ?></th>
                 </tr>
             </thead>
@@ -50,6 +51,11 @@ $modules = NAWS_Database::get_modules( false );
                                     ? max( 0, min( 100, round( ( $batt_vp - 3500 ) / 2500 * 100 ) ) )
                                     : null );
                     $row_style  = $is_active ? '' : 'opacity:0.45;';
+                    // The last value from the sync: Wi-Fi for the base station, the
+                    // radio link to it for every module. An unreachable device keeps
+                    // its old value in the table, so it is not shown as a level.
+                    $signal      = NAWS_Helpers::signal_level( $m['module_type'], $m['wifi_status'] ?? null, $m['rf_status'] ?? null );
+                    $unreachable = isset( $m['reachable'] ) && $m['reachable'] !== '' && (int) $m['reachable'] === 0;
                 ?>
                 <tr id="naws-module-row-<?php echo esc_attr( sanitize_html_class( $m['module_id'] ) ); ?>"
                     style="<?php echo esc_attr( $row_style ); ?> transition:opacity 0.3s;">
@@ -87,6 +93,42 @@ $modules = NAWS_Database::get_modules( false );
                             </div>
                         <?php else : ?>
                             <span class="description"><?php echo 'N/A (powered)'; ?></span>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <?php if ( $unreachable || $signal !== null ) :
+                            $lit   = $unreachable ? 0 : $signal['bars'];
+                            $kind  = $signal['kind'] ?? ( $m['module_type'] === 'NAMain' ? 'wifi' : 'rf' );
+                            $title = $signal ? sprintf( '%s_status %d', $signal['kind'], $signal['raw'] ) : '';
+                        ?>
+                            <span class="naws-signal<?php echo $unreachable ? ' naws-signal-down' : ''; ?>"
+                                  style="color:<?php echo esc_attr( $unreachable ? '#ef4444' : $signal['color'] ); ?>"
+                                  title="<?php echo esc_attr( $title ); ?>">
+                                <?php if ( $kind === 'wifi' ) : ?>
+                                    <svg class="naws-signal-icon" viewBox="0 0 24 19" width="22" height="17" aria-hidden="true" focusable="false">
+                                        <circle cx="12" cy="16" r="2.2" class="<?php echo $lit >= 1 ? 'on' : 'off'; ?>"/>
+                                        <path d="M8.1 12.1a5.5 5.5 0 0 1 7.8 0" class="<?php echo $lit >= 2 ? 'on' : 'off'; ?>"/>
+                                        <path d="M4.6 8.6a10.5 10.5 0 0 1 14.8 0" class="<?php echo $lit >= 3 ? 'on' : 'off'; ?>"/>
+                                        <path d="M1.5 5.2a15 15 0 0 1 21 0" class="<?php echo $lit >= 4 ? 'on' : 'off'; ?>"/>
+                                    </svg>
+                                <?php else : ?>
+                                    <svg class="naws-signal-icon" viewBox="0 0 22 18" width="20" height="17" aria-hidden="true" focusable="false">
+                                        <?php foreach ( [ 5, 9, 13, 17 ] as $i => $h ) : ?>
+                                            <rect x="<?php echo esc_attr( $i * 6 ); ?>" y="<?php echo esc_attr( 18 - $h ); ?>" width="4" height="<?php echo esc_attr( $h ); ?>" rx="1.5" class="<?php echo $lit > $i ? 'on' : 'off'; ?>"/>
+                                        <?php endforeach; ?>
+                                    </svg>
+                                <?php endif; ?>
+                                <span class="naws-signal-text">
+                                    <?php if ( $unreachable ) : ?>
+                                        <?php esc_html_e( 'Not reachable', 'xtx-integration-for-netatmo' ); ?>
+                                    <?php else : ?>
+                                        <span class="naws-signal-kind"><?php echo esc_html( $signal['kind_label'] ); ?> &middot;</span>
+                                        <?php echo esc_html( $signal['label'] ); ?>
+                                    <?php endif; ?>
+                                </span>
+                            </span>
+                        <?php else : ?>
+                            <span class="description">&mdash;</span>
                         <?php endif; ?>
                     </td>
                     <td>
