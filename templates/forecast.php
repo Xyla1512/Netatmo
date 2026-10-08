@@ -92,19 +92,19 @@ $fc_id = 'naws-fc-' . wp_unique_id();
           ?></div>
           <div class="naws-fc-cond"><?php echo esc_html( $wmo['label'] ); ?></div>
           <div class="naws-fc-temps">
-            <span class="naws-fc-tmax"><?php echo $t_max !== null ? esc_html( $t_max ) : '--'; ?></span>
+            <span class="naws-fc-tmax"><?php echo $t_max !== null ? esc_html( NAWS_Helpers::display_number( $t_max ) ) : '--'; ?></span>
             <span class="naws-fc-sep">/</span>
-            <span class="naws-fc-tmin"><?php echo $t_min !== null ? esc_html( $t_min ) : '--'; ?></span>
+            <span class="naws-fc-tmin"><?php echo $t_min !== null ? esc_html( NAWS_Helpers::display_number( $t_min ) ) : '--'; ?></span>
             <span class="naws-fc-tunit"><?php echo esc_html( $temp_unit ); ?></span>
           </div>
           <div class="naws-fc-meta">
-            <span title="<?php echo esc_attr( __( 'Precipitation', 'xtx-integration-for-netatmo' ) ); ?>">🌧️ <?php echo $precip !== null ? esc_html( $precip . ' ' . $rain_unit ) : '0 ' . esc_html( $rain_unit ); ?></span>
+            <span title="<?php echo esc_attr( __( 'Precipitation', 'xtx-integration-for-netatmo' ) ); ?>">🌧️ <?php echo $precip !== null ? esc_html( NAWS_Helpers::display_number( $precip ) . ' ' . $rain_unit ) : '0 ' . esc_html( $rain_unit ); ?></span>
             <span title="<?php echo esc_attr( __( 'Precipitation probability', 'xtx-integration-for-netatmo' ) ); ?>">💧 <?php echo esc_html( $day['precip_prob'] . '%' ); ?></span>
-            <span title="<?php echo esc_attr( __( 'Max. wind speed', 'xtx-integration-for-netatmo' ) ); ?>">🌬️ <?php echo $w_max !== null ? esc_html( $w_max . ' ' . $wind_unit ) : '--'; ?></span>
+            <span title="<?php echo esc_attr( __( 'Max. wind speed', 'xtx-integration-for-netatmo' ) ); ?>">🌬️ <?php echo $w_max !== null ? esc_html( NAWS_Helpers::display_number( $w_max ) . ' ' . $wind_unit ) : '--'; ?></span>
             <span title="<?php echo esc_attr( __( 'Wind direction', 'xtx-integration-for-netatmo' ) ); ?>">🧭 <?php echo esc_html( $compass ); ?></span>
           </div>
           <?php if ( $g_max !== null && $g_max > 0 ) : ?>
-          <div class="naws-fc-gust">🌪️ <?php echo esc_html( __( 'Gusts', 'xtx-integration-for-netatmo' ) . ': ' . $g_max . ' ' . $wind_unit ); ?></div>
+          <div class="naws-fc-gust">🌪️ <?php echo esc_html( __( 'Gusts', 'xtx-integration-for-netatmo' ) . ': ' . NAWS_Helpers::display_number( $g_max ) . ' ' . $wind_unit ); ?></div>
           <?php endif; ?>
         </div>
         <?php endforeach; ?>
