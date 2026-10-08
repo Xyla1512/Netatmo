@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -122,6 +122,10 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 
 == Changelog ==
 
+= 2.1.1 =
+* Added: a Signal column on the Modules page — the Wi-Fi of the base station as a fan, the radio link of every other module as four bars, each with a word (Excellent, Good, Fair, Weak) and Netatmo's raw value on hover. A device Netatmo reports as unreachable shows "Not reachable".
+* Fix: `[naws_forecast]` printed decimal points on a German page ("17.4 / 14.7 °C"). Temperatures, precipitation, wind and gusts of the forecast use the site's decimal mark now.
+
 = 2.1.0 =
 * Added: `[naws_sparkline]` — a curve the size of a word, next to the number in running text: the raw readings of the last hours or a column of the daily summary, rain as bars, the band between daily low and high, a bubble with time and value on hover. `layout="tile"` draws it as a card with value, low and high; `layout="month"` as a block of daily means with the rain per day. Server-side SVG, complete without JavaScript; eight colours on a new Appearance tab, Sparkline.
 * Added: `[naws_sparkline_tiles]` — the sparkline cards as a grid that wraps by itself: temperature, humidity, pressure, wind, rain and CO2 by default (`params`, `hours`).
@@ -151,25 +155,18 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 * Fix: the wind rose's period buttons turned red under the mouse on Hello Elementor and took the "primary" accent colour when active. Every rule for them now carries two classes and sets rest, hover, focus and active state itself, and the active button has its own colour — an eighth one on the Wind Rose tab under Appearance.
 * Fix: Appearance: saving without the icon set in the input no longer logs "Undefined array key".
 
-= 1.9.13 =
-* Fix: `[naws_records]` and `[naws_on_this_day]` stayed empty on an installation whose daily summary table carried a different collation than the modules table. The three big queries compared `module_id` across two tables; MySQL refuses that as soon as the collations differ, the query failed, and the plugin returned nothing without a word. The active modules now go into every query as an id list from PHP, so no comparison crosses a table any more — `[naws_live]`, `[naws_infobar]` and the history are read the same way.
-* Fix: when a block has nothing to show, an editor who is logged in reads why in the block — no active base station, no daily rows, a failed query with the database's own message, unknown record names — and the log gets a line. Visitors see what they saw before. An unknown name in `records="…"` is skipped with a note instead of emptying the whole block.
-* Fix: switching a module on or off under Netatmo → Modules reaches the front end at once. The module list was cached for an hour, and only the admin read fresh.
-* Fix: attributes that a page builder writes with HTML entities (`value=&quot;dewpoint&quot;`) reach the shortcode as intended; they used to arrive as `quotdewpointquot` and fall back to `--`. All fifteen shortcodes decode them first.
-* Fix: on Android, Chrome's automatic dark theme inverted the wind rose and the sun's arc into black shapes. The blocks declare `color-scheme: only light` now, which takes exactly them out of that and leaves the page alone.
-
 Older versions: the complete changelog since 1.0.0 is kept in [CHANGELOG.md](https://github.com/Xyla1512/Netatmo/blob/main/CHANGELOG.md) on GitHub.
 
 == Upgrade Notice ==
+
+= 2.1.1 =
+New: a Signal column on the Modules page shows the Wi-Fi of the base station and the radio link of every module. Fix: the forecast uses the decimal comma on German pages. Nothing to reconfigure.
 
 = 2.1.0 =
 New: sparklines — [naws_sparkline] inline, as a card or a month block, [naws_sparkline_tiles], and optional curves in the sidebar widget. Forecast colours on their own Appearance tab. Fix: decimal commas on German pages, charts included; the heatmap leaves today empty.
 
 = 2.0.2 =
 New: switchable retention of raw readings (off by default; the daily table is never touched). Fix: the wind cards of the live dashboard take their colours from a new Appearance tab — compass, pointer, wind and gust gauge. Nothing to reconfigure.
-
-= 2.0.1 =
-Fix: the 24-hour rain in the dashboard card was far too low — a fetch every ten minutes kept only every second five-minute report of the rain gauge; the gaps are closed now. [naws_live] no longer shows its own forecast strip: place [naws_forecast] below it if you want one. Nothing to reconfigure.
 
 == Privacy & External Services ==
 
