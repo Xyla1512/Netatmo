@@ -1,0 +1,15 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo - Stable Readme\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "Fix: <code>[naws_forecast]</code> printed decimal points on a German page (\"17.4 / 14.7 °C\"). Temperatures, precipitation, wind and gusts of the forecast use the site's decimal mark now."
+msgstr "Fix: <code>[naws_forecast]</code> zeigte auf einer deutschen Seite Dezimalpunkte („17.4 / 14.7 °C“). Temperaturen, Niederschlag, Wind und Böen der Vorhersage verwenden jetzt das Dezimalzeichen der Seite."
+
+msgid "Added: a Signal column on the Modules page — the Wi-Fi of the base station as a fan, the radio link of every other module as four bars, each with a word (Excellent, Good, Fair, Weak) and Netatmo's raw value on hover. A device Netatmo reports as unreachable shows \"Not reachable\"."
+msgstr "Added: Eine Spalte „Signal“ auf der Modulseite — das WLAN der Basisstation als Fächer, die Funkverbindung jedes anderen Moduls als vier Balken, jeweils mit einem Wort (Sehr gut, Gut, Mittel, Schwach) und Netatmos Rohwert beim Überfahren. Ein Gerät, das Netatmo als nicht erreichbar meldet, zeigt „Nicht erreichbar“."
+
