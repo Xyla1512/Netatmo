@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 2.1.1
+Stable tag: 2.1.2
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -122,6 +122,10 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 
 == Changelog ==
 
+= 2.1.2 =
+* Fix: the forecast showed "Open-Meteo API HTTP 429". Open-Meteo limits its free API per IP address, and the plugin asked again on every page view after a failure, which kept the address above the limit. A failed request now pauses the provider (after a 429 as long as Open-Meteo asks, otherwise 15 minutes; 5 minutes after other errors), the last good forecast stays on the page for up to 24 hours, and visitors read a plain sentence instead of an HTTP code. Yr.no and the place search of the manual location mode are covered as well.
+* Fix: the 29th of February drew two almost flat lines across the daily charts of `[naws_history]` in a leap year. The day was placed after the 31st of December; the axis has 366 days now.
+
 = 2.1.1 =
 * Added: a Signal column on the Modules page — the Wi-Fi of the base station as a fan, the radio link of every other module as four bars, each with a word (Excellent, Good, Fair, Weak) and Netatmo's raw value on hover. A device Netatmo reports as unreachable shows "Not reachable".
 * Fix: `[naws_forecast]` printed decimal points on a German page ("17.4 / 14.7 °C"). Temperatures, precipitation, wind and gusts of the forecast use the site's decimal mark now.
@@ -148,25 +152,18 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 * Changed: `[naws_live]` no longer carries a forecast strip of its own. The dashboard fetched the forecast itself and rendered a copy of the day cards that `[naws_forecast]` shows, and on a page carrying both shortcodes the forecast appeared twice. Whoever wants the forecast under the dashboard places `[naws_forecast]` below it — same cards, same settings. The "forecast days" setting now describes itself as the default for `[naws_forecast]`.
 * Changed: the heatmap builds up when it comes into view, not when the page loads. On a page where `[naws_heatmap]` sits below the fold the wave of tiles was over before anyone scrolled to it. The tiles now stay hidden until the top edge of the map reaches the middle of the screen — or until the page is scrolled to its end, for a map near the bottom of a short page; then the wave runs once. Visitors who ask for reduced motion, and print, get the map at once; without JavaScript nothing is hidden.
 
-= 2.0.0 =
-* Added: e-mail notifications. After every fetch the plugin checks up to thirteen rules and mails every change of state — once when it begins and, for every rule but rain, once when it is over; all changes of one fetch go into one mail. Seven rules watch the station: battery of a module below a percentage, weak radio link of a module, poor Wi-Fi of the base station, base station not reporting to Netatmo, module not reporting to the base station, three failed fetches in a row, expired credentials. Six watch the weather and the indoor air: frost, heat, a gust above a threshold, rain of the last 24 hours above a threshold, rain starting, CO₂ of the base station or an indoor module above a threshold. Radio, Wi-Fi and the two silence rules hold for a while before they speak or clear; frost and gust wait an hour below the threshold before the all-clear; rain sends no all-clear. All rules ship switched off, and a master switch pauses every mail without touching the rules. The new page XTX Netatmo → Notifications holds the switch, the recipients, the rules with their thresholds in your units, a test-mail button and the last fifty mails.
-* Added: the five status fields Netatmo sends with every module are stored now (schema 1.5): battery percentage, Wi-Fi of the base station, whether a device is reachable, when the base station last reported to Netatmo and when a module last spoke to the base station. The Modules page shows Netatmo's own battery percentage instead of an estimate from the voltage.
-* Added: two actions for other code — `naws_sync_failed( $message, $consecutive_errors )` fires wherever a fetch fails; `naws_data_synced( $readings )` existed before and is documented now.
-* Fix: the wind rose's period buttons turned red under the mouse on Hello Elementor and took the "primary" accent colour when active. Every rule for them now carries two classes and sets rest, hover, focus and active state itself, and the active button has its own colour — an eighth one on the Wind Rose tab under Appearance.
-* Fix: Appearance: saving without the icon set in the input no longer logs "Undefined array key".
-
 Older versions: the complete changelog since 1.0.0 is kept in [CHANGELOG.md](https://github.com/Xyla1512/Netatmo/blob/main/CHANGELOG.md) on GitHub.
 
 == Upgrade Notice ==
+
+= 2.1.2 =
+Fix: no more "HTTP 429" from Open-Meteo in the forecast — a failed request pauses the provider and the last good forecast stays on the page. Fix: no lines across the history charts on the 29th of February. Nothing to reconfigure.
 
 = 2.1.1 =
 New: a Signal column on the Modules page shows the Wi-Fi of the base station and the radio link of every module. Fix: the forecast uses the decimal comma on German pages. Nothing to reconfigure.
 
 = 2.1.0 =
 New: sparklines — [naws_sparkline] inline, as a card or a month block, [naws_sparkline_tiles], and optional curves in the sidebar widget. Forecast colours on their own Appearance tab. Fix: decimal commas on German pages, charts included; the heatmap leaves today empty.
-
-= 2.0.2 =
-New: switchable retention of raw readings (off by default; the daily table is never touched). Fix: the wind cards of the live dashboard take their colours from a new Appearance tab — compass, pointer, wind and gust gauge. Nothing to reconfigure.
 
 == Privacy & External Services ==
 
