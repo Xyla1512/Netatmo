@@ -2,6 +2,14 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [2.1.2]
+
+### Fixed
+- **HTTP 429 from Open-Meteo no longer feeds itself.** Open-Meteo limits its free API per IP address (600 requests a minute, 5,000 an hour, 10,000 a day), and on shared hosting many sites share one address. The plugin never remembered a failed request: every page view asked again, forecast and current conditions each on their own, and kept the address above the limit, so visitors saw "Open-Meteo API HTTP 429" for as long as the site had traffic. A failed request now pauses that provider — after a 429 for as long as the `Retry-After` header says (one minute to six hours) or 15 minutes, after any other failure for 5 minutes — and no request goes out in that time, neither for the forecast nor for the current conditions nor for the geocoding of a manually entered place. Yr.no gets the same treatment with its own pause. Reported by users.
+- **During an outage the forecast stays on the page.** The last good forecast is kept and shown for up to 24 hours, past days dropped; the "Updated" line adds the date when it is from the day before. Without one, visitors read "The forecast is temporarily unavailable. Please try again later." instead of an HTTP code; the code and the length of the pause go to the plugin's log. A new place or provider in the settings discards the stored forecast.
+- **A 429 from the geocoding API read "Location not found".** In manual location mode the answer was searched for results before its status was checked, so a rate limit looked like a misspelt town.
+- **The 29th of February drew lines across the history charts.** The daily charts of `[naws_history]` had an axis of 365 days without the 29th of February. In a leap year that day's value was placed after the 31st of December, and the line ran from the end of February to the right edge and back again — two almost flat lines across the year in "Temperature Min / Max". The axis now has 366 days; other years simply have no point on the 29th. Reported by users.
+
 ## [2.1.1]
 
 ### Added

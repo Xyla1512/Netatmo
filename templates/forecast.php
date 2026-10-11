@@ -34,9 +34,16 @@ $fc_id = 'naws-fc-' . wp_unique_id();
       <?php if ( $loc_name ) : ?>
         <span class="naws-fc-hdr-loc">📍 <?php echo esc_html( $loc_name ); ?></span>
       <?php endif; ?>
-      <?php if ( ! empty( $forecast['fetched_at'] ) ) : ?>
+      <?php if ( ! empty( $forecast['fetched_at'] ) ) :
+          // A stored forecast shown while the provider fails can be from
+          // yesterday; the time alone would pass it off as today's.
+          $fc_time_fmt = get_option( 'time_format', 'H:i' );
+          if ( ! empty( $forecast['stale'] ) && wp_date( 'Y-m-d', $forecast['fetched_at'] ) !== wp_date( 'Y-m-d' ) ) {
+              $fc_time_fmt = get_option( 'date_format', 'Y-m-d' ) . ' ' . $fc_time_fmt;
+          }
+      ?>
         <span class="naws-fc-hdr-time">
-          <?php printf( esc_html( /* translators: %s: time the forecast was last fetched. */ __( 'Updated: %s', 'xtx-integration-for-netatmo' ) ), esc_html( wp_date( get_option( 'time_format', 'H:i' ), $forecast['fetched_at'] ) ) ); ?>
+          <?php printf( esc_html( /* translators: %s: time the forecast was last fetched. */ __( 'Updated: %s', 'xtx-integration-for-netatmo' ) ), esc_html( wp_date( $fc_time_fmt, $forecast['fetched_at'] ) ) ); ?>
         </span>
       <?php endif; ?>
     </div>
