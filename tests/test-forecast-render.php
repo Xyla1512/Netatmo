@@ -25,7 +25,7 @@ function esc_attr( $s ) { return htmlspecialchars( (string) $s, ENT_QUOTES ); }
 function esc_html( $s ) { return htmlspecialchars( (string) $s, ENT_QUOTES ); }
 function number_format_i18n( $n, $d = 0 ) { return number_format( (float) $n, (int) $d, ',', '.' ); }
 function wp_unique_id( $p = '' ) { return $p . '1'; }
-function wp_date( $fmt, $ts ) { return gmdate( $fmt, $ts ); }
+function wp_date( $fmt, $ts = null ) { return gmdate( $fmt, $ts ?? time() ); }
 require_once __DIR__ . '/i18n-stubs.php';
 
 class NAWS_Forecast {
@@ -92,6 +92,28 @@ $html = render( [ 'temp_max' => 17.4, 'precip_sum' => 12.7 ], [ 'temperature_uni
 check( 'Fahrenheit mit Komma', text_of( $html, 'naws-fc-temps' ), '63,3 / 58,5 °F' );
 check( 'Zoll und m/s mit Komma', strpos( text_of( $html, 'naws-fc-meta' ), '🌧️ 0,5 in' ) === 0 && strpos( text_of( $html, 'naws-fc-meta' ), '6,5 m/s' ) !== false, true );
 check( 'Boeen in m/s mit Komma', text_of( $html, 'naws-fc-gust' ), '🌪️ Gusts: 11,6 m/s' );
+
+// ── Zeile "Updated" bei der letzten guten Vorhersage (2.1.2) ─────────────
+// Im Rueckfall kann der Stand von gestern sein; nur die Uhrzeit taete so,
+// als waere er von heute.
+function render_fc( array $extra ): string {
+    $GLOBALS['opts'] = [ 'naws_settings' => [] ];
+    $forecast = array_merge( [ 'days' => [ [
+        'date' => '2026-10-05', 'weathercode' => 3, 'temp_max' => 1.0, 'temp_min' => 0.0,
+        'wind_max' => 1.0, 'gust_max' => 0, 'wind_dir' => 0, 'precip_sum' => 0.0, 'precip_prob' => 0,
+    ] ] ], $extra );
+    $atts = [ 'title' => 'Vorhersage' ];
+    ob_start();
+    include dirname( __DIR__ ) . '/templates/forecast.php';
+    return ob_get_clean();
+}
+function hdr_time( string $html ): string {
+    return preg_match( '#class="naws-fc-hdr-time">\s*(.*?)\s*</span>#s', $html, $m ) ? $m[1] : '';
+}
+$gestern = strtotime( '-1 day 12:00' );
+check( 'frisch: nur Uhrzeit', hdr_time( render_fc( [ 'fetched_at' => $gestern ] ) ), 'Updated: ' . gmdate( 'H:i', $gestern ) );
+check( 'Rueckfall von gestern: mit Datum', hdr_time( render_fc( [ 'fetched_at' => $gestern, 'stale' => true ] ) ), 'Updated: ' . gmdate( 'Y-m-d H:i', $gestern ) );
+check( 'Rueckfall von heute: nur Uhrzeit', hdr_time( render_fc( [ 'fetched_at' => time(), 'stale' => true ] ) ), 'Updated: ' . gmdate( 'H:i' ) );
 
 printf( "\n%d ok, %d fehlgeschlagen\n", $passed, $failed );
 exit( $failed ? 1 : 0 );

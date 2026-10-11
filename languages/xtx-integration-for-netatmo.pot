@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: XTX Integration for Netatmo\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/xtx-integration-for-netatmo\n"
-"POT-Creation-Date: 2026-10-07 17:46+0000\n"
+"POT-Creation-Date: 2026-10-11 16:42+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -393,7 +393,7 @@ msgstr ""
 msgid "Applies to every part of the plugin, charts included. Only fonts your site already serves are offered – the plugin loads no font file of its own."
 msgstr ""
 
-#: includes/class-naws-forecast.php:928 templates/history.php:129
+#: includes/class-naws-forecast.php:1049 templates/history.php:129
 msgid "Apr"
 msgstr ""
 
@@ -408,7 +408,7 @@ msgstr ""
 msgid "Attribute"
 msgstr ""
 
-#: includes/class-naws-forecast.php:928 templates/history.php:130
+#: includes/class-naws-forecast.php:1049 templates/history.php:130
 msgid "Aug"
 msgstr ""
 
@@ -604,7 +604,7 @@ msgstr ""
 msgid "Clear night"
 msgstr ""
 
-#: includes/class-naws-forecast.php:843
+#: includes/class-naws-forecast.php:964
 msgid "Clear sky"
 msgstr ""
 
@@ -896,7 +896,7 @@ msgstr ""
 msgid "Deactivated modules are excluded from all frontend displays, charts and cron sync."
 msgstr ""
 
-#: includes/class-naws-forecast.php:928 templates/history.php:131
+#: includes/class-naws-forecast.php:1049 templates/history.php:131
 msgid "Dec"
 msgstr ""
 
@@ -924,15 +924,15 @@ msgstr ""
 msgid "Delete raw readings automatically once they are older than"
 msgstr ""
 
-#: includes/class-naws-forecast.php:851
+#: includes/class-naws-forecast.php:972
 msgid "Dense drizzle"
 msgstr ""
 
-#: includes/class-naws-forecast.php:853
+#: includes/class-naws-forecast.php:974
 msgid "Dense freezing drizzle"
 msgstr ""
 
-#: includes/class-naws-forecast.php:848
+#: includes/class-naws-forecast.php:969
 msgid "Depositing rime fog"
 msgstr ""
 
@@ -996,7 +996,7 @@ msgstr ""
 msgid "Drag to reorder, or move with the arrow keys"
 msgstr ""
 
-#: includes/class-naws-forecast.php:850
+#: includes/class-naws-forecast.php:971
 msgid "Drizzle"
 msgstr ""
 
@@ -1119,7 +1119,7 @@ msgstr ""
 msgid "Export weather data, module configuration and all plugin settings. Useful for migrating to a new WordPress installation."
 msgstr ""
 
-#: includes/class-naws-forecast.php:928 templates/history.php:129
+#: includes/class-naws-forecast.php:1049 templates/history.php:129
 msgid "Feb"
 msgstr ""
 
@@ -1151,7 +1151,7 @@ msgstr ""
 msgid "First Quarter"
 msgstr ""
 
-#: includes/class-naws-forecast.php:847 includes/class-naws-labels.php:282
+#: includes/class-naws-forecast.php:968 includes/class-naws-labels.php:282
 msgid "Fog"
 msgstr ""
 
@@ -1179,11 +1179,11 @@ msgstr ""
 msgid "Forecast length. Only 3 or 5; other values are pulled to the nearer one."
 msgstr ""
 
-#: includes/class-naws-forecast.php:913
+#: includes/class-naws-forecast.php:1034
 msgid "Fri"
 msgstr ""
 
-#: includes/class-naws-forecast.php:921
+#: includes/class-naws-forecast.php:1042
 msgid "Friday"
 msgstr ""
 
@@ -1284,7 +1284,7 @@ msgstr ""
 msgid "Gust Speed"
 msgstr ""
 
-#: admin/views/appearance.php:40 admin/views/appearance.php:435 includes/class-naws-labels.php:299 templates/forecast.php:107
+#: admin/views/appearance.php:40 admin/views/appearance.php:435 includes/class-naws-labels.php:299 templates/forecast.php:114
 #: templates/live.php:71 templates/live.php:266 templates/windrose.php:92
 msgid "Gusts"
 msgstr ""
@@ -1341,11 +1341,11 @@ msgstr ""
 msgid "Heatmap Scale"
 msgstr ""
 
-#: includes/class-naws-forecast.php:858
+#: includes/class-naws-forecast.php:979
 msgid "Heavy freezing rain"
 msgstr ""
 
-#: includes/class-naws-forecast.php:856 includes/class-naws-labels.php:284
+#: includes/class-naws-forecast.php:977 includes/class-naws-labels.php:284
 msgid "Heavy rain"
 msgstr ""
 
@@ -1353,19 +1353,19 @@ msgstr ""
 msgid "Heavy rain from"
 msgstr ""
 
-#: includes/class-naws-forecast.php:865
+#: includes/class-naws-forecast.php:986
 msgid "Heavy rain showers"
 msgstr ""
 
-#: includes/class-naws-forecast.php:861
+#: includes/class-naws-forecast.php:982
 msgid "Heavy snow"
 msgstr ""
 
-#: includes/class-naws-forecast.php:867
+#: includes/class-naws-forecast.php:988
 msgid "Heavy snow showers"
 msgstr ""
 
-#: includes/class-naws-forecast.php:870
+#: includes/class-naws-forecast.php:991
 msgid "Heavy thunderstorm"
 msgstr ""
 
@@ -1511,15 +1511,15 @@ msgstr ""
 msgid "Invalid or missing API key."
 msgstr ""
 
-#: includes/class-naws-forecast.php:928 templates/history.php:129
+#: includes/class-naws-forecast.php:1049 templates/history.php:129
 msgid "Jan"
 msgstr ""
 
-#: includes/class-naws-forecast.php:928 templates/history.php:130
+#: includes/class-naws-forecast.php:1049 templates/history.php:130
 msgid "Jul"
 msgstr ""
 
-#: includes/class-naws-forecast.php:928 templates/history.php:130
+#: includes/class-naws-forecast.php:1049 templates/history.php:130
 msgid "Jun"
 msgstr ""
 
@@ -1576,15 +1576,15 @@ msgstr ""
 msgid "Length of day"
 msgstr ""
 
-#: includes/class-naws-forecast.php:849
+#: includes/class-naws-forecast.php:970
 msgid "Light drizzle"
 msgstr ""
 
-#: includes/class-naws-forecast.php:852
+#: includes/class-naws-forecast.php:973
 msgid "Light freezing drizzle"
 msgstr ""
 
-#: includes/class-naws-forecast.php:857
+#: includes/class-naws-forecast.php:978
 msgid "Light freezing rain"
 msgstr ""
 
@@ -1592,15 +1592,15 @@ msgstr ""
 msgid "Light is the white card. Dark is the same card in dark colours, for a dark sidebar. Transparent draws no card at all: the text takes the sidebar’s own colour and the lines and chips are a faint shade of it, so the widget blends into whatever it is placed on. A single placement can override this with scheme=\"dark\" on the shortcode."
 msgstr ""
 
-#: includes/class-naws-forecast.php:854
+#: includes/class-naws-forecast.php:975
 msgid "Light rain"
 msgstr ""
 
-#: includes/class-naws-forecast.php:863
+#: includes/class-naws-forecast.php:984
 msgid "Light rain showers"
 msgstr ""
 
-#: includes/class-naws-forecast.php:859
+#: includes/class-naws-forecast.php:980
 msgid "Light snow"
 msgstr ""
 
@@ -1664,7 +1664,7 @@ msgstr ""
 msgid "Loaded by Elementor"
 msgstr ""
 
-#: includes/class-naws-forecast.php:691
+#: includes/class-naws-forecast.php:812
 msgid "Location not found. Please check city name and country code."
 msgstr ""
 
@@ -1718,7 +1718,7 @@ msgstr ""
 msgid "Main direction"
 msgstr ""
 
-#: includes/class-naws-forecast.php:844
+#: includes/class-naws-forecast.php:965
 msgid "Mainly clear"
 msgstr ""
 
@@ -1734,7 +1734,7 @@ msgstr ""
 msgid "Manual purge"
 msgstr ""
 
-#: includes/class-naws-forecast.php:928 templates/history.php:129
+#: includes/class-naws-forecast.php:1049 templates/history.php:129
 msgid "Mar"
 msgstr ""
 
@@ -1760,7 +1760,7 @@ msgstr ""
 msgid "Max. number of records"
 msgstr ""
 
-#: templates/forecast.php:103
+#: templates/forecast.php:110
 msgid "Max. wind speed"
 msgstr ""
 
@@ -1768,7 +1768,7 @@ msgstr ""
 msgid "Maximum width in pixels, 200–1200; empty fills the column up to 640 px."
 msgstr ""
 
-#: includes/class-naws-forecast.php:928 templates/history.php:130
+#: includes/class-naws-forecast.php:1049 templates/history.php:130
 msgid "May"
 msgstr ""
 
@@ -1838,11 +1838,11 @@ msgstr ""
 msgid "Modules & Sensors"
 msgstr ""
 
-#: includes/class-naws-forecast.php:913
+#: includes/class-naws-forecast.php:1034
 msgid "Mon"
 msgstr ""
 
-#: includes/class-naws-forecast.php:921
+#: includes/class-naws-forecast.php:1042
 msgid "Monday"
 msgstr ""
 
@@ -1947,7 +1947,7 @@ msgstr ""
 msgid "No card is switched on at the moment — turn one on above, with the modules."
 msgstr ""
 
-#: includes/class-naws-forecast.php:644
+#: includes/class-naws-forecast.php:757
 msgid "No city specified. Please enter a city in the forecast settings."
 msgstr ""
 
@@ -1975,7 +1975,7 @@ msgstr ""
 msgid "No earlier year holds this day yet."
 msgstr ""
 
-#: templates/forecast.php:50
+#: templates/forecast.php:57
 msgid "No forecast data available."
 msgstr ""
 
@@ -2060,7 +2060,7 @@ msgstr ""
 msgid "Notifications are switched off. No rule is evaluated and no mail is sent until you switch them on again."
 msgstr ""
 
-#: includes/class-naws-forecast.php:928 templates/history.php:131
+#: includes/class-naws-forecast.php:1049 templates/history.php:131
 msgid "Nov"
 msgstr ""
 
@@ -2076,7 +2076,7 @@ msgstr ""
 msgid "OAuth Debug"
 msgstr ""
 
-#: includes/class-naws-forecast.php:928 templates/history.php:131
+#: includes/class-naws-forecast.php:1049 templates/history.php:131
 msgid "Oct"
 msgstr ""
 
@@ -2153,7 +2153,7 @@ msgstr ""
 msgid "Outline"
 msgstr ""
 
-#: includes/class-naws-forecast.php:846 includes/class-naws-labels.php:281
+#: includes/class-naws-forecast.php:967 includes/class-naws-labels.php:281
 msgid "Overcast"
 msgstr ""
 
@@ -2173,7 +2173,7 @@ msgstr ""
 msgid "Partial"
 msgstr ""
 
-#: includes/class-naws-forecast.php:845 includes/class-naws-labels.php:280
+#: includes/class-naws-forecast.php:966 includes/class-naws-labels.php:280
 msgid "Partly cloudy"
 msgstr ""
 
@@ -2214,7 +2214,7 @@ msgstr ""
 msgid "Possible values"
 msgstr ""
 
-#: includes/class-naws-helpers.php:335 includes/class-naws-labels.php:296 templates/forecast.php:101 templates/live.php:263
+#: includes/class-naws-helpers.php:335 includes/class-naws-labels.php:296 templates/forecast.php:108 templates/live.php:263
 msgid "Precipitation"
 msgstr ""
 
@@ -2222,7 +2222,7 @@ msgstr ""
 msgid "Precipitation module"
 msgstr ""
 
-#: templates/forecast.php:102
+#: templates/forecast.php:109
 msgid "Precipitation probability"
 msgstr ""
 
@@ -2266,7 +2266,7 @@ msgstr ""
 msgid "Radio"
 msgstr ""
 
-#: includes/class-naws-forecast.php:855
+#: includes/class-naws-forecast.php:976
 msgid "Rain"
 msgstr ""
 
@@ -2317,7 +2317,7 @@ msgstr ""
 msgid "Rain per day"
 msgstr ""
 
-#: includes/class-naws-forecast.php:864
+#: includes/class-naws-forecast.php:985
 msgid "Rain showers"
 msgstr ""
 
@@ -2475,11 +2475,11 @@ msgstr ""
 msgid "Sample wind rose in the chosen colours"
 msgstr ""
 
-#: includes/class-naws-forecast.php:913
+#: includes/class-naws-forecast.php:1034
 msgid "Sat"
 msgstr ""
 
-#: includes/class-naws-forecast.php:921
+#: includes/class-naws-forecast.php:1042
 msgid "Saturday"
 msgstr ""
 
@@ -2531,7 +2531,7 @@ msgstr ""
 msgid "Send test mail"
 msgstr ""
 
-#: includes/class-naws-forecast.php:928 templates/history.php:131
+#: includes/class-naws-forecast.php:1049 templates/history.php:131
 msgid "Sep"
 msgstr ""
 
@@ -2621,7 +2621,7 @@ msgstr ""
 msgid "Sleet or hail"
 msgstr ""
 
-#: includes/class-naws-forecast.php:860 includes/class-naws-labels.php:285
+#: includes/class-naws-forecast.php:981 includes/class-naws-labels.php:285
 msgid "Snow"
 msgstr ""
 
@@ -2629,11 +2629,11 @@ msgstr ""
 msgid "Snow below"
 msgstr ""
 
-#: includes/class-naws-forecast.php:862
+#: includes/class-naws-forecast.php:983
 msgid "Snow grains"
 msgstr ""
 
-#: includes/class-naws-forecast.php:866
+#: includes/class-naws-forecast.php:987
 msgid "Snow showers"
 msgstr ""
 
@@ -2641,7 +2641,7 @@ msgstr ""
 msgid "Solid filled icons for a bolder, modern look."
 msgstr ""
 
-#: admin/views/shortcodes.php:450 templates/forecast.php:118
+#: admin/views/shortcodes.php:450 templates/forecast.php:125
 msgid "Source"
 msgstr ""
 
@@ -2677,7 +2677,7 @@ msgstr ""
 msgid "Station"
 msgstr ""
 
-#: includes/class-naws-forecast.php:774 includes/class-naws-forecast.php:779
+#: includes/class-naws-forecast.php:895 includes/class-naws-forecast.php:900
 msgid "Station Location"
 msgstr ""
 
@@ -2685,7 +2685,7 @@ msgstr ""
 msgid "Station Name"
 msgstr ""
 
-#: includes/class-naws-forecast.php:636
+#: includes/class-naws-forecast.php:749
 msgid "Station coordinates not available. Please sync your station first."
 msgstr ""
 
@@ -2741,7 +2741,7 @@ msgstr ""
 msgid "Summer days"
 msgstr ""
 
-#: includes/class-naws-forecast.php:913
+#: includes/class-naws-forecast.php:1034
 msgid "Sun"
 msgstr ""
 
@@ -2754,7 +2754,7 @@ msgstr ""
 msgid "Sun path: sunrise %1$s, sunset %2$s, day length %3$s."
 msgstr ""
 
-#: includes/class-naws-forecast.php:921
+#: includes/class-naws-forecast.php:1042
 msgid "Sunday"
 msgstr ""
 
@@ -2923,6 +2923,10 @@ msgstr ""
 msgid "The date range to count or sum over."
 msgstr ""
 
+#: includes/class-naws-forecast.php:206
+msgid "The forecast is temporarily unavailable. Please try again later."
+msgstr ""
+
 #: admin/views/settings.php:477
 msgid "The icon shows current weather. Station readings take precedence over the forecast; the forecast only fills in where the station cannot measure — cloud cover, thunderstorms, and precipitation when no rain gauge is present."
 msgstr ""
@@ -3028,19 +3032,19 @@ msgstr ""
 msgid "Threshold"
 msgstr ""
 
-#: includes/class-naws-forecast.php:913
+#: includes/class-naws-forecast.php:1034
 msgid "Thu"
 msgstr ""
 
-#: includes/class-naws-forecast.php:868 includes/class-naws-labels.php:287
+#: includes/class-naws-forecast.php:989 includes/class-naws-labels.php:287
 msgid "Thunderstorm"
 msgstr ""
 
-#: includes/class-naws-forecast.php:869
+#: includes/class-naws-forecast.php:990
 msgid "Thunderstorm with hail"
 msgstr ""
 
-#: includes/class-naws-forecast.php:921
+#: includes/class-naws-forecast.php:1042
 msgid "Thursday"
 msgstr ""
 
@@ -3064,7 +3068,7 @@ msgstr ""
 msgid "To connect, you need a Netatmo Developer account. Create an app at"
 msgstr ""
 
-#: templates/forecast.php:57
+#: templates/forecast.php:64
 msgid "Today"
 msgstr ""
 
@@ -3110,11 +3114,11 @@ msgstr ""
 msgid "Tropical nights"
 msgstr ""
 
-#: includes/class-naws-forecast.php:913
+#: includes/class-naws-forecast.php:1034
 msgid "Tue"
 msgstr ""
 
-#: includes/class-naws-forecast.php:921
+#: includes/class-naws-forecast.php:1042
 msgid "Tuesday"
 msgstr ""
 
@@ -3138,7 +3142,7 @@ msgstr ""
 msgid "Units"
 msgstr ""
 
-#: includes/class-naws-forecast.php:873
+#: includes/class-naws-forecast.php:994
 msgid "Unknown"
 msgstr ""
 
@@ -3148,7 +3152,7 @@ msgid "Unknown record names: %s. The Shortcodes page lists the valid ones."
 msgstr ""
 
 #. translators: %s: time the forecast was last fetched.
-#: templates/forecast.php:39
+#: templates/forecast.php:46
 msgid "Updated: %s"
 msgstr ""
 
@@ -3222,11 +3226,11 @@ msgstr ""
 msgid "Weather icon"
 msgstr ""
 
-#: includes/class-naws-forecast.php:913
+#: includes/class-naws-forecast.php:1034
 msgid "Wed"
 msgstr ""
 
-#: includes/class-naws-forecast.php:921
+#: includes/class-naws-forecast.php:1042
 msgid "Wednesday"
 msgstr ""
 
@@ -3312,7 +3316,7 @@ msgstr ""
 msgid "Wind Speed"
 msgstr ""
 
-#: includes/class-naws-labels.php:91 templates/forecast.php:104
+#: includes/class-naws-labels.php:91 templates/forecast.php:111
 msgid "Wind direction"
 msgstr ""
 
@@ -4132,7 +4136,7 @@ msgid "Copy"
 msgstr ""
 
 #. translators: 1: day of the month, 2: abbreviated month name.
-#: includes/class-naws-forecast.php:932
+#: includes/class-naws-forecast.php:1053
 msgctxt "short date"
 msgid "%2$s %1$s"
 msgstr ""

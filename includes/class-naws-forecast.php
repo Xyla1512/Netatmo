@@ -46,6 +46,29 @@ class NAWS_Forecast {
     const LAST_WMO_MAX_AGE = 6 * HOUR_IN_SECONDS;
 
     /**
+     * Option holding the last successful daily forecast, with its provider.
+     *
+     * Served while the provider fails, so a visitor sees a forecast from a
+     * few hours ago instead of an error. Autoload off: read only on failure.
+     */
+    const OPT_LAST_FORECAST = 'naws_forecast_last';
+
+    /** Beyond this age the stored forecast is no longer shown. */
+    const LAST_FORECAST_MAX_AGE = DAY_IN_SECONDS;
+
+    /**
+     * Transient prefix for the pause after a failed request, per provider.
+     *
+     * Open-Meteo limits per IP address (600/min, 5,000/h, 10,000/day), and on
+     * shared hosting many sites share one. Until 2.1.2 a failure was never
+     * remembered: every page view asked again, forecast and current
+     * conditions each on their own, and kept the address above the limit —
+     * HTTP 429 fed itself. One key covers both requests of a provider, as
+     * they go to the same host and count against the same budget.
+     */
+    const BACKOFF_KEY = 'naws_forecast_backoff';
+
+    /**
      * Current-condition variables requested from Open-Meteo.
      *
      * The three cloud layers are what let the icon tell a low deck from
@@ -117,9 +140,13 @@ class NAWS_Forecast {
             return $cached;
         }
 
+        if ( self::in_backoff( $provider ) ) {
+            return self::last_known_forecast( $provider, $days ) ?? self::unavailable();
+        }
+
         $location = self::resolve_location();
         if ( isset( $location['error'] ) ) {
-            return $location;
+            return self::last_known_forecast( $provider, $days ) ?? $location;
         }
 
         switch ( $provider ) {
@@ -131,12 +158,107 @@ class NAWS_Forecast {
         }
 
         if ( isset( $result['error'] ) ) {
-            return $result;
+            return self::last_known_forecast( $provider, $days ) ?? $result;
         }
 
         set_transient( $cache_key, $result, self::CACHE_TTL );
+        update_option( self::OPT_LAST_FORECAST, [ 'provider' => $provider, 'data' => $result ], false );
+
         $result['days'] = array_slice( $result['days'], 0, $days );
         return $result;
+    }
+
+    /**
+     * The last good forecast of this provider, past days dropped.
+     *
+     * @return array|null  Forecast with stale => true, or null if there is
+     *                     none, it is too old, or no day is left.
+     */
+    private static function last_known_forecast( string $provider, int $days ): ?array {
+        $last = get_option( self::OPT_LAST_FORECAST, [] );
+        if ( ! is_array( $last ) || ( $last['provider'] ?? '' ) !== $provider || ! is_array( $last['data']['days'] ?? null ) ) {
+            return null;
+        }
+
+        $data = $last['data'];
+        if ( ( time() - (int) ( $data['fetched_at'] ?? 0 ) ) > self::LAST_FORECAST_MAX_AGE ) {
+            return null;
+        }
+
+        $today = wp_date( 'Y-m-d' );
+        $left  = array_values( array_filter(
+            $data['days'],
+            static function ( $day ) use ( $today ) {
+                return is_array( $day ) && (string) ( $day['date'] ?? '' ) >= $today;
+            }
+        ) );
+        if ( ! $left ) {
+            return null;
+        }
+
+        $data['days']  = array_slice( $left, 0, $days );
+        $data['stale'] = true;
+        return $data;
+    }
+
+    /** What a visitor reads when there is no forecast to show. */
+    private static function unavailable(): array {
+        return [ 'error' => __( 'The forecast is temporarily unavailable. Please try again later.', 'xtx-integration-for-netatmo' ) ];
+    }
+
+    /* ==================================================================
+     * Pause after failed requests
+     * ================================================================*/
+
+    /**
+     * How long to leave a provider alone after a failed request.
+     *
+     * Pure: status code and Retry-After header in, seconds out.
+     * 429 honours Retry-After (as seconds, kept between one minute and six
+     * hours) and otherwise waits 15 minutes; anything else — 5xx, network
+     * error (code 0), unreadable body — waits 5 minutes.
+     */
+    public static function backoff_seconds( int $code, string $retry_after ): int {
+        if ( $code !== 429 ) {
+            return 5 * MINUTE_IN_SECONDS;
+        }
+        $retry_after = trim( $retry_after );
+        if ( $retry_after !== '' && ctype_digit( $retry_after ) ) {
+            return max( MINUTE_IN_SECONDS, min( 6 * HOUR_IN_SECONDS, (int) $retry_after ) );
+        }
+        return 15 * MINUTE_IN_SECONDS;
+    }
+
+    private static function in_backoff( string $provider ): bool {
+        return get_transient( self::BACKOFF_KEY . '_' . $provider ) !== false;
+    }
+
+    /**
+     * Remember a failure and log it with its code.
+     *
+     * @param string         $provider 'open_meteo' or 'yr_no'.
+     * @param string         $what     Which request failed, for the log.
+     * @param array|WP_Error $response The failed response.
+     */
+    private static function start_backoff( string $provider, string $what, $response ): void {
+        if ( is_wp_error( $response ) ) {
+            $code   = 0;
+            $detail = $response->get_error_message();
+        } else {
+            $code   = (int) wp_remote_retrieve_response_code( $response );
+            $detail = 'HTTP ' . $code;
+        }
+        $retry   = is_wp_error( $response ) ? '' : (string) wp_remote_retrieve_header( $response, 'retry-after' );
+        $seconds = self::backoff_seconds( $code, $retry );
+
+        set_transient( self::BACKOFF_KEY . '_' . $provider, [ 'code' => $code, 'until' => time() + $seconds ], $seconds );
+
+        NAWS_Logger::error( 'forecast', sprintf(
+            '%s request failed (%s), next attempt in %d minute(s)',
+            $what,
+            $detail,
+            (int) ceil( $seconds / MINUTE_IN_SECONDS )
+        ) );
     }
 
     public static function flush_cache(): void {
@@ -145,6 +267,10 @@ class NAWS_Forecast {
         delete_transient( self::CACHE_KEY_NOW . '_open_meteo' );
         delete_transient( self::CACHE_KEY_NOW . '_yr_no' );
         delete_transient( self::CACHE_KEY_GEO );
+        // A new place or provider makes the stored forecast wrong. The pause
+        // after a failure stays: the limit belongs to the IP address, and a
+        // settings change does not lift it.
+        delete_option( self::OPT_LAST_FORECAST );
     }
 
     /* ==================================================================
@@ -178,6 +304,10 @@ class NAWS_Forecast {
         $cached = get_transient( $cache_key );
         if ( is_array( $cached ) && isset( $cached['wmo'] ) ) {
             return $cached;
+        }
+
+        if ( self::in_backoff( $provider ) ) {
+            return self::last_known_conditions();
         }
 
         $location = self::resolve_location();
@@ -273,7 +403,7 @@ class NAWS_Forecast {
         ] );
 
         if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
-            NAWS_Logger::error( 'forecast', 'Open-Meteo current conditions request failed' );
+            self::start_backoff( 'open_meteo', 'Open-Meteo current conditions', $response );
             return null;
         }
 
@@ -322,7 +452,7 @@ class NAWS_Forecast {
         ] );
 
         if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
-            NAWS_Logger::error( 'forecast', 'Yr.no current conditions request failed' );
+            self::start_backoff( 'yr_no', 'Yr.no current conditions', $response );
             return null;
         }
 
@@ -416,24 +546,15 @@ class NAWS_Forecast {
             'user-agent' => self::user_agent(),
         ] );
 
-        if ( is_wp_error( $response ) ) {
-            error_log( 'NAWS Forecast: Open-Meteo HTTP error - ' . $response->get_error_message() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-            return [ 'error' => $response->get_error_message() ];
+        if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 || wp_remote_retrieve_body( $response ) === '' ) {
+            self::start_backoff( 'open_meteo', 'Open-Meteo forecast', $response );
+            return self::unavailable();
         }
 
-        $code = wp_remote_retrieve_response_code( $response );
-        $body = wp_remote_retrieve_body( $response );
-
-        if ( $code !== 200 || empty( $body ) ) {
-            error_log( "NAWS Forecast: Open-Meteo HTTP {$code}" ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-            return [ 'error' => sprintf( 'Open-Meteo API HTTP %d', $code ) ];
-        }
-
-        $json = json_decode( $body, true );
+        $json = json_decode( wp_remote_retrieve_body( $response ), true );
         if ( ! is_array( $json ) || isset( $json['error'] ) ) {
-            $reason = $json['reason'] ?? 'Unknown API error';
-            error_log( 'NAWS Forecast: Open-Meteo error - ' . $reason ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-            return [ 'error' => $reason ];
+            self::start_backoff( 'open_meteo', 'Open-Meteo forecast (' . ( $json['reason'] ?? 'unreadable answer' ) . ')', $response );
+            return self::unavailable();
         }
 
         return self::normalise( $json, $location );
@@ -456,23 +577,15 @@ class NAWS_Forecast {
             'headers'    => [ 'Accept' => 'application/json' ],
         ] );
 
-        if ( is_wp_error( $response ) ) {
-            error_log( 'NAWS Forecast: Yr.no HTTP error - ' . $response->get_error_message() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-            return [ 'error' => $response->get_error_message() ];
+        if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 || wp_remote_retrieve_body( $response ) === '' ) {
+            self::start_backoff( 'yr_no', 'Yr.no forecast', $response );
+            return self::unavailable();
         }
 
-        $code = wp_remote_retrieve_response_code( $response );
-        $body = wp_remote_retrieve_body( $response );
-
-        if ( $code !== 200 || empty( $body ) ) {
-            error_log( "NAWS Forecast: Yr.no HTTP {$code}" ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-            return [ 'error' => sprintf( 'Yr.no API HTTP %d', $code ) ];
-        }
-
-        $json = json_decode( $body, true );
+        $json = json_decode( wp_remote_retrieve_body( $response ), true );
         if ( ! is_array( $json ) || ! isset( $json['properties']['timeseries'] ) ) {
-            error_log( 'NAWS Forecast: Yr.no invalid response structure' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-            return [ 'error' => 'Yr.no returned unexpected data format' ];
+            self::start_backoff( 'yr_no', 'Yr.no forecast (unexpected data format)', $response );
+            return self::unavailable();
         }
 
         return self::normalise_yr( $json, $location );
@@ -675,13 +788,21 @@ class NAWS_Forecast {
             'format'   => 'json',
         ], self::GEOCODE_URL );
 
+        // Same IP budget as the forecast itself, hence the same pause.
+        if ( self::in_backoff( 'open_meteo' ) ) {
+            return self::unavailable();
+        }
+
         $response = wp_remote_get( $geo_url, [
             'timeout'    => 10,
             'user-agent' => self::user_agent(),
         ] );
 
-        if ( is_wp_error( $response ) ) {
-            return [ 'error' => 'Geocoding: ' . $response->get_error_message() ];
+        // Checked before reading the results: a 429 carries none, and used
+        // to surface as "Location not found".
+        if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
+            self::start_backoff( 'open_meteo', 'Open-Meteo geocoding', $response );
+            return self::unavailable();
         }
 
         $json    = json_decode( wp_remote_retrieve_body( $response ), true );
