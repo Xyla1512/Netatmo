@@ -82,6 +82,21 @@ function aggregateMonthly(dailyData){
   return out;
 }
 
+/* Daily x-axis labels 'MM-DD', 366 days. The server sends '02-29' in leap
+   years; a label missing here is appended by Chart.js at the far end of the
+   category axis, and the line ran from Feb 28 to after Dec 31 and back.
+   Other years simply have no point on 02-29. */
+function dayLabels(){
+  var arr=[];
+  var days=[31,29,31,30,31,30,31,31,30,31,30,31];
+  for(var m=0;m<12;m++){
+    for(var d=1;d<=days[m];d++){
+      arr.push((m+1<10?'0':'')+(m+1)+'-'+(d<10?'0':'')+d);
+    }
+  }
+  return arr;
+}
+
 function nawsHistFontSize(){ var w=window.innerWidth; return w<480?8:w<768?9:10; }
 
 /* Chart theme colors (configurable via Admin > Appearance) */
@@ -103,16 +118,7 @@ function baseOpts(unit, type, isModal, isMonthly){
   } else {
     xConfig = {
       type:'category',
-      labels: (function(){
-        var arr=[];
-        var days=[31,28,31,30,31,30,31,31,30,31,30,31];
-        for(var m=0;m<12;m++){
-          for(var d=1;d<=days[m];d++){
-            arr.push((m+1<10?'0':'')+(m+1)+'-'+(d<10?'0':'')+d);
-          }
-        }
-        return arr;
-      })(),
+      labels: dayLabels(),
       grid:{color:CHART_THEME.grid},
       ticks:{
         color:CHART_THEME.tick, font:{family:NAWS_FONT,size:fs},
