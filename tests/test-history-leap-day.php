@@ -40,10 +40,13 @@ check( 'die Tagesachse nimmt dayLabels()', (bool) preg_match( '/labels:\s*dayLab
 
 $node = trim( (string) shell_exec( ( DIRECTORY_SEPARATOR === '\\' ? 'where node 2>NUL' : 'command -v node 2>/dev/null' ) ) );
 if ( $has_fn && $node !== '' ) {
-    $script = tempnam( sys_get_temp_dir(), 'naws' ) . '.js';
-    file_put_contents( $script, $m[0] . "\nprocess.stdout.write(JSON.stringify(dayLabels()));\n" );
-    $labels = json_decode( (string) shell_exec( 'node ' . escapeshellarg( $script ) ), true );
-    unlink( $script );
+    // Per Standardeingabe an node, ohne Datei im Temp-Verzeichnis.
+    $proc = proc_open( 'node -', [ 0 => [ 'pipe', 'r' ], 1 => [ 'pipe', 'w' ] ], $pipes );
+    fwrite( $pipes[0], $m[0] . "\nprocess.stdout.write(JSON.stringify(dayLabels()));\n" );
+    fclose( $pipes[0] );
+    $labels = json_decode( (string) stream_get_contents( $pipes[1] ), true );
+    fclose( $pipes[1] );
+    proc_close( $proc );
 
     check( '366 Tage', is_array( $labels ) ? count( $labels ) : null, 366 );
     check( 'keine Beschriftung doppelt', is_array( $labels ) ? count( array_unique( $labels ) ) : null, 366 );
