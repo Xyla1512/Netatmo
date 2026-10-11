@@ -59,7 +59,6 @@ function wp_remote_get( $url, $args = [] ) {
 function wp_remote_retrieve_response_code( $r ) { return is_array( $r ) ? $r['code'] : ''; }
 function wp_remote_retrieve_body( $r ) { return is_array( $r ) ? $r['body'] : ''; }
 function wp_remote_retrieve_header( $r, $h ) { return is_array( $r ) ? ( $r['headers'][ strtolower( $h ) ] ?? '' ) : ''; }
-ini_set( "error_log", sys_get_temp_dir() . "/naws-test-forecast-backoff.log" );
 require_once __DIR__ . '/i18n-stubs.php';
 
 class NAWS_Logger {
