@@ -42,6 +42,16 @@ class NAWS_Radar_Store {
         return self::base()[1] . '/' . $key . '/' . $rel;
     }
 
+    /** A set key is exactly 12 lowercase hex characters (see key()). */
+    private static function valid_key( string $key ): bool {
+        return 1 === preg_match( '/^[a-f0-9]{12}\z/', $key );
+    }
+
+    /** A file inside a set: the manifest, or a png in map/ or frames/. */
+    private static function valid_rel( string $rel ): bool {
+        return 'manifest.json' === $rel || 1 === preg_match( '/^(?:map|frames)\/[A-Za-z0-9_-]+\.png\z/', $rel );
+    }
+
     /** @return WP_Filesystem_Base|null */
     private static function fs() {
         global $wp_filesystem;
@@ -83,7 +93,7 @@ class NAWS_Radar_Store {
 
     public static function put( string $key, string $rel, string $bytes ): bool {
         $fs = self::fs();
-        if ( ! $fs ) {
+        if ( ! $fs || ! self::valid_key( $key ) || ! self::valid_rel( $rel ) ) {
             return false;
         }
         $path = self::dir( $key ) . '/' . $rel;
@@ -93,7 +103,7 @@ class NAWS_Radar_Store {
 
     public static function has( string $key, string $rel ): bool {
         $fs = self::fs();
-        return $fs && $fs->exists( self::dir( $key ) . '/' . $rel );
+        return $fs && self::valid_key( $key ) && self::valid_rel( $rel ) && $fs->exists( self::dir( $key ) . '/' . $rel );
     }
 
     /** The radar files a manifest refers to (the map is never pruned). */
@@ -122,6 +132,10 @@ class NAWS_Radar_Store {
             $retired[ $file ] = $retired[ $file ] ?? $now;
         }
         foreach ( $retired as $file => $since ) {
+            if ( ! self::valid_key( $key ) || ! self::valid_rel( (string) $file ) ) {
+                unset( $retired[ $file ] ); // never trust names read back from disk
+                continue;
+            }
             if ( in_array( $file, $keep, true ) ) {
                 unset( $retired[ $file ] );
                 continue;
@@ -137,6 +151,9 @@ class NAWS_Radar_Store {
     }
 
     public static function delete_set( string $key ): void {
+        if ( ! self::valid_key( $key ) ) {
+            return;
+        }
         $fs = self::fs();
         if ( $fs ) {
             $fs->delete( self::dir( $key ), true );
@@ -149,6 +166,10 @@ class NAWS_Radar_Store {
     /**
      * Daily: delete sets no page has shown for UNUSED seconds, and folders
      * no set knows. Returns how many folders went.
+     *
+     * The orphan pass relies on callers remembering a set (remember())
+     * before any file of it is written: NAWS_Radar::render() remembers
+     * before scheduling, and refresh() refuses keys not in the option.
      */
     public static function cleanup( int $now ): int {
         $gone = 0;

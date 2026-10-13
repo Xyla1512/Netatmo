@@ -55,6 +55,21 @@ check( 'b und c bleiben',                   [ NAWS_Radar_Store::has( $k1, 'frame
 $ret = NAWS_Radar_Store::prune( $k1, [ 'frames' => [ [ 'file' => 'frames/b.png' ] ], 'retired' => [ 'frames/c.png' => $now ] ], [ 'frames' => [ [ 'file' => 'frames/c.png' ] ] ], $now + 99999 );
 check( 'wieder benutztes Bild wird nicht geloescht', [ NAWS_Radar_Store::has( $k1, 'frames/c.png' ), array_key_exists( 'frames/c.png', $ret ) ], [ true, false ] );
 
+echo "\nPfadwaechter\n" . str_repeat( '-', 74 ) . "\n";
+fs()->put_contents( '/up/wp-config.php', 'secret' );
+fs()->put_contents( '/up/naws-radar/other.txt', 'o' );
+check( 'put: ../x.png abgelehnt',           NAWS_Radar_Store::put( $k1, '../x.png', 'x' ), false );
+check( 'put: /etc/x.png abgelehnt',         NAWS_Radar_Store::put( $k1, '/etc/x.png', 'x' ), false );
+check( 'put: ungueltiger Schluessel',       NAWS_Radar_Store::put( '..', 'frames/a.png', 'x' ), false );
+check( 'has: ../x.png',                     NAWS_Radar_Store::has( $k1, '../x.png' ), false );
+check( 'has: /etc/x.png',                   NAWS_Radar_Store::has( $k1, '/etc/x.png' ), false );
+NAWS_Radar_Store::delete_set( '' );
+NAWS_Radar_Store::delete_set( '..' );
+check( 'delete_set leer/..: nichts geloescht', [ fs()->exists( '/up/naws-radar/other.txt' ), fs()->exists( '/up/wp-config.php' ), NAWS_Radar_Store::has( $k1, 'frames/b.png' ) ], [ true, true, true ] );
+$evil = [ 'frames' => [ [ 'file' => '../../wp-config.php' ] ], 'retired' => [ '../../wp-config.php' => 0, '../wp-config.php' => 0 ] ];
+$ret  = NAWS_Radar_Store::prune( $k1, $evil, [ 'frames' => [] ], $now + 99999 );
+check( 'feindliches Manifest loescht nichts', [ fs()->exists( '/up/wp-config.php' ), $ret ], [ true, [] ] );
+
 echo "\nSperre und Sperrfrist\n" . str_repeat( '-', 74 ) . "\n";
 check( 'erste Sperre klappt',               NAWS_Radar_Store::lock( $k1 ), true );
 check( 'zweite nicht',                      NAWS_Radar_Store::lock( $k1 ), false );
