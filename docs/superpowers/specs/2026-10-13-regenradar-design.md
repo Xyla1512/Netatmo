@@ -103,3 +103,10 @@ Abrufe des Servers tragen einen eigenen User-Agent `XTX-Integration-for-Netatmo/
 - `tests/test-radar-privacy.php`: Shortcode-Ausgabe und `radar.js` enthalten keine fremden Hosts (nur Site-URL).
 - `tests/test-radar-player.php`: Player-Logik in Node (nächstes Bild, Halt am Ende, Pause, reduzierte Bewegung, Überspringen fehlender Bilder).
 - Danach auf dev: Playwright Desktop + Handy, Netzwerkprotokoll: nur Anfragen an dev; Knöpfe hovern.
+
+## 10. Nachtrag beim Planen (13.10.2026)
+
+- Die Einstellungsseite hat keine Reiter: Schalter, Liste der Bildsätze und „Zwischenspeicher leeren“ stehen als Block „Regenradar“ auf der Einstellungsseite; die Farben als Reiter „Regenradar“ im Erscheinungsbild.
+- DWD-Vergangenheitsbilder werden wiederverwendet (ein gemessenes Bild ändert sich nicht): pro Erneuerung 1 neues Vergangenheitsbild + 8 Vorschau-Bilder.
+- Karte bei 150 km: Zoom 10, ~49 Kacheln einmalig; bei 50 km Zoom 11, 25 Kacheln.
+- RainViewer-Bilder nehmen das 10-min-Raster der Quelle (bis 13 Bilder in 2 h).
