@@ -72,7 +72,7 @@ class NAWS_Radar {
         try {
             $old    = NAWS_Radar_Store::manifest( $key );
             $box    = NAWS_Radar_Geo::box( (float) $set['lat'], (float) $set['lon'], (int) $set['km'] );
-            $map    = self::fetch_map( $key, $box, $old['map']['tiles'] ?? [] );
+            $map    = self::fetch_map( $key, $box );
             $frames = 'dwd' === $source ? self::fetch_dwd( $key, $box, $now ) : self::fetch_rainviewer( $key, $box, $now );
             if ( ! $frames ) {
                 return false;
@@ -91,9 +91,8 @@ class NAWS_Radar {
         }
     }
 
-    /** Map tiles: fetched once, kept. Missing ones are tried again next run. */
-    private static function fetch_map( string $key, array $box, array $known ): array {
-        $have = array_column( $known, null, 'file' );
+    /** Map tiles: fetched once, kept on disk. Missing ones are tried again next run. */
+    private static function fetch_map( string $key, array $box ): array {
         $out  = [];
         $ok   = ! NAWS_Radar_Store::in_backoff( 'osm' );
         foreach ( NAWS_Radar_Geo::tiles( $box, NAWS_Radar_Geo::zoom_for( $box ) ) as $t ) {
@@ -104,7 +103,7 @@ class NAWS_Radar {
                 'top'  => $t['top'],
                 'size' => $t['size'],
             ];
-            if ( isset( $have[ $file ] ) && NAWS_Radar_Store::has( $key, $file ) ) {
+            if ( NAWS_Radar_Store::has( $key, $file ) ) {
                 $out[] = $entry;
                 continue;
             }
@@ -162,12 +161,14 @@ class NAWS_Radar {
         $index = json_decode( (string) wp_remote_retrieve_body( $r ), true );
         $host  = is_array( $index ) ? NAWS_Radar_Source::rv_host( $index ) : null;
         if ( null === $host ) {
+            NAWS_Radar_Store::start_backoff( 'rainviewer', $r );
             return [];
         }
         $tiles = NAWS_Radar_Geo::tiles( $box, min( NAWS_Radar_Geo::zoom_for( $box ), NAWS_Radar_Geo::RV_MAX_ZOOM ) );
         $out   = [];
         foreach ( NAWS_Radar_Source::rv_frames( $index, $now ) as $f ) {
             $parts = [];
+            $mine  = [];
             foreach ( $tiles as $t ) {
                 $file = sprintf( 'frames/%d-%d-%d-%d.png', $f['t'], $t['z'], $t['x'], $t['y'] );
                 if ( ! NAWS_Radar_Store::has( $key, $file ) ) {
@@ -175,11 +176,14 @@ class NAWS_Radar {
                     [ $kind, $png ] = self::classify( $tr );
                     if ( 'fail' === $kind ) {
                         NAWS_Radar_Store::start_backoff( 'rainviewer', $tr );
+                        NAWS_Radar_Store::delete_files( $key, $mine );
                         return $out;
                     }
                     if ( 'skip' === $kind || ! NAWS_Radar_Store::put( $key, $file, $png ) ) {
+                        NAWS_Radar_Store::delete_files( $key, $mine );
                         continue 2;
                     }
+                    $mine[] = $file;
                 }
                 $parts[] = [
                     'file' => $file,

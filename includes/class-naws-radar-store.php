@@ -106,6 +106,19 @@ class NAWS_Radar_Store {
         return $fs && self::valid_key( $key ) && self::valid_rel( $rel ) && $fs->exists( self::dir( $key ) . '/' . $rel );
     }
 
+    /** Delete the named files of a set; invalid keys and names are ignored. */
+    public static function delete_files( string $key, array $rels ): void {
+        $fs = self::fs();
+        if ( ! $fs || ! self::valid_key( $key ) ) {
+            return;
+        }
+        foreach ( $rels as $rel ) {
+            if ( is_string( $rel ) && self::valid_rel( $rel ) ) {
+                $fs->delete( self::dir( $key ) . '/' . $rel );
+            }
+        }
+    }
+
     /** The radar files a manifest refers to (the map is never pruned). */
     public static function files_of( array $m ): array {
         $out = [];

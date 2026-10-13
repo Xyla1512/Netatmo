@@ -109,4 +109,45 @@ NAWS_Radar::refresh( $rk, $rnow + 900 );
 check( 'zweiter Lauf: nur der Index, keine alten Kacheln', calls_to( 'https://tilecache.rainviewer.com/' ), 0 );
 check( 'User-Agent nennt Plugin und Site',  NAWS_Radar::user_agent(), 'XTX-Integration-for-Netatmo/test (+https://example.org/)' );
 
+echo "\nNachbesserung\n" . str_repeat( '-', 74 ) . "\n";
+// 1) Erster Lauf bricht beim ersten Bild ab: Karte bleibt, wird nicht neu geholt.
+$GLOBALS['transients'] = [];
+$k3 = NAWS_Radar_Store::key( 48.14, 11.58, 150, 'dwd' );
+NAWS_Radar_Store::remember( $k3, [ 'lat' => 48.14, 'lon' => 11.58, 'km' => 150, 'source' => 'dwd' ], $now );
+$GLOBALS['http_routes'] = [
+    'https://tile.openstreetmap.org/' => png( 'osm' ),
+    'https://maps.dwd.de/'            => resp( 429, '', [ 'retry-after' => '600' ] ),
+];
+reset_http();
+check( 'erster Lauf bricht ab: kein Manifest', [ NAWS_Radar::refresh( $k3, $now ), NAWS_Radar_Store::manifest( $k3 ) ], [ false, null ] );
+$GLOBALS['transients'] = [];
+$GLOBALS['http_routes']['https://maps.dwd.de/'] = png( 'dwd' );
+reset_http();
+check( 'zweiter Lauf klappt', NAWS_Radar::refresh( $k3, $now + 60 ), true );
+check( 'Karte nicht neu geholt (0 OSM-Abrufe)', calls_to( 'https://tile.openstreetmap.org/' ), 0 );
+$b3 = NAWS_Radar_Geo::box( 48.14, 11.58, 150 );
+check( 'Manifest mit allen Kartenkacheln (Muenchen: 42)', [ count( NAWS_Radar_Store::manifest( $k3 )['map']['tiles'] ), count( NAWS_Radar_Geo::tiles( $b3, NAWS_Radar_Geo::zoom_for( $b3 ) ) ) ], [ 42, 42 ] );
+
+// 2) RainViewer: 2. Kachel eines Bildes liefert 429 -> keine Datei dieses Bildes bleibt.
+$GLOBALS['transients'] = [];
+$rk2 = NAWS_Radar_Store::key( 59.91, 10.75, 300, 'rainviewer' );
+NAWS_Radar_Store::remember( $rk2, [ 'lat' => 59.91, 'lon' => 10.75, 'km' => 300, 'source' => 'rainviewer' ], $rnow );
+$m_tiles = 0;
+$GLOBALS['http_routes'] = [
+    'https://api.rainviewer.com/'       => resp( 200, json_encode( [ 'host' => 'https://tilecache.rainviewer.com', 'radar' => [ 'past' => $past ] ] ) ),
+    'https://tilecache.rainviewer.com/' => function () use ( &$m_tiles ) { return 2 === ++$m_tiles ? resp( 429, '', [ 'retry-after' => '600' ] ) : png( 'rv' ); },
+    'https://tile.openstreetmap.org/'   => png( 'osm' ),
+];
+reset_http();
+NAWS_Radar::refresh( $rk2, $rnow );
+$left = array_filter( array_keys( fs()->files ), fn( $p ) => str_contains( $p, "/$rk2/frames/" ) );
+check( 'RainViewer: abgebrochenes Bild hinterlaesst keine Kacheln', count( $left ), 0 );
+
+// 3) Kaputter Index startet die Sperrfrist.
+$GLOBALS['transients'] = [];
+$GLOBALS['http_routes'] = [ 'https://api.rainviewer.com/' => resp( 200, 'kein json' ) ] + $GLOBALS['http_routes'];
+reset_http();
+NAWS_Radar::refresh( $rk2, $rnow + 900 );
+check( 'kaputter Index: Sperrfrist gesetzt', NAWS_Radar_Store::in_backoff( 'rainviewer' ), true );
+
 done();

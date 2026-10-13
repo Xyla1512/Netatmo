@@ -97,6 +97,14 @@ check( 'nach 7 Tagen: k2 weg (k1 war spaeter gesehen)', NAWS_Radar_Store::cleanu
 check( 'k2 aus der Option',                 isset( NAWS_Radar_Store::sets()[ $k2 ] ), false );
 check( 'k2 Dateien weg',                    NAWS_Radar_Store::has( $k2, 'frames/z.png' ), false );
 check( 'k1 bleibt',                         isset( NAWS_Radar_Store::sets()[ $k1 ] ), true );
+NAWS_Radar_Store::put( $k1, 'frames/del.png', 'x' );
+NAWS_Radar_Store::delete_files( $k1, [ '../x.png', 'frames/del.png' ] );
+NAWS_Radar_Store::delete_files( '../bad', [ 'frames/del.png' ] );
+check( 'delete_files: gueltige Datei geloescht', NAWS_Radar_Store::has( $k1, 'frames/del.png' ), false );
+NAWS_Radar_Store::put( $k1, 'frames/del2.png', 'x' );
+NAWS_Radar_Store::delete_files( 'ZZZ', [ 'frames/del2.png' ] );
+check( 'delete_files: falscher Schluessel ignoriert', NAWS_Radar_Store::has( $k1, 'frames/del2.png' ), true );
+NAWS_Radar_Store::delete_files( $k1, [ 'frames/del2.png' ] );
 NAWS_Radar_Store::clear_all();
 check( 'clear_all: Ordner leer',            fs()->exists( '/up/naws-radar' ), false );
 check( 'clear_all: Option weg',             get_option( NAWS_Radar_Store::OPTION, 'weg' ), 'weg' );
