@@ -39,6 +39,7 @@ function esc_attr( $s ) { return htmlspecialchars( (string) $s, ENT_QUOTES ); }
 function esc_url( $s ) { return (string) $s; }
 function wp_json_encode( $v, $f = 0 ) { return json_encode( $v, $f ); }
 function absint( $v ) { return abs( (int) $v ); }
+function disabled( $d ) { if ( $d ) { echo ' disabled="disabled"'; } }
 function admin_url( $p = '' ) { return 'https://example.org/wp-admin/' . $p; }
 function wp_next_scheduled( $hook, $args = [] ) { return $GLOBALS['scheduled'][ $hook . json_encode( $args ) ] ?? false; }
 function wp_schedule_single_event( $ts, $hook, $args = [] ) { $GLOBALS['scheduled'][ $hook . json_encode( $args ) ] = $ts; return true; }

@@ -24,6 +24,7 @@ class NAWS_Shortcodes {
         'naws_value'          => 'sc_value',
         'naws_calc'           => 'sc_calc',
         'naws_forecast'       => 'sc_forecast',
+        'naws_radar'          => 'sc_radar',
         'naws_weather_icon'   => 'sc_weather_icon',
         'naws_weather_widget' => 'sc_weather_widget',
     ];
@@ -38,7 +39,7 @@ class NAWS_Shortcodes {
     }
 
     private function __construct() {
-        // One wrapper for all seventeen: decode the attributes before a handler
+        // One wrapper for all eighteen: decode the attributes before a handler
         // sees them. Page builders write quotes as &quot;, WordPress passes that
         // through as it is, and sanitize_key() then turns "dewpoint" into
         // quotdewpointquot — the shortcode shows only its fallback.
@@ -684,6 +685,28 @@ class NAWS_Shortcodes {
         ob_start();
         include NAWS_PLUGIN_DIR . 'templates/forecast.php';
         return ob_get_clean();
+    }
+
+    // [naws_radar width="100%" height="420" km="150" source="auto"]
+    // Animated rain radar around the station, since 2.2.0. Images come from
+    // this site only; see NAWS_Radar.
+    public function sc_radar( $atts ) {
+        $atts = shortcode_atts(
+            [
+                'width'  => '100%',
+                'height' => '420',
+                'km'     => '150',
+                'source' => 'auto',
+            ],
+            $atts,
+            'naws_radar'
+        );
+        $html = NAWS_Radar::render( $atts );
+        if ( false !== strpos( $html, 'data-naws-radar' ) ) {
+            $this->enqueue_frontend_styles();
+            wp_enqueue_script( 'naws-radar' );
+        }
+        return $html;
     }
 
     // ----------------------------------------------------------------

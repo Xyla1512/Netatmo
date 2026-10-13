@@ -192,6 +192,7 @@ final class NAWS_Plugin {
         NAWS_Ajax::instance();
         NAWS_Rest_API::init();
         NAWS_Notifications::init();
+        NAWS_Radar::init();
 
         // ── Cron watchdog: schedule if missing OR stale ─────────────────────
         $next_fetch = wp_next_scheduled( NAWS_Cron::HOOK_FETCH );

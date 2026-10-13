@@ -200,4 +200,181 @@ class NAWS_Radar {
         }
         return $out;
     }
+
+    /** Hooks: the background run, the REST route, clean-up when switched off, privacy text. */
+    public static function init(): void {
+        add_action( self::HOOK_REFRESH, [ __CLASS__, 'refresh' ] );
+        add_action( 'rest_api_init', [ __CLASS__, 'register_routes' ] );
+        add_action( 'admin_init', [ __CLASS__, 'privacy_text' ] );
+        add_action(
+            'update_option_naws_settings',
+            static function ( $old, $new ) {
+                if ( ! empty( $old['radar_enabled'] ) && empty( $new['radar_enabled'] ) ) {
+                    NAWS_Radar_Store::clear_all();
+                }
+            },
+            10,
+            2
+        );
+    }
+
+    /** @return array{width:string, height:int, km:mixed, source:string} */
+    public static function normalise_atts( array $atts ): array {
+        $w = trim( (string) ( $atts['width'] ?? '100%' ) );
+        if ( ! preg_match( '/^\d{1,4}(px|%)?$/', $w ) ) {
+            $w = '100%';
+        } elseif ( ctype_digit( $w ) ) {
+            $w .= 'px';
+        }
+        $h = is_numeric( $atts['height'] ?? null ) ? (int) $atts['height'] : 420;
+        $s = (string) ( $atts['source'] ?? 'auto' );
+        return [
+            'width'  => $w,
+            'height' => max( 200, min( 1200, $h ) ),
+            'km'     => $atts['km'] ?? (string) NAWS_Radar_Geo::KM_DEFAULT,
+            'source' => in_array( $s, [ 'auto', 'dwd', 'rainviewer' ], true ) ? $s : 'auto',
+        ];
+    }
+
+    /** One background run when the set is missing or older than MAX_AGE. */
+    public static function maybe_schedule( string $key, ?array $m, int $now ): void {
+        if ( $m && $now - (int) ( $m['updated'] ?? 0 ) < self::MAX_AGE ) {
+            return;
+        }
+        if ( wp_next_scheduled( self::HOOK_REFRESH, [ $key ] ) ) {
+            return;
+        }
+        wp_schedule_single_event( $now, self::HOOK_REFRESH, [ $key ] );
+    }
+
+    /** What the player gets: own URLs and times only. */
+    public static function payload( string $key, ?array $m, string $source, int $now ): array {
+        $fmt     = (string) get_option( 'time_format', 'H:i' );
+        $updated = (int) ( $m['updated'] ?? 0 );
+        $stale   = ! $m || $now - $updated > self::STALE;
+        $frames  = [];
+        foreach ( $stale ? [] : (array) ( $m['frames'] ?? [] ) as $f ) {
+            $e = [
+                't'        => (int) $f['t'],
+                'label'    => wp_date( $fmt, (int) $f['t'] ),
+                'forecast' => ! empty( $f['forecast'] ),
+            ];
+            if ( isset( $f['file'] ) ) {
+                $e['img'] = NAWS_Radar_Store::url( $key, $f['file'] );
+            } else {
+                $e['tiles'] = array_map(
+                    static fn( $t ) => [ NAWS_Radar_Store::url( $key, $t['file'] ), $t['left'], $t['top'], $t['size'] ],
+                    (array) ( $f['tiles'] ?? [] )
+                );
+            }
+            $frames[] = $e;
+        }
+        return [
+            'key'          => $key,
+            'source'       => $source,
+            'updated'      => $updated,
+            'updatedLabel' => $updated ? wp_date( $fmt, $updated ) : '',
+            'stale'        => $stale,
+            'rest'         => rest_url( 'naws/v1/radar/' . $key ),
+            'frames'       => $frames,
+            'map'          => array_map(
+                static fn( $t ) => [ NAWS_Radar_Store::url( $key, $t['file'] ), $t['left'], $t['top'], $t['size'] ],
+                (array) ( $m['map']['tiles'] ?? [] )
+            ),
+        ];
+    }
+
+    private static function admin_hint( string $label ): string {
+        return current_user_can( 'manage_options' )
+            ? '<p class="naws-radar-hint">' . esc_html( naws_label( $label ) ) . '</p>'
+            : '';
+    }
+
+    public static function render( array $atts, int $now = 0 ): string {
+        $now = $now ? $now : time();
+        if ( ! self::enabled() ) {
+            return self::admin_hint( 'rd_admin_off' );
+        }
+        $loc = NAWS_Forecast::resolve_location();
+        if ( ! isset( $loc['lat'], $loc['lon'] ) ) {
+            return self::admin_hint( 'rd_admin_noloc' );
+        }
+        $a      = self::normalise_atts( $atts );
+        $lat    = (float) $loc['lat'];
+        $lon    = (float) $loc['lon'];
+        $source = NAWS_Radar_Source::pick( $a['source'], $lat, $lon );
+        $km     = NAWS_Radar_Geo::clamp_km( $a['km'], $source );
+        $key    = NAWS_Radar_Store::key( $lat, $lon, $km, $source );
+        NAWS_Radar_Store::remember(
+            $key,
+            [
+                'lat'    => $lat,
+                'lon'    => $lon,
+                'km'     => $km,
+                'source' => $source,
+            ],
+            $now
+        );
+        $m = NAWS_Radar_Store::manifest( $key );
+        self::maybe_schedule( $key, $m, $now );
+
+        $naws_rd        = self::payload( $key, $m, $source, $now );
+        $naws_rd_state  = ! $m ? 'preparing' : ( $naws_rd['stale'] ? 'unavailable' : 'ready' );
+        $naws_rd_width  = $a['width'];
+        $naws_rd_height = $a['height'];
+        $naws_rd_place  = (string) ( $loc['name'] ?? '' );
+        ob_start();
+        include NAWS_PLUGIN_DIR . 'templates/radar.php';
+        return (string) ob_get_clean();
+    }
+
+    public static function register_routes(): void {
+        register_rest_route(
+            'naws/v1',
+            '/radar/(?P<key>[a-f0-9]{12})',
+            [
+                'methods'             => 'GET',
+                'callback'            => [ __CLASS__, 'rest_manifest' ],
+                // Public on purpose, unlike the key-protected routes of
+                // NAWS_Rest_API: it answers only for sets this site has
+                // shown on a page, and hands out times and URLs of images
+                // on this site - what the page itself already contains.
+                'permission_callback' => '__return_true',
+            ]
+        );
+    }
+
+    /**
+     * @param WP_REST_Request|array $request
+     * @param int                   $now     for tests; 0 = time()
+     */
+    public static function rest_manifest( $request, int $now = 0 ) {
+        $key = (string) $request['key'];
+        $set = NAWS_Radar_Store::sets()[ $key ] ?? null;
+        if ( ! self::enabled() || ! is_array( $set ) ) {
+            return new WP_Error( 'naws_radar_unknown', 'Unknown radar.', [ 'status' => 404 ] );
+        }
+        $now = $now ? $now : time();
+        $m   = NAWS_Radar_Store::manifest( $key );
+        self::maybe_schedule( $key, $m, $now );
+        $res = rest_ensure_response( self::payload( $key, $m, (string) $set['source'], $now ) );
+        $res->header( 'Cache-Control', 'no-store' );
+        return $res;
+    }
+
+    /** From the daily cron run. */
+    public static function daily_cleanup( int $now = 0 ): int {
+        return NAWS_Radar_Store::cleanup( $now ? $now : time() );
+    }
+
+    /** Suggested text for the site's privacy policy page. */
+    public static function privacy_text(): void {
+        if ( ! function_exists( 'wp_add_privacy_policy_content' ) ) {
+            return;
+        }
+        wp_add_privacy_policy_content(
+            'XTX Integration for Netatmo',
+            '<p>' . esc_html__( 'If the rain radar is switched on, this website fetches radar images from the Deutscher Wetterdienst (maps.dwd.de) or RainViewer (rainviewer.com) and map tiles from OpenStreetMap (tile.openstreetmap.org) and stores them on its own server. Only the map section around the weather station and the time are sent. Visitors\' browsers load the images from this website only; no visitor data, IP address or cookie reaches these services.', 'xtx-integration-for-netatmo' ) . '</p>'
+        );
+    }
 }

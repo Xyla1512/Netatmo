@@ -64,7 +64,7 @@
    "only light" takes exactly these blocks out of that and nothing else on
    the page; plain "light" is ignored by Chrome (measured 2026-09-09). */
 .naws-wrap, .naws-rec, .naws-otd, .naws-sun, .naws-hm, .naws-hist, .naws-wx,
-.naws-fc-wrap, .naws-wgt, .naws-weather-icon, .naws-sl, .naws-sl-card {
+.naws-fc-wrap, .naws-wgt, .naws-weather-icon, .naws-sl, .naws-sl-card, .naws-radar {
   color-scheme: only light;
 }
 
@@ -2083,3 +2083,38 @@
 .naws-sl-month-axis { display:grid; grid-template-columns:7.5em 1fr; gap:12px; margin-top:4px; font-size:.74rem; color:var(--naws-text-muted, #7aa0a0); }
 .naws-sl-month-axis > div:last-child { display:flex; justify-content:space-between; }
 @media (max-width:520px) { .naws-sl-month-row, .naws-sl-month-axis { grid-template-columns:1fr; gap:4px; } .naws-sl-month-axis > div:first-child { display:none; } }
+
+/* ==========================================================================
+   [naws_radar] — rain radar (since 2.2.0)
+   The square image (1024 units) covers the frame like object-fit: cover,
+   centred on the station. Colours come from --naws-radar-* (Appearance →
+   Rain radar); the literals are only fallbacks.
+   ========================================================================== */
+.naws-radar { max-width: 100%; margin: 0 0 1em; font-size: 14px; }
+.naws-radar-view { position: relative; height: var(--naws-radar-h, 420px); overflow: hidden; border-radius: 10px; background: var(--naws-radar-bar-bg, #f4fafa); }
+.naws-radar-stage { position: absolute; left: 50%; top: 50%; width: max(100%, var(--naws-radar-h, 420px)); aspect-ratio: 1 / 1; transform: translate(-50%, -50%); }
+.naws-radar-map, .naws-radar-layer, .naws-radar-frame { position: absolute; inset: 0; }
+.naws-radar-map { filter: grayscale(1) contrast(.85) brightness(1.1); opacity: .7; }
+.naws-radar-layer { opacity: .85; }
+.naws-radar-frame { visibility: hidden; }
+.naws-radar-frame.is-on { visibility: visible; }
+.naws-radar .naws-radar-map img, .naws-radar .naws-radar-layer img { position: absolute; max-width: none; height: auto; margin: 0; border: 0; box-shadow: none; }
+.naws-radar-station { position: absolute; left: 50%; top: 50%; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: var(--naws-radar-station, #c0392b); box-shadow: 0 0 0 2px var(--naws-radar-time-text, #ffffff), 0 0 0 8px rgba(0, 0, 0, .12); }
+.naws-radar-time { position: absolute; left: 10px; top: 10px; display: flex; gap: 6px; align-items: center; padding: 4px 10px; border-radius: 6px; background: var(--naws-radar-time-bg, #2d5252); color: var(--naws-radar-time-text, #ffffff); font-size: 1.15em; font-weight: 700; font-variant-numeric: tabular-nums; }
+.naws-radar-fc { font-size: .75em; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; padding: 1px 6px; border-radius: 4px; background: var(--naws-radar-forecast, #dd9933); }
+.naws-radar-fc[hidden] { display: none; }
+.naws-radar-msg { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); max-width: 80%; margin: 0; padding: 10px 14px; border-radius: 8px; background: var(--naws-radar-bar-bg, #f4fafa); color: var(--naws-radar-time-bg, #2d5252); text-align: center; }
+.naws-radar-msg[hidden] { display: none; }
+.naws-radar-bar { display: flex; gap: 10px; align-items: center; margin-top: 8px; padding: 6px 8px; border-radius: 8px; background: var(--naws-radar-bar-bg, #f4fafa); }
+.naws-radar-range { flex: 1 1 auto; min-width: 0; accent-color: var(--naws-radar-button, #427272); }
+.naws-radar .naws-radar-btn { flex: 0 0 auto; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 50%; background: var(--naws-radar-button, #427272); color: var(--naws-radar-button-text, #ffffff); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+.naws-radar .naws-radar-btn:hover, .naws-radar .naws-radar-btn:focus { background: var(--naws-radar-button, #427272); color: var(--naws-radar-button-text, #ffffff); filter: brightness(1.12); }
+.naws-radar .naws-radar-btn:focus-visible { outline: 2px solid var(--naws-radar-time-bg, #2d5252); outline-offset: 2px; }
+.naws-radar .naws-radar-btn:disabled { opacity: .45; cursor: default; filter: none; }
+.naws-radar-icon { width: 0; height: 0; border-style: solid; border-width: 7px 0 7px 12px; border-color: transparent transparent transparent currentColor; margin-left: 3px; }
+.naws-radar-btn.is-playing .naws-radar-icon { width: 12px; height: 14px; border-width: 0 4px; border-color: currentColor; border-style: solid; margin-left: 0; }
+.naws-radar-legend { flex: 0 0 auto; display: inline-flex; gap: 6px; align-items: center; font-size: .8em; color: var(--naws-radar-time-bg, #2d5252); }
+.naws-radar-legend i { display: inline-block; width: 56px; height: 8px; border-radius: 4px; background: linear-gradient(90deg, #9be7ff, #2f80ed, #f2c94c, #eb5757); }
+.naws-radar-attr { margin: 4px 0 0; font-size: .75em; opacity: .75; }
+.naws-radar-hint { padding: 8px 12px; border-left: 3px solid var(--naws-radar-forecast, #dd9933); background: var(--naws-radar-bar-bg, #f4fafa); }
+@media (max-width: 480px) { .naws-radar-legend { display: none; } }

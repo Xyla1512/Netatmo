@@ -367,6 +367,37 @@ function naws_label( string $key ): string {
         case 'ntf_test_intro':                     return /* translators: %s: the site name */ __( 'This mail was sent by hand from %s to check the delivery.', 'xtx-integration-for-netatmo' );
         case 'ntf_test_rules':                     return __( 'Rules switched on:', 'xtx-integration-for-netatmo' );
         case 'ntf_test_none':                      return __( '(none)', 'xtx-integration-for-netatmo' );
+        // ── [naws_radar] (since 2.2.0) ─────────────────────────────────
+        case 'rd_aria':
+            /* translators: %s: name of the place the radar is centred on */
+            return __( 'Rain radar around %s', 'xtx-integration-for-netatmo' );
+        case 'rd_forecast':
+            return _x( 'Forecast', 'rain radar frame', 'xtx-integration-for-netatmo' );
+        case 'rd_play':
+            return __( 'Play or pause the rain radar', 'xtx-integration-for-netatmo' );
+        case 'rd_time':
+            return __( 'Time of the radar image', 'xtx-integration-for-netatmo' );
+        case 'rd_preparing':
+            return __( 'The rain radar is being prepared. It will appear in a moment.', 'xtx-integration-for-netatmo' );
+        case 'rd_unavailable':
+            return __( 'The rain radar is temporarily unavailable.', 'xtx-integration-for-netatmo' );
+        case 'rd_as_of':
+            /* translators: %s: time of the newest radar image */
+            return __( 'As of %s', 'xtx-integration-for-netatmo' );
+        case 'rd_light':
+            return _x( 'light', 'rain intensity', 'xtx-integration-for-netatmo' );
+        case 'rd_moderate':
+            return _x( 'moderate', 'rain intensity', 'xtx-integration-for-netatmo' );
+        case 'rd_heavy':
+            return _x( 'heavy', 'rain intensity', 'xtx-integration-for-netatmo' );
+        case 'rd_src_dwd':
+            return __( 'Radar: Deutscher Wetterdienst', 'xtx-integration-for-netatmo' );
+        case 'rd_src_osm':
+            return __( 'Map: © OpenStreetMap contributors', 'xtx-integration-for-netatmo' );
+        case 'rd_admin_off':
+            return __( 'The rain radar is switched off. Admins can switch it on under Settings → Rain radar. Only you see this note.', 'xtx-integration-for-netatmo' );
+        case 'rd_admin_noloc':
+            return __( 'The rain radar needs the station coordinates or a forecast location. Only you see this note.', 'xtx-integration-for-netatmo' );
     }
 
     return '';
