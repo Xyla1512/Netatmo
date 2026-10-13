@@ -35,6 +35,19 @@
             return i;
         },
 
+        /** Where the viewer was, found again by the frame's time in the new list. */
+        keepIndex: function (oldFrames, oldIdx, newFrames) {
+            var i, t;
+            if (!oldFrames || !oldFrames.length || oldIdx < 0 || oldIdx >= oldFrames.length) {
+                return core.nowIndex(newFrames);
+            }
+            t = oldFrames[oldIdx].t;
+            for (i = 0; i < newFrames.length; i++) {
+                if (newFrames[i].t === t) { return i; }
+            }
+            return core.nowIndex(newFrames);
+        },
+
         delay: function (i, n) { return i === n - 1 ? core.HOLD : core.STEP; },
 
         autoplay: function (frames, reduced) { return !reduced && frames.length >= 2; },
@@ -134,11 +147,13 @@
                     .then(function (r) { return r.ok ? r.json() : null; })
                     .then(function (d) {
                         if (d && d.frames && d.frames.length && !d.stale && d.updated !== data.updated) {
-                            var was = playing;
+                            var had = frames.length > 0, was = playing,
+                                oldFrames = frames, oldIdx = idx;
                             data = d;
                             play(false);
                             build(d);
-                            play(was || core.autoplay(frames, reduced));
+                            if (had) { show(core.keepIndex(oldFrames, oldIdx, frames)); }
+                            play(had ? was : core.autoplay(frames, reduced));
                             poll(core.POLL_EVERY);
                         } else if (!frames.length && ++tries < core.POLL_TRIES) {
                             poll(core.POLL_FIRST);

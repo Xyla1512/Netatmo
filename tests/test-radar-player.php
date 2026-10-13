@@ -25,7 +25,10 @@ console.log(JSON.stringify({
   allBroken: c.nextOk(0, 2, { 0: true, 1: true }), zero: c.nextOk(0, 0, {}),
   hold: c.delay(12, 13), step: c.delay(3, 13),
   auto: c.autoplay(p, false), reduced: c.autoplay(p, true), single: c.autoplay(f([false]), false),
-  pct: c.pct(512), pctNeg: c.pct(-19.59)
+  pct: c.pct(512), pctNeg: c.pct(-19.59),
+  keepShift: c.keepIndex([{ t: 1 }, { t: 2 }, { t: 3 }], 1, [{ t: 0 }, { t: 1 }, { t: 2 }, { t: 3 }]),
+  keepGone: c.keepIndex([{ t: 1 }, { t: 2 }], 1, [{ t: 5, forecast: false }, { t: 6, forecast: false }, { t: 7, forecast: true }]),
+  keepEmpty: c.keepIndex([], 0, [{ t: 5, forecast: false }, { t: 6, forecast: true }])
 }));
 JS;
 $proc = proc_open( [ 'node', '-', $file ], [ 0 => [ 'pipe', 'r' ], 1 => [ 'pipe', 'w' ], 2 => [ 'pipe', 'w' ] ], $pipes );
@@ -53,6 +56,9 @@ check( 'nicht bei reduzierter Bewegung', $r['reduced'], false );
 check( 'nicht bei nur einem Bild',       $r['single'], false );
 check( 'Prozent',                        $r['pct'], '50.0000%' );
 check( 'Prozent negativ',                $r['pctNeg'], '-1.9131%' );
+check( 'gleicher Zeitpunkt nach Verschiebung', $r['keepShift'], 2 );
+check( 'Zeitpunkt weg: jetzt der neuen Liste', $r['keepGone'], 1 );
+check( 'vorher leer: jetzt',                   $r['keepEmpty'], 0 );
 
 echo "\nDatenschutz\n" . str_repeat( '-', 74 ) . "\n";
 $src = (string) file_get_contents( $file );
