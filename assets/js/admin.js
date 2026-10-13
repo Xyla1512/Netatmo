@@ -97,6 +97,26 @@
                 result.css('color', '#ef4444').text(nawsAdmin.strings.request_failed);
             });
         });
+
+        // Settings → Rain radar → Clear storage (since 2.2.0).
+        $(document).on('click', '#naws-radar-clear', function() {
+            if (!confirm(nawsAdmin.strings.radar_clear_confirm)) return;
+            const btn    = $(this);
+            const result = $('#naws-radar-clear-result');
+            btn.prop('disabled', true);
+            $.post(nawsAdmin.ajax_url, { action: 'naws_radar_clear', nonce: nawsAdmin.nonce }, function(resp) {
+                btn.prop('disabled', false);
+                if (resp.success) {
+                    result.css('color', '#10b981').text(nawsAdmin.strings.radar_cleared);
+                    $('.naws-radar-sets').remove();
+                } else {
+                    result.css('color', '#ef4444').text(resp.data?.message || nawsAdmin.strings.error);
+                }
+            }).fail(function() {
+                btn.prop('disabled', false);
+                result.css('color', '#ef4444').text(nawsAdmin.strings.request_failed);
+            });
+        });
     });
 
     function showNotice(message, type) {

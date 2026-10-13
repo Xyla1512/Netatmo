@@ -146,6 +146,7 @@ class NAWS_Cron {
     public static function deactivate() {
         wp_clear_scheduled_hook( self::HOOK_FETCH );
         wp_clear_scheduled_hook( self::HOOK_DAILY );
+        wp_clear_scheduled_hook( 'naws_radar_refresh' );
     }
 
     // ────────────────────────────────────────────────────────────────
@@ -486,6 +487,11 @@ class NAWS_Cron {
         // Retention of raw readings: once a night, after the summary, and
         // before the caches go so no query keeps rows that are gone.
         $this->run_retention();
+
+        // Rain radar: sets no page has shown for 7 days go, with their map.
+        if ( class_exists( 'NAWS_Radar' ) ) {
+            NAWS_Radar::daily_cleanup();
+        }
 
         // Flush daily caches after summary computation
         NAWS_Database::flush_caches();

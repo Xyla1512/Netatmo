@@ -195,6 +195,12 @@ class NAWS_Admin {
             $clean['wgt_sparklines'] = empty( $input['wgt_sparklines'] ) ? 0 : 1;
         }
 
+        // Rain radar (since 2.2.0): a hidden-zero checkbox. Off means no
+        // request to DWD, RainViewer or OpenStreetMap at all.
+        if ( $sent( 'radar_enabled' ) ) {
+            $clean['radar_enabled'] = empty( $input['radar_enabled'] ) ? 0 : 1;
+        }
+
         // Auto-resolved location name is written by NAWS_Forecast, never by
         // a form, so it is carried over untouched.
         $clean['forecast_auto_name'] = $old_opts['forecast_auto_name'] ?? '';
@@ -279,6 +285,8 @@ class NAWS_Admin {
             'ajax_url' => admin_url( 'admin-ajax.php' ),
             'nonce'    => wp_create_nonce( 'naws_admin_nonce' ),
             'strings'  => [
+                'radar_clear_confirm' => __( 'Delete all stored rain radar images and map tiles? They are fetched again the next time a page shows the radar.', 'xtx-integration-for-netatmo' ),
+                'radar_cleared'       => __( 'Rain radar storage cleared.', 'xtx-integration-for-netatmo' ),
                 'syncing'          => __( 'Syncing…', 'xtx-integration-for-netatmo' ),
                 'sync_done'        => __( 'Sync complete!', 'xtx-integration-for-netatmo' ),
                 'importing'        => __( 'Importing…', 'xtx-integration-for-netatmo' ),

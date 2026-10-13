@@ -27,6 +27,7 @@ class NAWS_Ajax {
         add_action( 'wp_ajax_naws_import_cleanup',         [ $this, 'import_cleanup' ] );
         add_action( 'wp_ajax_naws_get_modules',         [ $this, 'get_modules' ] );
         add_action( 'wp_ajax_naws_delete_readings',     [ $this, 'delete_readings' ] );
+        add_action( 'wp_ajax_naws_radar_clear',         [ $this, 'radar_clear' ] );
         add_action( 'wp_ajax_naws_toggle_module',        [ $this, 'toggle_module' ] );
 
         // Public AJAX (for frontend widgets)
@@ -468,6 +469,16 @@ class NAWS_Ajax {
         $days = intval( $_POST['days'] ?? 365 ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- intval sanitizes
         $deleted = NAWS_Database::purge_old_readings( $days );
         wp_send_json_success( [ 'deleted' => $deleted ] );
+    }
+
+    /** Settings → Rain radar → "Clear storage" (since 2.2.0). */
+    public function radar_clear() {
+        check_ajax_referer( 'naws_admin_nonce', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 );
+        }
+        NAWS_Radar_Store::clear_all();
+        wp_send_json_success();
     }
 
     /**

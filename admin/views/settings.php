@@ -535,6 +535,50 @@ if ( ! defined( 'ABSPATH' ) ) exit; ?>
                     </div>
                 </div>
 
+                <div class="naws-admin-panel">
+                    <div class="naws-panel-header"><h2><?php esc_html_e( 'Rain radar', 'xtx-integration-for-netatmo' ); ?></h2></div>
+                    <div class="naws-panel-body">
+                        <table class="form-table naws-form-table">
+                            <tr>
+                                <th><?php esc_html_e( 'Allow rain radar', 'xtx-integration-for-netatmo' ); ?></th>
+                                <td>
+                                    <input type="hidden" name="naws_settings[radar_enabled]" value="0">
+                                    <label><input type="checkbox" name="naws_settings[radar_enabled]" value="1" <?php checked( ! empty( $options['radar_enabled'] ) ); ?>>
+                                        <?php esc_html_e( 'Show [naws_radar] and fetch its images', 'xtx-integration-for-netatmo' ); ?></label>
+                                    <p class="description"><?php esc_html_e( 'When on, this server fetches radar images from the Deutscher Wetterdienst (in Germany) or RainViewer (elsewhere) and map tiles from OpenStreetMap, at most every 15 minutes and only after a page showed the radar. Visitors load the images from this site only. Switching off deletes the stored images.', 'xtx-integration-for-netatmo' ); ?></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><?php esc_html_e( 'Stored radars', 'xtx-integration-for-netatmo' ); ?></th>
+                                <td>
+                                    <?php $naws_rd_sets = class_exists( 'NAWS_Radar_Store' ) ? NAWS_Radar_Store::sets() : []; ?>
+                                    <?php if ( ! $naws_rd_sets ) : ?>
+                                        <p class="description"><?php esc_html_e( 'None yet.', 'xtx-integration-for-netatmo' ); ?></p>
+                                    <?php else : ?>
+                                        <ul class="naws-radar-sets">
+                                        <?php foreach ( $naws_rd_sets as $naws_rd_key => $naws_rd_set ) : ?>
+                                            <li><?php
+                                                echo esc_html( sprintf(
+                                                    /* translators: 1: width of the map section in km, 2: DWD or RainViewer, 3: date and time last shown, 4: size on disk */
+                                                    __( '%1$d km, %2$s, last shown %3$s, %4$s', 'xtx-integration-for-netatmo' ),
+                                                    (int) $naws_rd_set['km'],
+                                                    'dwd' === $naws_rd_set['source'] ? 'DWD' : 'RainViewer',
+                                                    wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), (int) $naws_rd_set['last_seen'] ),
+                                                    size_format( NAWS_Radar_Store::usage( (string) $naws_rd_key ) )
+                                                ) );
+                                            ?></li>
+                                        <?php endforeach; ?>
+                                        </ul>
+                                    <?php endif; ?>
+                                    <p><button type="button" class="button" id="naws-radar-clear"><?php esc_html_e( 'Clear storage', 'xtx-integration-for-netatmo' ); ?></button>
+                                        <span id="naws-radar-clear-result"></span></p>
+                                    <p class="description"><?php esc_html_e( 'Every renewal deletes the old images; a radar no page has shown for 7 days is deleted with its map.', 'xtx-integration-for-netatmo' ); ?></p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
             </div><!-- /right column -->
         </div>
 

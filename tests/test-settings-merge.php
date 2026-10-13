@@ -47,6 +47,7 @@ $GLOBALS['naws_stored'] = [
     'retention_enabled' => 1,
     'data_retention'    => 200,
     'wgt_sparklines'    => 1,
+    'radar_enabled'     => 1,
 ];
 
 // ── Minimal WordPress surface ────────────────────────────────────────────
@@ -288,6 +289,13 @@ scenario(
     'Zugangsdaten speichern laesst den Sparkline-Haken stehen',
     [ 'client_id' => 'newid' ],
     [ 'wgt_sparklines' ],
+    [ 'client_id' => 'ENC:newid' ]
+);
+
+scenario(
+    'Zugangsdaten speichern laesst den Radar-Schalter stehen',
+    [ 'client_id' => 'newid' ],
+    [ 'radar_enabled' ],
     [ 'client_id' => 'ENC:newid' ]
 );
 
