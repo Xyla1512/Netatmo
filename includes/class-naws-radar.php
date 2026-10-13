@@ -390,8 +390,9 @@ class NAWS_Radar {
             return self::admin_hint( 'rd_admin_noloc' );
         }
         $a      = self::normalise_atts( $atts );
-        $lat    = (float) $loc['lat'];
-        $lon    = (float) $loc['lon'];
+        // 0.01 degrees, about 1 km: the radar centre must not pinpoint the station.
+        $lat    = round( (float) $loc['lat'], 2 );
+        $lon    = round( (float) $loc['lon'], 2 );
         $source = NAWS_Radar_Source::pick( $a['source'], $lat, $lon );
         $km     = NAWS_Radar_Geo::clamp_km( $a['km'], $source );
         $key    = NAWS_Radar_Store::key( $lat, $lon, $km, $source );

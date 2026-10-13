@@ -79,6 +79,14 @@ $html = NAWS_Radar::render( [], $now );
 check( 'aelter als 3 h: nicht verfuegbar', str_contains( $html, 'naws-radar--unavailable' ), true );
 check( 'aelter als 3 h: keine Bilder im JSON', str_contains( $html, '"frames":[]' ), true );
 
+echo "\nMitte auf 0,01 Grad gerundet\n" . str_repeat( '-', 74 ) . "\n";
+$GLOBALS['loc'] = [ 'lat' => 51.3512, 'lon' => 12.3688, 'name' => 'Leipzig' ];
+$html = NAWS_Radar::render( [], $now );
+preg_match( '#<script type="application/json" data-naws="radar">(.*?)</script>#s', $html, $j );
+check( '51.3512/12.3688 gibt den Satz von 51.35/12.37', json_decode( $j[1] ?? '', true )['key'] ?? '', $key );
+check( 'gemerkt mit gerundeter Lage',      [ NAWS_Radar_Store::sets()[ $key ]['lat'], NAWS_Radar_Store::sets()[ $key ]['lon'] ], [ 51.35, 12.37 ] );
+$GLOBALS['loc'] = [ 'lat' => 51.35, 'lon' => 12.37, 'name' => 'Leipzig' ];
+
 echo "\nREST\n" . str_repeat( '-', 74 ) . "\n";
 NAWS_Radar::register_routes();
 $route = $GLOBALS['routes']['naws/v1/radar/(?P<key>[a-f0-9]{12})'] ?? null;
