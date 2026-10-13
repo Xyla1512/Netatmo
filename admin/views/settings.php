@@ -546,6 +546,10 @@ if ( ! defined( 'ABSPATH' ) ) exit; ?>
                                     <label><input type="checkbox" name="naws_settings[radar_enabled]" value="1" <?php checked( ! empty( $options['radar_enabled'] ) ); ?>>
                                         <?php esc_html_e( 'Show [naws_radar] and fetch its images', 'xtx-integration-for-netatmo' ); ?></label>
                                     <p class="description"><?php esc_html_e( 'When on, this server fetches radar images from the Deutscher Wetterdienst (in Germany) or RainViewer (elsewhere) and map tiles from OpenStreetMap, at most every 15 minutes and only after a page showed the radar. Visitors load the images from this site only. Switching off deletes the stored images.', 'xtx-integration-for-netatmo' ); ?></p>
+                                    <?php $naws_rd_up = wp_upload_dir( null, false ); ?>
+                                    <?php if ( ! wp_is_writable( $naws_rd_up['basedir'] ) ) : ?>
+                                        <p class="naws-radar-unwritable"><strong><?php esc_html_e( 'The uploads folder is not writable, so the rain radar cannot store images.', 'xtx-integration-for-netatmo' ); ?></strong></p>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                             <tr>

@@ -33,7 +33,8 @@ check( 'Handler prueft Nonce',                    (bool) preg_match( '/function 
 check( 'Handler prueft Recht',                    (bool) preg_match( '/function radar_clear\(\).*?current_user_can\( \'manage_options\' \)/s', $ajax ), true );
 check( 'Handler leert',                           (bool) preg_match( '/function radar_clear\(\).*?NAWS_Radar_Store::clear_all\(\)/s', $ajax ), true );
 check( 'JS ruft die Aktion',                      str_contains( $js, "action: 'naws_radar_clear'" ), true );
-check( 'JS-Strings vorhanden',                    str_contains( $admin, "'radar_clear_confirm'" ) && str_contains( $admin, "'radar_cleared'" ), true );
+check( 'Hinweis bei schreibgeschuetztem Uploads-Ordner', (bool) preg_match( "/! wp_is_writable\( \\\$naws_rd_up\['basedir'\] \).*?esc_html_e\( 'The uploads folder is not writable, so the rain radar cannot store images\./s", $view ), true );
+check( 'JS-Strings vorhanden',                   str_contains( $admin, "'radar_clear_confirm'" ) && str_contains( $admin, "'radar_cleared'" ), true );
 
 echo "\nCron und Deinstallation\n" . str_repeat( '-', 74 ) . "\n";
 check( 'Tagesaufraeumen nach der Aufbewahrung',   (bool) preg_match( '/\$this->run_retention\(\);.*?NAWS_Radar::daily_cleanup\(\)/s', $cron ), true );

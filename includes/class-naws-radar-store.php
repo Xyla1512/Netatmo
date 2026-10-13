@@ -19,7 +19,7 @@ class NAWS_Radar_Store {
     const LOCK       = 'naws_radar_lock_';
     const BACKOFF    = 'naws_radar_backoff_';
     const SOURCES    = [ 'dwd', 'rainviewer', 'osm' ];
-    const LOCK_TTL   = 300;
+    const LOCK_TTL   = 600;      // a run may take up to 100 requests
     const GRACE      = 1800;     // an open player may still show the previous set
     const UNUSED     = 604800;   // 7 days without a page showing the set
     const SEEN_EVERY = 3600;     // write last_seen at most once an hour
@@ -95,7 +95,17 @@ class NAWS_Radar_Store {
         if ( isset( $sets[ $key ] ) && $now - (int) ( $sets[ $key ]['last_seen'] ?? 0 ) < self::SEEN_EVERY ) {
             return;
         }
-        $sets[ $key ] = array_merge( $params, [ 'last_seen' => $now ] );
+        $sets[ $key ] = array_merge( $sets[ $key ] ?? [], $params, [ 'last_seen' => $now ] );
+        update_option( self::OPTION, $sets, false );
+    }
+
+    /** Note that a background run started for this set (see NAWS_Radar::maybe_schedule()). */
+    public static function touch_try( string $key, int $now ): void {
+        $sets = self::sets();
+        if ( ! isset( $sets[ $key ] ) || ! is_array( $sets[ $key ] ) ) {
+            return;
+        }
+        $sets[ $key ]['last_try'] = $now;
         update_option( self::OPTION, $sets, false );
     }
 
@@ -275,17 +285,23 @@ class NAWS_Radar_Store {
         $code    = is_wp_error( $response ) ? 0 : (int) wp_remote_retrieve_response_code( $response );
         $retry   = is_wp_error( $response ) ? '' : (string) wp_remote_retrieve_header( $response, 'retry-after' );
         $seconds = NAWS_Forecast::backoff_seconds( $code, $retry );
+        self::pause( $source, $seconds, sprintf( 'request failed (%s)', $code ? $code : 'no response' ) );
+    }
+
+    /** No request to $source for $seconds; the reason goes to the log. */
+    public static function pause( string $source, int $seconds, string $reason ): void {
+        $seconds = max( 1, $seconds );
         set_transient(
             self::BACKOFF . $source,
             [
-                'code'  => $code,
-                'until' => time() + $seconds,
+                'reason' => $reason,
+                'until'  => time() + $seconds,
             ],
             $seconds
         );
         NAWS_Logger::warning(
             'radar',
-            sprintf( '%s request failed (%s), next attempt in %d minute(s)', $source, $code ? $code : 'no response', (int) ceil( $seconds / 60 ) )
+            sprintf( '%s %s, next attempt in %d minute(s)', $source, $reason, (int) ceil( $seconds / 60 ) )
         );
     }
 }

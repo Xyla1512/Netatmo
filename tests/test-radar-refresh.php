@@ -110,7 +110,8 @@ check( 'zweiter Lauf: nur der Index, keine alten Kacheln', calls_to( 'https://ti
 check( 'User-Agent nennt Plugin und Site',  NAWS_Radar::user_agent(), 'XTX-Integration-for-Netatmo/test (+https://example.org/)' );
 
 echo "\nNachbesserung\n" . str_repeat( '-', 74 ) . "\n";
-// 1) Erster Lauf bricht beim ersten Bild ab: Karte bleibt, wird nicht neu geholt.
+// 1) Erster Lauf bricht beim ersten Bild ab: ohne Radarbild keine Karte
+//    (Bilder kommen zuerst), der naechste Lauf holt beides.
 $GLOBALS['transients'] = [];
 $k3 = NAWS_Radar_Store::key( 48.14, 11.58, 150, 'dwd' );
 NAWS_Radar_Store::remember( $k3, [ 'lat' => 48.14, 'lon' => 11.58, 'km' => 150, 'source' => 'dwd' ], $now );
@@ -120,11 +121,13 @@ $GLOBALS['http_routes'] = [
 ];
 reset_http();
 check( 'erster Lauf bricht ab: kein Manifest', [ NAWS_Radar::refresh( $k3, $now ), NAWS_Radar_Store::manifest( $k3 ) ], [ false, null ] );
+check( 'ohne Radarbild keine Kartenabrufe', calls_to( 'https://tile.openstreetmap.org/' ), 0 );
+check( '429: Retry-After bleibt (keine 900 s darueber)', $GLOBALS['transients']['naws_radar_backoff_dwd'][1], 600 );
 $GLOBALS['transients'] = [];
 $GLOBALS['http_routes']['https://maps.dwd.de/'] = png( 'dwd' );
 reset_http();
 check( 'zweiter Lauf klappt', NAWS_Radar::refresh( $k3, $now + 60 ), true );
-check( 'Karte nicht neu geholt (0 OSM-Abrufe)', calls_to( 'https://tile.openstreetmap.org/' ), 0 );
+check( 'Karte einmal geholt (42 OSM-Abrufe)', calls_to( 'https://tile.openstreetmap.org/' ), 42 );
 $b3 = NAWS_Radar_Geo::box( 48.14, 11.58, 150 );
 check( 'Manifest mit allen Kartenkacheln (Muenchen: 42)', [ count( NAWS_Radar_Store::manifest( $k3 )['map']['tiles'] ), count( NAWS_Radar_Geo::tiles( $b3, NAWS_Radar_Geo::zoom_for( $b3 ) ) ) ], [ 42, 42 ] );
 
@@ -149,5 +152,107 @@ $GLOBALS['http_routes'] = [ 'https://api.rainviewer.com/' => resp( 200, 'kein js
 reset_http();
 NAWS_Radar::refresh( $rk2, $rnow + 900 );
 check( 'kaputter Index: Sperrfrist gesetzt', NAWS_Radar_Store::in_backoff( 'rainviewer' ), true );
+
+echo "\nPausen statt Wiederholung im Seitentakt\n" . str_repeat( '-', 74 ) . "\n";
+/** Neuer DWD-Satz ohne Dateien, Sperrfristen und Zeitplan leer. */
+function fresh_dwd( float $lat ): string {
+    $GLOBALS['transients'] = [];
+    $GLOBALS['scheduled']  = [];
+    $k = NAWS_Radar_Store::key( $lat, 12.37, 150, 'dwd' );
+    NAWS_Radar_Store::remember( $k, [ 'lat' => $lat, 'lon' => 12.37, 'km' => 150, 'source' => 'dwd' ], $GLOBALS['now'] );
+    reset_http();
+    return $k;
+}
+$osm_ok = png( 'osm' );
+
+$k = fresh_dwd( 50.10 );
+$GLOBALS['http_routes'] = [ 'https://maps.dwd.de/' => resp( 500, 'oops' ), 'https://tile.openstreetmap.org/' => $osm_ok ];
+NAWS_Radar::refresh( $k, $now );
+check( 'DWD 500: Pause',                    [ NAWS_Radar_Store::in_backoff( 'dwd' ), calls_to( 'https://maps.dwd.de/' ) ], [ true, 1 ] );
+
+$k = fresh_dwd( 50.11 );
+$GLOBALS['http_routes'] = [ 'https://tile.openstreetmap.org/' => $osm_ok ]; // DWD: keine Route -> WP_Error
+NAWS_Radar::refresh( $k, $now );
+check( 'kein Netz (WP_Error): Pause',       [ NAWS_Radar_Store::in_backoff( 'dwd' ), calls_to( 'https://maps.dwd.de/' ) ], [ true, 1 ] );
+
+foreach ( [ 401, 403, 418 ] as $i => $code ) {
+    $k = fresh_dwd( 50.12 + $i / 100 );
+    $GLOBALS['http_routes'] = [ 'https://maps.dwd.de/' => resp( $code, 'nein' ), 'https://tile.openstreetmap.org/' => $osm_ok ];
+    NAWS_Radar::refresh( $k, $now );
+    check( "DWD $code: Pause nach dem ersten Abruf", [ NAWS_Radar_Store::in_backoff( 'dwd' ), calls_to( 'https://maps.dwd.de/' ) ], [ true, 1 ] );
+}
+
+$k = fresh_dwd( 50.20 );
+$GLOBALS['http_routes'] = [ 'https://maps.dwd.de/' => png( 'dwd' ), 'https://tile.openstreetmap.org/' => resp( 403, 'blocked' ) ];
+check( 'OSM 403: Lauf klappt trotzdem',     NAWS_Radar::refresh( $k, $now ), true );
+check( 'OSM 403: OSM pausiert nach einem Abruf', [ NAWS_Radar_Store::in_backoff( 'osm' ), calls_to( 'https://tile.openstreetmap.org/' ) ], [ true, 1 ] );
+check( 'OSM 403: DWD-Bilder gespeichert, DWD frei', [ count( NAWS_Radar_Store::manifest( $k )['frames'] ), NAWS_Radar_Store::in_backoff( 'dwd' ) ], [ 13, false ] );
+
+$k = fresh_dwd( 50.21 );
+$GLOBALS['http_routes'] = [ 'https://maps.dwd.de/' => resp( 200, '<ServiceExceptionReport/>' ), 'https://tile.openstreetmap.org/' => $osm_ok ];
+check( 'nur XML statt PNG: kein Manifest',  [ NAWS_Radar::refresh( $k, $now ), NAWS_Radar_Store::manifest( $k ) ], [ false, null ] );
+check( 'ohne Bild: DWD 15 min pausiert',    [ NAWS_Radar_Store::in_backoff( 'dwd' ), $GLOBALS['transients']['naws_radar_backoff_dwd'][1] ?? 0 ], [ true, 900 ] );
+check( 'ohne Bild: keine Kartenabrufe',     calls_to( 'https://tile.openstreetmap.org/' ), 0 );
+
+// maybe_schedule(): nach einem Versuch nicht vor Ablauf von 15 Minuten wieder.
+$GLOBALS['transients'] = [];
+NAWS_Radar::maybe_schedule( $k, null, $now + 60 );
+check( 'letzter Versuch vor 1 min: nicht geplant', $GLOBALS['scheduled'], [] );
+NAWS_Radar::maybe_schedule( $k, null, $now + 899 );
+check( 'vor 899 s: nicht geplant',          $GLOBALS['scheduled'], [] );
+NAWS_Radar::maybe_schedule( $k, null, $now + 900 );
+check( 'nach 15 min: geplant',              wp_next_scheduled( NAWS_Radar::HOOK_REFRESH, [ $k ] ), $now + 900 );
+check( 'last_try steht im Satz',            NAWS_Radar_Store::sets()[ $k ]['last_try'] ?? null, $now );
+NAWS_Radar_Store::remember( $k, [ 'lat' => 50.21, 'lon' => 12.37, 'km' => 150, 'source' => 'dwd' ], $now + 7200 );
+check( 'remember() behaelt last_try',       NAWS_Radar_Store::sets()[ $k ]['last_try'] ?? null, $now );
+
+$k = fresh_dwd( 50.22 );
+$GLOBALS['http_routes'] = [ 'https://maps.dwd.de/' => png( 'dwd' ), 'https://tile.openstreetmap.org/' => $osm_ok ];
+$GLOBALS['logged'] = [];
+fs()->fail_put = true;
+check( 'Uploads nicht beschreibbar: kein Manifest', NAWS_Radar::refresh( $k, $now ), false );
+fs()->fail_put = false;
+check( 'Uploads: genau eine Fehlermeldung', count( array_filter( $GLOBALS['logged'], fn( $l ) => str_contains( $l, 'not writable' ) ) ), 1 );
+check( 'Uploads: DWD 15 min pausiert',      [ NAWS_Radar_Store::in_backoff( 'dwd' ), $GLOBALS['transients']['naws_radar_backoff_dwd'][1] ?? 0 ], [ true, 900 ] );
+check( 'Uploads: nach dem ersten Fehlschlag keine Abrufe mehr', count( $GLOBALS['calls'] ), 1 );
+
+echo "\nAbrufgrenze: hoechstens 100 je Lauf\n" . str_repeat( '-', 74 ) . "\n";
+$GLOBALS['transients'] = [];
+$ok = NAWS_Radar_Store::key( 59.91, 10.75, 1000, 'rainviewer' );
+NAWS_Radar_Store::remember( $ok, [ 'lat' => 59.91, 'lon' => 10.75, 'km' => 1000, 'source' => 'rainviewer' ], $rnow );
+$GLOBALS['http_routes'] = [
+    'https://api.rainviewer.com/'       => resp( 200, json_encode( [ 'host' => 'https://tilecache.rainviewer.com', 'radar' => [ 'past' => $past ] ] ) ),
+    'https://tilecache.rainviewer.com/' => png( 'rv' ),
+    'https://tile.openstreetmap.org/'   => png( 'osm' ),
+];
+reset_http();
+check( 'Oslo 1000 km: Lauf klappt',         NAWS_Radar::refresh( $ok, $rnow ), true );
+check( 'Oslo 1000 km: hoechstens 100 Abrufe', count( $GLOBALS['calls'] ) <= 100, true );
+$om = NAWS_Radar_Store::manifest( $ok );
+check( 'Oslo 1000 km: hoechstens 9 Kacheln je Bild', max( array_map( fn( $f ) => count( $f['tiles'] ), $om['frames'] ) ) <= 9, true );
+check( 'Oslo 1000 km: neuestes Bild dabei', end( $om['frames'] )['t'], end( $past )['time'] );
+$ts = array_column( $om['frames'], 't' );
+$sorted = $ts;
+sort( $sorted );
+check( 'Oslo 1000 km: aufsteigend sortiert', $ts, $sorted );
+check( 'Oslo 1000 km: keine Pause',         NAWS_Radar_Store::in_backoff( 'rainviewer' ), false );
+
+// DWD: Bilder zuerst, die Karte nimmt den Rest; fehlende Kacheln im naechsten Lauf.
+$GLOBALS['transients'] = [];
+$kc = NAWS_Radar_Store::key( 51.35, 12.37, 90, 'dwd' );
+NAWS_Radar_Store::remember( $kc, [ 'lat' => 51.35, 'lon' => 12.37, 'km' => 90, 'source' => 'dwd' ], $now );
+$bc   = NAWS_Radar_Geo::box( 51.35, 12.37, 90 );
+$need = count( NAWS_Radar_Geo::tiles( $bc, NAWS_Radar_Geo::zoom_for( $bc ) ) );
+$GLOBALS['http_routes'] = [ 'https://maps.dwd.de/' => png( 'dwd' ), 'https://tile.openstreetmap.org/' => png( 'osm' ) ];
+reset_http();
+check( 'gedeckelt (40): Lauf klappt',       NAWS_Radar::refresh( $kc, $now, 40 ), true );
+$cm = NAWS_Radar_Store::manifest( $kc );
+check( 'gedeckelt: 40 Abrufe, 13 Bilder, 27 Kartenkacheln', [ count( $GLOBALS['calls'] ), count( $cm['frames'] ), count( $cm['map']['tiles'] ) ], [ 40, 13, 27 ] );
+check( 'gedeckelt: keine Pause',            [ NAWS_Radar_Store::in_backoff( 'dwd' ), NAWS_Radar_Store::in_backoff( 'osm' ) ], [ false, false ] );
+reset_http();
+check( 'naechster Lauf klappt',             NAWS_Radar::refresh( $kc, $now + 60 ), true );
+check( 'Karte vollstaendig, nur der Rest geholt', [ count( NAWS_Radar_Store::manifest( $kc )['map']['tiles'] ), calls_to( 'https://tile.openstreetmap.org/' ) ], [ $need, $need - 27 ] );
+check( 'Bilder plus Karte gingen nicht in einen Lauf mit 40', 13 + $need > 40, true );
+check( 'Sperrdauer 10 min',                 NAWS_Radar_Store::LOCK_TTL, 600 );
 
 done();

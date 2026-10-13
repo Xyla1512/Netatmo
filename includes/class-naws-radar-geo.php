@@ -18,6 +18,7 @@ class NAWS_Radar_Geo {
     const EARTH       = 6378137.0;
     const MAX_ZOOM    = 12;
     const RV_MAX_ZOOM = 7;
+    const RV_TILES    = 9;
     const KM_DEFAULT  = 150;
 
     /** Width of the box in km, per source: [ min, max ]. */
@@ -59,6 +60,19 @@ class NAWS_Radar_Geo {
             }
         }
         return $max;
+    }
+
+    /**
+     * RainViewer zoom: at most RV_MAX_ZOOM and at most RV_TILES tiles per
+     * frame, so thirteen frames stay within the request budget of a run.
+     * A wide box far north gets a coarser picture instead.
+     */
+    public static function rv_zoom( array $box ): int {
+        $z = min( self::zoom_for( $box ), self::RV_MAX_ZOOM );
+        while ( $z > 0 && count( self::tiles( $box, $z ) ) > self::RV_TILES ) {
+            --$z;
+        }
+        return $z;
     }
 
     /**

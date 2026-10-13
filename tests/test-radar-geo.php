@@ -76,6 +76,17 @@ check( 'RainViewer Leipzig: Zoom 7, 2 Kacheln', [ $rv[0]['z'], count( $rv ) ], [
 check( 'RainViewer: Kachel 68/42 zuerst', [ $rv[0]['x'], $rv[0]['y'] ], [ 68, 42 ] );
 check( 'RainViewer: deckt das Bild',   covers( $rv ), true );
 
+echo "\nrv_zoom(): hoechstens 9 RainViewer-Kacheln je Bild\n" . str_repeat( '-', 74 ) . "\n";
+foreach ( [ 'Oslo 600 km' => [ 59.91, 10.75, 600 ], 'Oslo 1000 km' => [ 59.91, 10.75, 1000 ], 'Wien 1500 km' => [ 48.21, 16.37, 1500 ] ] as $name => [ $la, $lo, $km ] ) {
+    $bx = NAWS_Radar_Geo::box( $la, $lo, $km );
+    $z  = NAWS_Radar_Geo::rv_zoom( $bx );
+    $tz = NAWS_Radar_Geo::tiles( $bx, $z );
+    check( "$name: hoechstens 9 Kacheln", count( $tz ) <= 9, true );
+    check( "$name: deckt das Bild",       covers( $tz ), true );
+}
+$zl = NAWS_Radar_Geo::rv_zoom( $b );
+check( 'Leipzig 150 km: Zoom 7, 2 Kacheln', [ $zl, count( NAWS_Radar_Geo::tiles( $b, $zl ) ) ], [ 7, 2 ] );
+
 echo "\n" . str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );

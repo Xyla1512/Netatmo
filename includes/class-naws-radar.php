@@ -17,6 +17,17 @@ class NAWS_Radar {
     const HOOK_REFRESH = 'naws_radar_refresh';
     const MAX_AGE      = 900;     // renew a set older than this
     const STALE        = 10800;   // older than this: "temporarily unavailable"
+    const MAX_REQUESTS = 100;     // external requests per background run
+    const PAUSE        = 900;     // pause after a run without images or storage
+
+    /** Requests this run may still make. */
+    private static $left = 0;
+
+    /** True once this run hit the request budget. */
+    private static $capped = false;
+
+    /** True once this run could not write to the uploads folder. */
+    private static $put_failed = false;
 
     public static function enabled(): bool {
         $o = get_option( 'naws_settings', [] );
@@ -27,7 +38,13 @@ class NAWS_Radar {
         return 'XTX-Integration-for-Netatmo/' . NAWS_VERSION . ' (+' . home_url( '/' ) . ')';
     }
 
+    /** One request out of the run's budget; null when the budget is spent. */
     private static function get( string $url ) {
+        if ( self::$left <= 0 ) {
+            self::$capped = true;
+            return null;
+        }
+        --self::$left;
         return wp_remote_get(
             $url,
             [
@@ -37,18 +54,31 @@ class NAWS_Radar {
         );
     }
 
+    /** Store a file; a failure means the uploads folder is not writable. */
+    private static function put( string $key, string $file, string $png ): bool {
+        if ( NAWS_Radar_Store::put( $key, $file, $png ) ) {
+            return true;
+        }
+        self::$put_failed = true;
+        return false;
+    }
+
     /**
-     * 'png' with the bytes, 'skip' (no image for this one, try the next) or
-     * 'fail' (the service is in trouble: pause it and stop).
+     * 'png' with the bytes, 'skip' (no image for this one, try the next),
+     * 'fail' (the service is in trouble or refuses us: pause it and stop)
+     * or 'cap' (the run's request budget is spent: stop, no pause).
      *
      * @return array{0:string, 1:string}
      */
     private static function classify( $response ): array {
+        if ( null === $response ) {
+            return [ 'cap', '' ];
+        }
         if ( is_wp_error( $response ) ) {
             return [ 'fail', '' ];
         }
         $code = (int) wp_remote_retrieve_response_code( $response );
-        if ( 429 === $code || $code >= 500 ) {
+        if ( in_array( $code, [ 401, 403, 418, 429 ], true ) || $code >= 500 ) {
             return [ 'fail', '' ];
         }
         $body = (string) wp_remote_retrieve_body( $response );
@@ -58,8 +88,17 @@ class NAWS_Radar {
         return [ 'png', $body ];
     }
 
-    /** Background run for one set. True when a new manifest was written. */
-    public static function refresh( string $key, int $now = 0 ): bool {
+    /**
+     * Background run for one set. True when a new manifest was written.
+     *
+     * Radar frames first, then the map with what is left of the budget;
+     * missing map tiles follow in later runs.
+     *
+     * @param string $key    the set
+     * @param int    $now    for tests; 0 = time()
+     * @param int    $budget for tests; external requests this run may make
+     */
+    public static function refresh( string $key, int $now = 0, int $budget = self::MAX_REQUESTS ): bool {
         $now = $now ? $now : time();
         $set = NAWS_Radar_Store::sets()[ $key ] ?? null;
         if ( ! self::enabled() || ! is_array( $set ) ) {
@@ -69,32 +108,50 @@ class NAWS_Radar {
         if ( NAWS_Radar_Store::in_backoff( $source ) || ! NAWS_Radar_Store::lock( $key ) ) {
             return false;
         }
+        NAWS_Radar_Store::touch_try( $key, $now );
+        if ( function_exists( 'set_time_limit' ) ) {
+            // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- may be disabled on the host; then the default limit applies
+            @set_time_limit( 120 );
+        }
+        self::$left       = max( 0, $budget );
+        self::$capped     = false;
+        self::$put_failed = false;
         try {
             $old    = NAWS_Radar_Store::manifest( $key );
             $box    = NAWS_Radar_Geo::box( (float) $set['lat'], (float) $set['lon'], (int) $set['km'] );
-            $map    = self::fetch_map( $key, $box );
             $frames = 'dwd' === $source ? self::fetch_dwd( $key, $box, $now ) : self::fetch_rainviewer( $key, $box, $now );
             if ( ! $frames ) {
+                if ( ! self::$put_failed && ! self::$capped && ! NAWS_Radar_Store::in_backoff( $source ) ) {
+                    NAWS_Radar_Store::pause( $source, self::PAUSE, 'returned no radar image' );
+                }
                 return false;
             }
             $new            = [
                 'v'       => 1,
                 'source'  => $source,
                 'updated' => $now,
-                'map'     => [ 'tiles' => $map ],
+                'map'     => [ 'tiles' => self::fetch_map( $key, $box ) ],
                 'frames'  => $frames,
             ];
             $new['retired'] = NAWS_Radar_Store::prune( $key, $old, $new, $now );
-            return NAWS_Radar_Store::save_manifest( $key, $new );
+            if ( ! NAWS_Radar_Store::save_manifest( $key, $new ) ) {
+                self::$put_failed = true;
+                return false;
+            }
+            return true;
         } finally {
+            if ( self::$put_failed ) {
+                NAWS_Logger::error( 'radar', 'The uploads folder is not writable, so the rain radar cannot store images.' );
+                NAWS_Radar_Store::pause( $source, self::PAUSE, 'could not store images' );
+            }
             NAWS_Radar_Store::unlock( $key );
         }
     }
 
     /** Map tiles: fetched once, kept on disk. Missing ones are tried again next run. */
     private static function fetch_map( string $key, array $box ): array {
-        $out  = [];
-        $ok   = ! NAWS_Radar_Store::in_backoff( 'osm' );
+        $out = [];
+        $ok  = ! NAWS_Radar_Store::in_backoff( 'osm' );
         foreach ( NAWS_Radar_Geo::tiles( $box, NAWS_Radar_Geo::zoom_for( $box ) ) as $t ) {
             $file  = sprintf( 'map/%d-%d-%d.png', $t['z'], $t['x'], $t['y'] );
             $entry = [
@@ -110,14 +167,20 @@ class NAWS_Radar {
             if ( ! $ok ) {
                 continue;
             }
-            $r            = self::get( NAWS_Radar_Source::osm_tile_url( $t['z'], $t['x'], $t['y'] ) );
+            $r              = self::get( NAWS_Radar_Source::osm_tile_url( $t['z'], $t['x'], $t['y'] ) );
             [ $kind, $png ] = self::classify( $r );
             if ( 'fail' === $kind ) {
                 NAWS_Radar_Store::start_backoff( 'osm', $r );
-                $ok = false;
+            }
+            if ( 'fail' === $kind || 'cap' === $kind ) {
+                $ok = false; // tiles already on disk still count
                 continue;
             }
-            if ( 'png' === $kind && NAWS_Radar_Store::put( $key, $file, $png ) ) {
+            if ( 'png' === $kind ) {
+                if ( ! self::put( $key, $file, $png ) ) {
+                    $ok = false;
+                    continue;
+                }
                 $out[] = $entry;
             }
         }
@@ -138,8 +201,14 @@ class NAWS_Radar {
                     NAWS_Radar_Store::start_backoff( 'dwd', $r );
                     break;
                 }
-                if ( 'skip' === $kind || ! NAWS_Radar_Store::put( $key, $file, $png ) ) {
+                if ( 'cap' === $kind ) {
+                    break;
+                }
+                if ( 'skip' === $kind ) {
                     continue;
+                }
+                if ( ! self::put( $key, $file, $png ) ) {
+                    break;
                 }
             }
             $out[] = [
@@ -151,9 +220,15 @@ class NAWS_Radar {
         return $out;
     }
 
-    /** RainViewer: the index, then the tiles of each frame (kept once fetched). */
+    /**
+     * RainViewer: the index, then the tiles of each frame (kept once
+     * fetched), newest frame first so a capped run still shows "now".
+     */
     private static function fetch_rainviewer( string $key, array $box, int $now ): array {
         $r = self::get( NAWS_Radar_Source::RV_INDEX );
+        if ( null === $r ) {
+            return [];
+        }
         if ( is_wp_error( $r ) || 200 !== (int) wp_remote_retrieve_response_code( $r ) ) {
             NAWS_Radar_Store::start_backoff( 'rainviewer', $r );
             return [];
@@ -164,9 +239,9 @@ class NAWS_Radar {
             NAWS_Radar_Store::start_backoff( 'rainviewer', $r );
             return [];
         }
-        $tiles = NAWS_Radar_Geo::tiles( $box, min( NAWS_Radar_Geo::zoom_for( $box ), NAWS_Radar_Geo::RV_MAX_ZOOM ) );
+        $tiles = NAWS_Radar_Geo::tiles( $box, NAWS_Radar_Geo::rv_zoom( $box ) );
         $out   = [];
-        foreach ( NAWS_Radar_Source::rv_frames( $index, $now ) as $f ) {
+        foreach ( array_reverse( NAWS_Radar_Source::rv_frames( $index, $now ) ) as $f ) {
             $parts = [];
             $mine  = [];
             foreach ( $tiles as $t ) {
@@ -174,12 +249,21 @@ class NAWS_Radar {
                 if ( ! NAWS_Radar_Store::has( $key, $file ) ) {
                     $tr             = self::get( NAWS_Radar_Source::rv_tile_url( $host, $f['path'], $t['z'], $t['x'], $t['y'] ) );
                     [ $kind, $png ] = self::classify( $tr );
+                    if ( 'cap' === $kind ) {
+                        // Keep the tiles of this frame: the next run reuses them,
+                        // the daily sweep removes them if it never does.
+                        break 2;
+                    }
                     if ( 'fail' === $kind ) {
                         NAWS_Radar_Store::start_backoff( 'rainviewer', $tr );
                         NAWS_Radar_Store::delete_files( $key, $mine );
-                        return $out;
+                        break 2;
                     }
-                    if ( 'skip' === $kind || ! NAWS_Radar_Store::put( $key, $file, $png ) ) {
+                    if ( 'png' === $kind && ! self::put( $key, $file, $png ) ) {
+                        NAWS_Radar_Store::delete_files( $key, $mine );
+                        break 2;
+                    }
+                    if ( 'skip' === $kind ) {
                         NAWS_Radar_Store::delete_files( $key, $mine );
                         continue 2;
                     }
@@ -198,6 +282,7 @@ class NAWS_Radar {
                 'tiles'    => $parts,
             ];
         }
+        usort( $out, static fn( $a, $b ) => $a['t'] <=> $b['t'] );
         return $out;
     }
 
@@ -236,9 +321,14 @@ class NAWS_Radar {
         ];
     }
 
-    /** One background run when the set is missing or older than MAX_AGE. */
+    /**
+     * One background run when the set is missing or older than MAX_AGE -
+     * and the last attempt is too, so a failing run is not repeated at the
+     * rate pages are viewed.
+     */
     public static function maybe_schedule( string $key, ?array $m, int $now ): void {
-        if ( $m && $now - (int) ( $m['updated'] ?? 0 ) < self::MAX_AGE ) {
+        $set = NAWS_Radar_Store::sets()[ $key ] ?? [];
+        if ( $now - (int) ( $m['updated'] ?? 0 ) < self::MAX_AGE || $now - (int) ( $set['last_try'] ?? 0 ) < self::MAX_AGE ) {
             return;
         }
         if ( wp_next_scheduled( self::HOOK_REFRESH, [ $key ] ) ) {
