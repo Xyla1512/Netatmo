@@ -17,6 +17,7 @@ class NAWS_Radar {
     const HOOK_REFRESH = 'naws_radar_refresh';
     const MAX_AGE      = 900;     // renew a set older than this
     const STALE        = 10800;   // older than this: "temporarily unavailable"
+    const AS_OF        = 1800;    // older than this: "As of HH:MM" under the radar
     const MAX_REQUESTS = 100;     // external requests per background run
     const PAUSE        = 900;     // pause after a run without images or storage
 
@@ -414,6 +415,7 @@ class NAWS_Radar {
         $naws_rd_width  = $a['width'];
         $naws_rd_height = $a['height'];
         $naws_rd_place  = (string) ( $loc['name'] ?? '' );
+        $naws_rd_asof   = $naws_rd['updated'] > 0 && $now - $naws_rd['updated'] > self::AS_OF;
         ob_start();
         include NAWS_PLUGIN_DIR . 'templates/radar.php';
         return (string) ob_get_clean();
@@ -446,6 +448,18 @@ class NAWS_Radar {
             return new WP_Error( 'naws_radar_unknown', 'Unknown radar.', [ 'status' => 404 ] );
         }
         $now = $now ? $now : time();
+        // A page served from a cache never runs render(): the player's
+        // question is then the only sign that the set is still shown.
+        NAWS_Radar_Store::remember(
+            $key,
+            [
+                'lat'    => (float) ( $set['lat'] ?? 0 ),
+                'lon'    => (float) ( $set['lon'] ?? 0 ),
+                'km'     => (int) ( $set['km'] ?? 0 ),
+                'source' => (string) ( $set['source'] ?? '' ),
+            ],
+            $now
+        );
         $m   = NAWS_Radar_Store::manifest( $key );
         self::maybe_schedule( $key, $m, $now );
         $res = rest_ensure_response( self::payload( $key, $m, (string) $set['source'], $now ) );

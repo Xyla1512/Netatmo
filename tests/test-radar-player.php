@@ -28,7 +28,11 @@ console.log(JSON.stringify({
   pct: c.pct(512), pctNeg: c.pct(-19.59),
   keepShift: c.keepIndex([{ t: 1 }, { t: 2 }, { t: 3 }], 1, [{ t: 0 }, { t: 1 }, { t: 2 }, { t: 3 }]),
   keepGone: c.keepIndex([{ t: 1 }, { t: 2 }], 1, [{ t: 5, forecast: false }, { t: 6, forecast: false }, { t: 7, forecast: true }]),
-  keepEmpty: c.keepIndex([], 0, [{ t: 5, forecast: false }, { t: 6, forecast: true }])
+  keepEmpty: c.keepIndex([], 0, [{ t: 5, forecast: false }, { t: 6, forecast: true }]),
+  pollFresh: c.needsPoll(1000, 1900), pollDue: c.needsPoll(1000, 1901),
+  staleNo: c.isStale(1000, 11800), staleYes: c.isStale(1000, 11801),
+  asofNo: c.showAsOf(1000, 2800), asofYes: c.showAsOf(1000, 2801), asofNone: c.showAsOf(0, 99999),
+  markMid: c.markPct(4, 13), markEnd: c.markPct(12, 13), markOne: c.markPct(0, 1)
 }));
 JS;
 $proc = proc_open( [ 'node', '-', $file ], [ 0 => [ 'pipe', 'r' ], 1 => [ 'pipe', 'w' ], 2 => [ 'pipe', 'w' ] ], $pipes );
@@ -59,6 +63,16 @@ check( 'Prozent negativ',                $r['pctNeg'], '-1.9131%' );
 check( 'gleicher Zeitpunkt nach Verschiebung', $r['keepShift'], 2 );
 check( 'Zeitpunkt weg: jetzt der neuen Liste', $r['keepGone'], 1 );
 check( 'vorher leer: jetzt',                   $r['keepEmpty'], 0 );
+check( 'needsPoll: 15 min alt noch nicht',     $r['pollFresh'], false );
+check( 'needsPoll: danach sofort fragen',      $r['pollDue'], true );
+check( 'isStale: 3 h alt noch nicht',          $r['staleNo'], false );
+check( 'isStale: danach nicht verfuegbar',     $r['staleYes'], true );
+check( 'showAsOf: 30 min alt noch nicht',      $r['asofNo'], false );
+check( 'showAsOf: danach "Stand"',             $r['asofYes'], true );
+check( 'showAsOf: ohne Stand nie',             $r['asofNone'], false );
+check( 'Jetzt-Marke: Bild 5 von 13',           $r['markMid'], '33.3333%' );
+check( 'Jetzt-Marke: letztes Bild',            $r['markEnd'], '100.0000%' );
+check( 'Jetzt-Marke: ein Bild',                $r['markOne'], '0.0000%' );
 
 echo "\nDatenschutz\n" . str_repeat( '-', 74 ) . "\n";
 $src = (string) file_get_contents( $file );

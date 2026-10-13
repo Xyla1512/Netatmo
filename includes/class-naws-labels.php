@@ -390,10 +390,14 @@ function naws_label( string $key ): string {
             return _x( 'moderate', 'rain intensity', 'xtx-integration-for-netatmo' );
         case 'rd_heavy':
             return _x( 'heavy', 'rain intensity', 'xtx-integration-for-netatmo' );
+        case 'rd_aria_plain':
+            return __( 'Rain radar', 'xtx-integration-for-netatmo' );
         case 'rd_src_dwd':
-            return __( 'Radar: Deutscher Wetterdienst', 'xtx-integration-for-netatmo' );
+            /* translators: %s: "Deutscher Wetterdienst", linked to dwd.de */
+            return __( 'Radar: %s', 'xtx-integration-for-netatmo' );
         case 'rd_src_osm':
-            return __( 'Map: © OpenStreetMap contributors', 'xtx-integration-for-netatmo' );
+            /* translators: %s: "OpenStreetMap", linked to its copyright page */
+            return __( 'Map: © %s contributors', 'xtx-integration-for-netatmo' );
         case 'rd_admin_off':
             return __( 'The rain radar is switched off. Admins can switch it on under Settings → Rain radar. Only you see this note.', 'xtx-integration-for-netatmo' );
         case 'rd_admin_noloc':

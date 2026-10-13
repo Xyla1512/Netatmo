@@ -2106,7 +2106,12 @@
 .naws-radar-msg { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); max-width: 80%; margin: 0; padding: 10px 14px; border-radius: 8px; background: var(--naws-radar-bar-bg, #f4fafa); color: var(--naws-radar-time-bg, #2d5252); text-align: center; }
 .naws-radar-msg[hidden] { display: none; }
 .naws-radar-bar { display: flex; gap: 10px; align-items: center; margin-top: 8px; padding: 6px 8px; border-radius: 8px; background: var(--naws-radar-bar-bg, #f4fafa); }
-.naws-radar-range { flex: 1 1 auto; min-width: 0; accent-color: var(--naws-radar-button, #427272); }
+.naws-radar-track { position: relative; flex: 1 1 auto; min-width: 0; display: flex; align-items: center; }
+.naws-radar-range { flex: 1 1 auto; width: 100%; min-width: 0; margin: 0; accent-color: var(--naws-radar-button, #427272); }
+.naws-radar-now { position: absolute; top: 50%; width: 2px; height: 18px; margin-left: -1px; transform: translateY(-50%); border-radius: 1px; background: var(--naws-radar-forecast, #dd9933); pointer-events: none; }
+.naws-radar-now[hidden], .naws-radar-asof[hidden] { display: none; }
+.naws-radar-asof::before { content: "\00B7\00A0"; }
+.naws-radar-attr a { color: inherit; text-decoration: underline; }
 .naws-radar .naws-radar-btn { flex: 0 0 auto; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 50%; background: var(--naws-radar-button, #427272); color: var(--naws-radar-button-text, #ffffff); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
 .naws-radar .naws-radar-btn:hover, .naws-radar .naws-radar-btn:focus { background: var(--naws-radar-button, #427272); color: var(--naws-radar-button-text, #ffffff); filter: brightness(1.12); }
 .naws-radar .naws-radar-btn:focus-visible { outline: 2px solid var(--naws-radar-time-bg, #2d5252); outline-offset: 2px; }
