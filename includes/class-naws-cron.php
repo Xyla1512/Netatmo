@@ -146,7 +146,7 @@ class NAWS_Cron {
     public static function deactivate() {
         wp_clear_scheduled_hook( self::HOOK_FETCH );
         wp_clear_scheduled_hook( self::HOOK_DAILY );
-        wp_clear_scheduled_hook( 'naws_radar_refresh' );
+        wp_unschedule_hook( 'naws_radar_refresh' );
     }
 
     // ────────────────────────────────────────────────────────────────

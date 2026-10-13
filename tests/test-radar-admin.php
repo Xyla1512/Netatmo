@@ -37,7 +37,11 @@ check( 'JS-Strings vorhanden',                    str_contains( $admin, "'radar_
 
 echo "\nCron und Deinstallation\n" . str_repeat( '-', 74 ) . "\n";
 check( 'Tagesaufraeumen nach der Aufbewahrung',   (bool) preg_match( '/\$this->run_retention\(\);.*?NAWS_Radar::daily_cleanup\(\)/s', $cron ), true );
-check( 'deactivate raeumt geplante Laeufe',      str_contains( $cron, "wp_clear_scheduled_hook( 'naws_radar_refresh' )" ), true );
+check( 'deactivate raeumt geplante Laeufe',      str_contains( $cron, "wp_unschedule_hook( 'naws_radar_refresh' )" ), true );
+check( 'deactivate: kein clear_scheduled_hook',   str_contains( $cron, "wp_clear_scheduled_hook( 'naws_radar_refresh' )" ), false );
+check( 'uninstall raeumt geplante Laeufe',        str_contains( $un, "wp_unschedule_hook( 'naws_radar_refresh' )" ), true );
+check( 'uninstall: kein clear_scheduled_hook',    str_contains( $un, "wp_clear_scheduled_hook( 'naws_radar_refresh' )" ), false );
+check( 'uninstall: Rueckfall WP_Filesystem_Direct', str_contains( $un, 'WP_Filesystem_Direct' ), true );
 check( 'uninstall.php existiert',                 $un !== '', true );
 check( 'uninstall prueft WP_UNINSTALL_PLUGIN',    str_contains( $un, "defined( 'WP_UNINSTALL_PLUGIN' )" ), true );
 check( 'uninstall loescht nur den Radar-Ordner',  str_contains( $un, "'/naws-radar'" ), true );
