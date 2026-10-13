@@ -172,6 +172,7 @@ $base_url   = rest_url( 'naws/v1' );
 <tr><td><span class="naws-method">GET</span></td><td><code>/current</code></td><td><?php esc_html_e( 'Latest sensor reading per module/parameter', 'xtx-integration-for-netatmo' ); ?></td></tr>
 <tr><td><span class="naws-method">GET</span></td><td><code>/readings</code></td><td><?php esc_html_e( 'Raw sensor readings with time range, grouping and filtering', 'xtx-integration-for-netatmo' ); ?></td></tr>
 <tr><td><span class="naws-method">GET</span></td><td><code>/daily</code></td><td><?php esc_html_e( 'Daily summary data (temperature, rain, pressure etc.)', 'xtx-integration-for-netatmo' ); ?></td></tr>
+<tr><td><span class="naws-method">GET</span></td><td><code>/radar/{key}</code></td><td><?php esc_html_e( 'Rain radar frames of a [naws_radar] on this site (public, no key; used by the radar player).', 'xtx-integration-for-netatmo' ); ?></td></tr>
 </tbody>
 </table>
 <p class="naws-hint"><?php esc_html_e( 'All endpoints are read-only (GET). No data can be modified via the API.', 'xtx-integration-for-netatmo' ); ?></p>

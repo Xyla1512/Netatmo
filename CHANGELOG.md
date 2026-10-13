@@ -2,6 +2,11 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [Unreleased]
+
+### Added
+- **`[naws_radar]`: animated rain radar around the station.** In Germany the images come from the Deutscher Wetterdienst (the last hour plus a two-hour nowcast), elsewhere from RainViewer (the last two hours), on a grey OpenStreetMap map. Your server fetches the images and your site serves them, so visitors never contact a weather service; nothing is fetched until "Allow rain radar" is switched on under Settings → Rain radar, a button there clears the stored images, and images no longer used are deleted after seven days.
+
 ## [2.1.2]
 
 ### Fixed

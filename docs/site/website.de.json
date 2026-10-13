@@ -1,6 +1,13 @@
 {
-    "aktualisiert": "2026-10-01",
+    "aktualisiert": "2026-10-13",
     "vorhaben": [
+        {
+            "id": "regenradar",
+            "titel": "Regenradar",
+            "satz": "Animiertes Regenradar um die Station – die Bilder liefert die eigene Website, kein Besucher spricht mit einem Wetterdienst.",
+            "ab": null,
+            "bild": null
+        },
         {
             "id": "sparkline",
             "titel": "Sparklines: eine Kurve in Wortgröße",

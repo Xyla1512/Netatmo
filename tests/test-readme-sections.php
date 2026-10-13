@@ -33,7 +33,7 @@ echo "\nreadme.txt -- Pflichtabschnitte und Fenster\n" . str_repeat( '-', 74 ) .
 preg_match_all( '/^== (.+) ==$/m', $readme, $m );
 check( 'Abschnitte in dieser Reihenfolge', $m[1], [ 'Description', 'Installation', 'Frequently Asked Questions', 'Screenshots', 'Changelog', 'Upgrade Notice', 'Privacy & External Services', 'Third-Party Libraries' ] );
 
-foreach ( [ 'api.netatmo.com', 'api.open-meteo.com', 'geocoding-api.open-meteo.com', 'api.met.no' ] as $host ) {
+foreach ( [ 'api.netatmo.com', 'api.open-meteo.com', 'geocoding-api.open-meteo.com', 'api.met.no', 'maps.dwd.de', 'api.rainviewer.com', 'tile.openstreetmap.org' ] as $host ) {
     check( "External Services nennt $host als eigenen Eintrag", preg_match( '/^= [^=\n]*' . preg_quote( $host, '/' ) . '[^=\n]* =$/m', $readme ) === 1, true );
 }
 check( 'Third-Party Libraries nennt Chart.js', str_contains( $readme, '= Chart.js ' ), true );

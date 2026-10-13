@@ -414,6 +414,22 @@ $value_params = [
     </div>
 
     <div class="naws-sc-card">
+        <h3><code>[naws_radar]</code></h3>
+        <p><?php esc_html_e( 'Animated rain radar around the station: in Germany the Deutscher Wetterdienst with the last hour and a two-hour nowcast, elsewhere RainViewer with the last two hours. Your server fetches the images and your site serves them — visitors never contact a weather service. Switch it on under Settings → Rain radar.', 'xtx-integration-for-netatmo' ); ?></p>
+        <div class="naws-copy-wrap"><pre>[naws_radar]</pre><button class="naws-copy-btn" data-copy='[naws_radar]'><?php echo esc_html( _x( 'Copy', 'sc_copy', 'xtx-integration-for-netatmo' ) ); ?></button></div>
+        <table class="naws-attr-table" style="margin-top:10px">
+            <tr><th><?php esc_html_e( 'Attribute', 'xtx-integration-for-netatmo' ); ?></th><th><?php esc_html_e( 'Description', 'xtx-integration-for-netatmo' ); ?></th><th><?php esc_html_e( 'Default', 'xtx-integration-for-netatmo' ); ?></th></tr>
+            <tr><td><code>width</code></td><td><?php esc_html_e( 'Width on the page, in px or %', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">100%</span></td></tr>
+            <tr><td><code>height</code></td><td><?php esc_html_e( 'Height in px (200–1200)', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">420</span></td></tr>
+            <tr><td><code>km</code></td><td><?php esc_html_e( 'Width of the map section in km (DWD 50–600, RainViewer 150–1500). Applies to the longer side of the frame.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">150</span></td></tr>
+            <tr><td><code>source</code></td><td><?php esc_html_e( 'auto (DWD in Germany, RainViewer elsewhere), dwd or rainviewer', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">auto</span></td></tr>
+        </table>
+        <div class="naws-inline-examples">
+            <div class="naws-inline-ex"><code>[naws_radar height="320" km="80"]</code> &rarr; <?php esc_html_e( 'a lower frame, closer around the station', 'xtx-integration-for-netatmo' ); ?></div>
+        </div>
+    </div>
+
+    <div class="naws-sc-card">
         <h3><code>[naws_weather_icon]</code> &ndash; <?php esc_html_e( 'Current weather as an animated icon', 'xtx-integration-for-netatmo' ); ?></h3>
         <p><?php esc_html_e( 'Shows the current weather state as an animated icon. Deliberately without a visible caption — the state is carried by the aria-label for screen readers. If the icon sits on the same page as the live dashboard it refreshes along with that page\'s polling cycle. When no state can be determined, nothing is output.', 'xtx-integration-for-netatmo' ); ?></p>
         <div class="naws-copy-wrap"><pre>[naws_weather_icon]</pre><button class="naws-copy-btn" data-copy='[naws_weather_icon]'><?php echo esc_html( _x( 'Copy', 'sc_copy', 'xtx-integration-for-netatmo' ) ); ?></button></div>

@@ -38,6 +38,7 @@ Data then syncs on its own. Drop a shortcode on any page to display it.
 | `[naws_weather_widget days="3\|5"]` | Compact sidebar widget: weather icon, outdoor temperature, rain and wind, plus a three- or five-day forecast, in a light, dark or transparent scheme, optionally with small curves of the last 24 hours |
 | `[naws_weather_icon size="96"]` | The animated current-weather icon on its own |
 | `[naws_forecast]` | Multi-day weather forecast |
+| `[naws_radar]` | Animated rain radar around the station (DWD in Germany with nowcast, RainViewer elsewhere), served from your own site |
 | `[naws_history]` | Year-over-year comparison charts |
 | `[naws_current]` | Current readings |
 | `[naws_table]` | Readings as a table |
