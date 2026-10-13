@@ -118,6 +118,7 @@
             nodes[idx].classList.add('is-on');
             range.value = String(idx);
             clock.textContent = frames[idx].label;
+            clock.parentNode.hidden = false;
             fc.hidden = !frames[idx].forecast;
             range.setAttribute('aria-valuetext', frames[idx].label + (frames[idx].forecast ? ' ' + fc.textContent : ''));
         }
@@ -155,6 +156,7 @@
             }
             idx = 0;
             show(core.nowIndex(frames));
+            if (!frames.length) { clock.parentNode.hidden = true; }
             stamp(d);
             if (frames.length) {
                 el.classList.remove('naws-radar--preparing', 'naws-radar--unavailable');
@@ -164,6 +166,7 @@
                 el.classList.remove('naws-radar--ready', 'naws-radar--preparing');
                 el.classList.add('naws-radar--unavailable');
                 clock.textContent = '';
+                clock.parentNode.hidden = true;
                 fc.hidden = true;
                 if (msg) {
                     msg.textContent = msg.getAttribute('data-unavailable') || msg.textContent;

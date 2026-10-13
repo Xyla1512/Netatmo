@@ -70,6 +70,7 @@ $GLOBALS['loc'] = [ 'lat' => 51.35, 'lon' => 12.37, 'name' => 'Leipzig' ];
 
 $html = NAWS_Radar::render( [], $now );
 check( 'erster Aufruf: wird vorbereitet',  str_contains( $html, 'naws-radar--preparing' ), true );
+check( 'vorbereitet: Zeitfeld versteckt',  (bool) preg_match( '#<div class="naws-radar-time" hidden>#', $html ), true );
 check( 'Satz gemerkt',                     isset( NAWS_Radar_Store::sets()[ $key ] ), true );
 check( 'Hintergrundlauf geplant',          wp_next_scheduled( NAWS_Radar::HOOK_REFRESH, [ $key ] ), $now );
 check( 'Rahmenhoehe als Variable',         str_contains( $html, '--naws-radar-h:420px' ), true );
@@ -81,6 +82,7 @@ NAWS_Radar_Store::save_manifest( $key, $m );
 $GLOBALS['scheduled'] = [];
 $html = NAWS_Radar::render( [ 'height' => '300' ], $now );
 check( 'frisch: bereit',                   str_contains( $html, 'naws-radar--ready' ), true );
+check( 'bereit: Zeitfeld sichtbar',         (bool) preg_match( '#<div class="naws-radar-time">#', $html ), true );
 check( 'frisch: kein neuer Lauf geplant',  $GLOBALS['scheduled'], [] );
 check( 'Standbild "jetzt" ist b.png',      str_contains( $html, '/frames/b.png' ), true );
 check( 'Uhrzeit von "jetzt"',              str_contains( $html, gmdate( 'H:i', $now - 900 ) ), true );

@@ -25,6 +25,7 @@ foreach ( $naws_rd_frames as $naws_rd_i => $naws_rd_f ) {
 }
 $naws_rd_now   = $naws_rd_now < 0 ? count( $naws_rd_frames ) - 1 : $naws_rd_now;
 $naws_rd_shown = $naws_rd_frames[ $naws_rd_now ] ?? null;
+$naws_rd_clock = (string) ( $naws_rd_shown['label'] ?? '' );
 $naws_rd_pct   = static fn( $v ) => sprintf( '%.4F%%', $v / 1024 * 100 );
 $naws_rd_n     = count( $naws_rd_frames );
 $naws_rd_aria  = '' === trim( $naws_rd_place ) ? naws_label( 'rd_aria_plain' ) : sprintf( naws_label( 'rd_aria' ), $naws_rd_place );
@@ -66,8 +67,8 @@ $naws_rd_credit = static function ( string $label, string $url, string $text ): 
             </div>
             <span class="naws-radar-station" aria-hidden="true"></span>
         </div>
-        <div class="naws-radar-time">
-            <span class="naws-radar-clock"><?php echo esc_html( $naws_rd_shown['label'] ?? '' ); ?></span>
+        <div class="naws-radar-time"<?php echo '' === $naws_rd_clock ? ' hidden' : ''; ?>>
+            <span class="naws-radar-clock"><?php echo esc_html( $naws_rd_clock ); ?></span>
             <span class="naws-radar-fc"<?php echo ( $naws_rd_shown['forecast'] ?? false ) ? '' : ' hidden'; ?>><?php echo esc_html( naws_label( 'rd_forecast' ) ); ?></span>
         </div>
         <?php if ( 'ready' !== $naws_rd_state ) : ?>

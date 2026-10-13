@@ -2103,6 +2103,7 @@
 .naws-radar-time { position: absolute; left: 10px; top: 10px; display: flex; gap: 6px; align-items: center; padding: 4px 10px; border-radius: 6px; background: var(--naws-radar-time-bg, #2d5252); color: var(--naws-radar-time-text, #ffffff); font-size: 1.15em; font-weight: 700; font-variant-numeric: tabular-nums; }
 .naws-radar-fc { font-size: .75em; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; padding: 1px 6px; border-radius: 4px; background: var(--naws-radar-forecast, #dd9933); }
 .naws-radar-fc[hidden] { display: none; }
+.naws-radar-time[hidden] { display: none; }
 .naws-radar-msg { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); max-width: 80%; margin: 0; padding: 10px 14px; border-radius: 8px; background: var(--naws-radar-bar-bg, #f4fafa); color: var(--naws-radar-time-bg, #2d5252); text-align: center; }
 .naws-radar-msg[hidden] { display: none; }
 .naws-radar-bar { display: flex; gap: 10px; align-items: center; margin-top: 8px; padding: 6px 8px; border-radius: 8px; background: var(--naws-radar-bar-bg, #f4fafa); }
