@@ -1691,7 +1691,7 @@ msgstr "Live-forhåndsvisning – varsel"
 
 #: admin/views/appearance.php:774
 msgid "Live preview — rain radar"
-msgstr "Live-forhåndsvisning – nedbørsradar"
+msgstr "Forhåndsvisning — nedbørsradar"
 
 #: admin/views/appearance.php:818
 msgid "Live preview — sparkline"

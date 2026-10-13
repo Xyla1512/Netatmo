@@ -4288,7 +4288,7 @@ msgstr "mäßig"
 #: includes/class-naws-labels.php:375
 msgctxt "rain radar frame"
 msgid "Forecast"
-msgstr "Vorhersage"
+msgstr "Vorschau"
 
 #: admin/views/rest-api-docs.php:98
 msgctxt "rest_copy"
