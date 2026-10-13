@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: XTX Integration for Netatmo\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/xtx-integration-for-netatmo\n"
-"POT-Creation-Date: 2026-10-13 16:52+0000\n"
+"POT-Creation-Date: 2026-10-13 17:16+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,7 +12,7 @@ msgstr ""
 "X-Domain: xtx-integration-for-netatmo\n"
 
 #. translators: 1: width of the map section in km, 2: DWD or RainViewer, 3: date and time last shown, 4: size on disk
-#: admin/views/settings.php:563
+#: admin/views/settings.php:567
 msgid "%1$d km, %2$s, last shown %3$s, %4$s"
 msgstr ""
 
@@ -627,7 +627,7 @@ msgstr ""
 msgid "Clear sky"
 msgstr ""
 
-#: admin/views/settings.php:573
+#: admin/views/settings.php:577
 msgid "Clear storage"
 msgstr ""
 
@@ -1114,7 +1114,7 @@ msgstr ""
 msgid "Every %d minutes"
 msgstr ""
 
-#: admin/views/settings.php:575
+#: admin/views/settings.php:579
 msgid "Every renewal deletes the old images; a radar no page has shown for 7 days is deleted with its map."
 msgstr ""
 
@@ -1494,7 +1494,7 @@ msgstr ""
 msgid "Icons"
 msgstr ""
 
-#: includes/class-naws-radar.php:377
+#: includes/class-naws-radar.php:485
 msgid "If the rain radar is switched on, this website fetches radar images from the Deutscher Wetterdienst (maps.dwd.de) or RainViewer (rainviewer.com) and map tiles from OpenStreetMap (tile.openstreetmap.org) and stores them on its own server. Only the map section around the weather station and the time are sent. Visitors' browsers load the images from this website only; no visitor data, IP address or cookie reaches these services."
 msgstr ""
 
@@ -1789,8 +1789,9 @@ msgstr ""
 msgid "Manual purge"
 msgstr ""
 
-#: includes/class-naws-labels.php:396
-msgid "Map: © OpenStreetMap contributors"
+#. translators: %s: "OpenStreetMap", linked to its copyright page
+#: includes/class-naws-labels.php:400
+msgid "Map: © %s contributors"
 msgstr ""
 
 #: includes/class-naws-forecast.php:1049 templates/history.php:129
@@ -2086,7 +2087,7 @@ msgstr ""
 msgid "Noise Level"
 msgstr ""
 
-#: admin/views/settings.php:556
+#: admin/views/settings.php:560
 msgid "None yet."
 msgstr ""
 
@@ -2337,8 +2338,9 @@ msgstr ""
 msgid "REST API"
 msgstr ""
 
-#: includes/class-naws-labels.php:394
-msgid "Radar: Deutscher Wetterdienst"
+#. translators: %s: "Deutscher Wetterdienst", linked to dwd.de
+#: includes/class-naws-labels.php:397
+msgid "Radar: %s"
 msgstr ""
 
 #: includes/class-naws-labels.php:332
@@ -2396,7 +2398,7 @@ msgstr ""
 msgid "Rain per day"
 msgstr ""
 
-#: admin/views/settings.php:539 includes/class-naws-colors.php:725
+#: admin/views/settings.php:539 includes/class-naws-colors.php:725 includes/class-naws-labels.php:394
 msgid "Rain radar"
 msgstr ""
 
@@ -2591,7 +2593,7 @@ msgstr ""
 msgid "Save Notifications"
 msgstr ""
 
-#: admin/views/appearance.php:835 admin/views/appearance.php:951 admin/views/rest-api-docs.php:88 admin/views/settings.php:585
+#: admin/views/appearance.php:835 admin/views/appearance.php:951 admin/views/rest-api-docs.php:88 admin/views/settings.php:589
 msgid "Save Settings"
 msgstr ""
 
@@ -2817,7 +2819,7 @@ msgstr ""
 msgid "Stored encrypted"
 msgstr ""
 
-#: admin/views/settings.php:552
+#: admin/views/settings.php:556
 msgid "Stored radars"
 msgstr ""
 
@@ -3067,7 +3069,7 @@ msgstr ""
 msgid "The rain radar is being prepared. It will appear in a moment."
 msgstr ""
 
-#: includes/class-naws-labels.php:398
+#: includes/class-naws-labels.php:402
 msgid "The rain radar is switched off. Admins can switch it on under Settings → Rain radar. Only you see this note."
 msgstr ""
 
@@ -3075,7 +3077,7 @@ msgstr ""
 msgid "The rain radar is temporarily unavailable."
 msgstr ""
 
-#: includes/class-naws-labels.php:400
+#: includes/class-naws-labels.php:404
 msgid "The rain radar needs the station coordinates or a forecast location. Only you see this note."
 msgstr ""
 
@@ -3105,6 +3107,10 @@ msgstr ""
 
 #: admin/views/shortcodes.php:153
 msgid "The threshold temperature the sum is measured against."
+msgstr ""
+
+#: admin/views/settings.php:551
+msgid "The uploads folder is not writable, so the rain radar cannot store images."
 msgstr ""
 
 #: admin/views/shortcodes.php:154
@@ -3395,7 +3401,7 @@ msgid "When grouping is active, each entry additionally contains min_value, max_
 msgstr ""
 
 #: admin/views/settings.php:548
-msgid "When on, this server fetches radar images from the Deutscher Wetterdienst (in Germany) or RainViewer (elsewhere) and map tiles from OpenStreetMap, at most every 15 minutes and only after a page showed the radar. Visitors load the images from this site only. Switching off deletes the stored images."
+msgid "When on, this server fetches radar images from the Deutscher Wetterdienst (in Germany) or RainViewer (elsewhere) at most every 15 minutes, and map tiles from OpenStreetMap once per map section – only after a page showed the radar. Visitors load the images from this site only. Switching off deletes the stored images."
 msgstr ""
 
 #: admin/views/shortcodes.php:292
