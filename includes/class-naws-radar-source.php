@@ -105,7 +105,7 @@ class NAWS_Radar_Source {
     /** The tile host named in the index, only if it is RainViewer's over https. */
     public static function rv_host( array $index ): ?string {
         $host = isset( $index['host'] ) && is_string( $index['host'] ) ? $index['host'] : '';
-        return preg_match( '#^https://[a-z0-9.-]+\.rainviewer\.com$#', $host ) ? $host : null;
+        return preg_match( '#^https://[a-z0-9.-]+\.rainviewer\.com\z#', $host ) ? $host : null;
     }
 
     /**
@@ -122,9 +122,12 @@ class NAWS_Radar_Source {
         }
         $out = [];
         foreach ( $past as $f ) {
-            $t    = (int) ( $f['time'] ?? 0 );
-            $path = (string) ( $f['path'] ?? '' );
-            if ( $t < $now - self::RV_WINDOW - 300 || $t > $now + 300 || ! preg_match( '#^/v2/radar/[A-Za-z0-9]+$#', $path ) ) {
+            if ( ! is_array( $f ) || ! is_string( $f['path'] ?? null ) || ! is_scalar( $f['time'] ?? null ) ) {
+                continue;
+            }
+            $t    = (int) $f['time'];
+            $path = $f['path'];
+            if ( $t < $now - self::RV_WINDOW - 300 || $t > $now + 300 || ! preg_match( '#^/v2/radar/[A-Za-z0-9]+\z#', $path ) ) {
                 continue;
             }
             $out[] = [

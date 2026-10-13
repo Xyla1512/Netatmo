@@ -23,6 +23,7 @@ class NAWS_Radar_Store {
     const GRACE      = 1800;     // an open player may still show the previous set
     const UNUSED     = 604800;   // 7 days without a page showing the set
     const SEEN_EVERY = 3600;     // write last_seen at most once an hour
+    const SWEEP_AGE  = 3600;     // a radar file no manifest knows, older than this, is left over
 
     /** @return string[] [ base dir, base url ] without trailing slash */
     private static function base(): array {
@@ -234,7 +235,35 @@ class NAWS_Radar_Store {
                 ++$gone;
             }
         }
+        foreach ( array_keys( $sets ) as $key ) {
+            self::sweep( (string) $key, $now );
+        }
         return $gone;
+    }
+
+    /**
+     * Radar images of a set that its manifest neither uses nor has retired
+     * and that are older than an hour (a run in progress writes its images
+     * before the manifest): left over by an aborted run. Without a readable
+     * manifest nothing is touched.
+     */
+    private static function sweep( string $key, int $now ): void {
+        $fs = self::fs();
+        $m  = self::manifest( $key );
+        if ( ! $fs || ! $m || ! self::valid_key( $key ) ) {
+            return;
+        }
+        $known = array_merge( self::files_of( $m ), array_keys( is_array( $m['retired'] ?? null ) ? $m['retired'] : [] ) );
+        $list  = $fs->dirlist( self::dir( $key ) . '/frames' );
+        foreach ( is_array( $list ) ? $list : [] as $name => $entry ) {
+            $rel = 'frames/' . $name;
+            if ( 'f' !== ( $entry['type'] ?? '' ) || ! self::valid_rel( $rel ) || in_array( $rel, $known, true ) ) {
+                continue;
+            }
+            if ( $now - (int) ( $entry['lastmodunix'] ?? $now ) > self::SWEEP_AGE ) {
+                $fs->delete( self::dir( $key ) . '/' . $rel );
+            }
+        }
     }
 
     /** Everything: folder, list of sets, pauses. */

@@ -67,6 +67,19 @@ $index = [ 'host' => 'https://tilecache.rainviewer.com', 'radar' => [ 'past' => 
 check( 'Host wird angenommen',            NAWS_Radar_Source::rv_host( $index ), 'https://tilecache.rainviewer.com' );
 check( 'fremder Host wird verworfen',     NAWS_Radar_Source::rv_host( [ 'host' => 'https://evil.example' ] ), null );
 check( 'http wird verworfen',             NAWS_Radar_Source::rv_host( [ 'host' => 'http://tilecache.rainviewer.com' ] ), null );
+check( 'Host mit Zeilenumbruch verworfen', NAWS_Radar_Source::rv_host( [ 'host' => "https://tilecache.rainviewer.com\n" ] ), null );
+$warned = [];
+set_error_handler( function ( $no, $str ) use ( &$warned ) { $warned[] = $str; return true; } );
+$odd = NAWS_Radar_Source::rv_frames( [ 'radar' => [ 'past' => [
+    [ 'time' => $now - 600, 'path' => [ 'x' ] ],
+    [ 'time' => [ 1 ], 'path' => '/v2/radar/arr' ],
+    [ 'time' => $now - 300, 'path' => "/v2/radar/nl\n" ],
+    'kein Array',
+    [ 'time' => $now, 'path' => '/v2/radar/ok' ],
+] ] ], $now );
+restore_error_handler();
+check( 'seltsame Eintraege uebersprungen', array_column( $odd, 'path' ), [ '/v2/radar/ok' ] );
+check( 'ohne PHP-Warnung',                 $warned, [] );
 $fr = NAWS_Radar_Source::rv_frames( $index, $now );
 check( 'hoechstens 13 Bilder',            count( $fr ), 13 );
 check( 'aufsteigend',                     $fr[0]['t'] < $fr[12]['t'], true );

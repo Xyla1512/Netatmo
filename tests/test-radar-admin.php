@@ -34,7 +34,10 @@ check( 'Handler prueft Recht',                    (bool) preg_match( '/function 
 check( 'Handler leert',                           (bool) preg_match( '/function radar_clear\(\).*?NAWS_Radar_Store::clear_all\(\)/s', $ajax ), true );
 check( 'JS ruft die Aktion',                      str_contains( $js, "action: 'naws_radar_clear'" ), true );
 check( 'Hinweis bei schreibgeschuetztem Uploads-Ordner', (bool) preg_match( "/! wp_is_writable\( \\\$naws_rd_up\['basedir'\] \).*?esc_html_e\( 'The uploads folder is not writable, so the rain radar cannot store images\./s", $view ), true );
-check( 'JS-Strings vorhanden',                   str_contains( $admin, "'radar_clear_confirm'" ) && str_contains( $admin, "'radar_cleared'" ), true );
+check( 'Hilfetext: Karte einmal je Ausschnitt', str_contains( $view, 'map tiles from OpenStreetMap once per map section' ), true );
+$sc = (string) file_get_contents( $R . 'includes/class-naws-shortcodes.php' );
+check( 'sc_radar: Stile auch fuer den Admin-Hinweis', (bool) preg_match( "/function sc_radar\(.*?if \( '' !== \\\$html \) \{\s*\\\$this->enqueue_frontend_styles\(\);.*?if \( false !== strpos\( \\\$html, 'data-naws-radar' \) \) \{\s*wp_enqueue_script\( 'naws-radar' \);/s", $sc ), true );
+check( 'JS-Strings vorhanden',                  str_contains( $admin, "'radar_clear_confirm'" ) && str_contains( $admin, "'radar_cleared'" ), true );
 
 echo "\nCron und Deinstallation\n" . str_repeat( '-', 74 ) . "\n";
 check( 'Tagesaufraeumen nach der Aufbewahrung',   (bool) preg_match( '/\$this->run_retention\(\);.*?NAWS_Radar::daily_cleanup\(\)/s', $cron ), true );

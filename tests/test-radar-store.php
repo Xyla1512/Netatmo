@@ -107,8 +107,10 @@ check( 'Fake_FS wieder in Gebrauch',        NAWS_Radar_Store::has( $k1, 'frames/
 echo "\nAufraeumen\n" . str_repeat( '-', 74 ) . "\n";
 NAWS_Radar_Store::remember( $k2, [ 'lat' => 51.35, 'lon' => 12.37, 'km' => 100, 'source' => 'dwd' ], $now );
 NAWS_Radar_Store::put( $k2, 'frames/z.png', 'zz' );
+$m2json = '{"frames":[{"t":1,"file":"frames/z.png"}],"retired":[]}';
+fs()->put_contents( NAWS_Radar_Store::dir( $k2 ) . '/manifest.json', $m2json );
 fs()->put_contents( '/up/naws-radar/verwaist/frames/q.png', 'q' );
-check( 'Platzbedarf k2',                    NAWS_Radar_Store::usage( $k2 ), 2 );
+check( 'Platzbedarf k2 (Bild + Manifest)',  NAWS_Radar_Store::usage( $k2 ), 2 + strlen( $m2json ) );
 check( 'nach 6 Tagen nichts geloescht',     NAWS_Radar_Store::cleanup( $now + 6 * DAY_IN_SECONDS ), 1 ); // nur der verwaiste Ordner
 check( 'verwaister Ordner weg',             fs()->exists( '/up/naws-radar/verwaist' ), false );
 check( 'k2 noch da',                        NAWS_Radar_Store::has( $k2, 'frames/z.png' ), true );
@@ -124,6 +126,24 @@ NAWS_Radar_Store::put( $k1, 'frames/del2.png', 'x' );
 NAWS_Radar_Store::delete_files( 'ZZZ', [ 'frames/del2.png' ] );
 check( 'delete_files: falscher Schluessel ignoriert', NAWS_Radar_Store::has( $k1, 'frames/del2.png' ), true );
 NAWS_Radar_Store::delete_files( $k1, [ 'frames/del2.png' ] );
+
+echo "\nTaeglich: verwaiste Radarbilder\n" . str_repeat( '-', 74 ) . "\n";
+// Liegen gebliebene Dateien (z. B. ein abgebrochener Lauf), die kein
+// Manifest kennt und die aelter als eine Stunde sind.
+$sweep = $now + 7 * DAY_IN_SECONDS + 100;
+$d1    = NAWS_Radar_Store::dir( $k1 );
+NAWS_Radar_Store::save_manifest( $k1, [ 'frames' => [ [ 't' => 1, 'file' => 'frames/keep.png' ] ], 'retired' => [ 'frames/ret.png' => $sweep - 600 ] ] );
+foreach ( [ 'frames/keep.png' => 7200, 'frames/ret.png' => 7200, 'frames/alt.png' => 7200, 'frames/neu.png' => 600, 'map/9-1-1.png' => 99999 ] as $f => $age ) {
+    NAWS_Radar_Store::put( $k1, $f, 'x' );
+    fs()->mtime[ $d1 . '/' . $f ] = $sweep - $age;
+}
+NAWS_Radar_Store::cleanup( $sweep );
+check( 'verwaist und alt: geloescht',       NAWS_Radar_Store::has( $k1, 'frames/alt.png' ), false );
+check( 'im Manifest: bleibt',               NAWS_Radar_Store::has( $k1, 'frames/keep.png' ), true );
+check( 'ausgemustert: bleibt (Gnadenfrist)', NAWS_Radar_Store::has( $k1, 'frames/ret.png' ), true );
+check( 'juenger als 1 h: bleibt (Lauf im Gang)', NAWS_Radar_Store::has( $k1, 'frames/neu.png' ), true );
+check( 'Karte wird nicht gefegt',           NAWS_Radar_Store::has( $k1, 'map/9-1-1.png' ), true );
+check( 'Manifest bleibt',                   is_array( NAWS_Radar_Store::manifest( $k1 ) ), true );
 NAWS_Radar_Store::clear_all();
 check( 'clear_all: Ordner leer',            fs()->exists( '/up/naws-radar' ), false );
 check( 'clear_all: Option weg',             get_option( NAWS_Radar_Store::OPTION, 'weg' ), 'weg' );

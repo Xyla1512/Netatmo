@@ -702,8 +702,10 @@ class NAWS_Shortcodes {
             'naws_radar'
         );
         $html = NAWS_Radar::render( $atts );
+        if ( '' !== $html ) {
+            $this->enqueue_frontend_styles(); // also styles the admin hint
+        }
         if ( false !== strpos( $html, 'data-naws-radar' ) ) {
-            $this->enqueue_frontend_styles();
             wp_enqueue_script( 'naws-radar' );
         }
         return $html;
