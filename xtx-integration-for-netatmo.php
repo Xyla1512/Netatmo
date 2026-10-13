@@ -56,6 +56,7 @@ naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-windrose.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-sparkline.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-radar-geo.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-radar-source.php' );
+naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-radar-store.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-notify-rules.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-notifications.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-forecast.php' );
