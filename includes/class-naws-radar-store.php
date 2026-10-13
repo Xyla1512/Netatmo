@@ -52,14 +52,36 @@ class NAWS_Radar_Store {
         return 'manifest.json' === $rel || 1 === preg_match( '/^(?:map|frames)\/[A-Za-z0-9_-]+\.png\z/', $rel );
     }
 
-    /** @return WP_Filesystem_Base|null */
+    /**
+     * A filesystem that writes straight to disk. The global one only when
+     * it is 'direct': an FTP/SSH one needs credentials that a background
+     * run does not have, and an unconnected one ends in a fatal error.
+     * Otherwise our own WP_Filesystem_Direct, as uninstall.php builds it.
+     *
+     * @return WP_Filesystem_Base|null
+     */
     private static function fs() {
         global $wp_filesystem;
-        if ( ! $wp_filesystem && file_exists( ABSPATH . 'wp-admin/includes/file.php' ) ) {
+        static $direct = null;
+        $ready = is_object( $wp_filesystem );
+        if ( ! $ready && file_exists( ABSPATH . 'wp-admin/includes/file.php' ) ) {
             require_once ABSPATH . 'wp-admin/includes/file.php';
-            WP_Filesystem();
+            $ready = true === WP_Filesystem();
         }
-        return $wp_filesystem ? $wp_filesystem : null;
+        if ( $ready && is_object( $wp_filesystem ) && 'direct' === ( $wp_filesystem->method ?? '' ) ) {
+            return $wp_filesystem;
+        }
+        if ( null === $direct ) {
+            $base = ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+            $file = ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+            if ( ! file_exists( $base ) || ! file_exists( $file ) ) {
+                return null;
+            }
+            require_once $base;
+            require_once $file;
+            $direct = new WP_Filesystem_Direct( null );
+        }
+        return $direct;
     }
 
     public static function sets(): array {

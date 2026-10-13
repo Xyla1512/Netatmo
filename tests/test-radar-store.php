@@ -85,6 +85,25 @@ NAWS_Radar_Store::start_backoff( 'osm', new WP_Error( 'x', 'timeout' ) );
 check( 'kein Netz: 5 min',                  $GLOBALS['transients']['naws_radar_backoff_osm'][1], 300 );
 check( 'ins Protokoll',                     str_contains( implode( "\n", $GLOBALS['logged'] ), 'dwd request failed (429)' ), true );
 
+echo "\nNur ein direktes Dateisystem\n" . str_repeat( '-', 74 ) . "\n";
+// Ein FTP-Dateisystem ohne Zugangsdaten ist nicht verbunden; es zu benutzen
+// endet in einem TypeError (auch im taeglichen Cron-Lauf).
+class Ftp_FS_Spy {
+    public $method = 'ftpext';
+    public $used   = [];
+    public function __call( $name, $args ) { $this->used[] = $name; return false; }
+}
+$real = $GLOBALS['wp_filesystem'];
+$spy  = new Ftp_FS_Spy();
+$GLOBALS['wp_filesystem'] = $spy;
+check( 'ftpext: put() verweigert',          NAWS_Radar_Store::put( $k1, 'frames/ftp.png', 'x' ), false );
+check( 'ftpext: has() falsch, kein Fehler', NAWS_Radar_Store::has( $k1, 'frames/b.png' ), false );
+check( 'ftpext: manifest() null',           NAWS_Radar_Store::manifest( $k1 ), null );
+check( 'ftpext: cleanup() laeuft durch',    is_int( NAWS_Radar_Store::cleanup( $now ) ), true );
+check( 'ftpext: nichts aufgerufen',         $spy->used, [] );
+$GLOBALS['wp_filesystem'] = $real;
+check( 'Fake_FS wieder in Gebrauch',        NAWS_Radar_Store::has( $k1, 'frames/b.png' ), true );
+
 echo "\nAufraeumen\n" . str_repeat( '-', 74 ) . "\n";
 NAWS_Radar_Store::remember( $k2, [ 'lat' => 51.35, 'lon' => 12.37, 'km' => 100, 'source' => 'dwd' ], $now );
 NAWS_Radar_Store::put( $k2, 'frames/z.png', 'zz' );

@@ -79,8 +79,16 @@ class NAWS_Forecast {
 
 /** WP_Filesystem im Speicher: Pfad => Inhalt. Ordner gibt es nur implizit. */
 class Fake_FS {
-    public $files = [];
-    public function put_contents( $f, $c, $mode = false ) { $this->files[ $f ] = (string) $c; return true; }
+    public $method   = 'direct';
+    public $files    = [];
+    public $mtime    = [];   // Pfad => Zeitstempel, Vorgabe: time() beim Schreiben
+    public $fail_put = false;
+    public function put_contents( $f, $c, $mode = false ) {
+        if ( $this->fail_put ) { return false; }
+        $this->files[ $f ] = (string) $c;
+        $this->mtime[ $f ] = time();
+        return true;
+    }
     public function get_contents( $f ) { return $this->files[ $f ] ?? false; }
     public function exists( $f ) {
         if ( isset( $this->files[ $f ] ) ) { return true; }
@@ -89,10 +97,10 @@ class Fake_FS {
         return false;
     }
     public function delete( $f, $recursive = false, $type = false ) {
-        unset( $this->files[ $f ] );
+        unset( $this->files[ $f ], $this->mtime[ $f ] );
         if ( $recursive ) {
             $p = rtrim( $f, '/' ) . '/';
-            foreach ( array_keys( $this->files ) as $k ) { if ( 0 === strpos( $k, $p ) ) { unset( $this->files[ $k ] ); } }
+            foreach ( array_keys( $this->files ) as $k ) { if ( 0 === strpos( $k, $p ) ) { unset( $this->files[ $k ], $this->mtime[ $k ] ); } }
         }
         return true;
     }
@@ -103,7 +111,7 @@ class Fake_FS {
             if ( 0 !== strpos( $k, $p ) ) { continue; }
             $parts = explode( '/', substr( $k, strlen( $p ) ) );
             $name  = array_shift( $parts );
-            if ( ! $parts ) { $out[ $name ] = [ 'name' => $name, 'type' => 'f', 'size' => strlen( $c ) ]; continue; }
+            if ( ! $parts ) { $out[ $name ] = [ 'name' => $name, 'type' => 'f', 'size' => strlen( $c ), 'lastmodunix' => $this->mtime[ $k ] ?? time() ]; continue; }
             $out[ $name ] = $out[ $name ] ?? [ 'name' => $name, 'type' => 'd', 'size' => 0, 'files' => [] ];
         }
         if ( $recursive ) {

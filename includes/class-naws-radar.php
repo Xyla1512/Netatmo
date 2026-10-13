@@ -364,6 +364,9 @@ class NAWS_Radar {
 
     /** From the daily cron run. */
     public static function daily_cleanup( int $now = 0 ): int {
+        if ( ! self::enabled() && ! NAWS_Radar_Store::sets() ) {
+            return 0; // never used or already cleared: nothing to look at
+        }
         return NAWS_Radar_Store::cleanup( $now ? $now : time() );
     }
 

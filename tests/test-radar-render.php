@@ -95,5 +95,10 @@ $GLOBALS['opts']['naws_settings']['radar_enabled'] = 1;
 echo "\nTagesaufraeumen\n" . str_repeat( '-', 74 ) . "\n";
 check( 'nach 8 Tagen: Satz weg',           NAWS_Radar::daily_cleanup( $now + 8 * DAY_IN_SECONDS ), 1 );
 check( 'Ordner leer',                      NAWS_Radar_Store::manifest( $key ), null );
+$GLOBALS['opts']['naws_settings']['radar_enabled'] = 0;
+unset( $GLOBALS['opts']['naws_radar_sets'] );
+fs()->put_contents( '/up/naws-radar/fremd/x.png', 'x' );
+check( 'aus und keine Saetze: nichts zu tun', [ NAWS_Radar::daily_cleanup( $now ), fs()->exists( '/up/naws-radar/fremd/x.png' ) ], [ 0, true ] );
+$GLOBALS['opts']['naws_settings']['radar_enabled'] = 1;
 
 done();
