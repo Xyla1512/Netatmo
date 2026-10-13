@@ -227,6 +227,14 @@ class NAWS_Colors {
         'forecast_today_bar'    => '#3d9e74',
         'forecast_today_border' => '#427272',
         'forecast_today_day'    => '#3d9e74',
+        // [naws_radar] (since 2.2.0)
+        'radar_station'     => '#c0392b',
+        'radar_time_bg'     => '#2d5252',
+        'radar_time_text'   => '#ffffff',
+        'radar_forecast'    => '#dd9933',
+        'radar_bar_bg'      => '#f4fafa',
+        'radar_button'      => '#427272',
+        'radar_button_text' => '#ffffff',
     ];
 
     public static function instance() {
@@ -456,6 +464,13 @@ class NAWS_Colors {
         }
         $css .= "}\n";
 
+        // [naws_radar] (since 2.2.0): radar_time_bg -> --naws-radar-time-bg.
+        $css .= ".naws-radar {\n";
+        foreach ( self::RADAR_KEYS as $key ) {
+            $css .= '  --naws-radar-' . str_replace( '_', '-', substr( $key, 6 ) ) . ": {$c[ $key ]};\n";
+        }
+        $css .= "}\n";
+
         // [naws_sparkline]: its own rule, see sparkline_css().
         $css .= self::sparkline_css();
 
@@ -593,6 +608,9 @@ class NAWS_Colors {
         'forecast_bar', 'forecast_today_bar', 'forecast_today_border', 'forecast_today_day',
     ];
 
+    /** [naws_radar]: station dot, time label, forecast tag, control bar (since 2.2.0). */
+    const RADAR_KEYS = [ 'radar_station', 'radar_time_bg', 'radar_time_text', 'radar_forecast', 'radar_bar_bg', 'radar_button', 'radar_button_text' ];
+
     /**
      * Die Skala als Paare aus Temperatur und Farbe.
      *
@@ -704,6 +722,7 @@ class NAWS_Colors {
             'windrose'   => __( 'Wind Rose', 'xtx-integration-for-netatmo' ),
             'sparkline'  => __( 'Sparkline', 'xtx-integration-for-netatmo' ),
             'forecast'   => __( 'Forecast', 'xtx-integration-for-netatmo' ),
+            'radar'      => __( 'Rain radar', 'xtx-integration-for-netatmo' ),
         ];
     }
 
@@ -781,6 +800,10 @@ class NAWS_Colors {
             'forecast' => [
                 'label' => 'appearance_group_forecast',
                 'keys'  => self::FORECAST_KEYS,
+            ],
+            'radar'      => [
+                'label' => 'appearance_group_radar',
+                'keys'  => self::RADAR_KEYS,
             ],
         ];
     }

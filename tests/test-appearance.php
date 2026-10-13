@@ -197,8 +197,8 @@ saved( [] );
 
 echo "\nReiter des Erscheinungsbilds\n";
 
-check( 'zehn Reiter, Basis zuerst', array_keys( NAWS_Colors::appearance_tabs() ), [
-    'theme', 'icons', 'live_wind', 'chart24h', 'charttheme', 'history', 'heatmap', 'windrose', 'sparkline', 'forecast',
+check( 'elf Reiter, Basis zuerst', array_keys( NAWS_Colors::appearance_tabs() ), [
+    'theme', 'icons', 'live_wind', 'chart24h', 'charttheme', 'history', 'heatmap', 'windrose', 'sparkline', 'forecast', 'radar',
 ] );
 check( 'ein bekannter Reiter bleibt',         NAWS_Colors::appearance_tab( 'windrose' ), 'windrose' );
 check( 'ein unbekannter wird Basis',          NAWS_Colors::appearance_tab( 'nonsense' ), 'theme' );

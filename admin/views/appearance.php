@@ -84,6 +84,15 @@ $color_labels = [
     'forecast_today_bar'    => __( 'Today – bar', 'xtx-integration-for-netatmo' ),
     'forecast_today_border' => __( 'Today – frame', 'xtx-integration-for-netatmo' ),
     'forecast_today_day'    => __( 'Today – weekday', 'xtx-integration-for-netatmo' ),
+
+    // Rain radar
+    'radar_station'     => __( 'Station dot', 'xtx-integration-for-netatmo' ),
+    'radar_time_bg'     => __( 'Time label – background', 'xtx-integration-for-netatmo' ),
+    'radar_time_text'   => __( 'Time label – text', 'xtx-integration-for-netatmo' ),
+    'radar_forecast'    => __( 'Forecast tag', 'xtx-integration-for-netatmo' ),
+    'radar_bar_bg'      => __( 'Control bar – background', 'xtx-integration-for-netatmo' ),
+    'radar_button'      => __( 'Play button', 'xtx-integration-for-netatmo' ),
+    'radar_button_text' => __( 'Play button – symbol', 'xtx-integration-for-netatmo' ),
 ];
 
 // Short labels for 24h chart preview legend
@@ -735,6 +744,50 @@ $icon_color_keys = [
         </div>
 
         <!-- ============================================================
+             Tab 11: Rain radar (since 2.2.0)
+             ============================================================ -->
+        <div class="naws-appearance-pane<?php echo esc_attr( $naws_pane_class( 'radar' ) ); ?>" data-pane="radar">
+            <p class="description"><?php esc_html_e( 'Colours for [naws_radar]: the station dot, the time label with its forecast tag and the control bar below the map. The map itself is always grey so that the rain stands out; the rain colours are those of the radar service.', 'xtx-integration-for-netatmo' ); ?></p>
+            <div class="naws-appearance-row">
+                <div class="naws-appearance-controls">
+                    <table class="form-table naws-color-table">
+                        <tbody>
+                        <?php foreach ( $groups['radar']['keys'] as $key ) : ?>
+                            <tr>
+                                <th><label for="naws-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $color_labels[ $key ] ?? $key ); ?></label></th>
+                                <td>
+                                    <input type="text"
+                                           id="naws-<?php echo esc_attr( $key ); ?>"
+                                           name="naws_appearance[<?php echo esc_attr( $key ); ?>]"
+                                           value="<?php echo esc_attr( $colors[ $key ] ); ?>"
+                                           class="naws-color-picker"
+                                           data-preview="radar"
+                                           data-key="<?php echo esc_attr( $key ); ?>"
+                                           data-default-color="<?php echo esc_attr( $defaults[ $key ] ); ?>">
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="naws-appearance-preview naws-preview-sticky">
+                    <div class="naws-preview-label"><?php esc_html_e( 'Live preview — rain radar', 'xtx-integration-for-netatmo' ); ?></div>
+                    <div id="naws-preview-radar" style="--naws-radar-station:<?php echo esc_attr( $colors['radar_station'] ); ?>;--naws-radar-time-bg:<?php echo esc_attr( $colors['radar_time_bg'] ); ?>;--naws-radar-time-text:<?php echo esc_attr( $colors['radar_time_text'] ); ?>;--naws-radar-forecast:<?php echo esc_attr( $colors['radar_forecast'] ); ?>;--naws-radar-bar-bg:<?php echo esc_attr( $colors['radar_bar_bg'] ); ?>;--naws-radar-button:<?php echo esc_attr( $colors['radar_button'] ); ?>;--naws-radar-button-text:<?php echo esc_attr( $colors['radar_button_text'] ); ?>;max-width:340px;">
+                        <div style="position:relative;height:190px;border-radius:10px;overflow:hidden;background:repeating-linear-gradient(45deg,#e6eaea 0 12px,#eef1f1 12px 24px);">
+                            <span style="position:absolute;left:30%;top:22%;width:46%;height:38%;border-radius:45%;background:radial-gradient(circle at 40% 50%,#2f80ed 0 22%,#9be7ff 23% 60%,transparent 61%);opacity:.85;"></span>
+                            <span style="position:absolute;left:50%;top:50%;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:var(--naws-radar-station);box-shadow:0 0 0 2px var(--naws-radar-time-text),0 0 0 8px rgba(0,0,0,.12);"></span>
+                            <span style="position:absolute;left:10px;top:10px;display:flex;gap:6px;align-items:center;padding:4px 10px;border-radius:6px;background:var(--naws-radar-time-bg);color:var(--naws-radar-time-text);font-weight:700;">16:45 <span style="font-size:.7em;text-transform:uppercase;letter-spacing:.05em;padding:1px 6px;border-radius:4px;background:var(--naws-radar-forecast);"><?php echo esc_html( naws_label( 'rd_forecast' ) ); ?></span></span>
+                        </div>
+                        <div style="display:flex;gap:10px;align-items:center;margin-top:8px;padding:6px 8px;border-radius:8px;background:var(--naws-radar-bar-bg);">
+                            <span style="width:32px;height:32px;border-radius:50%;background:var(--naws-radar-button);display:inline-flex;align-items:center;justify-content:center;"><span style="width:0;height:0;border-style:solid;border-width:6px 0 6px 10px;border-color:transparent transparent transparent var(--naws-radar-button-text);margin-left:3px;"></span></span>
+                            <span style="flex:1;height:4px;border-radius:2px;background:var(--naws-radar-button);opacity:.5;"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
              Tab 9: Sparkline (since 2.1.0)
              ============================================================ -->
         <div class="naws-appearance-pane<?php echo esc_attr( $naws_pane_class( 'sparkline' ) ); ?>" data-pane="sparkline">
@@ -1075,6 +1128,12 @@ jQuery(document).ready(function($) {
         if (group === 'forecast') {
             var fc = document.getElementById('naws-preview-forecast');
             if (fc) { fc.style.setProperty('--naws-fc-' + String(key).replace('forecast_', '').replace(/_/g, '-'), val); }
+        }
+
+        // ── Rain radar: radar_time_bg -> --naws-radar-time-bg on the frame.
+        if (group === 'radar') {
+            var rd = document.getElementById('naws-preview-radar');
+            if (rd) { rd.style.setProperty('--naws-radar-' + String(key).replace('radar_', '').replace(/_/g, '-'), val); }
         }
     }
 
