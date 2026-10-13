@@ -110,6 +110,11 @@ class NAWS_Shortcodes {
         wp_register_script( 'naws-sparkline-boot',
             NAWS_PLUGIN_URL . 'assets/js/sparkline-boot.js',
             [], NAWS_Helpers::asset_version( 'assets/js/sparkline-boot.js' ), true );
+
+        // [naws_radar]: the player. Loads images from this site only.
+        wp_register_script( 'naws-radar',
+            NAWS_PLUGIN_URL . 'assets/js/radar.js',
+            [], NAWS_Helpers::asset_version( 'assets/js/radar.js' ), true );
     }
 
     private function enqueue_frontend() {

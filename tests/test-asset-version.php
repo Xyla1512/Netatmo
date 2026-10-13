@@ -61,6 +61,7 @@ foreach ( [
     'naws-heatmap-boot'  => 'assets/js/heatmap-boot.js',
     'naws-windrose-boot' => 'assets/js/windrose-boot.js',
     'naws-sparkline-boot' => 'assets/js/sparkline-boot.js',
+    'naws-radar'          => 'assets/js/radar.js',
 ] as $handle => $rel ) {
     check( "$handle script nutzt den Helfer fuer $rel",
         (bool) preg_match( "/wp_register_script\(\s*'" . preg_quote( $handle, '/' ) . "',[^;]*NAWS_Helpers::asset_version\(\s*'" . preg_quote( $rel, '/' ) . "'\s*\)/s", $sc ),
