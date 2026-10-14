@@ -377,6 +377,10 @@ function naws_label( string $key ): string {
             return __( 'Play or pause the rain radar', 'xtx-integration-for-netatmo' );
         case 'rd_time':
             return __( 'Time of the radar image', 'xtx-integration-for-netatmo' );
+        case 'rd_zoom_in':
+            return __( 'Zoom in on the rain radar', 'xtx-integration-for-netatmo' );
+        case 'rd_zoom_out':
+            return __( 'Zoom out of the rain radar', 'xtx-integration-for-netatmo' );
         case 'rd_preparing':
             return __( 'The rain radar is being prepared. It will appear in a moment.', 'xtx-integration-for-netatmo' );
         case 'rd_unavailable':

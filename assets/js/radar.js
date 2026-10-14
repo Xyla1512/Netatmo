@@ -57,6 +57,50 @@
             return -1;
         },
 
+        /** Zoom levels of the + / - buttons, around the station. */
+        LEVELS: [1, 1.5, 2, 3, 4],
+        /** A map tile this wide on screen keeps the labels readable. */
+        READABLE: 200,
+
+        /** First zoom level at which a map tile (px on screen at 1x) is readable. */
+        startLevel: function (tilePx) {
+            var i;
+            if (!(tilePx > 0)) { return 1; }
+            for (i = 0; i < core.LEVELS.length; i++) {
+                if (tilePx * core.LEVELS[i] >= core.READABLE) { return core.LEVELS[i]; }
+            }
+            return core.LEVELS[core.LEVELS.length - 1];
+        },
+
+        /** The next level up (dir 1) or down (dir -1); stays at the ends. */
+        stepLevel: function (s, dir) {
+            var L = core.LEVELS, i;
+            if (dir > 0) {
+                for (i = 0; i < L.length; i++) { if (L[i] > s) { return L[i]; } }
+                return L[L.length - 1];
+            }
+            for (i = L.length - 1; i >= 0; i--) { if (L[i] < s) { return L[i]; } }
+            return L[0];
+        },
+
+        /**
+         * The finer map layer (one zoom further in, tiles half the size)
+         * once it is readable itself, i.e. the coarse one is blown up twice.
+         */
+        useFine: function (tilePx, s) { return tilePx * s >= 2 * core.READABLE; },
+
+        /**
+         * Offset of the zoomed stage (square, stageW wide) in the view,
+         * kept so that it always fills the view. Nothing to move at 1x.
+         */
+        clampPan: function (x, y, s, viewW, viewH, stageW) {
+            var mx, my;
+            if (s <= 1) { return [0, 0]; }
+            mx = Math.max(0, (s * stageW - viewW) / 2);
+            my = Math.max(0, (s * stageW - viewH) / 2);
+            return [Math.max(-mx, Math.min(mx, x)), Math.max(-my, Math.min(my, y))];
+        },
+
         /** Where the viewer was, found again by the frame's time in the new list. */
         keepIndex: function (oldFrames, oldIdx, newFrames) {
             var i, t;
@@ -106,7 +150,12 @@
             nowMark = el.querySelector('.naws-radar-now'),
             msg = el.querySelector('.naws-radar-msg'),
             asof = el.querySelector('.naws-radar-asof'),
-            frames = [], nodes = [], broken = {}, idx = 0, timer = null, playing = false, resume = false, tries = 0;
+            view = el.querySelector('.naws-radar-view'),
+            stage = el.querySelector('.naws-radar-stage'),
+            zin = el.querySelector('.naws-radar-zin'),
+            zout = el.querySelector('.naws-radar-zout'),
+            frames = [], nodes = [], broken = {}, idx = 0, timer = null, playing = false, resume = false, tries = 0,
+            scale = 1, pan = [0, 0], touched = false, fineBox = null, drag = null;
 
         function nowSec() { return Math.floor(Date.now() / 1000); }
 
@@ -177,6 +226,48 @@
             }
         }
 
+        /** Width of one map tile on screen at 1x, in px; 0 without a map. */
+        function tilePx() {
+            var t = data.map && data.map[0];
+            return t && stage ? stage.offsetWidth * t[3] / 1024 : 0;
+        }
+
+        /** Show the finer map layer when it reads better; built on first use. */
+        function fine() {
+            var on = !!(map && data.fine && data.fine.length) && core.useFine(tilePx(), scale);
+            if (on && !fineBox) {
+                fineBox = document.createElement('div');
+                fineBox.className = 'naws-radar-map naws-radar-map--fine';
+                fineBox.setAttribute('aria-hidden', 'true');
+                data.fine.forEach(function (t) { fineBox.appendChild(img(t[0], t[1], t[2], t[3])); });
+                map.parentNode.insertBefore(fineBox, map.nextSibling);
+            }
+            if (fineBox) { fineBox.hidden = !on; }
+        }
+
+        function applyZoom() {
+            if (!stage || !view) { return; }
+            pan = core.clampPan(pan[0], pan[1], scale, view.clientWidth, view.clientHeight, stage.offsetWidth);
+            stage.style.transform = 'translate(-50%, -50%) translate(' + pan[0] + 'px, ' + pan[1] + 'px) scale(' + scale + ')';
+            el.style.setProperty('--naws-radar-zoom', String(scale));
+            el.classList.toggle('naws-radar--zoomed', scale > 1);
+            if (zin) { zin.disabled = scale >= core.LEVELS[core.LEVELS.length - 1]; }
+            if (zout) { zout.disabled = scale <= 1; }
+            fine();
+        }
+
+        /** Zoom around the middle of the view: the point there stays put. */
+        function zoomTo(s) {
+            pan = [pan[0] * s / scale, pan[1] * s / scale];
+            scale = s;
+            applyZoom();
+        }
+
+        /** Until the visitor zooms: start where the map labels are readable. */
+        function autoZoom() {
+            if (!touched) { zoomTo(core.startLevel(tilePx())); }
+        }
+
         /** One pass from the first to the last frame, then it stops there. */
         function tick() {
             var j = core.stepOn(idx, frames.length, broken);
@@ -226,6 +317,8 @@
                             build(d);
                             if (had) { show(core.keepIndex(oldFrames, oldIdx, frames)); }
                             play(had && was);
+                            autoZoom();
+                            fine();
                             poll(core.POLL_EVERY);
                         } else if ((!frames.length || core.needsPoll(data.updated, nowSec())) && ++tries < core.POLL_TRIES) {
                             // Still preparing, or the renewal is under way: ask again soon.
@@ -254,8 +347,43 @@
             show(parseInt(range.value, 10) || 0);
         });
 
+        function zoomBtn(dir) {
+            return function () {
+                touched = true;
+                zoomTo(core.stepLevel(scale, dir));
+            };
+        }
+        if (zin) { zin.addEventListener('click', zoomBtn(1)); }
+        if (zout) { zout.addEventListener('click', zoomBtn(-1)); }
+
+        // Drag to move the zoomed map (mouse, pen or finger). At 1x the
+        // finger scrolls the page as before (touch-action in the CSS).
+        if (view && stage) {
+            view.addEventListener('pointerdown', function (e) {
+                if (scale <= 1 || e.button !== 0 || (e.target.closest && e.target.closest('button'))) { return; }
+                drag = { id: e.pointerId, x: e.clientX, y: e.clientY, px: pan[0], py: pan[1] };
+                if (view.setPointerCapture) { view.setPointerCapture(e.pointerId); }
+                el.classList.add('naws-radar--dragging');
+                e.preventDefault();
+            });
+            view.addEventListener('pointermove', function (e) {
+                if (!drag || e.pointerId !== drag.id) { return; }
+                pan = [drag.px + e.clientX - drag.x, drag.py + e.clientY - drag.y];
+                applyZoom();
+            });
+            var endDrag = function (e) {
+                if (!drag || e.pointerId !== drag.id) { return; }
+                drag = null;
+                el.classList.remove('naws-radar--dragging');
+            };
+            view.addEventListener('pointerup', endDrag);
+            view.addEventListener('pointercancel', endDrag);
+            root.addEventListener('resize', applyZoom);
+        }
+
         // No autoplay: the visitor starts the pass with the Play button.
         build(data);
+        autoZoom();
         // A cached page can be hours old: ask at once when its images are due.
         if (data.updated > 0 && core.needsPoll(data.updated, nowSec())) {
             poll(0);

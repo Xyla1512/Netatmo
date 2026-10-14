@@ -131,7 +131,7 @@ class NAWS_Radar {
                 'v'       => 1,
                 'source'  => $source,
                 'updated' => $now,
-                'map'     => [ 'tiles' => self::fetch_map( $key, $box ) ],
+                'map'     => self::fetch_maps( $key, $box ),
                 'frames'  => $frames,
             ];
             $new['retired'] = NAWS_Radar_Store::prune( $key, $old, $new, $now );
@@ -141,8 +141,8 @@ class NAWS_Radar {
             }
             // Map tiles of another zoom (an earlier rule) are not used any more.
             NAWS_Radar_Store::delete_files( $key, array_diff(
-                array_column( (array) ( $old['map']['tiles'] ?? [] ), 'file' ),
-                array_column( $new['map']['tiles'], 'file' )
+                array_column( array_merge( (array) ( $old['map']['tiles'] ?? [] ), (array) ( $old['map']['fine'] ?? [] ) ), 'file' ),
+                array_column( array_merge( $new['map']['tiles'], $new['map']['fine'] ), 'file' )
             ) );
             return true;
         } finally {
@@ -154,11 +154,30 @@ class NAWS_Radar {
         }
     }
 
-    /** Map tiles: fetched once, kept on disk. Missing ones are tried again next run. */
-    private static function fetch_map( string $key, array $box ): array {
+    /**
+     * The map: the tiles at map_zoom() and, once those are complete, the
+     * finer layer one zoom further in that the player shows when zoomed in.
+     */
+    private static function fetch_maps( string $key, array $box ): array {
+        $z     = NAWS_Radar_Geo::map_zoom( $box );
+        $tiles = self::fetch_map( $key, $box, $z );
+        $fine  = [];
+        $need  = $z < NAWS_Radar_Geo::MAX_ZOOM ? count( NAWS_Radar_Geo::tiles( $box, $z + 1 ) ) : 0;
+        if ( $need && count( $tiles ) === count( NAWS_Radar_Geo::tiles( $box, $z ) ) ) {
+            $fine = self::fetch_map( $key, $box, $z + 1 );
+        }
+        return [
+            'tiles'   => $tiles,
+            'fine'    => $fine,
+            'fine_ok' => $need > 0 && count( $fine ) === $need,
+        ];
+    }
+
+    /** Map tiles of zoom $z: fetched once, kept on disk. Missing ones are tried again next run. */
+    private static function fetch_map( string $key, array $box, int $z ): array {
         $out = [];
         $ok  = ! NAWS_Radar_Store::in_backoff( 'osm' );
-        foreach ( NAWS_Radar_Geo::tiles( $box, NAWS_Radar_Geo::map_zoom( $box ) ) as $t ) {
+        foreach ( NAWS_Radar_Geo::tiles( $box, $z ) as $t ) {
             $file  = sprintf( 'map/%d-%d-%d.png', $t['z'], $t['x'], $t['y'] );
             $entry = [
                 'file' => $file,
@@ -376,6 +395,11 @@ class NAWS_Radar {
             'map'          => array_map(
                 static fn( $t ) => [ NAWS_Radar_Store::url( $key, $t['file'] ), $t['left'], $t['top'], $t['size'] ],
                 (array) ( $m['map']['tiles'] ?? [] )
+            ),
+            // Only a complete finer layer: a half one would leave holes when zoomed in.
+            'fine'         => empty( $m['map']['fine_ok'] ) ? [] : array_map(
+                static fn( $t ) => [ NAWS_Radar_Store::url( $key, $t['file'] ), $t['left'], $t['top'], $t['size'] ],
+                (array) ( $m['map']['fine'] ?? [] )
             ),
         ];
     }

@@ -26,6 +26,13 @@ console.log(JSON.stringify({
   firstBroken: c.stepOn(-1, 13, { 0: true }), zero: c.stepOn(-1, 0, {}),
   noAuto: typeof c.autoplay, noLoop: typeof c.nextOk,
   goneSoon: c.goneWait(1), goneLate: c.goneWait(10),
+  levels: c.LEVELS,
+  startDesk: c.startLevel(372), startPhone: c.startLevel(116), startTiny: c.startLevel(40), startNone: c.startLevel(0),
+  upFrom1: c.stepLevel(1, 1), downFrom1: c.stepLevel(1, -1), upFrom4: c.stepLevel(4, 1), downFrom3: c.stepLevel(3, -1),
+  upOdd: c.stepLevel(1.7, 1), downOdd: c.stepLevel(1.7, -1),
+  fineDesk1: c.useFine(372, 1), fineDesk2: c.useFine(372, 2), finePhone2: c.useFine(116, 2), finePhone4: c.useFine(116, 4),
+  pan1: c.clampPan(50, -30, 1, 1140, 420, 1140), panIn: c.clampPan(100, -50, 2, 1140, 420, 1140),
+  panOut: c.clampPan(5000, -5000, 2, 1140, 420, 1140), panPhone: c.clampPan(-999, 999, 2, 355, 420, 420),
   pct: c.pct(512), pctNeg: c.pct(-19.59),
   keepShift: c.keepIndex([{ t: 1 }, { t: 2 }, { t: 3 }], 1, [{ t: 0 }, { t: 1 }, { t: 2 }, { t: 3 }]),
   keepGone: c.keepIndex([{ t: 1 }, { t: 2 }], 1, [{ t: 5, forecast: false }, { t: 6, forecast: false }, { t: 7, forecast: true }]),
@@ -61,6 +68,28 @@ check( 'keine Endlosschleife mehr',      $r['noLoop'], 'undefined' );
 // Zu alt beim Aufruf: die Erneuerung laeuft gerade, also bald wieder fragen.
 check( 'zu alt: nach 20 s erneut fragen', $r['goneSoon'], 20000 );
 check( 'zu alt, 10 Versuche: 15 min',     $r['goneLate'], 900000 );
+
+echo "\nZoom\n" . str_repeat( '-', 74 ) . "\n";
+// Kachel = Breite einer Kartenkachel auf dem Bildschirm bei 1x (px).
+check( 'Stufen',                           $r['levels'], [ 1, 1.5, 2, 3, 4 ] );
+check( 'Start Desktop (372 px): 1x',       $r['startDesk'], 1 );
+check( 'Start Handy (116 px): 2x',         $r['startPhone'], 2 );
+check( 'Start winzig: hoechstens 4x',      $r['startTiny'], 4 );
+check( 'Start ohne Karte: 1x',             $r['startNone'], 1 );
+check( '+ von 1x: 1,5x',                   $r['upFrom1'], 1.5 );
+check( '- von 1x: bleibt 1x',              $r['downFrom1'], 1 );
+check( '+ von 4x: bleibt 4x',              $r['upFrom4'], 4 );
+check( '- von 3x: 2x',                     $r['downFrom3'], 2 );
+check( '+ zwischen den Stufen: naechste',  $r['upOdd'], 2 );
+check( '- zwischen den Stufen: vorige',    $r['downOdd'], 1.5 );
+check( 'feine Ebene: Desktop 1x nein',     $r['fineDesk1'], false );
+check( 'feine Ebene: Desktop 2x ja',       $r['fineDesk2'], true );
+check( 'feine Ebene: Handy 2x nein',       $r['finePhone2'], false );
+check( 'feine Ebene: Handy 4x ja',         $r['finePhone4'], true );
+check( 'Verschieben bei 1x: nichts',       $r['pan1'], [ 0, 0 ] );
+check( 'Verschieben bei 2x: frei',         $r['panIn'], [ 100, -50 ] );
+check( 'Verschieben: bis zum Bildrand',    $r['panOut'], [ 570, -930 ] );
+check( 'Handy: Rand in beide Richtungen',  $r['panPhone'], [ -242.5, 210 ] );
 check( 'Prozent',                        $r['pct'], '50.0000%' );
 check( 'Prozent negativ',                $r['pctNeg'], '-1.9131%' );
 check( 'gleicher Zeitpunkt nach Verschiebung', $r['keepShift'], 2 );

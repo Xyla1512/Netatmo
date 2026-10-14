@@ -2122,5 +2122,16 @@
 .naws-radar-legend { flex: 0 0 auto; display: inline-flex; gap: 6px; align-items: center; font-size: .8em; color: var(--naws-radar-time-bg, #2d5252); }
 .naws-radar-legend i { display: inline-block; width: 56px; height: 8px; border-radius: 4px; background: linear-gradient(90deg, #9be7ff, #2f80ed, #f2c94c, #eb5757); }
 .naws-radar-attr { margin: 4px 0 0; font-size: .75em; opacity: .75; }
+/* Zoom (+ / -) around the station; drag moves the zoomed map. The station dot keeps its size. */
+.naws-radar-stage { transition: transform .2s ease; }
+.naws-radar--dragging .naws-radar-stage { transition: none; }
+.naws-radar--zoomed .naws-radar-view { touch-action: none; cursor: grab; }
+.naws-radar--dragging .naws-radar-view { cursor: grabbing; }
+.naws-radar .naws-radar-view img { -webkit-user-drag: none; user-select: none; }
+.naws-radar-map--fine[hidden] { display: none; }
+.naws-radar-station { transform: scale(calc(1 / var(--naws-radar-zoom, 1))); }
+.naws-radar-zoom { position: absolute; right: 10px; top: 10px; display: flex; flex-direction: column; gap: 6px; }
+.naws-radar .naws-radar-zoom .naws-radar-btn { width: 32px; height: 32px; font-size: 20px; font-weight: 700; line-height: 1; box-shadow: 0 1px 3px rgba(0, 0, 0, .25); }
+@media (prefers-reduced-motion: reduce) { .naws-radar-stage { transition: none; } }
 .naws-radar-hint { padding: 8px 12px; border-left: 3px solid var(--naws-radar-forecast, #dd9933); background: var(--naws-radar-bar-bg, #f4fafa); }
 @media (max-width: 480px) { .naws-radar-legend { display: none; } }

@@ -71,6 +71,10 @@ $naws_rd_credit = static function ( string $label, string $url, string $text ): 
             <span class="naws-radar-clock"><?php echo esc_html( $naws_rd_clock ); ?></span>
             <span class="naws-radar-fc"<?php echo ( $naws_rd_shown['forecast'] ?? false ) ? '' : ' hidden'; ?>><?php echo esc_html( naws_label( 'rd_forecast' ) ); ?></span>
         </div>
+        <div class="naws-radar-zoom">
+            <button type="button" class="naws-radar-btn naws-radar-zin" aria-label="<?php echo esc_attr( naws_label( 'rd_zoom_in' ) ); ?>"><span aria-hidden="true">+</span></button>
+            <button type="button" class="naws-radar-btn naws-radar-zout" aria-label="<?php echo esc_attr( naws_label( 'rd_zoom_out' ) ); ?>" disabled><span aria-hidden="true">&minus;</span></button>
+        </div>
         <?php if ( 'ready' !== $naws_rd_state ) : ?>
         <p class="naws-radar-msg" data-unavailable="<?php echo esc_attr( naws_label( 'rd_unavailable' ) ); ?>"><?php echo esc_html( naws_label( 'preparing' === $naws_rd_state ? 'rd_preparing' : 'rd_unavailable' ) ); ?></p>
         <?php else : ?>

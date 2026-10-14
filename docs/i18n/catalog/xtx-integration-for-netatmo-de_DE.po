@@ -409,7 +409,7 @@ msgid "Apr"
 msgstr "Apr"
 
 #. translators: %s: time of the newest radar image
-#: includes/class-naws-labels.php:386
+#: includes/class-naws-labels.php:390
 msgid "As of %s"
 msgstr "Stand %s"
 
@@ -1492,7 +1492,7 @@ msgstr "Icon und Außentemperatur, darunter Regen und Wind, darunter die Vorhers
 msgid "Icons"
 msgstr "Icons"
 
-#: includes/class-naws-radar.php:485
+#: includes/class-naws-radar.php:514
 msgid "If the rain radar is switched on, this website fetches radar images from the Deutscher Wetterdienst (maps.dwd.de) or RainViewer (rainviewer.com) and map tiles from OpenStreetMap (tile.openstreetmap.org) and stores them on its own server. Only the map section around the weather station and the time are sent. Visitors' browsers load the images from this website only; no visitor data, IP address or cookie reaches these services."
 msgstr "Ist das Regenradar eingeschaltet, holt diese Website Radarbilder vom Deutschen Wetterdienst (maps.dwd.de) oder von RainViewer (rainviewer.com) und Kartenkacheln von OpenStreetMap (tile.openstreetmap.org) und speichert sie auf dem eigenen Server. Gesendet werden nur der Kartenausschnitt um die Wetterstation und die Uhrzeit. Die Browser der Besucher laden die Bilder nur von dieser Website; keine Besucherdaten, keine IP-Adresse und kein Cookie erreichen diese Dienste."
 
@@ -1788,7 +1788,7 @@ msgid "Manual purge"
 msgstr "Manuelle Bereinigung"
 
 #. translators: %s: "OpenStreetMap", linked to its copyright page
-#: includes/class-naws-labels.php:400
+#: includes/class-naws-labels.php:404
 msgid "Map: © %s contributors"
 msgstr "Karte: © %s-Mitwirkende"
 
@@ -2337,7 +2337,7 @@ msgid "REST API"
 msgstr "REST API"
 
 #. translators: %s: "Deutscher Wetterdienst", linked to dwd.de
-#: includes/class-naws-labels.php:397
+#: includes/class-naws-labels.php:401
 msgid "Radar: %s"
 msgstr "Radar: %s"
 
@@ -2396,7 +2396,7 @@ msgstr "Regen in 24 Stunden"
 msgid "Rain per day"
 msgstr "Regen je Tag"
 
-#: admin/views/settings.php:539 includes/class-naws-colors.php:725 includes/class-naws-labels.php:394
+#: admin/views/settings.php:539 includes/class-naws-colors.php:725 includes/class-naws-labels.php:398
 msgid "Rain radar"
 msgstr "Regenradar"
 
@@ -3063,19 +3063,19 @@ msgstr "Das Funksignal eines Moduls zur Basisstation liegt 30 Minuten lang auf o
 msgid "The rain of the last 24 hours is at or above the threshold. No all-clear: one mail per rain event."
 msgstr "Der Regen der letzten 24 Stunden liegt auf oder über der Schwelle. Keine Entwarnung: eine Mail je Regenereignis."
 
-#: includes/class-naws-labels.php:381
+#: includes/class-naws-labels.php:385
 msgid "The rain radar is being prepared. It will appear in a moment."
 msgstr "Das Regenradar wird vorbereitet. Es erscheint gleich."
 
-#: includes/class-naws-labels.php:402
+#: includes/class-naws-labels.php:406
 msgid "The rain radar is switched off. Admins can switch it on under Settings → Rain radar. Only you see this note."
 msgstr "Das Regenradar ist ausgeschaltet. Administratoren können es unter Einstellungen → Regenradar einschalten. Nur du siehst diesen Hinweis."
 
-#: includes/class-naws-labels.php:383
+#: includes/class-naws-labels.php:387
 msgid "The rain radar is temporarily unavailable."
 msgstr "Das Regenradar ist vorübergehend nicht verfügbar."
 
-#: includes/class-naws-labels.php:404
+#: includes/class-naws-labels.php:408
 msgid "The rain radar needs the station coordinates or a forecast location. Only you see this note."
 msgstr "Das Regenradar braucht die Stationskoordinaten oder einen Vorhersageort. Nur du siehst diesen Hinweis."
 
@@ -3533,6 +3533,14 @@ msgstr "Deine Netatmo Client ID"
 #: admin/views/settings.php:398
 msgid "Yr.no / MET Norway (accurate for Northern Europe)"
 msgstr "Yr.no / MET Norway (genau für Nordeuropa)"
+
+#: includes/class-naws-labels.php:381
+msgid "Zoom in on the rain radar"
+msgstr "Regenradar vergrößern"
+
+#: includes/class-naws-labels.php:383
+msgid "Zoom out of the rain radar"
+msgstr "Regenradar verkleinern"
 
 #: admin/views/shortcodes.php:60
 msgid "[naws_value] – Attributes"
@@ -4276,17 +4284,17 @@ msgctxt "radio level"
 msgid "weak"
 msgstr "schwach"
 
-#: includes/class-naws-labels.php:392
+#: includes/class-naws-labels.php:396
 msgctxt "rain intensity"
 msgid "heavy"
 msgstr "stark"
 
-#: includes/class-naws-labels.php:388
+#: includes/class-naws-labels.php:392
 msgctxt "rain intensity"
 msgid "light"
 msgstr "leicht"
 
-#: includes/class-naws-labels.php:390
+#: includes/class-naws-labels.php:394
 msgctxt "rain intensity"
 msgid "moderate"
 msgstr "mäßig"
