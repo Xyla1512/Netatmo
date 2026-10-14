@@ -1,6 +1,34 @@
 {
-    "aktualisiert": "2026-10-01",
+    "aktualisiert": "2026-10-14",
     "vorhaben": [
+        {
+            "id": "regenradar",
+            "titel": "Regenradar",
+            "satz": "[naws_radar] zeigt den Regen um deine Station: in Deutschland die letzte Stunde und zwei Stunden Vorschau vom Deutschen Wetterdienst, anderswo RainViewer, auf einer grauen OpenStreetMap-Karte. Abspielen auf Knopfdruck, Hineinzoomen mit schärferer Karte, Verschieben mit Maus oder Finger. Die Bilder holt dein Server und liefert deine Website aus – kein Besucher spricht mit einem Wetterdienst.",
+            "ab": null,
+            "bild": null
+        },
+        {
+            "id": "monatsrueckblick",
+            "titel": "Monatsrückblick",
+            "satz": "Ein Absatz zum vergangenen Monat, aus den eigenen Messungen geschrieben: wie warm, wie nass, wie windig er war – und wie er neben demselben Monat der Vorjahre dasteht.",
+            "ab": null,
+            "bild": null
+        },
+        {
+            "id": "gutenberg-bloecke",
+            "titel": "Blöcke für den Block-Editor",
+            "satz": "Die Bausteine des Plugins als Gutenberg-Blöcke: einfügen, in der Seitenleiste einstellen und schon im Editor sehen, wie es aussieht – ohne Shortcodes abzutippen.",
+            "ab": null,
+            "bild": null
+        },
+        {
+            "id": "elementor-widgets",
+            "titel": "Elementor-Widgets",
+            "satz": "Dasselbe für Elementor: die Bausteine als eigene Widgets, eingestellt im Elementor-Panel und mit Vorschau im Editor.",
+            "ab": null,
+            "bild": null
+        },
         {
             "id": "sparkline",
             "titel": "Sparklines: eine Kurve in Wortgröße",
