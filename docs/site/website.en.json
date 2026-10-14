@@ -1,10 +1,31 @@
 {
-    "aktualisiert": "2026-10-13",
+    "aktualisiert": "2026-10-14",
     "vorhaben": [
         {
             "id": "regenradar",
             "titel": "Rain radar",
-            "satz": "Animated rain radar around the station – your own site serves the images, no visitor talks to a weather service.",
+            "satz": "[naws_radar] shows the rain around your station: in Germany the last hour and a two-hour nowcast from the Deutscher Wetterdienst, elsewhere RainViewer, on a grey OpenStreetMap map. Play at the press of a button, zoom in with a sharper map, drag with mouse or finger. Your server fetches the images and your site serves them – no visitor talks to a weather service.",
+            "ab": null,
+            "bild": null
+        },
+        {
+            "id": "monatsrueckblick",
+            "titel": "Monthly review",
+            "satz": "A paragraph about the past month, written from your own readings: how warm, how wet, how windy it was – and how it compares with the same month in earlier years.",
+            "ab": null,
+            "bild": null
+        },
+        {
+            "id": "gutenberg-bloecke",
+            "titel": "Blocks for the block editor",
+            "satz": "The plugin's building blocks as Gutenberg blocks: insert them, set them up in the sidebar and see right in the editor what they look like – no shortcodes to type.",
+            "ab": null,
+            "bild": null
+        },
+        {
+            "id": "elementor-widgets",
+            "titel": "Elementor widgets",
+            "satz": "The same for Elementor: the building blocks as widgets of their own, set up in the Elementor panel and previewed in the editor.",
             "ab": null,
             "bild": null
         },
