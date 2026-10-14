@@ -144,6 +144,24 @@ check( 'ausgemustert: bleibt (Gnadenfrist)', NAWS_Radar_Store::has( $k1, 'frames
 check( 'juenger als 1 h: bleibt (Lauf im Gang)', NAWS_Radar_Store::has( $k1, 'frames/neu.png' ), true );
 check( 'Karte wird nicht gefegt',           NAWS_Radar_Store::has( $k1, 'map/9-1-1.png' ), true );
 check( 'Manifest bleibt',                   is_array( NAWS_Radar_Store::manifest( $k1 ) ), true );
+
+echo "\nTaeglich: ausgemusterte Bilder nach der Gnadenfrist\n" . str_repeat( '-', 74 ) . "\n";
+// Ohne weiteren Seitenaufruf gibt es keine Erneuerung, die sie loescht.
+NAWS_Radar_Store::save_manifest( $k1, [ 'frames' => [ [ 't' => 1, 'file' => 'frames/keep.png' ] ],
+    'retired' => [ 'frames/ret.png' => $sweep - 1800, 'frames/jung.png' => $sweep - 600 ] ] );
+NAWS_Radar_Store::put( $k1, 'frames/jung.png', 'x' );
+NAWS_Radar_Store::lock( $k1 );
+NAWS_Radar_Store::cleanup( $sweep );
+check( 'Lauf im Gang: nichts angefasst',    NAWS_Radar_Store::has( $k1, 'frames/ret.png' ), true );
+NAWS_Radar_Store::unlock( $k1 );
+NAWS_Radar_Store::cleanup( $sweep );
+$m1 = NAWS_Radar_Store::manifest( $k1 );
+check( 'ausgemustert, Frist um: geloescht', NAWS_Radar_Store::has( $k1, 'frames/ret.png' ), false );
+check( '... und aus dem Manifest',          array_keys( $m1['retired'] ?? [] ), [ 'frames/jung.png' ] );
+check( 'ausgemustert, Frist laeuft: bleibt', NAWS_Radar_Store::has( $k1, 'frames/jung.png' ), true );
+check( 'im Manifest: bleibt weiter',        NAWS_Radar_Store::has( $k1, 'frames/keep.png' ), true );
+check( 'Sperre wieder frei',                NAWS_Radar_Store::lock( $k1 ), true );
+NAWS_Radar_Store::unlock( $k1 );
 NAWS_Radar_Store::clear_all();
 check( 'clear_all: Ordner leer',            fs()->exists( '/up/naws-radar' ), false );
 check( 'clear_all: Option weg',             get_option( NAWS_Radar_Store::OPTION, 'weg' ), 'weg' );

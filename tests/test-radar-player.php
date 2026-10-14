@@ -21,10 +21,10 @@ const f = (fc) => fc.map((x) => ({ forecast: x }));
 const p = f([false, false, false, false, false, true, true, true, true, true, true, true, true]);
 console.log(JSON.stringify({
   now: c.nowIndex(p), nowAllPast: c.nowIndex(f([false, false, false])), nowEmpty: c.nowIndex([]),
-  next: c.nextOk(3, 13, {}), wrap: c.nextOk(12, 13, {}), skip: c.nextOk(3, 13, { 4: true, 5: true }),
-  allBroken: c.nextOk(0, 2, { 0: true, 1: true }), zero: c.nextOk(0, 0, {}),
-  hold: c.delay(12, 13), step: c.delay(3, 13),
-  auto: c.autoplay(p, false), reduced: c.autoplay(p, true), single: c.autoplay(f([false]), false),
+  next: c.stepOn(3, 13, {}), end: c.stepOn(12, 13, {}), skip: c.stepOn(3, 13, { 4: true, 5: true }),
+  brokenToEnd: c.stepOn(10, 13, { 11: true, 12: true }), first: c.stepOn(-1, 13, {}),
+  firstBroken: c.stepOn(-1, 13, { 0: true }), zero: c.stepOn(-1, 0, {}),
+  noAuto: typeof c.autoplay, noLoop: typeof c.nextOk,
   pct: c.pct(512), pctNeg: c.pct(-19.59),
   keepShift: c.keepIndex([{ t: 1 }, { t: 2 }, { t: 3 }], 1, [{ t: 0 }, { t: 1 }, { t: 2 }, { t: 3 }]),
   keepGone: c.keepIndex([{ t: 1 }, { t: 2 }], 1, [{ t: 5, forecast: false }, { t: 6, forecast: false }, { t: 7, forecast: true }]),
@@ -49,15 +49,14 @@ check( '"jetzt" ist das letzte gemessene Bild', $r['now'], 4 );
 check( 'nur gemessene: das letzte',      $r['nowAllPast'], 2 );
 check( 'leer: -1',                       $r['nowEmpty'], -1 );
 check( 'naechstes Bild',                 $r['next'], 4 );
-check( 'nach dem letzten wieder vorn',   $r['wrap'], 0 );
+check( 'nach dem letzten: Ende (-1)',    $r['end'], -1 );
 check( 'kaputte Bilder uebersprungen',   $r['skip'], 6 );
-check( 'alle kaputt: bleibt stehen',     $r['allBroken'], 0 );
-check( 'keine Bilder: 0',                $r['zero'], 0 );
-check( 'am Ende 1,5 s Halt',             $r['hold'], 1500 );
-check( 'sonst 600 ms',                   $r['step'], 600 );
-check( 'spielt von selbst',              $r['auto'], true );
-check( 'nicht bei reduzierter Bewegung', $r['reduced'], false );
-check( 'nicht bei nur einem Bild',       $r['single'], false );
+check( 'nur kaputte bis zum Ende: Ende', $r['brokenToEnd'], -1 );
+check( 'Start: erstes Bild',             $r['first'], 0 );
+check( 'Start: erstes heiles Bild',      $r['firstBroken'], 1 );
+check( 'keine Bilder: Ende',             $r['zero'], -1 );
+check( 'kein Autoplay mehr',             $r['noAuto'], 'undefined' );
+check( 'keine Endlosschleife mehr',      $r['noLoop'], 'undefined' );
 check( 'Prozent',                        $r['pct'], '50.0000%' );
 check( 'Prozent negativ',                $r['pctNeg'], '-1.9131%' );
 check( 'gleicher Zeitpunkt nach Verschiebung', $r['keepShift'], 2 );

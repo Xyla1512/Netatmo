@@ -242,18 +242,30 @@ class NAWS_Radar_Store {
     }
 
     /**
-     * Radar images of a set that its manifest neither uses nor has retired
-     * and that are older than an hour (a run in progress writes its images
-     * before the manifest): left over by an aborted run. Without a readable
-     * manifest nothing is touched.
+     * Retired images whose GRACE is over (no page asked for a renewal that
+     * would have deleted them), then radar images of a set that its
+     * manifest neither uses nor has retired and that are older than an hour
+     * (a run in progress writes its images before the manifest): left over
+     * by an aborted run. Without a readable manifest, or while a run holds
+     * the lock, nothing is touched.
      */
     private static function sweep( string $key, int $now ): void {
         $fs = self::fs();
-        $m  = self::manifest( $key );
-        if ( ! $fs || ! $m || ! self::valid_key( $key ) ) {
+        if ( ! $fs || ! self::valid_key( $key ) || ! self::lock( $key ) ) {
             return;
         }
-        $known = array_merge( self::files_of( $m ), array_keys( is_array( $m['retired'] ?? null ) ? $m['retired'] : [] ) );
+        $m = self::manifest( $key );
+        if ( ! $m ) {
+            self::unlock( $key );
+            return;
+        }
+        $retired = is_array( $m['retired'] ?? null ) ? $m['retired'] : [];
+        $left    = self::prune( $key, $m, $m, $now );
+        if ( $left !== $retired ) {
+            $m['retired'] = $left;
+            self::save_manifest( $key, $m );
+        }
+        $known =array_merge( self::files_of( $m ), array_keys( is_array( $m['retired'] ?? null ) ? $m['retired'] : [] ) );
         $list  = $fs->dirlist( self::dir( $key ) . '/frames' );
         foreach ( is_array( $list ) ? $list : [] as $name => $entry ) {
             $rel = 'frames/' . $name;
@@ -264,6 +276,7 @@ class NAWS_Radar_Store {
                 $fs->delete( self::dir( $key ) . '/' . $rel );
             }
         }
+        self::unlock( $key );
     }
 
     /** Everything: folder, list of sets, pauses. */

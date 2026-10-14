@@ -10,7 +10,6 @@
 
     var core = {
         STEP: 600,
-        HOLD: 1500,
         POLL_FIRST: 20000,
         POLL_TRIES: 10,
         POLL_EVERY: 900000,
@@ -39,15 +38,17 @@
             return last < 0 ? frames.length - 1 : last;
         },
 
-        /** The next frame that did not fail to load; stays put if all did. */
-        nextOk: function (i, n, broken) {
-            var k, j;
-            if (!n) { return 0; }
-            for (k = 1; k <= n; k++) {
-                j = (i + k) % n;
+        /**
+         * The next frame after i that did not fail to load, -1 at the end:
+         * a pass runs once, it does not start over. stepOn(-1, ...) is the
+         * first frame of a pass.
+         */
+        stepOn: function (i, n, broken) {
+            var j;
+            for (j = i + 1; j < n; j++) {
                 if (!broken[j]) { return j; }
             }
-            return i;
+            return -1;
         },
 
         /** Where the viewer was, found again by the frame's time in the new list. */
@@ -62,10 +63,6 @@
             }
             return core.nowIndex(newFrames);
         },
-
-        delay: function (i, n) { return i === n - 1 ? core.HOLD : core.STEP; },
-
-        autoplay: function (frames, reduced) { return !reduced && frames.length >= 2; },
 
         /** A position in the 1024 px image space as a percentage. */
         pct: function (v) { return (v / 1024 * 100).toFixed(4) + '%'; }
@@ -103,8 +100,7 @@
             nowMark = el.querySelector('.naws-radar-now'),
             msg = el.querySelector('.naws-radar-msg'),
             asof = el.querySelector('.naws-radar-asof'),
-            reduced = !!(root.matchMedia && root.matchMedia('(prefers-reduced-motion: reduce)').matches),
-            frames = [], nodes = [], broken = {}, idx = 0, timer = null, playing = false, tries = 0;
+            frames = [], nodes = [], broken = {}, idx = 0, timer = null, playing = false, resume = false, tries = 0;
 
         function nowSec() { return Math.floor(Date.now() / 1000); }
 
@@ -175,9 +171,15 @@
             }
         }
 
+        /** One pass from the first to the last frame, then it stops there. */
         function tick() {
-            show(core.nextOk(idx, frames.length, broken));
-            timer = root.setTimeout(tick, core.delay(idx, frames.length));
+            var j = core.stepOn(idx, frames.length, broken);
+            if (j < 0) {
+                play(false);
+                return;
+            }
+            show(j);
+            timer = root.setTimeout(tick, core.STEP);
         }
 
         function play(on) {
@@ -186,6 +188,15 @@
             btn.setAttribute('aria-pressed', playing ? 'true' : 'false');
             btn.classList.toggle('is-playing', playing);
             if (playing) { timer = root.setTimeout(tick, core.STEP); }
+        }
+
+        /** Play: from the first frame, or on from where Pause stopped the pass. */
+        function start() {
+            var first = core.stepOn(-1, frames.length, broken);
+            if (resume && core.stepOn(idx, frames.length, broken) < 0) { resume = false; } // paused on the last frame
+            if (!resume && first >= 0) { show(first); }
+            resume = false;
+            play(true);
         }
 
         function poll(wait) {
@@ -207,7 +218,7 @@
                             play(false);
                             build(d);
                             if (had) { show(core.keepIndex(oldFrames, oldIdx, frames)); }
-                            play(had ? was : core.autoplay(frames, reduced));
+                            play(had && was);
                             poll(core.POLL_EVERY);
                         } else if ((!frames.length || core.needsPoll(data.updated, nowSec())) && ++tries < core.POLL_TRIES) {
                             // Still preparing, or the renewal is under way: ask again soon.
@@ -222,14 +233,22 @@
             }, wait);
         }
 
-        btn.addEventListener('click', function () { play(!playing); });
+        btn.addEventListener('click', function () {
+            if (playing) {
+                play(false);
+                resume = true;
+            } else {
+                start();
+            }
+        });
         range.addEventListener('input', function () {
             play(false);
+            resume = false;
             show(parseInt(range.value, 10) || 0);
         });
 
+        // No autoplay: the visitor starts the pass with the Play button.
         build(data);
-        play(core.autoplay(frames, reduced));
         // A cached page can be hours old: ask at once when its images are due.
         if (data.updated > 0 && core.needsPoll(data.updated, nowSec())) {
             poll(0);
