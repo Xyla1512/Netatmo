@@ -19,6 +19,7 @@ class NAWS_Radar_Geo {
     const MAX_ZOOM    = 12;
     const RV_MAX_ZOOM = 7;
     const RV_TILES    = 9;
+    const MAP_TILE    = 300;  // map tile size in the image that keeps the labels readable
     const KM_DEFAULT  = 150;
 
     /** Width of the box in km, per source: [ min, max ]. */
@@ -60,6 +61,22 @@ class NAWS_Radar_Geo {
             }
         }
         return $max;
+    }
+
+    /**
+     * Map zoom: OSM draws its labels for 256 px tiles, but at zoom_for()
+     * a tile may take only half of that in the image, and the labels
+     * become too small to read. One zoom coarser when its tile size is
+     * nearer (on a log scale) to MAP_TILE pixels in the image.
+     */
+    public static function map_zoom( array $box ): int {
+        $z = self::zoom_for( $box );
+        if ( $z < 1 ) {
+            return $z;
+        }
+        $tile = self::SIZE * ( 2 * M_PI * self::EARTH / ( 2 ** $z ) ) / ( $box[2] - $box[0] );
+        // Coarser tiles are twice the size: closer to MAP_TILE when tile * 2 / MAP_TILE < MAP_TILE / tile.
+        return 2 * $tile * $tile < self::MAP_TILE * self::MAP_TILE ? $z - 1 : $z;
     }
 
     /**

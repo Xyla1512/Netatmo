@@ -28,9 +28,9 @@ check( 'Lauf klappt',                       NAWS_Radar::refresh( $key, $now ), t
 $m = NAWS_Radar_Store::manifest( $key );
 check( '13 Bilder',                         count( $m['frames'] ), 13 );
 check( '8 davon Vorschau',                  count( array_filter( $m['frames'], fn( $f ) => $f['forecast'] ) ), 8 );
-check( '49 Kartenkacheln',                  count( $m['map']['tiles'] ), 49 );
+check( '16 Kartenkacheln (Zoom 9)',         count( $m['map']['tiles'] ), 16 );
 check( '13 DWD-Abrufe',                     calls_to( 'https://maps.dwd.de/' ), 13 );
-check( '49 OSM-Abrufe',                     calls_to( 'https://tile.openstreetmap.org/' ), 49 );
+check( '16 OSM-Abrufe',                     calls_to( 'https://tile.openstreetmap.org/' ), 16 );
 check( 'Stand',                             $m['updated'], $now );
 check( 'gemessenes Bild heisst frames/<t>.png', $m['frames'][4]['file'], 'frames/' . gmmktime( 15, 15, 0, 10, 13, 2026 ) . '.png' );
 check( 'Sperre wieder frei',                NAWS_Radar_Store::lock( $key ), true );
@@ -52,6 +52,19 @@ check( 'keine verwaiste Datei', count( array_diff(
     array_keys( array_filter( fs()->files, fn( $c, $p ) => str_contains( $p, "/$key/frames/" ), ARRAY_FILTER_USE_BOTH ) ),
     array_map( fn( $f ) => NAWS_Radar_Store::dir( $key ) . '/' . $f, array_merge( NAWS_Radar_Store::files_of( $m3 ), array_keys( $m3['retired'] ) ) )
 ) ), 0 );
+
+echo "\nKarte einer alten Zoomstufe\n" . str_repeat( '-', 74 ) . "\n";
+// Ein Ausschnitt aus 2.2.0-Vorabstaenden hat Zoom-10-Kacheln: der naechste
+// Lauf loescht, was die neue Karte nicht mehr nutzt.
+$m3['map']['tiles'][] = [ 'file' => 'map/10-544-338.png', 'left' => 0, 'top' => 0, 'size' => 166.86 ];
+NAWS_Radar_Store::save_manifest( $key, $m3 );
+NAWS_Radar_Store::put( $key, 'map/10-544-338.png', 'x' );
+reset_http();
+NAWS_Radar::refresh( $key, $now + 2760 );
+$m4 = NAWS_Radar_Store::manifest( $key );
+check( 'alte Kachel geloescht',             NAWS_Radar_Store::has( $key, 'map/10-544-338.png' ), false );
+check( 'neue Kacheln bleiben',              NAWS_Radar_Store::has( $key, $m4['map']['tiles'][0]['file'] ), true );
+check( 'Karte bleibt 16 Kacheln',           count( $m4['map']['tiles'] ), 16 );
 
 echo "\nFehler\n" . str_repeat( '-', 74 ) . "\n";
 // Eine Vorschau noch nicht gerechnet: 200 mit XML statt PNG.
@@ -127,9 +140,9 @@ $GLOBALS['transients'] = [];
 $GLOBALS['http_routes']['https://maps.dwd.de/'] = png( 'dwd' );
 reset_http();
 check( 'zweiter Lauf klappt', NAWS_Radar::refresh( $k3, $now + 60 ), true );
-check( 'Karte einmal geholt (42 OSM-Abrufe)', calls_to( 'https://tile.openstreetmap.org/' ), 42 );
+check( 'Karte einmal geholt (12 OSM-Abrufe)', calls_to( 'https://tile.openstreetmap.org/' ), 12 );
 $b3 = NAWS_Radar_Geo::box( 48.14, 11.58, 150 );
-check( 'Manifest mit allen Kartenkacheln (Muenchen: 42)', [ count( NAWS_Radar_Store::manifest( $k3 )['map']['tiles'] ), count( NAWS_Radar_Geo::tiles( $b3, NAWS_Radar_Geo::zoom_for( $b3 ) ) ) ], [ 42, 42 ] );
+check( 'Manifest mit allen Kartenkacheln (Muenchen: 12)', [ count( NAWS_Radar_Store::manifest( $k3 )['map']['tiles'] ), count( NAWS_Radar_Geo::tiles( $b3, NAWS_Radar_Geo::map_zoom( $b3 ) ) ) ], [ 12, 12 ] );
 
 // 2) RainViewer: 2. Kachel eines Bildes liefert 429 -> keine Datei dieses Bildes bleibt.
 $GLOBALS['transients'] = [];
@@ -242,17 +255,17 @@ $GLOBALS['transients'] = [];
 $kc = NAWS_Radar_Store::key( 51.35, 12.37, 90, 'dwd' );
 NAWS_Radar_Store::remember( $kc, [ 'lat' => 51.35, 'lon' => 12.37, 'km' => 90, 'source' => 'dwd' ], $now );
 $bc   = NAWS_Radar_Geo::box( 51.35, 12.37, 90 );
-$need = count( NAWS_Radar_Geo::tiles( $bc, NAWS_Radar_Geo::zoom_for( $bc ) ) );
+$need = count( NAWS_Radar_Geo::tiles( $bc, NAWS_Radar_Geo::map_zoom( $bc ) ) );
 $GLOBALS['http_routes'] = [ 'https://maps.dwd.de/' => png( 'dwd' ), 'https://tile.openstreetmap.org/' => png( 'osm' ) ];
 reset_http();
-check( 'gedeckelt (40): Lauf klappt',       NAWS_Radar::refresh( $kc, $now, 40 ), true );
+check( 'gedeckelt (30): Lauf klappt',       NAWS_Radar::refresh( $kc, $now, 30 ), true );
 $cm = NAWS_Radar_Store::manifest( $kc );
-check( 'gedeckelt: 40 Abrufe, 13 Bilder, 27 Kartenkacheln', [ count( $GLOBALS['calls'] ), count( $cm['frames'] ), count( $cm['map']['tiles'] ) ], [ 40, 13, 27 ] );
+check( 'gedeckelt: 30 Abrufe, 13 Bilder, 17 Kartenkacheln', [ count( $GLOBALS['calls'] ), count( $cm['frames'] ), count( $cm['map']['tiles'] ) ], [ 30, 13, 17 ] );
 check( 'gedeckelt: keine Pause',            [ NAWS_Radar_Store::in_backoff( 'dwd' ), NAWS_Radar_Store::in_backoff( 'osm' ) ], [ false, false ] );
 reset_http();
 check( 'naechster Lauf klappt',             NAWS_Radar::refresh( $kc, $now + 60 ), true );
-check( 'Karte vollstaendig, nur der Rest geholt', [ count( NAWS_Radar_Store::manifest( $kc )['map']['tiles'] ), calls_to( 'https://tile.openstreetmap.org/' ) ], [ $need, $need - 27 ] );
-check( 'Bilder plus Karte gingen nicht in einen Lauf mit 40', 13 + $need > 40, true );
+check( 'Karte vollstaendig, nur der Rest geholt', [ count( NAWS_Radar_Store::manifest( $kc )['map']['tiles'] ), calls_to( 'https://tile.openstreetmap.org/' ) ], [ $need, $need - 17 ] );
+check( 'Bilder plus Karte gingen nicht in einen Lauf mit 30', 13 + $need > 30, true );
 check( 'Sperrdauer 10 min',                 NAWS_Radar_Store::LOCK_TTL, 600 );
 
 done();

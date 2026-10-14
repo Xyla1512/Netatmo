@@ -71,6 +71,19 @@ $xs = array_values( array_unique( array_column( $td, 'x' ) ) );
 check( 'Datumsgrenze: x laeuft 508..511, 0..3', $xs, [ 508, 509, 510, 511, 0, 1, 2, 3 ] );
 check( 'Datumsgrenze: deckt das Bild', covers( $td ), true );
 
+echo "\nmap_zoom(): Kartenschrift lesbar (Kachel ~300 px im Bild)\n" . str_repeat( '-', 74 ) . "\n";
+// OSM zeichnet die Schrift fuer 256 px; bei zoom_for() erschiene eine
+// Kachel oft nur mit 167 px. Eine Stufe groeber, wenn das naeher an 300 liegt.
+check( '150 km: Zoom 9 statt 10',       NAWS_Radar_Geo::map_zoom( $b ), 9 );
+$tm = NAWS_Radar_Geo::tiles( $b, 9 );
+check( '150 km: Kachel 333,72 px',      $tm[0]['size'], 333.72 );
+check( '150 km: 16 statt 49 Kacheln',   count( $tm ), 16 );
+check( '150 km: deckt das Bild',        covers( $tm ), true );
+check( '80 km: Zoom 10 statt 11',       NAWS_Radar_Geo::map_zoom( NAWS_Radar_Geo::box( 51.35, 12.37, 80 ) ), 10 );
+check( '50 km: bleibt 11 (250 px)',     NAWS_Radar_Geo::map_zoom( $b50 ), 11 );
+check( '220 km: bleibt 9',              NAWS_Radar_Geo::map_zoom( NAWS_Radar_Geo::box( 51.35, 12.37, 220 ) ), 9 );
+check( 'Zoom 0 bleibt 0',               NAWS_Radar_Geo::map_zoom( [ -8.1e7, -8.1e7, 8.1e7, 8.1e7 ] ), 0 );
+
 $rv = NAWS_Radar_Geo::tiles( $b, min( NAWS_Radar_Geo::zoom_for( $b ), NAWS_Radar_Geo::RV_MAX_ZOOM ) );
 check( 'RainViewer Leipzig: Zoom 7, 2 Kacheln', [ $rv[0]['z'], count( $rv ) ], [ 7, 2 ] );
 check( 'RainViewer: Kachel 68/42 zuerst', [ $rv[0]['x'], $rv[0]['y'] ], [ 68, 42 ] );

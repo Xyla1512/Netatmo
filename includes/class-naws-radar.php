@@ -139,6 +139,11 @@ class NAWS_Radar {
                 self::$put_failed = true;
                 return false;
             }
+            // Map tiles of another zoom (an earlier rule) are not used any more.
+            NAWS_Radar_Store::delete_files( $key, array_diff(
+                array_column( (array) ( $old['map']['tiles'] ?? [] ), 'file' ),
+                array_column( $new['map']['tiles'], 'file' )
+            ) );
             return true;
         } finally {
             if ( self::$put_failed ) {
@@ -153,7 +158,7 @@ class NAWS_Radar {
     private static function fetch_map( string $key, array $box ): array {
         $out = [];
         $ok  = ! NAWS_Radar_Store::in_backoff( 'osm' );
-        foreach ( NAWS_Radar_Geo::tiles( $box, NAWS_Radar_Geo::zoom_for( $box ) ) as $t ) {
+        foreach ( NAWS_Radar_Geo::tiles( $box, NAWS_Radar_Geo::map_zoom( $box ) ) as $t ) {
             $file  = sprintf( 'map/%d-%d-%d.png', $t['z'], $t['x'], $t['y'] );
             $entry = [
                 'file' => $file,

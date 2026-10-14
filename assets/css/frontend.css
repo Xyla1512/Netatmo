@@ -2094,7 +2094,7 @@
 .naws-radar-view { position: relative; height: var(--naws-radar-h, 420px); overflow: hidden; border-radius: 10px; background: var(--naws-radar-bar-bg, #f4fafa); }
 .naws-radar-stage { position: absolute; left: 50%; top: 50%; width: max(100%, var(--naws-radar-h, 420px)); aspect-ratio: 1 / 1; transform: translate(-50%, -50%); }
 .naws-radar-map, .naws-radar-layer, .naws-radar-frame { position: absolute; inset: 0; }
-.naws-radar-map { filter: grayscale(1) contrast(.85) brightness(1.1); opacity: .7; }
+.naws-radar-map { filter: grayscale(1) contrast(1.05); opacity: .85; }
 .naws-radar-layer { opacity: .85; }
 .naws-radar-frame { visibility: hidden; }
 .naws-radar-frame.is-on { visibility: visible; }

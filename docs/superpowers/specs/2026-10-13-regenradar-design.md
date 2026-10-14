@@ -41,7 +41,7 @@ Geprüft am 13.10. ohne Schlüssel: `maps.dwd.de/geoserver/dwd/wms` (Ebenen `dwd
 
 ## 3. Aussehen und Bedienung
 
-- Gedämpfte Karte (CSS-Filter, Graustufen + aufgehellt), darüber das Radar halbtransparent, Station als Punkt mit Hof.
+- Gedämpfte Karte (CSS-Filter, Graustufen; seit 14.10. kräftiger: `contrast(1.05)`, Deckkraft .85), darüber das Radar halbtransparent, Station als Punkt mit Hof.
 - Oben links die Uhrzeit groß; Vorschau-Bilder tragen „Vorschau“ in eigener Farbe.
 - Unten eine Leiste: Abspielen/Pause, Zeitregler (`<input type="range">`) mit Markierung „jetzt“. Pfeiltasten springen ein Bild, Touch-Ziehen geht.
 - Kleine Farblegende (leicht · mäßig · stark) passend zur Quelle; rechts unten die Quellenangabe (DWD bzw. „Weather data by RainViewer“, „© OpenStreetMap-Mitwirkende“).
@@ -57,7 +57,7 @@ Folgen: `width`/`height` erzeugen keine eigenen Bildsätze; nur `km` und Quelle 
 
 ## 5. Bausteine
 
-1. **`NAWS_Radar_Geo`** (rein, ohne Abrufe): Box aus Koordinaten + km, OSM-Zoomstufe (kleinste, bei der 1024 px mindestens erreicht werden, höchstens 12), benötigte Kacheln samt Pixelversatz, Stationsposition, RainViewer-Kacheln bei Zoom ≤ 7 mit Vergrößerungsfaktor. Behandelt die Datumsgrenze (Kachel-x modulo `2^z`).
+1. **`NAWS_Radar_Geo`** (rein, ohne Abrufe): Box aus Koordinaten + km, OSM-Zoomstufe (kleinste, bei der 1024 px mindestens erreicht werden, höchstens 12; **für die Karte seit 14.10. `map_zoom()`: eine Stufe gröber, wenn die Kachel dann näher an 300 px im Bild liegt — Frank: Städte waren unlesbar**), benötigte Kacheln samt Pixelversatz, Stationsposition, RainViewer-Kacheln bei Zoom ≤ 7 mit Vergrößerungsfaktor. Behandelt die Datumsgrenze (Kachel-x modulo `2^z`).
 2. **`NAWS_Radar_Source`**: `for_location(lat, lon, source)` → `dwd` oder `rainviewer` (Deutschland-Test über ein grobes Umriss-Polygon, nicht über Geocoding). Baut die Bildliste:
    - DWD: Zeiten auf 15 min gerastert ab dem letzten verfügbaren Zeitpunkt; 4 zurück + „jetzt“ aus `Niederschlagsradar`, 8 voraus aus `Radar_wn-product_1x1km_ger`; je ein WMS-`GetMap`-PNG genau für die Box.
    - RainViewer: `weather-maps.json` lesen, alle Bilder aus `radar.past` nehmen (10-min-Raster der Quelle, bis 2 h zurück, also bis 13 Bilder; ein 15-min-Raster passt auf deren Zeiten nicht), je Bild die Kacheln `256/{z}/{x}/{y}/2/1_1.png`.
