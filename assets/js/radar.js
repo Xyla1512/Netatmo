@@ -23,6 +23,12 @@
         /** Images this old are not shown any more (same rule as the server). */
         isStale: function (updated, nowSec) { return nowSec - updated > core.STALE; },
 
+        /**
+         * Images too old: the visit has just started a renewal, so ask again
+         * soon - unless it has failed POLL_TRIES times already.
+         */
+        goneWait: function (tries) { return tries < core.POLL_TRIES ? core.POLL_FIRST : core.POLL_EVERY; },
+
         /** Show "As of HH:MM" once the newest image is this old. */
         showAsOf: function (updated, nowSec) { return updated > 0 && nowSec - updated > core.AS_OF; },
 
@@ -210,10 +216,11 @@
                             data = d;
                             play(false);
                             build(d);
-                            poll(core.POLL_EVERY);
+                            poll(core.goneWait(++tries));
                         } else if (d && d.frames && d.frames.length && d.updated !== data.updated) {
                             var had = frames.length > 0, was = playing,
                                 oldFrames = frames, oldIdx = idx;
+                            tries = 0;
                             data = d;
                             play(false);
                             build(d);

@@ -25,6 +25,7 @@ console.log(JSON.stringify({
   brokenToEnd: c.stepOn(10, 13, { 11: true, 12: true }), first: c.stepOn(-1, 13, {}),
   firstBroken: c.stepOn(-1, 13, { 0: true }), zero: c.stepOn(-1, 0, {}),
   noAuto: typeof c.autoplay, noLoop: typeof c.nextOk,
+  goneSoon: c.goneWait(1), goneLate: c.goneWait(10),
   pct: c.pct(512), pctNeg: c.pct(-19.59),
   keepShift: c.keepIndex([{ t: 1 }, { t: 2 }, { t: 3 }], 1, [{ t: 0 }, { t: 1 }, { t: 2 }, { t: 3 }]),
   keepGone: c.keepIndex([{ t: 1 }, { t: 2 }], 1, [{ t: 5, forecast: false }, { t: 6, forecast: false }, { t: 7, forecast: true }]),
@@ -57,6 +58,9 @@ check( 'Start: erstes heiles Bild',      $r['firstBroken'], 1 );
 check( 'keine Bilder: Ende',             $r['zero'], -1 );
 check( 'kein Autoplay mehr',             $r['noAuto'], 'undefined' );
 check( 'keine Endlosschleife mehr',      $r['noLoop'], 'undefined' );
+// Zu alt beim Aufruf: die Erneuerung laeuft gerade, also bald wieder fragen.
+check( 'zu alt: nach 20 s erneut fragen', $r['goneSoon'], 20000 );
+check( 'zu alt, 10 Versuche: 15 min',     $r['goneLate'], 900000 );
 check( 'Prozent',                        $r['pct'], '50.0000%' );
 check( 'Prozent negativ',                $r['pctNeg'], '-1.9131%' );
 check( 'gleicher Zeitpunkt nach Verschiebung', $r['keepShift'], 2 );
