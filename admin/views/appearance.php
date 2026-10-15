@@ -94,13 +94,13 @@ $color_labels = [
     'radar_button'      => __( 'Play button', 'xtx-integration-for-netatmo' ),
     'radar_button_text' => __( 'Play button – symbol', 'xtx-integration-for-netatmo' ),
 
-    // Records and "on this day" (since 2.2.0)
+    // Records and "on this day" (since 2.1.3)
     'records_bg'      => __( 'Block background', 'xtx-integration-for-netatmo' ),
     'records_tile_bg' => __( 'Tile background', 'xtx-integration-for-netatmo' ),
     'records_value'   => __( 'Value', 'xtx-integration-for-netatmo' ),
     'records_label'   => __( 'Labels and dates', 'xtx-integration-for-netatmo' ),
 
-    // Expand button on the chart cards (since 2.2.0)
+    // Expand button on the chart cards (since 2.1.3)
     'chart_expand'            => __( 'Expand button – arrow and frame', 'xtx-integration-for-netatmo' ),
     'chart_expand_hover_bg'   => __( 'Expand button – background on hover', 'xtx-integration-for-netatmo' ),
     'chart_expand_hover_icon' => __( 'Expand button – arrow on hover', 'xtx-integration-for-netatmo' ),
@@ -766,7 +766,7 @@ $icon_color_keys = [
         </div>
 
         <!-- ============================================================
-             Tab 11: Rain radar (since 2.2.0)
+             Tab 11: Rain radar (since 2.1.3)
              ============================================================ -->
         <div class="naws-appearance-pane<?php echo esc_attr( $naws_pane_class( 'radar' ) ); ?>" data-pane="radar">
             <p class="description"><?php esc_html_e( 'Colours for [naws_radar]: the station dot, the time label with its forecast tag and the control bar below the map. The map itself is always grey so that the rain stands out; the rain colours are those of the radar service.', 'xtx-integration-for-netatmo' ); ?></p>
@@ -854,7 +854,7 @@ $icon_color_keys = [
         </div>
 
         <!-- ============================================================
-             Tab 12: Records (since 2.2.0)
+             Tab 12: Records (since 2.1.3)
              ============================================================ -->
         <div class="naws-appearance-pane<?php echo esc_attr( $naws_pane_class( 'records' ) ); ?>" data-pane="records">
             <p class="description"><?php esc_html_e( 'Colours for [naws_records] and [naws_on_this_day]. A field left empty follows the base theme: the block takes Card Background, the tiles and the record cells take Alternate Background.', 'xtx-integration-for-netatmo' ); ?></p>

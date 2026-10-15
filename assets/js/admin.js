@@ -98,7 +98,7 @@
             });
         });
 
-        // Settings → Rain radar → Clear storage (since 2.2.0).
+        // Settings → Rain radar → Clear storage (since 2.1.3).
         $(document).on('click', '#naws-radar-clear', function() {
             if (!confirm(nawsAdmin.strings.radar_clear_confirm)) return;
             const btn    = $(this);

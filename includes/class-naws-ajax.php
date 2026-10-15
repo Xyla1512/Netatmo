@@ -471,7 +471,7 @@ class NAWS_Ajax {
         wp_send_json_success( [ 'deleted' => $deleted ] );
     }
 
-    /** Settings → Rain radar → "Clear storage" (since 2.2.0). */
+    /** Settings → Rain radar → "Clear storage" (since 2.1.3). */
     public function radar_clear() {
         check_ajax_referer( 'naws_admin_nonce', 'nonce' );
         if ( ! current_user_can( 'manage_options' ) ) {

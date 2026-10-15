@@ -1,0 +1,174 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "%1$d km, %2$s, last shown %3$s, %4$s"
+msgstr "%1$d km, %2$s, zuletzt gezeigt %3$s, %4$s"
+
+msgid "Allow rain radar"
+msgstr "Regenradar erlauben"
+
+msgid "Animated rain radar around the station: in Germany the Deutscher Wetterdienst with the last hour and a two-hour nowcast, elsewhere RainViewer with the last two hours. Your server fetches the images and your site serves them — visitors never contact a weather service. Switch it on under Settings → Rain radar."
+msgstr "Animiertes Regenradar um die Station: in Deutschland vom Deutschen Wetterdienst mit der letzten Stunde und einer Zwei-Stunden-Vorhersage, anderswo von RainViewer mit den letzten zwei Stunden. Dein Server holt die Bilder, deine Website liefert sie aus – Besucher sprechen nie mit einem Wetterdienst. Schalte es unter Einstellungen → Regenradar ein."
+
+msgid "As of %s"
+msgstr "Stand %s"
+
+msgid "Block background"
+msgstr "Hintergrund des Blocks"
+
+msgid "Clear storage"
+msgstr "Zwischenspeicher leeren"
+
+msgid "Colours for [naws_radar]: the station dot, the time label with its forecast tag and the control bar below the map. The map itself is always grey so that the rain stands out; the rain colours are those of the radar service."
+msgstr "Farben für [naws_radar]: der Stationspunkt, das Zeitschild mit seiner Vorhersage-Marke und die Bedienleiste unter der Karte. Die Karte selbst ist immer grau, damit der Regen hervortritt; die Regenfarben sind die des Radardienstes."
+
+msgid "Colours for [naws_records] and [naws_on_this_day]. A field left empty follows the base theme: the block takes Card Background, the tiles and the record cells take Alternate Background."
+msgstr "Farben für [naws_records] und [naws_on_this_day]. Ein leeres Feld folgt dem Basis-Theme: Der Block nimmt den Karten-Hintergrund, die Kacheln und die Rekordzellen den alternativen Hintergrund."
+
+msgid "Control bar – background"
+msgstr "Bedienleiste – Hintergrund"
+
+msgid "Delete all stored rain radar images and map tiles? They are fetched again the next time a page shows the radar."
+msgstr "Alle gespeicherten Regenradar-Bilder und Kartenkacheln löschen? Sie werden beim nächsten Aufruf einer Seite mit dem Radar neu geholt."
+
+msgid "Every renewal deletes the old images; a radar no page has shown for 7 days is deleted with its map."
+msgstr "Jede Erneuerung löscht die alten Bilder; ein Radar, das 7 Tage keine Seite gezeigt hat, wird samt Karte gelöscht."
+
+msgid "Expand button – arrow and frame"
+msgstr "Vergrößern-Knopf – Pfeil und Rahmen"
+
+msgid "Expand button – arrow on hover"
+msgstr "Vergrößern-Knopf – Pfeil beim Überfahren"
+
+msgid "Expand button – background on hover"
+msgstr "Vergrößern-Knopf – Hintergrund beim Überfahren"
+
+msgid "Expand button — at rest and on hover"
+msgstr "Vergrößern-Knopf — in Ruhe und beim Überfahren"
+
+msgid "Forecast tag"
+msgstr "Vorhersage-Marke"
+
+msgid "Height in px (200–1200)"
+msgstr "Höhe in px (200–1200)"
+
+msgid "If the rain radar is switched on, this website fetches radar images from the Deutscher Wetterdienst (maps.dwd.de) or RainViewer (rainviewer.com) and map tiles from OpenStreetMap (tile.openstreetmap.org) and stores them on its own server. Only the map section around the weather station and the time are sent. Visitors' browsers load the images from this website only; no visitor data, IP address or cookie reaches these services."
+msgstr "Ist das Regenradar eingeschaltet, holt diese Website Radarbilder vom Deutschen Wetterdienst (maps.dwd.de) oder von RainViewer (rainviewer.com) und Kartenkacheln von OpenStreetMap (tile.openstreetmap.org) und speichert sie auf dem eigenen Server. Gesendet werden nur der Kartenausschnitt um die Wetterstation und die Uhrzeit. Die Browser der Besucher laden die Bilder nur von dieser Website; keine Besucherdaten, keine IP-Adresse und kein Cookie erreichen diese Dienste."
+
+msgid "Labels and dates"
+msgstr "Beschriftungen und Daten"
+
+msgid "Live preview — rain radar"
+msgstr "Live-Vorschau — Regenradar"
+
+msgid "Live preview — records"
+msgstr "Live-Vorschau — Rekorde"
+
+msgid "Map: © %s contributors"
+msgstr "Karte: © %s-Mitwirkende"
+
+msgid "None yet."
+msgstr "Noch keine."
+
+msgid "Play button"
+msgstr "Abspielknopf"
+
+msgid "Play button – symbol"
+msgstr "Abspielknopf – Symbol"
+
+msgid "Play or pause the rain radar"
+msgstr "Regenradar abspielen oder anhalten"
+
+msgid "Radar: %s"
+msgstr "Radar: %s"
+
+msgid "Rain radar"
+msgstr "Regenradar"
+
+msgid "Rain radar around %s"
+msgstr "Regenradar um %s"
+
+msgid "Rain radar frames of a [naws_radar] on this site (public, no key; used by the radar player)."
+msgstr "Regenradar-Bilder eines [naws_radar] auf dieser Website (öffentlich, ohne Schlüssel; wird vom Radar-Player genutzt)."
+
+msgid "Rain radar storage cleared."
+msgstr "Regenradar-Zwischenspeicher geleert."
+
+msgid "Show [naws_radar] and fetch its images"
+msgstr "[naws_radar] anzeigen und seine Bilder holen"
+
+msgid "Station dot"
+msgstr "Stationspunkt"
+
+msgid "Stored radars"
+msgstr "Gespeicherte Radare"
+
+msgid "The rain radar is being prepared. It will appear in a moment."
+msgstr "Das Regenradar wird vorbereitet. Es erscheint gleich."
+
+msgid "The rain radar is switched off. Admins can switch it on under Settings → Rain radar. Only you see this note."
+msgstr "Das Regenradar ist ausgeschaltet. Administratoren können es unter Einstellungen → Regenradar einschalten. Nur du siehst diesen Hinweis."
+
+msgid "The rain radar is temporarily unavailable."
+msgstr "Das Regenradar ist vorübergehend nicht verfügbar."
+
+msgid "The rain radar needs the station coordinates or a forecast location. Only you see this note."
+msgstr "Das Regenradar braucht die Stationskoordinaten oder einen Vorhersageort. Nur du siehst diesen Hinweis."
+
+msgid "The uploads folder is not writable, so the rain radar cannot store images."
+msgstr "Der Uploads-Ordner ist nicht beschreibbar, deshalb kann das Regenradar keine Bilder speichern."
+
+msgid "Tile background"
+msgstr "Hintergrund der Kacheln"
+
+msgid "Time label – background"
+msgstr "Zeitschild – Hintergrund"
+
+msgid "Time label – text"
+msgstr "Zeitschild – Text"
+
+msgid "Time of the radar image"
+msgstr "Zeitpunkt des Radarbilds"
+
+msgid "When on, this server fetches radar images from the Deutscher Wetterdienst (in Germany) or RainViewer (elsewhere) at most every 15 minutes, and map tiles from OpenStreetMap once per map section – only after a page showed the radar. Visitors load the images from this site only. Switching off deletes the stored images."
+msgstr "Ist es an, holt dieser Server Radarbilder vom Deutschen Wetterdienst (in Deutschland) oder von RainViewer (anderswo) höchstens alle 15 Minuten und Kartenkacheln von OpenStreetMap einmal je Kartenausschnitt – und nur, nachdem eine Seite das Radar gezeigt hat. Besucher laden die Bilder nur von dieser Website. Beim Ausschalten werden die gespeicherten Bilder gelöscht."
+
+msgid "Width of the map section in km (DWD 50–600, RainViewer 150–1500). Applies to the longer side of the frame."
+msgstr "Breite des Kartenausschnitts in km (DWD 50–600, RainViewer 150–1500). Gilt für die längere Seite des Rahmens."
+
+msgid "Width on the page, in px or %"
+msgstr "Breite auf der Seite, in px oder %"
+
+msgid "Zoom in on the rain radar"
+msgstr "Regenradar vergrößern"
+
+msgid "Zoom out of the rain radar"
+msgstr "Regenradar verkleinern"
+
+msgid "a lower frame, closer around the station"
+msgstr "ein niedrigerer Rahmen, näher um die Station"
+
+msgid "auto (DWD in Germany, RainViewer elsewhere), dwd or rainviewer"
+msgstr "auto (DWD in Deutschland, sonst RainViewer), dwd oder rainviewer"
+
+msgctxt "rain intensity"
+msgid "heavy"
+msgstr "stark"
+
+msgctxt "rain intensity"
+msgid "light"
+msgstr "leicht"
+
+msgctxt "rain intensity"
+msgid "moderate"
+msgstr "mäßig"
+
+msgctxt "rain radar frame"
+msgid "Forecast"
+msgstr "Vorschau"

@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 2.1.2
+Stable tag: 2.1.3
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -123,6 +123,12 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 
 == Changelog ==
 
+= 2.1.3 =
+* Added: `[naws_radar]` — an animated rain radar around the station: Deutscher Wetterdienst in Germany (the last hour plus a two-hour nowcast), RainViewer elsewhere, on a grey OpenStreetMap map. Play runs through the images once; + and − zoom in around the station, and the enlarged map can be dragged. Your server fetches and stores the images, so visitors never contact a weather service. Nothing is fetched until "Allow rain radar" is switched on under Settings › Rain radar; colours on a new Appearance tab, Rain radar.
+* Added: a new Appearance tab, Records — block background, tile background, value and labels of `[naws_records]` and `[naws_on_this_day]`; an empty field follows the base theme. Under Chart Theming three colours for the expand button of the live and history charts.
+* Fix: records, "on this day" and the sun path ignored the base theme; their background stayed white whatever was set.
+* Fix: the expand button of the charts could turn red after a click under themes such as Hello Elementor.
+
 = 2.1.2 =
 * Fix: the forecast showed "Open-Meteo API HTTP 429". Open-Meteo limits its free API per IP address, and the plugin asked again on every page view after a failure, which kept the address above the limit. A failed request now pauses the provider (after a 429 as long as Open-Meteo asks, otherwise 15 minutes; 5 minutes after other errors), the last good forecast stays on the page for up to 24 hours, and visitors read a plain sentence instead of an HTTP code. Yr.no and the place search of the manual location mode are covered as well.
 * Fix: the 29th of February drew two almost flat lines across the daily charts of `[naws_history]` in a leap year. The day was placed after the 31st of December; the axis has 366 days now.
@@ -148,23 +154,18 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 * Fix: the wind rose said "no wind readings" for a period that had readings — all of them calm. It now says "Calm the whole time: 20 readings, all below 1 km/h."
 * Fix: the translators comments never reached the catalogues; the extractor looked for them inside the call's parentheses, where WordPress convention never puts them. The `.pot` and both `.po` files carry them now.
 
-= 2.0.1 =
-* Fix: the 24-hour rain in the dashboard's rain card was far too low. The card sums the plugin's own `Rain` readings over the last 24 hours, because Netatmo's `sum_rain_24` resets at midnight and the card promises a rolling day. But the rain gauge reports every five minutes, each report carrying the rain of those five minutes, and getstationsdata shows only the newest report — so a fetch every ten minutes stored one report in two, and the card showed 1.6 mm on a day with 3.9 mm; a fetch every 30 or 60 minutes lost even more. After every fetch the plugin now asks getmeasure for the five-minute reports since the last one it has and stores them under their own timestamps; the first fetch after the update closes the last 24 hours in one call. A dry hour needs no extra call. The daily, monthly and yearly sums were never affected — they come from Netatmo's own daily counter. The rain rule of the e-mail notifications, which uses the same rolling sum, is corrected along with the card.
-* Changed: `[naws_live]` no longer carries a forecast strip of its own. The dashboard fetched the forecast itself and rendered a copy of the day cards that `[naws_forecast]` shows, and on a page carrying both shortcodes the forecast appeared twice. Whoever wants the forecast under the dashboard places `[naws_forecast]` below it — same cards, same settings. The "forecast days" setting now describes itself as the default for `[naws_forecast]`.
-* Changed: the heatmap builds up when it comes into view, not when the page loads. On a page where `[naws_heatmap]` sits below the fold the wave of tiles was over before anyone scrolled to it. The tiles now stay hidden until the top edge of the map reaches the middle of the screen — or until the page is scrolled to its end, for a map near the bottom of a short page; then the wave runs once. Visitors who ask for reduced motion, and print, get the map at once; without JavaScript nothing is hidden.
-
 Older versions: the complete changelog since 1.0.0 is kept in [CHANGELOG.md](https://github.com/Xyla1512/Netatmo/blob/main/CHANGELOG.md) on GitHub.
 
 == Upgrade Notice ==
+
+= 2.1.3 =
+New: [naws_radar], an animated rain radar around the station — switch it on under Settings › Rain radar. New colours for records and the chart expand button. Fix: records, "on this day" and the sun path follow the base theme.
 
 = 2.1.2 =
 Fix: no more "HTTP 429" from Open-Meteo in the forecast — a failed request pauses the provider and the last good forecast stays on the page. Fix: no lines across the history charts on the 29th of February. Nothing to reconfigure.
 
 = 2.1.1 =
 New: a Signal column on the Modules page shows the Wi-Fi of the base station and the radio link of every module. Fix: the forecast uses the decimal comma on German pages. Nothing to reconfigure.
-
-= 2.1.0 =
-New: sparklines — [naws_sparkline] inline, as a card or a month block, [naws_sparkline_tiles], and optional curves in the sidebar widget. Forecast colours on their own Appearance tab. Fix: decimal commas on German pages, charts included; the heatmap leaves today empty.
 
 == Privacy & External Services ==
 

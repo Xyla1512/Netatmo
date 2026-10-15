@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * the station sits in its centre.
  *
  * @package NAWS
- * @since   2.2.0
+ * @since   2.1.3
  */
 class NAWS_Radar_Geo {
 

@@ -62,7 +62,7 @@ check( 'keine verwaiste Datei', count( array_diff(
 ) ), 0 );
 
 echo "\nKarte einer alten Zoomstufe\n" . str_repeat( '-', 74 ) . "\n";
-// Ein Ausschnitt aus 2.2.0-Vorabstaenden hat Zoom-10-Kacheln: der naechste
+// Ein Ausschnitt aus 2.1.3-Vorabstaenden hat Zoom-10-Kacheln: der naechste
 // Lauf loescht, was die neue Karte nicht mehr nutzt.
 $m3['map']['tiles'][] = [ 'file' => 'map/11-1-1.png', 'left' => 0, 'top' => 0, 'size' => 166.86 ];
 NAWS_Radar_Store::save_manifest( $key, $m3 );

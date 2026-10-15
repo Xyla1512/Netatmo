@@ -1,0 +1,174 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo\n"
+"Language: nb_NO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "%1$d km, %2$s, last shown %3$s, %4$s"
+msgstr "%1$d km, %2$s, sist vist %3$s, %4$s"
+
+msgid "Allow rain radar"
+msgstr "Tillat nedbørsradar"
+
+msgid "Animated rain radar around the station: in Germany the Deutscher Wetterdienst with the last hour and a two-hour nowcast, elsewhere RainViewer with the last two hours. Your server fetches the images and your site serves them — visitors never contact a weather service. Switch it on under Settings → Rain radar."
+msgstr "Animert nedbørsradar rundt stasjonen: i Tyskland fra Deutscher Wetterdienst med den siste timen og en totimers prognose, ellers fra RainViewer med de to siste timene. Serveren din henter bildene og nettstedet ditt leverer dem – besøkende kontakter aldri en værtjeneste. Slå det på under Innstillinger → Nedbørsradar."
+
+msgid "As of %s"
+msgstr "Per %s"
+
+msgid "Block background"
+msgstr "Bakgrunn for blokken"
+
+msgid "Clear storage"
+msgstr "Tøm mellomlager"
+
+msgid "Colours for [naws_radar]: the station dot, the time label with its forecast tag and the control bar below the map. The map itself is always grey so that the rain stands out; the rain colours are those of the radar service."
+msgstr "Farger for [naws_radar]: stasjonspunktet, tidsmerket med prognosemerket og kontrollfeltet under kartet. Selve kartet er alltid grått slik at regnet trer fram; regnfargene er radartjenestens egne."
+
+msgid "Colours for [naws_records] and [naws_on_this_day]. A field left empty follows the base theme: the block takes Card Background, the tiles and the record cells take Alternate Background."
+msgstr "Farger for [naws_records] og [naws_on_this_day]. Et tomt felt følger basistemaet: blokken får kortbakgrunnen, flisene og rekordcellene får den alternative bakgrunnen."
+
+msgid "Control bar – background"
+msgstr "Kontrollfelt – bakgrunn"
+
+msgid "Delete all stored rain radar images and map tiles? They are fetched again the next time a page shows the radar."
+msgstr "Slette alle lagrede nedbørsradarbilder og kartfliser? De hentes på nytt neste gang en side viser radaren."
+
+msgid "Every renewal deletes the old images; a radar no page has shown for 7 days is deleted with its map."
+msgstr "Hver fornyelse sletter de gamle bildene; en radar som ingen side har vist på 7 dager, slettes sammen med kartet."
+
+msgid "Expand button – arrow and frame"
+msgstr "Forstørr-knapp – pil og ramme"
+
+msgid "Expand button – arrow on hover"
+msgstr "Forstørr-knapp – pil ved peking"
+
+msgid "Expand button – background on hover"
+msgstr "Forstørr-knapp – bakgrunn ved peking"
+
+msgid "Expand button — at rest and on hover"
+msgstr "Forstørr-knapp — i ro og ved peking"
+
+msgid "Forecast tag"
+msgstr "Prognosemerke"
+
+msgid "Height in px (200–1200)"
+msgstr "Høyde i px (200–1200)"
+
+msgid "If the rain radar is switched on, this website fetches radar images from the Deutscher Wetterdienst (maps.dwd.de) or RainViewer (rainviewer.com) and map tiles from OpenStreetMap (tile.openstreetmap.org) and stores them on its own server. Only the map section around the weather station and the time are sent. Visitors' browsers load the images from this website only; no visitor data, IP address or cookie reaches these services."
+msgstr "Når nedbørsradaren er slått på, henter dette nettstedet radarbilder fra Deutscher Wetterdienst (maps.dwd.de) eller RainViewer (rainviewer.com) og kartfliser fra OpenStreetMap (tile.openstreetmap.org) og lagrer dem på sin egen server. Bare kartutsnittet rundt værstasjonen og tidspunktet sendes. De besøkendes nettlesere laster bildene bare fra dette nettstedet; ingen besøksdata, IP-adresse eller informasjonskapsler når disse tjenestene."
+
+msgid "Labels and dates"
+msgstr "Etiketter og datoer"
+
+msgid "Live preview — rain radar"
+msgstr "Forhåndsvisning — nedbørsradar"
+
+msgid "Live preview — records"
+msgstr "Forhåndsvisning — rekorder"
+
+msgid "Map: © %s contributors"
+msgstr "Kart: © %s-bidragsytere"
+
+msgid "None yet."
+msgstr "Ingen ennå."
+
+msgid "Play button"
+msgstr "Avspillingsknapp"
+
+msgid "Play button – symbol"
+msgstr "Avspillingsknapp – symbol"
+
+msgid "Play or pause the rain radar"
+msgstr "Spill av eller pause nedbørsradaren"
+
+msgid "Radar: %s"
+msgstr "Radar: %s"
+
+msgid "Rain radar"
+msgstr "Nedbørsradar"
+
+msgid "Rain radar around %s"
+msgstr "Nedbørsradar rundt %s"
+
+msgid "Rain radar frames of a [naws_radar] on this site (public, no key; used by the radar player)."
+msgstr "Nedbørsradarbilder fra en [naws_radar] på dette nettstedet (offentlig, uten nøkkel; brukes av radarspilleren)."
+
+msgid "Rain radar storage cleared."
+msgstr "Mellomlageret for nedbørsradaren er tømt."
+
+msgid "Show [naws_radar] and fetch its images"
+msgstr "Vis [naws_radar] og hent bildene"
+
+msgid "Station dot"
+msgstr "Stasjonspunkt"
+
+msgid "Stored radars"
+msgstr "Lagrede radarer"
+
+msgid "The rain radar is being prepared. It will appear in a moment."
+msgstr "Nedbørsradaren forberedes. Den vises om et øyeblikk."
+
+msgid "The rain radar is switched off. Admins can switch it on under Settings → Rain radar. Only you see this note."
+msgstr "Nedbørsradaren er slått av. Administratorer kan slå den på under Innstillinger → Nedbørsradar. Bare du ser dette notatet."
+
+msgid "The rain radar is temporarily unavailable."
+msgstr "Nedbørsradaren er midlertidig utilgjengelig."
+
+msgid "The rain radar needs the station coordinates or a forecast location. Only you see this note."
+msgstr "Nedbørsradaren trenger stasjonens koordinater eller et varselsted. Bare du ser dette notatet."
+
+msgid "The uploads folder is not writable, so the rain radar cannot store images."
+msgstr "Opplastingsmappen er ikke skrivbar, så nedbørsradaren kan ikke lagre bilder."
+
+msgid "Tile background"
+msgstr "Bakgrunn for flisene"
+
+msgid "Time label – background"
+msgstr "Tidsmerke – bakgrunn"
+
+msgid "Time label – text"
+msgstr "Tidsmerke – tekst"
+
+msgid "Time of the radar image"
+msgstr "Tidspunkt for radarbildet"
+
+msgid "When on, this server fetches radar images from the Deutscher Wetterdienst (in Germany) or RainViewer (elsewhere) at most every 15 minutes, and map tiles from OpenStreetMap once per map section – only after a page showed the radar. Visitors load the images from this site only. Switching off deletes the stored images."
+msgstr "Når det er slått på, henter denne serveren radarbilder fra Deutscher Wetterdienst (i Tyskland) eller RainViewer (ellers) høyst hvert 15. minutt, og kartfliser fra OpenStreetMap én gang per kartutsnitt – og bare etter at en side har vist radaren. Besøkende laster bildene bare fra dette nettstedet. Når det slås av, slettes de lagrede bildene."
+
+msgid "Width of the map section in km (DWD 50–600, RainViewer 150–1500). Applies to the longer side of the frame."
+msgstr "Bredden på kartutsnittet i km (DWD 50–600, RainViewer 150–1500). Gjelder rammens lengste side."
+
+msgid "Width on the page, in px or %"
+msgstr "Bredde på siden, i px eller %"
+
+msgid "Zoom in on the rain radar"
+msgstr "Zoom inn på nedbørsradaren"
+
+msgid "Zoom out of the rain radar"
+msgstr "Zoom ut på nedbørsradaren"
+
+msgid "a lower frame, closer around the station"
+msgstr "en lavere ramme, nærmere rundt stasjonen"
+
+msgid "auto (DWD in Germany, RainViewer elsewhere), dwd or rainviewer"
+msgstr "auto (DWD i Tyskland, ellers RainViewer), dwd eller rainviewer"
+
+msgctxt "rain intensity"
+msgid "heavy"
+msgstr "kraftig"
+
+msgctxt "rain intensity"
+msgid "light"
+msgstr "lett"
+
+msgctxt "rain intensity"
+msgid "moderate"
+msgstr "moderat"
+
+msgctxt "rain radar frame"
+msgid "Forecast"
+msgstr "Prognose"

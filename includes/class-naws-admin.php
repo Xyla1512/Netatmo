@@ -195,7 +195,7 @@ class NAWS_Admin {
             $clean['wgt_sparklines'] = empty( $input['wgt_sparklines'] ) ? 0 : 1;
         }
 
-        // Rain radar (since 2.2.0): a hidden-zero checkbox. Off means no
+        // Rain radar (since 2.1.3): a hidden-zero checkbox. Off means no
         // request to DWD, RainViewer or OpenStreetMap at all.
         if ( $sent( 'radar_enabled' ) ) {
             $clean['radar_enabled'] = empty( $input['radar_enabled'] ) ? 0 : 1;

@@ -12,7 +12,7 @@
  * @var bool   $naws_rd_asof   show "As of" (newest image older than NAWS_Radar::AS_OF)
  *
  * @package NAWS
- * @since   2.2.0
+ * @since   2.1.3
  */
 if ( ! defined( 'ABSPATH' ) ) exit;
 

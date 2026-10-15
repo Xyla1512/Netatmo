@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * every image. Requests are made by NAWS_Radar, not here.
  *
  * @package NAWS
- * @since   2.2.0
+ * @since   2.1.3
  */
 class NAWS_Radar_Source {
 

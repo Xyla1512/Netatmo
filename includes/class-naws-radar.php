@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * uploads/naws-radar/. Nothing goes out unless "Allow rain radar" is on.
  *
  * @package NAWS
- * @since   2.2.0
+ * @since   2.1.3
  */
 class NAWS_Radar {
 

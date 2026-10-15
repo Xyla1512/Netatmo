@@ -367,7 +367,7 @@ function naws_label( string $key ): string {
         case 'ntf_test_intro':                     return /* translators: %s: the site name */ __( 'This mail was sent by hand from %s to check the delivery.', 'xtx-integration-for-netatmo' );
         case 'ntf_test_rules':                     return __( 'Rules switched on:', 'xtx-integration-for-netatmo' );
         case 'ntf_test_none':                      return __( '(none)', 'xtx-integration-for-netatmo' );
-        // ── [naws_radar] (since 2.2.0) ─────────────────────────────────
+        // ── [naws_radar] (since 2.1.3) ─────────────────────────────────
         case 'rd_aria':
             /* translators: %s: name of the place the radar is centred on */
             return __( 'Rain radar around %s', 'xtx-integration-for-netatmo' );

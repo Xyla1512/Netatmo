@@ -688,7 +688,7 @@ class NAWS_Shortcodes {
     }
 
     // [naws_radar width="100%" height="420" km="150" source="auto"]
-    // Animated rain radar around the station, since 2.2.0. Images come from
+    // Animated rain radar around the station, since 2.1.3. Images come from
     // this site only; see NAWS_Radar.
     public function sc_radar( $atts ) {
         $atts = shortcode_atts(

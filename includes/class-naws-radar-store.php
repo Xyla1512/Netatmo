@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * All file access goes through WP_Filesystem.
  *
  * @package NAWS
- * @since   2.2.0
+ * @since   2.1.3
  */
 class NAWS_Radar_Store {
 

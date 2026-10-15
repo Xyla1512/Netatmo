@@ -129,7 +129,7 @@ class NAWS_Colors {
         'chart_tooltip_text'      => '#ffffff',
         'chart_axis_title'        => '#a0b8b8',
         // The expand button on the cards of [naws_live] and [naws_history]
-        // (since 2.2.0): arrow (its frame is the arrow, lightly mixed), and
+        // (since 2.1.3): arrow (its frame is the arrow, lightly mixed), and
         // background and arrow on hover. One set for both blocks; the live
         // card used to hover in theme_text, the history card in #2d5252.
         'chart_expand'            => '#7aa0a0',
@@ -234,7 +234,7 @@ class NAWS_Colors {
         'forecast_today_bar'    => '#3d9e74',
         'forecast_today_border' => '#427272',
         'forecast_today_day'    => '#3d9e74',
-        // [naws_radar] (since 2.2.0)
+        // [naws_radar] (since 2.1.3)
         'radar_station'     => '#c0392b',
         'radar_time_bg'     => '#2d5252',
         'radar_time_text'   => '#ffffff',
@@ -242,7 +242,7 @@ class NAWS_Colors {
         'radar_bar_bg'      => '#f4fafa',
         'radar_button'      => '#427272',
         'radar_button_text' => '#ffffff',
-        // [naws_records] and [naws_on_this_day] (since 2.2.0). Empty means
+        // [naws_records] and [naws_on_this_day] (since 2.1.3). Empty means
         // the base theme: block = theme_surface, tile = theme_surface_alt,
         // value = theme_text_darkest, labels = theme_text_muted.
         'records_bg'      => '',
@@ -478,7 +478,7 @@ class NAWS_Colors {
         }
         $css .= "}\n";
 
-        // [naws_radar] (since 2.2.0): radar_time_bg -> --naws-radar-time-bg.
+        // [naws_radar] (since 2.1.3): radar_time_bg -> --naws-radar-time-bg.
         $css .= ".naws-radar {\n";
         foreach ( self::RADAR_KEYS as $key ) {
             $css .= '  --naws-radar-' . str_replace( '_', '-', substr( $key, 6 ) ) . ": {$c[ $key ]};\n";
@@ -487,7 +487,7 @@ class NAWS_Colors {
 
         // [naws_records], [naws_on_this_day] and [naws_sunpath] stand on
         // their own like the forecast and never saw the base theme: their
-        // background stayed the fallback #fff whatever was set (2.2.0).
+        // background stayed the fallback #fff whatever was set (2.1.3).
         $css .= ".naws-rec, .naws-otd, .naws-sun {\n";
         foreach ( [ 'surface' => 'theme_surface', 'surface-2' => 'theme_surface_alt', 'border' => 'theme_border', 'text' => 'theme_text', 'text-dark' => 'theme_text_dark', 'text-darkest' => 'theme_text_darkest', 'text-muted' => 'theme_text_muted', 'text-light' => 'theme_text_light' ] as $var => $key ) {
             $css .= "  --naws-{$var}: {$c[ $key ]};\n";
@@ -506,7 +506,7 @@ class NAWS_Colors {
             $css .= ".naws-rec, .naws-otd {\n{$rec}}\n";
         }
 
-        // The expand button of the live and the history cards (2.2.0):
+        // The expand button of the live and the history cards (2.1.3):
         // chart_expand_hover_bg -> --naws-expand-hover-bg.
         $css .= ".naws-wx, .naws-hist {\n";
         foreach ( self::EXPAND_KEYS as $key ) {
@@ -651,13 +651,13 @@ class NAWS_Colors {
         'forecast_bar', 'forecast_today_bar', 'forecast_today_border', 'forecast_today_day',
     ];
 
-    /** [naws_radar]: station dot, time label, forecast tag, control bar (since 2.2.0). */
+    /** [naws_radar]: station dot, time label, forecast tag, control bar (since 2.1.3). */
     const RADAR_KEYS = [ 'radar_station', 'radar_time_bg', 'radar_time_text', 'radar_forecast', 'radar_bar_bg', 'radar_button', 'radar_button_text' ];
 
-    /** [naws_records] and [naws_on_this_day]: block, tile, value, labels; empty = base theme (since 2.2.0). */
+    /** [naws_records] and [naws_on_this_day]: block, tile, value, labels; empty = base theme (since 2.1.3). */
     const RECORDS_KEYS = [ 'records_bg', 'records_tile_bg', 'records_value', 'records_label' ];
 
-    /** The expand button of the live and the history cards (since 2.2.0). */
+    /** The expand button of the live and the history cards (since 2.1.3). */
     const EXPAND_KEYS = [ 'chart_expand', 'chart_expand_hover_bg', 'chart_expand_hover_icon' ];
 
     /**

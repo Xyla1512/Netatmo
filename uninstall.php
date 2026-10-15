@@ -3,11 +3,11 @@
  * Runs when the plugin is deleted in WordPress (not on deactivation).
  *
  * Removes only what the rain radar stored: its folder in uploads and its
- * options. Weather data and every other setting stay, as before 2.2.0 -
+ * options. Weather data and every other setting stay, as before 2.1.3 -
  * deleting them is a decision the plugin does not make for the user.
  *
  * @package NAWS
- * @since   2.2.0
+ * @since   2.1.3
  */
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
     exit;
