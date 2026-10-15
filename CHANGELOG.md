@@ -6,6 +6,12 @@ All notable changes to the XTX Netatmo plugin are documented here.
 
 ### Added
 - **`[naws_radar]`: animated rain radar around the station.** In Germany the images come from the Deutscher Wetterdienst (the last hour plus a two-hour nowcast), elsewhere from RainViewer (the last two hours), on a grey OpenStreetMap map. It starts on the current image; the Play button runs through the images once. The + / − buttons zoom in around the station (with a finer map once it is enlarged) and the zoomed map can be dragged; on narrow screens it starts zoomed in so that town names stay readable. Your server fetches the images and your site serves them, so visitors never contact a weather service; nothing is fetched until "Allow rain radar" is switched on under Settings → Rain radar, a button there clears the stored images, and images no longer used are deleted after seven days; images replaced by a renewal go at the latest with the daily clean-up.
+- **Appearance → Records: colours for `[naws_records]` and `[naws_on_this_day]`.** Block background, tile background, value, and labels and dates, with a live preview. A field left empty follows the base theme.
+- **Colours for the expand button of the charts.** Under Appearance → Chart Theming: arrow and frame, background on hover, arrow on hover. One set for the cards of `[naws_live]` and `[naws_history]`, with a preview.
+
+### Fixed
+- **Records, "on this day" and the sun path ignored the base theme.** The three blocks sit outside the plugin's main wrapper and never received the colours from Appearance → Base Theme; their background stayed white whatever was set. They now follow the base theme like the other blocks.
+- **The expand button of the charts could turn red after a click.** It had no focus rule, so the button reset of themes such as Hello Elementor painted it while it kept the focus. Both expand buttons, live and history, now have their own hover and focus rules and share one hover colour (before, the live button hovered in the text colour, the history button in #2d5252).
 
 ## [2.1.2]
 

@@ -128,6 +128,13 @@ class NAWS_Colors {
         'chart_tooltip_title'     => '#a0c8c8',
         'chart_tooltip_text'      => '#ffffff',
         'chart_axis_title'        => '#a0b8b8',
+        // The expand button on the cards of [naws_live] and [naws_history]
+        // (since 2.2.0): arrow (its frame is the arrow, lightly mixed), and
+        // background and arrow on hover. One set for both blocks; the live
+        // card used to hover in theme_text, the history card in #2d5252.
+        'chart_expand'            => '#7aa0a0',
+        'chart_expand_hover_bg'   => '#2d5252',
+        'chart_expand_hover_icon' => '#ffffff',
 
         // ── Gruppe 6: Jahresvergleich-Palette ──────────────────────────
         'history_year_1'  => '#3d9e74',
@@ -235,6 +242,13 @@ class NAWS_Colors {
         'radar_bar_bg'      => '#f4fafa',
         'radar_button'      => '#427272',
         'radar_button_text' => '#ffffff',
+        // [naws_records] and [naws_on_this_day] (since 2.2.0). Empty means
+        // the base theme: block = theme_surface, tile = theme_surface_alt,
+        // value = theme_text_darkest, labels = theme_text_muted.
+        'records_bg'      => '',
+        'records_tile_bg' => '',
+        'records_value'   => '',
+        'records_label'   => '',
     ];
 
     public static function instance() {
@@ -471,6 +485,35 @@ class NAWS_Colors {
         }
         $css .= "}\n";
 
+        // [naws_records], [naws_on_this_day] and [naws_sunpath] stand on
+        // their own like the forecast and never saw the base theme: their
+        // background stayed the fallback #fff whatever was set (2.2.0).
+        $css .= ".naws-rec, .naws-otd, .naws-sun {\n";
+        foreach ( [ 'surface' => 'theme_surface', 'surface-2' => 'theme_surface_alt', 'border' => 'theme_border', 'text' => 'theme_text', 'text-dark' => 'theme_text_dark', 'text-darkest' => 'theme_text_darkest', 'text-muted' => 'theme_text_muted', 'text-light' => 'theme_text_light' ] as $var => $key ) {
+            $css .= "  --naws-{$var}: {$c[ $key ]};\n";
+        }
+        $css .= "}\n";
+
+        // Their own colours, only where set — empty falls back to the base
+        // theme in frontend.css. records_tile_bg -> --naws-rec-tile-bg.
+        $rec = '';
+        foreach ( self::RECORDS_KEYS as $key ) {
+            if ( '' !== (string) $c[ $key ] ) {
+                $rec .= '  --naws-rec-' . str_replace( '_', '-', substr( $key, 8 ) ) . ": {$c[ $key ]};\n";
+            }
+        }
+        if ( '' !== $rec ) {
+            $css .= ".naws-rec, .naws-otd {\n{$rec}}\n";
+        }
+
+        // The expand button of the live and the history cards (2.2.0):
+        // chart_expand_hover_bg -> --naws-expand-hover-bg.
+        $css .= ".naws-wx, .naws-hist {\n";
+        foreach ( self::EXPAND_KEYS as $key ) {
+            $css .= '  --naws-' . str_replace( '_', '-', substr( $key, 6 ) ) . ": {$c[ $key ]};\n";
+        }
+        $css .= "}\n";
+
         // [naws_sparkline]: its own rule, see sparkline_css().
         $css .= self::sparkline_css();
 
@@ -611,6 +654,12 @@ class NAWS_Colors {
     /** [naws_radar]: station dot, time label, forecast tag, control bar (since 2.2.0). */
     const RADAR_KEYS = [ 'radar_station', 'radar_time_bg', 'radar_time_text', 'radar_forecast', 'radar_bar_bg', 'radar_button', 'radar_button_text' ];
 
+    /** [naws_records] and [naws_on_this_day]: block, tile, value, labels; empty = base theme (since 2.2.0). */
+    const RECORDS_KEYS = [ 'records_bg', 'records_tile_bg', 'records_value', 'records_label' ];
+
+    /** The expand button of the live and the history cards (since 2.2.0). */
+    const EXPAND_KEYS = [ 'chart_expand', 'chart_expand_hover_bg', 'chart_expand_hover_icon' ];
+
     /**
      * Die Skala als Paare aus Temperatur und Farbe.
      *
@@ -723,6 +772,7 @@ class NAWS_Colors {
             'sparkline'  => __( 'Sparkline', 'xtx-integration-for-netatmo' ),
             'forecast'   => __( 'Forecast', 'xtx-integration-for-netatmo' ),
             'radar'      => __( 'Rain radar', 'xtx-integration-for-netatmo' ),
+            'records'    => __( 'Records', 'xtx-integration-for-netatmo' ),
         ];
     }
 
@@ -775,6 +825,7 @@ class NAWS_Colors {
                     'chart_grid', 'chart_tick',
                     'chart_tooltip_bg', 'chart_tooltip_title', 'chart_tooltip_text',
                     'chart_axis_title',
+                    ...self::EXPAND_KEYS,
                 ],
             ],
             'history_palette' => [
@@ -804,6 +855,10 @@ class NAWS_Colors {
             'radar'      => [
                 'label' => 'appearance_group_radar',
                 'keys'  => self::RADAR_KEYS,
+            ],
+            'records'    => [
+                'label' => 'appearance_group_records',
+                'keys'  => self::RECORDS_KEYS,
             ],
         ];
     }

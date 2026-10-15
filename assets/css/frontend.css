@@ -1190,12 +1190,13 @@
 .naws-wx .naws-chart-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
 .naws-wx .naws-chart-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);}
 .naws-wx .naws-chart-expand{
-  background:none;border:1px solid var(--line);border-radius:6px;
-  padding:8px 10px;cursor:pointer;color:var(--muted);min-height:44px;min-width:44px;
+  background:none;border:1px solid color-mix(in srgb,var(--naws-expand,#7aa0a0) 25%,transparent);border-radius:6px;
+  padding:8px 10px;cursor:pointer;color:var(--naws-expand,#7aa0a0);min-height:44px;min-width:44px;
   display:flex;align-items:center;justify-content:center;transition:background .15s,color .15s;
 }
 @media (min-width: 768px) { .naws-wx .naws-chart-expand { padding:4px 6px;min-height:auto;min-width:auto; } }
-.naws-wx .naws-chart-expand:hover{background:var(--ink);color:#fff;border-color:var(--ink);}
+/* Own hover and focus with two classes: Hello Elementor paints button:hover red. */
+.naws-wx .naws-chart-expand:hover, .naws-wx .naws-chart-expand:focus{background:var(--naws-expand-hover-bg,#2d5252);color:var(--naws-expand-hover-icon,#fff);border-color:var(--naws-expand-hover-bg,#2d5252);}
 .naws-wx .naws-error{text-align:center;padding:50px 20px;color:var(--muted);font-style:italic;font-size:14px;}
 
 /* Live Modal */
@@ -1354,15 +1355,16 @@
 }
 .naws-hc-legend:empty { margin-top:0; }
 @media (min-width: 600px) { .naws-hc-legend { gap:6px; margin-top:12px; } }
-.naws-hc-expand {
-  background:none; border:1px solid var(--line); border-radius:6px;
-  padding:8px 10px; cursor:pointer; color:var(--muted); flex-shrink:0;
+.naws-hist .naws-hc-expand {
+  background:none; border:1px solid color-mix(in srgb,var(--naws-expand,#7aa0a0) 25%,transparent); border-radius:6px;
+  padding:8px 10px; cursor:pointer; color:var(--naws-expand,#7aa0a0); flex-shrink:0;
   min-height:44px; min-width:44px;
   display:flex; align-items:center; justify-content:center; transition:background .15s,color .15s;
   margin-left:auto;
 }
-@media (min-width: 768px) { .naws-hc-expand { padding:4px 7px; min-height:auto; min-width:auto; } }
-.naws-hc-expand:hover { background:var(--ink2); color:#fff; border-color:var(--ink2); }
+@media (min-width: 768px) { .naws-hist .naws-hc-expand { padding:4px 7px; min-height:auto; min-width:auto; } }
+/* Own hover and focus with two classes: Hello Elementor paints button:hover red. */
+.naws-hist .naws-hc-expand:hover, .naws-hist .naws-hc-expand:focus { background:var(--naws-expand-hover-bg,#2d5252); color:var(--naws-expand-hover-icon,#fff); border-color:var(--naws-expand-hover-bg,#2d5252); }
 .naws-leg-rain-total {
   display: inline-block; margin-left: 5px;
   font-size: 10px; font-weight: 700; opacity: .75; letter-spacing: .03em;
@@ -1644,7 +1646,7 @@
    ══════════════════════════════════════════════════════════════════ */
 
 .naws-rec, .naws-otd {
-  background: var(--naws-surface, #fff);
+  background: var(--naws-rec-bg, var(--naws-surface, #fff));
   border: 1px solid var(--naws-border, #e0eeee);
   border-radius: var(--naws-radius, 12px);
   padding: 14px;
@@ -1660,21 +1662,21 @@
 .naws-rec-tile {
   display: flex; flex-direction: column; gap: 4px;
   padding: 12px 14px;
-  background: var(--naws-surface-2, #f8fafc);
+  background: var(--naws-rec-tile-bg, var(--naws-surface-2, #f8fafc));
   border: 1px solid var(--naws-border, #e0eeee);
   border-radius: var(--naws-radius-sm, 10px);
 }
-.naws-rec-label { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--naws-text-muted, #7aa0a0); }
-.naws-rec-value { font-size: 22px; font-weight: 640; line-height: 1.1; font-variant-numeric: tabular-nums; color: var(--naws-text-darkest, #1a3535); }
-.naws-rec-unit  { font-size: 13px; font-weight: 500; color: var(--naws-text-muted, #7aa0a0); }
-.naws-rec-when  { font-size: 12px; color: var(--naws-text-muted, #7aa0a0); }
-.naws-rec-foot  { margin: 12px 0 0; font-size: 12px; color: var(--naws-text-muted, #7aa0a0); }
+.naws-rec-label { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--naws-rec-label, var(--naws-text-muted, #7aa0a0)); }
+.naws-rec-value { font-size: 22px; font-weight: 640; line-height: 1.1; font-variant-numeric: tabular-nums; color: var(--naws-rec-value, var(--naws-text-darkest, #1a3535)); }
+.naws-rec-unit  { font-size: 13px; font-weight: 500; color: var(--naws-rec-label, var(--naws-text-muted, #7aa0a0)); }
+.naws-rec-when  { font-size: 12px; color: var(--naws-rec-label, var(--naws-text-muted, #7aa0a0)); }
+.naws-rec-foot  { margin: 12px 0 0; font-size: 12px; color: var(--naws-rec-label, var(--naws-text-muted, #7aa0a0)); }
 
 .naws-rec-table, .naws-otd-table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
-.naws-rec-table th, .naws-otd-table th { text-align: left; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--naws-text-muted, #7aa0a0); padding: 6px 8px; border-bottom: 1px solid var(--naws-border, #e0eeee); }
+.naws-rec-table th, .naws-otd-table th { text-align: left; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--naws-rec-label, var(--naws-text-muted, #7aa0a0)); padding: 6px 8px; border-bottom: 1px solid var(--naws-border, #e0eeee); }
 .naws-rec-table td, .naws-otd-table td { padding: 8px; border-bottom: 1px solid var(--naws-border, #e0eeee); }
 .naws-otd-unit { font-weight: 400; text-transform: none; letter-spacing: 0; }
-.naws-otd-record { font-weight: 640; color: var(--naws-text-darkest, #1a3535); background: var(--naws-surface-2, #f8fafc); }
+.naws-otd-record { font-weight: 640; color: var(--naws-rec-value, var(--naws-text-darkest, #1a3535)); background: var(--naws-rec-tile-bg, var(--naws-surface-2, #f8fafc)); }
 
 /* ══════════════════════════════════════════════════════════════════
    [naws_sunpath] — die Sonne auf ihrem Tagesbogen

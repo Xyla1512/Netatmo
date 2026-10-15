@@ -93,6 +93,17 @@ $color_labels = [
     'radar_bar_bg'      => __( 'Control bar – background', 'xtx-integration-for-netatmo' ),
     'radar_button'      => __( 'Play button', 'xtx-integration-for-netatmo' ),
     'radar_button_text' => __( 'Play button – symbol', 'xtx-integration-for-netatmo' ),
+
+    // Records and "on this day" (since 2.2.0)
+    'records_bg'      => __( 'Block background', 'xtx-integration-for-netatmo' ),
+    'records_tile_bg' => __( 'Tile background', 'xtx-integration-for-netatmo' ),
+    'records_value'   => __( 'Value', 'xtx-integration-for-netatmo' ),
+    'records_label'   => __( 'Labels and dates', 'xtx-integration-for-netatmo' ),
+
+    // Expand button on the chart cards (since 2.2.0)
+    'chart_expand'            => __( 'Expand button – arrow and frame', 'xtx-integration-for-netatmo' ),
+    'chart_expand_hover_bg'   => __( 'Expand button – background on hover', 'xtx-integration-for-netatmo' ),
+    'chart_expand_hover_icon' => __( 'Expand button – arrow on hover', 'xtx-integration-for-netatmo' ),
 ];
 
 // Short labels for 24h chart preview legend
@@ -555,6 +566,17 @@ $icon_color_keys = [
                             <span><span class="naws-pv-dot" style="background:<?php echo esc_attr( $colors['chart_axis_title'] ); ?>;"></span> Achsentitel</span>
                         </div>
                     </div>
+                    <?php
+                    // The expand button as the history cards draw it, once at rest and
+                    // once as it looks on hover. The real stylesheet paints the first
+                    // from the variables on the frame; the second copies the hover rule.
+                    $naws_pv_arrow = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>';
+                    ?>
+                    <div class="naws-hist naws-pv-expand" style="--naws-expand:<?php echo esc_attr( $colors['chart_expand'] ); ?>;--naws-expand-hover-bg:<?php echo esc_attr( $colors['chart_expand_hover_bg'] ); ?>;--naws-expand-hover-icon:<?php echo esc_attr( $colors['chart_expand_hover_icon'] ); ?>;display:flex;gap:10px;align-items:center;margin-top:12px;">
+                        <button type="button" class="naws-hc-expand" style="margin-left:0" tabindex="-1" aria-hidden="true"><?php echo $naws_pv_arrow; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- literal markup above ?></button>
+                        <span class="naws-hc-expand" style="margin-left:0;background:var(--naws-expand-hover-bg);color:var(--naws-expand-hover-icon);border-color:var(--naws-expand-hover-bg);" aria-hidden="true"><?php echo $naws_pv_arrow; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- literal markup above ?></span>
+                        <span class="description"><?php esc_html_e( 'Expand button — at rest and on hover', 'xtx-integration-for-netatmo' ); ?></span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -831,6 +853,64 @@ $icon_color_keys = [
             </div>
         </div>
 
+        <!-- ============================================================
+             Tab 12: Records (since 2.2.0)
+             ============================================================ -->
+        <div class="naws-appearance-pane<?php echo esc_attr( $naws_pane_class( 'records' ) ); ?>" data-pane="records">
+            <p class="description"><?php esc_html_e( 'Colours for [naws_records] and [naws_on_this_day]. A field left empty follows the base theme: the block takes Card Background, the tiles and the record cells take Alternate Background.', 'xtx-integration-for-netatmo' ); ?></p>
+            <div class="naws-appearance-row">
+                <div class="naws-appearance-controls">
+                    <table class="form-table naws-color-table">
+                        <tbody>
+                        <?php foreach ( $groups['records']['keys'] as $key ) : ?>
+                            <tr>
+                                <th><label for="naws-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $color_labels[ $key ] ?? $key ); ?></label></th>
+                                <td>
+                                    <input type="text"
+                                           id="naws-<?php echo esc_attr( $key ); ?>"
+                                           name="naws_appearance[<?php echo esc_attr( $key ); ?>]"
+                                           value="<?php echo esc_attr( $colors[ $key ] ); ?>"
+                                           class="naws-color-picker"
+                                           data-preview="records"
+                                           data-key="<?php echo esc_attr( $key ); ?>"
+                                           data-default-color="<?php echo esc_attr( $defaults[ $key ] ); ?>">
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="naws-appearance-preview naws-preview-sticky">
+                    <div class="naws-preview-label"><?php esc_html_e( 'Live preview — records', 'xtx-integration-for-netatmo' ); ?></div>
+                    <?php
+                    // Two tiles with the real classes. The base theme sits on the frame
+                    // as the frontend gets it; the own colours only where they are set,
+                    // so an emptied field falls back exactly as on the site.
+                    $naws_pv_rec_style = '';
+                    foreach ( [ 'surface' => 'theme_surface', 'surface-2' => 'theme_surface_alt', 'border' => 'theme_border', 'text' => 'theme_text', 'text-dark' => 'theme_text_dark', 'text-darkest' => 'theme_text_darkest', 'text-muted' => 'theme_text_muted' ] as $naws_pv_var => $naws_pv_key ) {
+                        $naws_pv_rec_style .= '--naws-' . $naws_pv_var . ':' . $colors[ $naws_pv_key ] . ';';
+                    }
+                    foreach ( $groups['records']['keys'] as $naws_pv_key ) {
+                        if ( '' !== (string) $colors[ $naws_pv_key ] ) {
+                            $naws_pv_rec_style .= '--naws-rec-' . str_replace( '_', '-', substr( $naws_pv_key, 8 ) ) . ':' . $colors[ $naws_pv_key ] . ';';
+                        }
+                    }
+                    ?>
+                    <section id="naws-preview-records" class="naws-rec" style="<?php echo esc_attr( $naws_pv_rec_style . 'max-width:420px;' ); ?>">
+                        <div class="naws-rec-grid">
+                            <?php foreach ( [ [ 'rec_hottest_day', '36,4', '°C', '13.08.2025' ], [ 'rec_coldest_night', '−14,2', '°C', '09.01.2026' ] ] as [ $naws_pv_lbl, $naws_pv_val, $naws_pv_unit, $naws_pv_when ] ) : ?>
+                            <div class="naws-rec-tile">
+                                <span class="naws-rec-label"><?php echo esc_html( naws_label( $naws_pv_lbl ) ); ?></span>
+                                <span class="naws-rec-value"><?php echo esc_html( $naws_pv_val ); ?> <span class="naws-rec-unit"><?php echo esc_html( $naws_pv_unit ); ?></span></span>
+                                <span class="naws-rec-when"><?php echo esc_html( $naws_pv_when ); ?></span>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+
         <p class="submit">
             <button type="submit" class="button button-primary"><?php esc_html_e( 'Save Settings', 'xtx-integration-for-netatmo' ); ?></button>
         </p>
@@ -1006,6 +1086,18 @@ jQuery(document).ready(function($) {
         var key = $input.data('key');
         var group = $input.data('preview');
         var val = getPickerVal($input);
+
+        // ── Records: an emptied field means "base theme", so the variable
+        // goes away instead of being skipped like the others below.
+        // records_tile_bg -> --naws-rec-tile-bg on the frame.
+        if (group === 'records') {
+            var rc = document.getElementById('naws-preview-records');
+            var rcVar = '--naws-rec-' + String(key).replace('records_', '').replace(/_/g, '-');
+            var rcVal = $input.val() ? val : '';
+            if (rc) { rcVal ? rc.style.setProperty(rcVar, rcVal) : rc.style.removeProperty(rcVar); }
+            return;
+        }
+
         if (!val) return;
 
         // ── Theme preview ──
@@ -1067,6 +1159,9 @@ jQuery(document).ready(function($) {
             if (key === 'chart_grid')       legend.find('.naws-pv-dot').eq(0).css('background', val);
             if (key === 'chart_tick')        legend.find('.naws-pv-dot').eq(1).css('background', val);
             if (key === 'chart_axis_title') legend.find('.naws-pv-dot').eq(2).css('background', val);
+            // chart_expand_hover_bg -> --naws-expand-hover-bg on the button row.
+            var ex = document.querySelector('.naws-pv-expand');
+            if (ex && String(key).indexOf('chart_expand') === 0) { ex.style.setProperty('--naws-' + String(key).replace('chart_', '').replace(/_/g, '-'), val); }
         }
 
         // ── Icon colors preview ──
