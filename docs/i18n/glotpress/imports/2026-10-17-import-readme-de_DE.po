@@ -1,0 +1,18 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo - Stable Readme\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "Fix: the JavaScript and Chart.js examples now warn that a key used in the browser is readable in the page source."
+msgstr "Fix: Die Beispiele für JavaScript und Chart.js weisen jetzt darauf hin, dass ein im Browser verwendeter Schlüssel im Quelltext der Seite lesbar ist."
+
+msgid "Fix: the REST API page still offered the key as a query parameter, which has been refused since the key moved to the <code>X-NAWS-Key</code> header."
+msgstr "Fix: Die REST-API-Seite bot den Schlüssel noch als Query-Parameter an, der abgelehnt wird, seit der Schlüssel in den Header <code>X-NAWS-Key</code> gewandert ist."
+
+msgid "Fix: the PHP example on the REST API page failed in snippet plugins such as Code Snippets or WPCode — it read address and key with <code>global</code>, which finds nothing inside the function these plugins run. The tab, now \"PHP / Snippet\", shows a <code>[wetter_aktuell]</code> shortcode with the key in the header, a five-minute cache and a copy button."
+msgstr "Fix: Das PHP-Beispiel auf der REST-API-Seite lief nicht in Snippet-Plugins wie Code Snippets oder WPCode — es las Adresse und Schlüssel mit <code>global</code>, das innerhalb der Funktion, in der diese Plugins den Code ausführen, nichts findet. Der Reiter heißt jetzt „PHP / Snippet“ und zeigt einen Shortcode <code>[wetter_aktuell]</code> mit dem Schlüssel im Header, fünf Minuten Zwischenspeicher und einem Kopieren-Knopf."
+
