@@ -45,6 +45,8 @@ $absicht = [
     'Open-Meteo Geocoding API (geocoding-api.open-meteo.com)',
     'Open-Meteo API (api.open-meteo.com)',
     'Netatmo API (api.netatmo.com)',
+    'Deutscher Wetterdienst (maps.dwd.de)',
+    'RainViewer (api.rainviewer.com, tilecache.rainviewer.com)',
     'Shortcodes',
 ];
 
