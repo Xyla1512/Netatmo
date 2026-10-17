@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: XTX Integration for Netatmo\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/xtx-integration-for-netatmo\n"
-"POT-Creation-Date: 2026-10-15 17:23+0000\n"
+"POT-Creation-Date: 2026-10-17 11:26+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -269,7 +269,7 @@ msgstr ""
 msgid "API key revoked. The API is no longer accessible."
 msgstr ""
 
-#: admin/views/rest-api-docs.php:530
+#: admin/views/rest-api-docs.php:536
 msgid "API not configured – no key has been generated."
 msgstr ""
 
@@ -351,7 +351,7 @@ msgid "All endpoints are read-only (GET). No data can be modified via the API."
 msgstr ""
 
 #: admin/views/rest-api-docs.php:135
-msgid "All endpoints are relative to this base URL. Add your API key as header or query parameter."
+msgid "All endpoints are relative to this base URL. Send your API key in the X-NAWS-Key header (see Authentication below)."
 msgstr ""
 
 #: admin/views/settings.php:543
@@ -572,6 +572,10 @@ msgstr ""
 
 #: admin/views/shortcodes.php:74 admin/views/shortcodes.php:160
 msgid "CSS class on wrapper"
+msgstr ""
+
+#: admin/views/rest-api-docs.php:370
+msgid "Call the API from a server (PHP, Python, cURL), not from a visitor's browser. A key in JavaScript on a public page sits in the page source, where every visitor can read it."
 msgstr ""
 
 #: includes/class-naws-labels.php:209
@@ -1091,7 +1095,7 @@ msgstr ""
 msgid "Enter a city name, optionally with postal code for better accuracy."
 msgstr ""
 
-#: admin/views/rest-api-docs.php:523
+#: admin/views/rest-api-docs.php:529
 msgid "Error Codes"
 msgstr ""
 
@@ -1574,7 +1578,7 @@ msgstr ""
 msgid "Interactive annual comparison charts for temperature, pressure and precipitation."
 msgstr ""
 
-#: admin/views/rest-api-docs.php:528
+#: admin/views/rest-api-docs.php:534
 msgid "Invalid date format or parameters."
 msgstr ""
 
@@ -1582,7 +1586,7 @@ msgstr ""
 msgid "Invalid file. Please select a valid NAWS export file (.json)."
 msgstr ""
 
-#: admin/views/rest-api-docs.php:527
+#: admin/views/rest-api-docs.php:533
 msgid "Invalid or missing API key."
 msgstr ""
 
@@ -2188,6 +2192,10 @@ msgstr ""
 msgid "One year of outdoor daily average temperature as a calendar grid: months down, days across, one coloured tile per day."
 msgstr ""
 
+#: admin/views/rest-api-docs.php:393 admin/views/rest-api-docs.php:467
+msgid "Only for pages that are not public, such as an intranet or a local dashboard: the key is visible in the page source. For a public page use the PHP example."
+msgstr ""
+
 #: admin/views/appearance.php:241
 msgid "Only needed when your font is not listed above. Write it as in CSS, e.g. \"PT Sans\", Arial, sans-serif. Your theme or page builder has to load it, otherwise the fallback applies."
 msgstr ""
@@ -2459,7 +2467,7 @@ msgstr ""
 msgid "Rate Limit"
 msgstr ""
 
-#: admin/views/rest-api-docs.php:529
+#: admin/views/rest-api-docs.php:535
 msgid "Rate limit exceeded. Wait 60 seconds."
 msgstr ""
 
@@ -2723,6 +2731,10 @@ msgstr ""
 
 #: admin/views/shortcodes.php:356
 msgid "Shows animated metric cards with the latest sensor values from all or specific modules."
+msgstr ""
+
+#: admin/views/rest-api-docs.php:423
+msgid "Shows the current readings on another WordPress site. Paste the code into a snippet plugin (for example Code Snippets or WPCode) without the opening <?php line and let it run everywhere, or put it into the functions.php of a child theme. Then place [wetter_aktuell] on a page – in Elementor with the Shortcode widget, not the HTML widget. [wetter_aktuell modul=\"Outdoor\"] shows one module only."
 msgstr ""
 
 #: admin/views/shortcodes.php:434
@@ -4345,6 +4357,11 @@ msgstr ""
 #: admin/views/rest-api-docs.php:98
 msgctxt "rest_copy"
 msgid "Copy"
+msgstr ""
+
+#: admin/views/rest-api-docs.php:424
+msgctxt "rest_copy"
+msgid "Copy code"
 msgstr ""
 
 #: admin/views/shortcodes.php:167

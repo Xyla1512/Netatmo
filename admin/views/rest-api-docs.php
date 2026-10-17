@@ -132,7 +132,7 @@ $base_url   = rest_url( 'naws/v1' );
 <div class="naws-api-panel">
 <h2>🌐 Base-URL</h2>
 <div class="naws-code-block" id="naws-base-url"><?php echo esc_html( $base_url ); ?></div>
-<p class="naws-hint"><?php esc_html_e( 'All endpoints are relative to this base URL. Add your API key as header or query parameter.', 'xtx-integration-for-netatmo' ); ?></p>
+<p class="naws-hint"><?php esc_html_e( 'All endpoints are relative to this base URL. Send your API key in the X-NAWS-Key header (see Authentication below).', 'xtx-integration-for-netatmo' ); ?></p>
 </div>
 
 
@@ -367,11 +367,12 @@ $base_url   = rest_url( 'naws/v1' );
 <!-- ━━ Examples ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
 <div class="naws-api-panel">
 <h2>🧪 <?php esc_html_e( 'Usage Examples', 'xtx-integration-for-netatmo' ); ?></h2>
+<p class="naws-hint">⚠️ <?php esc_html_e( 'Call the API from a server (PHP, Python, cURL), not from a visitor\'s browser. A key in JavaScript on a public page sits in the page source, where every visitor can read it.', 'xtx-integration-for-netatmo' ); ?></p>
 
 <div class="nav-tab-wrapper naws-tab-bar">
     <button type="button" class="nav-tab naws-tab nav-tab-active active" data-tab="ex-curl">cURL</button>
     <button type="button" class="nav-tab naws-tab" data-tab="ex-js">JavaScript</button>
-    <button type="button" class="nav-tab naws-tab" data-tab="ex-php">PHP</button>
+    <button type="button" class="nav-tab naws-tab" data-tab="ex-php">PHP / Snippet</button>
     <button type="button" class="nav-tab naws-tab" data-tab="ex-google">Chart.js</button>
     <button type="button" class="nav-tab naws-tab" data-tab="ex-python">Python</button>
 </div>
@@ -389,6 +390,7 @@ curl -H "<span class="s">X-NAWS-Key: <?php echo esc_html( $api_key ?: 'DEIN_API_
 
 <!-- JavaScript -->
 <div class="naws-tab-content" id="ex-js">
+<p class="naws-hint">⚠️ <?php esc_html_e( 'Only for pages that are not public, such as an intranet or a local dashboard: the key is visible in the page source. For a public page use the PHP example.', 'xtx-integration-for-netatmo' ); ?></p>
 <div class="naws-code-block"><span class="k">const</span> API_BASE = '<span class="s"><?php echo esc_js( $base_url ); ?></span>';
 <span class="k">const</span> API_KEY  = '<span class="s"><?php echo esc_js( $api_key ?: 'DEIN_API_KEY' ); ?></span>';
 
@@ -418,47 +420,51 @@ console.log(current.readings);
 
 <!-- PHP -->
 <div class="naws-tab-content" id="ex-php">
-<div class="naws-code-block"><span class="k">&lt;?php</span>
-<span class="c">// NAWS REST API – PHP-Beispiel</span>
+<p class="naws-hint"><?php esc_html_e( 'Shows the current readings on another WordPress site. Paste the code into a snippet plugin (for example Code Snippets or WPCode) without the opening <?php line and let it run everywhere, or put it into the functions.php of a child theme. Then place [wetter_aktuell] on a page – in Elementor with the Shortcode widget, not the HTML widget. [wetter_aktuell modul="Outdoor"] shows one module only.', 'xtx-integration-for-netatmo' ); ?></p>
+<p style="margin:8px 0"><button type="button" class="button" id="naws-copy-snippet"><?php echo esc_html( _x( 'Copy code', 'rest_copy', 'xtx-integration-for-netatmo' ) ); ?></button></p>
+<div class="naws-code-block" id="naws-snippet-code"><span class="c">// NAWS REST API – Shortcode [wetter_aktuell]</span>
+add_shortcode( '<span class="s">wetter_aktuell</span>', <span class="k">function</span> ( <span class="k">$atts</span> ) {
+    <span class="k">$atts</span> = shortcode_atts( [ '<span class="s">modul</span>' =&gt; '' ], <span class="k">$atts</span> );
 
-<span class="k">$base</span> = '<span class="s"><?php echo esc_html( $base_url ); ?></span>';
-<span class="k">$key</span>  = '<span class="s"><?php echo esc_html( $api_key ?: 'DEIN_API_KEY' ); ?></span>';
+    <span class="k">$base</span> = '<span class="s"><?php echo esc_html( $base_url ); ?></span>';
+    <span class="k">$key</span>  = '<span class="s"><?php echo esc_html( $api_key ?: 'DEIN_API_KEY' ); ?></span>';
 
-<span class="k">function</span> <span class="n">naws_api_get</span>(<span class="k">$endpoint</span>, <span class="k">$params</span> = []) {
-    <span class="k">global $base, $key</span>;
-    <span class="k">$url</span> = <span class="k">$base</span> . <span class="k">$endpoint</span>;
-    <span class="k">if</span> (!empty(<span class="k">$params</span>)) {
-        <span class="k">$url</span> .= '<span class="s">?</span>' . http_build_query(<span class="k">$params</span>);
+    <span class="c">// 5 Minuten zwischenspeichern: schont das Rate Limit und macht die Seite schnell</span>
+    <span class="k">$cache</span> = '<span class="s">wetter_aktuell_</span>' . md5( <span class="k">$atts</span>['<span class="s">modul</span>'] );
+    <span class="k">$data</span>  = get_transient( <span class="k">$cache</span> );
+
+    <span class="k">if</span> ( <span class="k">false</span> === <span class="k">$data</span> ) {
+        <span class="k">$res</span> = wp_remote_get( <span class="k">$base</span> . '<span class="s">/current</span>', [
+            '<span class="s">headers</span>' =&gt; [ '<span class="s">X-NAWS-Key</span>' =&gt; <span class="k">$key</span> ],
+            '<span class="s">timeout</span>' =&gt; <span class="n">10</span>,
+        ] );
+        <span class="k">if</span> ( is_wp_error( <span class="k">$res</span> ) || <span class="n">200</span> !== wp_remote_retrieve_response_code( <span class="k">$res</span> ) ) {
+            <span class="k">return</span> '<span class="s">&lt;p&gt;Wetterdaten sind gerade nicht verfügbar.&lt;/p&gt;</span>';
+        }
+        <span class="k">$data</span> = json_decode( wp_remote_retrieve_body( <span class="k">$res</span> ), <span class="k">true</span> );
+        set_transient( <span class="k">$cache</span>, <span class="k">$data</span>, <span class="n">5</span> * MINUTE_IN_SECONDS );
     }
 
-    <span class="k">$ch</span> = curl_init(<span class="k">$url</span>);
-    curl_setopt_array(<span class="k">$ch</span>, [
-        CURLOPT_RETURNTRANSFER => <span class="k">true</span>,
-        CURLOPT_HTTPHEADER     => ["<span class="s">X-NAWS-Key: {$key}</span>"],
-        CURLOPT_TIMEOUT        => <span class="n">10</span>,
-    ]);
-    <span class="k">$body</span> = curl_exec(<span class="k">$ch</span>);
-    curl_close(<span class="k">$ch</span>);
-    <span class="k">return</span> json_decode(<span class="k">$body</span>, <span class="k">true</span>);
-}
-
-<span class="c">// Aktuelle Messwerte</span>
-<span class="k">$data</span> = <span class="n">naws_api_get</span>('<span class="s">/current</span>');
-<span class="k">foreach</span> (<span class="k">$data</span>['readings'] <span class="k">as $r</span>) {
-    echo "<span class="s">{$r['parameter']}: {$r['value']} {$r['unit']}\n</span>";
-}
-
-<span class="c">// Tagesdaten monatlich</span>
-<span class="k">$monthly</span> = <span class="n">naws_api_get</span>('<span class="s">/daily</span>', [
-    '<span class="s">from</span>'     => '<span class="s">2025-01-01</span>',
-    '<span class="s">to</span>'       => '<span class="s">2025-12-31</span>',
-    '<span class="s">fields</span>'   => '<span class="s">temp_avg,rain_sum</span>',
-    '<span class="s">group_by</span>' => '<span class="s">month</span>',
-]);</div>
+    <span class="k">$out</span> = '<span class="s">&lt;ul class="wetter-aktuell"&gt;</span>';
+    <span class="k">foreach</span> ( <span class="k">$data</span>['<span class="s">readings</span>'] ?? [] <span class="k">as $r</span> ) {
+        <span class="k">if</span> ( <span class="k">$atts</span>['<span class="s">modul</span>'] &amp;&amp; <span class="k">$r</span>['<span class="s">module_name</span>'] !== <span class="k">$atts</span>['<span class="s">modul</span>'] ) {
+            <span class="k">continue</span>;
+        }
+        <span class="k">$out</span> .= sprintf(
+            '<span class="s">&lt;li&gt;&lt;strong&gt;%s – %s:&lt;/strong&gt; %s %s&lt;/li&gt;</span>',
+            esc_html( <span class="k">$r</span>['<span class="s">module_name</span>'] ),
+            esc_html( <span class="k">$r</span>['<span class="s">parameter</span>'] ),
+            esc_html( number_format_i18n( (float) <span class="k">$r</span>['<span class="s">value</span>'], <span class="n">1</span> ) ),
+            esc_html( <span class="k">$r</span>['<span class="s">unit</span>'] )
+        );
+    }
+    <span class="k">return</span> <span class="k">$out</span> . '<span class="s">&lt;/ul&gt;</span>';
+} );</div>
 </div>
 
 <!-- Chart.js (vanilla) -->
 <div class="naws-tab-content" id="ex-google">
+<p class="naws-hint">⚠️ <?php esc_html_e( 'Only for pages that are not public, such as an intranet or a local dashboard: the key is visible in the page source. For a public page use the PHP example.', 'xtx-integration-for-netatmo' ); ?></p>
 <div class="naws-code-block"><span class="c">&lt;!-- Chart.js: Temperaturverlauf (kein externes CDN) --&gt;</span>
 &lt;canvas id="<span class="s">myChart</span>" width="<span class="s">800</span>" height="<span class="s">300</span>"&gt;&lt;/canvas&gt;
 
@@ -545,6 +551,17 @@ wp_add_inline_script( 'naws-admin', '(function(){
             this.classList.add(\'active\', \'nav-tab-active\');
             var target = document.getElementById(this.dataset.tab);
             if(target) target.classList.add(\'active\');
+        });
+    });
+})();
+/* Copy the snippet as plain text, line by line */
+(function(){
+    var btn = document.getElementById(\'naws-copy-snippet\');
+    var code = document.getElementById(\'naws-snippet-code\');
+    if(!btn || !code) return;
+    btn.addEventListener(\'click\', function(){
+        navigator.clipboard.writeText(code.textContent).then(function(){
+            btn.textContent = \'✓ \' + btn.textContent.replace(/^✓ /, \'\');
         });
     });
 })();

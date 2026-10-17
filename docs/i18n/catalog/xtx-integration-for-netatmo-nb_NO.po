@@ -267,7 +267,7 @@ msgstr "Et enkelt kalenderår; overstyrer period når det er satt."
 msgid "API key revoked. The API is no longer accessible."
 msgstr "API-nøkkelen er tilbakekalt. API-et er ikke lenger tilgjengelig."
 
-#: admin/views/rest-api-docs.php:530
+#: admin/views/rest-api-docs.php:536
 msgid "API not configured – no key has been generated."
 msgstr "API ikke konfigurert – ingen nøkkel er generert."
 
@@ -349,8 +349,8 @@ msgid "All endpoints are read-only (GET). No data can be modified via the API."
 msgstr "Alle endepunkter er skrivebeskyttet (GET). Ingen data kan endres via API-et."
 
 #: admin/views/rest-api-docs.php:135
-msgid "All endpoints are relative to this base URL. Add your API key as header or query parameter."
-msgstr "Alle endepunkter er relative til denne basis-URL-en. Legg ved API-nøkkelen som header eller spørringsparameter."
+msgid "All endpoints are relative to this base URL. Send your API key in the X-NAWS-Key header (see Authentication below)."
+msgstr "Alle endepunkter er relative til denne basis-URL-en. Send API-nøkkelen i headeren X-NAWS-Key (se Autentisering nedenfor)."
 
 #: admin/views/settings.php:543
 msgid "Allow rain radar"
@@ -571,6 +571,10 @@ msgstr "CO₂-vurdering"
 #: admin/views/shortcodes.php:74 admin/views/shortcodes.php:160
 msgid "CSS class on wrapper"
 msgstr "Legger til en CSS-klasse i wrapper-elementet."
+
+#: admin/views/rest-api-docs.php:370
+msgid "Call the API from a server (PHP, Python, cURL), not from a visitor's browser. A key in JavaScript on a public page sits in the page source, where every visitor can read it."
+msgstr "Kall API-et fra en server (PHP, Python, cURL), ikke fra besøkendes nettleser. En nøkkel i JavaScript på en offentlig side står i kildekoden, der alle besøkende kan lese den."
 
 #: includes/class-naws-labels.php:209
 msgid "Calm"
@@ -1089,7 +1093,7 @@ msgstr "Skriv inn Client ID og Secret, og klikk på \"Koble til Netatmo\"."
 msgid "Enter a city name, optionally with postal code for better accuracy."
 msgstr "Skriv inn et bynavn, eventuelt med postnummer for bedre nøyaktighet."
 
-#: admin/views/rest-api-docs.php:523
+#: admin/views/rest-api-docs.php:529
 msgid "Error Codes"
 msgstr "Feilkoder"
 
@@ -1572,7 +1576,7 @@ msgstr "Arv skriften fra temaet"
 msgid "Interactive annual comparison charts for temperature, pressure and precipitation."
 msgstr "Interaktive årssammenligningsdiagrammer for temperatur, lufttrykk og nedbør."
 
-#: admin/views/rest-api-docs.php:528
+#: admin/views/rest-api-docs.php:534
 msgid "Invalid date format or parameters."
 msgstr "Ugyldig datoformat eller parametere."
 
@@ -1580,7 +1584,7 @@ msgstr "Ugyldig datoformat eller parametere."
 msgid "Invalid file. Please select a valid NAWS export file (.json)."
 msgstr "Ugyldig fil. Velg en gyldig NAWS-eksportfil (.json)."
 
-#: admin/views/rest-api-docs.php:527
+#: admin/views/rest-api-docs.php:533
 msgid "Invalid or missing API key."
 msgstr "Ugyldig eller manglende API-nøkkel."
 
@@ -2186,6 +2190,10 @@ msgstr "Én kortkode for alle beregnede verdier. Verdien står i attributtet <co
 msgid "One year of outdoor daily average temperature as a calendar grid: months down, days across, one coloured tile per day."
 msgstr "Ett år med døgnmiddeltemperatur ute som kalenderrutenett: måneder nedover, dager bortover, én farget flis per dag."
 
+#: admin/views/rest-api-docs.php:393 admin/views/rest-api-docs.php:467
+msgid "Only for pages that are not public, such as an intranet or a local dashboard: the key is visible in the page source. For a public page use the PHP example."
+msgstr "Bare for sider som ikke er offentlige, for eksempel et intranett eller et lokalt dashbord: nøkkelen er synlig i kildekoden. Bruk PHP-eksempelet for en offentlig side."
+
 #: admin/views/appearance.php:241
 msgid "Only needed when your font is not listed above. Write it as in CSS, e.g. \"PT Sans\", Arial, sans-serif. Your theme or page builder has to load it, otherwise the fallback applies."
 msgstr "Trengs bare når skriften din ikke står i listen over. Skriv den som i CSS, f.eks. \"PT Sans\", Arial, sans-serif. Temaet eller sidebyggeren må laste den, ellers brukes reserveskriften."
@@ -2457,7 +2465,7 @@ msgstr "Regn begynner"
 msgid "Rate Limit"
 msgstr "Hastighetsgrense"
 
-#: admin/views/rest-api-docs.php:529
+#: admin/views/rest-api-docs.php:535
 msgid "Rate limit exceeded. Wait 60 seconds."
 msgstr "Hastighetsgrense overskredet. Vent 60 sekunder."
 
@@ -2722,6 +2730,10 @@ msgstr "Viser et værvarsel basert på stasjonens plassering."
 #: admin/views/shortcodes.php:356
 msgid "Shows animated metric cards with the latest sensor values from all or specific modules."
 msgstr "Viser animerte målekort med de nyeste sensorverdiene fra alle eller enkelte moduler."
+
+#: admin/views/rest-api-docs.php:423
+msgid "Shows the current readings on another WordPress site. Paste the code into a snippet plugin (for example Code Snippets or WPCode) without the opening <?php line and let it run everywhere, or put it into the functions.php of a child theme. Then place [wetter_aktuell] on a page – in Elementor with the Shortcode widget, not the HTML widget. [wetter_aktuell modul=\"Outdoor\"] shows one module only."
+msgstr "Viser de nåværende måleverdiene på et annet WordPress-nettsted. Lim inn koden i et snippet-tillegg (for eksempel Code Snippets eller WPCode) uten linjen <?php i begynnelsen, og la den kjøre overalt – eller legg den i functions.php i et barnetema. Sett deretter [wetter_aktuell] på en side – i Elementor med Shortcode-widgeten, ikke HTML-widgeten. [wetter_aktuell modul=\"Ute\"] viser bare én modul."
 
 #: admin/views/shortcodes.php:434
 msgid "Shows the current weather state as an animated icon. Deliberately without a visible caption — the state is carried by the aria-label for screen readers. If the icon sits on the same page as the live dashboard it refreshes along with that page's polling cycle. When no state can be determined, nothing is output."
@@ -4344,6 +4356,11 @@ msgstr "Prognose"
 msgctxt "rest_copy"
 msgid "Copy"
 msgstr "Kopier"
+
+#: admin/views/rest-api-docs.php:424
+msgctxt "rest_copy"
+msgid "Copy code"
+msgstr "Kopier kode"
 
 #: admin/views/shortcodes.php:167
 msgctxt "sc_calc_col_key"

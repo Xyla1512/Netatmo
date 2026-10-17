@@ -2,6 +2,13 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [2.1.4]
+
+### Fixed
+- **The PHP example on the REST API page failed in snippet plugins.** It kept the address and the key in variables and read them with `global` inside its function. Snippet plugins such as Code Snippets or WPCode run their code inside a function, where `global` finds nothing, so the request went to an empty address; its `echo` also printed at the top of every page. The tab, now "PHP / Snippet", shows a shortcode instead: `[wetter_aktuell]` fetches the current readings with the key in the header, keeps them for five minutes, and lists them where the shortcode stands; `[wetter_aktuell modul="…"]` shows one module. Address and key are filled in, a button copies the code, and a short note says where it goes. Reported by users.
+- **The REST API page still offered the key as a query parameter.** The note under the base URL said "as header or query parameter", although a key in the query string has been refused with 401 since the key moved to the header. It now names the `X-NAWS-Key` header only.
+- **The JavaScript and Chart.js examples put the key into the browser without a word.** On a public page every visitor can read it in the page source. A note above the examples and in both tabs now says so and points to the PHP example for public pages.
+
 ## [2.1.3]
 
 ### Added
