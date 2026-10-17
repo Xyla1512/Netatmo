@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 2.1.3
+Stable tag: 2.1.4
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -123,6 +123,11 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 
 == Changelog ==
 
+= 2.1.4 =
+* Fix: the PHP example on the REST API page failed in snippet plugins such as Code Snippets or WPCode — it read address and key with `global`, which finds nothing inside the function these plugins run. The tab, now "PHP / Snippet", shows a `[wetter_aktuell]` shortcode with the key in the header, a five-minute cache and a copy button.
+* Fix: the REST API page still offered the key as a query parameter, which has been refused since the key moved to the `X-NAWS-Key` header.
+* Fix: the JavaScript and Chart.js examples now warn that a key used in the browser is readable in the page source.
+
 = 2.1.3 =
 * Added: `[naws_radar]` — an animated rain radar around the station: Deutscher Wetterdienst in Germany (the last hour plus a two-hour nowcast), RainViewer elsewhere, on a grey OpenStreetMap map. Play runs through the images once; + and − zoom in around the station, and the enlarged map can be dragged. Your server fetches and stores the images, so visitors never contact a weather service. Nothing is fetched until "Allow rain radar" is switched on under Settings › Rain radar; colours on a new Appearance tab, Rain radar.
 * Added: a new Appearance tab, Records — block background, tile background, value and labels of `[naws_records]` and `[naws_on_this_day]`; an empty field follows the base theme. Under Chart Theming three colours for the expand button of the live and history charts.
@@ -148,24 +153,18 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 * Fix: `[naws_current]` shows its icons again instead of their SVG source as text.
 * Fix: "11 Minuten ago" — relative times are translatable now ("vor 11 Minuten").
 
-= 2.0.2 =
-* Added: retention of raw readings, switchable. The settings page promised "all data is stored permanently" while the dashboard sidebar showed a "Data Retention: 365" that nothing applied. Retention is a real thing now, in a section of its own on the settings page and off by default: switch it on, give it a number of days (365 by default, never fewer than 30), and once a night, after the daily summary, the plugin deletes raw readings older than that and notes the run on the settings page and in the cron log. Only the raw readings go — the ten-minute values behind the live dashboard, `[naws_table]`, `[naws_chart]`, the wind rose and the REST readings endpoint. The daily table is never touched, so history, heatmap, records and climate indices keep their full range. Switching it on, and the manual purge, ask once more and say what is lost. An update changes nothing: the switch is off until you turn it on.
-* Fix: the wind cards of the live dashboard ignored every colour setting. `[naws_live]` drew its compass, the pointer and the half-circle gauge for wind and gusts with literal colours; the "Compass Needle" colour went into the page as a variable nothing read, and for wind and gusts there was no field at all. The two cards now take their colours from a tab of their own, Appearance › Live dashboard: wind — background (compass face and the empty part of the gauge), compass rose, compass pointer (the old "Compass Needle", same key, so a saved colour survives), gauge wind, gauge gusts, gauge peak gust of the day — with a preview built from the real compass and gauge. The defaults are the colours the dashboard has always used.
-* Fix: the wind rose said "no wind readings" for a period that had readings — all of them calm. It now says "Calm the whole time: 20 readings, all below 1 km/h."
-* Fix: the translators comments never reached the catalogues; the extractor looked for them inside the call's parentheses, where WordPress convention never puts them. The `.pot` and both `.po` files carry them now.
-
 Older versions: the complete changelog since 1.0.0 is kept in [CHANGELOG.md](https://github.com/Xyla1512/Netatmo/blob/main/CHANGELOG.md) on GitHub.
 
 == Upgrade Notice ==
+
+= 2.1.4 =
+Fix: the REST API page shows a PHP example that works in snippet plugins, as a [wetter_aktuell] shortcode with a copy button, names the X-NAWS-Key header as the only place for the key, and warns about keys in browser code. Nothing to reconfigure.
 
 = 2.1.3 =
 New: [naws_radar], an animated rain radar around the station — switch it on under Settings › Rain radar. New colours for records and the chart expand button. Fix: records, "on this day" and the sun path follow the base theme.
 
 = 2.1.2 =
 Fix: no more "HTTP 429" from Open-Meteo in the forecast — a failed request pauses the provider and the last good forecast stays on the page. Fix: no lines across the history charts on the 29th of February. Nothing to reconfigure.
-
-= 2.1.1 =
-New: a Signal column on the Modules page shows the Wi-Fi of the base station and the radio link of every module. Fix: the forecast uses the decimal comma on German pages. Nothing to reconfigure.
 
 == Privacy & External Services ==
 

@@ -1,0 +1,24 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo\n"
+"Language: nb_NO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "All endpoints are relative to this base URL. Send your API key in the X-NAWS-Key header (see Authentication below)."
+msgstr "Alle endepunkter er relative til denne basis-URL-en. Send API-nøkkelen i headeren X-NAWS-Key (se Autentisering nedenfor)."
+
+msgid "Call the API from a server (PHP, Python, cURL), not from a visitor's browser. A key in JavaScript on a public page sits in the page source, where every visitor can read it."
+msgstr "Kall API-et fra en server (PHP, Python, cURL), ikke fra besøkendes nettleser. En nøkkel i JavaScript på en offentlig side står i kildekoden, der alle besøkende kan lese den."
+
+msgid "Only for pages that are not public, such as an intranet or a local dashboard: the key is visible in the page source. For a public page use the PHP example."
+msgstr "Bare for sider som ikke er offentlige, for eksempel et intranett eller et lokalt dashbord: nøkkelen er synlig i kildekoden. Bruk PHP-eksempelet for en offentlig side."
+
+msgid "Shows the current readings on another WordPress site. Paste the code into a snippet plugin (for example Code Snippets or WPCode) without the opening <?php line and let it run everywhere, or put it into the functions.php of a child theme. Then place [wetter_aktuell] on a page – in Elementor with the Shortcode widget, not the HTML widget. [wetter_aktuell modul=\"Outdoor\"] shows one module only."
+msgstr "Viser de nåværende måleverdiene på et annet WordPress-nettsted. Lim inn koden i et snippet-tillegg (for eksempel Code Snippets eller WPCode) uten linjen <?php i begynnelsen, og la den kjøre overalt – eller legg den i functions.php i et barnetema. Sett deretter [wetter_aktuell] på en side – i Elementor med Shortcode-widgeten, ikke HTML-widgeten. [wetter_aktuell modul=\"Ute\"] viser bare én modul."
+
+msgctxt "rest_copy"
+msgid "Copy code"
+msgstr "Kopier kode"
