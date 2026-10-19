@@ -591,6 +591,7 @@
 }
 .naws-badge-success { background: rgba(16,185,129,0.12); color: #059669; }
 .naws-badge-error   { background: rgba(239,68,68,0.12);  color: #dc2626; }
+.naws-badge-warning { background: rgba(245,158,11,0.14); color: #b45309; }
 .naws-badge-info    { background: rgba(34,113,177,0.12); color: #2271b1; }
 
 .naws-module-type-badge {

@@ -118,11 +118,14 @@ class NAWS_Cron {
         return $schedules;
     }
 
-    public static function schedule() {
+    /**
+     * @param int|null $first_fetch  When the first fetch is due; null = now.
+     */
+    public static function schedule( $first_fetch = null ) {
         // Fetch interval
         if ( ! wp_next_scheduled( self::HOOK_FETCH ) ) {
             $interval = intval( self::base_interval() / MINUTE_IN_SECONDS );
-            wp_schedule_event( time(), 'naws_' . $interval . '_minutes', self::HOOK_FETCH );
+            wp_schedule_event( $first_fetch ?? time(), 'naws_' . $interval . '_minutes', self::HOOK_FETCH );
         }
 
         // Daily summary: fire at 00:01 site-local time each night
@@ -136,11 +139,19 @@ class NAWS_Cron {
         }
     }
 
-    public function reschedule() {
+    /**
+     * @param bool $just_synced  true right after a manual sync: the next fetch
+     *                           is one interval away. Due "now" it ran again on
+     *                           the next page view, two fetches per click, and
+     *                           the dashboard showed the next run on the second
+     *                           of the last one (reported 2026-10-19). Strict
+     *                           check: do_action() hands callbacks ''.
+     */
+    public function reschedule( $just_synced = false ) {
         wp_clear_scheduled_hook( self::HOOK_FETCH );
         // Reset polling state when settings change
         self::reset_polling_state();
-        self::schedule();
+        self::schedule( $just_synced === true ? time() + self::base_interval() : null );
     }
 
     public static function deactivate() {

@@ -44,6 +44,64 @@ if ( ! defined( 'ABSPATH' ) ) exit;
         <p class="description" style="padding:0 1.25rem 1rem;"><?php echo wp_kses_post( __( 'WP-Cron is triggered by page views, not by a clock: if nobody opens the site, no fetch happens — during quiet nights possibly for hours. Night mode then has nothing left to slow down, and a gap appears in the readings; the daily summary retrieves the missing values from the Netatmo API later. The schedule only becomes reliable once <code>define( \'DISABLE_WP_CRON\', true );</code> is set in <code>wp-config.php</code> and a real server cron calls <code>wp-cron.php</code> at the interval you want.', 'xtx-integration-for-netatmo' ) ); ?></p>
     </div>
 
+    <div class="naws-admin-panel" id="naws-error-log" style="margin-top:1rem;">
+        <div class="naws-panel-header">
+            <h2><?php esc_html_e( 'Error Log', 'xtx-integration-for-netatmo' ); ?></h2>
+            <?php if ( ! empty( $error_log ) ) : ?>
+            <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+                <?php wp_nonce_field( 'naws_clear_error_log' ); ?>
+                <input type="hidden" name="action" value="naws_clear_error_log">
+                <button type="submit" class="button button-secondary"><?php esc_html_e( 'Clear error log', 'xtx-integration-for-netatmo' ); ?></button>
+            </form>
+            <?php endif; ?>
+        </div>
+        <p class="description" style="padding:0 1.25rem;"><?php esc_html_e( 'Errors and warnings from the database, the Netatmo connection and the weather services. A sync can reach Netatmo and still fail here, for example when the database refuses the data.', 'xtx-integration-for-netatmo' ); ?></p>
+
+        <?php if ( empty( $error_log ) ) : ?>
+            <p style="padding:1rem 1.25rem;"><?php esc_html_e( 'No errors logged.', 'xtx-integration-for-netatmo' ); ?></p>
+        <?php else : ?>
+        <table class="wp-list-table widefat striped naws-list-table">
+            <thead>
+                <tr>
+                    <th><?php echo esc_html( _x( 'Time', 'time', 'xtx-integration-for-netatmo' ) ); ?></th>
+                    <th><?php esc_html_e( 'Level', 'xtx-integration-for-netatmo' ); ?></th>
+                    <th><?php esc_html_e( 'Area', 'xtx-integration-for-netatmo' ); ?></th>
+                    <th><?php esc_html_e( 'Message', 'xtx-integration-for-netatmo' ); ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ( $error_log as $entry ) :
+                    $level       = $entry['level'] ?? '';
+                    $badge_class = [ 'error' => 'naws-badge-error', 'warning' => 'naws-badge-warning' ][ $level ] ?? 'naws-badge-info';
+                ?>
+                <tr>
+                    <td style="white-space:nowrap;"><?php echo esc_html( wp_date( 'Y-m-d H:i:s', (int) ( $entry['time'] ?? 0 ) ) ); ?></td>
+                    <td><span class="naws-badge <?php echo esc_attr( $badge_class ); ?>"><?php echo esc_html( $level ); ?></span></td>
+                    <td><?php echo esc_html( $entry['context'] ?? '' ); ?></td>
+                    <td>
+                        <?php echo esc_html( $entry['message'] ?? '' ); ?>
+                        <?php if ( ! empty( $entry['data'] ) ) : ?>
+                            <br><code style="font-size:11px;"><?php echo esc_html( wp_json_encode( $entry['data'] ) ); ?></code>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php endif; ?>
+    </div>
+
+    <div class="naws-admin-panel" id="naws-support-report" style="margin-top:1rem;">
+        <div class="naws-panel-header">
+            <h2><?php esc_html_e( 'Support Report', 'xtx-integration-for-netatmo' ); ?></h2>
+            <button type="button" class="button button-primary" id="naws-copy-report"><?php esc_html_e( 'Copy report', 'xtx-integration-for-netatmo' ); ?></button>
+        </div>
+        <p class="description" style="padding:0 1.25rem;"><?php esc_html_e( 'If you ask for help, copy this report and paste it into your support request. It lists the plugin, WordPress, PHP and database versions, whether the plugin tables exist, the cron state and the newest log entries. It contains no passwords, tokens or API keys.', 'xtx-integration-for-netatmo' ); ?></p>
+        <div style="padding:0.5rem 1.25rem 1.25rem;">
+            <textarea id="naws-report-text" class="large-text code" rows="12" readonly><?php echo esc_textarea( $support_report ); ?></textarea>
+        </div>
+    </div>
+
     <div class="naws-admin-panel" style="margin-top:1rem;">
         <div class="naws-panel-header">
             <h2><?php esc_html_e( 'Daily Evaluation', 'xtx-integration-for-netatmo' ); ?></h2>
@@ -51,3 +109,23 @@ if ( ! defined( 'ABSPATH' ) ) exit;
         <p style="padding:0 1.25rem 1rem;"><?php esc_html_e( 'The daily cron runs at 00:01 and computes daily summaries for temperature, pressure and precipitation.', 'xtx-integration-for-netatmo' ); ?></p>
     </div>
 </div>
+<?php
+// Copy the support report. navigator.clipboard needs a secure context; on a
+// plain-http admin the selected textarea and execCommand still work.
+wp_add_inline_script( 'naws-admin', <<<'EOJS'
+(function(){
+    var btn = document.getElementById('naws-copy-report');
+    var text = document.getElementById('naws-report-text');
+    if(!btn || !text) return;
+    btn.addEventListener('click', function(){
+        var done = function(){ btn.textContent = '✓ ' + btn.textContent.replace(/^✓ /, ''); };
+        text.select();
+        if(navigator.clipboard && window.isSecureContext){
+            navigator.clipboard.writeText(text.value).then(done);
+        } else if(document.execCommand('copy')){
+            done();
+        }
+    });
+})();
+EOJS
+);

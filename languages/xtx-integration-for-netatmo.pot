@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: XTX Integration for Netatmo\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/xtx-integration-for-netatmo\n"
-"POT-Creation-Date: 2026-10-17 11:26+0000\n"
+"POT-Creation-Date: 2026-10-19 13:21+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -58,7 +58,7 @@ msgstr[1] ""
 
 #. translators: %d: number of days
 #. translators: %d: number of days.
-#: admin/views/dashboard.php:405 includes/class-naws-sparkline.php:468 includes/class-naws-windrose.php:337 templates/records.php:59
+#: admin/views/dashboard.php:406 includes/class-naws-sparkline.php:468 includes/class-naws-windrose.php:337 templates/records.php:59
 #: templates/records.php:140
 msgid "%d day"
 msgid_plural "%d days"
@@ -66,7 +66,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of errors.
-#: admin/views/dashboard.php:168
+#: admin/views/dashboard.php:169
 msgid "%d error(s) in the last hour"
 msgstr ""
 
@@ -95,7 +95,7 @@ msgid "%d modules"
 msgstr ""
 
 #. translators: %d: number of deleted readings
-#: includes/class-naws-admin.php:307
+#: includes/class-naws-admin.php:308
 msgid "%d readings deleted."
 msgstr ""
 
@@ -294,7 +294,7 @@ msgstr ""
 msgid "Access Token valid until: %s"
 msgstr ""
 
-#: admin/views/live-settings.php:175 includes/class-naws-admin.php:312
+#: admin/views/live-settings.php:175 includes/class-naws-admin.php:313
 msgid "Activate module"
 msgstr ""
 
@@ -382,7 +382,7 @@ msgstr ""
 msgid "Any text"
 msgstr ""
 
-#: admin/views/appearance.php:148 includes/class-naws-admin.php:58
+#: admin/views/appearance.php:148 includes/class-naws-admin.php:59
 msgid "Appearance"
 msgstr ""
 
@@ -408,6 +408,10 @@ msgstr ""
 
 #: includes/class-naws-forecast.php:1049 templates/history.php:129
 msgid "Apr"
+msgstr ""
+
+#: admin/views/cron-log.php:68
+msgid "Area"
 msgstr ""
 
 #. translators: %s: time of the newest radar image
@@ -627,6 +631,10 @@ msgstr ""
 msgid "Clear"
 msgstr ""
 
+#: admin/views/cron-log.php:54
+msgid "Clear error log"
+msgstr ""
+
 #: includes/class-naws-labels.php:278
 msgid "Clear night"
 msgstr ""
@@ -779,6 +787,10 @@ msgstr ""
 msgid "Cooling limit (°C)"
 msgstr ""
 
+#: admin/views/cron-log.php:97
+msgid "Copy report"
+msgstr ""
+
 #. translators: %s is the HTTP status code the request came back with.
 #: includes/class-naws-shortcodes.php:148
 msgid "Could not load data (HTTP %s)"
@@ -788,7 +800,7 @@ msgstr ""
 msgid "Country code"
 msgstr ""
 
-#: admin/views/dashboard.php:186 includes/class-naws-labels.php:26
+#: admin/views/dashboard.php:187 includes/class-naws-labels.php:26
 msgid "Credentials"
 msgstr ""
 
@@ -796,19 +808,19 @@ msgstr ""
 msgid "Credentials expired"
 msgstr ""
 
-#: admin/views/dashboard.php:389 admin/views/settings.php:224
+#: admin/views/dashboard.php:390 admin/views/settings.php:224
 msgid "Cron Interval (minutes)"
 msgstr ""
 
-#: admin/views/cron-log.php:6 admin/views/dashboard.php:375 includes/class-naws-admin.php:56
+#: admin/views/cron-log.php:6 admin/views/dashboard.php:376 includes/class-naws-admin.php:57
 msgid "Cron Log"
 msgstr ""
 
-#: admin/views/dashboard.php:384
+#: admin/views/dashboard.php:385
 msgid "Cron Status"
 msgstr ""
 
-#: admin/views/dashboard.php:87 admin/views/dashboard.php:202
+#: admin/views/dashboard.php:87 admin/views/dashboard.php:203
 msgid "Current Readings"
 msgstr ""
 
@@ -824,11 +836,11 @@ msgstr ""
 msgid "Daily Average Temperature"
 msgstr ""
 
-#: admin/views/cron-log.php:49
+#: admin/views/cron-log.php:107
 msgid "Daily Evaluation"
 msgstr ""
 
-#: admin/views/dashboard.php:104 admin/views/dashboard.php:321 admin/views/dashboard.php:344 includes/class-naws-admin.php:310
+#: admin/views/dashboard.php:104 admin/views/dashboard.php:322 admin/views/dashboard.php:345 includes/class-naws-admin.php:311
 msgid "Daily Summary"
 msgstr ""
 
@@ -881,7 +893,7 @@ msgstr ""
 msgid "Daily trend (last 24h)"
 msgstr ""
 
-#: admin/views/dashboard.php:358 includes/class-naws-admin.php:50
+#: admin/views/dashboard.php:359 includes/class-naws-admin.php:51
 msgid "Dashboard"
 msgstr ""
 
@@ -889,7 +901,7 @@ msgstr ""
 msgid "Dashboard — Live Overview & System Status"
 msgstr ""
 
-#: admin/views/dashboard.php:403 admin/views/settings.php:281
+#: admin/views/dashboard.php:404 admin/views/settings.php:281
 msgid "Data Retention"
 msgstr ""
 
@@ -931,7 +943,7 @@ msgstr ""
 msgid "Days"
 msgstr ""
 
-#: admin/views/live-settings.php:175 includes/class-naws-admin.php:311
+#: admin/views/live-settings.php:175 includes/class-naws-admin.php:312
 msgid "Deactivate module"
 msgstr ""
 
@@ -954,7 +966,7 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: includes/class-naws-admin.php:288
+#: includes/class-naws-admin.php:289
 msgid "Delete all stored rain radar images and map tiles? They are fetched again the next time a page shows the radar."
 msgstr ""
 
@@ -963,7 +975,7 @@ msgid "Delete entries older than:"
 msgstr ""
 
 #. translators: %d: number of days
-#: includes/class-naws-admin.php:304
+#: includes/class-naws-admin.php:305
 msgid "Delete every reading older than %d days? This is permanent and cannot be undone. Afterwards [naws_table], [naws_chart], the wind rose and the REST readings endpoint can only reach back that far. History, heatmap, records and climate indices are not affected."
 msgstr ""
 
@@ -1003,7 +1015,7 @@ msgstr ""
 msgid "Direction"
 msgstr ""
 
-#: includes/class-naws-admin.php:314
+#: includes/class-naws-admin.php:315
 msgid "Disable 24h chart"
 msgstr ""
 
@@ -1059,7 +1071,7 @@ msgstr ""
 msgid "Emoji"
 msgstr ""
 
-#: includes/class-naws-admin.php:315
+#: includes/class-naws-admin.php:316
 msgid "Enable 24h chart"
 msgstr ""
 
@@ -1099,22 +1111,30 @@ msgstr ""
 msgid "Error Codes"
 msgstr ""
 
+#: admin/views/cron-log.php:49
+msgid "Error Log"
+msgstr ""
+
 #. translators: 1: number of consecutive errors, 2: minutes since the last sync.
-#: includes/class-naws-cron.php:540
+#: includes/class-naws-cron.php:551
 msgid "Error backoff: %1$d consecutive errors, last sync %2$d min ago"
 msgstr ""
 
-#: admin/views/dashboard.php:314 includes/class-naws-admin.php:294
+#: admin/views/dashboard.php:315 includes/class-naws-admin.php:295
 msgid "Error occurred."
 msgstr ""
 
-#: includes/class-naws-admin.php:296
+#: includes/class-naws-admin.php:297
 msgid "Error toggling module. Please try again."
 msgstr ""
 
 #. translators: %s: the error message of the failed fetch
 #: includes/class-naws-labels.php:364
 msgid "Error: %s"
+msgstr ""
+
+#: admin/views/cron-log.php:58
+msgid "Errors and warnings from the database, the Netatmo connection and the weather services. A sync can reach Netatmo and still fail here, for example when the database refuses the data."
 msgstr ""
 
 #: includes/class-naws-labels.php:336
@@ -1170,7 +1190,7 @@ msgstr ""
 msgid "Export & Import"
 msgstr ""
 
-#: includes/class-naws-admin.php:53
+#: includes/class-naws-admin.php:54
 msgid "Export / Import"
 msgstr ""
 
@@ -1198,7 +1218,7 @@ msgstr ""
 msgid "Fifteen records from the daily summary — hottest day, coldest night, wettest month, longest dry spell, strongest gust and more — each with its date, as tiles or as a table."
 msgstr ""
 
-#: includes/class-naws-admin.php:718
+#: includes/class-naws-admin.php:803
 msgid "File too large. Maximum size: 100 MB."
 msgstr ""
 
@@ -1311,7 +1331,7 @@ msgstr ""
 msgid "Go to Dashboard"
 msgstr ""
 
-#: admin/views/dashboard.php:213
+#: admin/views/dashboard.php:214
 msgid "Go to Settings"
 msgstr ""
 
@@ -1444,7 +1464,7 @@ msgstr ""
 msgid "Height in px (200–1200)"
 msgstr ""
 
-#: includes/class-naws-admin.php:301
+#: includes/class-naws-admin.php:302
 msgid "Hide"
 msgstr ""
 
@@ -1461,7 +1481,7 @@ msgstr ""
 msgid "History"
 msgstr ""
 
-#: admin/views/dashboard.php:369 includes/class-naws-admin.php:52
+#: admin/views/dashboard.php:370 includes/class-naws-admin.php:53
 msgid "History Import"
 msgstr ""
 
@@ -1526,6 +1546,10 @@ msgstr ""
 msgid "If the rain radar is switched on, this website fetches radar images from the Deutscher Wetterdienst (maps.dwd.de) or RainViewer (rainviewer.com) and map tiles from OpenStreetMap (tile.openstreetmap.org) and stores them on its own server. Only the map section around the weather station and the time are sent. Visitors' browsers load the images from this website only; no visitor data, IP address or cookie reaches these services."
 msgstr ""
 
+#: admin/views/cron-log.php:99
+msgid "If you ask for help, copy this report and paste it into your support request. It lists the plugin, WordPress, PHP and database versions, whether the plugin tables exist, the cron state and the newest log entries. It contains no passwords, tokens or API keys."
+msgstr ""
+
 #: admin/views/import.php:17
 msgid "Import Configuration"
 msgstr ""
@@ -1538,7 +1562,7 @@ msgstr ""
 msgid "Import Historical Data"
 msgstr ""
 
-#: admin/views/export.php:22 includes/class-naws-admin.php:293
+#: admin/views/export.php:22 includes/class-naws-admin.php:294
 msgid "Import chunk complete!"
 msgstr ""
 
@@ -1550,11 +1574,11 @@ msgstr ""
 msgid "Importing will overwrite existing daily data for matching dates."
 msgstr ""
 
-#: includes/class-naws-admin.php:292
+#: includes/class-naws-admin.php:293
 msgid "Importing…"
 msgstr ""
 
-#: admin/views/rest-api-docs.php:75 includes/class-naws-admin.php:295
+#: admin/views/rest-api-docs.php:75 includes/class-naws-admin.php:296
 msgid "Inactive"
 msgstr ""
 
@@ -1582,7 +1606,7 @@ msgstr ""
 msgid "Invalid date format or parameters."
 msgstr ""
 
-#: includes/class-naws-admin.php:697 includes/class-naws-admin.php:712
+#: includes/class-naws-admin.php:782 includes/class-naws-admin.php:797
 msgid "Invalid file. Please select a valid NAWS export file (.json)."
 msgstr ""
 
@@ -1657,6 +1681,10 @@ msgstr ""
 
 #: includes/class-naws-labels.php:95
 msgid "Length of day"
+msgstr ""
+
+#: admin/views/cron-log.php:67
+msgid "Level"
 msgstr ""
 
 #: includes/class-naws-forecast.php:970
@@ -1843,7 +1871,7 @@ msgstr ""
 msgid "Max"
 msgstr ""
 
-#: includes/class-naws-database.php:1031 includes/class-naws-helpers.php:95 includes/class-naws-helpers.php:97 includes/class-naws-helpers.php:841
+#: includes/class-naws-database.php:1035 includes/class-naws-helpers.php:95 includes/class-naws-helpers.php:97 includes/class-naws-helpers.php:841
 #: includes/class-naws-labels.php:73
 msgid "Max Temperature (day)"
 msgstr ""
@@ -1876,7 +1904,7 @@ msgstr ""
 msgid "Measured on the wind gauge gust peak. Without a wind module the rule is skipped, with no substitute."
 msgstr ""
 
-#: admin/views/cron-log.php:24
+#: admin/views/cron-log.php:24 admin/views/cron-log.php:69
 msgid "Message"
 msgstr ""
 
@@ -1884,7 +1912,7 @@ msgstr ""
 msgid "Min"
 msgstr ""
 
-#: includes/class-naws-database.php:1030 includes/class-naws-helpers.php:94 includes/class-naws-helpers.php:96 includes/class-naws-helpers.php:840
+#: includes/class-naws-database.php:1034 includes/class-naws-helpers.php:94 includes/class-naws-helpers.php:96 includes/class-naws-helpers.php:840
 #: includes/class-naws-labels.php:70
 msgid "Min Temperature (day)"
 msgstr ""
@@ -1926,7 +1954,7 @@ msgid "Module4 Temperature"
 msgstr ""
 
 #: admin/views/dashboard.php:79 admin/views/export.php:83 admin/views/modules.php:9 admin/views/shortcodes.php:517
-#: includes/class-naws-admin.php:54
+#: includes/class-naws-admin.php:55
 msgid "Modules"
 msgstr ""
 
@@ -1979,7 +2007,7 @@ msgstr ""
 msgid "Native system emojis — appearance varies by device."
 msgstr ""
 
-#: admin/views/dashboard.php:185 includes/class-naws-labels.php:28
+#: admin/views/dashboard.php:186 includes/class-naws-labels.php:28
 msgid "Needs attention"
 msgstr ""
 
@@ -2011,7 +2039,7 @@ msgstr ""
 msgid "Next lunar eclipse"
 msgstr ""
 
-#: admin/views/cron-log.php:11 admin/views/dashboard.php:141 admin/views/dashboard.php:329 admin/views/dashboard.php:395
+#: admin/views/cron-log.php:11 admin/views/dashboard.php:141 admin/views/dashboard.php:330 admin/views/dashboard.php:396
 msgid "Next run:"
 msgstr ""
 
@@ -2023,7 +2051,7 @@ msgstr ""
 msgid "Night Mode"
 msgstr ""
 
-#: includes/class-naws-cron.php:562
+#: includes/class-naws-cron.php:573
 msgid "Night mode active (reduced polling)"
 msgstr ""
 
@@ -2047,7 +2075,7 @@ msgstr ""
 msgid "No city specified. Please enter a city in the forecast settings."
 msgstr ""
 
-#: admin/views/dashboard.php:272 templates/table.php:46
+#: admin/views/dashboard.php:273 templates/table.php:46
 msgid "No data available yet."
 msgstr ""
 
@@ -2071,6 +2099,10 @@ msgstr ""
 msgid "No earlier year holds this day yet."
 msgstr ""
 
+#: admin/views/cron-log.php:61
+msgid "No errors logged."
+msgstr ""
+
 #: templates/forecast.php:57
 msgid "No forecast data available."
 msgstr ""
@@ -2083,7 +2115,7 @@ msgstr ""
 msgid "No log entries yet."
 msgstr ""
 
-#: admin/views/dashboard.php:211 admin/views/modules.php:22
+#: admin/views/dashboard.php:212 admin/views/modules.php:22
 msgid "No modules found yet. Sync data first."
 msgstr ""
 
@@ -2107,7 +2139,7 @@ msgstr ""
 msgid "No state determinable right now — neither station readings nor forecast are available. Nothing would be output."
 msgstr ""
 
-#: includes/class-naws-cron.php:529
+#: includes/class-naws-cron.php:540
 msgid "No successful sync yet"
 msgstr ""
 
@@ -2136,7 +2168,7 @@ msgid "Not reachable"
 msgstr ""
 
 #. translators: %s: a duration such as "5 minutes", from human_time_diff().
-#: admin/views/dashboard.php:334
+#: admin/views/dashboard.php:335
 msgid "Not scheduled"
 msgstr ""
 
@@ -2152,7 +2184,7 @@ msgstr ""
 msgid "Nothing displayable right now — neither station readings nor forecast are available. The widget would output nothing."
 msgstr ""
 
-#: admin/views/notifications.php:18 includes/class-naws-admin.php:55
+#: admin/views/notifications.php:18 includes/class-naws-admin.php:56
 msgid "Notifications"
 msgstr ""
 
@@ -2314,7 +2346,7 @@ msgstr ""
 msgid "Please connect to Netatmo again under XTX Netatmo → Settings."
 msgstr ""
 
-#: includes/class-naws-admin.php:302
+#: includes/class-naws-admin.php:303
 msgid "Please enter at least 30 days."
 msgstr ""
 
@@ -2358,7 +2390,7 @@ msgstr ""
 msgid "Pressure (relative)"
 msgstr ""
 
-#: includes/class-naws-database.php:1033 includes/class-naws-labels.php:72
+#: includes/class-naws-database.php:1037 includes/class-naws-labels.php:72
 msgid "Pressure Ø (hPa)"
 msgstr ""
 
@@ -2451,7 +2483,7 @@ msgstr ""
 msgid "Rain radar frames of a [naws_radar] on this site (public, no key; used by the radar player)."
 msgstr ""
 
-#: includes/class-naws-admin.php:289
+#: includes/class-naws-admin.php:290
 msgid "Rain radar storage cleared."
 msgstr ""
 
@@ -2483,7 +2515,7 @@ msgstr ""
 msgid "Ready-made, complete widgets with Chart.js visualizations and automatic data refresh."
 msgstr ""
 
-#: admin/views/cron-log.php:9 admin/views/dashboard.php:132 admin/views/dashboard.php:399
+#: admin/views/cron-log.php:9 admin/views/dashboard.php:132 admin/views/dashboard.php:400
 msgid "Recent Sync Events"
 msgstr ""
 
@@ -2524,7 +2556,7 @@ msgstr ""
 msgid "Regenerate Key"
 msgstr ""
 
-#: includes/class-naws-admin.php:297
+#: includes/class-naws-admin.php:298
 msgid "Request failed."
 msgstr ""
 
@@ -2637,7 +2669,7 @@ msgstr ""
 msgid "Save Settings"
 msgstr ""
 
-#: includes/class-naws-admin.php:316
+#: includes/class-naws-admin.php:317
 msgid "Saving…"
 msgstr ""
 
@@ -2677,11 +2709,11 @@ msgstr ""
 msgid "Sets the order the cards appear in within the <code>[naws_live]</code> widget. Showing and hiding them happens above, with the modules."
 msgstr ""
 
-#: includes/class-naws-admin.php:51
+#: includes/class-naws-admin.php:52
 msgid "Settings"
 msgstr ""
 
-#: admin/views/dashboard.php:364
+#: admin/views/dashboard.php:365
 msgid "Settings & OAuth"
 msgstr ""
 
@@ -2701,7 +2733,7 @@ msgstr ""
 msgid "Shortcode Reference"
 msgstr ""
 
-#: admin/views/settings.php:151 includes/class-naws-admin.php:300
+#: admin/views/settings.php:151 includes/class-naws-admin.php:301
 msgid "Show"
 msgstr ""
 
@@ -2859,7 +2891,7 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: admin/views/dashboard.php:185 includes/class-naws-labels.php:27
+#: admin/views/dashboard.php:186 includes/class-naws-labels.php:27
 msgid "Stored encrypted"
 msgstr ""
 
@@ -2920,11 +2952,15 @@ msgstr ""
 msgid "Sunset"
 msgstr ""
 
+#: admin/views/cron-log.php:96
+msgid "Support Report"
+msgstr ""
+
 #: admin/views/notifications.php:53
 msgid "Switch off to pause every mail without losing your rules; the test mail still works."
 msgstr ""
 
-#: includes/class-naws-admin.php:305
+#: includes/class-naws-admin.php:306
 msgid "Switch on automatic deletion? Once you save, raw readings older than the configured number of days will be deleted every night, permanently and beyond recovery. Afterwards [naws_table], [naws_chart], the wind rose and the REST readings endpoint can only reach back that far. History, heatmap, records and climate indices are not affected."
 msgstr ""
 
@@ -2933,15 +2969,15 @@ msgid "Sync Now"
 msgstr ""
 
 #. translators: %d: minutes since the last sync.
-#: includes/class-naws-cron.php:568
+#: includes/class-naws-cron.php:579
 msgid "Sync OK (%d min ago)"
 msgstr ""
 
-#: includes/class-naws-admin.php:291
+#: includes/class-naws-admin.php:292
 msgid "Sync complete!"
 msgstr ""
 
-#: includes/class-naws-admin.php:290
+#: includes/class-naws-admin.php:291
 msgid "Syncing…"
 msgstr ""
 
@@ -2949,7 +2985,7 @@ msgstr ""
 msgid "Tabular view of historical readings with configurable time period and grouping."
 msgstr ""
 
-#: includes/class-naws-database.php:1032 includes/class-naws-labels.php:71
+#: includes/class-naws-database.php:1036 includes/class-naws-labels.php:71
 msgid "Temp Ø (°C)"
 msgstr ""
 
@@ -3055,12 +3091,12 @@ msgstr ""
 msgid "The connection could not be stored securely. See the notices above for the reason."
 msgstr ""
 
-#: admin/views/rest-api-docs.php:20 admin/views/rest-api-docs.php:30 admin/views/settings.php:35 includes/class-naws-admin.php:110
-#: includes/class-naws-admin.php:123 includes/class-naws-labels.php:33
+#: admin/views/rest-api-docs.php:20 admin/views/rest-api-docs.php:30 admin/views/settings.php:35 includes/class-naws-admin.php:111
+#: includes/class-naws-admin.php:124 includes/class-naws-labels.php:33
 msgid "The credentials were NOT saved: they could not be stored encrypted. The previously stored value is unchanged."
 msgstr ""
 
-#: admin/views/cron-log.php:51 admin/views/dashboard.php:326
+#: admin/views/cron-log.php:109 admin/views/dashboard.php:327
 msgid "The daily cron runs at 00:01 and computes daily summaries for temperature, pressure and precipitation."
 msgstr ""
 
@@ -3290,7 +3326,7 @@ msgstr ""
 msgid "Total"
 msgstr ""
 
-#: admin/views/import.php:25 includes/class-naws-database.php:1034 includes/class-naws-helpers.php:89 includes/class-naws-helpers.php:839
+#: admin/views/import.php:25 includes/class-naws-database.php:1038 includes/class-naws-helpers.php:89 includes/class-naws-helpers.php:839
 #: includes/class-naws-labels.php:81
 msgid "Total last 24h"
 msgstr ""
@@ -3324,7 +3360,7 @@ msgstr ""
 msgid "Unhealthy"
 msgstr ""
 
-#: admin/views/dashboard.php:280 admin/views/shortcodes.php:92
+#: admin/views/dashboard.php:281 admin/views/shortcodes.php:92
 msgid "Unit"
 msgstr ""
 
@@ -3358,7 +3394,7 @@ msgstr ""
 msgid "Usage Examples"
 msgstr ""
 
-#: admin/views/appearance.php:100 admin/views/dashboard.php:278 admin/views/dashboard.php:279 templates/table.php:57
+#: admin/views/appearance.php:100 admin/views/dashboard.php:279 admin/views/dashboard.php:280 templates/table.php:57
 msgid "Value"
 msgstr ""
 
@@ -3388,7 +3424,7 @@ msgid "Warning since %s"
 msgstr ""
 
 #. translators: %d: minutes since the last sync.
-#: includes/class-naws-cron.php:554
+#: includes/class-naws-cron.php:565
 msgid "Warning: last sync %d minutes ago"
 msgstr ""
 
@@ -3547,7 +3583,7 @@ msgstr ""
 msgid "Window of raw readings in hours, 1–168."
 msgstr ""
 
-#: admin/views/dashboard.php:30 includes/class-naws-admin.php:41 includes/class-naws-admin.php:42
+#: admin/views/dashboard.php:30 includes/class-naws-admin.php:42 includes/class-naws-admin.php:43
 msgid "XTX Netatmo"
 msgstr ""
 
@@ -3604,7 +3640,7 @@ msgstr ""
 msgid "a lower frame, closer around the station"
 msgstr ""
 
-#: admin/views/live-settings.php:195 includes/class-naws-admin.php:313
+#: admin/views/live-settings.php:195 includes/class-naws-admin.php:314
 msgid "active"
 msgstr ""
 
@@ -3729,7 +3765,7 @@ msgid "hot"
 msgstr ""
 
 #. translators: %s: a duration such as "5 minutes", from human_time_diff().
-#: admin/views/dashboard.php:142 admin/views/dashboard.php:333
+#: admin/views/dashboard.php:143 admin/views/dashboard.php:334
 msgid "in %s"
 msgstr ""
 
@@ -3795,6 +3831,11 @@ msgstr ""
 
 #: admin/views/shortcodes.php:321
 msgid "outdoor, indoor, wind, rain, in-<name> or a MAC address. Left out, the module that measures the reading. Ignored with days."
+msgstr ""
+
+#. translators: %s: a duration such as "5 minutes", from human_time_diff().
+#: admin/views/dashboard.php:143
+msgid "overdue by %s"
 msgstr ""
 
 #: includes/class-naws-labels.php:271
@@ -3988,15 +4029,15 @@ msgstr ""
 msgid "✅ On — raw readings older than %d days are deleted every night."
 msgstr ""
 
-#: includes/class-naws-admin.php:317
+#: includes/class-naws-admin.php:318
 msgid "✅ Saved!"
 msgstr ""
 
-#: includes/class-naws-admin.php:309
+#: includes/class-naws-admin.php:310
 msgid "✓ Copied"
 msgstr ""
 
-#: includes/class-naws-admin.php:318
+#: includes/class-naws-admin.php:319
 msgid "❌ Error."
 msgstr ""
 
@@ -4004,7 +4045,7 @@ msgstr ""
 msgid "📡 Available Modules (current installation)"
 msgstr ""
 
-#: includes/class-naws-admin.php:57
+#: includes/class-naws-admin.php:58
 msgid "🖥️ Live-Dashboard"
 msgstr ""
 
@@ -4248,7 +4289,7 @@ msgctxt "daily sum"
 msgid "Rain"
 msgstr ""
 
-#: admin/views/dashboard.php:405
+#: admin/views/dashboard.php:406
 msgctxt "data retention"
 msgid "off"
 msgstr ""
@@ -4373,7 +4414,7 @@ msgstr ""
 #: admin/views/shortcodes.php:252 admin/views/shortcodes.php:269 admin/views/shortcodes.php:283 admin/views/shortcodes.php:293
 #: admin/views/shortcodes.php:315 admin/views/shortcodes.php:342 admin/views/shortcodes.php:357 admin/views/shortcodes.php:375
 #: admin/views/shortcodes.php:394 admin/views/shortcodes.php:400 admin/views/shortcodes.php:419 admin/views/shortcodes.php:435
-#: admin/views/shortcodes.php:486 admin/views/shortcodes.php:538 includes/class-naws-admin.php:308
+#: admin/views/shortcodes.php:486 admin/views/shortcodes.php:538 includes/class-naws-admin.php:309
 msgctxt "sc_copy"
 msgid "Copy"
 msgstr ""
@@ -4475,7 +4516,7 @@ msgctxt "table_col_time"
 msgid "Time"
 msgstr ""
 
-#: admin/views/cron-log.php:22 admin/views/notifications.php:139
+#: admin/views/cron-log.php:22 admin/views/cron-log.php:66 admin/views/notifications.php:139
 msgctxt "time"
 msgid "Time"
 msgstr ""

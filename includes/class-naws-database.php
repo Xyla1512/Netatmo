@@ -465,12 +465,16 @@ class NAWS_Database {
         $result = $wpdb->query( $wpdb->prepare( $sql, $values ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         if ( $result === false ) {
+            // 0 alone cannot tell a refused insert from all-duplicates;
+            // sync_current_data() reads last_error() to tell them apart.
+            self::$last_error = (string) $wpdb->last_error;
             NAWS_Logger::error( 'database', 'bulk_insert_readings failed: ' . $wpdb->last_error, [
                 'row_count' => count( $rows ),
             ] );
             return 0;
         }
 
+        self::$last_error = '';
         return $result;
     }
 

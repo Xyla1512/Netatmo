@@ -488,8 +488,22 @@ class NAWS_API {
             return $devices;
         }
 
+        // Without a station there is nothing to store, and "Sync OK" would
+        // leave the user waiting for modules that never come.
+        if ( empty( $devices ) ) {
+            $error = new WP_Error( 'no_devices', 'Netatmo returned no weather station for this account. Connect the Netatmo account that owns the station.' );
+            update_option( 'naws_last_sync_error', $error->get_error_message() );
+            return $error;
+        }
+
         $total_saved = 0;
         $rows        = [];
+
+        // Database errors of this run. Netatmo answering is only half of a
+        // sync: when the tables refuse the data (reported 2026-10-19: missing
+        // tables, "Sync OK – 0 readings saved" every ten minutes), the run
+        // has failed and has to say so.
+        $db_errors = [];
 
         // These fields in dashboard_data are Unix timestamps or metadata, NOT sensor values.
         // Storing them as readings would pollute the DB with nonsensical large integers.
@@ -508,7 +522,8 @@ class NAWS_API {
 
             // Save main module metadata
             $device['station_id'] = $station_id;
-            NAWS_Database::save_module( $device );
+            $saved = NAWS_Database::save_module( $device );
+            if ( is_wp_error( $saved ) ) $db_errors[] = $saved->get_error_message();
 
             // Save readings from dashboard_data (only if module is active)
             if ( ! empty( $device['dashboard_data'] ) ) {
@@ -531,7 +546,8 @@ class NAWS_API {
             // Process additional modules
             foreach ( $device['modules'] ?? [] as $module ) {
                 $module['station_id'] = $station_id;
-                NAWS_Database::save_module( $module );
+                $saved = NAWS_Database::save_module( $module );
+                if ( is_wp_error( $saved ) ) $db_errors[] = $saved->get_error_message();
 
                 if ( ! empty( $module['dashboard_data'] ) ) {
                     if ( ! NAWS_Database::is_module_active( $module['_id'] ) ) continue;
@@ -554,6 +570,20 @@ class NAWS_API {
 
         if ( ! empty( $rows ) ) {
             $total_saved = NAWS_Database::bulk_insert_readings( $rows );
+            if ( NAWS_Database::last_error() !== '' ) {
+                $db_errors[] = 'Failed to save readings: ' . NAWS_Database::last_error();
+            }
+        }
+
+        if ( ! empty( $db_errors ) ) {
+            $db_errors = array_values( array_unique( $db_errors ) );
+            $error     = new WP_Error( 'db_error', sprintf(
+                'Netatmo data received, but the database did not store it: %s%s',
+                $db_errors[0],
+                count( $db_errors ) > 1 ? sprintf( ' (+%d more, see the error log)', count( $db_errors ) - 1 ) : ''
+            ) );
+            update_option( 'naws_last_sync_error', $error->get_error_message() );
+            return $error;
         }
 
         // The rain gauge reports every five minutes and dashboard_data shows

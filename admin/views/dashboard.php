@@ -139,7 +139,8 @@ $module_type_colors = [
             <div class="naws-stat-body">
                 <div class="naws-stat-value naws-stat-value--date"><?php echo $next_run ? esc_html( wp_date('H:i', $next_run) ) : '—'; ?></div>
                 <div class="naws-stat-label"><?php esc_html_e( 'Next run:', 'xtx-integration-for-netatmo' ); ?></div>
-                <div class="naws-stat-sub"><?php echo $next_run ? esc_html( sprintf( /* translators: %s: a duration such as "5 minutes", from human_time_diff(). */ __( 'in %s', 'xtx-integration-for-netatmo' ), human_time_diff( $next_run ) ) ) : ''; ?></div>
+                <?php // human_time_diff() has no direction: an overdue run read "in 2 seconds". ?>
+                <div class="naws-stat-sub"><?php if ( $next_run && $next_run > time() ) { echo esc_html( sprintf( /* translators: %s: a duration such as "5 minutes", from human_time_diff(). */ __( 'in %s', 'xtx-integration-for-netatmo' ), human_time_diff( $next_run ) ) ); } elseif ( $next_run ) { echo esc_html( sprintf( /* translators: %s: a duration such as "5 minutes", from human_time_diff(). */ __( 'overdue by %s', 'xtx-integration-for-netatmo' ), human_time_diff( $next_run ) ) ); } ?></div>
             </div>
         </div>
 
@@ -165,7 +166,7 @@ $module_type_colors = [
                 <div class="naws-stat-value naws-stat-value--date" style="font-size:0.8rem;"><?php echo esc_html( $health['message'] ); ?></div>
                 <div class="naws-stat-label">Health</div>
                 <?php if ( $recent_errors > 0 ) : ?>
-                <div class="naws-stat-sub" style="color:#ef4444;"><?php echo esc_html( sprintf( /* translators: %d: number of errors. */ __( '%d error(s) in the last hour', 'xtx-integration-for-netatmo' ), $recent_errors ) ); ?></div>
+                <div class="naws-stat-sub"><a href="<?php echo esc_url( admin_url( 'admin.php?page=naws-cron-log#naws-error-log' ) ); ?>" style="color:#ef4444;"><?php echo esc_html( sprintf( /* translators: %d: number of errors. */ __( '%d error(s) in the last hour', 'xtx-integration-for-netatmo' ), $recent_errors ) ); ?></a></div>
                 <?php endif; ?>
             </div>
         </div>

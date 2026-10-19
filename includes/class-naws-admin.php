@@ -23,6 +23,7 @@ class NAWS_Admin {
         add_action( 'admin_post_naws_manual_sync',   [ $this, 'handle_manual_sync' ] );
         add_action( 'admin_post_naws_import_historical', [ $this, 'handle_import_historical' ] );
         add_action( 'admin_post_naws_disconnect',    [ $this, 'handle_disconnect' ] );
+        add_action( 'admin_post_naws_clear_error_log', [ $this, 'handle_clear_error_log' ] );
         add_action( 'admin_post_naws_export_weather', [ $this, 'handle_export_weather' ] );
         add_action( 'admin_post_naws_export_full',    [ $this, 'handle_export_full' ] );
         add_action( 'admin_post_naws_import_file',    [ $this, 'handle_import_upload' ] );
@@ -453,7 +454,23 @@ class NAWS_Admin {
         $result = $api->sync_current_data();
 
         // Always reschedule cron after manual sync so it doesn't stay stuck
-        NAWS_Cron::instance()->reschedule();
+        NAWS_Cron::instance()->reschedule( true );
+
+        // Log to cron log so manual syncs are visible too, as the AJAX
+        // button in NAWS_Ajax::sync_now() does.
+        $log = get_option( 'naws_cron_log', [] );
+        if ( is_wp_error( $result ) ) {
+            $entry = [ 'time' => time(), 'status' => 'error', 'message' => 'Manual sync: ' . $result->get_error_message() ];
+        } else {
+            $expiry = (int) get_option( 'naws_token_expiry', 0 );
+            $entry  = [ 'time' => time(), 'status' => 'ok', 'message' => sprintf(
+                'Manual sync OK – %d readings saved. Token valid until %s.',
+                intval( $result ),
+                $expiry ? wp_date( 'H:i', $expiry ) : '?'
+            ) ];
+        }
+        array_unshift( $log, $entry );
+        update_option( 'naws_cron_log', array_slice( $log, 0, 150 ) );
 
         $msg = is_wp_error( $result ) ? '&error=' . rawurlencode( $result->get_error_message() ) : '&synced=1';
         wp_safe_redirect( wp_nonce_url( admin_url( 'admin.php?page=naws-dashboard' . $msg ), 'naws_notice' ) );
@@ -600,9 +617,77 @@ class NAWS_Admin {
     }
 
     public function page_cron_log() {
-        $log      = get_option( 'naws_cron_log', [] );
-        $next_run = NAWS_Cron::get_next_run();
+        $log            = get_option( 'naws_cron_log', [] );
+        $next_run       = NAWS_Cron::get_next_run();
+        $error_log      = NAWS_Logger::get_log( null, NAWS_Logger::MAX_ENTRIES );
+        $support_report = $this->support_report( $error_log, is_array( $log ) ? $log : [] );
         include NAWS_PLUGIN_DIR . 'admin/views/cron-log.php';
+    }
+
+    /**
+     * Plain-text report for support requests: environment, tables, cron
+     * state, then the newest error-log and cron-log entries. Users paste it
+     * into a support request; it carries no credentials (the logger strips
+     * them before storing, and no option holding one is read here).
+     *
+     * @param  array $error_log  NAWS_Logger entries, newest first.
+     * @param  array $cron_log   naws_cron_log entries, newest first.
+     * @return string
+     */
+    private function support_report( array $error_log, array $cron_log ) {
+        global $wpdb;
+
+        $tables = [];
+        foreach ( [ NAWS_TABLE_MODULES, NAWS_TABLE_READINGS, NAWS_TABLE_DAILY ] as $name ) {
+            $table  = $wpdb->prefix . $name;
+            $exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table ) ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- schema check, no caching applicable
+            $tables[] = $table . ': ' . ( $exists ? 'ok' : 'MISSING' );
+        }
+
+        $fmt   = function ( $ts ) { return $ts ? wp_date( 'Y-m-d H:i:s', (int) $ts ) : '-'; };
+        $state = NAWS_Cron::get_polling_state();
+        $lines = [
+            '== XTX Netatmo support report ' . $fmt( time() ) . ' ==',
+            'Plugin: ' . NAWS_VERSION . ' | DB schema: ' . get_option( 'naws_db_version', '-' ) . ' (expected ' . NAWS_DB_VERSION . ')',
+            'WordPress: ' . get_bloginfo( 'version' ) . ' | PHP: ' . PHP_VERSION . ' | Database: ' . $wpdb->db_server_info(),
+            'Timezone: ' . wp_timezone_string(),
+            'Tables: ' . implode( ', ', $tables ),
+            'Cron: next fetch ' . $fmt( NAWS_Cron::get_next_run() )
+                . ' | last sync ' . $fmt( get_option( 'naws_last_sync', 0 ) )
+                . ' | interval ' . intval( NAWS_Cron::base_interval() / MINUTE_IN_SECONDS ) . ' min'
+                . ' | consecutive errors ' . (int) $state['consecutive_errors'],
+            'WP-Cron: DISABLE_WP_CRON ' . ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ? 'yes' : 'no' )
+                . ' | ALTERNATE_WP_CRON ' . ( defined( 'ALTERNATE_WP_CRON' ) && ALTERNATE_WP_CRON ? 'yes' : 'no' )
+                . ' | object cache ' . ( wp_using_ext_object_cache() ? 'external' : 'none' ),
+            'Last sync error: ' . ( get_option( 'naws_last_sync_error', '' ) ?: '-' ),
+            '',
+            '== Error log (newest first) ==',
+        ];
+
+        foreach ( array_slice( $error_log, 0, 50 ) as $e ) {
+            $lines[] = $fmt( $e['time'] ?? 0 ) . ' ' . strtoupper( $e['level'] ?? '' ) . ' [' . ( $e['context'] ?? '' ) . '] ' . ( $e['message'] ?? '' )
+                . ( ! empty( $e['data'] ) ? ' ' . wp_json_encode( $e['data'] ) : '' );
+        }
+        if ( empty( $error_log ) ) $lines[] = '-';
+
+        $lines[] = '';
+        $lines[] = '== Cron log (newest first) ==';
+        foreach ( array_slice( $cron_log, 0, 30 ) as $c ) {
+            $lines[] = $fmt( $c['time'] ?? 0 ) . ' ' . ( $c['status'] ?? '' ) . ' ' . ( $c['message'] ?? '' );
+        }
+        if ( empty( $cron_log ) ) $lines[] = '-';
+
+        return implode( "\n", $lines );
+    }
+
+    public function handle_clear_error_log() {
+        check_admin_referer( 'naws_clear_error_log' );
+        if ( ! current_user_can( 'manage_options' ) ) wp_die( 'Unauthorized' );
+
+        NAWS_Logger::clear();
+
+        wp_safe_redirect( admin_url( 'admin.php?page=naws-cron-log#naws-error-log' ) );
+        exit;
     }
 
     public function page_live_settings() {

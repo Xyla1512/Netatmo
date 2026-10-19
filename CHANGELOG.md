@@ -2,6 +2,16 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [2.1.5]
+
+### Added
+- **Cron Log → Error Log and Support Report.** The plugin has always kept a log of database, connection and weather-service errors, but no page showed it; the dashboard only counted "184 error(s) in the last hour". The Cron Log page now lists these entries with level, area and details, and a button clears them. Below, a support report collects plugin, WordPress, PHP and database versions, whether the plugin tables exist, the cron state and the newest log entries; "Copy report" puts it on the clipboard for a support request. It contains no passwords, tokens or API keys. The error count on the dashboard links to the log.
+
+### Fixed
+- **A sync whose data the database refused reported "Sync OK".** When the plugin tables were missing or broken, Netatmo answered, every write failed, and the cron log still read "Sync OK – 0 readings saved" every ten minutes while the dashboard stayed at 0 modules. A refused write now fails the sync with the database's own message, in the cron log, on the "Sync now" button and for the e-mail notification on failed syncs. Likewise an account without a weather station: "Netatmo returned no weather station for this account" instead of "Sync OK". Reported by users.
+- **"Sync now" fetched twice and showed the next run on the second of the last.** After the manual sync the cron was rescheduled for "now", so the next page view ran another fetch straight away; the dashboard showed "Next run" and "Last sync" at the same time. The next fetch is now one interval after the manual one, and the manual sync appears in the cron log.
+- **An overdue next run read "in 2 seconds".** The dashboard now says "overdue by 2 seconds".
+
 ## [2.1.4]
 
 ### Fixed

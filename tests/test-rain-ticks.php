@@ -61,6 +61,7 @@ class NAWS_Database {
     public static $inactive = [];
     public static function is_module_active( $id ) { return ! in_array( $id, self::$inactive, true ); }
     public static function save_module( $m ) {}
+    public static function last_error(): string { return ''; }
     public static function bulk_insert_readings( $rows ) {
         foreach ( $rows as $r ) { self::$rows[] = $r; }
         return count( $rows );
