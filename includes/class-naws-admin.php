@@ -619,7 +619,13 @@ class NAWS_Admin {
     public function page_cron_log() {
         $log            = get_option( 'naws_cron_log', [] );
         $next_run       = NAWS_Cron::get_next_run();
-        $error_log      = NAWS_Logger::get_log( null, NAWS_Logger::MAX_ENTRIES );
+        // Errors and warnings only: every sync logs an info line ("All NAWS
+        // caches flushed."), and those buried the errors on the page and in
+        // the report.
+        $error_log      = array_values( array_filter(
+            NAWS_Logger::get_log( null, NAWS_Logger::MAX_ENTRIES ),
+            function ( $entry ) { return in_array( $entry['level'] ?? '', [ NAWS_Logger::LEVEL_ERROR, NAWS_Logger::LEVEL_WARNING ], true ); }
+        ) );
         $support_report = $this->support_report( $error_log, is_array( $log ) ? $log : [] );
         include NAWS_PLUGIN_DIR . 'admin/views/cron-log.php';
     }
