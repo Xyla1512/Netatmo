@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 2.1.4
+Stable tag: 2.1.5
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -123,6 +123,12 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 
 == Changelog ==
 
+= 2.1.5 =
+* Added: Cron Log › Error Log — the errors and warnings the plugin has always collected (database, Netatmo connection, weather services), which no page showed; the dashboard only counted them. A button clears the log, and the error count on the dashboard links to it.
+* Added: Cron Log › Support Report — plugin, WordPress, PHP and database versions, whether the plugin tables exist, the cron state and the newest log entries, with a "Copy report" button for support requests. It contains no passwords, tokens or API keys.
+* Fix: a sync whose data the database refused reported "Sync OK – 0 readings saved". It now fails with the database's own message, in the cron log, on the "Sync now" button and for the e-mail notification on failed syncs. An account without a weather station gets its own message instead of "Sync OK".
+* Fix: "Sync now" fetched twice and showed the next run on the second of the last one; the next fetch now follows one interval later, and manual syncs appear in the cron log. An overdue next run reads "overdue by …" instead of "in …".
+
 = 2.1.4 =
 * Fix: the PHP example on the REST API page failed in snippet plugins such as Code Snippets or WPCode — it read address and key with `global`, which finds nothing inside the function these plugins run. The tab, now "PHP / Snippet", shows a `[wetter_aktuell]` shortcode with the key in the header, a five-minute cache and a copy button.
 * Fix: the REST API page still offered the key as a query parameter, which has been refused since the key moved to the `X-NAWS-Key` header.
@@ -142,29 +148,18 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 * Added: a Signal column on the Modules page — the Wi-Fi of the base station as a fan, the radio link of every other module as four bars, each with a word (Excellent, Good, Fair, Weak) and Netatmo's raw value on hover. A device Netatmo reports as unreachable shows "Not reachable".
 * Fix: `[naws_forecast]` printed decimal points on a German page ("17.4 / 14.7 °C"). Temperatures, precipitation, wind and gusts of the forecast use the site's decimal mark now.
 
-= 2.1.0 =
-* Added: `[naws_sparkline]` — a curve the size of a word, next to the number in running text: the raw readings of the last hours or a column of the daily summary, rain as bars, the band between daily low and high, a bubble with time and value on hover. `layout="tile"` draws it as a card with value, low and high; `layout="month"` as a block of daily means with the rain per day. Server-side SVG, complete without JavaScript; eight colours on a new Appearance tab, Sparkline.
-* Added: `[naws_sparkline_tiles]` — the sparkline cards as a grid that wraps by itself: temperature, humidity, pressure, wind, rain and CO2 by default (`params`, `hours`).
-* Added: sparklines in the sidebar widget. A switch under Appearance › Sidebar widget, or `sparklines="1"` on the shortcode, adds a 24-hour curve under the temperature and five tiles for humidity, pressure, wind, rain and CO2. Off by default.
-* Changed: the forecast's colours can be set on a new Appearance tab, Forecast; texts, frames and the card background follow the base theme. The Appearance tabs are WordPress tabs now, wrap on a narrow screen and stay open after saving.
-* Changed: the REST endpoint `/daily` returns `humidity_avg`, `wind_avg`, `co2_avg` and `noise_avg` when asked for them.
-* Fix: numbers follow the language of the page — "23,4 °C" and "1.019,1 mbar" on a German page — in the widget, the tables, single and computed values, the infobar, the heatmap, the e-mails and the axes and tooltips of the charts.
-* Fix: the heatmap no longer colours today. The running mean of a day that is not over looked like a finished day; the cell now gets its colour the next day.
-* Fix: `[naws_current]` shows its icons again instead of their SVG source as text.
-* Fix: "11 Minuten ago" — relative times are translatable now ("vor 11 Minuten").
-
 Older versions: the complete changelog since 1.0.0 is kept in [CHANGELOG.md](https://github.com/Xyla1512/Netatmo/blob/main/CHANGELOG.md) on GitHub.
 
 == Upgrade Notice ==
+
+= 2.1.5 =
+New: the error log and a support report on the Cron Log page. Fix: a sync the database refused no longer reports "Sync OK", and "Sync now" no longer fetches twice. Nothing to reconfigure.
 
 = 2.1.4 =
 Fix: the REST API page shows a PHP example that works in snippet plugins, as a [wetter_aktuell] shortcode with a copy button, names the X-NAWS-Key header as the only place for the key, and warns about keys in browser code. Nothing to reconfigure.
 
 = 2.1.3 =
 New: [naws_radar], an animated rain radar around the station — switch it on under Settings › Rain radar. New colours for records and the chart expand button. Fix: records, "on this day" and the sun path follow the base theme.
-
-= 2.1.2 =
-Fix: no more "HTTP 429" from Open-Meteo in the forecast — a failed request pauses the provider and the last good forecast stays on the page. Fix: no lines across the history charts on the 29th of February. Nothing to reconfigure.
 
 == Privacy & External Services ==
 

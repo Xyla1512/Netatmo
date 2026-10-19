@@ -1,0 +1,44 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo
+"
+"Language: de_DE
+"
+"MIME-Version: 1.0
+"
+"Content-Type: text/plain; charset=UTF-8
+"
+"Content-Transfer-Encoding: 8bit
+"
+"Plural-Forms: nplurals=2; plural=n != 1;
+"
+
+msgid "Area"
+msgstr "Bereich"
+
+msgid "Clear error log"
+msgstr "Fehlerprotokoll leeren"
+
+msgid "Copy report"
+msgstr "Bericht kopieren"
+
+msgid "Error Log"
+msgstr "Fehlerprotokoll"
+
+msgid "Errors and warnings from the database, the Netatmo connection and the weather services. A sync can reach Netatmo and still fail here, for example when the database refuses the data."
+msgstr "Fehler und Warnungen aus der Datenbank, der Netatmo-Verbindung und den Wetterdiensten. Ein Abruf kann Netatmo erreichen und trotzdem hier scheitern, zum Beispiel wenn die Datenbank die Daten nicht annimmt."
+
+msgid "If you ask for help, copy this report and paste it into your support request. It lists the plugin, WordPress, PHP and database versions, whether the plugin tables exist, the cron state and the newest log entries. It contains no passwords, tokens or API keys."
+msgstr "Wenn du Hilfe brauchst, kopiere diesen Bericht und füge ihn in deine Support-Anfrage ein. Er nennt die Versionen von Plugin, WordPress, PHP und Datenbank, ob die Tabellen des Plugins vorhanden sind, den Cron-Zustand und die neuesten Protokolleinträge. Er enthält keine Passwörter, Tokens oder API-Schlüssel."
+
+msgid "Level"
+msgstr "Stufe"
+
+msgid "No errors logged."
+msgstr "Keine Fehler protokolliert."
+
+msgid "Support Report"
+msgstr "Support-Bericht"
+
+msgid "overdue by %s"
+msgstr "überfällig seit %s"

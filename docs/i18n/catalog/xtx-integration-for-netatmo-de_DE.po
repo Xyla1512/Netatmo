@@ -1546,7 +1546,7 @@ msgstr "Ist das Regenradar eingeschaltet, holt diese Website Radarbilder vom Deu
 
 #: admin/views/cron-log.php:99
 msgid "If you ask for help, copy this report and paste it into your support request. It lists the plugin, WordPress, PHP and database versions, whether the plugin tables exist, the cron state and the newest log entries. It contains no passwords, tokens or API keys."
-msgstr "Wenn Sie Hilfe brauchen, kopieren Sie diesen Bericht und fügen Sie ihn in Ihre Support-Anfrage ein. Er nennt die Versionen von Plugin, WordPress, PHP und Datenbank, ob die Tabellen des Plugins vorhanden sind, den Cron-Zustand und die neuesten Protokolleinträge. Er enthält keine Passwörter, Tokens oder API-Schlüssel."
+msgstr "Wenn du Hilfe brauchst, kopiere diesen Bericht und füge ihn in deine Support-Anfrage ein. Er nennt die Versionen von Plugin, WordPress, PHP und Datenbank, ob die Tabellen des Plugins vorhanden sind, den Cron-Zustand und die neuesten Protokolleinträge. Er enthält keine Passwörter, Tokens oder API-Schlüssel."
 
 #: admin/views/import.php:17
 msgid "Import Configuration"
