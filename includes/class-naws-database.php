@@ -324,10 +324,13 @@ class NAWS_Database {
         ) );
 
         if ( $result === false ) {
-            NAWS_Logger::error( 'database', 'save_module failed: ' . $wpdb->last_error, [
+            // Read it once: the logger's update_option() is a query of its
+            // own and leaves $wpdb->last_error empty behind it.
+            $db_error = (string) $wpdb->last_error;
+            NAWS_Logger::error( 'database', 'save_module failed: ' . $db_error, [
                 'module_id' => $module_id,
             ] );
-            return new WP_Error( 'db_error', 'Failed to save module: ' . $wpdb->last_error );
+            return new WP_Error( 'db_error', 'Failed to save module: ' . $db_error );
         }
 
         // Status fields as a second, small write: wpdb::update() writes a real
