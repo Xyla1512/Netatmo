@@ -1,0 +1,20 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo - Stable Readme\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "Added: Cron Log › Error Log — the errors and warnings the plugin has always collected (database, Netatmo connection, weather services), which no page showed; the dashboard only counted them. A button clears the log, and the error count on the dashboard links to it."
+msgstr "Added: Cron-Log › Fehlerprotokoll — die Fehler und Warnungen, die das Plugin schon immer sammelt (Datenbank, Netatmo-Verbindung, Wetterdienste), die aber keine Seite zeigte; das Dashboard zählte sie nur. Ein Knopf leert das Protokoll, und die Fehlerzahl auf dem Dashboard verlinkt darauf."
+
+msgid "Added: Cron Log › Support Report — plugin, WordPress, PHP and database versions, whether the plugin tables exist, the cron state and the newest log entries, with a \"Copy report\" button for support requests. It contains no passwords, tokens or API keys."
+msgstr "Added: Cron-Log › Support-Bericht — Versionen von Plugin, WordPress, PHP und Datenbank, ob die Tabellen des Plugins vorhanden sind, der Cron-Zustand und die neuesten Protokolleinträge, mit einem Knopf „Bericht kopieren“ für Support-Anfragen. Er enthält keine Passwörter, Tokens oder API-Schlüssel."
+
+msgid "Fix: a sync whose data the database refused reported \"Sync OK – 0 readings saved\". It now fails with the database's own message, in the cron log, on the \"Sync now\" button and for the e-mail notification on failed syncs. An account without a weather station gets its own message instead of \"Sync OK\"."
+msgstr "Fix: Ein Abruf, dessen Daten die Datenbank nicht annahm, meldete „Sync OK – 0 readings saved“. Jetzt scheitert er mit der Meldung der Datenbank: im Cron-Log, beim Knopf „Jetzt synchronisieren“ und für die E-Mail-Benachrichtigung bei fehlgeschlagenen Abrufen. Ein Konto ohne Wetterstation bekommt eine eigene Meldung statt „Sync OK“."
+
+msgid "Fix: \"Sync now\" fetched twice and showed the next run on the second of the last one; the next fetch now follows one interval later, and manual syncs appear in the cron log. An overdue next run reads \"overdue by …\" instead of \"in …\"."
+msgstr "Fix: „Jetzt synchronisieren“ rief zweimal ab und zeigte die nächste Ausführung auf der Sekunde der letzten; der nächste Abruf folgt jetzt ein Intervall später, und Handabrufe stehen im Cron-Log. Eine überfällige Ausführung heißt „überfällig seit …“ statt „in …“."
