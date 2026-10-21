@@ -498,6 +498,12 @@ class NAWS_Database {
             'date_to'    => time(),
             'limit'      => 5000,
             'group_by'   => 'raw',
+            // Parameters whose readings are amounts rather than levels: a
+            // group adds them up instead of averaging them. Rain carries the
+            // rain of each five-minute report, so its mean over an hour said
+            // a twelfth of what fell — in the live chart, [naws_table] and
+            // the REST API alike.
+            'sum_params' => [ 'Rain' ],
         ] );
 
         // ── Transient cache ──────────────────────────────────────────
@@ -543,8 +549,16 @@ class NAWS_Database {
         $group_by = $args['group_by'];
         if ( isset( $buckets[ $group_by ] ) ) {
             $bkt    = $buckets[ $group_by ];
+            $agg    = 'AVG(r.value)';
+            if ( ! empty( $args['sum_params'] ) ) {
+                $sp  = array_values( (array) $args['sum_params'] );
+                $sph = implode( ',', array_fill( 0, count( $sp ), '%s' ) );
+                $agg = "CASE WHEN r.parameter IN ({$sph}) THEN SUM(r.value) ELSE AVG(r.value) END";
+                // These placeholders stand in the SELECT, ahead of the WHERE ones.
+                $params = array_merge( $sp, $params );
+            }
             $select = "r.module_id, r.parameter, {$bkt} AS recorded_at,
-                        AVG(r.value) AS value,
+                        {$agg} AS value,
                         MIN(r.value) AS min_value,
                         MAX(r.value) AS max_value,
                         COUNT(*)     AS data_points";

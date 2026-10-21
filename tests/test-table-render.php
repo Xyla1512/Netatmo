@@ -107,6 +107,16 @@ check( 'ungruppiert entfallen Min und Max',   str_contains( $raw, '<th>Min</th>'
 check( 'und die Spalte heisst schlicht Wert', str_contains( $raw, '<th>Average</th>' ), false );
 check( 'vier Spalten statt sechs',            substr_count( $raw, '<th>' ), 4 );
 
+// Gruppierter Regen ist eine Summe (sum_params in get_readings()): die
+// Spalte heisst dann nicht Mittel, und Min/Max der Fuenf-Minuten-Meldungen
+// bleiben leer.
+$rain = render( [ grouped_row( 'Temperature', 21.34, 18.2, 24.9 ), grouped_row( 'Rain', 0.505, 0.0, 0.101 ) ] );
+check( 'mit Regen heisst die Spalte Wert',          str_contains( $rain, '<th>Value</th>' ) && ! str_contains( $rain, '<th>Average</th>' ), true );
+check( 'die Regensumme steht da',                   str_contains( $rain, '0.5 mm' ), true );
+check( 'Min/Max des Regens bleiben leer',           substr_count( $rain, '<td>—</td>' ), 2 );
+check( 'Min/Max der Temperatur bleiben',            str_contains( $rain, '18.2 °C' ) && str_contains( $rain, '24.9 °C' ), true );
+check( 'ohne Regen bleibt es beim Mittel',          str_contains( $html, '<th>Average</th>' ), true );
+
 $day = render( [ grouped_row( 'Temperature', 21.34, 18.2, 24.9 ) ], [ 'group_by' => 'day' ] );
 
 check( 'Tagesbuckets zeigen nur das Datum', str_contains( $day, gmdate( 'Y-m-d', 1756600000 ) ) && ! str_contains( $day, gmdate( 'H:i', 1756600000 ) ), true );

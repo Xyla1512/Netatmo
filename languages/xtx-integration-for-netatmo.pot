@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: XTX Integration for Netatmo\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/xtx-integration-for-netatmo\n"
-"POT-Creation-Date: 2026-10-19 13:21+0000\n"
+"POT-Creation-Date: 2026-10-21 14:29+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -451,7 +451,7 @@ msgstr ""
 msgid "Automatic deletion"
 msgstr ""
 
-#: templates/table.php:56
+#: templates/table.php:63
 msgid "Average"
 msgstr ""
 
@@ -1218,7 +1218,7 @@ msgstr ""
 msgid "Fifteen records from the daily summary — hottest day, coldest night, wettest month, longest dry spell, strongest gust and more — each with its date, as tiles or as a table."
 msgstr ""
 
-#: includes/class-naws-admin.php:803
+#: includes/class-naws-admin.php:809
 msgid "File too large. Maximum size: 100 MB."
 msgstr ""
 
@@ -1606,7 +1606,7 @@ msgstr ""
 msgid "Invalid date format or parameters."
 msgstr ""
 
-#: includes/class-naws-admin.php:782 includes/class-naws-admin.php:797
+#: includes/class-naws-admin.php:788 includes/class-naws-admin.php:803
 msgid "Invalid file. Please select a valid NAWS export file (.json)."
 msgstr ""
 
@@ -1866,12 +1866,12 @@ msgstr ""
 msgid "Master switch"
 msgstr ""
 
-#: admin/views/appearance.php:456 templates/history.php:135 templates/live.php:267 templates/table.php:60
+#: admin/views/appearance.php:456 templates/history.php:135 templates/live.php:267 templates/table.php:67
 #: templates/windrose.php:71 templates/windrose.php:185
 msgid "Max"
 msgstr ""
 
-#: includes/class-naws-database.php:1035 includes/class-naws-helpers.php:95 includes/class-naws-helpers.php:97 includes/class-naws-helpers.php:841
+#: includes/class-naws-database.php:1052 includes/class-naws-helpers.php:95 includes/class-naws-helpers.php:97 includes/class-naws-helpers.php:841
 #: includes/class-naws-labels.php:73
 msgid "Max Temperature (day)"
 msgstr ""
@@ -1908,11 +1908,11 @@ msgstr ""
 msgid "Message"
 msgstr ""
 
-#: templates/history.php:134 templates/table.php:59
+#: templates/history.php:134 templates/table.php:66
 msgid "Min"
 msgstr ""
 
-#: includes/class-naws-database.php:1034 includes/class-naws-helpers.php:94 includes/class-naws-helpers.php:96 includes/class-naws-helpers.php:840
+#: includes/class-naws-database.php:1051 includes/class-naws-helpers.php:94 includes/class-naws-helpers.php:96 includes/class-naws-helpers.php:840
 #: includes/class-naws-labels.php:70
 msgid "Min Temperature (day)"
 msgstr ""
@@ -1925,7 +1925,7 @@ msgstr ""
 msgid "Minimum: 5 minutes. Note: Netatmo updates sensors every 5 minutes."
 msgstr ""
 
-#: templates/table.php:53
+#: templates/table.php:60
 msgid "Module"
 msgstr ""
 
@@ -2075,7 +2075,7 @@ msgstr ""
 msgid "No city specified. Please enter a city in the forecast settings."
 msgstr ""
 
-#: admin/views/dashboard.php:273 templates/table.php:46
+#: admin/views/dashboard.php:273 templates/table.php:53
 msgid "No data available yet."
 msgstr ""
 
@@ -2301,7 +2301,7 @@ msgstr ""
 msgid "Own font family"
 msgstr ""
 
-#: templates/table.php:54
+#: templates/table.php:61
 msgid "Parameter"
 msgstr ""
 
@@ -2362,7 +2362,8 @@ msgstr ""
 msgid "Possible values"
 msgstr ""
 
-#: includes/class-naws-helpers.php:335 includes/class-naws-labels.php:296 templates/forecast.php:108 templates/live.php:263
+#: includes/class-naws-helpers.php:87 includes/class-naws-helpers.php:335 includes/class-naws-helpers.php:837 includes/class-naws-labels.php:296
+#: templates/forecast.php:108 templates/live.php:263
 msgid "Precipitation"
 msgstr ""
 
@@ -2390,7 +2391,7 @@ msgstr ""
 msgid "Pressure (relative)"
 msgstr ""
 
-#: includes/class-naws-database.php:1037 includes/class-naws-labels.php:72
+#: includes/class-naws-database.php:1054 includes/class-naws-labels.php:72
 msgid "Pressure Ø (hPa)"
 msgstr ""
 
@@ -2985,7 +2986,7 @@ msgstr ""
 msgid "Tabular view of historical readings with configurable time period and grouping."
 msgstr ""
 
-#: includes/class-naws-database.php:1036 includes/class-naws-labels.php:71
+#: includes/class-naws-database.php:1053 includes/class-naws-labels.php:71
 msgid "Temp Ø (°C)"
 msgstr ""
 
@@ -3326,13 +3327,12 @@ msgstr ""
 msgid "Total"
 msgstr ""
 
-#: admin/views/import.php:25 includes/class-naws-database.php:1038 includes/class-naws-helpers.php:89 includes/class-naws-helpers.php:839
+#: admin/views/import.php:25 includes/class-naws-database.php:1055 includes/class-naws-helpers.php:89 includes/class-naws-helpers.php:839
 #: includes/class-naws-labels.php:81
 msgid "Total last 24h"
 msgstr ""
 
-#: admin/views/live-settings.php:121 includes/class-naws-helpers.php:87 includes/class-naws-helpers.php:88 includes/class-naws-helpers.php:837
-#: includes/class-naws-helpers.php:838 includes/class-naws-labels.php:80
+#: admin/views/live-settings.php:121 includes/class-naws-helpers.php:88 includes/class-naws-helpers.php:838 includes/class-naws-labels.php:80
 msgid "Total last hour"
 msgstr ""
 
@@ -3394,7 +3394,7 @@ msgstr ""
 msgid "Usage Examples"
 msgstr ""
 
-#: admin/views/appearance.php:100 admin/views/dashboard.php:279 admin/views/dashboard.php:280 templates/table.php:57
+#: admin/views/appearance.php:100 admin/views/dashboard.php:279 admin/views/dashboard.php:280 templates/table.php:64
 msgid "Value"
 msgstr ""
 
@@ -4511,7 +4511,7 @@ msgctxt "table column"
 msgid "When"
 msgstr ""
 
-#: templates/table.php:52
+#: templates/table.php:59
 msgctxt "table_col_time"
 msgid "Time"
 msgstr ""

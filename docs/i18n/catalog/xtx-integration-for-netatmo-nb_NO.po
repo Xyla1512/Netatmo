@@ -449,7 +449,7 @@ msgstr "Automatisk (fra Netatmo-stasjonskoordinater)"
 msgid "Automatic deletion"
 msgstr "Automatisk sletting"
 
-#: templates/table.php:56
+#: templates/table.php:63
 msgid "Average"
 msgstr "Snitt"
 
@@ -1216,7 +1216,7 @@ msgstr "Henting feiler"
 msgid "Fifteen records from the daily summary — hottest day, coldest night, wettest month, longest dry spell, strongest gust and more — each with its date, as tiles or as a table."
 msgstr "Femten rekorder fra dagssammendraget — varmeste dag, kaldeste natt, våteste måned, lengste tørkeperiode, sterkeste vindkast og mer — hver med sin dato, som fliser eller som tabell."
 
-#: includes/class-naws-admin.php:803
+#: includes/class-naws-admin.php:809
 msgid "File too large. Maximum size: 100 MB."
 msgstr "Filen er for stor. Maksimal størrelse: 100 MB."
 
@@ -1604,7 +1604,7 @@ msgstr "Interaktive årssammenligningsdiagrammer for temperatur, lufttrykk og ne
 msgid "Invalid date format or parameters."
 msgstr "Ugyldig datoformat eller parametere."
 
-#: includes/class-naws-admin.php:782 includes/class-naws-admin.php:797
+#: includes/class-naws-admin.php:788 includes/class-naws-admin.php:803
 msgid "Invalid file. Please select a valid NAWS export file (.json)."
 msgstr "Ugyldig fil. Velg en gyldig NAWS-eksportfil (.json)."
 
@@ -1864,12 +1864,12 @@ msgstr "Mar"
 msgid "Master switch"
 msgstr "Hovedbryter"
 
-#: admin/views/appearance.php:456 templates/history.php:135 templates/live.php:267 templates/table.php:60
+#: admin/views/appearance.php:456 templates/history.php:135 templates/live.php:267 templates/table.php:67
 #: templates/windrose.php:71 templates/windrose.php:185
 msgid "Max"
 msgstr "Maks"
 
-#: includes/class-naws-database.php:1035 includes/class-naws-helpers.php:95 includes/class-naws-helpers.php:97 includes/class-naws-helpers.php:841
+#: includes/class-naws-database.php:1052 includes/class-naws-helpers.php:95 includes/class-naws-helpers.php:97 includes/class-naws-helpers.php:841
 #: includes/class-naws-labels.php:73
 msgid "Max Temperature (day)"
 msgstr "Maks. temperatur (døgn)"
@@ -1906,11 +1906,11 @@ msgstr "Målt på vindmålerens kastvind. Uten vindmodul faller regelen bort ute
 msgid "Message"
 msgstr "Melding"
 
-#: templates/history.php:134 templates/table.php:59
+#: templates/history.php:134 templates/table.php:66
 msgid "Min"
 msgstr "Min"
 
-#: includes/class-naws-database.php:1034 includes/class-naws-helpers.php:94 includes/class-naws-helpers.php:96 includes/class-naws-helpers.php:840
+#: includes/class-naws-database.php:1051 includes/class-naws-helpers.php:94 includes/class-naws-helpers.php:96 includes/class-naws-helpers.php:840
 #: includes/class-naws-labels.php:70
 msgid "Min Temperature (day)"
 msgstr "Min. temperatur (døgn)"
@@ -1923,7 +1923,7 @@ msgstr "Minimal"
 msgid "Minimum: 5 minutes. Note: Netatmo updates sensors every 5 minutes."
 msgstr "Minimum: 5 minutter. Merk: Netatmo oppdaterer sensorene hvert 5. minutt."
 
-#: templates/table.php:53
+#: templates/table.php:60
 msgid "Module"
 msgstr "Modul"
 
@@ -2073,7 +2073,7 @@ msgstr "Ingen kort er aktive nå — slå dem på øverst, sammen med modulene."
 msgid "No city specified. Please enter a city in the forecast settings."
 msgstr "Ingen by er angitt. Angi en by i innstillingene for værvarsel."
 
-#: admin/views/dashboard.php:273 templates/table.php:46
+#: admin/views/dashboard.php:273 templates/table.php:53
 msgid "No data available yet."
 msgstr "Ingen data tilgjengelig ennå."
 
@@ -2299,7 +2299,7 @@ msgstr "Overskriv eksisterende innstillinger (kun for full sikkerhetskopi)"
 msgid "Own font family"
 msgstr "Egen skriftfamilie"
 
-#: templates/table.php:54
+#: templates/table.php:61
 msgid "Parameter"
 msgstr "Parameter"
 
@@ -2360,7 +2360,8 @@ msgstr "Dårlig Wi-Fi ved basestasjonen"
 msgid "Possible values"
 msgstr "Verdier"
 
-#: includes/class-naws-helpers.php:335 includes/class-naws-labels.php:296 templates/forecast.php:108 templates/live.php:263
+#: includes/class-naws-helpers.php:87 includes/class-naws-helpers.php:335 includes/class-naws-helpers.php:837 includes/class-naws-labels.php:296
+#: templates/forecast.php:108 templates/live.php:263
 msgid "Precipitation"
 msgstr "Nedbør"
 
@@ -2388,7 +2389,7 @@ msgstr "Lufttrykk (abs.)"
 msgid "Pressure (relative)"
 msgstr "Lufttrykk (rel.)"
 
-#: includes/class-naws-database.php:1037 includes/class-naws-labels.php:72
+#: includes/class-naws-database.php:1054 includes/class-naws-labels.php:72
 msgid "Pressure Ø (hPa)"
 msgstr "Trykk Ø (hPa)"
 
@@ -2983,7 +2984,7 @@ msgstr "Synkroniserer …"
 msgid "Tabular view of historical readings with configurable time period and grouping."
 msgstr "Tabellvisning av historiske målinger med konfigurerbart tidsrom og gruppering."
 
-#: includes/class-naws-database.php:1036 includes/class-naws-labels.php:71
+#: includes/class-naws-database.php:1053 includes/class-naws-labels.php:71
 msgid "Temp Ø (°C)"
 msgstr "Temp Ø (°C)"
 
@@ -3324,13 +3325,12 @@ msgstr "Verktøytips tittel"
 msgid "Total"
 msgstr "Total"
 
-#: admin/views/import.php:25 includes/class-naws-database.php:1038 includes/class-naws-helpers.php:89 includes/class-naws-helpers.php:839
+#: admin/views/import.php:25 includes/class-naws-database.php:1055 includes/class-naws-helpers.php:89 includes/class-naws-helpers.php:839
 #: includes/class-naws-labels.php:81
 msgid "Total last 24h"
 msgstr "Total siste 24t"
 
-#: admin/views/live-settings.php:121 includes/class-naws-helpers.php:87 includes/class-naws-helpers.php:88 includes/class-naws-helpers.php:837
-#: includes/class-naws-helpers.php:838 includes/class-naws-labels.php:80
+#: admin/views/live-settings.php:121 includes/class-naws-helpers.php:88 includes/class-naws-helpers.php:838 includes/class-naws-labels.php:80
 msgid "Total last hour"
 msgstr "Total siste time"
 
@@ -3392,7 +3392,7 @@ msgstr "Last opp en tidligere eksportert JSON-fil for å gjenopprette værdata e
 msgid "Usage Examples"
 msgstr "Kodeeksempler"
 
-#: admin/views/appearance.php:100 admin/views/dashboard.php:279 admin/views/dashboard.php:280 templates/table.php:57
+#: admin/views/appearance.php:100 admin/views/dashboard.php:279 admin/views/dashboard.php:280 templates/table.php:64
 msgid "Value"
 msgstr "Verdi"
 
@@ -4509,7 +4509,7 @@ msgctxt "table column"
 msgid "When"
 msgstr "Når"
 
-#: templates/table.php:52
+#: templates/table.php:59
 msgctxt "table_col_time"
 msgid "Time"
 msgstr "Tidspunkt"

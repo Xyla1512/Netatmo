@@ -2,6 +2,13 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [2.1.6]
+
+### Fixed
+- **The hourly rain chart showed the rain half an hour late.** Each bar of "Rain (hourly)" in `[naws_live]` was the average of Netatmo's "rain in the last 60 minutes", taken every ten minutes, so a shower was spread over the hour it fell in and the next one: on 21 October the chart read 0.1 mm at 10:00 and 0.1 mm at 12:00, where 0.2 mm and nothing had fallen. Each bar is now the sum of the rain gauge's five-minute reports in that hour, the same readings the 24-hour total is made from; the hourly bars of a day add up to it exactly.
+- **Grouped rain in `[naws_table]` and the REST API was a twelfth of what fell.** With `group_by` set to an hour, day, week or month, the rain value was the average of the five-minute reports in the bucket. It is now their sum. The table heads that column "Value" instead of "Average" when it holds rain, and leaves min and max of the rain rows empty; the row reads "Precipitation" instead of "Total last hour". Temperature and every other value are still averaged.
+- **The y-axis of the rain chart repeated its labels.** With little rain the axis ran in steps of 0.05 or 0.02 mm and printed them with one decimal: 0, 0.1, 0.1, 0.2, 0.2. The steps are now at least 0.1 mm (0.01 in).
+
 ## [2.1.5]
 
 ### Added

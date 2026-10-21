@@ -14,9 +14,16 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * the average of the bucket. Grouping 'raw' returns single measurements and
  * none of those three, so the extra columns only appear when they mean
  * something.
+ *
+ * Rain is the exception: grouped, its value is what fell in the bucket (see
+ * sum_params in get_readings()). The column is then headed "Value" rather
+ * than "Average", and its min and max — the smallest and largest
+ * five-minute report — stay empty, as they would only invite a comparison
+ * with the sum beside them.
  */
 
-$naws_grouped = isset( $readings[0]['min_value'] );
+$naws_grouped  = isset( $readings[0]['min_value'] );
+$naws_has_rain = $naws_grouped && in_array( 'Rain', array_column( (array) $readings, 'parameter' ), true );
 
 // Buckets of a day or longer have no meaningful time of day.
 $naws_date_only = in_array( $atts['group_by'], [ 'day', 'week', 'month', 'year' ], true );
@@ -52,7 +59,7 @@ $naws_param_labels = NAWS_Helpers::get_all_parameters();
                     <th><?php echo esc_html( _x( 'Time', 'table_col_time', 'xtx-integration-for-netatmo' ) ); ?></th>
                     <th><?php esc_html_e( 'Module', 'xtx-integration-for-netatmo' ); ?></th>
                     <th><?php esc_html_e( 'Parameter', 'xtx-integration-for-netatmo' ); ?></th>
-                    <th><?php echo esc_html( $naws_grouped
+                    <th><?php echo esc_html( $naws_grouped && ! $naws_has_rain
                         ? __( 'Average', 'xtx-integration-for-netatmo' )
                         : __( 'Value', 'xtx-integration-for-netatmo' ) ); ?></th>
                     <?php if ( $naws_grouped ) : ?>
@@ -71,7 +78,10 @@ $naws_param_labels = NAWS_Helpers::get_all_parameters();
                     <td><?php echo esc_html( $naws_module_names[ $naws_row['module_id'] ] ?? '' ); ?></td>
                     <td><?php echo esc_html( $naws_param_labels[ $naws_param ] ?? $naws_param ); ?></td>
                     <td><?php echo esc_html( NAWS_Helpers::display_value( $naws_param, $naws_row['value'] ) . ' ' . $naws_unit ); ?></td>
-                    <?php if ( $naws_grouped ) : ?>
+                    <?php if ( $naws_grouped && $naws_param === 'Rain' ) : ?>
+                        <td>—</td>
+                        <td>—</td>
+                    <?php elseif ( $naws_grouped ) : ?>
                         <td><?php echo esc_html( NAWS_Helpers::display_value( $naws_param, $naws_row['min_value'] ) . ' ' . $naws_unit ); ?></td>
                         <td><?php echo esc_html( NAWS_Helpers::display_value( $naws_param, $naws_row['max_value'] ) . ' ' . $naws_unit ); ?></td>
                     <?php endif; ?>

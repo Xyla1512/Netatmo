@@ -72,7 +72,7 @@ if ( isset( $module_refs['wind'] ) ) {
 }
 // NAModule3 – rain
 if ( isset( $module_refs['rain'] ) ) {
-    $sensor_chart_configs[] = [ 'key'=>'Rain', 'param'=>'sum_rain_1', 'module_ref'=>'rain', 'label'=>__( 'Rain (hourly)', 'xtx-integration-for-netatmo' ), 'unit'=>NAWS_Helpers::get_unit('Rain'), 'type'=>'bar', 'color'=>NAWS_Colors::get('chart_rain') ];
+    $sensor_chart_configs[] = [ 'key'=>'Rain', 'param'=>'Rain', 'module_ref'=>'rain', 'label'=>__( 'Rain (hourly)', 'xtx-integration-for-netatmo' ), 'unit'=>NAWS_Helpers::get_unit('Rain'), 'type'=>'bar', 'color'=>NAWS_Colors::get('chart_rain') ];
 }
 // NAModule4 – dynamic
 foreach ( $module4_list as $m4 ) {

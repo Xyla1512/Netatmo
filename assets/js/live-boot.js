@@ -429,7 +429,11 @@ function chartOpts(unit, type){
         grid:{color:'rgba(218,240,240,.5)'},
         ticks:{
           color:'#7aa0a0',font:{family:NAWS_FONT,size:fs},
-          callback:function(v){return num(Math.round(v*10)/10);}
+          // Steps no finer than the label shows: with 0,2 mm of rain Chart.js
+          // chose 0,05/0,02 steps, which one decimal printed as 0,1 and 0,2 twice.
+          // Rain in inches comes with three decimals and needs two.
+          precision:unit==='in'?2:1,
+          callback:function(v){var f=unit==='in'?100:10;return num(Math.round(v*f)/f);}
         },
         title:{display:true,text:unit,color:'#a0b8b8',font:{family:NAWS_FONT,size:fs,weight:'600'}}
       }

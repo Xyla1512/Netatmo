@@ -165,5 +165,36 @@ fresh( $wpdb, [ $main ] );
 $wpdb->fail_readings = 'Illegal mix of collations (letzte Messwerte)';
 check( 'bei Fehler: leer, und last_error() nennt den Grund',   [ NAWS_Database::get_latest_readings(), str_contains( last_error_or( '(fehlt)' ), 'Illegal mix' ) ], [ [], true ] );
 
+echo "\nRegen wird je Gruppe addiert, nicht gemittelt\n" . str_repeat( '-', 74 ) . "\n";
+/*
+ * Rain traegt den Regen jeder Fuenf-Minuten-Meldung. Das Stundenmittel
+ * zeigte ein Zwoelftel dessen, was fiel; die Tageskachel „Regen (stuendl.)“
+ * nahm deshalb sum_rain_1 und verschob den Regen dabei um eine halbe
+ * Stunde (21.10.2026: 10 Uhr 0,1 statt 0,2 mm, 12 Uhr 0,1 statt 0 mm).
+ */
+/** Platzhalter in einer SQL, ohne die %% aus DATE_FORMAT. */
+function placeholders( string $sql ): int {
+    return preg_match_all( '/(?<!%)%[sdf]/', str_replace( '%%', '', $sql ) );
+}
+fresh( $wpdb, [ $main ] );
+NAWS_Database::get_readings( [ 'module_id' => $main['module_id'], 'parameter' => [ 'Rain', 'Temperature' ], 'group_by' => 'hour' ] );
+[ $sql, $params ] = last_sql( $wpdb, 'naws_readings' ) ?? [ '', [] ];
+check( 'gruppiert: Rain als Summe',                  str_contains( $sql, 'CASE WHEN r.parameter IN (%s) THEN SUM(r.value) ELSE AVG(r.value) END AS value' ), true );
+check( 'gruppiert: Rain steht vorn in den Parametern', $params[0] ?? null, 'Rain' );
+check( 'gruppiert: so viele Parameter wie Platzhalter', count( $params ), placeholders( $sql ) );
+check( 'gruppiert: Min und Max bleiben MIN/MAX',      str_contains( $sql, 'MIN(r.value) AS min_value' ) && str_contains( $sql, 'MAX(r.value) AS max_value' ), true );
+
+fresh( $wpdb, [ $main ] );
+NAWS_Database::get_readings( [ 'module_id' => $main['module_id'], 'parameter' => 'Temperature', 'group_by' => 'month', 'sum_params' => [] ] );
+[ $sql, $params ] = last_sql( $wpdb, 'naws_readings' ) ?? [ '', [] ];
+check( 'ohne sum_params: wieder schlicht AVG',        str_contains( $sql, 'AVG(r.value) AS value' ) && ! str_contains( $sql, 'CASE' ), true );
+check( 'ohne sum_params: Parameter wie zuvor',        count( $params ), placeholders( $sql ) );
+
+fresh( $wpdb, [ $main ] );
+NAWS_Database::get_readings( [ 'module_id' => $main['module_id'], 'parameter' => 'Rain', 'group_by' => 'raw' ] );
+[ $sql, $params ] = last_sql( $wpdb, 'naws_readings' ) ?? [ '', [] ];
+check( 'ungruppiert: kein SUM, Einzelwerte',          str_contains( $sql, 'SUM(' ), false );
+check( 'ungruppiert: kein Rain vor dem Zeitraum',     is_int( $params[0] ?? null ), true );
+
 printf( "\n%d ok, %d fehlgeschlagen\n", $passed, $failed );
 exit( $failed ? 1 : 0 );
