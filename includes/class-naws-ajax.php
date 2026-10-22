@@ -527,19 +527,36 @@ class NAWS_Ajax {
 
         $date_from  = sanitize_text_field( wp_unslash( $_POST['date_from'] ?? gmdate(  'Y-m-d', strtotime('-365 days' ) ) ) );
         $date_to    = sanitize_text_field( wp_unslash( $_POST['date_to']   ?? gmdate(  'Y-m-d'  ) ) );
+        if ( ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $date_from ) || ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $date_to ) ) {
+            wp_send_json_error( [ 'message' => 'Use YYYY-MM-DD for date_from/date_to.' ], 400 );
+            return;
+        }
         $group_by   = in_array( $_POST['group_by'] ?? 'day', [ 'day','week','month','year' ], true ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
                     ? sanitize_key( wp_unslash( $_POST['group_by'] ?? 'day' ) ) : 'day';
 
+        // Each field becomes one dataset with one point per day, so the
+        // list is cut to known, distinct names: a request repeating
+        // fields[]=temp_min a thousand times would otherwise build a
+        // thousand copies of the same series and run the worker out of
+        // memory.
+        $allowed    = [ 'temp_min', 'temp_max', 'temp_avg', 'pressure_avg', 'rain_sum', 'gust_max', 'humidity_avg', 'wind_avg', 'co2_avg', 'noise_avg' ];
         $raw_fields = isset( $_POST['fields'] )
-            ? array_map( 'sanitize_key', (array) wp_unslash( $_POST['fields'] ) )
+            ? array_values( array_unique( array_intersect( array_map( 'sanitize_key', (array) wp_unslash( $_POST['fields'] ) ), $allowed ) ) )
             : [ 'temp_min','temp_max','temp_avg','pressure_avg','rain_sum' ];
+        if ( empty( $raw_fields ) ) {
+            wp_send_json_error( [ 'message' => 'No valid fields.' ], 400 );
+            return;
+        }
 
+        // No transient: the dates come from the request, and every new
+        // pair would leave its own copy of the rows in wp_options.
         $result = NAWS_Database::get_daily_chart_data( [
             'module_id' => $module_id,
             'date_from' => $date_from,
             'date_to'   => $date_to,
             'group_by'  => $group_by,
             'fields'    => $raw_fields,
+            'no_cache'  => true,
         ] );
 
         wp_send_json_success( $result );
@@ -555,13 +572,16 @@ class NAWS_Ajax {
         // does: an NAModule4 keeps its readings in the indoor_* columns, so a
         // chart for one of those modules can ask for nothing else.
         $allowed    = [ 'temp_min', 'temp_max', 'temp_avg', 'pressure_avg', 'rain_sum', 'humidity_avg', 'indoor_temp_avg', 'indoor_humidity_avg' ];
+        // array_unique: array_intersect() keeps repeats, and every repeat
+        // is one more SELECT column and one more full series per year.
         $raw_fields = isset( $_POST['fields'] ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-                    ? array_intersect( array_map( 'sanitize_key', (array) wp_unslash( $_POST['fields'] ) ), $allowed )
+                    ? array_values( array_unique( array_intersect( array_map( 'sanitize_key', (array) wp_unslash( $_POST['fields'] ) ), $allowed ) ) )
                     : $allowed;
         if ( empty( $raw_fields ) ) $raw_fields = $allowed;
 
-        $year_from = intval( $_POST['year_from'] ?? gmdate( 'Y') ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-        $year_to   = intval( $_POST['year_to']   ?? gmdate( 'Y') ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        // Same 1900-2999 window as NAWS_Calc::period_range().
+        $year_from = min( 2999, max( 1900, intval( $_POST['year_from'] ?? gmdate( 'Y') ) ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        $year_to   = min( 2999, max( 1900, intval( $_POST['year_to']   ?? gmdate( 'Y') ) ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
         // Optional: filter by specific module (NAModule4 rows keyed by module_id, not station_id)
         $filter_module_id = $this->requested_module_id();
@@ -787,7 +807,7 @@ class NAWS_Ajax {
             return;
         }
         $parameter = isset( $_POST['parameter'] )
-            ? array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['parameter'] ) )
+            ? array_values( array_unique( array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['parameter'] ) ) ) )
             : [];
         $date_from = intval( $_POST['date_from'] ?? strtotime( '-7 days' ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         $date_to   = intval( $_POST['date_to']   ?? time() ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized

@@ -927,18 +927,22 @@ class NAWS_Database {
             'fields'     => [ 'temp_min','temp_max','temp_avg','pressure_avg','rain_sum' ],
             'group_by'   => 'day',
             'limit'      => 0,
+            'no_cache'   => false,
         ] );
 
         // ── Transient cache ──────────────────────────────────────────
+        // no_cache: for callers whose dates come from a visitor, where
+        // each new pair would leave one more transient behind.
+        $use_cache = empty( $args['no_cache'] );
         $cache_key = self::CACHE_PREFIX . 'daily_' . md5( wp_json_encode( $args ) );
-        $cached    = get_transient( $cache_key );
+        $cached    = $use_cache ? get_transient( $cache_key ) : false;
         if ( $cached !== false && is_array( $cached ) ) {
             return $cached;
         }
 
         // Only select requested fields + join with active modules
         $allowed_fields = [ 'temp_min', 'temp_max', 'temp_avg', 'pressure_avg', 'rain_sum', 'gust_max', 'humidity_avg', 'wind_avg', 'co2_avg', 'noise_avg' ];
-        $fields = array_intersect( (array)$args['fields'], $allowed_fields );
+        $fields = array_values( array_unique( array_intersect( (array)$args['fields'], $allowed_fields ) ) );
         if ( empty( $fields ) ) $fields = $allowed_fields;
 
         // %i placeholders for field identifiers (WP 6.2+); passed as first args to prepare()
@@ -987,7 +991,9 @@ class NAWS_Database {
             }
 
             $results = $results ?: [];
-            set_transient( $cache_key, $results, self::TTL_DAILY );
+            if ( $use_cache ) {
+                set_transient( $cache_key, $results, self::TTL_DAILY );
+            }
             return $results;
         }
 
@@ -1031,7 +1037,9 @@ class NAWS_Database {
         }
 
         $results = $results ?: [];
-        set_transient( $cache_key, $results, self::TTL_DAILY );
+        if ( $use_cache ) {
+            set_transient( $cache_key, $results, self::TTL_DAILY );
+        }
 
         return $results;
     }
@@ -1063,7 +1071,9 @@ class NAWS_Database {
             'rain_sum'     => '#06b6d4',
         ];
 
-        $fields  = $args['fields'] ?? [ 'temp_min','temp_max','temp_avg' ];
+        // Distinct names: one dataset per field, and a repeated name would
+        // only build the same series again.
+        $fields  = array_values( array_unique( (array) ( $args['fields'] ?? [ 'temp_min','temp_max','temp_avg' ] ) ) );
         $by_key  = [];
 
         foreach ( $rows as $row ) {
