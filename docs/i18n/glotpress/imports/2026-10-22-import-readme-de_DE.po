@@ -1,0 +1,21 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo - Stable Readme\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "Fix: the y-axis of the rain chart repeated its labels (0, 0.1, 0.1, 0.2); the steps are at least 0.1 mm now."
+msgstr "Fix: Die y-Achse des Regendiagramms wiederholte ihre Beschriftung (0, 0,1, 0,1, 0,2); die Schritte sind jetzt mindestens 0,1 mm."
+
+msgid "Fix: grouped rain in <code>[naws_table]</code> and the REST API was a twelfth of what fell — it is a sum now, not an average."
+msgstr "Fix: Gruppierter Regen in <code>[naws_table]</code> und der REST-API war ein Zwölftel dessen, was fiel — jetzt ist er eine Summe, kein Mittelwert."
+
+msgid "Fix: the hourly rain chart showed rain half an hour late. Each bar is now the sum of the rain gauge's reports in that hour; the bars of a day add up to the 24-hour total."
+msgstr "Fix: Das stündliche Regendiagramm zeigte den Regen eine halbe Stunde zu spät. Jeder Balken ist jetzt die Summe der Meldungen des Regenmessers in dieser Stunde; die Balken eines Tages ergeben die 24-Stunden-Summe."
+
+msgid "Security: the public chart endpoints took repeated fields — a single visitor request could build hundreds of megabytes and run PHP out of memory, the starting point of CVE-2026-109618/109619 (\"PHP2Shell\"). Repeats are dropped and unknown fields refused; the daily-data endpoint is for logged-in users only and no longer stores a cache entry for every date pair it is sent. The fix in PHP itself comes from your host: PHP 8.2.35, 8.3.36, 8.4.27, 8.5.12 or a build with the backport."
+msgstr "Security: Die öffentlichen Diagramm-Endpunkte nahmen wiederholte Felder an — eine einzige Besucheranfrage konnte Hunderte Megabyte aufbauen und PHP den Speicher ausgehen lassen, der Ausgangspunkt von CVE-2026-109618/109619 („PHP2Shell“). Wiederholungen werden aussortiert und unbekannte Felder abgelehnt; der Endpunkt für Tagesdaten antwortet nur noch angemeldeten Nutzern und legt nicht mehr für jedes Datumspaar einen eigenen Cache-Eintrag an. Den Fix in PHP selbst liefert dein Hoster: PHP 8.2.35, 8.3.36, 8.4.27, 8.5.12 oder ein Build mit dem Backport."
+
