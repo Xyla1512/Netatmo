@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Plugins - XTX Integration for Netatmo - Stable Readme (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-10-19 14:09:34+0000\n"
+"PO-Revision-Date: 2026-10-22 14:49:01+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -539,6 +539,26 @@ msgstr "Live-Dashboard mit Sensorkacheln und 24-Stunden-Verläufen"
 
 #. Found in changelog list item.
 #, gp-priority: low
+msgid "Fix: the y-axis of the rain chart repeated its labels (0, 0.1, 0.1, 0.2); the steps are at least 0.1 mm now."
+msgstr "Fix: Die y-Achse des Regendiagramms wiederholte ihre Beschriftung (0, 0,1, 0,1, 0,2); die Schritte sind jetzt mindestens 0,1 mm."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: grouped rain in <code>[naws_table]</code> and the REST API was a twelfth of what fell — it is a sum now, not an average."
+msgstr "Fix: Gruppierter Regen in <code>[naws_table]</code> und der REST-API war ein Zwölftel dessen, was fiel — jetzt ist er eine Summe, kein Mittelwert."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: the hourly rain chart showed rain half an hour late. Each bar is now the sum of the rain gauge's reports in that hour; the bars of a day add up to the 24-hour total."
+msgstr "Fix: Das stündliche Regendiagramm zeigte den Regen eine halbe Stunde zu spät. Jeder Balken ist jetzt die Summe der Meldungen des Regenmessers in dieser Stunde; die Balken eines Tages ergeben die 24-Stunden-Summe."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Security: the public chart endpoints took repeated fields — a single visitor request could build hundreds of megabytes and run PHP out of memory, the starting point of CVE-2026-109618/109619 (\"PHP2Shell\"). Repeats are dropped and unknown fields refused; the daily-data endpoint is for logged-in users only and no longer stores a cache entry for every date pair it is sent. The fix in PHP itself comes from your host: PHP 8.2.35, 8.3.36, 8.4.27, 8.5.12 or a build with the backport."
+msgstr "Security: Die öffentlichen Diagramm-Endpunkte nahmen wiederholte Felder an — eine einzige Besucheranfrage konnte Hunderte Megabyte aufbauen und PHP den Speicher ausgehen lassen, der Ausgangspunkt von CVE-2026-109618/109619 („PHP2Shell“). Wiederholungen werden aussortiert und unbekannte Felder abgelehnt; der Endpunkt für Tagesdaten antwortet nur noch angemeldeten Nutzern und legt nicht mehr für jedes Datumspaar einen eigenen Cache-Eintrag an. Den Fix in PHP selbst liefert dein Hoster: PHP 8.2.35, 8.3.36, 8.4.27, 8.5.12 oder ein Build mit dem Backport."
+
+#. Found in changelog list item.
+#, gp-priority: low
 msgid "Fix: \"Sync now\" fetched twice and showed the next run on the second of the last one; the next fetch now follows one interval later, and manual syncs appear in the cron log. An overdue next run reads \"overdue by …\" instead of \"in …\"."
 msgstr "Fix: „Jetzt synchronisieren“ rief zweimal ab und zeigte die nächste Ausführung auf der Sekunde der letzten; der nächste Abruf folgt jetzt ein Intervall später, und Handabrufe stehen im Cron-Log. Eine überfällige Ausführung heißt „überfällig seit …“ statt „in …“."
 
@@ -601,16 +621,6 @@ msgstr "Fix: Der 29. Februar zog in einem Schaltjahr zwei fast waagerechte Linie
 #, gp-priority: low
 msgid "Fix: the forecast showed \"Open-Meteo API HTTP 429\". Open-Meteo limits its free API per IP address, and the plugin asked again on every page view after a failure, which kept the address above the limit. A failed request now pauses the provider (after a 429 as long as Open-Meteo asks, otherwise 15 minutes; 5 minutes after other errors), the last good forecast stays on the page for up to 24 hours, and visitors read a plain sentence instead of an HTTP code. Yr.no and the place search of the manual location mode are covered as well."
 msgstr "Fix: Die Vorhersage zeigte „Open-Meteo API HTTP 429“. Open-Meteo begrenzt seine kostenlose API pro IP-Adresse, und das Plugin fragte nach einem Fehlschlag bei jedem Seitenaufruf erneut an — damit blieb die Adresse über der Grenze. Ein fehlgeschlagener Abruf legt jetzt eine Pause ein (nach einem 429 so lange, wie Open-Meteo verlangt, sonst 15 Minuten; nach anderen Fehlern 5 Minuten), die letzte gute Vorhersage bleibt bis zu 24 Stunden auf der Seite, und Besucher lesen einen verständlichen Satz statt eines HTTP-Codes. Yr.no und die Ortssuche des manuellen Standortmodus sind ebenfalls abgedeckt."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Fix: <code>[naws_forecast]</code> printed decimal points on a German page (\"17.4 / 14.7 °C\"). Temperatures, precipitation, wind and gusts of the forecast use the site's decimal mark now."
-msgstr "Fix: <code>[naws_forecast]</code> zeigte auf einer deutschen Seite Dezimalpunkte („17.4 / 14.7 °C“). Temperaturen, Niederschlag, Wind und Böen der Vorhersage verwenden jetzt das Dezimalzeichen der Seite."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Added: a Signal column on the Modules page — the Wi-Fi of the base station as a fan, the radio link of every other module as four bars, each with a word (Excellent, Good, Fair, Weak) and Netatmo's raw value on hover. A device Netatmo reports as unreachable shows \"Not reachable\"."
-msgstr "Added: Eine Spalte „Signal“ auf der Modulseite — das WLAN der Basisstation als Fächer, die Funkverbindung jedes anderen Moduls als vier Balken, jeweils mit einem Wort (Sehr gut, Gut, Mittel, Schwach) und Netatmos Rohwert beim Überfahren. Ein Gerät, das Netatmo als nicht erreichbar meldet, zeigt „Nicht erreichbar“."
 
 #. Found in changelog paragraph.
 #, gp-priority: low
