@@ -37,8 +37,9 @@ class NAWS_Ajax {
         add_action( 'wp_ajax_naws_get_latest',             [ $this, 'get_latest' ] );
         add_action( 'wp_ajax_nopriv_naws_get_latest',      [ $this, 'get_latest' ] );
 
+        // Logged-in only: no frontend script asks for it, so a visitor
+        // endpoint would be open surface and nothing else.
         add_action( 'wp_ajax_naws_get_daily_data',         [ $this, 'get_daily_data' ] );
-        add_action( 'wp_ajax_nopriv_naws_get_daily_data',  [ $this, 'get_daily_data' ] );
 
         add_action( 'wp_ajax_naws_get_history_data',        [ $this, 'get_history_data' ] );
         add_action( 'wp_ajax_nopriv_naws_get_history_data', [ $this, 'get_history_data' ] );

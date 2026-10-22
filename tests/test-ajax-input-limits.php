@@ -34,7 +34,8 @@ class NAWS_Test_Sent extends Exception {}
 
 $GLOBALS['naws_test_transients'] = [];
 $GLOBALS['sent']                 = null;
-function add_action( ...$a ) {}
+$GLOBALS['hooks'] = [];
+function add_action( $hook, ...$a ) { $GLOBALS['hooks'][] = $hook; }
 function check_ajax_referer( ...$a ) { return true; }
 function nocache_headers() {}
 function get_transient( $k )               { return $GLOBALS['naws_test_transients'][ $k ] ?? false; }
@@ -134,6 +135,10 @@ $repeated = array_fill( 0, 1000, 'temp_min' );
 echo "\nNAWS_Ajax: Grenzen der oeffentlichen Endpunkte\n" . str_repeat( '-', 74 ) . "\n";
 
 // ── naws_get_daily_data ──────────────────────────────────────────────────
+NAWS_Ajax::instance();
+check( 'Tagesdaten: kein Endpunkt fuer Besucher (seit 2.1.6)', in_array( 'wp_ajax_nopriv_naws_get_daily_data', $GLOBALS['hooks'], true ), false );
+check( 'angemeldet bleibt er erreichbar',                   in_array( 'wp_ajax_naws_get_daily_data', $GLOBALS['hooks'], true ), true );
+check( 'der Jahresvergleich bleibt oeffentlich',            in_array( 'wp_ajax_nopriv_naws_get_history_data', $GLOBALS['hooks'], true ), true );
 $r = call( 'get_daily_data', [ 'fields' => $repeated, 'date_from' => '2025-01-01', 'date_to' => '2026-12-31' ] );
 check( 'Tagesdaten: 1000 x temp_min ergibt eine Datenreihe', count( $r['data']['datasets'] ?? [] ), 1 );
 check( 'mit einem Punkt je Tag, nicht tausend',               count( $r['data']['datasets'][0]['data'] ?? [] ), 3 );
