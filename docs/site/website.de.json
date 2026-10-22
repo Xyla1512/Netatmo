@@ -1,5 +1,5 @@
 {
-    "aktualisiert": "2026-10-15",
+    "aktualisiert": "2026-10-22",
     "vorhaben": [
         {
             "id": "monatsrueckblick",
@@ -20,6 +20,20 @@
             "titel": "Elementor-Widgets",
             "satz": "Dasselbe für Elementor: die Bausteine als eigene Widgets, eingestellt im Elementor-Panel und mit Vorschau im Editor.",
             "ab": null,
+            "bild": null
+        },
+        {
+            "id": "sicherheit-endpunkte",
+            "titel": "Diagramm-Endpunkte gegen Speicherfluten gehärtet",
+            "satz": "Die öffentlichen Diagramm-Endpunkte sortieren wiederholte Felder aus und lehnen unbekannte ab. Vorher konnte eine einzige Besucheranfrage Hunderte Megabyte aufbauen und PHP an seine Speichergrenze treiben, genau der Ausgangspunkt der PHP-Lücken CVE-2026-109618/109619. Die Tagesdaten antworten nur noch angemeldeten Nutzern. Die Lücke in PHP selbst schließt dein Hoster mit einem PHP-Update.",
+            "ab": "2.1.6",
+            "bild": null
+        },
+        {
+            "id": "regen-summe",
+            "titel": "Regen als echte Summe",
+            "satz": "Jeder Balken im stündlichen Regendiagramm ist die Summe der Meldungen des Regenmessers in dieser Stunde, und die Balken eines Tages ergeben genau die 24-Stunden-Summe. Auch [naws_table] und die REST-API zählen gruppierten Regen jetzt zusammen, statt ihn zu mitteln.",
+            "ab": "2.1.6",
             "bild": null
         },
         {

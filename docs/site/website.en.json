@@ -1,5 +1,5 @@
 {
-    "aktualisiert": "2026-10-15",
+    "aktualisiert": "2026-10-22",
     "vorhaben": [
         {
             "id": "monatsrueckblick",
@@ -20,6 +20,20 @@
             "titel": "Elementor widgets",
             "satz": "The same for Elementor: the building blocks as widgets of their own, set up in the Elementor panel and previewed in the editor.",
             "ab": null,
+            "bild": null
+        },
+        {
+            "id": "sicherheit-endpunkte",
+            "titel": "Chart endpoints hardened against memory floods",
+            "satz": "The public chart endpoints drop repeated fields and refuse unknown ones. Before, a single visitor request could build hundreds of megabytes and push PHP to its memory limit, the very starting point of the PHP flaws CVE-2026-109618/109619. Daily data now answers logged-in users only. The flaw in PHP itself is closed by your host with a PHP update.",
+            "ab": "2.1.6",
+            "bild": null
+        },
+        {
+            "id": "regen-summe",
+            "titel": "Rain as a real sum",
+            "satz": "Each bar of the hourly rain chart is the sum of the rain gauge's reports in that hour, and the bars of a day add up exactly to the 24-hour total. [naws_table] and the REST API now add grouped rain up instead of averaging it.",
+            "ab": "2.1.6",
             "bild": null
         },
         {
