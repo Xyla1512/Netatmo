@@ -509,8 +509,15 @@ function loadCharts(){
       var labels=ds.data.map(function(p){return hhmm(p.x);});
       var vals=ds.data.map(function(p){return p.y;});
       chartData[cfg.key]={cfg:cfg,labels:labels,vals:vals};
-      renderChart(chartCanvasId(cfg.key), cfg, labels, vals, true);
       if(chartsEl) chartsEl.style.display='';
+      // The chart draws itself in when the visitor gets to it, not while
+      // it is still below the fold (frontend.js, NAWS_whenInView).
+      // These charts keep the height of their attribute, so the canvas
+      // already takes its room while it waits.
+      var canvasId=chartCanvasId(cfg.key);
+      window.NAWS_whenInView(document.getElementById(canvasId), function(){
+        renderChart(canvasId, cfg, labels, vals, true);
+      });
     });
   });
 }
@@ -620,6 +627,7 @@ function loadLive(){
       if(!built){
         liveEl.innerHTML=buildLive(rows);
         applyCardOrder();
+        window.NAWS_revealCards(liveEl);
         built=true;
         loadCharts();
       } else {

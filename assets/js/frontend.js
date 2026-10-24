@@ -117,26 +117,102 @@
     }
 
     /* ============================================================
-       Intersection Observer: trigger animations on scroll
+       Build-up animations wait until the visitor can see them
        ============================================================ */
-    if ('IntersectionObserver' in window) {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const card = entry.target;
+    /**
+     * Calls fn once el is in view, by the rule [naws_heatmap] uses for its
+     * wave: the top edge has reached the middle of the window — or the page
+     * is scrolled to its end, so an element low on a short page, whose top
+     * never gets that far, still starts. Checked on scroll, on resize and,
+     * for an element in a tab or accordion, when it becomes visible. Until
+     * then a chart is simply not built yet and a card holds its first frame.
+     * A second call for an element that is still waiting replaces its fn,
+     * so data that arrives twice before the reveal animates once. With
+     * reduced motion there is nothing to wait for: fn runs at once.
+     */
+    window.NAWS_whenInView = function(el, fn) {
+        if (!el) { return; }
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { fn(); return; }
+        if (el._nawsReveal) { el._nawsReveal = fn; return; }
+        el._nawsReveal = fn;
+        let ticking = false;
+        let io = null;
+        function check() {
+            ticking = false;
+            const r = el.getBoundingClientRect();
+            if (r.bottom <= 0 || r.top >= window.innerHeight || r.height === 0) { return; }
+            const atEnd = window.pageYOffset + window.innerHeight >= document.documentElement.scrollHeight - 2;
+            if (r.top > window.innerHeight / 2 && !atEnd) { return; }
+            window.removeEventListener('scroll', onChange);
+            window.removeEventListener('resize', onChange);
+            if (io) { io.disconnect(); io = null; }
+            const run = el._nawsReveal;
+            el._nawsReveal = null;
+            run();
+        }
+        function onChange() {
+            if (ticking) { return; }
+            ticking = true;
+            window.requestAnimationFrame(check);
+        }
+        window.addEventListener('scroll', onChange, { passive: true });
+        window.addEventListener('resize', onChange, { passive: true });
+        if ('IntersectionObserver' in window) {
+            io = new IntersectionObserver(onChange, { threshold: 0 });
+            io.observe(el);
+        }
+        onChange();
+    };
+
+    /**
+     * Holds the room a chart will take while it waits for NAWS_whenInView.
+     * A canvas without a chart is 300 px wide; Chart.js later stretches it
+     * to the full width at the ratio of its width and height attributes.
+     * Giving it that size up front keeps the page below from jumping when
+     * the chart is built. Release it right before the chart is built:
+     * Chart.js reads the canvas size it finds, and a canvas already at
+     * 100 % comes out at the height of its attribute. Hold and release in
+     * the same frame, nothing moves.
+     */
+    window.NAWS_holdChartSpace = function(canvas) {
+        if (!canvas || !canvas.width || !canvas.height) { return; }
+        canvas.style.width = '100%';
+        canvas.style.aspectRatio = canvas.width + ' / ' + canvas.height;
+    };
+    window.NAWS_releaseChartSpace = function(canvas) {
+        if (!canvas) { return; }
+        canvas.style.width = '';
+        canvas.style.aspectRatio = '';
+    };
+
+    /**
+     * Cards fade in group by group: each row of .naws-card siblings waits
+     * as one, so the staggered delays still run left to right, and a
+     * count-up value starts with its card. .is-pending pauses the fade on
+     * its first frame; without this script the cards fade in on load.
+     */
+    window.NAWS_revealCards = function(root) {
+        const groups = [];
+        root.querySelectorAll('.naws-card').forEach(card => {
+            if (groups.indexOf(card.parentNode) < 0) { groups.push(card.parentNode); }
+        });
+        groups.forEach(group => {
+            const cards = Array.prototype.filter.call(group.children, c => c.classList.contains('naws-card'));
+            cards.forEach(c => c.classList.add('is-pending'));
+            window.NAWS_whenInView(group, () => {
+                cards.forEach(card => {
+                    card.classList.remove('is-pending');
                     const valueEl = card.querySelector('.naws-count-up');
-                    if (valueEl && card.dataset.nawsAnimated !== '1') {
-                        card.dataset.nawsAnimated = '1';
+                    if (valueEl && valueEl.dataset.nawsAnimated !== '1') {
+                        valueEl.dataset.nawsAnimated = '1';
                         const val = parseFloat(valueEl.dataset.value || valueEl.textContent) || 0;
                         animateNumber(valueEl, val, 1200);
                     }
-                    observer.unobserve(card);
-                }
+                });
             });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.naws-card').forEach(c => observer.observe(c));
-    }
+        });
+    };
+    window.NAWS_revealCards(document);
 
     /* ============================================================
        Chart Builder

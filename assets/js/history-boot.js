@@ -399,7 +399,13 @@ function checkDone(){
     loadEl.style.display = 'none';
     chartsEl.style.display = '';
     CHART_DEFS.forEach(function(def){
-      renderChart(def.id, false);
+      // Each chart draws itself in when the visitor gets to it, not while
+      // it is still below the fold (frontend.js, NAWS_whenInView).
+      window.NAWS_holdChartSpace(document.getElementById(WID+'-'+def.id));
+      window.NAWS_whenInView(document.getElementById(WID+'-'+def.id), function(){
+        window.NAWS_releaseChartSpace(document.getElementById(WID+'-'+def.id));
+        renderChart(def.id, false);
+      });
       buildLegend(def.id, WID+'-leg-'+def.id);
     });
   }
