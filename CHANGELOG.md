@@ -2,6 +2,11 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [Unreleased]
+
+### Fixed
+- **The rain radar's legend did not match the DWD map.** The bar under `[naws_radar]` ran from blue through yellow to red, the colours of RainViewer, while the German weather service paints light rain cyan, then green, yellow, orange and red. With DWD as the source the legend now shows the DWD colours; with RainViewer it stays as it was.
+
 ## [2.1.6]
 
 ### Security

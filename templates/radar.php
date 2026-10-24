@@ -93,7 +93,7 @@ $naws_rd_credit = static function ( string $label, string $url, string $text ): 
             <span class="naws-radar-now" aria-hidden="true"
                   style="left:<?php echo esc_attr( sprintf( '%.4F%%', $naws_rd_n > 1 ? max( 0, $naws_rd_now ) / ( $naws_rd_n - 1 ) * 100 : 0 ) ); ?>"<?php echo $naws_rd_n < 2 ? ' hidden' : ''; ?>></span>
         </span>
-        <span class="naws-radar-legend" aria-hidden="true">
+        <span class="naws-radar-legend naws-radar-legend--<?php echo 'dwd' === $naws_rd['source'] ? 'dwd' : 'rainviewer'; ?>" aria-hidden="true">
             <span><?php echo esc_html( naws_label( 'rd_light' ) ); ?></span><i></i><span><?php echo esc_html( naws_label( 'rd_heavy' ) ); ?></span>
         </span>
     </div>

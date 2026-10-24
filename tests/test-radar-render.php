@@ -89,6 +89,7 @@ check( 'Uhrzeit von "jetzt"',              str_contains( $html, gmdate( 'H:i', $
 check( 'Karte im HTML',                    str_contains( $html, '/map/10-547-341.png' ), true );
 check( 'Quellenangabe DWD + OSM',          str_contains( $html, 'Deutscher Wetterdienst' ) && str_contains( $html, 'OpenStreetMap' ), true );
 check( 'Regler mit 3 Bildern',             str_contains( $html, 'max="2"' ), true );
+check( 'Legende in DWD-Farben',            str_contains( $html, '<span class="naws-radar-legend naws-radar-legend--dwd" aria-hidden="true">' ), true );
 check( 'kein id-Attribut',                 preg_match( '/\sid="/', $html ), 0 );
 preg_match( '#<script type="application/json" data-naws="radar">(.*?)</script>#s', $html, $j );
 privacy( $html, 'frisch' );
@@ -127,7 +128,8 @@ NAWS_Radar_Store::save_manifest( $rk, [ 'v' => 1, 'source' => 'rainviewer', 'upd
     'frames' => [ [ 't' => $now - 600, 'forecast' => false, 'tiles' => [ [ 'file' => 'frames/1-7-1-1.png', 'left' => -10, 'top' => -10, 'size' => 600 ] ] ] ], 'retired' => [] ] );
 $html = NAWS_Radar::render( [], $now );
 privacy( $html, 'RainViewer' );
-check( 'RainViewer verlinkt',              str_contains( $html, 'Weather data by <a href="https://www.rainviewer.com" target="_blank" rel="noopener noreferrer">RainViewer</a>' ), true );
+check( 'Legende in RainViewer-Farben',     str_contains( $html, '<span class="naws-radar-legend naws-radar-legend--rainviewer" aria-hidden="true">' ), true );
+check( 'RainViewer verlinkt',             str_contains( $html, 'Weather data by <a href="https://www.rainviewer.com" target="_blank" rel="noopener noreferrer">RainViewer</a>' ), true );
 check( 'ein Bild: Jetzt-Marke versteckt',  (bool) preg_match( '#<span class="naws-radar-now" aria-hidden="true"\s+style="left:0\.0000%" hidden>#', $html ), true );
 $GLOBALS['loc'] = [ 'lat' => 51.35, 'lon' => 12.37, 'name' => 'Leipzig' ];
 

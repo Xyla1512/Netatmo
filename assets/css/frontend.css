@@ -2122,7 +2122,10 @@
 .naws-radar-icon { width: 0; height: 0; border-style: solid; border-width: 7px 0 7px 12px; border-color: transparent transparent transparent currentColor; margin-left: 3px; }
 .naws-radar-btn.is-playing .naws-radar-icon { width: 12px; height: 14px; border-width: 0 4px; border-color: currentColor; border-style: solid; margin-left: 0; }
 .naws-radar-legend { flex: 0 0 auto; display: inline-flex; gap: 6px; align-items: center; font-size: .8em; color: var(--naws-radar-time-bg, #2d5252); }
-.naws-radar-legend i { display: inline-block; width: 56px; height: 8px; border-radius: 4px; background: linear-gradient(90deg, #9be7ff, #2f80ed, #f2c94c, #eb5757); }
+.naws-radar-legend i { display: inline-block; width: 56px; height: 8px; border-radius: 4px; }
+/* Each service colours rain its own way: DWD from cyan through green and yellow to red, RainViewer (scheme 2) from light blue to red. */
+.naws-radar-legend--dwd i { background: linear-gradient(90deg, #33ffff, #019934, #99cc01, #ffff01, #ff8901, #fe0000); }
+.naws-radar-legend--rainviewer i { background: linear-gradient(90deg, #9be7ff, #2f80ed, #f2c94c, #eb5757); }
 .naws-radar-attr { margin: 4px 0 0; font-size: .75em; opacity: .75; }
 /* Zoom (+ / -) around the station; drag moves the zoomed map. The station dot keeps its size. */
 .naws-radar-stage { transition: transform .2s ease; }
