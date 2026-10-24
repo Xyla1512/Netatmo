@@ -183,6 +183,42 @@
         if (!canvas) { return; }
         canvas.style.width = '';
         canvas.style.aspectRatio = '';
+        // The axes and grid would otherwise stand there at once; the canvas
+        // fades in while the curve builds (.naws-chart-reveal, frontend.css).
+        canvas.classList.add('naws-chart-reveal');
+    };
+
+    /**
+     * The first build of a chart as a wave from left to right, the way the
+     * heatmap builds: each point or bar rises from the floor of the plot a
+     * little after the one before, the wave running over `spread` ms.
+     * Chart.js 4 does not do this by itself — a new line chart stands there
+     * at its final height on the first frame — so the start value is given
+     * here. Later updates (a year switched off, new readings) move from
+     * where they are. Returns the `animation` and `animations` options.
+     */
+    window.NAWS_chartWave = function(duration, spread) {
+        const first = ctx => ctx.type === 'data' && !ctx.chart.$nawsWaved;
+        return {
+            animation: {
+                duration: duration,
+                easing: 'easeOutCubic',
+                onComplete: function(e) { e.chart.$nawsWaved = true; }
+            },
+            animations: {
+                y: {
+                    duration: duration,
+                    easing: 'easeOutCubic',
+                    from: function(ctx) { return first(ctx) ? ctx.chart.chartArea.bottom : undefined; },
+                    delay: function(ctx) {
+                        if (!first(ctx)) { return 0; }
+                        const ds = ctx.chart.data.datasets[ctx.datasetIndex];
+                        const n = ds && ds.data ? ds.data.length : 1;
+                        return Math.round(ctx.dataIndex * spread / Math.max(1, n - 1));
+                    }
+                }
+            }
+        };
     };
 
     /**

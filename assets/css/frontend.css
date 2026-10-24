@@ -899,28 +899,36 @@
    Animations
    ============================================================ */
 @keyframes naws-fade-in {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(18px) scale(.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-.naws-card { animation: naws-fade-in 0.5s ease both; }
+/* Long and soft, so the row is seen arriving rather than switching on. */
+.naws-card { animation: naws-fade-in 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
 /* frontend.js holds a card on the first frame until its row is in view. */
 @media (prefers-reduced-motion: no-preference) {
   .naws-card.is-pending { animation-play-state: paused; }
 }
 
-.naws-card:nth-child(1)  { animation-delay: 0.05s; }
-.naws-card:nth-child(2)  { animation-delay: 0.10s; }
-.naws-card:nth-child(3)  { animation-delay: 0.15s; }
-.naws-card:nth-child(4)  { animation-delay: 0.20s; }
-.naws-card:nth-child(5)  { animation-delay: 0.25s; }
-.naws-card:nth-child(6)  { animation-delay: 0.30s; }
-.naws-card:nth-child(7)  { animation-delay: 0.35s; }
-.naws-card:nth-child(8)  { animation-delay: 0.40s; }
-.naws-card:nth-child(9)  { animation-delay: 0.45s; }
-.naws-card:nth-child(10) { animation-delay: 0.50s; }
-.naws-card:nth-child(11) { animation-delay: 0.55s; }
-.naws-card:nth-child(12) { animation-delay: 0.60s; }
+.naws-card:nth-child(1)  { animation-delay: 0.04s; }
+.naws-card:nth-child(2)  { animation-delay: 0.12s; }
+.naws-card:nth-child(3)  { animation-delay: 0.20s; }
+.naws-card:nth-child(4)  { animation-delay: 0.28s; }
+.naws-card:nth-child(5)  { animation-delay: 0.36s; }
+.naws-card:nth-child(6)  { animation-delay: 0.44s; }
+.naws-card:nth-child(7)  { animation-delay: 0.52s; }
+.naws-card:nth-child(8)  { animation-delay: 0.60s; }
+.naws-card:nth-child(9)  { animation-delay: 0.68s; }
+.naws-card:nth-child(10) { animation-delay: 0.76s; }
+.naws-card:nth-child(11) { animation-delay: 0.84s; }
+.naws-card:nth-child(12) { animation-delay: 0.92s; }
+
+/* A chart canvas fades in while its curve builds (frontend.js, NAWS_releaseChartSpace). */
+@keyframes naws-chart-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.naws-chart-reveal { animation: naws-chart-in 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
 
 /* Reduce motion if requested */
 @media (prefers-reduced-motion: reduce) {

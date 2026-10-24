@@ -130,9 +130,10 @@ function baseOpts(unit, type, isModal, isMonthly){
       }
     };
   }
+  var wave = window.NAWS_chartWave(800, 900);
   return {
     responsive:true, maintainAspectRatio:!isModal,
-    animation:{duration:600,easing:'easeInOutQuart'},
+    animation:wave.animation, animations:wave.animations,
     plugins:{
       legend:{display:false},
       tooltip:{

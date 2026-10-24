@@ -6,6 +6,7 @@ All notable changes to the XTX Netatmo plugin are documented here.
 
 ### Changed
 - **Charts and cards build up when the visitor gets to them.** The charts of `[naws_live]` and `[naws_history]` drew themselves in while the page loaded, so anything below the fold had finished long before anyone scrolled down; the cards of `[naws_current]` and `[naws_live]` faded in the same way. They now wait by the rule the heatmap has used since 2.0.1: the build-up starts once their top edge reaches the middle of the window, or the page is scrolled to its end. A chart keeps its full size while it waits, so the page does not jump when it is drawn. With reduced motion switched on in the system, everything is there at once.
+- **The build-up is soft instead of abrupt.** Chart.js 4 draws a new line chart at its final height on the first frame, so axes, grid and curve simply appeared. The chart now fades in while its curve rises from the floor as a wave from left to right, the rain bars one after another; later updates still move from where they are. The cards take longer and ease out (0.8 s instead of 0.5 s, 80 ms apart instead of 50).
 
 ### Fixed
 - **The rain radar's legend did not match the DWD map.** The bar under `[naws_radar]` ran from blue through yellow to red, the colours of RainViewer, while the German weather service paints light rain cyan, then green, yellow, orange and red. With DWD as the source the legend now shows the DWD colours; with RainViewer it stays as it was.

@@ -406,9 +406,10 @@ function nawsLiveFontSize(){ var w=window.innerWidth; return w<480?9:w<768?10:11
 
 function chartOpts(unit, type){
   var fs = nawsLiveFontSize();
+  var wave = window.NAWS_chartWave(900, 700);
   return {
     responsive:true, maintainAspectRatio:true,
-    animation:{duration:900,easing:'easeInOutQuart'},
+    animation:wave.animation, animations:wave.animations,
     plugins:{
       legend:{display:false},
       tooltip:{
@@ -516,6 +517,7 @@ function loadCharts(){
       // already takes its room while it waits.
       var canvasId=chartCanvasId(cfg.key);
       window.NAWS_whenInView(document.getElementById(canvasId), function(){
+        window.NAWS_releaseChartSpace(document.getElementById(canvasId));
         renderChart(canvasId, cfg, labels, vals, true);
       });
     });
