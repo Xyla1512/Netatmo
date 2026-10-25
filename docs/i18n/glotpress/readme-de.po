@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Plugins - XTX Integration for Netatmo - Stable Readme (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-10-22 14:49:01+0000\n"
+"PO-Revision-Date: 2026-10-25 11:48:15+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -539,6 +539,16 @@ msgstr "Live-Dashboard mit Sensorkacheln und 24-Stunden-Verläufen"
 
 #. Found in changelog list item.
 #, gp-priority: low
+msgid "Fix: the legend of <code>[naws_radar]</code> showed RainViewer's colours on the DWD map. With DWD as the source it now runs from cyan through green, yellow and orange to red, like the map."
+msgstr "Fix: Die Legende von <code>[naws_radar]</code> zeigte auf der DWD-Karte die Farben von RainViewer. Mit dem DWD als Quelle läuft sie jetzt wie die Karte von Türkis über Grün, Gelb und Orange bis Rot."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Changed: the charts of <code>[naws_live]</code> and <code>[naws_history]</code> and the cards of <code>[naws_current]</code> and <code>[naws_live]</code> build up when the visitor scrolls to them, not while the page loads out of sight. The curve rises from the floor as a soft wave and the chart fades in; the cards ease in. With reduced motion switched on in the system, everything is there at once."
+msgstr "Changed: Die Diagramme von <code>[naws_live]</code> und <code>[naws_history]</code> und die Kacheln von <code>[naws_current]</code> und <code>[naws_live]</code> bauen sich auf, wenn der Besucher zu ihnen scrollt, nicht schon außer Sicht beim Laden der Seite. Die Kurve steigt als weiche Welle vom Boden auf, und das Diagramm blendet ein; die Kacheln gleiten herein. Ist im System „Bewegung reduzieren“ eingeschaltet, steht alles sofort da."
+
+#. Found in changelog list item.
+#, gp-priority: low
 msgid "Fix: the y-axis of the rain chart repeated its labels (0, 0.1, 0.1, 0.2); the steps are at least 0.1 mm now."
 msgstr "Fix: Die y-Achse des Regendiagramms wiederholte ihre Beschriftung (0, 0,1, 0,1, 0,2); die Schritte sind jetzt mindestens 0,1 mm."
 
@@ -611,16 +621,6 @@ msgstr "Added: ein Reiter „Rekorde“ unter Darstellung — Hintergrund des Bl
 #, gp-priority: low
 msgid "Added: <code>[naws_radar]</code> — an animated rain radar around the station: Deutscher Wetterdienst in Germany (the last hour plus a two-hour nowcast), RainViewer elsewhere, on a grey OpenStreetMap map. Play runs through the images once; + and − zoom in around the station, and the enlarged map can be dragged. Your server fetches and stores the images, so visitors never contact a weather service. Nothing is fetched until \"Allow rain radar\" is switched on under Settings › Rain radar; colours on a new Appearance tab, Rain radar."
 msgstr "Added: <code>[naws_radar]</code> — ein animiertes Regenradar um die Station: in Deutschland vom Deutschen Wetterdienst (die letzte Stunde und zwei Stunden Vorschau), anderswo von RainViewer, auf einer grauen OpenStreetMap-Karte. „Abspielen“ läuft einmal durch alle Bilder; mit + und − zoomst du um die Station hinein, die vergrößerte Karte lässt sich verschieben. Dein Server holt und speichert die Bilder, Besucher sprechen nie mit einem Wetterdienst. Abgerufen wird nichts, bevor unter Einstellungen › Regenradar „Regenradar erlauben“ eingeschaltet ist; die Farben stehen in einem neuen Reiter Regenradar unter Darstellung."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Fix: the 29th of February drew two almost flat lines across the daily charts of <code>[naws_history]</code> in a leap year. The day was placed after the 31st of December; the axis has 366 days now."
-msgstr "Fix: Der 29. Februar zog in einem Schaltjahr zwei fast waagerechte Linien durch die Tagesdiagramme von <code>[naws_history]</code>. Der Tag landete hinter dem 31. Dezember; die Achse hat jetzt 366 Tage."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Fix: the forecast showed \"Open-Meteo API HTTP 429\". Open-Meteo limits its free API per IP address, and the plugin asked again on every page view after a failure, which kept the address above the limit. A failed request now pauses the provider (after a 429 as long as Open-Meteo asks, otherwise 15 minutes; 5 minutes after other errors), the last good forecast stays on the page for up to 24 hours, and visitors read a plain sentence instead of an HTTP code. Yr.no and the place search of the manual location mode are covered as well."
-msgstr "Fix: Die Vorhersage zeigte „Open-Meteo API HTTP 429“. Open-Meteo begrenzt seine kostenlose API pro IP-Adresse, und das Plugin fragte nach einem Fehlschlag bei jedem Seitenaufruf erneut an — damit blieb die Adresse über der Grenze. Ein fehlgeschlagener Abruf legt jetzt eine Pause ein (nach einem 429 so lange, wie Open-Meteo verlangt, sonst 15 Minuten; nach anderen Fehlern 5 Minuten), die letzte gute Vorhersage bleibt bis zu 24 Stunden auf der Seite, und Besucher lesen einen verständlichen Satz statt eines HTTP-Codes. Yr.no und die Ortssuche des manuellen Standortmodus sind ebenfalls abgedeckt."
 
 #. Found in changelog paragraph.
 #, gp-priority: low
