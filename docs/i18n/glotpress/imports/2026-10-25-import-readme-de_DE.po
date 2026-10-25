@@ -1,0 +1,15 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo - Stable Readme\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "Fix: the legend of <code>[naws_radar]</code> showed RainViewer's colours on the DWD map. With DWD as the source it now runs from cyan through green, yellow and orange to red, like the map."
+msgstr "Fix: Die Legende von <code>[naws_radar]</code> zeigte auf der DWD-Karte die Farben von RainViewer. Mit dem DWD als Quelle läuft sie jetzt wie die Karte von Türkis über Grün, Gelb und Orange bis Rot."
+
+msgid "Changed: the charts of <code>[naws_live]</code> and <code>[naws_history]</code> and the cards of <code>[naws_current]</code> and <code>[naws_live]</code> build up when the visitor scrolls to them, not while the page loads out of sight. The curve rises from the floor as a soft wave and the chart fades in; the cards ease in. With reduced motion switched on in the system, everything is there at once."
+msgstr "Changed: Die Diagramme von <code>[naws_live]</code> und <code>[naws_history]</code> und die Kacheln von <code>[naws_current]</code> und <code>[naws_live]</code> bauen sich auf, wenn der Besucher zu ihnen scrollt, nicht schon außer Sicht beim Laden der Seite. Die Kurve steigt als weiche Welle vom Boden auf, und das Diagramm blendet ein; die Kacheln gleiten herein. Ist im System „Bewegung reduzieren“ eingeschaltet, steht alles sofort da."
+
