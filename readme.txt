@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 2.1.6
+Stable tag: 2.1.7
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -123,6 +123,10 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 
 == Changelog ==
 
+= 2.1.7 =
+* Changed: the charts of `[naws_live]` and `[naws_history]` and the cards of `[naws_current]` and `[naws_live]` build up when the visitor scrolls to them, not while the page loads out of sight. The curve rises from the floor as a soft wave and the chart fades in; the cards ease in. With reduced motion switched on in the system, everything is there at once.
+* Fix: the legend of `[naws_radar]` showed RainViewer's colours on the DWD map. With DWD as the source it now runs from cyan through green, yellow and orange to red, like the map.
+
 = 2.1.6 =
 * Security: the public chart endpoints took repeated fields — a single visitor request could build hundreds of megabytes and run PHP out of memory, the starting point of CVE-2026-109618/109619 ("PHP2Shell"). Repeats are dropped and unknown fields refused; the daily-data endpoint is for logged-in users only and no longer stores a cache entry for every date pair it is sent. The fix in PHP itself comes from your host: PHP 8.2.35, 8.3.36, 8.4.27, 8.5.12 or a build with the backport.
 * Fix: the hourly rain chart showed rain half an hour late. Each bar is now the sum of the rain gauge's reports in that hour; the bars of a day add up to the 24-hour total.
@@ -146,22 +150,18 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 * Fix: records, "on this day" and the sun path ignored the base theme; their background stayed white whatever was set.
 * Fix: the expand button of the charts could turn red after a click under themes such as Hello Elementor.
 
-= 2.1.2 =
-* Fix: the forecast showed "Open-Meteo API HTTP 429". Open-Meteo limits its free API per IP address, and the plugin asked again on every page view after a failure, which kept the address above the limit. A failed request now pauses the provider (after a 429 as long as Open-Meteo asks, otherwise 15 minutes; 5 minutes after other errors), the last good forecast stays on the page for up to 24 hours, and visitors read a plain sentence instead of an HTTP code. Yr.no and the place search of the manual location mode are covered as well.
-* Fix: the 29th of February drew two almost flat lines across the daily charts of `[naws_history]` in a leap year. The day was placed after the 31st of December; the axis has 366 days now.
-
 Older versions: the complete changelog since 1.0.0 is kept in [CHANGELOG.md](https://github.com/Xyla1512/Netatmo/blob/main/CHANGELOG.md) on GitHub.
 
 == Upgrade Notice ==
+
+= 2.1.7 =
+Charts and cards build up softly when the visitor scrolls to them, and the rain radar legend matches the DWD map. Nothing to reconfigure.
 
 = 2.1.6 =
 Security: visitors can no longer make the chart endpoints run PHP out of memory (relevant to CVE-2026-109618/109619 — update PHP as well). Fix: the hourly rain chart and grouped rain show the real sum. Nothing to reconfigure.
 
 = 2.1.5 =
 New: the error log and a support report on the Cron Log page. Fix: a sync the database refused no longer reports "Sync OK", and "Sync now" no longer fetches twice. Nothing to reconfigure.
-
-= 2.1.4 =
-Fix: the REST API page shows a PHP example that works in snippet plugins, as a [wetter_aktuell] shortcode with a copy button, names the X-NAWS-Key header as the only place for the key, and warns about keys in browser code. Nothing to reconfigure.
 
 == Privacy & External Services ==
 

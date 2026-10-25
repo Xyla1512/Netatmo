@@ -1,5 +1,5 @@
 {
-    "aktualisiert": "2026-10-22",
+    "aktualisiert": "2026-10-25",
     "vorhaben": [
         {
             "id": "monatsrueckblick",
@@ -20,6 +20,20 @@
             "titel": "Elementor-Widgets",
             "satz": "Dasselbe für Elementor: die Bausteine als eigene Widgets, eingestellt im Elementor-Panel und mit Vorschau im Editor.",
             "ab": null,
+            "bild": null
+        },
+        {
+            "id": "animationen-im-blick",
+            "titel": "Diagramme bauen sich auf, wenn man hinsieht",
+            "satz": "Die Diagramme von [naws_live] und [naws_history] und die Kacheln warten, bis der Besucher zu ihnen scrollt. Dann steigt die Kurve als weiche Welle vom Boden auf, und die Kacheln gleiten herein. Wer im System weniger Bewegung eingestellt hat, sieht alles sofort.",
+            "ab": "2.1.7",
+            "bild": null
+        },
+        {
+            "id": "radar-legende-dwd",
+            "titel": "Radar-Legende in den Farben des DWD",
+            "satz": "Die Farbskala unter [naws_radar] zeigt beim Deutschen Wetterdienst jetzt dessen Farben, von Türkis über Grün, Gelb und Orange bis Rot, genau wie auf der Karte. Mit RainViewer bleibt sie wie bisher.",
+            "ab": "2.1.7",
             "bild": null
         },
         {

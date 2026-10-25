@@ -2,7 +2,7 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
-## [Unreleased]
+## [2.1.7]
 
 ### Changed
 - **Charts and cards build up when the visitor gets to them.** The charts of `[naws_live]` and `[naws_history]` drew themselves in while the page loaded, so anything below the fold had finished long before anyone scrolled down; the cards of `[naws_current]` and `[naws_live]` faded in the same way. They now wait by the rule the heatmap has used since 2.0.1: the build-up starts once their top edge reaches the middle of the window, or the page is scrolled to its end. A chart keeps its full size while it waits, so the page does not jump when it is drawn. With reduced motion switched on in the system, everything is there at once.
