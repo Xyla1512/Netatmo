@@ -218,7 +218,8 @@ class NAWS_Rest_API {
                 'module_name' => $m['module_name'],
                 'display_name' => NAWS_Helpers::display_name( $m ),
                 'module_type' => $m['module_type'],
-                'data_types'  => array_filter( array_map( 'trim', explode( ',', $m['data_types'] ?? '' ) ) ),
+                // get_modules() hands data_types over decoded; explode() on that list was a TypeError.
+                'data_types'  => array_values( (array) ( $m['data_types'] ?? [] ) ),
                 'last_seen'   => ! empty( $m['last_seen'] ) ? (int) $m['last_seen'] : null,
                 'firmware'    => $m['firmware'] ?? null,
                 'battery_vp'  => $m['battery_vp'] ?? null,
