@@ -1,0 +1,21 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo - Stable Readme\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "<strong>Full Netatmo Integration</strong> – OAuth2 authentication, automatic sync, all module types supported (Base, Outdoor, Wind, Rain, Indoor), with your own display name for each module"
+msgstr "<strong>Vollständige Netatmo-Integration</strong> – OAuth2-Anmeldung, automatischer Abgleich, alle Modultypen unterstützt (Basis, Außen, Wind, Regen, Innen), mit eigenem Anzeigenamen für jedes Modul"
+
+msgid "Fix: switching a module off on the Modules page did not grey out its row until the page was reloaded."
+msgstr "Fix: Wurde ein Modul auf der Modulseite abgeschaltet, wurde seine Zeile erst nach dem Neuladen der Seite ausgegraut."
+
+msgid "Fix: <code>GET /naws/v1/modules</code> failed with HTTP 500 on every call."
+msgstr "Fix: <code>GET /naws/v1/modules</code> endete bei jedem Aufruf mit HTTP 500."
+
+msgid "Added: display names for modules. Type a name under a module on the Modules page and it replaces the Netatmo name everywhere — the cards, badges and chart titles of <code>[naws_live]</code>, <code>[naws_current]</code>, <code>[naws_table]</code>, the admin pages and the e-mail notifications; <code>[naws_current]</code> then shows only that name, without the type badge. An empty field keeps the Netatmo name. The REST API adds <code>display_name</code> beside <code>module_name</code>."
+msgstr "Added: Anzeigenamen für Module. Ein Name, der auf der Modulseite unter einem Modul eingetragen wird, ersetzt den Netatmo-Namen überall – auf den Kacheln, Abzeichen und Diagrammtiteln von <code>[naws_live]</code>, in <code>[naws_current]</code>, <code>[naws_table]</code>, auf den Admin-Seiten und in den E-Mail-Benachrichtigungen; <code>[naws_current]</code> zeigt dann nur noch diesen Namen, ohne das Typ-Abzeichen. Ein leeres Feld lässt den Netatmo-Namen stehen. Die REST-API liefert <code>display_name</code> neben <code>module_name</code>."
+
