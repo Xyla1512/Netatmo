@@ -38,6 +38,7 @@ class NAWS_Helpers {
     public static function display_value( $p, $v ) { return (string) self::format_value( $p, $v ); }
     public static function get_unit( $p ) { return [ 'Temperature' => '°C', 'GustStrength' => 'km/h', 'sum_rain_24' => 'mm', 'CO2' => 'ppm' ][ $p ] ?? ''; }
     public static function module_type_label( $t ) { return [ 'NAModule1' => 'Outdoor Module', 'NAModule4' => 'Indoor module' ][ $t ] ?? $t; }
+    public static function display_name( $m ) { return (string) ( $m['display_name'] ?? $m['module_name'] ?? '' ); }
 }
 class NAWS_Logger { public static $errors = []; public static function error( $c, $m, $x = [] ) { self::$errors[] = $m; } public static function warning( ...$a ) {} public static function info( ...$a ) {} }
 class NAWS_Cron {

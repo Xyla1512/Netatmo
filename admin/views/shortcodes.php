@@ -529,7 +529,7 @@ $value_params = [
             $alias = $alias_map[ $m['module_type'] ] ?? '(MAC)';
         ?>
         <tr>
-            <td><?php echo esc_html( $m['module_name'] ); ?></td>
+            <td><?php echo esc_html( NAWS_Helpers::display_name( $m ) ); ?></td>
             <td><code><?php echo esc_html( $m['module_type'] ); ?></code></td>
             <td><code><?php echo esc_html( $alias ); ?></code></td>
             <td>

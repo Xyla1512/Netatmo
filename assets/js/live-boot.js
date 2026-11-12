@@ -255,16 +255,16 @@ function buildLive(rows){
     var r=p.Temperature,subs=[];
     if(p.min_temp) subs.push({l:'Min',v:p.min_temp.value,u:p.min_temp.unit||'°C'});
     if(p.max_temp) subs.push({l:'Max',v:p.max_temp.value,u:p.max_temp.unit||'°C'});
-    h+=mkCard('c-temp','temp',NAWS_I18N.card_temperature+'<span class="naws-lbl-badge">'+NAWS_I18N.lbl_outdoor+'</span>','Temperature',r.value,r.unit||'°C',r.recorded_at,subs);
+    h+=mkCard('c-temp','temp',NAWS_I18N.card_temperature+'<span class="naws-lbl-badge">'+esc(NAWS_I18N.lbl_outdoor)+'</span>','Temperature',r.value,r.unit||'°C',r.recorded_at,subs);
   }
   if(HIDE.indexOf('min_temp')<0&&p.min_temp&&HIDE.indexOf('Temperature')>=0)
-    h+=mkCard('c-temp','temp',NAWS_I18N.card_temp_min+'<span class="naws-lbl-badge">'+NAWS_I18N.lbl_outdoor+'</span>','min_temp',p.min_temp.value,p.min_temp.unit||'°C',p.min_temp.recorded_at,[]);
+    h+=mkCard('c-temp','temp',NAWS_I18N.card_temp_min+'<span class="naws-lbl-badge">'+esc(NAWS_I18N.lbl_outdoor)+'</span>','min_temp',p.min_temp.value,p.min_temp.unit||'°C',p.min_temp.recorded_at,[]);
   if(HIDE.indexOf('max_temp')<0&&p.max_temp&&HIDE.indexOf('Temperature')>=0)
-    h+=mkCard('c-temp','temp',NAWS_I18N.card_temp_max+'<span class="naws-lbl-badge">'+NAWS_I18N.lbl_outdoor+'</span>','max_temp',p.max_temp.value,p.max_temp.unit||'°C',p.max_temp.recorded_at,[]);
+    h+=mkCard('c-temp','temp',NAWS_I18N.card_temp_max+'<span class="naws-lbl-badge">'+esc(NAWS_I18N.lbl_outdoor)+'</span>','max_temp',p.max_temp.value,p.max_temp.unit||'°C',p.max_temp.recorded_at,[]);
 
   // ── Außen-Luftfeuchtigkeit ─────────────────────────────────────────────
   if(HIDE.indexOf('Humidity')<0&&p.Humidity)
-    h+=mkCard('c-humid','humid',NAWS_I18N.card_humidity+'<span class="naws-lbl-badge">'+NAWS_I18N.lbl_outdoor+'</span>','Humidity',p.Humidity.value,p.Humidity.unit||'%',p.Humidity.recorded_at,[]);
+    h+=mkCard('c-humid','humid',NAWS_I18N.card_humidity+'<span class="naws-lbl-badge">'+esc(NAWS_I18N.lbl_outdoor)+'</span>','Humidity',p.Humidity.value,p.Humidity.unit||'%',p.Humidity.recorded_at,[]);
 
   // ── Luftdruck (NAMain) ─────────────────────────────────────────────────
   var pr=p.Pressure||p.AbsolutePressure;
@@ -273,19 +273,19 @@ function buildLive(rows){
 
   // ── CO₂ Basis (NAMain) ────────────────────────────────────────────────
   if(HIDE.indexOf('CO2')<0&&p.CO2)
-    h+=mkCard('c-co2','co2',NAWS_I18N.card_co2+'<span class="naws-lbl-badge">'+NAWS_I18N.lbl_base+'</span>','CO2',p.CO2.value,p.CO2.unit||'ppm',p.CO2.recorded_at,[]);
+    h+=mkCard('c-co2','co2',NAWS_I18N.card_co2+'<span class="naws-lbl-badge">'+esc(NAWS_I18N.lbl_base)+'</span>','CO2',p.CO2.value,p.CO2.unit||'ppm',p.CO2.recorded_at,[]);
 
   // ── Lärm Basis (NAMain) ───────────────────────────────────────────────
   if(HIDE.indexOf('Noise')<0&&p.Noise)
-    h+=mkCard('c-noise','noise',NAWS_I18N.card_noise+'<span class="naws-lbl-badge">'+NAWS_I18N.lbl_base+'</span>','Noise',p.Noise.value,p.Noise.unit||'dB',p.Noise.recorded_at,[]);
+    h+=mkCard('c-noise','noise',NAWS_I18N.card_noise+'<span class="naws-lbl-badge">'+esc(NAWS_I18N.lbl_base)+'</span>','Noise',p.Noise.value,p.Noise.unit||'dB',p.Noise.recorded_at,[]);
 
   // ── Innentemperatur Basis (NAMain) ─────────────────────────────────────
   if(HIDE.indexOf('Temperature_indoor')<0&&p.Temperature_indoor)
-    h+=mkCard('c-temp','temp',NAWS_I18N.card_temperature+'<span class="naws-lbl-badge">'+NAWS_I18N.lbl_base+'</span>','Temperature_indoor',p.Temperature_indoor.value,p.Temperature_indoor.unit||'°C',p.Temperature_indoor.recorded_at,[]);
+    h+=mkCard('c-temp','temp',NAWS_I18N.card_temperature+'<span class="naws-lbl-badge">'+esc(NAWS_I18N.lbl_base)+'</span>','Temperature_indoor',p.Temperature_indoor.value,p.Temperature_indoor.unit||'°C',p.Temperature_indoor.recorded_at,[]);
 
   // ── Innen-Luftfeuchtigkeit Basis (NAMain) ──────────────────────────────
   if(HIDE.indexOf('Humidity_indoor')<0&&p.Humidity_indoor)
-    h+=mkCard('c-humid','humid',NAWS_I18N.card_humidity+'<span class="naws-lbl-badge">'+NAWS_I18N.lbl_base+'</span>','Humidity_indoor',p.Humidity_indoor.value,p.Humidity_indoor.unit||'%',p.Humidity_indoor.recorded_at,[]);
+    h+=mkCard('c-humid','humid',NAWS_I18N.card_humidity+'<span class="naws-lbl-badge">'+esc(NAWS_I18N.lbl_base)+'</span>','Humidity_indoor',p.Humidity_indoor.value,p.Humidity_indoor.unit||'%',p.Humidity_indoor.recorded_at,[]);
 
   // ── Regen (NAModule3) ─────────────────────────────────────────────────
   if(HIDE.indexOf('Rain')<0&&(p.Rain||p.sum_rain_1||p.sum_rain_24||p.rain_rolling_24h)){

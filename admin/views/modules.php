@@ -14,6 +14,7 @@ $modules = NAWS_Database::get_modules( false );
             <h2><?php esc_html_e( 'All Modules', 'xtx-integration-for-netatmo' ); ?></h2>
             <p class="description" style="margin:0;">
                 <?php esc_html_e( 'Deactivated modules are excluded from all frontend displays, charts and cron sync.', 'xtx-integration-for-netatmo' ); ?>
+                <?php esc_html_e( 'A display name replaces the Netatmo name everywhere on the site and in the admin; leave it empty to keep the Netatmo name.', 'xtx-integration-for-netatmo' ); ?>
             </p>
         </div>
 
@@ -69,12 +70,32 @@ $modules = NAWS_Database::get_modules( false );
                         </label>
                     </td>
                     <td>
-                        <strong><?php echo esc_html( $m['module_name'] ); ?></strong>
+                        <strong class="naws-module-display"><?php echo esc_html( NAWS_Helpers::display_name( $m ) ); ?></strong>
                         <?php if ( ! $is_active ) : ?>
                             <span class="naws-badge naws-badge-error" style="margin-left:0.4rem;">
                                 <?php echo 'Inactive'; ?>
                             </span>
                         <?php endif; ?>
+                        <div class="naws-display-name-edit" style="margin-top:0.35rem;">
+                            <input type="text"
+                                   class="naws-display-name"
+                                   data-module-id="<?php echo esc_attr( $m['module_id'] ); ?>"
+                                   data-saved="<?php echo esc_attr( $m['custom_name'] ?? '' ); ?>"
+                                   value="<?php echo esc_attr( $m['custom_name'] ?? '' ); ?>"
+                                   placeholder="<?php echo esc_attr( $m['module_name'] ); ?>"
+                                   maxlength="<?php echo esc_attr( NAWS_Database::DISPLAY_NAME_MAX ); ?>"
+                                   aria-label="<?php echo esc_attr( sprintf( /* translators: %s: module name as Netatmo reports it. */ __( 'Display name for %s', 'xtx-integration-for-netatmo' ), $m['module_name'] ) ); ?>"
+                                   style="width:100%;max-width:16rem;">
+                            <span class="naws-display-name-status description" aria-live="polite"></span>
+                            <?php if ( ! empty( $m['custom_name'] ) ) : ?>
+                                <div class="description naws-netatmo-name">
+                                    <?php
+                                    /* translators: %s: module name as Netatmo reports it. */
+                                    echo esc_html( sprintf( __( 'Netatmo: %s', 'xtx-integration-for-netatmo' ), $m['module_name'] ) );
+                                    ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
                     </td>
                     <td>
                         <span class="naws-module-type-badge">
@@ -182,6 +203,45 @@ wp_add_inline_script( 'naws-admin', <<<'EOJS'
         }).fail(function() {
             checkbox.prop('disabled', false).prop('checked', !isActive);
             alert(nawsAdmin.strings.request_failed);
+        });
+    });
+
+    // Display name: saved when the field loses focus or on Enter.
+    $(document).on('keydown', '.naws-display-name', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            $(this).trigger('blur');
+        }
+    });
+    $(document).on('change', '.naws-display-name', function() {
+        const input  = $(this);
+        const status = input.siblings('.naws-display-name-status');
+        const value  = input.val().trim();
+        if (value === String(input.data('saved'))) {
+            return;
+        }
+
+        input.prop('disabled', true);
+        status.text('');
+
+        $.post(ajaxurl, {
+            action:       'naws_save_display_name',
+            nonce:        nawsAdmin.nonce,
+            module_id:    input.data('module-id'),
+            display_name: value
+        }, function(resp) {
+            input.prop('disabled', false);
+            if (resp.success) {
+                input.val(resp.data.custom_name).data('saved', resp.data.custom_name);
+                input.closest('tr').find('.naws-module-display').text(resp.data.display_name);
+                status.text(nawsAdmin.strings.name_saved);
+            } else {
+                input.val(input.data('saved'));
+                status.text(nawsAdmin.strings.name_error);
+            }
+        }).fail(function() {
+            input.prop('disabled', false).val(input.data('saved'));
+            status.text(nawsAdmin.strings.request_failed);
         });
     });
 })(jQuery);

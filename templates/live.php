@@ -253,8 +253,9 @@ $t_labels  = [ 'up' => __( 'rising', 'xtx-integration-for-netatmo' ), 'down' => 
 
 // ── i18n strings for JavaScript ──────────────────────────────────────────────
 $_i18n = [
-    'lbl_outdoor'     => __( 'Outdoor', 'xtx-integration-for-netatmo' ),
-    'lbl_base'        => __( 'Base', 'xtx-integration-for-netatmo' ),
+    // A display name from the modules screen replaces the fixed badge; live-boot.js escapes both.
+    'lbl_outdoor'     => NAWS_Helpers::type_display_name( 'NAModule1' ) ?: __( 'Outdoor', 'xtx-integration-for-netatmo' ),
+    'lbl_base'        => NAWS_Helpers::type_display_name( 'NAMain' ) ?: __( 'Base', 'xtx-integration-for-netatmo' ),
     'card_temperature'=> __( 'Temperature', 'xtx-integration-for-netatmo' ),
     'card_humidity'   => _x( 'Humidity', 'card_humidity', 'xtx-integration-for-netatmo' ),
     'card_pressure'   => __( 'Air Pressure', 'xtx-integration-for-netatmo' ),

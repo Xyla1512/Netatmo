@@ -43,7 +43,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
         ?>
             <span class="naws-module-badge<?php echo $skip ? ' naws-module-badge-skip' : ''; ?>">
                 <?php echo $skip ? '⏭' : '✅'; ?>
-                <?php echo esc_html($m['module_name']); ?>
+                <?php echo esc_html(NAWS_Helpers::display_name($m)); ?>
                 <small>(<?php echo esc_html($m['module_type']); ?>)</small>
                 <?php if(!$skip): ?>
                 <small style="color:#94a3b8;">→ <?php echo esc_html(implode(', ',$types)); ?></small>
@@ -216,7 +216,7 @@ foreach ( $modules as $m ) {
     if ( empty( $t ) ) continue;
     $_naws_mod_json[] = [
         'module_id'   => $m['module_id'],
-        'module_name' => $m['module_name'],
+        'module_name' => NAWS_Helpers::display_name( $m ),
         'module_type' => $m['module_type'],
         'device_id'   => $m['station_id'],
         'types'       => $t,

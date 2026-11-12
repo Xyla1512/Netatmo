@@ -244,7 +244,7 @@ final class NAWS_Notifications {
             $out[ $id ] = [
                 'module_id'         => $id,
                 'station_id'        => (string) ( $m['station_id'] ?? '' ),
-                'module_name'       => (string) ( $m['module_name'] ?? '' ),
+                'module_name'       => NAWS_Helpers::display_name( $m ),
                 'module_type'       => (string) ( $m['module_type'] ?? '' ),
                 'battery_percent'   => self::int_or_null( $m['battery_percent'] ?? null ),
                 'rf_status'         => self::int_or_null( $m['rf_status'] ?? null ),

@@ -20,7 +20,7 @@ $animate = $atts['animate'] !== 'false';
         <?php if (!empty($module)) : ?>
         <div class="naws-module-header">
             <span class="naws-module-badge"><?php echo esc_html(NAWS_Helpers::module_type_label($module['module_type'] ?? '')); ?></span>
-            <h3 class="naws-module-name"><?php echo esc_html($module['module_name']); ?></h3>
+            <h3 class="naws-module-name"><?php echo esc_html(NAWS_Helpers::display_name($module)); ?></h3>
         </div>
         <?php endif; ?>
 

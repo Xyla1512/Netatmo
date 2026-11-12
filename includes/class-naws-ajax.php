@@ -29,6 +29,7 @@ class NAWS_Ajax {
         add_action( 'wp_ajax_naws_delete_readings',     [ $this, 'delete_readings' ] );
         add_action( 'wp_ajax_naws_radar_clear',         [ $this, 'radar_clear' ] );
         add_action( 'wp_ajax_naws_toggle_module',        [ $this, 'toggle_module' ] );
+        add_action( 'wp_ajax_naws_save_display_name',    [ $this, 'save_display_name' ] );
 
         // Public AJAX (for frontend widgets)
         add_action( 'wp_ajax_naws_get_chart_data',         [ $this, 'get_chart_data' ] );
@@ -795,6 +796,35 @@ class NAWS_Ajax {
         wp_send_json_success( [ 'module_id' => $module_id, 'is_active' => $is_active ] );
     }
 
+    /**
+     * Stores the display name of one module (modules screen).
+     *
+     * Only modules the plugin knows are accepted, so the option cannot be
+     * filled with names for ids that will never be shown.
+     */
+    public function save_display_name() {
+        check_ajax_referer( 'naws_admin_nonce', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) { wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 ); }
+
+        $module_id = sanitize_text_field( wp_unslash( $_POST['module_id'] ?? '' ) );
+        $name      = sanitize_text_field( wp_unslash( $_POST['display_name'] ?? '' ) );
+
+        $known = array_column( NAWS_Database::get_modules( false ), null, 'module_id' );
+        if ( $module_id === '' || ! isset( $known[ $module_id ] ) ) {
+            wp_send_json_error( [ 'message' => 'Unknown module_id.' ] );
+            return;
+        }
+
+        NAWS_Database::set_display_name( $module_id, $name );
+
+        $module = array_column( NAWS_Database::get_modules( false ), null, 'module_id' )[ $module_id ];
+        wp_send_json_success( [
+            'module_id'    => $module_id,
+            'custom_name'  => $module['custom_name'],
+            'display_name' => $module['display_name'],
+        ] );
+    }
+
     // ----------------------------------------------------------------
     // Public AJAX
     // ----------------------------------------------------------------
@@ -830,7 +860,7 @@ class NAWS_Ajax {
         $modules    = NAWS_Database::get_modules( false ); // include inactive (still shown if explicitly queried)
         $module_map = [];
         foreach ( $modules as $m ) {
-            $module_map[ $m['module_id'] ] = $m['module_name'];
+            $module_map[ $m['module_id'] ] = NAWS_Helpers::display_name( $m );
         }
 
         // Decimal places per parameter type
@@ -943,7 +973,7 @@ class NAWS_Ajax {
                 'icon'        => NAWS_Helpers::get_icon( $row['parameter'] ),
                 'recorded_at' => $row['recorded_at'],
                 'module_ref'  => $refs[ $mid ] ?? '',
-                'module_name' => $module_map[ $mid ]['module_name'] ?? '',
+                'module_name' => isset( $module_map[ $mid ] ) ? NAWS_Helpers::display_name( $module_map[ $mid ] ) : '',
                 'module_type' => $module_map[ $mid ]['module_type'] ?? '',
             ];
         }
@@ -966,7 +996,7 @@ class NAWS_Ajax {
                     'value'       => NAWS_Helpers::format_value( 'Rain', $rolling ),
                     'unit'        => NAWS_Helpers::get_unit( 'Rain' ),
                     'recorded_at' => time(),
-                    'module_name' => $module_map[ $rain_module ]['module_name'] ?? '',
+                    'module_name' => isset( $module_map[ $rain_module ] ) ? NAWS_Helpers::display_name( $module_map[ $rain_module ] ) : '',
                     'icon'        => NAWS_Helpers::get_icon( 'Rain' ),
                 ];
             }

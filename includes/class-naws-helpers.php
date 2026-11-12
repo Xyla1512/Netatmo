@@ -322,16 +322,20 @@ class NAWS_Helpers {
      *         label, group.
      */
     public static function live_card_defs(): array {
+        // The owner's display name replaces the fixed badge, as on the cards.
+        $outdoor = self::type_display_name( 'NAModule1' ) ?: __( 'Outdoor', 'xtx-integration-for-netatmo' );
+        $base    = self::type_display_name( 'NAMain' ) ?: __( 'Base', 'xtx-integration-for-netatmo' );
+
         $defs = [
-            [ 'id' => 'Temperature',        'stands_in_for' => '', 'module' => 'NAModule1', 'label' => __( 'Temperature', 'xtx-integration-for-netatmo' ), 'group' => __( 'Outdoor', 'xtx-integration-for-netatmo' ) ],
-            [ 'id' => 'min_temp',           'stands_in_for' => 'Temperature', 'module' => 'NAModule1', 'label' => __( 'Temp. Min', 'xtx-integration-for-netatmo' ),    'group' => __( 'Outdoor', 'xtx-integration-for-netatmo' ) ],
-            [ 'id' => 'max_temp',           'stands_in_for' => 'Temperature', 'module' => 'NAModule1', 'label' => __( 'Temp. Max', 'xtx-integration-for-netatmo' ),    'group' => __( 'Outdoor', 'xtx-integration-for-netatmo' ) ],
-            [ 'id' => 'Humidity',           'stands_in_for' => '', 'module' => 'NAModule1', 'label' => _x( 'Humidity', 'card_humidity', 'xtx-integration-for-netatmo' ),    'group' => __( 'Outdoor', 'xtx-integration-for-netatmo' ) ],
-            [ 'id' => 'Pressure',           'stands_in_for' => '', 'module' => 'NAMain',    'label' => __( 'Air Pressure', 'xtx-integration-for-netatmo' ),    'group' => __( 'Base', 'xtx-integration-for-netatmo' ) ],
-            [ 'id' => 'CO2',                'stands_in_for' => '', 'module' => 'NAMain',    'label' => __( 'CO₂', 'xtx-integration-for-netatmo' ),         'group' => __( 'Base', 'xtx-integration-for-netatmo' ) ],
-            [ 'id' => 'Noise',              'stands_in_for' => '', 'module' => 'NAMain',    'label' => _x( 'Noise', 'card_noise', 'xtx-integration-for-netatmo' ),       'group' => __( 'Base', 'xtx-integration-for-netatmo' ) ],
-            [ 'id' => 'Temperature_indoor', 'stands_in_for' => '', 'module' => 'NAMain',    'label' => __( 'Temperature', 'xtx-integration-for-netatmo' ), 'group' => __( 'Base', 'xtx-integration-for-netatmo' ) ],
-            [ 'id' => 'Humidity_indoor',    'stands_in_for' => '', 'module' => 'NAMain',    'label' => _x( 'Humidity', 'card_humidity', 'xtx-integration-for-netatmo' ),    'group' => __( 'Base', 'xtx-integration-for-netatmo' ) ],
+            [ 'id' => 'Temperature',        'stands_in_for' => '', 'module' => 'NAModule1', 'label' => __( 'Temperature', 'xtx-integration-for-netatmo' ), 'group' => $outdoor ],
+            [ 'id' => 'min_temp',           'stands_in_for' => 'Temperature', 'module' => 'NAModule1', 'label' => __( 'Temp. Min', 'xtx-integration-for-netatmo' ),    'group' => $outdoor ],
+            [ 'id' => 'max_temp',           'stands_in_for' => 'Temperature', 'module' => 'NAModule1', 'label' => __( 'Temp. Max', 'xtx-integration-for-netatmo' ),    'group' => $outdoor ],
+            [ 'id' => 'Humidity',           'stands_in_for' => '', 'module' => 'NAModule1', 'label' => _x( 'Humidity', 'card_humidity', 'xtx-integration-for-netatmo' ),    'group' => $outdoor ],
+            [ 'id' => 'Pressure',           'stands_in_for' => '', 'module' => 'NAMain',    'label' => __( 'Air Pressure', 'xtx-integration-for-netatmo' ),    'group' => $base ],
+            [ 'id' => 'CO2',                'stands_in_for' => '', 'module' => 'NAMain',    'label' => __( 'CO₂', 'xtx-integration-for-netatmo' ),         'group' => $base ],
+            [ 'id' => 'Noise',              'stands_in_for' => '', 'module' => 'NAMain',    'label' => _x( 'Noise', 'card_noise', 'xtx-integration-for-netatmo' ),       'group' => $base ],
+            [ 'id' => 'Temperature_indoor', 'stands_in_for' => '', 'module' => 'NAMain',    'label' => __( 'Temperature', 'xtx-integration-for-netatmo' ), 'group' => $base ],
+            [ 'id' => 'Humidity_indoor',    'stands_in_for' => '', 'module' => 'NAMain',    'label' => _x( 'Humidity', 'card_humidity', 'xtx-integration-for-netatmo' ),    'group' => $base ],
             [ 'id' => 'Rain',               'stands_in_for' => '', 'module' => 'NAModule3', 'label' => __( 'Precipitation', 'xtx-integration-for-netatmo' ),        'group' => '' ],
             [ 'id' => 'WindStrength',       'stands_in_for' => '', 'module' => 'NAModule2', 'label' => __( 'Wind &amp; Gusts', 'xtx-integration-for-netatmo' ),  'group' => '' ],
             [ 'id' => 'WindAngle',          'stands_in_for' => '', 'module' => 'NAModule2', 'label' => __( 'Wind Direction', 'xtx-integration-for-netatmo' ),    'group' => '' ],
@@ -392,14 +396,44 @@ class NAWS_Helpers {
                 continue;
             }
 
+            // The slug from Netatmo's name, the label from the owner's: a
+            // rename on the modules screen must not unhook saved switches.
             $slugs[] = [
                 'slug'      => self::module_slug( $module['module_name'], $module['module_id'] ),
-                'name'      => $module['module_name'],
+                'name'      => self::display_name( $module ),
                 'module_id' => $module['module_id'],
             ];
         }
 
         return $slugs;
+    }
+
+    /**
+     * The name a module is shown under: the owner's display name if set on
+     * the modules screen, Netatmo's name otherwise.
+     *
+     * @param array<string,mixed> $module A row from NAWS_Database::get_modules().
+     */
+    public static function display_name( array $module ): string {
+        $name = (string) ( $module['display_name'] ?? '' );
+        return $name !== '' ? $name : (string) ( $module['module_name'] ?? '' );
+    }
+
+    /**
+     * The owner's display name for the module of one type, '' if none is set.
+     *
+     * The live cards label outdoor and base station readings with a fixed
+     * "Outdoor" / "Base" rather than the module's name; a display name given
+     * on the modules screen replaces that badge. The first active module of
+     * the type is the one meant, as in NAWS_Calc::module_id().
+     */
+    public static function type_display_name( string $type ): string {
+        foreach ( NAWS_Database::get_modules( true ) as $module ) {
+            if ( ( $module['module_type'] ?? '' ) === $type ) {
+                return (string) ( $module['custom_name'] ?? '' );
+            }
+        }
+        return '';
     }
 
     /**

@@ -22,6 +22,7 @@ $GLOBALS['naws_test_transients'] = [];
 function get_transient( $k )               { return $GLOBALS['naws_test_transients'][ $k ] ?? false; }
 function set_transient( $k, $v, $ttl = 0 ) { $GLOBALS['naws_test_transients'][ $k ] = $v; return true; }
 function delete_transient( $k )            { unset( $GLOBALS['naws_test_transients'][ $k ] ); return true; }
+function get_option( $k, $d = false )      { return $d; }
 function sanitize_text_field( $s )         { return is_string( $s ) ? trim( $s ) : $s; }
 function wp_json_encode( $v )              { return json_encode( $v ); }
 function wp_parse_args( $a, $d )           { return array_merge( $d, (array) $a ); }

@@ -93,7 +93,7 @@ msgid "%d modules"
 msgstr "%d moduler"
 
 #. translators: %d: number of deleted readings
-#: includes/class-naws-admin.php:308
+#: includes/class-naws-admin.php:310
 msgid "%d readings deleted."
 msgstr "%d målinger slettet."
 
@@ -109,7 +109,7 @@ msgid "%d-Day Forecast"
 msgstr "%d-dagers varsel"
 
 #. translators: %s: a duration such as "11 minutes", from human_time_diff().
-#: admin/views/modules.php:136 templates/current.php:48
+#: admin/views/modules.php:157 templates/current.php:48
 msgid "%s ago"
 msgstr "for %s siden"
 
@@ -134,7 +134,7 @@ msgid "%s shorter than yesterday"
 msgstr "%s kortere enn i går"
 
 #. translators: %s is a temperature that already carries its unit, e.g. "6 °C".
-#: includes/class-naws-helpers.php:765
+#: includes/class-naws-helpers.php:799
 msgid "%s · computed from min and max"
 msgstr "%s · beregnet fra min og maks"
 
@@ -243,6 +243,10 @@ msgstr "En dag regnes som kjøledag når døgnmiddelet stiger over denne. Her fi
 msgid "A day counts as a heating day when its mean falls below this. Germany 15 °C (VDI 2067), Austria and Switzerland 12 °C."
 msgstr "En dag regnes som fyringsdag når døgnmiddelet faller under denne. Tyskland 15 °C (VDI 2067), Østerrike og Sveits 12 °C."
 
+#: admin/views/modules.php:17
+msgid "A display name replaces the Netatmo name everywhere on the site and in the admin; leave it empty to keep the Netatmo name."
+msgstr "Et visningsnavn erstatter Netatmo-navnet overalt på nettstedet og i administrasjonen; la feltet stå tomt for å beholde Netatmo-navnet."
+
 #: admin/views/shortcodes.php:297
 msgid "A fixed range as YYYY-MM-DD, both days included. Only from runs to today, only to starts at the first reading. Turns the switcher off."
 msgstr "Et fast tidsrom som ÅÅÅÅ-MM-DD, begge dager inkludert. Bare from går til i dag, bare to starter ved første måling. Slår av velgeren."
@@ -267,7 +271,7 @@ msgstr "Et enkelt kalenderår; overstyrer period når det er satt."
 msgid "API key revoked. The API is no longer accessible."
 msgstr "API-nøkkelen er tilbakekalt. API-et er ikke lenger tilgjengelig."
 
-#: admin/views/rest-api-docs.php:536
+#: admin/views/rest-api-docs.php:538
 msgid "API not configured – no key has been generated."
 msgstr "API ikke konfigurert – ingen nøkkel er generert."
 
@@ -292,11 +296,11 @@ msgstr "Access-token er utløpt – fornyes automatisk ved neste synkronisering.
 msgid "Access Token valid until: %s"
 msgstr "Token present. Access Token gyldig til: %s"
 
-#: admin/views/live-settings.php:175 includes/class-naws-admin.php:313
+#: admin/views/live-settings.php:175 includes/class-naws-admin.php:315
 msgid "Activate module"
 msgstr "Aktiver modul"
 
-#: admin/views/modules.php:31 admin/views/rest-api-docs.php:75 admin/views/shortcodes.php:521
+#: admin/views/modules.php:32 admin/views/rest-api-docs.php:75 admin/views/shortcodes.php:521
 msgid "Active"
 msgstr "Aktiv"
 
@@ -316,7 +320,7 @@ msgstr "Etter hver henting sjekker utvidelsen reglene som er slått på nedenfor
 msgid "After saving your Client ID and Secret, click the button below to authorize:"
 msgstr "Lagre Client ID og Secret, og klikk deretter på knappen under for å autorisere:"
 
-#: includes/class-naws-helpers.php:330 includes/class-naws-labels.php:293 templates/live.php:260
+#: includes/class-naws-helpers.php:334 includes/class-naws-labels.php:293 templates/live.php:261
 msgid "Air Pressure"
 msgstr "Lufttrykk"
 
@@ -477,8 +481,7 @@ msgstr "Bånd (døgnets laveste til høyeste)"
 msgid "Bar above each day"
 msgstr "Stolpe over hver dag"
 
-#: admin/views/live-settings.php:78 includes/class-naws-helpers.php:330 includes/class-naws-helpers.php:331 includes/class-naws-helpers.php:332
-#: includes/class-naws-helpers.php:333 includes/class-naws-helpers.php:334 templates/live.php:257
+#: admin/views/live-settings.php:78 includes/class-naws-helpers.php:327 templates/live.php:258
 msgid "Base"
 msgstr "Basis"
 
@@ -490,7 +493,7 @@ msgstr "Basistema"
 msgid "Base colors for background, surfaces, text and borders. Applied to all shortcodes."
 msgstr "Grunnfarger for bakgrunn, overflater, tekst og rammer. Gjelder alle shortcodes."
 
-#: admin/views/import.php:24 admin/views/live-settings.php:79 includes/class-naws-helpers.php:852
+#: admin/views/import.php:24 admin/views/live-settings.php:79 includes/class-naws-helpers.php:886
 msgid "Base station (Indoor)"
 msgstr "Basestasjon (innendørs)"
 
@@ -498,7 +501,7 @@ msgstr "Basestasjon (innendørs)"
 msgid "Base station not reporting"
 msgstr "Basestasjonen rapporterer ikke"
 
-#: admin/views/modules.php:36
+#: admin/views/modules.php:37
 msgid "Battery"
 msgstr "Batteri"
 
@@ -551,7 +554,7 @@ msgstr "Begge vilkår må være oppfylt. Duggpunktavstanden er forskjellen mello
 msgid "CO2"
 msgstr "CO2"
 
-#: includes/class-naws-helpers.php:331 includes/class-naws-labels.php:294 templates/live.php:84 templates/live.php:261
+#: includes/class-naws-helpers.php:335 includes/class-naws-labels.php:294 templates/live.php:84 templates/live.php:262
 msgid "CO₂"
 msgstr "CO₂"
 
@@ -559,7 +562,7 @@ msgstr "CO₂"
 msgid "CO₂ Base"
 msgstr "CO₂ basis"
 
-#: admin/views/live-settings.php:69 includes/class-naws-helpers.php:82 includes/class-naws-helpers.php:832 includes/class-naws-labels.php:67
+#: admin/views/live-settings.php:69 includes/class-naws-helpers.php:82 includes/class-naws-helpers.php:866 includes/class-naws-labels.php:67
 #: includes/class-naws-labels.php:83
 msgid "CO₂ Concentration"
 msgstr "CO₂-konsentrasjon"
@@ -576,7 +579,7 @@ msgstr "CO₂-vurdering"
 msgid "CSS class on wrapper"
 msgstr "Legger til en CSS-klasse i wrapper-elementet."
 
-#: admin/views/rest-api-docs.php:370
+#: admin/views/rest-api-docs.php:372
 msgid "Call the API from a server (PHP, Python, cURL), not from a visitor's browser. A key in JavaScript on a public page sits in the page source, where every visitor can read it."
 msgstr "Kall API-et fra en server (PHP, Python, cURL), ikke fra besøkendes nettleser. En nøkkel i JavaScript på en offentlig side står i kildekoden, der alle besøkende kan lese den."
 
@@ -713,7 +716,7 @@ msgstr "Kommaseparerte felt: temp_min, temp_max, temp_avg, pressure_avg, rain_su
 msgid "Comma-separated keys to show, in that order: hottest_day, coldest_night, warmest_night, coldest_day, widest_range, warmest_month, coldest_month, wettest_day, wettest_month, longest_dry_spell, longest_wet_spell, strongest_gust, longest_frost, longest_heat_wave, longest_summer_run. Unknown keys are ignored."
 msgstr "Kommaseparerte nøkler i ønsket rekkefølge: hottest_day, coldest_night, warmest_night, coldest_day, widest_range, warmest_month, coldest_month, wettest_day, wettest_month, longest_dry_spell, longest_wet_spell, strongest_gust, longest_frost, longest_heat_wave, longest_summer_run. Ukjente nøkler blir oversett."
 
-#: admin/views/rest-api-docs.php:328
+#: admin/views/rest-api-docs.php:330
 msgid "Comma-separated list of fields to return"
 msgstr "Kommaseparert liste over felt som skal returneres"
 
@@ -794,6 +797,10 @@ msgstr "Kopier rapporten"
 msgid "Could not load data (HTTP %s)"
 msgstr "Kunne ikke laste data (HTTP %s)"
 
+#: includes/class-naws-admin.php:299
+msgid "Could not save the display name."
+msgstr "Kunne ikke lagre visningsnavnet."
+
 #: admin/views/settings.php:445
 msgid "Country code"
 msgstr "Landskode"
@@ -838,7 +845,7 @@ msgstr "Døgnmiddeltemperatur"
 msgid "Daily Evaluation"
 msgstr "Daglig oppsummering"
 
-#: admin/views/dashboard.php:104 admin/views/dashboard.php:322 admin/views/dashboard.php:345 includes/class-naws-admin.php:311
+#: admin/views/dashboard.php:104 admin/views/dashboard.php:322 admin/views/dashboard.php:345 includes/class-naws-admin.php:313
 msgid "Daily Summary"
 msgstr "Daglig sammendrag"
 
@@ -903,12 +910,12 @@ msgstr "Oversikt — Live-data og systemstatus"
 msgid "Data Retention"
 msgstr "Datalagring"
 
-#: admin/views/modules.php:35
+#: admin/views/modules.php:36
 msgid "Data Types"
 msgstr "Datatyper"
 
 #. translators: %d: age of the data in minutes.
-#: templates/live.php:271
+#: templates/live.php:272
 msgid "Data outdated (%d min.)"
 msgstr "Data er utdaterte (%d min.)"
 
@@ -941,7 +948,7 @@ msgstr "Dag uten måling"
 msgid "Days"
 msgstr "Dager"
 
-#: admin/views/live-settings.php:175 includes/class-naws-admin.php:312
+#: admin/views/live-settings.php:175 includes/class-naws-admin.php:314
 msgid "Deactivate module"
 msgstr "Deaktiver modul"
 
@@ -973,7 +980,7 @@ msgid "Delete entries older than:"
 msgstr "Slett oppføringer eldre enn:"
 
 #. translators: %d: number of days
-#: includes/class-naws-admin.php:305
+#: includes/class-naws-admin.php:307
 msgid "Delete every reading older than %d days? This is permanent and cannot be undone. Afterwards [naws_table], [naws_chart], the wind rose and the REST readings endpoint can only reach back that far. History, heatmap, records and climate indices are not affected."
 msgstr "Slette alle målinger eldre enn %d dager? Dette er endelig og kan ikke angres. Etterpå rekker [naws_table], [naws_chart], vindrosen og REST-endepunktet «readings» bare så langt tilbake. Historikk, heatmap, rekorder og klimaindekser berøres ikke."
 
@@ -1013,7 +1020,7 @@ msgstr "Duggpunkt"
 msgid "Direction"
 msgstr "Retning"
 
-#: includes/class-naws-admin.php:315
+#: includes/class-naws-admin.php:317
 msgid "Disable 24h chart"
 msgstr "Deaktiver 24t-diagram"
 
@@ -1032,6 +1039,11 @@ msgstr "Frakoblet"
 #: admin/views/settings.php:43
 msgid "Disconnected. You can now reconnect."
 msgstr "Netatmo-tilkobling frakoblet."
+
+#. translators: %s: module name as Netatmo reports it.
+#: admin/views/modules.php:87
+msgid "Display name for %s"
+msgstr "Visningsnavn for %s"
 
 #: admin/views/settings.php:212
 msgid "Displayed as default title in the live dashboard and shortcodes. Leave empty to use the WordPress site title."
@@ -1069,7 +1081,7 @@ msgstr "Kantlengde i piksler. Verdier under 64 heves til 64; under det lar tilst
 msgid "Emoji"
 msgstr "Emoji"
 
-#: includes/class-naws-admin.php:316
+#: includes/class-naws-admin.php:318
 msgid "Enable 24h chart"
 msgstr "Aktiver 24t-diagram"
 
@@ -1089,7 +1101,7 @@ msgstr "Aktiver redusert polling mellom 23:00 og 06:00"
 msgid "Enables/disables the individual charts in the <code>[naws_history]</code> widget. Pick a row up with the mouse and move it — that is the order the front end uses."
 msgstr "Aktiverer/deaktiverer de enkelte diagrammene i <code>[naws_history]</code>-widgeten. Radene kan tas tak i med musen og flyttes — det er rekkefølgen nettstedet bruker."
 
-#: admin/views/rest-api-docs.php:278
+#: admin/views/rest-api-docs.php:280
 msgid "End time – ISO 8601 or Unix timestamp"
 msgstr "Sluttidspunkt – ISO 8601 eller Unix-tidsstempel"
 
@@ -1105,7 +1117,7 @@ msgstr "Skriv inn Client ID og Secret, og klikk på \"Koble til Netatmo\"."
 msgid "Enter a city name, optionally with postal code for better accuracy."
 msgstr "Skriv inn et bynavn, eventuelt med postnummer for bedre nøyaktighet."
 
-#: admin/views/rest-api-docs.php:529
+#: admin/views/rest-api-docs.php:531
 msgid "Error Codes"
 msgstr "Feilkoder"
 
@@ -1156,7 +1168,7 @@ msgstr "Hver forespørsel må ha en gyldig API-nøkkel — kun i HTTP-hodet:"
 msgid "Example shortcode"
 msgstr "Eksempel"
 
-#: includes/class-naws-helpers.php:772
+#: includes/class-naws-helpers.php:806
 msgid "Excellent"
 msgstr "Utmerket"
 
@@ -1216,7 +1228,7 @@ msgstr "Henting feiler"
 msgid "Fifteen records from the daily summary — hottest day, coldest night, wettest month, longest dry spell, strongest gust and more — each with its date, as tiles or as a table."
 msgstr "Femten rekorder fra dagssammendraget — varmeste dag, kaldeste natt, våteste måned, lengste tørkeperiode, sterkeste vindkast og mer — hver med sin dato, som fliser eller som tabell."
 
-#: includes/class-naws-admin.php:809
+#: includes/class-naws-admin.php:811
 msgid "File too large. Maximum size: 100 MB."
 msgstr "Filen er for stor. Maksimal størrelse: 100 MB."
 
@@ -1224,11 +1236,11 @@ msgstr "Filen er for stor. Maksimal størrelse: 100 MB."
 msgid "Filled"
 msgstr "Filled"
 
-#: admin/views/rest-api-docs.php:276
+#: admin/views/rest-api-docs.php:278
 msgid "Filter by parameter(s), comma-separated: Temperature, Humidity, CO2, Pressure, Rain, etc."
 msgstr "Filtrer på parameter(e), kommaseparert: Temperature, Humidity, CO2, Pressure, Rain osv."
 
-#: admin/views/rest-api-docs.php:243 admin/views/rest-api-docs.php:275
+#: admin/views/rest-api-docs.php:244 admin/views/rest-api-docs.php:277
 msgid "Filter by specific module ID (optional)"
 msgstr "Filtrer på en bestemt modul-ID (valgfritt)"
 
@@ -1325,7 +1337,7 @@ msgstr "Generere en ny nøkkel? Den gamle slutter å virke umiddelbart."
 msgid "Generate new salts"
 msgstr "Lag nye salt"
 
-#: admin/views/modules.php:24
+#: admin/views/modules.php:25
 msgid "Go to Dashboard"
 msgstr "Gå til oversikt"
 
@@ -1333,7 +1345,7 @@ msgstr "Gå til oversikt"
 msgid "Go to Settings"
 msgstr "Gå til innstillinger"
 
-#: includes/class-naws-helpers.php:773
+#: includes/class-naws-helpers.php:807
 msgid "Good"
 msgstr "God"
 
@@ -1357,7 +1369,7 @@ msgstr "Gruppering: day, week, month, year"
 msgid "Grouping: hour, day, week, month, year. Any other value lists single readings."
 msgstr "Gruppering: hour, day, week, month, year. Enhver annen verdi viser enkeltmålinger."
 
-#: admin/views/rest-api-docs.php:279
+#: admin/views/rest-api-docs.php:281
 msgid "Grouping: raw (no grouping), hour, day, week, month"
 msgstr "Gruppering: raw (ingen), hour, day, week, month"
 
@@ -1365,16 +1377,16 @@ msgstr "Gruppering: raw (ingen), hour, day, week, month"
 msgid "Growing degree days"
 msgstr "Veksstgraddager"
 
-#: admin/views/live-settings.php:111 includes/class-naws-helpers.php:93 includes/class-naws-helpers.php:845 includes/class-naws-labels.php:78
+#: admin/views/live-settings.php:111 includes/class-naws-helpers.php:93 includes/class-naws-helpers.php:879 includes/class-naws-labels.php:78
 msgid "Gust Direction"
 msgstr "Vindkastretning"
 
-#: admin/views/live-settings.php:109 includes/class-naws-helpers.php:92 includes/class-naws-helpers.php:844 includes/class-naws-labels.php:76
+#: admin/views/live-settings.php:109 includes/class-naws-helpers.php:92 includes/class-naws-helpers.php:878 includes/class-naws-labels.php:76
 msgid "Gust Speed"
 msgstr "Vindkasthastighet"
 
 #: admin/views/appearance.php:40 admin/views/appearance.php:455 includes/class-naws-labels.php:299 templates/forecast.php:114
-#: templates/live.php:71 templates/live.php:266 templates/windrose.php:92
+#: templates/live.php:71 templates/live.php:267 templates/windrose.php:92
 msgid "Gusts"
 msgstr "Vindkast"
 
@@ -1462,7 +1474,7 @@ msgstr "Kraftig tordenvær"
 msgid "Height in px (200–1200)"
 msgstr "Høyde i px (200–1200)"
 
-#: includes/class-naws-admin.php:302
+#: includes/class-naws-admin.php:304
 msgid "Hide"
 msgstr "Skjul"
 
@@ -1588,7 +1600,7 @@ msgstr "Individuelle farger for hvert sensorikon. Disse fargene brukes også for
 msgid "Indoor Temperature"
 msgstr "Innetemperatur"
 
-#: admin/views/live-settings.php:63 includes/class-naws-helpers.php:856
+#: admin/views/live-settings.php:63 includes/class-naws-helpers.php:890
 msgid "Indoor module (NAModule4)"
 msgstr "Innendørsmodul (NAModule4)"
 
@@ -1600,15 +1612,15 @@ msgstr "Arv skriften fra temaet"
 msgid "Interactive annual comparison charts for temperature, pressure and precipitation."
 msgstr "Interaktive årssammenligningsdiagrammer for temperatur, lufttrykk og nedbør."
 
-#: admin/views/rest-api-docs.php:534
+#: admin/views/rest-api-docs.php:536
 msgid "Invalid date format or parameters."
 msgstr "Ugyldig datoformat eller parametere."
 
-#: includes/class-naws-admin.php:788 includes/class-naws-admin.php:803
+#: includes/class-naws-admin.php:790 includes/class-naws-admin.php:805
 msgid "Invalid file. Please select a valid NAWS export file (.json)."
 msgstr "Ugyldig fil. Velg en gyldig NAWS-eksportfil (.json)."
 
-#: admin/views/rest-api-docs.php:533
+#: admin/views/rest-api-docs.php:535
 msgid "Invalid or missing API key."
 msgstr "Ugyldig eller manglende API-nøkkel."
 
@@ -1648,7 +1660,7 @@ msgstr "Største døgnvariasjon"
 msgid "Last Quarter"
 msgstr "Siste kvarter"
 
-#: admin/views/modules.php:38
+#: admin/views/modules.php:39
 msgid "Last Seen"
 msgstr "Sist sett"
 
@@ -1839,7 +1851,7 @@ msgstr "Hovedretning"
 msgid "Mainly clear"
 msgstr "Stort sett klart"
 
-#: templates/live.php:273
+#: templates/live.php:274
 msgid "Make sure the sync function is active."
 msgstr "Kontroller at synkroniseringen er aktiv."
 
@@ -1864,17 +1876,17 @@ msgstr "Mar"
 msgid "Master switch"
 msgstr "Hovedbryter"
 
-#: admin/views/appearance.php:456 templates/history.php:135 templates/live.php:267 templates/table.php:67
+#: admin/views/appearance.php:456 templates/history.php:135 templates/live.php:268 templates/table.php:67
 #: templates/windrose.php:71 templates/windrose.php:185
 msgid "Max"
 msgstr "Maks"
 
-#: includes/class-naws-database.php:1052 includes/class-naws-helpers.php:95 includes/class-naws-helpers.php:97 includes/class-naws-helpers.php:841
+#: includes/class-naws-database.php:1131 includes/class-naws-helpers.php:95 includes/class-naws-helpers.php:97 includes/class-naws-helpers.php:875
 #: includes/class-naws-labels.php:73
 msgid "Max Temperature (day)"
 msgstr "Maks. temperatur (døgn)"
 
-#: admin/views/rest-api-docs.php:280
+#: admin/views/rest-api-docs.php:282
 msgid "Max results (1–5000)"
 msgstr "Maks. antall resultater (1–5000)"
 
@@ -1910,7 +1922,7 @@ msgstr "Melding"
 msgid "Min"
 msgstr "Min"
 
-#: includes/class-naws-database.php:1051 includes/class-naws-helpers.php:94 includes/class-naws-helpers.php:96 includes/class-naws-helpers.php:840
+#: includes/class-naws-database.php:1130 includes/class-naws-helpers.php:94 includes/class-naws-helpers.php:96 includes/class-naws-helpers.php:874
 #: includes/class-naws-labels.php:70
 msgid "Min Temperature (day)"
 msgstr "Min. temperatur (døgn)"
@@ -1927,7 +1939,7 @@ msgstr "Minimum: 5 minutter. Merk: Netatmo oppdaterer sensorene hvert 5. minutt.
 msgid "Module"
 msgstr "Modul"
 
-#: admin/views/modules.php:34
+#: admin/views/modules.php:35
 msgid "Module ID (MAC)"
 msgstr "Modul-ID (MAC)"
 
@@ -1997,7 +2009,7 @@ msgstr "MÅNENEDGANG"
 msgid "Most: %s"
 msgstr "Mest: %s"
 
-#: admin/views/modules.php:32
+#: admin/views/modules.php:33
 msgid "Name"
 msgstr "Navn"
 
@@ -2016,6 +2028,11 @@ msgstr "Netatmo API-tilkobling"
 #: admin/views/settings.php:69
 msgid "Netatmo Refresh Token expired!"
 msgstr "Token tilbakekalt eller utløpt. Koble til på nytt via OAuth."
+
+#. translators: %s: module name as Netatmo reports it.
+#: admin/views/modules.php:94
+msgid "Netatmo: %s"
+msgstr "Netatmo: %s"
 
 #: admin/views/rest-api-docs.php:28
 msgid "New API key generated."
@@ -2105,7 +2122,7 @@ msgstr "Ingen feil logget."
 msgid "No forecast data available."
 msgstr "Ingen værvarseldata tilgjengelig."
 
-#: templates/live.php:272
+#: templates/live.php:273
 msgid "No live data available."
 msgstr "Ingen live-data tilgjengelig."
 
@@ -2113,7 +2130,7 @@ msgstr "Ingen live-data tilgjengelig."
 msgid "No log entries yet."
 msgstr "Ingen loggoppføringer ennå."
 
-#: admin/views/dashboard.php:212 admin/views/modules.php:22
+#: admin/views/dashboard.php:212 admin/views/modules.php:23
 msgid "No modules found yet. Sync data first."
 msgstr "Ingen moduler funnet."
 
@@ -2125,7 +2142,7 @@ msgstr "Ingen moduler funnet."
 msgid "No notifications sent yet."
 msgstr "Ingen varsler sendt ennå."
 
-#: includes/class-naws-helpers.php:758
+#: includes/class-naws-helpers.php:792
 msgid "No reading"
 msgstr "Ingen måling"
 
@@ -2149,7 +2166,7 @@ msgstr "Ingen vindmålinger i denne perioden."
 msgid "Noise Base"
 msgstr "Støy basis"
 
-#: admin/views/live-settings.php:87 includes/class-naws-helpers.php:84 includes/class-naws-helpers.php:834 includes/class-naws-labels.php:68
+#: admin/views/live-settings.php:87 includes/class-naws-helpers.php:84 includes/class-naws-helpers.php:868 includes/class-naws-labels.php:68
 msgid "Noise Level"
 msgstr "Støynivå"
 
@@ -2161,7 +2178,7 @@ msgstr "Ingen ennå."
 msgid "Not connected"
 msgstr "Ikke tilkoblet"
 
-#: admin/views/modules.php:123
+#: admin/views/modules.php:144
 msgid "Not reachable"
 msgstr "Ikke tilgjengelig"
 
@@ -2222,7 +2239,7 @@ msgstr "Én kortkode for alle beregnede verdier. Verdien står i attributtet <co
 msgid "One year of outdoor daily average temperature as a calendar grid: months down, days across, one coloured tile per day."
 msgstr "Ett år med døgnmiddeltemperatur ute som kalenderrutenett: måneder nedover, dager bortover, én farget flis per dag."
 
-#: admin/views/rest-api-docs.php:393 admin/views/rest-api-docs.php:467
+#: admin/views/rest-api-docs.php:395 admin/views/rest-api-docs.php:469
 msgid "Only for pages that are not public, such as an intranet or a local dashboard: the key is visible in the page source. For a public page use the PHP example."
 msgstr "Bare for sider som ikke er offentlige, for eksempel et intranett eller et lokalt dashbord: nøkkelen er synlig i kildekoden. Bruk PHP-eksempelet for en offentlig side."
 
@@ -2254,8 +2271,7 @@ msgstr "Valgfri tabelltittel"
 msgid "Optional title"
 msgstr "Valgfri tittel"
 
-#: includes/class-naws-helpers.php:326 includes/class-naws-helpers.php:327 includes/class-naws-helpers.php:328 includes/class-naws-helpers.php:329
-#: templates/live.php:256
+#: includes/class-naws-helpers.php:326 templates/live.php:257
 msgid "Outdoor"
 msgstr "Ute"
 
@@ -2267,7 +2283,7 @@ msgstr "Utefuktighet"
 msgid "Outdoor Humidity (Annual Mean)"
 msgstr "Utendørs luftfuktighet (årsgjennomsnitt)"
 
-#: admin/views/import.php:23 admin/views/live-settings.php:92 includes/class-naws-helpers.php:853
+#: admin/views/import.php:23 admin/views/live-settings.php:92 includes/class-naws-helpers.php:887
 msgid "Outdoor Module"
 msgstr "Utendørsmodul"
 
@@ -2344,11 +2360,11 @@ msgstr "Klikk på \"Koble til Netatmo\" under og autoriser appen på nytt. Dette
 msgid "Please connect to Netatmo again under XTX Netatmo → Settings."
 msgstr "Koble til Netatmo på nytt under XTX Netatmo → Innstillinger."
 
-#: includes/class-naws-admin.php:303
+#: includes/class-naws-admin.php:305
 msgid "Please enter at least 30 days."
 msgstr "Skriv inn minst 30 dager."
 
-#: includes/class-naws-helpers.php:775
+#: includes/class-naws-helpers.php:809
 msgid "Poor"
 msgstr "Dårlig"
 
@@ -2360,8 +2376,8 @@ msgstr "Dårlig Wi-Fi ved basestasjonen"
 msgid "Possible values"
 msgstr "Verdier"
 
-#: includes/class-naws-helpers.php:87 includes/class-naws-helpers.php:335 includes/class-naws-helpers.php:837 includes/class-naws-labels.php:296
-#: templates/forecast.php:108 templates/live.php:263
+#: includes/class-naws-helpers.php:87 includes/class-naws-helpers.php:339 includes/class-naws-helpers.php:871 includes/class-naws-labels.php:296
+#: templates/forecast.php:108 templates/live.php:264
 msgid "Precipitation"
 msgstr "Nedbør"
 
@@ -2381,15 +2397,15 @@ msgstr "Lufttrykk"
 msgid "Pressure (Annual Mean)"
 msgstr "Lufttrykk"
 
-#: includes/class-naws-helpers.php:86 includes/class-naws-helpers.php:836 includes/class-naws-labels.php:66
+#: includes/class-naws-helpers.php:86 includes/class-naws-helpers.php:870 includes/class-naws-labels.php:66
 msgid "Pressure (absolute)"
 msgstr "Lufttrykk (abs.)"
 
-#: admin/views/import.php:24 includes/class-naws-helpers.php:85 includes/class-naws-helpers.php:835 includes/class-naws-labels.php:65
+#: admin/views/import.php:24 includes/class-naws-helpers.php:85 includes/class-naws-helpers.php:869 includes/class-naws-labels.php:65
 msgid "Pressure (relative)"
 msgstr "Lufttrykk (rel.)"
 
-#: includes/class-naws-database.php:1054 includes/class-naws-labels.php:72
+#: includes/class-naws-database.php:1133 includes/class-naws-labels.php:72
 msgid "Pressure Ø (hPa)"
 msgstr "Trykk Ø (hPa)"
 
@@ -2438,7 +2454,7 @@ msgstr "Nedbør (per time)"
 msgid "Rain (last hour)"
 msgstr "Regn (siste time)"
 
-#: admin/views/import.php:25 includes/class-naws-helpers.php:855
+#: admin/views/import.php:25 includes/class-naws-helpers.php:889
 msgid "Rain Gauge"
 msgstr "Regnmåler"
 
@@ -2498,7 +2514,7 @@ msgstr "Regn begynner"
 msgid "Rate Limit"
 msgstr "Hastighetsgrense"
 
-#: admin/views/rest-api-docs.php:535
+#: admin/views/rest-api-docs.php:537
 msgid "Rate limit exceeded. Wait 60 seconds."
 msgstr "Hastighetsgrense overskredet. Vent 60 sekunder."
 
@@ -2555,7 +2571,7 @@ msgstr "Refresh-token finnes."
 msgid "Regenerate Key"
 msgstr "Generer ny nøkkel"
 
-#: includes/class-naws-admin.php:298
+#: includes/class-naws-admin.php:300
 msgid "Request failed."
 msgstr "Forespørsel mislyktes."
 
@@ -2579,7 +2595,7 @@ msgstr "Oppløst posisjon:"
 msgid "Returns a single sensor value — ideal for embedding readings directly in text, headings or custom HTML layouts."
 msgstr "Returnerer én enkelt sensorverdi — ideelt for å sette målinger rett inn i brødtekst, overskrifter eller egne HTML-oppsett."
 
-#: admin/views/rest-api-docs.php:321
+#: admin/views/rest-api-docs.php:323
 msgid "Returns aggregated daily summary data from permanent storage. Supports grouping by day, week, month or year. Ideal for long-term charts and analysis."
 msgstr "Returnerer aggregerte daglige sammendragsdata fra permanent lagring. Støtter gruppering etter dag, uke, måned eller år. Ideelt for langtidsdiagrammer og analyse."
 
@@ -2587,7 +2603,7 @@ msgstr "Returnerer aggregerte daglige sammendragsdata fra permanent lagring. St�
 msgid "Returns all active modules with their Netatmo type, supported data types, firmware version and battery status."
 msgstr "Returnerer alle aktive moduler med Netatmo-type, støttede datatyper, fastvareversjon og batteristatus."
 
-#: admin/views/rest-api-docs.php:270
+#: admin/views/rest-api-docs.php:272
 msgid "Returns raw sensor readings from the rolling storage (typically last 90 days). Supports filtering by module, parameter and time range. Results can be grouped by hour, day, week or month."
 msgstr "Returnerer rå sensordata fra det rullerende lageret (vanligvis siste 90 dager). Støtter filtrering på modul, parameter og tidsrom. Resultatene kan grupperes etter time, dag, uke eller måned."
 
@@ -2595,7 +2611,7 @@ msgstr "Returnerer rå sensordata fra det rullerende lageret (vanligvis siste 90
 msgid "Returns station location, timezone, active module count and the unit configuration."
 msgstr "Returnerer stasjonens plassering, tidssone, antall aktive moduler og enhetskonfigurasjonen."
 
-#: admin/views/rest-api-docs.php:238
+#: admin/views/rest-api-docs.php:239
 msgid "Returns the most recent reading for every parameter of every active module. Optionally filter by module_id."
 msgstr "Returnerer den nyeste målingen for hver parameter i hver aktive modul. Kan eventuelt filtreres på module_id."
 
@@ -2668,7 +2684,11 @@ msgstr "Lagre varsler"
 msgid "Save Settings"
 msgstr "Lagre innstillinger"
 
-#: includes/class-naws-admin.php:317
+#: includes/class-naws-admin.php:298
+msgid "Saved"
+msgstr "Lagret"
+
+#: includes/class-naws-admin.php:319
 msgid "Saving…"
 msgstr "Lagrer …"
 
@@ -2732,7 +2752,7 @@ msgstr "Andel"
 msgid "Shortcode Reference"
 msgstr "Shortcode-referanse"
 
-#: admin/views/settings.php:151 includes/class-naws-admin.php:301
+#: admin/views/settings.php:151 includes/class-naws-admin.php:303
 msgid "Show"
 msgstr "Vis"
 
@@ -2764,7 +2784,7 @@ msgstr "Viser et værvarsel basert på stasjonens plassering."
 msgid "Shows animated metric cards with the latest sensor values from all or specific modules."
 msgstr "Viser animerte målekort med de nyeste sensorverdiene fra alle eller enkelte moduler."
 
-#: admin/views/rest-api-docs.php:423
+#: admin/views/rest-api-docs.php:425
 msgid "Shows the current readings on another WordPress site. Paste the code into a snippet plugin (for example Code Snippets or WPCode) without the opening <?php line and let it run everywhere, or put it into the functions.php of a child theme. Then place [wetter_aktuell] on a page – in Elementor with the Shortcode widget, not the HTML widget. [wetter_aktuell modul=\"Outdoor\"] shows one module only."
 msgstr "Viser de nåværende måleverdiene på et annet WordPress-nettsted. Lim inn koden i et snippet-tillegg (for eksempel Code Snippets eller WPCode) uten linjen <?php i begynnelsen, og la den kjøre overalt – eller legg den i functions.php i et barnetema. Sett deretter [wetter_aktuell] på en side – i Elementor med Shortcode-widgeten, ikke HTML-widgeten. [wetter_aktuell modul=\"Ute\"] viser bare én modul."
 
@@ -2776,7 +2796,7 @@ msgstr "Viser gjeldende værtilstand som et animert ikon. Bevisst uten synlig te
 msgid "Sidebar widget"
 msgstr "Sidefelt-widget"
 
-#: admin/views/modules.php:37
+#: admin/views/modules.php:38
 msgid "Signal"
 msgstr "Signal"
 
@@ -2846,7 +2866,7 @@ msgstr "Standardisert nedbørindeks (SPI)"
 msgid "Start of the growing season"
 msgstr "Vekstsesongens start"
 
-#: admin/views/rest-api-docs.php:277
+#: admin/views/rest-api-docs.php:279
 msgid "Start time – ISO 8601 (2025-03-01T00:00:00Z) or Unix timestamp"
 msgstr "Starttidspunkt – ISO 8601 (2025-03-01T00:00:00Z) eller Unix-tidsstempel"
 
@@ -2959,7 +2979,7 @@ msgstr "Støtterapport"
 msgid "Switch off to pause every mail without losing your rules; the test mail still works."
 msgstr "Slå av for å sette alle e-poster på pause uten å miste reglene; test-e-posten fungerer fortsatt."
 
-#: includes/class-naws-admin.php:306
+#: includes/class-naws-admin.php:308
 msgid "Switch on automatic deletion? Once you save, raw readings older than the configured number of days will be deleted every night, permanently and beyond recovery. Afterwards [naws_table], [naws_chart], the wind rose and the REST readings endpoint can only reach back that far. History, heatmap, records and climate indices are not affected."
 msgstr "Slå på automatisk sletting? Etter lagring slettes råmålinger eldre enn det innstilte antallet dager hver natt, endelig og uten mulighet for gjenoppretting. Etterpå rekker [naws_table], [naws_chart], vindrosen og REST-endepunktet «readings» bare så langt tilbake. Historikk, heatmap, rekorder og klimaindekser berøres ikke."
 
@@ -2984,7 +3004,7 @@ msgstr "Synkroniserer …"
 msgid "Tabular view of historical readings with configurable time period and grouping."
 msgstr "Tabellvisning av historiske målinger med konfigurerbart tidsrom og gruppering."
 
-#: includes/class-naws-database.php:1053 includes/class-naws-labels.php:71
+#: includes/class-naws-database.php:1132 includes/class-naws-labels.php:71
 msgid "Temp Ø (°C)"
 msgstr "Temp Ø (°C)"
 
@@ -2996,11 +3016,11 @@ msgstr "Temp."
 msgid "Temp. Base"
 msgstr "Temp. basis"
 
-#: includes/class-naws-helpers.php:328 includes/class-naws-labels.php:302 templates/live.php:270
+#: includes/class-naws-helpers.php:332 includes/class-naws-labels.php:302 templates/live.php:271
 msgid "Temp. Max"
 msgstr "Temp. maks"
 
-#: includes/class-naws-helpers.php:327 includes/class-naws-labels.php:301 templates/live.php:269
+#: includes/class-naws-helpers.php:331 includes/class-naws-labels.php:301 templates/live.php:270
 msgid "Temp. Min"
 msgstr "Temp. min"
 
@@ -3009,8 +3029,8 @@ msgid "Temp. Outdoor"
 msgstr "Temp. ute"
 
 #: admin/views/appearance.php:135 admin/views/live-settings.php:67 admin/views/settings.php:341 includes/class-naws-helpers.php:81
-#: includes/class-naws-helpers.php:326 includes/class-naws-helpers.php:333 includes/class-naws-helpers.php:831 includes/class-naws-labels.php:82
-#: includes/class-naws-labels.php:291 templates/live.php:258
+#: includes/class-naws-helpers.php:330 includes/class-naws-helpers.php:337 includes/class-naws-helpers.php:865 includes/class-naws-labels.php:82
+#: includes/class-naws-labels.php:291 templates/live.php:259
 msgid "Temperature"
 msgstr "Temperatur"
 
@@ -3325,12 +3345,12 @@ msgstr "Verktøytips tittel"
 msgid "Total"
 msgstr "Total"
 
-#: admin/views/import.php:25 includes/class-naws-database.php:1055 includes/class-naws-helpers.php:89 includes/class-naws-helpers.php:839
+#: admin/views/import.php:25 includes/class-naws-database.php:1134 includes/class-naws-helpers.php:89 includes/class-naws-helpers.php:873
 #: includes/class-naws-labels.php:81
 msgid "Total last 24h"
 msgstr "Total siste 24t"
 
-#: admin/views/live-settings.php:121 includes/class-naws-helpers.php:88 includes/class-naws-helpers.php:838 includes/class-naws-labels.php:80
+#: admin/views/live-settings.php:121 includes/class-naws-helpers.php:88 includes/class-naws-helpers.php:872 includes/class-naws-labels.php:80
 msgid "Total last hour"
 msgstr "Total siste time"
 
@@ -3346,7 +3366,7 @@ msgstr "tir"
 msgid "Tuesday"
 msgstr "tirsdag"
 
-#: admin/views/modules.php:33 admin/views/shortcodes.php:518
+#: admin/views/modules.php:34 admin/views/shortcodes.php:518
 msgid "Type"
 msgstr "Type"
 
@@ -3354,7 +3374,7 @@ msgstr "Type"
 msgid "Ultra-thin, geometric icons for a reduced style."
 msgstr "Ultratynne, geometriske ikoner for en redusert stil."
 
-#: includes/class-naws-helpers.php:776
+#: includes/class-naws-helpers.php:810
 msgid "Unhealthy"
 msgstr "Usunt"
 
@@ -3388,7 +3408,7 @@ msgstr "Last opp & importer"
 msgid "Upload a previously exported JSON file to restore weather data or a full backup."
 msgstr "Last opp en tidligere eksportert JSON-fil for å gjenopprette værdata eller en full sikkerhetskopi."
 
-#: admin/views/rest-api-docs.php:369
+#: admin/views/rest-api-docs.php:371
 msgid "Usage Examples"
 msgstr "Kodeeksempler"
 
@@ -3478,7 +3498,7 @@ msgstr "Våteste måned"
 msgid "What is imported"
 msgstr "Hva importeres"
 
-#: admin/views/rest-api-docs.php:296
+#: admin/views/rest-api-docs.php:298
 msgid "When grouping is active, each entry additionally contains min_value, max_value and data_points."
 msgstr "Når gruppering er aktiv, inneholder hver oppføring i tillegg min_value, max_value og data_points."
 
@@ -3502,7 +3522,7 @@ msgstr "Hvilken modul"
 msgid "Which station to read, by module or station ID."
 msgstr "Hvilken stasjon som leses, med modul- eller stasjons-ID."
 
-#: includes/class-naws-helpers.php:810 includes/class-naws-labels.php:333
+#: includes/class-naws-helpers.php:844 includes/class-naws-labels.php:333
 msgid "Wi-Fi"
 msgstr "Wi-Fi"
 
@@ -3523,23 +3543,23 @@ msgid "Width on the page, in px or %"
 msgstr "Bredde på siden, i px eller %"
 
 #: admin/views/appearance.php:39 admin/views/appearance.php:138 admin/views/appearance.php:454 includes/class-naws-labels.php:44
-#: includes/class-naws-labels.php:298 templates/live.php:70 templates/live.php:265 templates/windrose.php:92
+#: includes/class-naws-labels.php:298 templates/live.php:70 templates/live.php:266 templates/windrose.php:92
 msgid "Wind"
 msgstr "Vind og vindkast"
 
-#: admin/views/appearance.php:438 includes/class-naws-helpers.php:336 includes/class-naws-labels.php:297 templates/live.php:264
+#: admin/views/appearance.php:438 includes/class-naws-helpers.php:340 includes/class-naws-labels.php:297 templates/live.php:265
 msgid "Wind &amp; Gusts"
 msgstr "Vind &amp; vindkast"
 
-#: admin/views/appearance.php:405 includes/class-naws-helpers.php:337 includes/class-naws-labels.php:300 templates/live.php:268
+#: admin/views/appearance.php:405 includes/class-naws-helpers.php:341 includes/class-naws-labels.php:300 templates/live.php:269
 msgid "Wind Direction"
 msgstr "Vindretning"
 
-#: admin/views/live-settings.php:110 includes/class-naws-helpers.php:91 includes/class-naws-helpers.php:843 includes/class-naws-labels.php:77
+#: admin/views/live-settings.php:110 includes/class-naws-helpers.php:91 includes/class-naws-helpers.php:877 includes/class-naws-labels.php:77
 msgid "Wind Direction (compass)"
 msgstr "Vindretning (kompass)"
 
-#: admin/views/import.php:26 admin/views/live-settings.php:104 includes/class-naws-helpers.php:854
+#: admin/views/import.php:26 admin/views/live-settings.php:104 includes/class-naws-helpers.php:888
 msgid "Wind Gauge"
 msgstr "Vindmåler"
 
@@ -3547,7 +3567,7 @@ msgstr "Vindmåler"
 msgid "Wind Rose"
 msgstr "Vindrose"
 
-#: admin/views/import.php:26 admin/views/settings.php:350 includes/class-naws-helpers.php:90 includes/class-naws-helpers.php:842
+#: admin/views/import.php:26 admin/views/settings.php:350 includes/class-naws-helpers.php:90 includes/class-naws-helpers.php:876
 #: includes/class-naws-labels.php:75
 msgid "Wind Speed"
 msgstr "Vindhastighet"
@@ -3638,7 +3658,7 @@ msgstr "et kort: navn, gjeldende verdi, lavest og høyest, en stor kurve"
 msgid "a lower frame, closer around the station"
 msgstr "en lavere ramme, nærmere rundt stasjonen"
 
-#: admin/views/live-settings.php:195 includes/class-naws-admin.php:314
+#: admin/views/live-settings.php:195 includes/class-naws-admin.php:316
 msgid "active"
 msgstr "aktive"
 
@@ -3946,7 +3966,7 @@ msgstr "terskel %s"
 msgid "today"
 msgstr "i dag"
 
-#: admin/views/rest-api-docs.php:281 admin/views/rest-api-docs.php:330
+#: admin/views/rest-api-docs.php:283 admin/views/rest-api-docs.php:332
 msgid "true = convert to user units (°F, inHg etc.), false = raw metric values"
 msgstr "true = konverter til brukerens enheter (°F, inHg osv.), false = rå metriske verdier"
 
@@ -4027,15 +4047,15 @@ msgstr "✅ Av — alle råmålinger beholdes."
 msgid "✅ On — raw readings older than %d days are deleted every night."
 msgstr "✅ På — råmålinger eldre enn %d dager slettes hver natt."
 
-#: includes/class-naws-admin.php:318
+#: includes/class-naws-admin.php:320
 msgid "✅ Saved!"
 msgstr "Dashboard-innstillinger lagret."
 
-#: includes/class-naws-admin.php:310
+#: includes/class-naws-admin.php:312
 msgid "✓ Copied"
 msgstr "✓ Kopiert"
 
-#: includes/class-naws-admin.php:319
+#: includes/class-naws-admin.php:321
 msgid "❌ Error."
 msgstr "❌ Feil."
 
@@ -4081,12 +4101,12 @@ msgctxt "calc_feels_like"
 msgid "Feels like"
 msgstr "Følt temperatur"
 
-#: includes/class-naws-helpers.php:329 includes/class-naws-helpers.php:334 includes/class-naws-labels.php:292 templates/live.php:259
+#: includes/class-naws-helpers.php:333 includes/class-naws-helpers.php:338 includes/class-naws-labels.php:292 templates/live.php:260
 msgctxt "card_humidity"
 msgid "Humidity"
 msgstr "Luftfuktighet"
 
-#: includes/class-naws-helpers.php:332 includes/class-naws-labels.php:295 templates/live.php:262
+#: includes/class-naws-helpers.php:336 includes/class-naws-labels.php:295 templates/live.php:263
 msgctxt "card_noise"
 msgid "Noise"
 msgstr "Støynivå"
@@ -4097,12 +4117,12 @@ msgid "Humidity"
 msgstr "Luftfuktighet"
 
 #. translators: %s is a clock time such as 06:12. Add a suffix if your language uses one; German renders "06:12 Uhr".
-#: includes/class-naws-helpers.php:912
+#: includes/class-naws-helpers.php:946
 msgctxt "clock time"
 msgid "%s"
 msgstr "%s"
 
-#: includes/class-naws-helpers.php:774
+#: includes/class-naws-helpers.php:808
 msgctxt "co2_fair"
 msgid "Fair"
 msgstr "Middels"
@@ -4358,7 +4378,7 @@ msgid "ok"
 msgstr "ok"
 
 #: admin/views/live-settings.php:68 admin/views/live-settings.php:83 admin/views/live-settings.php:99 includes/class-naws-helpers.php:83
-#: includes/class-naws-helpers.php:833 includes/class-naws-labels.php:74
+#: includes/class-naws-helpers.php:867 includes/class-naws-labels.php:74
 msgctxt "param_humidity"
 msgid "Humidity"
 msgstr "Luftfuktighet"
@@ -4398,7 +4418,7 @@ msgctxt "rest_copy"
 msgid "Copy"
 msgstr "Kopier"
 
-#: admin/views/rest-api-docs.php:424
+#: admin/views/rest-api-docs.php:426
 msgctxt "rest_copy"
 msgid "Copy code"
 msgstr "Kopier kode"
@@ -4412,7 +4432,7 @@ msgstr "Skrivemåte"
 #: admin/views/shortcodes.php:252 admin/views/shortcodes.php:269 admin/views/shortcodes.php:283 admin/views/shortcodes.php:293
 #: admin/views/shortcodes.php:315 admin/views/shortcodes.php:342 admin/views/shortcodes.php:357 admin/views/shortcodes.php:375
 #: admin/views/shortcodes.php:394 admin/views/shortcodes.php:400 admin/views/shortcodes.php:419 admin/views/shortcodes.php:435
-#: admin/views/shortcodes.php:486 admin/views/shortcodes.php:538 includes/class-naws-admin.php:309
+#: admin/views/shortcodes.php:486 admin/views/shortcodes.php:538 includes/class-naws-admin.php:311
 msgctxt "sc_copy"
 msgid "Copy"
 msgstr "Kopier"
@@ -4423,27 +4443,27 @@ msgctxt "short date"
 msgid "%2$s %1$s"
 msgstr "%1$s. %2$s"
 
-#: includes/class-naws-helpers.php:806
+#: includes/class-naws-helpers.php:840
 msgctxt "signal strength"
 msgid "Excellent"
 msgstr "Svært god"
 
-#: includes/class-naws-helpers.php:804
+#: includes/class-naws-helpers.php:838
 msgctxt "signal strength"
 msgid "Fair"
 msgstr "Middels"
 
-#: includes/class-naws-helpers.php:805
+#: includes/class-naws-helpers.php:839
 msgctxt "signal strength"
 msgid "Good"
 msgstr "God"
 
-#: includes/class-naws-helpers.php:803
+#: includes/class-naws-helpers.php:837
 msgctxt "signal strength"
 msgid "Weak"
 msgstr "Svak"
 
-#: includes/class-naws-helpers.php:810
+#: includes/class-naws-helpers.php:844
 msgctxt "signal type"
 msgid "Radio"
 msgstr "Radio"

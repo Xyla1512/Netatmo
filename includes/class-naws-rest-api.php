@@ -216,6 +216,7 @@ class NAWS_Rest_API {
             $out[] = [
                 'module_id'   => $m['module_id'],
                 'module_name' => $m['module_name'],
+                'display_name' => NAWS_Helpers::display_name( $m ),
                 'module_type' => $m['module_type'],
                 'data_types'  => array_filter( array_map( 'trim', explode( ',', $m['data_types'] ?? '' ) ) ),
                 'last_seen'   => ! empty( $m['last_seen'] ) ? (int) $m['last_seen'] : null,
@@ -245,6 +246,7 @@ class NAWS_Rest_API {
             $out[] = [
                 'module_id'   => $row['module_id'],
                 'module_name' => $module_map[ $row['module_id'] ]['module_name'] ?? '',
+                'display_name' => isset( $module_map[ $row['module_id'] ] ) ? NAWS_Helpers::display_name( $module_map[ $row['module_id'] ] ) : '',
                 'module_type' => $module_map[ $row['module_id'] ]['module_type'] ?? '',
                 'parameter'   => $row['parameter'],
                 'value'       => NAWS_Helpers::format_value( $row['parameter'], (float) $row['value'] ),
@@ -269,6 +271,7 @@ class NAWS_Rest_API {
                 $out[] = [
                     'module_id'       => $rain_module,
                     'module_name'     => $module_map[ $rain_module ]['module_name'] ?? '',
+                    'display_name'    => isset( $module_map[ $rain_module ] ) ? NAWS_Helpers::display_name( $module_map[ $rain_module ] ) : '',
                     'module_type'     => 'NAModule3',
                     'parameter'       => 'rain_rolling_24h',
                     'value'           => NAWS_Helpers::format_value( 'Rain', $rolling ),

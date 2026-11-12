@@ -38,6 +38,19 @@ class NAWS_Database {
     const TTL_READINGS = 10 * MINUTE_IN_SECONDS;   // Grouped time-series
     const TTL_DAILY    = HOUR_IN_SECONDS;          // Historical daily data
 
+    /**
+     * Display names the site owner gave the modules, module_id => name.
+     *
+     * An option rather than a column: save_module() rewrites module_name on
+     * every sync, and a name kept beside it would have to be guarded against
+     * that upsert forever. Kept out of the module transient as well, so a
+     * rename shows at once without flushing anything.
+     */
+    const OPT_DISPLAY_NAMES = 'naws_module_display_names';
+
+    /** Longest display name, in characters. */
+    const DISPLAY_NAME_MAX = 40;
+
     /** The error of the last failed query in this class, '' after a success. */
     private static $last_error = '';
 
@@ -355,7 +368,7 @@ class NAWS_Database {
         $cache_key = self::CACHE_PREFIX . 'modules_' . ( $active_only ? '1' : '0' );
         $cached    = get_transient( $cache_key );
         if ( $cached !== false && is_array( $cached ) ) {
-            return $cached;
+            return self::with_display_names( $cached );
         }
 
         global $wpdb;
@@ -381,7 +394,65 @@ class NAWS_Database {
 
         set_transient( $cache_key, $rows, self::TTL_MODULES );
 
+        return self::with_display_names( $rows );
+    }
+
+    /**
+     * Adds `custom_name` and `display_name` to each module row.
+     *
+     * display_name is what every screen shows: the owner's name for the
+     * module if there is one, Netatmo's otherwise. module_name stays
+     * Netatmo's, because the slugs behind visibility switches and shortcode
+     * parameters are derived from it and must not move with a rename.
+     *
+     * @param array<int,array<string,mixed>> $rows
+     * @return array<int,array<string,mixed>>
+     */
+    private static function with_display_names( array $rows ): array {
+        $names = self::get_display_names();
+        foreach ( $rows as &$row ) {
+            $name                = $names[ $row['module_id'] ?? '' ] ?? '';
+            $row['custom_name']  = $name;
+            $row['display_name'] = $name !== '' ? $name : (string) ( $row['module_name'] ?? '' );
+        }
+        unset( $row );
         return $rows;
+    }
+
+    /** @return array<string,string> module_id => display name, only the ones set. */
+    public static function get_display_names(): array {
+        $names = get_option( self::OPT_DISPLAY_NAMES, [] );
+        if ( ! is_array( $names ) ) {
+            return [];
+        }
+        return array_filter( $names, static fn( $n ) => is_string( $n ) && $n !== '' );
+    }
+
+    /**
+     * Stores the display name of one module; an empty name removes it.
+     *
+     * @return bool false for a missing module_id, true otherwise.
+     */
+    public static function set_display_name( string $module_id, string $name ): bool {
+        $module_id = sanitize_text_field( $module_id );
+        if ( $module_id === '' ) {
+            return false;
+        }
+
+        $name  = mb_substr( sanitize_text_field( $name ), 0, self::DISPLAY_NAME_MAX );
+        $names = self::get_display_names();
+        if ( $name === '' ) {
+            unset( $names[ $module_id ] );
+        } else {
+            $names[ $module_id ] = $name;
+        }
+
+        if ( $names ) {
+            update_option( self::OPT_DISPLAY_NAMES, $names, false );
+        } else {
+            delete_option( self::OPT_DISPLAY_NAMES );
+        }
+        return true;
     }
 
     public static function set_module_active( $module_id, $is_active ) {

@@ -178,7 +178,7 @@ class NAWS_Importer {
             if ( empty( $types ) ) continue;
             $jobs[] = [
                 'module_id'   => $m['module_id'],
-                'module_name' => $m['module_name'],
+                'module_name' => NAWS_Helpers::display_name( $m ),
                 'module_type' => $m['module_type'],
                 'device_id'   => $m['station_id'],
                 'types'       => $types,

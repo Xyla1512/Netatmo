@@ -251,7 +251,7 @@ $module_type_colors = [
                                     <?php echo wp_kses( $type_icon, naws_svg_kses_args() ); ?>
                                 </span>
                                 <div class="naws-acc-titles">
-                                    <span class="naws-acc-name"><?php echo esc_html( $module['module_name'] ); ?></span>
+                                    <span class="naws-acc-name"><?php echo esc_html( NAWS_Helpers::display_name( $module ) ); ?></span>
                                     <span class="naws-acc-meta">
                                         <span class="naws-module-type-badge" style="background:<?php echo esc_attr($type_color); ?>18; color:<?php echo esc_attr($type_color); ?>;"><?php echo esc_html($type_label); ?></span>
                                         <?php if ( ! empty( $summary_parts ) ) : ?>

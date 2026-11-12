@@ -211,6 +211,7 @@ $base_url   = rest_url( 'naws/v1' );
     {
       "<span class="s">module_id</span>":   "<span class="n">02:00:00:xx:xx:xx</span>",
       "<span class="s">module_name</span>": "<span class="n">Außen</span>",
+      "<span class="s">display_name</span>": "<span class="n">Garten</span>",
       "<span class="s">module_type</span>": "<span class="n">NAModule1</span>",
       "<span class="s">data_types</span>":  ["<span class="n">Temperature</span>", "<span class="n">Humidity</span>"],
       "<span class="s">last_seen</span>":   <span class="n">1741420500</span>,
@@ -252,6 +253,7 @@ $base_url   = rest_url( 'naws/v1' );
     {
       "<span class="s">module_id</span>":       "<span class="n">02:00:00:xx:xx:xx</span>",
       "<span class="s">module_name</span>":     "<span class="n">Außen</span>",
+      "<span class="s">display_name</span>":    "<span class="n">Garten</span>",
       "<span class="s">module_type</span>":     "<span class="n">NAModule1</span>",
       "<span class="s">parameter</span>":       "<span class="n">Temperature</span>",
       "<span class="s">value</span>":           <span class="n">18.5</span>,

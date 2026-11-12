@@ -295,6 +295,8 @@ class NAWS_Admin {
                 'error'            => __( 'Error occurred.', 'xtx-integration-for-netatmo' ),
                 'inactive'         => __( 'Inactive', 'xtx-integration-for-netatmo' ),
                 'toggle_error'     => __( 'Error toggling module. Please try again.', 'xtx-integration-for-netatmo' ),
+                'name_saved'       => __( 'Saved', 'xtx-integration-for-netatmo' ),
+                'name_error'       => __( 'Could not save the display name.', 'xtx-integration-for-netatmo' ),
                 'request_failed'   => __( 'Request failed.', 'xtx-integration-for-netatmo' ),
                 // The purge button and the secret toggle in admin.js (since 1.9.11;
                 // the sentences used to be German literals in the script).

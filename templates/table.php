@@ -36,7 +36,7 @@ $naws_fmt = $naws_date_only
 // module's MAC address, and readings outlive the module they came from.
 $naws_module_names = [];
 foreach ( NAWS_Database::get_modules() as $naws_mod ) {
-    $naws_module_names[ $naws_mod['module_id'] ] = $naws_mod['module_name'];
+    $naws_module_names[ $naws_mod['module_id'] ] = NAWS_Helpers::display_name( $naws_mod );
 }
 
 $naws_param_labels = NAWS_Helpers::get_all_parameters();

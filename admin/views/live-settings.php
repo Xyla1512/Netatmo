@@ -59,7 +59,7 @@ foreach ( $all_modules as $m ) {
     // Param keys are namespaced: Temperature_gast, Humidity_gast, etc.
     $extra_module4_defs[] = [
         'type'      => 'NAModule4_' . $slug,
-        'label'     => $m['module_name'],
+        'label'     => NAWS_Helpers::display_name( $m ),
         'sub'       => __( 'Indoor module (NAModule4)', 'xtx-integration-for-netatmo' ),
         'color'     => $color,
         'db_module' => $m,
@@ -75,7 +75,7 @@ foreach ( $all_modules as $m ) {
 $module_defs = [
     [
         'type'   => 'NAMain',
-        'label'  => __( 'Base', 'xtx-integration-for-netatmo' ),
+        'label'  => NAWS_Helpers::type_display_name( 'NAMain' ) ?: __( 'Base', 'xtx-integration-for-netatmo' ),
         'sub'    => __( 'Base station (Indoor)', 'xtx-integration-for-netatmo' ),
         'color'  => '#2271b1',
         'params' => [
@@ -89,7 +89,7 @@ $module_defs = [
     ],
     [
         'type'   => 'NAModule1',
-        'label'  => __( 'Outdoor Module', 'xtx-integration-for-netatmo' ),
+        'label'  => NAWS_Helpers::type_display_name( 'NAModule1' ) ?: __( 'Outdoor Module', 'xtx-integration-for-netatmo' ),
         'sub'    => __( 'Outdoor sensor', 'xtx-integration-for-netatmo' ),
         'color'  => '#d4541a',
         'params' => [
@@ -101,7 +101,7 @@ $module_defs = [
     ],
     [
         'type'   => 'NAModule2',
-        'label'  => __( 'Wind Gauge', 'xtx-integration-for-netatmo' ),
+        'label'  => NAWS_Helpers::type_display_name( 'NAModule2' ) ?: __( 'Wind Gauge', 'xtx-integration-for-netatmo' ),
         'sub'    => 'Wind-Modul',
         'color'  => '#0a9272',
         'params' => [
@@ -113,7 +113,7 @@ $module_defs = [
     ],
     [
         'type'   => 'NAModule3',
-        'label'  => 'Regenmesser',
+        'label'  => NAWS_Helpers::type_display_name( 'NAModule3' ) ?: 'Regenmesser',
         'sub'    => __( 'Precipitation module', 'xtx-integration-for-netatmo' ),
         'color'  => '#0579b0',
         'params' => [
