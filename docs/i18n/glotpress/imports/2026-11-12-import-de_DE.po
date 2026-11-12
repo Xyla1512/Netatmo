@@ -1,0 +1,33 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo
+"
+"Language: de_DE
+"
+"MIME-Version: 1.0
+"
+"Content-Type: text/plain; charset=UTF-8
+"
+"Content-Transfer-Encoding: 8bit
+"
+"Plural-Forms: nplurals=2; plural=n != 1;
+"
+
+msgid "A display name replaces the Netatmo name everywhere on the site and in the admin; leave it empty to keep the Netatmo name."
+msgstr "Ein Anzeigename ersetzt den Netatmo-Namen überall auf der Website und im Adminbereich; leer lassen, um den Netatmo-Namen zu behalten."
+
+msgid "Could not save the display name."
+msgstr "Der Anzeigename konnte nicht gespeichert werden."
+
+msgid "Display name for %s"
+msgstr "Anzeigename für %s"
+
+msgid "Netatmo: %s"
+msgstr "Netatmo: %s"
+
+msgid "Saved"
+msgstr "Gespeichert"
+
+msgctxt "chart_noise_prefix"
+msgid "Noise"
+msgstr "Lärm"

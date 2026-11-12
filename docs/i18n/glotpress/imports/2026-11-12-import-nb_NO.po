@@ -1,0 +1,33 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo
+"
+"Language: nb_NO
+"
+"MIME-Version: 1.0
+"
+"Content-Type: text/plain; charset=UTF-8
+"
+"Content-Transfer-Encoding: 8bit
+"
+"Plural-Forms: nplurals=2; plural=n != 1;
+"
+
+msgid "A display name replaces the Netatmo name everywhere on the site and in the admin; leave it empty to keep the Netatmo name."
+msgstr "Et visningsnavn erstatter Netatmo-navnet overalt på nettstedet og i administrasjonen; la feltet stå tomt for å beholde Netatmo-navnet."
+
+msgid "Could not save the display name."
+msgstr "Kunne ikke lagre visningsnavnet."
+
+msgid "Display name for %s"
+msgstr "Visningsnavn for %s"
+
+msgid "Netatmo: %s"
+msgstr "Netatmo: %s"
+
+msgid "Saved"
+msgstr "Lagret"
+
+msgctxt "chart_noise_prefix"
+msgid "Noise"
+msgstr "Støy"
