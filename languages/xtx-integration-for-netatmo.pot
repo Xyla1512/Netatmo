@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: XTX Integration for Netatmo\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/xtx-integration-for-netatmo\n"
-"POT-Creation-Date: 2026-11-12 09:34+0000\n"
+"POT-Creation-Date: 2026-11-12 09:47+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -322,7 +322,7 @@ msgstr ""
 msgid "After saving your Client ID and Secret, click the button below to authorize:"
 msgstr ""
 
-#: includes/class-naws-helpers.php:334 includes/class-naws-labels.php:293 templates/live.php:261
+#: includes/class-naws-helpers.php:334 includes/class-naws-labels.php:293 templates/live.php:265
 msgid "Air Pressure"
 msgstr ""
 
@@ -483,7 +483,7 @@ msgstr ""
 msgid "Bar above each day"
 msgstr ""
 
-#: admin/views/live-settings.php:78 includes/class-naws-helpers.php:327 templates/live.php:258
+#: admin/views/live-settings.php:78 includes/class-naws-helpers.php:327 templates/live.php:262
 msgid "Base"
 msgstr ""
 
@@ -556,11 +556,12 @@ msgstr ""
 msgid "CO2"
 msgstr ""
 
-#: includes/class-naws-helpers.php:335 includes/class-naws-labels.php:294 templates/live.php:84 templates/live.php:262
+#: includes/class-naws-helpers.php:335 includes/class-naws-labels.php:294 templates/live.php:69 templates/live.php:88
+#: templates/live.php:266
 msgid "CO₂"
 msgstr ""
 
-#: templates/live.php:65
+#: templates/live.php:69
 msgid "CO₂ Base"
 msgstr ""
 
@@ -658,7 +659,7 @@ msgstr ""
 msgid "Client Secret"
 msgstr ""
 
-#: templates/live.php:230
+#: templates/live.php:234
 msgid "Close"
 msgstr ""
 
@@ -896,7 +897,7 @@ msgstr ""
 msgid "Daily summary data (temperature, rain, pressure etc.)"
 msgstr ""
 
-#: templates/live.php:205
+#: templates/live.php:209
 msgid "Daily trend (last 24h)"
 msgstr ""
 
@@ -917,7 +918,7 @@ msgid "Data Types"
 msgstr ""
 
 #. translators: %d: age of the data in minutes.
-#: templates/live.php:272
+#: templates/live.php:276
 msgid "Data outdated (%d min.)"
 msgstr ""
 
@@ -1034,7 +1035,7 @@ msgstr ""
 msgid "Disconnect from Netatmo?"
 msgstr ""
 
-#: templates/live.php:170
+#: templates/live.php:174
 msgid "Disconnected"
 msgstr ""
 
@@ -1178,7 +1179,7 @@ msgstr ""
 msgid "Existing Data"
 msgstr ""
 
-#: templates/history.php:80 templates/live.php:213
+#: templates/history.php:80 templates/live.php:217
 msgid "Expand"
 msgstr ""
 
@@ -1388,7 +1389,7 @@ msgid "Gust Speed"
 msgstr ""
 
 #: admin/views/appearance.php:40 admin/views/appearance.php:455 includes/class-naws-labels.php:299 templates/forecast.php:114
-#: templates/live.php:71 templates/live.php:267 templates/windrose.php:92
+#: templates/live.php:75 templates/live.php:271 templates/windrose.php:92
 msgid "Gusts"
 msgstr ""
 
@@ -1530,7 +1531,7 @@ msgstr ""
 msgid "Hub (calm)"
 msgstr ""
 
-#: templates/live.php:59
+#: templates/live.php:63
 msgid "Humidity Outdoor"
 msgstr ""
 
@@ -1747,7 +1748,7 @@ msgstr ""
 msgid "List of active modules with type and capabilities"
 msgstr ""
 
-#: templates/live.php:172
+#: templates/live.php:176
 msgid "Live"
 msgstr ""
 
@@ -1853,7 +1854,7 @@ msgstr ""
 msgid "Mainly clear"
 msgstr ""
 
-#: templates/live.php:274
+#: templates/live.php:278
 msgid "Make sure the sync function is active."
 msgstr ""
 
@@ -1878,7 +1879,7 @@ msgstr ""
 msgid "Master switch"
 msgstr ""
 
-#: admin/views/appearance.php:456 templates/history.php:135 templates/live.php:268 templates/table.php:67
+#: admin/views/appearance.php:456 templates/history.php:135 templates/live.php:272 templates/table.php:67
 #: templates/windrose.php:71 templates/windrose.php:185
 msgid "Max"
 msgstr ""
@@ -2124,7 +2125,7 @@ msgstr ""
 msgid "No forecast data available."
 msgstr ""
 
-#: templates/live.php:273
+#: templates/live.php:277
 msgid "No live data available."
 msgstr ""
 
@@ -2164,7 +2165,7 @@ msgstr ""
 msgid "No wind readings in this period."
 msgstr ""
 
-#: templates/live.php:66
+#: templates/live.php:70
 msgid "Noise Base"
 msgstr ""
 
@@ -2273,7 +2274,7 @@ msgstr ""
 msgid "Optional title"
 msgstr ""
 
-#: includes/class-naws-helpers.php:326 templates/live.php:257
+#: includes/class-naws-helpers.php:326 templates/live.php:261
 msgid "Outdoor"
 msgstr ""
 
@@ -2379,7 +2380,7 @@ msgid "Possible values"
 msgstr ""
 
 #: includes/class-naws-helpers.php:87 includes/class-naws-helpers.php:339 includes/class-naws-helpers.php:871 includes/class-naws-labels.php:296
-#: templates/forecast.php:108 templates/live.php:264
+#: templates/forecast.php:108 templates/live.php:268
 msgid "Precipitation"
 msgstr ""
 
@@ -2391,7 +2392,7 @@ msgstr ""
 msgid "Precipitation probability"
 msgstr ""
 
-#: admin/views/appearance.php:36 admin/views/appearance.php:137 admin/views/settings.php:361 templates/live.php:64
+#: admin/views/appearance.php:36 admin/views/appearance.php:137 admin/views/settings.php:361 templates/live.php:68
 msgid "Pressure"
 msgstr ""
 
@@ -2448,7 +2449,7 @@ msgstr ""
 msgid "Rain (current)"
 msgstr ""
 
-#: templates/live.php:75
+#: templates/live.php:79
 msgid "Rain (hourly)"
 msgstr ""
 
@@ -3010,29 +3011,29 @@ msgstr ""
 msgid "Temp Ø (°C)"
 msgstr ""
 
-#: templates/live.php:82
+#: templates/live.php:62 templates/live.php:67 templates/live.php:86
 msgid "Temp."
 msgstr ""
 
-#: templates/live.php:63
+#: templates/live.php:67
 msgid "Temp. Base"
 msgstr ""
 
-#: includes/class-naws-helpers.php:332 includes/class-naws-labels.php:302 templates/live.php:271
+#: includes/class-naws-helpers.php:332 includes/class-naws-labels.php:302 templates/live.php:275
 msgid "Temp. Max"
 msgstr ""
 
-#: includes/class-naws-helpers.php:331 includes/class-naws-labels.php:301 templates/live.php:270
+#: includes/class-naws-helpers.php:331 includes/class-naws-labels.php:301 templates/live.php:274
 msgid "Temp. Min"
 msgstr ""
 
-#: templates/live.php:58
+#: templates/live.php:62
 msgid "Temp. Outdoor"
 msgstr ""
 
 #: admin/views/appearance.php:135 admin/views/live-settings.php:67 admin/views/settings.php:341 includes/class-naws-helpers.php:81
 #: includes/class-naws-helpers.php:330 includes/class-naws-helpers.php:337 includes/class-naws-helpers.php:865 includes/class-naws-labels.php:82
-#: includes/class-naws-labels.php:291 templates/live.php:259
+#: includes/class-naws-labels.php:291 templates/live.php:263
 msgid "Temperature"
 msgstr ""
 
@@ -3545,15 +3546,15 @@ msgid "Width on the page, in px or %"
 msgstr ""
 
 #: admin/views/appearance.php:39 admin/views/appearance.php:138 admin/views/appearance.php:454 includes/class-naws-labels.php:44
-#: includes/class-naws-labels.php:298 templates/live.php:70 templates/live.php:266 templates/windrose.php:92
+#: includes/class-naws-labels.php:298 templates/live.php:74 templates/live.php:270 templates/windrose.php:92
 msgid "Wind"
 msgstr ""
 
-#: admin/views/appearance.php:438 includes/class-naws-helpers.php:340 includes/class-naws-labels.php:297 templates/live.php:265
+#: admin/views/appearance.php:438 includes/class-naws-helpers.php:340 includes/class-naws-labels.php:297 templates/live.php:269
 msgid "Wind &amp; Gusts"
 msgstr ""
 
-#: admin/views/appearance.php:405 includes/class-naws-helpers.php:341 includes/class-naws-labels.php:300 templates/live.php:269
+#: admin/views/appearance.php:405 includes/class-naws-helpers.php:341 includes/class-naws-labels.php:300 templates/live.php:273
 msgid "Wind Direction"
 msgstr ""
 
@@ -3764,7 +3765,7 @@ msgstr ""
 msgid "failed"
 msgstr ""
 
-#: templates/live.php:252
+#: templates/live.php:256
 msgid "falling"
 msgstr ""
 
@@ -3887,7 +3888,7 @@ msgstr ""
 msgid "record for this day"
 msgstr ""
 
-#: templates/live.php:252
+#: templates/live.php:256
 msgid "rising"
 msgstr ""
 
@@ -3907,7 +3908,7 @@ msgstr ""
 msgid "shorter, for very narrow columns"
 msgstr ""
 
-#: templates/live.php:252
+#: templates/live.php:256
 msgid "stable"
 msgstr ""
 
@@ -4103,17 +4104,17 @@ msgctxt "calc_feels_like"
 msgid "Feels like"
 msgstr ""
 
-#: includes/class-naws-helpers.php:333 includes/class-naws-helpers.php:338 includes/class-naws-labels.php:292 templates/live.php:260
+#: includes/class-naws-helpers.php:333 includes/class-naws-helpers.php:338 includes/class-naws-labels.php:292 templates/live.php:264
 msgctxt "card_humidity"
 msgid "Humidity"
 msgstr ""
 
-#: includes/class-naws-helpers.php:336 includes/class-naws-labels.php:295 templates/live.php:263
+#: includes/class-naws-helpers.php:336 includes/class-naws-labels.php:295 templates/live.php:70 templates/live.php:267
 msgctxt "card_noise"
 msgid "Noise"
 msgstr ""
 
-#: templates/live.php:83
+#: templates/live.php:63 templates/live.php:87
 msgctxt "chart_humid_prefix"
 msgid "Humidity"
 msgstr ""

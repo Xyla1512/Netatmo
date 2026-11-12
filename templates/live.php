@@ -52,18 +52,22 @@ $hidden_charts = (array) get_option( 'naws_live_hidden_charts', [] );
 // Master sensor→chart config: display_key, db_param, module reference, label, unit, type, color
 // Units are always read from settings via NAWS_Helpers::get_unit()
 $sensor_chart_configs = [];
+// A display name from the modules screen replaces "Outdoor" and "Base" in the chart titles,
+// built the way the indoor modules' titles are ("Temp. Guest room").
+$outdoor_name = NAWS_Helpers::type_display_name( 'NAModule1' );
+$base_name    = NAWS_Helpers::type_display_name( 'NAMain' );
 
 // NAModule1 – outdoor
 if ( isset( $module_refs['outdoor'] ) ) {
-    $sensor_chart_configs[] = [ 'key'=>'Temperature',    'param'=>'Temperature', 'module_ref'=>'outdoor', 'label'=>__( 'Temp. Outdoor', 'xtx-integration-for-netatmo' ),        'unit'=>NAWS_Helpers::get_unit('Temperature'),   'type'=>'line', 'color'=>NAWS_Colors::get('chart_temp_outdoor') ];
-    $sensor_chart_configs[] = [ 'key'=>'Humidity',       'param'=>'Humidity',    'module_ref'=>'outdoor', 'label'=>__( 'Humidity Outdoor', 'xtx-integration-for-netatmo' ),       'unit'=>'%',                                    'type'=>'line', 'color'=>NAWS_Colors::get('chart_humidity_outdoor') ];
+    $sensor_chart_configs[] = [ 'key'=>'Temperature',    'param'=>'Temperature', 'module_ref'=>'outdoor', 'label'=>$outdoor_name !== '' ? __( 'Temp.', 'xtx-integration-for-netatmo' ) . ' ' . $outdoor_name : __( 'Temp. Outdoor', 'xtx-integration-for-netatmo' ),        'unit'=>NAWS_Helpers::get_unit('Temperature'),   'type'=>'line', 'color'=>NAWS_Colors::get('chart_temp_outdoor') ];
+    $sensor_chart_configs[] = [ 'key'=>'Humidity',       'param'=>'Humidity',    'module_ref'=>'outdoor', 'label'=>$outdoor_name !== '' ? _x( 'Humidity', 'chart_humid_prefix', 'xtx-integration-for-netatmo' ) . ' ' . $outdoor_name : __( 'Humidity Outdoor', 'xtx-integration-for-netatmo' ),       'unit'=>'%',                                    'type'=>'line', 'color'=>NAWS_Colors::get('chart_humidity_outdoor') ];
 }
 // NAMain – indoor base
 if ( isset( $module_refs['indoor'] ) ) {
-    $sensor_chart_configs[] = [ 'key'=>'Temperature_indoor', 'param'=>'Temperature', 'module_ref'=>'indoor', 'label'=>__( 'Temp. Base', 'xtx-integration-for-netatmo' ),   'unit'=>NAWS_Helpers::get_unit('Temperature'),   'type'=>'line', 'color'=>NAWS_Colors::get('chart_temp_indoor') ];
+    $sensor_chart_configs[] = [ 'key'=>'Temperature_indoor', 'param'=>'Temperature', 'module_ref'=>'indoor', 'label'=>$base_name !== '' ? __( 'Temp.', 'xtx-integration-for-netatmo' ) . ' ' . $base_name : __( 'Temp. Base', 'xtx-integration-for-netatmo' ),   'unit'=>NAWS_Helpers::get_unit('Temperature'),   'type'=>'line', 'color'=>NAWS_Colors::get('chart_temp_indoor') ];
     $sensor_chart_configs[] = [ 'key'=>'Pressure',           'param'=>'Pressure',    'module_ref'=>'indoor', 'label'=>__( 'Pressure', 'xtx-integration-for-netatmo' ),     'unit'=>NAWS_Helpers::get_unit('Pressure'),      'type'=>'line', 'color'=>NAWS_Colors::get('chart_pressure') ];
-    $sensor_chart_configs[] = [ 'key'=>'CO2',                'param'=>'CO2',         'module_ref'=>'indoor', 'label'=>__( 'CO₂ Base', 'xtx-integration-for-netatmo' ),     'unit'=>'ppm',                                  'type'=>'line', 'color'=>NAWS_Colors::get('chart_co2') ];
-    $sensor_chart_configs[] = [ 'key'=>'Noise',              'param'=>'Noise',       'module_ref'=>'indoor', 'label'=>__( 'Noise Base', 'xtx-integration-for-netatmo' ),   'unit'=>'dB',                                   'type'=>'line', 'color'=>NAWS_Colors::get('chart_noise') ];
+    $sensor_chart_configs[] = [ 'key'=>'CO2',                'param'=>'CO2',         'module_ref'=>'indoor', 'label'=>$base_name !== '' ? __( 'CO₂', 'xtx-integration-for-netatmo' ) . ' ' . $base_name : __( 'CO₂ Base', 'xtx-integration-for-netatmo' ),     'unit'=>'ppm',                                  'type'=>'line', 'color'=>NAWS_Colors::get('chart_co2') ];
+    $sensor_chart_configs[] = [ 'key'=>'Noise',              'param'=>'Noise',       'module_ref'=>'indoor', 'label'=>$base_name !== '' ? _x( 'Noise', 'card_noise', 'xtx-integration-for-netatmo' ) . ' ' . $base_name : __( 'Noise Base', 'xtx-integration-for-netatmo' ),   'unit'=>'dB',                                   'type'=>'line', 'color'=>NAWS_Colors::get('chart_noise') ];
 }
 // NAModule2 – wind
 if ( isset( $module_refs['wind'] ) ) {

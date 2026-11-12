@@ -208,6 +208,27 @@ check( 'und zeichnet genau ihre sechs Charts',
     count( payload( $html )['CHART_CONFIGS'] ?? [] ), 6 );
 check( 'ohne Innenmodul bleibt die Zuordnungstabelle leer',
     attr( $html, 'data-module4' ), '[]' );
+check( 'ohne Anzeigenamen bleiben die festen Diagrammtitel',
+    array_column( payload( $html )['CHART_CONFIGS'] ?? [], 'label' ),
+    [ 'Temp. Outdoor', 'Humidity Outdoor', 'Temp. Base', 'Pressure', 'CO₂ Base', 'Noise Base' ] );
+check( 'und die festen Abzeichen',
+    [ $data['I18N']['lbl_outdoor'] ?? null, $data['I18N']['lbl_base'] ?? null ], [ 'Outdoor', 'Base' ] );
+
+// ── Anzeigenamen ersetzen "Outdoor" und "Base" — nur sie sind zu sehen ───
+// Gesetzt auf der Modulseite; im Frontend darf neben ihnen weder der
+// Netatmo-Name noch das feste Abzeichen stehen.
+$GLOBALS['mods'][0]['custom_name'] = 'Wohnzimmer';
+$GLOBALS['mods'][1]['custom_name'] = 'Garten';
+$html  = render( [] );
+$named = payload( $html );
+check( 'die Diagrammtitel tragen den Anzeigenamen',
+    array_column( $named['CHART_CONFIGS'] ?? [], 'label' ),
+    [ 'Temp. Garten', 'Humidity Garten', 'Temp. Wohnzimmer', 'Pressure', 'CO₂ Wohnzimmer', 'Noise Wohnzimmer' ] );
+check( 'die Abzeichen der Karten ebenso',
+    [ $named['I18N']['lbl_outdoor'] ?? null, $named['I18N']['lbl_base'] ?? null ], [ 'Garten', 'Wohnzimmer' ] );
+check( 'weder Netatmo-Name noch festes Abzeichen im Markup',
+    preg_match( '/\b(Aussen|Basis|Outdoor|Base)\b/', $html ), 0 );
+unset( $GLOBALS['mods'][0]['custom_name'], $GLOBALS['mods'][1]['custom_name'] );
 
 // ── Und das Skript, das diesen Block liest ───────────────────────────────
 // Der Datenblock und live-boot.js sind zwei Haelften einer Absprache: was
