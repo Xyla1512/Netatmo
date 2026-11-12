@@ -1,17 +1,11 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: XTX Integration for Netatmo
-"
-"Language: de_DE
-"
-"MIME-Version: 1.0
-"
-"Content-Type: text/plain; charset=UTF-8
-"
-"Content-Transfer-Encoding: 8bit
-"
-"Plural-Forms: nplurals=2; plural=n != 1;
-"
+"Project-Id-Version: XTX Integration for Netatmo\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 msgid "A display name replaces the Netatmo name everywhere on the site and in the admin; leave it empty to keep the Netatmo name."
 msgstr "Ein Anzeigename ersetzt den Netatmo-Namen überall auf der Website und im Adminbereich; leer lassen, um den Netatmo-Namen zu behalten."
