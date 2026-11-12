@@ -19,7 +19,10 @@ $animate = $atts['animate'] !== 'false';
     ?>
         <?php if (!empty($module)) : ?>
         <div class="naws-module-header">
+            <?php // With a display name from the modules screen only that name shows; the type badge read like a second name. ?>
+            <?php if ( empty( $module['custom_name'] ) ) : ?>
             <span class="naws-module-badge"><?php echo esc_html(NAWS_Helpers::module_type_label($module['module_type'] ?? '')); ?></span>
+            <?php endif; ?>
             <h3 class="naws-module-name"><?php echo esc_html(NAWS_Helpers::display_name($module)); ?></h3>
         </div>
         <?php endif; ?>
