@@ -2,6 +2,13 @@
     "aktualisiert": "2026-11-12",
     "vorhaben": [
         {
+            "id": "webhooks",
+            "titel": "Messwerte per Webhook",
+            "satz": "Netatmo schickt neue Messwerte selbst an die eigene Website, sobald sie da sind, statt dass das Plugin alle zehn Minuten nachfragt. Das spart Abfragen, bevor Netatmo die Grenzen fürs regelmäßige Abfragen ab März 2027 senkt.",
+            "ab": null,
+            "bild": null
+        },
+        {
             "id": "monatsrueckblick",
             "titel": "Monatsrückblick",
             "satz": "Ein Absatz zum vergangenen Monat, aus den eigenen Messungen geschrieben: wie warm, wie nass, wie windig er war – und wie er neben demselben Monat der Vorjahre dasteht.",
