@@ -173,7 +173,9 @@ wp_add_inline_script( 'naws-admin', <<<'EOJS'
         const checkbox  = $(this);
         const moduleId  = checkbox.data('module-id');
         const isActive  = checkbox.is(':checked') ? 1 : 0;
-        const row       = $('#naws-module-row-' + moduleId.replace(/:/g, '-').replace(/[^a-zA-Z0-9-_]/g, '_'));
+        // The row from the switch itself: the id is built by sanitize_html_class(),
+        // which drops the colons, and a second spelling of it here never matched.
+        const row       = checkbox.closest('tr');
 
         checkbox.prop('disabled', true);
 
@@ -192,7 +194,7 @@ wp_add_inline_script( 'naws-admin', <<<'EOJS'
                     badge.remove();
                 } else {
                     if (!badge.length) {
-                        row.find('strong').after('<span class="naws-badge naws-badge-error" style="margin-left:0.4rem;">' + nawsAdmin.strings.inactive + '</span>');
+                        row.find('.naws-module-display').after('<span class="naws-badge naws-badge-error" style="margin-left:0.4rem;">' + nawsAdmin.strings.inactive + '</span>');
                     }
                 }
             } else {
