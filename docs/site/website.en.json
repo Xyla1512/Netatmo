@@ -1,5 +1,5 @@
 {
-    "aktualisiert": "2026-10-25",
+    "aktualisiert": "2026-11-12",
     "vorhaben": [
         {
             "id": "monatsrueckblick",
@@ -20,6 +20,20 @@
             "titel": "Elementor widgets",
             "satz": "The same for Elementor: the building blocks as widgets of their own, set up in the Elementor panel and previewed in the editor.",
             "ab": null,
+            "bild": null
+        },
+        {
+            "id": "modulvergleich",
+            "titel": "Modules compared over the long run",
+            "satz": "Two modules in one chart over months and years – say indoor and outdoor humidity over two years, day by day from your own daily summary.",
+            "ab": null,
+            "bild": null
+        },
+        {
+            "id": "anzeigenamen",
+            "titel": "Your own names for the modules",
+            "satz": "Each module gets a display name of its own on the Modules page, such as \"Garden\" instead of \"Outdoor\". It replaces the Netatmo name everywhere: on the cards, in the chart titles, in the admin and in the e-mails. An empty field keeps the Netatmo name.",
+            "ab": "2.1.8",
             "bild": null
         },
         {

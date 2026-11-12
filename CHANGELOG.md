@@ -2,7 +2,7 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
-## [Unreleased]
+## [2.1.8]
 
 ### Added
 - **Display names for modules.** The modules screen has a field under each module's name. A name typed there replaces the Netatmo name everywhere: the cards of `[naws_live]` (including the fixed "Outdoor" and "Base" badges and the chart titles "Temp. Outdoor", "Temp. Base", "CO₂ Base" and "Noise Base"), `[naws_current]`, `[naws_table]`, chart labels, the dashboard, the live settings, the import screen, the shortcode reference and the e-mail notifications. On the site only that name shows: `[naws_current]` drops its type badge ("Base station (Indoor)") for a module that has one, since the badge read like a second name. An empty field keeps the Netatmo name, so nothing changes until a name is set. The names are kept in their own option rather than in the module table, which every sync rewrites, and the internal keys stay with the Netatmo name, so saved visibility switches and parameters such as `Temperature_gast` keep working after a rename. The REST API keeps `module_name` as Netatmo reports it and adds `display_name`. Asked for in the support forum ("Using Alias names for sensors"). `tests/test-module-display-names.php` is new.

@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 2.1.7
+Stable tag: 2.1.8
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -16,7 +16,7 @@ Connects to the Netatmo API, stores all sensor data locally and displays live da
 
 = Key Features =
 
-* **Full Netatmo Integration** – OAuth2 authentication, automatic sync, all module types supported (Base, Outdoor, Wind, Rain, Indoor)
+* **Full Netatmo Integration** – OAuth2 authentication, automatic sync, all module types supported (Base, Outdoor, Wind, Rain, Indoor), with your own display name for each module
 * **Live Dashboard** – Real-time sensor cards with animated counters, 24h trend charts, pressure trend indicator, wind compass, CO2 air quality levels
 * **Astronomy** – Sunrise/sunset, moon phase with illumination, next full moon
 * **Derived Weather Data** – Feels-like temperature, heat index, dew point, wind chill
@@ -123,6 +123,11 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 
 == Changelog ==
 
+= 2.1.8 =
+* Added: display names for modules. Type a name under a module on the Modules page and it replaces the Netatmo name everywhere — the cards, badges and chart titles of `[naws_live]`, `[naws_current]`, `[naws_table]`, the admin pages and the e-mail notifications; `[naws_current]` then shows only that name, without the type badge. An empty field keeps the Netatmo name. The REST API adds `display_name` beside `module_name`.
+* Fix: `GET /naws/v1/modules` failed with HTTP 500 on every call.
+* Fix: switching a module off on the Modules page did not grey out its row until the page was reloaded.
+
 = 2.1.7 =
 * Changed: the charts of `[naws_live]` and `[naws_history]` and the cards of `[naws_current]` and `[naws_live]` build up when the visitor scrolls to them, not while the page loads out of sight. The curve rises from the floor as a soft wave and the chart fades in; the cards ease in. With reduced motion switched on in the system, everything is there at once.
 * Fix: the legend of `[naws_radar]` showed RainViewer's colours on the DWD map. With DWD as the source it now runs from cyan through green, yellow and orange to red, like the map.
@@ -144,24 +149,18 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 * Fix: the REST API page still offered the key as a query parameter, which has been refused since the key moved to the `X-NAWS-Key` header.
 * Fix: the JavaScript and Chart.js examples now warn that a key used in the browser is readable in the page source.
 
-= 2.1.3 =
-* Added: `[naws_radar]` — an animated rain radar around the station: Deutscher Wetterdienst in Germany (the last hour plus a two-hour nowcast), RainViewer elsewhere, on a grey OpenStreetMap map. Play runs through the images once; + and − zoom in around the station, and the enlarged map can be dragged. Your server fetches and stores the images, so visitors never contact a weather service. Nothing is fetched until "Allow rain radar" is switched on under Settings › Rain radar; colours on a new Appearance tab, Rain radar.
-* Added: a new Appearance tab, Records — block background, tile background, value and labels of `[naws_records]` and `[naws_on_this_day]`; an empty field follows the base theme. Under Chart Theming three colours for the expand button of the live and history charts.
-* Fix: records, "on this day" and the sun path ignored the base theme; their background stayed white whatever was set.
-* Fix: the expand button of the charts could turn red after a click under themes such as Hello Elementor.
-
 Older versions: the complete changelog since 1.0.0 is kept in [CHANGELOG.md](https://github.com/Xyla1512/Netatmo/blob/main/CHANGELOG.md) on GitHub.
 
 == Upgrade Notice ==
+
+= 2.1.8 =
+New: give each module its own display name on the Modules page; it replaces the Netatmo name on the site and in the admin. Fix: the REST endpoint /modules works again. Nothing to reconfigure.
 
 = 2.1.7 =
 Charts and cards build up softly when the visitor scrolls to them, and the rain radar legend matches the DWD map. Nothing to reconfigure.
 
 = 2.1.6 =
 Security: visitors can no longer make the chart endpoints run PHP out of memory (relevant to CVE-2026-109618/109619 — update PHP as well). Fix: the hourly rain chart and grouped rain show the real sum. Nothing to reconfigure.
-
-= 2.1.5 =
-New: the error log and a support report on the Cron Log page. Fix: a sync the database refused no longer reports "Sync OK", and "Sync now" no longer fetches twice. Nothing to reconfigure.
 
 == Privacy & External Services ==
 

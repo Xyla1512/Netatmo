@@ -1,5 +1,5 @@
 {
-    "aktualisiert": "2026-10-25",
+    "aktualisiert": "2026-11-12",
     "vorhaben": [
         {
             "id": "monatsrueckblick",
@@ -20,6 +20,20 @@
             "titel": "Elementor-Widgets",
             "satz": "Dasselbe für Elementor: die Bausteine als eigene Widgets, eingestellt im Elementor-Panel und mit Vorschau im Editor.",
             "ab": null,
+            "bild": null
+        },
+        {
+            "id": "modulvergleich",
+            "titel": "Module im Langzeitvergleich",
+            "satz": "Zwei Module in einem Diagramm über Monate und Jahre – etwa die Luftfeuchte drinnen und draußen über zwei Jahre, Tag für Tag aus der eigenen Tagesübersicht.",
+            "ab": null,
+            "bild": null
+        },
+        {
+            "id": "anzeigenamen",
+            "titel": "Eigene Namen für die Module",
+            "satz": "Jedes Modul bekommt auf der Modulseite einen eigenen Anzeigenamen, etwa „Garten“ statt „Außen“. Er ersetzt den Netatmo-Namen überall: auf den Kacheln, in den Diagrammtiteln, im Adminbereich und in den E-Mails. Ein leeres Feld lässt den Netatmo-Namen stehen.",
+            "ab": "2.1.8",
             "bild": null
         },
         {
