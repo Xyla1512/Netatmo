@@ -45,11 +45,11 @@ if ( $fehlend ) {
 // ── Stichproben gegen eine Verschiebung ─────────────────────────────────
 $anker = [
     1   => 'Connects to the Netatmo API',
-    42  => 'Which forecast providers',
-    57  => '/wp-content/plugins/',
-    71  => 'MET Norway',
-    89  => 'Authenticate via OAuth2',
-    113 => 'Full Netatmo Integration',
+    43  => 'Which forecast providers',
+    58  => '/wp-content/plugins/',
+    72  => 'MET Norway',
+    90  => 'Authenticate via OAuth2',
+    3   => 'Full Netatmo Integration',
     124 => 'Key Features',
     131 => 'Live dashboard with sensor cards',
 ];
