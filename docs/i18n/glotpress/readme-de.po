@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Plugins - XTX Integration for Netatmo - Stable Readme (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-11-12 10:23:21+0000\n"
+"PO-Revision-Date: 2026-11-13 15:14:42+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,6 +20,30 @@ msgstr "Verbindet sich mit der Netatmo-API, speichert alle Sensordaten lokal und
 #, gp-priority: high
 msgid "XTX Integration for Netatmo"
 msgstr "XTX Integration for Netatmo"
+
+#. Found in description paragraph.
+msgid "Only your server talks to the services below, without any visitor data:"
+msgstr "Nur dein Server spricht mit den folgenden Diensten, ohne Daten der Besucher:"
+
+#. Found in description paragraph.
+msgid "<strong>This plugin adds nothing to your privacy notice on the visitor side.</strong> Everything your visitors see — charts, symbols, rain radar images, map tiles, fonts and scripts — is served from your own site. The plugin loads nothing from other servers into the visitor's browser: no weather service, map server, font host or CDN learns who looks at your weather pages. The symbols are the plugin's own drawings rather than emoji, so WordPress has no emoji images to fetch for them either."
+msgstr "<strong>Dieses Plugin fügt deiner Datenschutzerklärung auf Besucherseite nichts hinzu.</strong> Alles, was deine Besucher sehen – Diagramme, Symbole, Regenradarbilder, Kartenkacheln, Schriften und Skripte –, kommt von deiner eigenen Website. Das Plugin lädt nichts von fremden Servern in den Browser der Besucher: Kein Wetterdienst, Kartenserver, Schriftenanbieter oder CDN erfährt, wer deine Wetterseiten ansieht. Die Symbole sind eigene Zeichnungen des Plugins statt Emojis, also muss WordPress auch dafür keine Emoji-Bilder nachladen."
+
+#. Found in description list item.
+msgid "<code>[naws_compare]</code> – Two daily series from any modules in one chart over months and years, e.g. indoor against outdoor humidity; a second unit gets its own axis. A builder on the Shortcodes page writes the shortcode (<code>a</code>, <code>b</code>, <code>from</code>, <code>to</code>, <code>months</code>, <code>title</code>, <code>height</code>)"
+msgstr "<code>[naws_compare]</code> – Zwei Tagesreihen beliebiger Module in einem Diagramm über Monate und Jahre, etwa Luftfeuchte innen gegen außen; eine zweite Einheit bekommt ihre eigene Achse. Ein Baukasten auf der Shortcode-Seite schreibt den Kurzbefehl (<code>a</code>, <code>b</code>, <code>from</code>, <code>to</code>, <code>months</code>, <code>title</code>, <code>height</code>)"
+
+#. Found in description list item.
+msgid "<code>[naws_month_review]</code> – A month in review: temperature, rain and gust against the same month in earlier years, with a headline for what stands out; visitors page through the months without reloading (<code>month</code>, <code>years</code>, <code>title</code>)"
+msgstr "<code>[naws_month_review]</code> – Ein Monatsrückblick: Temperatur, Regen und Böen neben demselben Monat der Vorjahre, mit einem Kopfsatz für das, was auffällt; Besucher blättern ohne Neuladen durch die Monate (<code>month</code>, <code>years</code>, <code>title</code>)"
+
+#. Found in description list item.
+msgid "<strong>Nothing from other servers in the visitor's browser</strong> – charts, symbols, radar images, map tiles and fonts all come from your own site"
+msgstr "<strong>Nichts von fremden Servern im Browser der Besucher</strong> – Diagramme, Symbole, Radarbilder, Kartenkacheln und Schriften kommen alle von deiner eigenen Website"
+
+#. Found in description list item.
+msgid "<strong>Astronomy</strong> – Sunrise/sunset, moon phase with illumination, next full moon and supermoon (computed after Meeus), next lunar eclipse"
+msgstr "<strong>Astronomie</strong> – Sonnenauf- und -untergang, Mondphase mit Beleuchtungsgrad, nächster Vollmond und Supermond (berechnet nach Meeus), nächste Mondfinsternis"
 
 #. Found in description list item.
 msgid "<strong>Full Netatmo Integration</strong> – OAuth2 authentication, automatic sync, all module types supported (Base, Outdoor, Wind, Rain, Indoor), with your own display name for each module"
@@ -126,8 +150,8 @@ msgid "<code>[naws_records]</code> – Fifteen records from the daily summary wi
 msgstr "<code>[naws_records]</code> – Fünfzehn Rekorde aus der Tagesübersicht mit ihren Daten, als Kacheln oder Tabelle (<code>year</code>, <code>records</code>, <code>layout</code>, <code>title</code>)"
 
 #. Found in description list item.
-msgid "<strong>18 Shortcodes</strong> – Dashboard, current readings, infobar, single value, computed value, sparkline, sparkline tiles, history charts, heatmap, records, this day in earlier years, sun path, wind rose, forecast, rain radar, table, widget, weather icon"
-msgstr "<strong>18 Shortcodes</strong> – Dashboard, aktuelle Werte, Infoleiste, Einzelwert, berechneter Wert, Sparkline, Sparkline-Kacheln, Verlaufsdiagramme, Heatmap, Rekorde, dieser Tag in früheren Jahren, Sonnenbahn, Windrose, Vorhersage, Regenradar, Tabelle, Widget, Wettersymbol"
+msgid "<strong>20 Shortcodes</strong> – Dashboard, current readings, infobar, single value, computed value, sparkline, sparkline tiles, history charts, heatmap, records, this day in earlier years, month review, module comparison, sun path, wind rose, forecast, rain radar, table, widget, weather icon"
+msgstr "<strong>20 Shortcodes</strong> – Dashboard, aktuelle Werte, Infoleiste, Einzelwert, berechneter Wert, Sparkline, Sparkline-Kacheln, Verlaufsdiagramme, Heatmap, Rekorde, dieser Tag in früheren Jahren, Monatsrückblick, Modulvergleich, Sonnenbahn, Windrose, Vorhersage, Regenradar, Tabelle, Widget, Wettersymbol"
 
 #. Found in description list item.
 msgid "<code>[naws_heatmap]</code> – One year of outdoor daily average temperature as a calendar grid, one tile per day, with a year selector (<code>year</code>, <code>title</code>, <code>legend</code>)"
@@ -256,10 +280,6 @@ msgstr "Diesem Plugin liegen zwei JavaScript-Bibliotheken bei, beide unter der M
 #. Found in description paragraph.
 msgid "No personal user data (names, emails, IP addresses) is collected or transmitted by this plugin. All sensor data is stored exclusively in your local WordPress database."
 msgstr "Dieses Plugin erhebt und übermittelt keine personenbezogenen Daten (Namen, E-Mail-Adressen, IP-Adressen). Alle Sensordaten liegen ausschließlich in deiner lokalen WordPress-Datenbank."
-
-#. Found in description paragraph.
-msgid "This plugin connects to the following external services:"
-msgstr "Dieses Plugin verbindet sich mit den folgenden externen Diensten:"
 
 #. Found in description paragraph.
 msgid "<strong>XTX Integration for Netatmo</strong> connects your Netatmo hardware to WordPress. It reads all sensor data via the official Netatmo API, stores readings in your local database and displays them with beautiful live dashboards, animated charts and weather forecasts."
@@ -458,10 +478,6 @@ msgid "<strong>Derived Weather Data</strong> – Feels-like temperature, heat in
 msgstr "<strong>Abgeleitete Wetterdaten</strong> – Gefühlte Temperatur, Hitzeindex, Taupunkt, Windchill"
 
 #. Found in description list item.
-msgid "<strong>Astronomy</strong> – Sunrise/sunset, moon phase with illumination, next full moon"
-msgstr "<strong>Astronomie</strong> – Sonnenauf- und -untergang, Mondphase mit Beleuchtungsgrad, nächster Vollmond"
-
-#. Found in description list item.
 msgid "<strong>Live Dashboard</strong> – Real-time sensor cards with animated counters, 24h trend charts, pressure trend indicator, wind compass, CO2 air quality levels"
 msgstr "<strong>Live-Dashboard</strong> – Sensorkacheln in Echtzeit mit animierten Zählern, 24-Stunden-Verläufen, Luftdrucktendenz, Windkompass und CO2-Luftqualitätsstufen"
 
@@ -539,6 +555,36 @@ msgstr "Live-Dashboard mit Sensorkacheln und 24-Stunden-Verläufen"
 
 #. Found in changelog list item.
 #, gp-priority: low
+msgid "Fix: the wind card's compass points are translated, <code>[naws_table]</code> grouped by day shows seven calendar days in local time in a stable order, <code>[naws_current]</code> shows its values without JavaScript, and SVG symbols keep their viewBox."
+msgstr "Fix: Die Himmelsrichtungen der Windkachel sind übersetzt, <code>[naws_table]</code> zeigt nach Tagen gruppiert sieben Kalendertage in Ortszeit in fester Reihenfolge, <code>[naws_current]</code> zeigt seine Werte auch ohne JavaScript, und SVG-Symbole behalten ihre viewBox."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: moon — the supermoon date was off and lunar eclipses were misclassified; full moons are now computed after Meeus and eclipses come from NASA's canon."
+msgstr "Fix: Mond – das Datum des Supermonds stimmte nicht und Mondfinsternisse waren falsch eingeordnet; Vollmonde werden jetzt nach Meeus berechnet, Finsternisse stammen aus dem Katalog der NASA."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: Yr.no forecast — rain of the first two or three days was about six times too high, the last day repeated the day before, and the precipitation probability showed a fixed 0 % (MET Norway gives one only for the Nordic countries; without it no figure is shown)."
+msgstr "Fix: Vorhersage mit Yr.no – die Regenmengen der ersten zwei, drei Tage waren etwa sechsfach zu hoch, der letzte Tag wiederholte den Vortag, und die Regenwahrscheinlichkeit stand fest auf 0 % (MET Norway liefert sie nur für die nordischen Länder; fehlt sie, wird keine Zahl gezeigt)."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Changed: the plugin's own pictograms instead of emoji on the site, the same on every device. WordPress no longer fetches emoji images from s.w.org for them, so nothing reaches another server from the visitor's browser."
+msgstr "Changed: eigene Symbole des Plugins statt Emojis auf der Website, auf allen Geräten gleich. WordPress lädt dafür keine Emoji-Bilder mehr von s.w.org, sodass vom Browser der Besucher nichts an einen fremden Server geht."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Added: <code>[naws_compare]</code> — two daily series from any modules in one chart over months and years, e.g. indoor against outdoor humidity. A builder on the Shortcodes page writes the shortcode and shows a live preview."
+msgstr "Added: <code>[naws_compare]</code> – zwei Tagesreihen beliebiger Module in einem Diagramm über Monate und Jahre, etwa Luftfeuchte innen gegen außen. Ein Baukasten auf der Shortcode-Seite schreibt den Kurzbefehl und zeigt eine Live-Vorschau."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Added: <code>[naws_month_review]</code> — a month in review: mean, highest and lowest temperature, rain and the strongest gust, each against the same month in earlier years, with a headline for what stands out. Visitors page through the months without reloading."
+msgstr "Added: <code>[naws_month_review]</code> – ein Monatsrückblick: Mittel, Höchst- und Tiefstwert, Regen und stärkste Böe, jeweils neben demselben Monat der Vorjahre, mit einem Kopfsatz für das, was auffällt. Besucher blättern ohne Neuladen durch die Monate."
+
+#. Found in changelog list item.
+#, gp-priority: low
 msgid "Fix: switching a module off on the Modules page did not grey out its row until the page was reloaded."
 msgstr "Fix: Wurde ein Modul auf der Modulseite abgeschaltet, wurde seine Zeile erst nach dem Neuladen der Seite ausgegraut."
 
@@ -601,21 +647,6 @@ msgstr "Added: Cron-Log › Support-Bericht — Versionen von Plugin, WordPress,
 #, gp-priority: low
 msgid "Added: Cron Log › Error Log — the errors and warnings the plugin has always collected (database, Netatmo connection, weather services), which no page showed; the dashboard only counted them. A button clears the log, and the error count on the dashboard links to it."
 msgstr "Added: Cron-Log › Fehlerprotokoll — die Fehler und Warnungen, die das Plugin schon immer sammelt (Datenbank, Netatmo-Verbindung, Wetterdienste), die aber keine Seite zeigte; das Dashboard zählte sie nur. Ein Knopf leert das Protokoll, und die Fehlerzahl auf dem Dashboard verlinkt darauf."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Fix: the JavaScript and Chart.js examples now warn that a key used in the browser is readable in the page source."
-msgstr "Fix: Die Beispiele für JavaScript und Chart.js weisen jetzt darauf hin, dass ein im Browser verwendeter Schlüssel im Quelltext der Seite lesbar ist."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Fix: the REST API page still offered the key as a query parameter, which has been refused since the key moved to the <code>X-NAWS-Key</code> header."
-msgstr "Fix: Die REST-API-Seite bot den Schlüssel noch als Query-Parameter an, der abgelehnt wird, seit der Schlüssel in den Header <code>X-NAWS-Key</code> gewandert ist."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Fix: the PHP example on the REST API page failed in snippet plugins such as Code Snippets or WPCode — it read address and key with <code>global</code>, which finds nothing inside the function these plugins run. The tab, now \"PHP / Snippet\", shows a <code>[wetter_aktuell]</code> shortcode with the key in the header, a five-minute cache and a copy button."
-msgstr "Fix: Das PHP-Beispiel auf der REST-API-Seite lief nicht in Snippet-Plugins wie Code Snippets oder WPCode — es las Adresse und Schlüssel mit <code>global</code>, das innerhalb der Funktion, in der diese Plugins den Code ausführen, nichts findet. Der Reiter heißt jetzt „PHP / Snippet“ und zeigt einen Shortcode <code>[wetter_aktuell]</code> mit dem Schlüssel im Header, fünf Minuten Zwischenspeicher und einem Kopieren-Knopf."
 
 #. Found in changelog paragraph.
 #, gp-priority: low
