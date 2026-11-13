@@ -73,9 +73,11 @@ function hhmm(ms){
   var d=new Date(ms); var p=function(n){return String(n).padStart(2,'0');};
   return p(d.getHours())+':'+p(d.getMinutes());
 }
+// The 16 compass points in the site's language (templates/live.php passes
+// naws_label( 'compass_*' ), the same texts the windrose uses).
+var C=(NAWS_I18N&&NAWS_I18N.compass&&NAWS_I18N.compass.length===16)?NAWS_I18N.compass:['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
 function cdir(deg){
-  var d=['N','NNO','NO','ONO','O','OSO','SO','SSO','S','SSW','SW','WSW','W','WNW','NW','NNW'];
-  return d[Math.round(((+deg%360)+360)%360/22.5)%16];
+  return esc(C[Math.round(((+deg%360)+360)%360/22.5)%16]);
 }
 function post(params,cb){
   var xhr=new XMLHttpRequest();
@@ -121,14 +123,14 @@ var ROSE='<svg style="position:absolute;top:0;left:0;width:100%;height:100%" vie
   +'<polygon class="naws-lw-minor" points="31,31 76,84 80,80"/>'
   +'<polygon class="naws-lw-shade" points="31,31 84,76 80,80"/>'
   +'<circle class="naws-lw-hub" cx="80" cy="80" r="9" stroke-width="2.5"/>'
-  +'<text class="naws-lw-letter" x="80" y="9" text-anchor="middle" dominant-baseline="middle" font-size="13" font-weight="800">N</text>'
-  +'<text class="naws-lw-letter" x="80" y="153" text-anchor="middle" dominant-baseline="middle" font-size="13" font-weight="800">S</text>'
-  +'<text class="naws-lw-letter" x="153" y="80" text-anchor="middle" dominant-baseline="middle" font-size="13" font-weight="800">E</text>'
-  +'<text class="naws-lw-letter" x="7" y="80" text-anchor="middle" dominant-baseline="middle" font-size="13" font-weight="800">W</text>'
-  +'<text class="naws-lw-letter-minor" x="133" y="27" text-anchor="middle" font-size="10" font-weight="600">NE</text>'
-  +'<text class="naws-lw-letter-minor" x="133" y="136" text-anchor="middle" font-size="10" font-weight="600">SE</text>'
-  +'<text class="naws-lw-letter-minor" x="27" y="136" text-anchor="middle" font-size="10" font-weight="600">SW</text>'
-  +'<text class="naws-lw-letter-minor" x="27" y="27" text-anchor="middle" font-size="10" font-weight="600">NW</text>'
+  +'<text class="naws-lw-letter" x="80" y="9" text-anchor="middle" dominant-baseline="middle" font-size="13" font-weight="800">'+esc(C[0])+'</text>'
+  +'<text class="naws-lw-letter" x="80" y="153" text-anchor="middle" dominant-baseline="middle" font-size="13" font-weight="800">'+esc(C[8])+'</text>'
+  +'<text class="naws-lw-letter" x="153" y="80" text-anchor="middle" dominant-baseline="middle" font-size="13" font-weight="800">'+esc(C[4])+'</text>'
+  +'<text class="naws-lw-letter" x="7" y="80" text-anchor="middle" dominant-baseline="middle" font-size="13" font-weight="800">'+esc(C[12])+'</text>'
+  +'<text class="naws-lw-letter-minor" x="133" y="27" text-anchor="middle" font-size="10" font-weight="600">'+esc(C[2])+'</text>'
+  +'<text class="naws-lw-letter-minor" x="133" y="136" text-anchor="middle" font-size="10" font-weight="600">'+esc(C[6])+'</text>'
+  +'<text class="naws-lw-letter-minor" x="27" y="136" text-anchor="middle" font-size="10" font-weight="600">'+esc(C[10])+'</text>'
+  +'<text class="naws-lw-letter-minor" x="27" y="27" text-anchor="middle" font-size="10" font-weight="600">'+esc(C[14])+'</text>'
   +'</svg>';
 function arrowSVG(deg){
   return '<svg id="'+WID+'-arr" style="position:absolute;top:0;left:0;width:100%;height:100%;transform:rotate('+deg+'deg);transform-origin:50% 50%;transition:transform 1.2s ease" viewBox="-4 -4 168 168" xmlns="http://www.w3.org/2000/svg">'

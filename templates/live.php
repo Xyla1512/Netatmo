@@ -257,6 +257,8 @@ $t_labels  = [ 'up' => __( 'rising', 'xtx-integration-for-netatmo' ), 'down' => 
 
 // ── i18n strings for JavaScript ──────────────────────────────────────────────
 $_i18n = [
+    // The 16 compass points, N clockwise to NNW, as the windrose has them.
+    'compass'         => array_map( static fn( $k ) => naws_label( 'compass_' . $k ), [ 'n', 'nne', 'ne', 'ene', 'e', 'ese', 'se', 'sse', 's', 'ssw', 'sw', 'wsw', 'w', 'wnw', 'nw', 'nnw' ] ),
     // A display name from the modules screen replaces the fixed badge; live-boot.js escapes both.
     'lbl_outdoor'     => NAWS_Helpers::type_display_name( 'NAModule1' ) ?: __( 'Outdoor', 'xtx-integration-for-netatmo' ),
     'lbl_base'        => NAWS_Helpers::type_display_name( 'NAMain' ) ?: __( 'Base', 'xtx-integration-for-netatmo' ),
