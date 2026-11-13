@@ -2182,11 +2182,10 @@ h3.naws-mr-month { margin: 0 0 10px; font-size: 1.1rem; font-weight: 600; color:
 @media (max-width: 480px) { .naws-mr-tiles { grid-template-columns: minmax(0, 1fr); } }
 
 /* ── [naws_compare] two series on one time axis (since 2.2.0) ─────────── */
-.naws-cmp { margin: 0 0 24px; padding: 14px 16px 12px; background: var(--naws-card-bg, #fff); border: 1px solid var(--naws-border, #dde9e9); border-radius: 12px; }
-.naws-cmp-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 6px; }
-.naws-cmp-title { font-size: 1rem; font-weight: 600; color: var(--naws-text-dark, #2d5252); }
-.naws-cmp-canvas { position: relative; width: 100%; }
-.naws-cmp .naws-cmp-expand { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; padding: 0; border: 1px solid var(--naws-border, #dde9e9); border-radius: 8px; background: transparent; color: var(--naws-text-muted, #7aa0a0); cursor: pointer; }
+.naws-cmp { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 12px; margin: 0 0 24px; padding: 14px 16px 12px; background: var(--naws-card-bg, #fff); border: 1px solid var(--naws-border, #dde9e9); border-radius: 12px; }
+.naws-cmp-title { grid-column: 1; margin: 0 0 6px; font-size: 1rem; font-weight: 600; color: var(--naws-text-dark, #2d5252); }
+.naws-cmp-canvas { grid-column: 1 / -1; position: relative; width: 100%; margin-top: 6px; }
+.naws-cmp .naws-cmp-expand { grid-column: 2; justify-self: end; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; padding: 0; border: 1px solid var(--naws-border, #dde9e9); border-radius: 8px; background: transparent; color: var(--naws-text-muted, #7aa0a0); cursor: pointer; }
 .naws-cmp .naws-cmp-expand:hover, .naws-cmp .naws-cmp-expand:focus-visible { color: var(--naws-text-dark, #2d5252); background: var(--naws-tile-bg, rgba(122, 160, 160, .12)); border-color: var(--naws-text-muted, #7aa0a0); }
 .naws-cmp .naws-cmp-expand:focus-visible { outline: 2px solid var(--naws-text-muted, #7aa0a0); outline-offset: 2px; }
 .naws-cmp-dialog { width: min(1200px, 94vw); max-width: none; padding: 18px 20px 16px; border: 0; border-radius: 12px; background: var(--naws-card-bg, #fff); color: var(--naws-text-dark, #2d5252); }

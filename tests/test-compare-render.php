@@ -37,7 +37,7 @@ class NAWS_Logger {
     public static function info( ...$a ) {}
 }
 class NAWS_Colors {
-    public static function get_history_palette() { return [ '#427272', '#c08a3e', '#7a5ea8' ]; }
+    public static function get_history_palette() { return $GLOBALS['naws_palette_override'] ?? [ '#427272', '#c08a3e', '#7a5ea8' ]; }
     public static function get_chart_theme() { return [ 'grid' => '#eee', 'tick' => '#777', 'tooltip_bg' => '#fff', 'tooltip_title' => '#000', 'tooltip_text' => '#333', 'axis_title' => '#555' ]; }
 }
 
@@ -172,6 +172,21 @@ check( 'unbekanntes Innenmodul', str_contains( render_as_editor( atts( 'in-kelle
 check( 'beide falsch: Besucher leer', NAWS_Compare::render( atts( 'x:y', 'z:w' ) ), '' );
 check( 'keine Daten im Zeitraum: Besucher leer', NAWS_Compare::render( atts( 'outdoor:temp', '', [ 'from' => '2026-01', 'to' => '2026-02' ] ) ), '' );
 check( 'Basis-Innentemp: nur ein Tag', count( naws_test_json( NAWS_Compare::render( atts( 'indoor:temp', '' ) ) )['dates'] ), 1 );
+check( 'Zukunfts-from: Besucher leer', NAWS_Compare::render( atts( 'outdoor:temp', '', [ 'from' => '2027-01' ] ) ), '' );
+
+echo "\nMarkup, Farben, Skript\n" . str_repeat( '-', 74 ) . "\n";
+
+check( 'Titel als erstes Kind der figure', (bool) preg_match( '#<figure class="naws-cmp" data-naws-cmp>\s*<figcaption#', NAWS_Compare::render( atts( 'indoor:humidity', 'outdoor:humidity', [ 'title' => 'T' ] ) ) ), true );
+check( 'ohne Titel keine leere figcaption', str_contains( NAWS_Compare::render( atts() ), '<figcaption' ), false );
+check( 'Canvas mit Namen fuer Vorlesehilfen', (bool) preg_match( '#<canvas[^>]+aria-label="[^"]*Humidity · Museum[^"]*Humidity · Outdoor#', NAWS_Compare::render( atts() ) ), true );
+$GLOBALS['naws_palette_override'] = [ '', '' ];
+check( 'leere Palette -> Ersatzfarben', naws_test_json( NAWS_Compare::render( atts() ) )['colors'], [ '#427272', '#c08a3e' ] );
+unset( $GLOBALS['naws_palette_override'] );
+$naws_js = file_get_contents( dirname( __DIR__ ) . '/assets/js/compare-boot.js' );
+check( 'Einzeltage bekommen einen Punkt', (bool) preg_match( '/pointRadius:\s*function/', $naws_js ), true );
+check( 'Balkenfarbe ohne Hex-Anhaengen', str_contains( $naws_js, "c + '99'" ), false );
+$naws_labels = file_get_contents( dirname( __DIR__ ) . '/includes/class-naws-labels.php' );
+check( 'Groessen mit eigenem Kontext', substr_count( $naws_labels, "'quantity in the comparison chart'" ), 10 );
 
 echo "\nMehrere auf einer Seite, Hoehe\n" . str_repeat( '-', 74 ) . "\n";
 

@@ -428,10 +428,6 @@ msgstr "Speichere Client ID und Secret, dann klicke auf den Button:"
 msgid "Air Pressure"
 msgstr "Luftdruck"
 
-#: includes/class-naws-labels.php:230
-msgid "Air pressure"
-msgstr "Luftdruck"
-
 #: admin/views/shortcodes.php:573
 msgid "Alias"
 msgstr "Alias"
@@ -662,8 +658,8 @@ msgstr "Beide Bedingungen müssen zutreffen. Der Taupunkt-Abstand ist die Differ
 msgid "CO2"
 msgstr "CO₂"
 
-#: includes/class-naws-helpers.php:335 includes/class-naws-labels.php:228 includes/class-naws-labels.php:398 templates/live.php:69
-#: templates/live.php:88 templates/live.php:266
+#: includes/class-naws-helpers.php:335 includes/class-naws-labels.php:398 templates/live.php:69 templates/live.php:88
+#: templates/live.php:266
 msgid "CO₂"
 msgstr "CO₂"
 
@@ -1496,10 +1492,6 @@ msgstr "Gruppierung: raw (keine), hour, day, week, month"
 msgid "Growing degree days"
 msgstr "Wachstumsgradtage"
 
-#: includes/class-naws-labels.php:233
-msgid "Gust"
-msgstr "Böe"
-
 #: admin/views/live-settings.php:111 includes/class-naws-helpers.php:93 includes/class-naws-helpers.php:879 includes/class-naws-labels.php:78
 msgid "Gust Direction"
 msgstr "Böenrichtung"
@@ -1610,10 +1602,6 @@ msgstr "Verbergen"
 msgid "High %s"
 msgstr "Hoch %s"
 
-#: includes/class-naws-labels.php:226
-msgid "Highest temperature"
-msgstr "Höchsttemperatur"
-
 #: admin/views/shortcodes.php:222 includes/class-naws-shortcodes.php:294
 msgid "Historical Weather Data"
 msgstr "Historical Weather Data"
@@ -1662,10 +1650,6 @@ msgstr "Mit wie vielen früheren Jahren jede Kachel verglichen wird, 0 bis 10. B
 #: admin/views/appearance.php:71
 msgid "Hub (calm)"
 msgstr "Nabe (Windstille)"
-
-#: includes/class-naws-labels.php:227
-msgid "Humidity"
-msgstr "Luftfeuchte"
 
 #: templates/live.php:63
 msgid "Humidity Outdoor"
@@ -1981,10 +1965,6 @@ msgstr "Tief %s"
 #: admin/views/appearance.php:79
 msgid "Low and high dots"
 msgstr "Tief- und Hochpunkte"
-
-#: includes/class-naws-labels.php:225
-msgid "Lowest temperature"
-msgstr "Tiefsttemperatur"
 
 #: templates/infobar.php:150
 msgid "Lunar Eclipse"
@@ -2322,10 +2302,6 @@ msgstr "Noch kein erfolgreicher Sync"
 msgid "No wind readings in this period."
 msgstr "Keine Windmessungen in diesem Zeitraum."
 
-#: includes/class-naws-labels.php:229
-msgid "Noise"
-msgstr "Lärm"
-
 #: templates/live.php:70
 msgid "Noise Base"
 msgstr "Lärm Basis"
@@ -2627,7 +2603,7 @@ msgstr "Radar: %s"
 msgid "Radio"
 msgstr "Funk"
 
-#: includes/class-naws-forecast.php:976 includes/class-naws-labels.php:231
+#: includes/class-naws-forecast.php:976
 msgid "Rain"
 msgstr "Regen"
 
@@ -3235,7 +3211,7 @@ msgstr "Temp. Außen"
 
 #: admin/views/appearance.php:135 admin/views/live-settings.php:67 admin/views/settings.php:341 includes/class-naws-helpers.php:81
 #: includes/class-naws-helpers.php:330 includes/class-naws-helpers.php:337 includes/class-naws-helpers.php:865 includes/class-naws-labels.php:82
-#: includes/class-naws-labels.php:224 includes/class-naws-labels.php:395 templates/live.php:263
+#: includes/class-naws-labels.php:395 templates/live.php:263
 msgid "Temperature"
 msgstr "Temperatur"
 
@@ -3789,8 +3765,7 @@ msgid "Width on the page, in px or %"
 msgstr "Breite auf der Seite, in px oder %"
 
 #: admin/views/appearance.php:39 admin/views/appearance.php:138 admin/views/appearance.php:454 includes/class-naws-labels.php:44
-#: includes/class-naws-labels.php:232 includes/class-naws-labels.php:402 templates/live.php:74 templates/live.php:270
-#: templates/windrose.php:92
+#: includes/class-naws-labels.php:402 templates/live.php:74 templates/live.php:270 templates/windrose.php:92
 msgid "Wind"
 msgstr "Wind"
 
@@ -4730,6 +4705,56 @@ msgstr "ok"
 msgctxt "param_humidity"
 msgid "Humidity"
 msgstr "Luftfeuchtigkeit"
+
+#: includes/class-naws-labels.php:230
+msgctxt "quantity in the comparison chart"
+msgid "Air pressure"
+msgstr "Luftdruck"
+
+#: includes/class-naws-labels.php:228
+msgctxt "quantity in the comparison chart"
+msgid "CO₂"
+msgstr "CO₂"
+
+#: includes/class-naws-labels.php:233
+msgctxt "quantity in the comparison chart"
+msgid "Gust"
+msgstr "Böe"
+
+#: includes/class-naws-labels.php:226
+msgctxt "quantity in the comparison chart"
+msgid "Highest temperature"
+msgstr "Höchsttemperatur"
+
+#: includes/class-naws-labels.php:227
+msgctxt "quantity in the comparison chart"
+msgid "Humidity"
+msgstr "Luftfeuchte"
+
+#: includes/class-naws-labels.php:225
+msgctxt "quantity in the comparison chart"
+msgid "Lowest temperature"
+msgstr "Tiefsttemperatur"
+
+#: includes/class-naws-labels.php:229
+msgctxt "quantity in the comparison chart"
+msgid "Noise"
+msgstr "Lärm"
+
+#: includes/class-naws-labels.php:231
+msgctxt "quantity in the comparison chart"
+msgid "Rain"
+msgstr "Regen"
+
+#: includes/class-naws-labels.php:224
+msgctxt "quantity in the comparison chart"
+msgid "Temperature"
+msgstr "Temperatur"
+
+#: includes/class-naws-labels.php:232
+msgctxt "quantity in the comparison chart"
+msgid "Wind"
+msgstr "Wind"
 
 #: includes/class-naws-labels.php:449
 msgctxt "radio level"

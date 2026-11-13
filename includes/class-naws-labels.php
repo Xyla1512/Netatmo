@@ -221,16 +221,16 @@ function naws_label( string $key ): string {
         case 'mr_notice_no_complete_month':        return __( 'The month review needs at least one completed month of data.', 'xtx-integration-for-netatmo' );
 
         // [naws_compare] (since 2.2.0): quantities, module types, notices.
-        case 'cmp_q_temp':                         return __( 'Temperature', 'xtx-integration-for-netatmo' );
-        case 'cmp_q_temp_min':                     return __( 'Lowest temperature', 'xtx-integration-for-netatmo' );
-        case 'cmp_q_temp_max':                     return __( 'Highest temperature', 'xtx-integration-for-netatmo' );
-        case 'cmp_q_humidity':                     return __( 'Humidity', 'xtx-integration-for-netatmo' );
-        case 'cmp_q_co2':                          return __( 'CO₂', 'xtx-integration-for-netatmo' );
-        case 'cmp_q_noise':                        return __( 'Noise', 'xtx-integration-for-netatmo' );
-        case 'cmp_q_pressure':                     return __( 'Air pressure', 'xtx-integration-for-netatmo' );
-        case 'cmp_q_rain':                         return __( 'Rain', 'xtx-integration-for-netatmo' );
-        case 'cmp_q_wind':                         return __( 'Wind', 'xtx-integration-for-netatmo' );
-        case 'cmp_q_gust':                         return __( 'Gust', 'xtx-integration-for-netatmo' );
+        case 'cmp_q_temp':                         return _x( 'Temperature', 'quantity in the comparison chart', 'xtx-integration-for-netatmo' );
+        case 'cmp_q_temp_min':                     return _x( 'Lowest temperature', 'quantity in the comparison chart', 'xtx-integration-for-netatmo' );
+        case 'cmp_q_temp_max':                     return _x( 'Highest temperature', 'quantity in the comparison chart', 'xtx-integration-for-netatmo' );
+        case 'cmp_q_humidity':                     return _x( 'Humidity', 'quantity in the comparison chart', 'xtx-integration-for-netatmo' );
+        case 'cmp_q_co2':                          return _x( 'CO₂', 'quantity in the comparison chart', 'xtx-integration-for-netatmo' );
+        case 'cmp_q_noise':                        return _x( 'Noise', 'quantity in the comparison chart', 'xtx-integration-for-netatmo' );
+        case 'cmp_q_pressure':                     return _x( 'Air pressure', 'quantity in the comparison chart', 'xtx-integration-for-netatmo' );
+        case 'cmp_q_rain':                         return _x( 'Rain', 'quantity in the comparison chart', 'xtx-integration-for-netatmo' );
+        case 'cmp_q_wind':                         return _x( 'Wind', 'quantity in the comparison chart', 'xtx-integration-for-netatmo' );
+        case 'cmp_q_gust':                         return _x( 'Gust', 'quantity in the comparison chart', 'xtx-integration-for-netatmo' );
         case 'cmp_mod_outdoor':                    return _x( 'Outdoor', 'module in the comparison legend', 'xtx-integration-for-netatmo' );
         case 'cmp_mod_indoor':                     return _x( 'Base station', 'module in the comparison legend', 'xtx-integration-for-netatmo' );
         case 'cmp_mod_wind':                       return _x( 'Wind gauge', 'module in the comparison legend', 'xtx-integration-for-netatmo' );

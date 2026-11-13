@@ -206,7 +206,7 @@
 
         function shortcode(a) {
             var out = '[naws_compare';
-            Object.keys(a).forEach(function (k) { out += ' ' + k + '="' + String(a[k]).replace(/"/g, '') + '"'; });
+            Object.keys(a).forEach(function (k) { out += ' ' + k + '="' + String(a[k]).replace(/[\[\]"]/g, '') + '"'; });
             return out + ']';
         }
 
@@ -219,6 +219,8 @@
                 .then(function (r) { return r.json(); })
                 .then(function (j) {
                     if (mine !== seq) { return; }
+                    var old = preview.querySelector('canvas');
+                    if (old && window.Chart && window.Chart.getChart(old)) { window.Chart.getChart(old).destroy(); }
                     preview.innerHTML = (j && j.success && j.data) ? j.data.html : '';
                     var fig = preview.querySelector('figure[data-naws-cmp]');
                     if (fig && typeof window.NAWS_compareInit === 'function') { window.NAWS_compareInit(fig); }

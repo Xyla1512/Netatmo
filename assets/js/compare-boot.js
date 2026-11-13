@@ -26,6 +26,14 @@
         }
     }
 
+    /** #rgb, #rgba, #rrggbb or #rrggbbaa with the given opacity; anything else unchanged. */
+    function alpha(hex, a) {
+        var h = String(hex || '').replace('#', '');
+        if (h.length === 3 || h.length === 4) { h = h.split('').map(function (x) { return x + x; }).join(''); }
+        if (!/^[0-9a-f]{6}([0-9a-f]{2})?$/i.test(h)) { return hex; }
+        return 'rgba(' + parseInt(h.substr(0, 2), 16) + ',' + parseInt(h.substr(2, 2), 16) + ',' + parseInt(h.substr(4, 2), 16) + ',' + a + ')';
+    }
+
     function dateFmt(locale, opts) {
         try { return new Intl.DateTimeFormat(locale, opts); } catch (e) { return new Intl.DateTimeFormat(undefined, opts); }
     }
@@ -40,9 +48,15 @@
                 data: s.values,
                 yAxisID: s.axis,
                 borderColor: c,
-                backgroundColor: s.chart === 'bar' ? c + '99' : c,
+                backgroundColor: s.chart === 'bar' ? alpha(c, 0.6) : c,
                 borderWidth: s.chart === 'bar' ? 0 : 1.6,
-                pointRadius: 0,
+                // A day with no neighbours draws no line segment; give it a dot.
+                pointRadius: function (ctx) {
+                    var v = ctx.dataset.data, i = ctx.dataIndex;
+                    if (v[i] === null || v[i] === undefined) { return 0; }
+                    var prev = i > 0 ? v[i - 1] : null, next = i < v.length - 1 ? v[i + 1] : null;
+                    return (prev === null || prev === undefined) && (next === null || next === undefined) ? 2.5 : 0;
+                },
                 pointHoverRadius: 4,
                 spanGaps: false,
                 tension: 0.15,

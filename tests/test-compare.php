@@ -47,6 +47,8 @@ check( 'Tippfehler Modul', NAWS_Compare::parse_series( 'outdor:humidity' )['erro
 check( 'Groesse passt nicht', NAWS_Compare::parse_series( 'rain:humidity' )['error'], 'unknown_quantity' );
 check( 'ohne Doppelpunkt', NAWS_Compare::parse_series( 'outdoor' )['error'], 'syntax' );
 check( 'leer', NAWS_Compare::parse_series( '' )['error'], 'syntax' );
+check( 'Innenmodul mit Zaehler (gleiche Namen)', NAWS_Compare::parse_series( 'in-gast-2:temp' )['ok'], true );
+check( 'group_of in-gast-2', NAWS_Compare::group_of( 'in-gast-2' ), 'in' );
 check( 'in- ohne Namen', NAWS_Compare::parse_series( 'in-:temp' )['error'], 'unknown_module' );
 
 echo "\nZeitraum\n" . str_repeat( '-', 74 ) . "\n";
@@ -64,6 +66,10 @@ check( 'ohne Daten: from null', NAWS_Compare::period( [], null, $y )['from'], nu
 check( 'Zukunft gekappt', NAWS_Compare::period( [ 'to' => '2030-01-01' ], '2024-03-28', $y )['to'], $y );
 $p = NAWS_Compare::period( [ 'from' => '2025-06', 'to' => '2025-01' ], '2024-03-28', $y );
 check( 'vertauscht', [ $p['from'], $p['to'] ], [ '2025-01-01', '2025-06-30' ] );
+$p = NAWS_Compare::period( [ 'from' => '2027-01' ], '2024-03-28', $y );
+check( 'from in der Zukunft: kein Tausch', $p['from'] > $p['to'], true );
+$p = NAWS_Compare::period( [ 'to' => '2024-02' ], '2024-03-28', $y );
+check( 'to vor Messbeginn: kein Tausch', $p['from'] > $p['to'], true );
 check( 'ungueltig wie leer', NAWS_Compare::period( [ 'from' => '2025-13' ], '2024-03-28', $y )['auto_from'], true );
 check( 'fester Zeitraum nicht auto', NAWS_Compare::period( [ 'from' => '2025-01', 'to' => '2025-03' ], '2024-03-28', $y )['auto_to'], false );
 

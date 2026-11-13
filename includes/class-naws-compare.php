@@ -73,7 +73,7 @@ final class NAWS_Compare {
 
     /** The catalogue group a module reference belongs to, or null. */
     public static function group_of( string $ref ): ?string {
-        if ( preg_match( '/^in-[a-z0-9]+$/', $ref ) ) {
+        if ( preg_match( '/^in-[a-z0-9]+(-\d+)?$/', $ref ) ) {
             return 'in';
         }
         return isset( self::series_catalogue()[ $ref ] ) && $ref !== 'in' ? $ref : null;
@@ -144,7 +144,7 @@ final class NAWS_Compare {
             $from = $first_day;
         }
 
-        if ( $from !== null && $from > $to ) {
+        if ( $from !== null && $from > $to && ! $auto_from && ! $auto_to ) {
             [ $from, $to ] = [ $to, $from ];
             // A swapped explicit pair keeps the whole of both months.
             if ( preg_match( '/^\d{4}-\d{2}$/', (string) ( $atts['from'] ?? '' ) ) ) {
@@ -464,10 +464,11 @@ final class NAWS_Compare {
             'right'   => $axes['right'],
             'locale'  => str_replace( '_', '-', get_locale() ),
             'decimal' => substr( number_format_i18n( 1.5, 1 ), 1, 1 ),
-            'colors'  => [ $palette[0] ?? '#427272', $palette[1] ?? '#c08a3e' ],
+            'colors'  => [ ( $palette[0] ?? '' ) ?: '#427272', ( $palette[1] ?? '' ) ?: '#c08a3e' ],
             'theme'   => NAWS_Colors::get_chart_theme(),
             'labels'  => [ 'close' => naws_label( 'cmp_close' ) ],
         ];
+        $naws_cmp_label  = implode( ' / ', array_column( $out, 'name' ) );
         $naws_cmp_id     = wp_unique_id( 'naws-cmp-' );
         $naws_cmp_title  = trim( (string) ( $atts['title'] ?? '' ) );
         $naws_cmp_height = max( 200, min( 900, (int) ( $atts['height'] ?? 360 ) ?: 360 ) );

@@ -159,6 +159,8 @@ check( 'Abschnitt vorhanden', str_contains( $v, '[naws_compare' ), true );
 check( 'Katalog eingebettet', str_contains( $v, 'naws-cmp-catalogue' ), true );
 $js = file_get_contents( dirname( __DIR__ ) . '/assets/js/admin.js' );
 check( 'Vorschau ruft NAWS_compareInit', str_contains( $js, 'NAWS_compareInit' ), true );
+check( 'eckige Klammern aus dem Shortcode entfernt', str_contains( $js, 'replace(/[\[\]"]/g, \'\')' ), true );
+check( 'alte Vorschau wird abgebaut', str_contains( $js, 'getChart(old)' ), true );
 check( 'Vorschau-Action', str_contains( $js, 'naws_compare_preview' ), true );
 $adm = file_get_contents( dirname( __DIR__ ) . '/includes/class-naws-admin.php' );
 check( 'Admin laedt das Vergleichsskript', str_contains( $adm, 'compare-boot.js' ), true );
