@@ -48,6 +48,9 @@ class NAWS_Ajax {
         add_action( 'wp_ajax_naws_get_heatmap_data',        [ $this, 'get_heatmap_data' ] );
         add_action( 'wp_ajax_nopriv_naws_get_heatmap_data', [ $this, 'get_heatmap_data' ] );
 
+        add_action( 'wp_ajax_naws_get_month_review',        [ $this, 'get_month_review' ] );
+        add_action( 'wp_ajax_nopriv_naws_get_month_review', [ $this, 'get_month_review' ] );
+
         // Admin: trigger daily summary manually
         add_action( 'wp_ajax_naws_run_daily_summary',      [ $this, 'run_daily_summary' ] );
     }
@@ -721,6 +724,35 @@ class NAWS_Ajax {
             'sources' => $data['sources'],
             'colors'  => $colors,
             'labels'  => $labels,
+        ] );
+    }
+
+    /**
+     * One finished month of [naws_month_review], for the paging arrows.
+     *
+     * The answer is the block as the first call renders it, so the script
+     * only swaps it in. A month that is not in the list of finished months
+     * (wrong format, the running month, a gap) gets an error and not a
+     * quietly different month: the script then follows the link instead.
+     */
+    public function get_month_review() {
+        check_ajax_referer( 'naws_public_nonce', 'nonce' );
+        nocache_headers();
+
+        $month = NAWS_Month_Review::valid_month( isset( $_POST['month'] ) ? sanitize_text_field( wp_unslash( $_POST['month'] ) ) : '' );
+        $years = isset( $_POST['years'] ) ? (int) $_POST['years'] : NAWS_Month_Review::YEARS_DEFAULT; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- cast to int
+        $years = max( 0, min( NAWS_Month_Review::YEARS_MAX, $years ) );
+        $title = isset( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) ) : '';
+        $atts  = [ 'years' => $years, 'title' => $title ];
+
+        if ( $month === null || ! in_array( $month, NAWS_Month_Review::months( NAWS_Month_Review::rows( $atts ), wp_date( 'Y-m-d' ) ), true ) ) {
+            wp_send_json_error( [ 'message' => 'Month out of range.' ], 400 );
+            return;
+        }
+
+        wp_send_json_success( [
+            'html'  => NAWS_Month_Review::render( $atts, $month, true ),
+            'month' => $month,
         ] );
     }
 

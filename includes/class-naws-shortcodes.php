@@ -372,7 +372,6 @@ class NAWS_Shortcodes {
     // ----------------------------------------------------------------
     public function sc_month_review( $atts ) {
         $this->enqueue_frontend_styles();
-        wp_enqueue_script( 'naws-month-review' );
 
         $atts = shortcode_atts( [
             'month' => '',
@@ -392,6 +391,8 @@ class NAWS_Shortcodes {
 
         // Read-only paging parameter, validated by its format.
         $wanted = isset( $_GET['naws_month'] ) ? NAWS_Month_Review::valid_month( sanitize_text_field( wp_unslash( $_GET['naws_month'] ) ) ) : null; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        // Only the paged block has arrows for the script to take over.
+        wp_enqueue_script( 'naws-month-review' );
         return NAWS_Month_Review::render( $atts, $wanted, true );
     }
 
