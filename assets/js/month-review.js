@@ -72,6 +72,25 @@
             } );
     }
 
+    /*
+     * The server renders the arrows during an admin-ajax call, so their
+     * hrefs point at admin-ajax.php. Point them back at this page, keeping
+     * its other parameters and the hash, so the fallback and new-tab clicks
+     * land on a real page.
+     */
+    function rebase( section ) {
+        var links = section.querySelectorAll( '.naws-mr-step[href]' );
+        Array.prototype.forEach.call( links, function ( link ) {
+            var month = monthOf( link );
+            if ( ! month ) {
+                return;
+            }
+            var url = new URL( window.location.href );
+            url.searchParams.set( 'naws_month', month );
+            link.href = url.toString();
+        } );
+    }
+
     function swap( section, html, month ) {
         var holder = document.createElement( 'div' );
         holder.innerHTML = html;
@@ -79,6 +98,7 @@
         if ( ! fresh ) {
             throw new Error( 'no block' );
         }
+        rebase( fresh );
         section.replaceWith( fresh );
         wire( fresh );
 

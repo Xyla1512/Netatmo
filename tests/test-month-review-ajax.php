@@ -123,6 +123,7 @@ $js = is_file( dirname( __DIR__ ) . '/assets/js/month-review.js' ) ? (string) fi
 check( 'Rueckfall location.href',     (bool) preg_match( '/location\.href\s*=\s*\w+\.href/', $js ), true );
 check( 'replaceState statt pushState', [ str_contains( $js, 'replaceState' ), str_contains( $js, 'pushState' ) ], [ true, false ] );
 check( 'nur Bloecke mit data-naws-mr', str_contains( $js, '[data-naws-mr]' ), true );
+check( "Pfeil-Links werden auf die Seitenadresse umgeschrieben", [ str_contains( $js, "function rebase" ), (bool) preg_match( "/rebase\w*\(\s*fresh/", $js ), (bool) preg_match( "/searchParams\.set\(\s*\x27naws_month\x27[\s\S]*?\.href\s*=/", $js ) ], [ true, true, true ] );
 
 $sc = (string) file_get_contents( dirname( __DIR__ ) . '/includes/class-naws-shortcodes.php' );
 $fn = substr( $sc, (int) strpos( $sc, 'function sc_month_review' ), 1800 );
