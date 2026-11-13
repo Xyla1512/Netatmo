@@ -58,11 +58,11 @@ Datenlage auf dev (geprüft 13.11.): Tageszeilen der Basisstation lückenlos ab 
 | `years` | höchstens so viele Vorjahre je Kachel | `5` | 0–10 (geklemmt); `0` = keine Vorjahreszeilen und keine Vergleichssätze |
 | `title` | eigene Überschrift über der Leiste | keine (die Leiste nennt den Monat) | Text, escaped |
 
-Weitere Angaben wie `station` werden nur angenommen, wenn `NAWS_Calc::station_row_id()` sie schon für `[naws_records]` auswertet (gleiche Bedeutung, kein neues Konzept).
+Kein `station`-Attribut: `[naws_records]` nimmt es in der Praxis auch nicht an (`shortcode_atts` in `sc_records` lässt es fallen), es gilt die aktive Basisstation über `NAWS_Calc::station_row_id()`. *Festlegung nach Prüfung.*
 
 **Adressparameter:** `?naws_month=JJJJ-MM` (englisch wie die Shortcode-Namen, weil das Plugin weltweit läuft — *meine Festlegung; im Brainstorming hatte ich `naws_monat` geschrieben*). Er hat Vorrang vor dem Vorgabewert, aber **nicht** vor einem fest gesetzten `month=""` — wer einen Monat festnagelt, will ihn behalten; dann gibt es auch keine Blätterleiste (nur der Monatsname als Überschrift). Mehrere Rückblicke auf einer Seite folgen alle demselben Parameter.
 
-Registrierung wie alle anderen über `NAWS_Shortcodes::TAGS` (`'naws_month_review' => 'sc_month_review'`), Platz in der Liste nach `naws_on_this_day`. Die Zählung „achtzehn“ im Kommentar des Konstruktors wird „neunzehn“.
+Registrierung wie alle anderen über `NAWS_Shortcodes::TAGS` (`'naws_month_review' => 'sc_month_review'`), Platz in der Liste nach `naws_on_this_day`. Die Zählung „eighteen“ im Kommentar des Konstruktors wird „nineteen“.
 
 ## 4. Rechnung (`NAWS_Month_Review`, rein)
 
@@ -70,7 +70,7 @@ Wie `NAWS_Records`: eine `final class` mit reinen statischen Funktionen (Tagesze
 
 **`rows( array $atts ): array`** — alle Tageszeilen der Station über die ganze Aufzeichnung, Felder `temp_min, temp_max, temp_avg, rain_sum, gust_max`, `group_by => day` (identisch zu `NAWS_Records::rows()` mit `period=all`; gern direkt wiederverwenden). Bei heute ~1000 Zeilen ist das billig; **kein Zwischenspeicher** in dieser Version (die Rekorde rechnen ebenfalls live).
 
-**`months( array $rows ): array`** — Liste aller Monate `JJJJ-MM` mit mindestens einer Zeile, aufsteigend. Daraus: erster Monat = erster Monat mit Daten, letzter blätterbarer Monat = Vormonat von „heute“ in der Zeitzone der Site (`naws_timezone()`).
+**`months( array $rows ): array`** — Liste aller Monate `JJJJ-MM` mit mindestens einer Zeile, aufsteigend, **ohne den laufenden Monat** („heute“ in der Zeitzone der Site, `naws_timezone()`). Nur diese Monate sind blätterbar: ‹/› springen zum nächsten Monat **mit Daten** (Monate ohne Zeilen, etwa bei abgeschalteter Station, werden übersprungen); der Vorgabemonat ist der letzte Eintrag dieser Liste. *Festlegung nach Prüfung.*
 
 **`summary( array $rows, string $ym ): array`** — Kennzahlen eines Monats:
 
@@ -90,9 +90,15 @@ Wie `NAWS_Records`: eine `final class` mit reinen statischen Funktionen (Tagesze
 
 Schwellen für Frost-/Sommertage aus `NAWS_Calc` übernehmen (Katalogeinträge `frost_days`, `summer_days`), nicht neu hart kodieren. Hinweis: im Brainstorming-Beispiel standen Regentage ab 0,2 mm — gerechnet wird mit 0,1 mm wie bei den Rekorden.
 
-**Vollständigkeit:** Ein Monat zählt für Vergleiche und Rekorde nur, wenn das jeweilige Feld an mindestens `NAWS_Records::MONTH_MIN_DAYS` (20) Tagen einen Wert hat — dieselbe Regel wie beim Rekord „wärmster Monat“. Ist der **angezeigte** Monat darunter, erscheint er trotzdem, mit dem Vermerk „unvollständig (X von Y Tagen)“, aber ohne ★ und ohne Rekord-/Vergleichssätze für dieses Feld. Fehlen Tage, liegen aber über 20, steht der Vermerk ebenfalls (Zahl der Tage), Vergleiche bleiben erlaubt.
+**Vollständigkeit:** Ein Monat zählt für Vergleiche und Rekorde eines Feldes nur, wenn dieses Feld genug Tage hat:
+- **Mittel und Extremwerte** (`mean`, `max`, `min`, `gust`): mindestens `NAWS_Records::MONTH_MIN_DAYS` (20) Tage — dieselbe Regel wie beim Rekord „wärmster Monat“.
+- **Summen und Zählungen** (`rain`, `rain_days`, `frost_days`, `summer_days`): **alle** Tage des Monats. Sonst würde ein Geräteausfall zum „trockensten Oktober“ (Anti-Ziel §2). *Festlegung nach Prüfung.*
+- Ein Tag, an dem der Regenmesser nur stundenweise fehlte, speichert eine zu kleine, aber vorhandene Summe; das ist nicht erkennbar und wird hingenommen.
+
+ Ist der **angezeigte** Monat darunter, erscheint er trotzdem, mit dem Vermerk „unvollständig (X von Y Tagen)“, aber ohne ★ und ohne Rekord-/Vergleichssätze für dieses Feld. Fehlen Tage, liegen aber über 20, steht der Vermerk ebenfalls (Zahl der Tage), Vergleiche bleiben erlaubt.
 
 **`compare( array $rows, string $ym, int $years ): array`** — derselbe Kalendermonat in den Vorjahren (neueste zuerst, höchstens `$years`, nur vollständige je Feld) plus:
+- **„Seit Messbeginn“ heißt immer: bis zum Ende des angezeigten Monats.** Alles danach bleibt außer Betracht; Oktober 2025 behält seinen ★, auch wenn Oktober 2026 ihn später übertrifft (der Rückblick erzählt, wie es damals stand). *Festlegung nach Prüfung.*
 - **★ Rekord** je Kachel, wenn der Wert extremer ist als in **allen** vollständigen Vorjahresmonaten desselben Namens und es mindestens **ein** solches Vorjahr gibt. Richtung je Kachel: Mittel (wärmster/kältester), Höchstwert (höchster), Tiefstwert (tiefster), Regen (nassester/trockenster), Böe (stärkste). Gleichstand ist kein Rekord.
 - **▲/▼ Tendenz** gegenüber dem **Mittel** der gezeigten Vorjahre, nur wenn kein ★ und die Abweichung die Schwelle erreicht: Temperatur 0,5 K, Regen 10 % *und* mindestens 2 mm, Böe 5 km/h (in Basiseinheit; Umrechnung nur für die Anzeige). Darunter: kein Pfeil. *Schwellen sind meine Festlegung — reine Konstanten, später leicht änderbar.*
 
@@ -112,7 +118,7 @@ Ganze Sätze mit Platzhaltern, jeder ein eigener `naws_label()`-Schlüssel mit `
 **Sätze darunter** (höchstens drei, in dieser Reihenfolge, nur zutreffende):
 1. Frost-/Sommertage, wenn > 0: „%1$d Frosttage (2025: %2$d)“ — Vorjahresangabe nur bei vollständigem Vorjahr.
 2. Nassester Tag, wenn ≥ 1 mm: „Der meiste Regen fiel am %1$s: %2$s“.
-3. Stationsrekord über **alle** Monate, wenn der Monatswert ihn bricht (Abgleich mit `NAWS_Records::compute()`): „%1$s war zugleich die stärkste Böe seit Messbeginn überhaupt.“
+3. Stationsrekord über **alle** Tage vor dem Monat, wenn der Monatswert ihn echt übertrifft (Abgleich mit `NAWS_Records::compute()` über die Zeilen **vor dem 1. des Monats** — über alle Zeilen enthielte der Rekord den Monat selbst, und „übertrifft“ wäre nie wahr): „%1$s war zugleich die stärkste Böe seit Messbeginn überhaupt.“ Gilt für Höchstwert, Tiefstwert, Böe und nassesten Tag; ohne Zeilen vor dem Monat entfällt der Satz.
 
 Singular/Plural über `_n()` (Frosttage, Tage). Die genaue Satzliste darf der Bauer verfeinern, solange die Reihenfolge-Logik und die Regeln aus §2 (ehrlich, keine Wertung) halten; alle Endfassungen der englischen Quelltexte gehen vor dem Schnitt einmal an Frank.
 
@@ -172,7 +178,9 @@ Wie bei Rekorden/Sparkline: handgebaute Tageszeilen, keine Datenbank.
 - Vollständigkeit: Monat mit 19 vs. 20 Tagen; unvollständiges Vorjahr wird übersprungen; angezeigter unvollständiger Monat ohne ★
 - `compare()`: ★ nur mit ≥ 1 vollständigem Vorjahr, Gleichstand kein Rekord, Pfeil-Schwellen knapp darunter/darüber, `years`-Begrenzung, Reihenfolge neueste zuerst
 - Kopfsatz-Regeln 1–4 in Reihenfolge; erster Monat eines Namens → neutral
-- Blätterspanne: erster Monat ohne ‹, Vormonat von heute ohne ›; laufender Monat nicht erreichbar
+- Blätterspanne: erster Monat ohne ‹, letzter abgeschlossener Monat mit Daten ohne ›; laufender Monat nicht erreichbar; Lückenmonat wird übersprungen
+- „seit Messbeginn“ für einen alten Monat ignoriert spätere Zeilen; Stationsrekord-Satz nur bei echtem Übertreffen der Zeilen davor
+- Summen: Monat mit 30 von 31 Regen-Werten ohne ★/Pfeil/Vergleich beim Regen, Mittel desselben Monats mit Vergleich
 - Vorlage rendert mit fehlender Böen-Spalte ohne Böen-Kachel; Leerfall Besucher = leerer String
 - Abruf: ungültiger Monat / außerhalb → 400; gültig → HTML identisch zum Erstaufruf desselben Monats
 - Suite, `php -l`, phpcs wie immer grün.
