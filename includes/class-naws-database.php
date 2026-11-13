@@ -1012,7 +1012,7 @@ class NAWS_Database {
         }
 
         // Only select requested fields + join with active modules
-        $allowed_fields = [ 'temp_min', 'temp_max', 'temp_avg', 'pressure_avg', 'rain_sum', 'gust_max', 'humidity_avg', 'wind_avg', 'co2_avg', 'noise_avg' ];
+        $allowed_fields = [ 'temp_min', 'temp_max', 'temp_avg', 'pressure_avg', 'rain_sum', 'gust_max', 'humidity_avg', 'wind_avg', 'co2_avg', 'noise_avg', 'indoor_temp_avg', 'indoor_humidity_avg' ];
         $fields = array_values( array_unique( array_intersect( (array)$args['fields'], $allowed_fields ) ) );
         if ( empty( $fields ) ) $fields = $allowed_fields;
 
