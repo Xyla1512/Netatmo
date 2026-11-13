@@ -15,6 +15,7 @@ class NAWS_Shortcodes {
         'naws_heatmap'        => 'sc_heatmap',
         'naws_records'        => 'sc_records',
         'naws_on_this_day'    => 'sc_on_this_day',
+        'naws_month_review'   => 'sc_month_review',
         'naws_sunpath'        => 'sc_sunpath',
         'naws_windrose'       => 'sc_windrose',
         'naws_sparkline'      => 'sc_sparkline',
@@ -39,7 +40,7 @@ class NAWS_Shortcodes {
     }
 
     private function __construct() {
-        // One wrapper for all eighteen: decode the attributes before a handler
+        // One wrapper for all nineteen: decode the attributes before a handler
         // sees them. Page builders write quotes as &quot;, WordPress passes that
         // through as it is, and sanitize_key() then turns "dewpoint" into
         // quotdewpointquot — the shortcode shows only its fallback.
@@ -116,6 +117,12 @@ class NAWS_Shortcodes {
         wp_register_script( 'naws-radar',
             NAWS_PLUGIN_URL . 'assets/js/radar.js',
             [], NAWS_Helpers::asset_version( 'assets/js/radar.js' ), true );
+
+        // [naws_month_review]: pages between months without a reload. The
+        // block is complete without it (the arrows are ordinary links).
+        wp_register_script( 'naws-month-review',
+            NAWS_PLUGIN_URL . 'assets/js/month-review.js',
+            [], NAWS_Helpers::asset_version( 'assets/js/month-review.js' ), true );
     }
 
     private function enqueue_frontend() {
@@ -357,6 +364,35 @@ class NAWS_Shortcodes {
         ob_start();
         include NAWS_PLUGIN_DIR . 'templates/on-this-day.php';
         return ob_get_clean();
+    }
+
+    // ----------------------------------------------------------------
+    // [naws_month_review month="" years="5" title=""]
+    // One finished month against the same month of earlier years
+    // ----------------------------------------------------------------
+    public function sc_month_review( $atts ) {
+        $this->enqueue_frontend_styles();
+        wp_enqueue_script( 'naws-month-review' );
+
+        $atts = shortcode_atts( [
+            'month' => '',
+            'years' => '5',
+            'title' => '',
+        ], $atts, 'naws_month_review' );
+
+        $atts['years'] = max( 0, min( NAWS_Month_Review::YEARS_MAX, (int) $atts['years'] ) );
+        $atts['title'] = sanitize_text_field( (string) $atts['title'] );
+
+        // A month fixed in the shortcode wins over the address: whoever pins
+        // a month wants to keep it, and gets no paging bar either.
+        $fixed = NAWS_Month_Review::valid_month( $atts['month'] );
+        if ( $fixed !== null ) {
+            return NAWS_Month_Review::render( $atts, $fixed, false );
+        }
+
+        // Read-only paging parameter, validated by its format.
+        $wanted = isset( $_GET['naws_month'] ) ? NAWS_Month_Review::valid_month( sanitize_text_field( wp_unslash( $_GET['naws_month'] ) ) ) : null; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        return NAWS_Month_Review::render( $atts, $wanted, true );
     }
 
     // ----------------------------------------------------------------

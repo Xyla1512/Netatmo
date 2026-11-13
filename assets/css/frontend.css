@@ -64,7 +64,7 @@
    "only light" takes exactly these blocks out of that and nothing else on
    the page; plain "light" is ignored by Chrome (measured 2026-09-09). */
 .naws-wrap, .naws-rec, .naws-otd, .naws-sun, .naws-hm, .naws-hist, .naws-wx,
-.naws-fc-wrap, .naws-wgt, .naws-weather-icon, .naws-sl, .naws-sl-card, .naws-radar {
+.naws-fc-wrap, .naws-wgt, .naws-weather-icon, .naws-sl, .naws-sl-card, .naws-radar, .naws-mr {
   color-scheme: only light;
 }
 
@@ -2152,3 +2152,32 @@
 @media (prefers-reduced-motion: reduce) { .naws-radar-stage { transition: none; } }
 .naws-radar-hint { padding: 8px 12px; border-left: 3px solid var(--naws-radar-forecast, #dd9933); background: var(--naws-radar-bar-bg, #f4fafa); }
 @media (max-width: 480px) { .naws-radar-legend { display: none; } }
+
+/* Month review [naws_month_review]. Tiles like the sparkline tiles; marks and arrows stay neutral on purpose, a record is not good or bad. */
+.naws-mr { font-family: var(--naws-font, inherit); color: var(--naws-text, #427272); }
+.naws-mr .screen-reader-text { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.naws-mr-title { margin: 0 0 8px; color: var(--naws-text-dark, #2d5252); }
+.naws-mr-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 10px; }
+.naws-mr-nav .naws-mr-month { flex: 1 1 auto; text-align: center; font-size: 1.1rem; font-weight: 600; color: var(--naws-text-dark, #2d5252); }
+h3.naws-mr-month { margin: 0 0 10px; font-size: 1.1rem; font-weight: 600; color: var(--naws-text-dark, #2d5252); }
+.naws-mr .naws-mr-step { flex: 0 0 9.5em; font-size: .9rem; color: var(--naws-text-muted, #7aa0a0); text-decoration: none; white-space: nowrap; }
+.naws-mr .naws-mr-next { text-align: right; }
+.naws-mr .naws-mr-step--none { display: block; }
+.naws-mr .naws-mr-step:hover, .naws-mr .naws-mr-step:focus-visible { color: var(--naws-text-dark, #2d5252); text-decoration: underline; background: none; }
+.naws-mr .naws-mr-step:focus-visible { outline: 2px solid var(--naws-text-muted, #7aa0a0); outline-offset: 2px; }
+.naws-mr .naws-mr-head { margin: 0 0 12px; font-size: 1.25rem; line-height: 1.25; color: var(--naws-text-dark, #2d5252); }
+.naws-mr .naws-mr-head:focus { outline: none; }
+.naws-mr-tiles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+.naws-mr-tile { display: flex; flex-direction: column; gap: 2px; padding: 12px 14px 10px; background: var(--naws-surface-2, #f8fafc); border: 1px solid var(--naws-border, #e0eeee); border-radius: var(--naws-radius-sm, 10px); }
+.naws-mr-tile-name { font-size: .78rem; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; color: var(--naws-text-muted, #7aa0a0); }
+.naws-mr-tile-val { margin-top: 2px; font-size: 1.55rem; font-weight: 500; line-height: 1.15; font-variant-numeric: tabular-nums; color: var(--naws-text-dark, #2d5252); }
+.naws-mr-tile-val small { margin-left: .15em; font-size: .85rem; font-weight: 400; color: var(--naws-text-muted, #7aa0a0); }
+.naws-mr-mark { margin-left: .2em; font-size: .8rem; color: var(--naws-text-muted, #7aa0a0); }
+.naws-mr-tile-sub { font-size: .8rem; font-variant-numeric: tabular-nums; color: var(--naws-text-muted, #7aa0a0); }
+.naws-mr-incomplete { font-style: italic; }
+.naws-mr-prev-year { font-size: .8rem; font-variant-numeric: tabular-nums; color: var(--naws-text, #427272); }
+.naws-mr-tile-sub + .naws-mr-prev-year, .naws-mr-tile-val + .naws-mr-prev-year { margin-top: 6px; }
+.naws-mr-notes { list-style: none; margin: 12px 0 0; padding: 0; font-size: .95rem; }
+.naws-mr-notes li { margin: 0 0 4px; }
+@media (max-width: 900px) { .naws-mr-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 480px) { .naws-mr-tiles { grid-template-columns: minmax(0, 1fr); } .naws-mr .naws-mr-step { flex-basis: 2.5em; } .naws-mr .naws-mr-step-text { display: none; } }

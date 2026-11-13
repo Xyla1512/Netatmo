@@ -228,6 +228,32 @@ final class NAWS_Records {
         ] );
     }
 
+    // ── Display ──────────────────────────────────────────────────────────
+
+    /**
+     * Value and unit of a figure in the site's units.
+     *
+     * format_value() already returns three decimals for rain in inches
+     * (26.4 mm -> 1.039 in); the catalogue's one decimal is right for mm
+     * and would round that away, so inches override $decimals.
+     *
+     * @param string $param    Parameter name as get_unit()/format_value() know it.
+     * @param int    $decimals Decimals in the base unit.
+     * @return array{value:string,unit:string}
+     */
+    public static function display_value( string $param, float $value, int $decimals ): array {
+        if ( $param === 'Rain' ) {
+            $options = get_option( 'naws_settings', [] );
+            if ( ( $options['rain_unit'] ?? 'mm' ) === 'in' ) {
+                $decimals = 3;
+            }
+        }
+        return [
+            'value' => number_format_i18n( (float) NAWS_Helpers::format_value( $param, $value ), $decimals ),
+            'unit'  => (string) NAWS_Helpers::get_unit( $param ),
+        ];
+    }
+
     // ── Diagnosis ────────────────────────────────────────────────────────
 
     /**
@@ -247,12 +273,17 @@ final class NAWS_Records {
      * everyone. Visitors get an empty string, as before: the page must not
      * change for them. Each reason is logged once per request.
      *
-     * @param string $shortcode 'naws_records' or 'naws_on_this_day'.
-     * @param string $reason    db_error, no_station, no_rows, unknown or no_hits.
+     * @param string $shortcode 'naws_records', 'naws_on_this_day' or 'naws_month_review'.
+     * @param string $reason    db_error, no_station, no_rows, unknown, no_hits or no_complete_month.
      * @param string $detail    Filled into %s where the label carries one.
      */
     public static function notice( string $shortcode, string $reason, string $detail = '' ): string {
-        $key     = ( $shortcode === 'naws_on_this_day' && $reason === 'no_hits' ) ? 'otd_notice_no_hits' : 'rec_notice_' . $reason;
+        $key = 'rec_notice_' . $reason;
+        if ( $shortcode === 'naws_on_this_day' && $reason === 'no_hits' ) {
+            $key = 'otd_notice_no_hits';
+        } elseif ( $shortcode === 'naws_month_review' && $reason === 'no_complete_month' ) {
+            $key = 'mr_notice_no_complete_month';
+        }
         if ( $reason === 'db_error' && $detail === '' ) {
             $detail = NAWS_Database::last_error();
         }

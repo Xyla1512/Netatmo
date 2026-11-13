@@ -152,6 +152,74 @@ function naws_label( string $key ): string {
         case 'otd_col_rain':                       return _x( 'Rain', 'daily sum', 'xtx-integration-for-netatmo' );
         case 'otd_record':                         return __( 'record for this day', 'xtx-integration-for-netatmo' );
 
+        // Month review (since 2.2.0). %1$s in the headlines is a month name
+        // (or month and year) from wp_date(), so it is already in the site's
+        // language. Plural forms live in naws_label_n() below.
+        case 'mr_head_wettest':
+            /* translators: %1$s: month name, e.g. "October" */
+            return __( 'The wettest %1$s since records began', 'xtx-integration-for-netatmo' );
+        case 'mr_head_driest':
+            /* translators: %1$s: month name, e.g. "October" */
+            return __( 'The driest %1$s since records began', 'xtx-integration-for-netatmo' );
+        case 'mr_head_warmest':
+            /* translators: %1$s: month name, e.g. "October" */
+            return __( 'The warmest %1$s since records began', 'xtx-integration-for-netatmo' );
+        case 'mr_head_coldest':
+            /* translators: %1$s: month name, e.g. "October" */
+            return __( 'The coldest %1$s since records began', 'xtx-integration-for-netatmo' );
+        case 'mr_head_hottest_day':
+            /* translators: 1: month and year, e.g. "October 2026"; 2: month name, e.g. "October" */
+            return __( '%1$s brought the warmest %2$s day since records began', 'xtx-integration-for-netatmo' );
+        case 'mr_head_coldest_night':
+            /* translators: 1: month and year, e.g. "October 2026"; 2: month name, e.g. "October" */
+            return __( '%1$s brought the coldest %2$s night since records began', 'xtx-integration-for-netatmo' );
+        case 'mr_head_gust':
+            /* translators: 1: month and year, e.g. "October 2026"; 2: month name, e.g. "October" */
+            return __( '%1$s brought the strongest %2$s gust since records began', 'xtx-integration-for-netatmo' );
+        case 'mr_head_neutral':
+            /* translators: %1$s: month and year, e.g. "October 2026" */
+            return __( '%1$s in review', 'xtx-integration-for-netatmo' );
+        case 'mr_tile_mean':                       return _x( 'Mean', 'month review tile: mean temperature', 'xtx-integration-for-netatmo' );
+        case 'mr_tile_max':                        return _x( 'Highest', 'month review tile: highest temperature', 'xtx-integration-for-netatmo' );
+        case 'mr_tile_min':                        return _x( 'Lowest', 'month review tile: lowest temperature', 'xtx-integration-for-netatmo' );
+        case 'mr_tile_rain':                       return _x( 'Rain', 'month review tile: rainfall', 'xtx-integration-for-netatmo' );
+        case 'mr_tile_gust':                       return _x( 'Strongest gust', 'month review tile: gust', 'xtx-integration-for-netatmo' );
+        case 'mr_on_date':
+            /* translators: %s: a date, e.g. "October 3" */
+            return __( 'on %s', 'xtx-integration-for-netatmo' );
+        case 'mr_incomplete':
+            /* translators: 1: number of days with readings, 2: number of days in the month */
+            return __( 'incomplete (%1$d of %2$d days)', 'xtx-integration-for-netatmo' );
+        case 'mr_record_sr':                       return __( 'Record since records began', 'xtx-integration-for-netatmo' );
+        case 'mr_up_sr':                           return __( 'More than the average of earlier years', 'xtx-integration-for-netatmo' );
+        case 'mr_down_sr':                         return __( 'Less than the average of earlier years', 'xtx-integration-for-netatmo' );
+        case 'mr_prev_count':
+            /* translators: 1: a year, e.g. "2025"; 2: the count in that year, e.g. "4" */
+            return __( '(%1$s: %2$d)', 'xtx-integration-for-netatmo' );
+        case 'mr_wettest_day':
+            /* translators: 1: a date, e.g. "October 17"; 2: rainfall that day, e.g. "9.8 mm" */
+            return __( 'The most rain fell on %1$s: %2$s', 'xtx-integration-for-netatmo' );
+        case 'mr_station_record_hottest_day':
+            /* translators: 1: a temperature, e.g. "24.0 °C"; 2: a date, e.g. "October 3" */
+            return __( '%1$s on %2$s was also the warmest day since records began.', 'xtx-integration-for-netatmo' );
+        case 'mr_station_record_coldest_night':
+            /* translators: 1: a temperature, e.g. "-1.2 °C"; 2: a date, e.g. "October 28" */
+            return __( '%1$s on %2$s was also the coldest night since records began.', 'xtx-integration-for-netatmo' );
+        case 'mr_station_record_strongest_gust':
+            /* translators: 1: a wind speed, e.g. "86.0 km/h"; 2: a date, e.g. "October 9" */
+            return __( '%1$s on %2$s was also the strongest gust since records began.', 'xtx-integration-for-netatmo' );
+        case 'mr_station_record_wettest_day':
+            /* translators: 1: rainfall, e.g. "39.6 mm"; 2: a date, e.g. "October 17" */
+            return __( '%1$s on %2$s was also the wettest day since records began.', 'xtx-integration-for-netatmo' );
+        case 'mr_nav_prev':
+            /* translators: %s: month and year, e.g. "September 2026" */
+            return __( 'Previous month: %s', 'xtx-integration-for-netatmo' );
+        case 'mr_nav_next':
+            /* translators: %s: month and year, e.g. "November 2026" */
+            return __( 'Next month: %s', 'xtx-integration-for-netatmo' );
+        case 'mr_date_format':                     return _x( 'F j', 'date format for the month review', 'xtx-integration-for-netatmo' );
+        case 'mr_notice_no_complete_month':        return __( 'The month review needs at least one completed month of data.', 'xtx-integration-for-netatmo' );
+
         // Compass directions (since 1.9.12): the codes are the keys, the
         // texts are what a visitor reads. degrees_to_compass() and
         // [naws_windrose] both come here, so the live card and the rose
@@ -406,6 +474,32 @@ function naws_label( string $key ): string {
             return __( 'The rain radar is switched off. Admins can switch it on under Settings → Rain radar. Only you see this note.', 'xtx-integration-for-netatmo' );
         case 'rd_admin_noloc':
             return __( 'The rain radar needs the station coordinates or a forecast location. Only you see this note.', 'xtx-integration-for-netatmo' );
+    }
+
+    return '';
+}
+
+/**
+ * Labels that depend on a count.
+ *
+ * naws_label() returns plain strings, so the singular/plural pairs live here:
+ * one literal _n() per key keeps them extractable.
+ *
+ * @param string $key Label key.
+ * @param int    $n   The count the text is about.
+ * @return string Format string with a %d for the count; '' for an unknown key.
+ */
+function naws_label_n( string $key, int $n ): string {
+    switch ( $key ) {
+        case 'mr_rain_days':
+            /* translators: %d: number of days with rain */
+            return _n( '%d rain day', '%d rain days', $n, 'xtx-integration-for-netatmo' );
+        case 'mr_frost':
+            /* translators: %d: number of frost days */
+            return _n( '%d frost day', '%d frost days', $n, 'xtx-integration-for-netatmo' );
+        case 'mr_summer':
+            /* translators: %d: number of summer days */
+            return _n( '%d summer day', '%d summer days', $n, 'xtx-integration-for-netatmo' );
     }
 
     return '';

@@ -353,6 +353,56 @@ final class NAWS_Month_Review {
         return array_slice( $out, 0, 3 );
     }
 
+
+    // ── Output ───────────────────────────────────────────────────────────
+
+    /** The address parameter's format, also for a fixed month="" attribute. */
+    const MONTH_PATTERN = '/^\d{4}-(0[1-9]|1[0-2])$/';
+
+    /** $value if it is a valid 'YYYY-MM', else null. */
+    public static function valid_month( $value ): ?string {
+        $value = is_string( $value ) ? trim( $value ) : '';
+        return preg_match( self::MONTH_PATTERN, $value ) === 1 ? $value : null;
+    }
+
+    /**
+     * The station's daily rows, the whole record. The only place the
+     * arithmetic above meets WordPress.
+     */
+    public static function rows( array $atts ): array {
+        return NAWS_Records::rows( [ 'period' => 'all' ] );
+    }
+
+    /**
+     * The review as HTML.
+     *
+     * @param array       $atts  [ 'years' => int, 'title' => string ], already cleaned.
+     * @param string|null $month Wanted 'YYYY-MM'; null or unknown means the latest finished month.
+     * @param bool        $nav   Show the paging bar (and the hook for the script).
+     */
+    public static function render( array $atts, ?string $month, bool $nav ): string {
+        $rows = self::rows( $atts );
+        if ( $rows === [] ) {
+            return NAWS_Records::notice( 'naws_month_review', NAWS_Records::empty_reason( [ 'period' => 'all' ] ) );
+        }
+
+        $months = self::months( $rows, wp_date( 'Y-m-d' ) );
+        $ym     = self::resolve_month( (string) $month, $months );
+        if ( $ym === null ) {
+            return NAWS_Records::notice( 'naws_month_review', 'no_complete_month' );
+        }
+
+        $years      = max( 0, min( self::YEARS_MAX, (int) ( $atts['years'] ?? self::YEARS_DEFAULT ) ) );
+        $title      = (string) ( $atts['title'] ?? '' );
+        $cmp        = self::compare( $rows, $ym, $years );
+        $headline   = self::headline( $cmp );
+        $sentences  = self::sentences( $cmp, self::station_records( $rows, $ym ) );
+        $neighbours = self::neighbours( $ym, $months );
+
+        ob_start();
+        include NAWS_PLUGIN_DIR . 'templates/month-review.php';
+        return (string) ob_get_clean();
+    }
     /** The number a tile compares: the scalar or an extreme's value. */
     private static function figure( array $summary, string $kpi ): ?float {
         $v = $summary[ $kpi ];
