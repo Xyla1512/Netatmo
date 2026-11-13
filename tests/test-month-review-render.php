@@ -127,6 +127,10 @@ check( 'September: Zurueck zeigt auf Oktober 2025, Weiter auf Oktober', [ str_co
 $oct_html = review( $rows );
 check( 'Oktober: Zurueck zeigt auf September', str_contains( $oct_html, 'href="/wetter/?naws_month=2026-09"' ), true );
 check( 'aria-label der Pfeile', str_contains( $oct_html, 'aria-label="Previous month: September 2026"' ), true );
+// Franks Wunsch 13.11.: sichtbar ist nur ein Monat - die Leiste zeigt nur Pfeile,
+// die Nachbarmonate stehen nur noch in der Vorlesehilfe (aria-label).
+preg_match( '#<nav class="naws-mr-nav">.*?</nav>#s', $oct_html, $naws_nav );
+check( 'Leiste: nur der eigene Monat sichtbar', substr_count( strip_tags( $naws_nav[0] ?? '' ), '2026' ), 1 );
 
 // Erster Monat: kein Zurueck-Link, Platzhalter.
 check( 'erster Monat: kein Zurueck-Link', str_contains( review( naws_test_rows(), '2024-10' ), 'naws-mr-prev"' ), false );

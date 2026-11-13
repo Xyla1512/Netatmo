@@ -106,14 +106,14 @@ if ( $nav ) {
     <nav class="naws-mr-nav">
       <?php if ( $neighbours['prev'] !== null ) :
           $naws_mr_prev_name = $naws_mr_month( $neighbours['prev'], 'F Y' ); ?>
-        <a class="naws-mr-step naws-mr-prev" href="<?php echo esc_url( add_query_arg( 'naws_month', $neighbours['prev'] ) ); ?>" data-month="prev" aria-label="<?php echo esc_attr( sprintf( naws_label( 'mr_nav_prev' ), $naws_mr_prev_name ) ); ?>"><span aria-hidden="true">&lsaquo;</span> <span class="naws-mr-step-text"><?php echo esc_html( $naws_mr_prev_name ); ?></span></a>
+        <a class="naws-mr-step naws-mr-prev" href="<?php echo esc_url( add_query_arg( 'naws_month', $neighbours['prev'] ) ); ?>" data-month="prev" aria-label="<?php echo esc_attr( sprintf( naws_label( 'mr_nav_prev' ), $naws_mr_prev_name ) ); ?>"><span aria-hidden="true">&lsaquo;</span></a>
       <?php else : ?>
         <span class="naws-mr-step naws-mr-step--none" aria-hidden="true"></span>
       <?php endif; ?>
       <span class="naws-mr-month"><?php echo esc_html( $naws_mr_name_year ); ?></span>
       <?php if ( $neighbours['next'] !== null ) :
           $naws_mr_next_name = $naws_mr_month( $neighbours['next'], 'F Y' ); ?>
-        <a class="naws-mr-step naws-mr-next" href="<?php echo esc_url( add_query_arg( 'naws_month', $neighbours['next'] ) ); ?>" data-month="next" aria-label="<?php echo esc_attr( sprintf( naws_label( 'mr_nav_next' ), $naws_mr_next_name ) ); ?>"><span class="naws-mr-step-text"><?php echo esc_html( $naws_mr_next_name ); ?></span> <span aria-hidden="true">&rsaquo;</span></a>
+        <a class="naws-mr-step naws-mr-next" href="<?php echo esc_url( add_query_arg( 'naws_month', $neighbours['next'] ) ); ?>" data-month="next" aria-label="<?php echo esc_attr( sprintf( naws_label( 'mr_nav_next' ), $naws_mr_next_name ) ); ?>"><span aria-hidden="true">&rsaquo;</span></a>
       <?php else : ?>
         <span class="naws-mr-step naws-mr-step--none" aria-hidden="true"></span>
       <?php endif; ?>
