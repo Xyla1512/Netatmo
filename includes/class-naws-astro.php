@@ -322,10 +322,10 @@ class NAWS_Astro {
         // phase 0.5 → cos(π) = -1   → illum = 100%
         $pct  = round( ( 1 - cos( 2 * M_PI * $phase ) ) / 2 * 100 );
 
-        // Next full moon
-        $days_to_full = ( 0.5 - $phase );
-        if ( $days_to_full < 0 ) $days_to_full += 1.0;
-        $next_full_ts  = intval( $timestamp + $days_to_full * $synodic * 86400 );
+        // Next full moon: the true instant, not the mean one. The mean
+        // synodic month drifts up to ~14 h from the real full moon, which
+        // is what put this row a day away from the supermoon row before.
+        $next_full_ts = self::next_full_moon( $timestamp );
 
         [ $name ] = self::_moon_name( $phase );
 
@@ -336,6 +336,118 @@ class NAWS_Astro {
             'next_full'     => self::format_event( $next_full_ts ),
             'next_full_ts'  => $next_full_ts,
         ];
+    }
+
+    /**
+     * The first true full moon strictly after a moment.
+     *
+     * Every row that names a full moon — the next full moon, the supermoon —
+     * goes through here, so they cannot disagree about the same lunation.
+     *
+     * @param int|null $from_ts Unix timestamp; defaults to time().
+     * @return int              Unix timestamp (UTC) of the full moon.
+     */
+    public static function next_full_moon( ?int $from_ts = null ): int {
+        $from_ts = $from_ts ?? time();
+        $k       = (int) floor( ( $from_ts / 86400.0 + 2440587.5 - 2451550.09766 ) / 29.530588861 ) - 1;
+        do {
+            $ts = self::full_moon_ts( $k );
+            $k++;
+        } while ( $ts <= $from_ts );
+        return $ts;
+    }
+
+    /**
+     * True full moon of lunation $k (Meeus, Astronomical Algorithms, 2nd ed.,
+     * ch. 49): the mean phase at k + 0.5, the periodic corrections for a full
+     * moon and the planetary corrections A1–A14. Meeus gives the error as a
+     * few seconds over several centuries around 2000; the ΔT step below adds
+     * well under a minute.
+     *
+     * Lunation 0 is the one that starts with the new moon of 6 January 2000.
+     *
+     * @param int $k Lunation number.
+     * @return int   Unix timestamp (UTC).
+     */
+    public static function full_moon_ts( int $k ): int {
+        $k  = $k + 0.5;
+        $T  = $k / 1236.85;
+        $T2 = $T * $T;
+        $T3 = $T2 * $T;
+        $T4 = $T3 * $T;
+
+        $jde = 2451550.09766 + 29.530588861 * $k + 0.00015437 * $T2 - 0.000000150 * $T3 + 0.00000000073 * $T4;
+
+        $E  = 1 - 0.002516 * $T - 0.0000074 * $T2;
+        $M  = deg2rad( 2.5534 + 29.10535670 * $k - 0.0000014 * $T2 - 0.00000011 * $T3 );
+        $Mp = deg2rad( 201.5643 + 385.81693528 * $k + 0.0107582 * $T2 + 0.00001238 * $T3 - 0.000000058 * $T4 );
+        $F  = deg2rad( 160.7108 + 390.67050284 * $k - 0.0016118 * $T2 - 0.00000227 * $T3 + 0.000000011 * $T4 );
+        $Om = deg2rad( 124.7746 - 1.56375588 * $k + 0.0020672 * $T2 + 0.00000215 * $T3 );
+
+        $jde += -0.40614 * sin( $Mp )
+            + 0.17302 * $E * sin( $M )
+            + 0.01614 * sin( 2 * $Mp )
+            + 0.01043 * sin( 2 * $F )
+            + 0.00734 * $E * sin( $Mp - $M )
+            - 0.00515 * $E * sin( $Mp + $M )
+            + 0.00209 * $E * $E * sin( 2 * $M )
+            - 0.00111 * sin( $Mp - 2 * $F )
+            - 0.00057 * sin( $Mp + 2 * $F )
+            + 0.00056 * $E * sin( 2 * $Mp + $M )
+            - 0.00042 * sin( 3 * $Mp )
+            + 0.00042 * $E * sin( $M + 2 * $F )
+            + 0.00038 * $E * sin( $M - 2 * $F )
+            - 0.00024 * $E * sin( 2 * $Mp - $M )
+            - 0.00017 * sin( $Om )
+            - 0.00007 * sin( $Mp + 2 * $M )
+            + 0.00004 * sin( 2 * $Mp - 2 * $F )
+            + 0.00004 * sin( 3 * $M )
+            + 0.00003 * sin( $Mp + $M - 2 * $F )
+            + 0.00003 * sin( 2 * $Mp + 2 * $F )
+            - 0.00003 * sin( $Mp + $M + 2 * $F )
+            + 0.00003 * sin( $Mp - $M + 2 * $F )
+            - 0.00002 * sin( $Mp - $M - 2 * $F )
+            - 0.00002 * sin( 3 * $Mp + $M )
+            + 0.00002 * sin( 4 * $Mp );
+
+        // Additional (planetary) corrections A1–A14: [ coefficient, A0, rate ].
+        $planetary = [
+            [ 0.000325, 299.77, 0.107408 ],
+            [ 0.000165, 251.88, 0.016321 ],
+            [ 0.000164, 251.83, 26.651886 ],
+            [ 0.000126, 349.42, 36.412478 ],
+            [ 0.000110, 84.66, 18.206239 ],
+            [ 0.000062, 141.74, 53.303771 ],
+            [ 0.000060, 207.14, 2.453732 ],
+            [ 0.000056, 154.84, 7.306860 ],
+            [ 0.000047, 34.52, 27.261239 ],
+            [ 0.000042, 207.19, 0.121824 ],
+            [ 0.000040, 291.34, 1.844379 ],
+            [ 0.000037, 161.72, 24.198154 ],
+            [ 0.000035, 239.56, 25.513099 ],
+            [ 0.000023, 331.55, 3.592518 ],
+        ];
+        foreach ( $planetary as $i => $p ) {
+            $a = $p[1] + $p[2] * $k;
+            if ( 0 === $i ) {
+                $a -= 0.009173 * $T2; // A1 carries a T² term.
+            }
+            $jde += $p[0] * sin( deg2rad( $a ) );
+        }
+
+        // JDE is Terrestrial Time; Unix time is UTC.
+        $year = 2000 + $k / 12.3685;
+        return (int) round( ( $jde - 2440587.5 ) * 86400 - self::delta_t( $year ) );
+    }
+
+    /**
+     * ΔT = TT − UT in seconds (Espenak & Meeus polynomial for 2005–2050,
+     * used outside that range too — the error there is minutes at worst,
+     * still far below what a dated row on a weather page shows).
+     */
+    private static function delta_t( float $year ): float {
+        $t = $year - 2000;
+        return 62.92 + 0.32217 * $t + 0.005589 * $t * $t;
     }
 
     private static function _moon_name( float $phase ): array {
@@ -469,10 +581,6 @@ class NAWS_Astro {
     // ── Supermoon ────────────────────────────────────────────────────────────
 
     /**
-     * Next supermoon: full moon where distance < 360,000 km (Nolle definition).
-     * Returns [ 'date' => 'DD.MM.YYYY – HH:MM', 'distance_km' => int ] or null.
-     */
-    /**
      * A dated astronomical event, in the site's own date and time format.
      *
      * Both event finders used to hand back 'd.m.Y – H:i' plus the word "Uhr",
@@ -489,92 +597,169 @@ class NAWS_Astro {
         return wp_date( $format, $ts );
     }
 
+    /**
+     * Next supermoon: the first true full moon (see full_moon_ts()) at which
+     * the Moon is closer than 360,000 km. The threshold is the one this
+     * plugin has always used; the distance is now taken at the real full
+     * moon instead of a mean one up to a day off.
+     *
+     * Returns [ 'date' => string, 'ts' => int, 'distance_km' => int ] or null.
+     */
     public static function next_supermoon( ?int $from_ts = null ): ?array {
         $from_ts = $from_ts ?? time();
 
-        // Iterate full moons: synodic = 29.53058770 days
-        // Reference full moon: 2000-01-20 04:41 UTC
-        $ref_full  = 2451563.694444; // JD of reference full moon
-        $synodic   = 29.53058770;
-
-        $jd_now    = 2440587.5 + $from_ts / 86400.0;
-        $n         = ceil( ( $jd_now - $ref_full ) / $synodic );
-
-        for ( $i = 0; $i < 24; $i++ ) { // search up to 2 years
-            $jd_full = $ref_full + ( $n + $i ) * $synodic;
-            if ( $jd_full <= $jd_now ) continue;
-
-            $dist = self::_moon_distance_km( $jd_full );
+        $ts = $from_ts;
+        for ( $i = 0; $i < 25; $i++ ) { // a little over two years
+            $ts   = self::next_full_moon( $ts );
+            $jde  = 2440587.5 + ( $ts + self::delta_t( 1970 + $ts / 31557600.0 ) ) / 86400.0;
+            $dist = self::_moon_distance_km( $jde );
             if ( $dist < 360000 ) {
-                $unix = intval( ( $jd_full - 2440587.5 ) * 86400 );
                 return [
-                    'date'        => self::format_event( $unix ),
-                    'ts'          => $unix,
-                    'distance_km' => intval( $dist ),
+                    'date'        => self::format_event( $ts ),
+                    'ts'          => $ts,
+                    'distance_km' => intval( round( $dist ) ),
                 ];
             }
         }
         return null;
     }
 
-    /** Moon–Earth distance in km at given Julian Day */
+    /**
+     * Moon–Earth distance in km (centre to centre) at a Julian Ephemeris Day.
+     *
+     * Meeus ch. 47, the distance column of table 47.A down to terms of about
+     * 10 km. The first eleven terms alone ran 200–400 km long at perigee,
+     * which is the whole margin a supermoon threshold works with.
+     */
     private static function _moon_distance_km( float $jd ): float {
         $T  = ( $jd - 2451545.0 ) / 36525.0;
+        $E  = 1 - 0.002516 * $T - 0.0000074 * $T * $T;
         $Mm = deg2rad( fmod( 134.9633964 + 477198.8675055 * $T, 360 ) );
         $D  = deg2rad( fmod( 297.8501921 + 445267.1114034 * $T, 360 ) );
         $M  = deg2rad( fmod( 357.5291092 +  35999.0502909 * $T, 360 ) );
         $F  = deg2rad( fmod(  93.2720950 + 483202.0175233 * $T, 360 ) );
 
-        $r = 385000.56
-            - 20905.355 * cos( $Mm )
-            -  3699.111 * cos( 2*$D - $Mm )
-            -  2955.968 * cos( 2*$D )
-            -   569.925 * cos( 2*$Mm )
-            +    48.888 * cos( $M )
-            -    3.149  * cos( 2*$F )
-            +  246.158  * cos( 2*$D - 2*$Mm )
-            -  152.138  * cos( 2*$D - $M - $Mm )
-            -  170.733  * cos( 2*$D + $Mm )
-            -  204.586  * cos( 2*$D - $M )
-            -   129.620 * cos( $Mm - $M );
+        // [ D, M, M', F, coefficient in km ]
+        $terms = [
+            [ 0,  0,  1,  0, -20905.355 ],
+            [ 2,  0, -1,  0,  -3699.111 ],
+            [ 2,  0,  0,  0,  -2955.968 ],
+            [ 0,  0,  2,  0,   -569.925 ],
+            [ 0,  1,  0,  0,     48.888 ],
+            [ 0,  0,  0,  2,     -3.149 ],
+            [ 2,  0, -2,  0,    246.158 ],
+            [ 2, -1, -1,  0,   -152.138 ],
+            [ 2,  0,  1,  0,   -170.733 ],
+            [ 2, -1,  0,  0,   -204.586 ],
+            [ 0,  1, -1,  0,   -129.620 ],
+            [ 1,  0,  0,  0,    108.743 ],
+            [ 0,  1,  1,  0,    104.755 ],
+            [ 2,  0,  0, -2,     10.321 ],
+            [ 0,  0,  1, -2,     79.661 ],
+            [ 4,  0, -1,  0,    -34.782 ],
+            [ 0,  0,  3,  0,    -23.210 ],
+            [ 4,  0, -2,  0,    -21.636 ],
+            [ 2,  1, -1,  0,     24.208 ],
+            [ 2,  1,  0,  0,     30.824 ],
+            [ 1,  0, -1,  0,     -8.379 ],
+            [ 1,  1,  0,  0,    -16.675 ],
+            [ 2, -1,  1,  0,    -12.831 ],
+            [ 2,  0,  2,  0,    -10.445 ],
+            [ 4,  0,  0,  0,    -11.650 ],
+            [ 2,  0, -3,  0,     14.403 ],
+        ];
 
+        $r = 385000.56;
+        foreach ( $terms as $t ) {
+            $arg = $t[0] * $D + $t[1] * $M + $t[2] * $Mm + $t[3] * $F;
+            $e   = 0 === $t[1] ? 1.0 : ( 1 === abs( $t[1] ) ? $E : $E * $E );
+            $r  += $t[4] * $e * cos( $arg );
+        }
         return $r;
     }
 
     // ── Lunar Eclipse ────────────────────────────────────────────────────────
 
     /**
-     * Next lunar eclipse (penumbral, partial or total).
-     * Returns [ 'date' => string, 'type' => string ] or null.
+     * Lunar eclipses 2024–2040 from NASA's Five Millennium Canon of Lunar
+     * Eclipses (Espenak & Meeus): time of greatest eclipse in UTC and type.
      *
-     * Algorithm: at each full moon, check if Moon is close enough to ecliptic
-     * to pass through Earth's shadow (umbra/penumbra).
+     * A table, not a calculation: the old classifier guessed the type from
+     * the Moon's latitude at a mean full moon and invented total eclipses
+     * that do not happen. Every entry was checked against Meeus ch. 54 (all
+     * within two minutes, same type, none missing); tests/test-moon.php
+     * checks each against full_moon_ts(). When the table runs out, there is
+     * simply no eclipse row.
+     *
+     * @return array<int, array{ts: int, type: string}> Sorted by time.
+     */
+    public static function lunar_eclipses(): array {
+        $canon = [
+            '2024-03-25 07:13' => 'penumbral',
+            '2024-09-18 02:44' => 'partial',
+            '2025-03-14 06:59' => 'total',
+            '2025-09-07 18:12' => 'total',
+            '2026-03-03 11:34' => 'total',
+            '2026-08-28 04:14' => 'partial',
+            '2027-02-20 23:14' => 'penumbral',
+            '2027-07-18 16:04' => 'penumbral',
+            '2027-08-17 07:14' => 'penumbral',
+            '2028-01-12 04:14' => 'partial',
+            '2028-07-06 18:20' => 'partial',
+            '2028-12-31 16:53' => 'total',
+            '2029-06-26 03:23' => 'total',
+            '2029-12-20 22:43' => 'total',
+            '2030-06-15 18:34' => 'partial',
+            '2030-12-09 22:28' => 'penumbral',
+            '2031-05-07 03:52' => 'penumbral',
+            '2031-06-05 11:45' => 'penumbral',
+            '2031-10-30 07:46' => 'penumbral',
+            '2032-04-25 15:14' => 'total',
+            '2032-10-18 19:03' => 'total',
+            '2033-04-14 19:13' => 'total',
+            '2033-10-08 10:56' => 'total',
+            '2034-04-03 19:06' => 'penumbral',
+            '2034-09-28 02:47' => 'partial',
+            '2035-02-22 09:05' => 'penumbral',
+            '2035-08-19 01:12' => 'partial',
+            '2036-02-11 22:13' => 'total',
+            '2036-08-07 02:52' => 'total',
+            '2037-01-31 14:01' => 'total',
+            '2037-07-27 04:09' => 'partial',
+            '2038-01-21 03:49' => 'penumbral',
+            '2038-06-17 02:45' => 'penumbral',
+            '2038-07-16 11:35' => 'penumbral',
+            '2038-12-11 17:45' => 'penumbral',
+            '2039-06-06 18:54' => 'partial',
+            '2039-11-30 16:56' => 'partial',
+            '2040-05-26 11:46' => 'total',
+            '2040-11-18 19:04' => 'total',
+        ];
+
+        $out = [];
+        foreach ( $canon as $when => $type ) {
+            $out[] = [
+                'ts'   => gmmktime( (int) substr( $when, 11, 2 ), (int) substr( $when, 14, 2 ), 0, (int) substr( $when, 5, 2 ), (int) substr( $when, 8, 2 ), (int) substr( $when, 0, 4 ) ),
+                'type' => $type,
+            ];
+        }
+        return $out;
+    }
+
+    /**
+     * Next lunar eclipse (penumbral, partial or total) after a moment.
+     * Returns [ 'date' => string, 'type' => string, 'ts' => int ] or null
+     * once the table has run out.
      */
     public static function next_lunar_eclipse( ?int $from_ts = null ): ?array {
-        $from_ts  = $from_ts ?? time();
+        $from_ts = $from_ts ?? time();
 
-        $ref_full = 2451563.694444;
-        $synodic  = 29.53058770;
-        $jd_now   = 2440587.5 + $from_ts / 86400.0;
-        $n        = ceil( ( $jd_now - $ref_full ) / $synodic );
-
-        for ( $i = 0; $i < 48; $i++ ) {
-            $jd_full = $ref_full + ( $n + $i ) * $synodic;
-            if ( $jd_full <= $jd_now ) continue;
-
-            $T   = ( $jd_full - 2451545.0 ) / 36525.0;
-            $F   = fmod( 93.2720950 + 483202.0175233 * $T, 360 );
-            // F is argument of latitude – eclipse possible when |sin(F)| is small
-            $sinF = abs( sin( deg2rad( $F ) ) );
-
-            // Penumbral limit: sinF < 0.36, Umbral/partial: sinF < 0.26, Total: sinF < 0.09
-            if ( $sinF < 0.36 ) {
-                $type = $sinF < 0.09 ? 'total' : ( $sinF < 0.26 ? 'partial' : 'penumbral' );
-                $unix = intval( ( $jd_full - 2440587.5 ) * 86400 );
+        foreach ( self::lunar_eclipses() as $ecl ) {
+            if ( $ecl['ts'] > $from_ts ) {
                 return [
-                    'date'  => self::format_event( $unix ),
-                    'type'  => $type,
-                    'ts'    => $unix,
+                    'date' => self::format_event( $ecl['ts'] ),
+                    'type' => $ecl['type'],
+                    'ts'   => $ecl['ts'],
                 ];
             }
         }
