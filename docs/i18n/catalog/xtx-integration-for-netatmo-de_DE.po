@@ -4398,7 +4398,7 @@ msgstr "%s Uhr"
 #: includes/class-naws-helpers.php:809
 msgctxt "co2_fair"
 msgid "Fair"
-msgstr "Befriedigend"
+msgstr "Erhöht"
 
 #: includes/class-naws-labels.php:267
 msgctxt "compass direction"
