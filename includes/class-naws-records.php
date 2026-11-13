@@ -178,8 +178,11 @@ final class NAWS_Records {
     }
 
     /**
-     * First day with data and the number of days that carry at least one
-     * of the five columns — for the footer under the tiles.
+     * First day with a temperature and the number of days that carry one —
+     * for the footer under the tiles. Since 2.2.0 rain or gust alone does
+     * not count: a station whose rain gauge reported weeks before the
+     * outdoor module said "since" a date the heatmap (temperature) could
+     * not show.
      *
      * $rows must already be ascending by day_date, as get_daily_summaries()
      * returns them, for 'first' to actually be the first day.
@@ -190,7 +193,7 @@ final class NAWS_Records {
         $first = null;
         $days  = 0;
         foreach ( $rows as $row ) {
-            foreach ( [ 'temp_min', 'temp_max', 'temp_avg', 'rain_sum', 'gust_max' ] as $field ) {
+            foreach ( [ 'temp_min', 'temp_max', 'temp_avg' ] as $field ) {
                 if ( isset( $row[ $field ] ) ) {
                     $days++;
                     $first = $first ?? (string) $row['day_date'];

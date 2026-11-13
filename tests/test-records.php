@@ -252,13 +252,17 @@ $GLOBALS['naws_test_options']['naws_settings']['temperature_unit'] = 'F';
 check( '10 K in Fahrenheit sind 18, ohne Versatz', NAWS_Records::delta_parts( 10.0 ), [ 'value' => 18.0, 'unit' => '°F' ] );
 $GLOBALS['naws_test_options']['naws_settings']['temperature_unit'] = 'C';
 
+// Seit 2.2.0 zaehlen nur Tage mit Temperatur — wie die Heatmap. Auf der
+// Seite kamen vom 28.03. bis 24.04.2024 nur Regen und Wind an; "Seit
+// 28. Maerz" passte nicht zur Heatmap, die erst am 25.04. beginnt.
 $cov = NAWS_Records::coverage( [
-    [ 'day_date' => '2024-03-28', 'pressure_avg' => 1010.0 ],                // zaehlt nicht: keine der fuenf Spalten
-    [ 'day_date' => '2024-03-29', 'temp_avg' => 5.0 ],
-    [ 'day_date' => '2024-03-30', 'rain_sum' => 0.0 ],
+    [ 'day_date' => '2024-03-28', 'pressure_avg' => 1010.0 ],                // zaehlt nicht
+    [ 'day_date' => '2024-03-29', 'rain_sum' => 0.4, 'gust_max' => 30.0 ],  // nur Regen/Wind: zaehlt nicht
+    [ 'day_date' => '2024-04-25', 'temp_avg' => 5.0 ],
+    [ 'day_date' => '2024-04-26', 'temp_max' => 9.0, 'rain_sum' => 0.0 ],
 ] );
-check( 'Abdeckung: erster Tag mit Daten', $cov['first'], '2024-03-29' );
-check( 'Abdeckung: zwei Tage',            $cov['days'], 2 );
+check( 'Abdeckung: erster Tag mit Temperatur', $cov['first'], '2024-04-25' );
+check( 'Abdeckung: zwei Tage mit Temperatur',  $cov['days'], 2 );
 check( 'Abdeckung ohne Zeilen',           NAWS_Records::coverage( [] ), [ 'first' => null, 'days' => 0 ] );
 
 echo "\n" . str_repeat( '-', 74 ) . "\n";
