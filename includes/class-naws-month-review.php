@@ -159,6 +159,233 @@ final class NAWS_Month_Review {
         ];
     }
 
+    /** Directions in which a month counts as a record, per tile figure. */
+    const RECORD_DIRS = [
+        'mean' => [ 'high', 'low' ],
+        'max'  => [ 'high' ],
+        'min'  => [ 'low' ],
+        'rain' => [ 'high', 'low' ],
+        'gust' => [ 'high' ],
+    ];
+
+    /**
+     * One month against the same month of earlier years.
+     *
+     * Only rows up to the end of $ym count ("since records began" means up
+     * to that month). 'previous' lists at most $years earlier years, newest
+     * first, that have rows for the month -- also incomplete ones, which the
+     * template marks. 'record' is high|low when the figure beats every
+     * complete earlier year (all of them, whatever $years is) strictly.
+     * 'trend' is up|down against the mean of the complete years shown, and
+     * only where there is no record. $years = 0 switches all of it off.
+     *
+     * @param string $ym 'YYYY-MM'.
+     */
+    public static function compare( array $rows, string $ym, int $years ): array {
+        $years = max( 0, $years );
+        $year  = (int) substr( $ym, 0, 4 );
+        $name  = substr( $ym, 5, 2 );
+
+        $earlier = [];
+        foreach ( $rows as $row ) {
+            $date = (string) ( $row['day_date'] ?? '' );
+            if ( substr( $date, 5, 2 ) !== $name ) {
+                continue;
+            }
+            $y = (int) substr( $date, 0, 4 );
+            if ( $y < $year ) {
+                $earlier[ $y ] = true;
+            }
+        }
+        krsort( $earlier, SORT_NUMERIC );
+
+        $all = [];
+        foreach ( array_keys( $earlier ) as $y ) {
+            $all[ sprintf( '%04d', $y ) ] = self::summary( $rows, sprintf( '%04d-%s', $y, $name ) );
+        }
+
+        $current  = self::summary( $rows, $ym );
+        $previous = $years > 0 ? array_slice( $all, 0, $years, true ) : [];
+
+        $record = [];
+        $trend  = [];
+        foreach ( self::RECORD_DIRS as $kpi => $dirs ) {
+            $record[ $kpi ] = null;
+            $trend[ $kpi ]  = null;
+            $now            = self::figure( $current, $kpi );
+            if ( $years === 0 || $now === null || ! $current['complete'][ $kpi ] ) {
+                continue;
+            }
+
+            $others = self::complete_figures( $all, $kpi );
+            if ( $others !== [] ) {
+                if ( in_array( 'high', $dirs, true ) && round( $now - max( $others ), 6 ) > 0 ) {
+                    $record[ $kpi ] = 'high';
+                } elseif ( in_array( 'low', $dirs, true ) && round( $now - min( $others ), 6 ) < 0 ) {
+                    $record[ $kpi ] = 'low';
+                }
+            }
+            if ( $record[ $kpi ] !== null ) {
+                continue;
+            }
+
+            $shown = self::complete_figures( $previous, $kpi );
+            if ( $shown === [] ) {
+                continue;
+            }
+            $avg   = array_sum( $shown ) / count( $shown );
+            $delta = round( $now - $avg, 6 );
+            if ( abs( $delta ) >= round( self::trend_limit( $kpi, $avg ), 6 ) ) {
+                $trend[ $kpi ] = $delta > 0 ? 'up' : 'down';
+            }
+        }
+
+        return [ 'current' => $current, 'previous' => $previous, 'record' => $record, 'trend' => $trend ];
+    }
+
+    /**
+     * Whether the month beats the station's whole history before it.
+     *
+     * Strictly: a tie is no record. Without rows before the month nothing
+     * can be a record.
+     *
+     * @param string $ym 'YYYY-MM'.
+     * @return array{hottest_day:bool,coldest_night:bool,strongest_gust:bool,wettest_day:bool}
+     */
+    public static function station_records( array $rows, string $ym ): array {
+        $out    = [ 'hottest_day' => false, 'coldest_night' => false, 'strongest_gust' => false, 'wettest_day' => false ];
+        $before = [];
+        foreach ( $rows as $row ) {
+            if ( (string) ( $row['day_date'] ?? '' ) < $ym . '-01' ) {
+                $before[] = $row;
+            }
+        }
+        if ( $before === [] ) {
+            return $out;
+        }
+
+        $month = self::summary( $rows, $ym );
+        $map   = [
+            'hottest_day'    => [ 'max', 'high' ],
+            'coldest_night'  => [ 'min', 'low' ],
+            'strongest_gust' => [ 'gust', 'high' ],
+            'wettest_day'    => [ 'wettest_day', 'high' ],
+        ];
+        foreach ( $map as $key => $spec ) {
+            $now  = $month[ $spec[0] ];
+            $best = NAWS_Records::compute( $before, $key );
+            if ( $now === null || $best === null ) {
+                continue;
+            }
+            $diff        = round( (float) $now['value'] - (float) $best['value'], 6 );
+            $out[ $key ] = $spec[1] === 'high' ? $diff > 0 : $diff < 0;
+        }
+        return $out;
+    }
+
+    /**
+     * The one headline sentence: the first record that applies, else neutral.
+     *
+     * @return array{key:string,args:array}
+     */
+    public static function headline( array $cmp ): array {
+        $rec   = $cmp['record'];
+        $rules = [
+            [ 'rain', 'high', 'mr_head_wettest' ],
+            [ 'rain', 'low', 'mr_head_driest' ],
+            [ 'mean', 'high', 'mr_head_warmest' ],
+            [ 'mean', 'low', 'mr_head_coldest' ],
+            [ 'max', 'high', 'mr_head_hottest_day' ],
+            [ 'min', 'low', 'mr_head_coldest_night' ],
+            [ 'gust', 'high', 'mr_head_gust' ],
+        ];
+        $key = 'mr_head_neutral';
+        foreach ( $rules as $rule ) {
+            if ( ( $rec[ $rule[0] ] ?? null ) === $rule[1] ) {
+                $key = $rule[2];
+                break;
+            }
+        }
+        return [ 'key' => $key, 'args' => [ 'month' => (string) $cmp['current']['ym'] ] ];
+    }
+
+    /**
+     * Up to three supporting sentences, in a fixed order: frost days, summer
+     * days, wettest day, the first station record that applies.
+     *
+     * @param array $station Result of station_records().
+     * @return array<int,array{key:string,args:array}>
+     */
+    public static function sentences( array $cmp, array $station ): array {
+        $cur = $cmp['current'];
+        $out = [];
+
+        foreach ( [ 'frost_days' => 'mr_frost', 'summer_days' => 'mr_summer' ] as $field => $label ) {
+            $n = $cur[ $field ];
+            if ( $n === null || $n <= 0 || ! $cur['complete'][ $field ] ) {
+                continue;
+            }
+            $prev      = null;
+            $prev_year = null;
+            foreach ( $cmp['previous'] as $y => $summary ) {
+                if ( $summary['complete'][ $field ] && $summary[ $field ] !== null ) {
+                    $prev      = (int) $summary[ $field ];
+                    $prev_year = (string) $y;
+                    break;
+                }
+            }
+            $out[] = [ 'key' => $label, 'args' => [ 'n' => (int) $n, 'prev' => $prev, 'prev_year' => $prev_year ] ];
+        }
+
+        $wet = $cur['wettest_day'];
+        if ( $wet !== null && $wet['value'] >= 1.0 ) {
+            $out[] = [ 'key' => 'mr_wettest_day', 'args' => [ 'date' => $wet['date'], 'value' => $wet['value'] ] ];
+        }
+
+        $fields = [ 'hottest_day' => 'max', 'coldest_night' => 'min', 'strongest_gust' => 'gust', 'wettest_day' => 'wettest_day' ];
+        foreach ( $fields as $key => $field ) {
+            if ( ! empty( $station[ $key ] ) && $cur[ $field ] !== null ) {
+                $out[] = [ 'key' => 'mr_station_record_' . $key, 'args' => [ 'date' => $cur[ $field ]['date'], 'value' => $cur[ $field ]['value'] ] ];
+                break;
+            }
+        }
+
+        return array_slice( $out, 0, 3 );
+    }
+
+    /** The number a tile compares: the scalar or an extreme's value. */
+    private static function figure( array $summary, string $kpi ): ?float {
+        $v = $summary[ $kpi ];
+        if ( is_array( $v ) ) {
+            $v = $v['value'];
+        }
+        return $v === null ? null : (float) $v;
+    }
+
+    /** The figure of every summary that is complete for it. */
+    private static function complete_figures( array $summaries, string $kpi ): array {
+        $out = [];
+        foreach ( $summaries as $summary ) {
+            $v = self::figure( $summary, $kpi );
+            if ( $v !== null && $summary['complete'][ $kpi ] ) {
+                $out[] = $v;
+            }
+        }
+        return $out;
+    }
+
+    /** How far a figure must move from the comparison value to count as a trend. */
+    private static function trend_limit( string $kpi, float $avg ): float {
+        switch ( $kpi ) {
+            case 'rain':
+                return max( self::TREND_RAIN_MM, self::TREND_RAIN_PCT * $avg );
+            case 'gust':
+                return self::TREND_GUST;
+            default:
+                return self::TREND_TEMP;
+        }
+    }
+
     // ── Helpers ──────────────────────────────────────────────────────────
 
     /** Strict comparison, rows in date order: a tie goes to the earlier day. */
