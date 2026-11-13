@@ -293,6 +293,44 @@ $value_params = [
         </div>
     </div>
 
+    <div class="naws-sc-card naws-cmp-builder">
+        <h3><code>[naws_compare]</code></h3>
+        <p><?php esc_html_e( 'Two daily series from any modules in one chart over months and years — indoor against outdoor humidity, one room against another, temperature against rain. Values come from the daily summary, one point per day; a gap stays a gap. Two units get an axis each. Pick the series below, copy the shortcode, and check the preview.', 'xtx-integration-for-netatmo' ); ?></p>
+        <script type="application/json" id="naws-cmp-catalogue"><?php echo wp_json_encode( NAWS_Compare::catalogue_for_admin(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON with < > & hex-escaped, read by admin.js ?></script>
+        <div class="naws-cmp-form">
+            <?php foreach ( [ 'a' => __( 'Series A', 'xtx-integration-for-netatmo' ), 'b' => __( 'Series B', 'xtx-integration-for-netatmo' ) ] as $naws_cmp_key => $naws_cmp_label ) : ?>
+            <div class="naws-cmp-row" data-series="<?php echo esc_attr( $naws_cmp_key ); ?>">
+                <span class="naws-cmp-row-label"><?php echo esc_html( $naws_cmp_label ); ?></span>
+                <label><span class="screen-reader-text"><?php esc_html_e( 'Module', 'xtx-integration-for-netatmo' ); ?></span><select class="naws-cmp-module"></select></label>
+                <label><span class="screen-reader-text"><?php esc_html_e( 'Quantity', 'xtx-integration-for-netatmo' ); ?></span><select class="naws-cmp-qty"></select></label>
+                <?php if ( $naws_cmp_key === 'b' ) : ?>
+                <label class="naws-cmp-none"><input type="checkbox" class="naws-cmp-b-off"> <?php esc_html_e( 'no second series', 'xtx-integration-for-netatmo' ); ?></label>
+                <?php endif; ?>
+            </div>
+            <?php endforeach; ?>
+            <div class="naws-cmp-row">
+                <span class="naws-cmp-row-label"><?php esc_html_e( 'Period', 'xtx-integration-for-netatmo' ); ?></span>
+                <label><input type="radio" name="naws-cmp-period" value="all" checked> <?php esc_html_e( 'everything recorded', 'xtx-integration-for-netatmo' ); ?></label>
+                <label><input type="radio" name="naws-cmp-period" value="from"> <?php esc_html_e( 'from', 'xtx-integration-for-netatmo' ); ?> <input type="month" class="naws-cmp-from"></label>
+                <label><input type="radio" name="naws-cmp-period" value="months"> <?php esc_html_e( 'the last', 'xtx-integration-for-netatmo' ); ?> <input type="number" class="naws-cmp-months small-text" min="1" max="120" value="24"> <?php esc_html_e( 'months', 'xtx-integration-for-netatmo' ); ?></label>
+            </div>
+            <div class="naws-cmp-row">
+                <label><span class="naws-cmp-row-label"><?php esc_html_e( 'Title', 'xtx-integration-for-netatmo' ); ?></span><input type="text" class="naws-cmp-title-in regular-text"></label>
+                <label><span class="naws-cmp-row-label"><?php esc_html_e( 'Height', 'xtx-integration-for-netatmo' ); ?></span><input type="number" class="naws-cmp-height small-text" min="200" max="900" value="360"> px</label>
+            </div>
+        </div>
+        <div class="naws-copy-wrap"><pre class="naws-cmp-code">[naws_compare]</pre><button class="naws-copy-btn naws-cmp-copy" data-copy='[naws_compare]'><?php echo esc_html( _x( 'Copy', 'sc_copy', 'xtx-integration-for-netatmo' ) ); ?></button></div>
+        <div class="naws-cmp-preview" aria-live="polite"></div>
+        <table class="naws-attr-table" style="margin-top:10px">
+            <tr><th><?php esc_html_e( 'Attribute', 'xtx-integration-for-netatmo' ); ?></th><th><?php esc_html_e( 'Description', 'xtx-integration-for-netatmo' ); ?></th><th><?php esc_html_e( 'Default', 'xtx-integration-for-netatmo' ); ?></th></tr>
+            <tr><td><code>a</code>, <code>b</code></td><td><?php esc_html_e( 'The two series as module:quantity. b="" draws one series only.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">indoor:humidity, outdoor:humidity</span></td></tr>
+            <tr><td><code>from</code>, <code>to</code></td><td><?php esc_html_e( 'Period as YYYY-MM or YYYY-MM-DD', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php esc_html_e( 'everything recorded', 'xtx-integration-for-netatmo' ); ?></span></td></tr>
+            <tr><td><code>months</code></td><td><?php esc_html_e( 'Instead of from: the last 1 to 120 months', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">—</span></td></tr>
+            <tr><td><code>title</code></td><td><?php esc_html_e( 'Optional heading above the chart', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php esc_html_e( 'none', 'xtx-integration-for-netatmo' ); ?></span></td></tr>
+            <tr><td><code>height</code></td><td><?php esc_html_e( 'Chart height in pixels, 200 to 900', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">360</span></td></tr>
+        </table>
+    </div>
+
     <div class="naws-sc-card">
         <h3><code>[naws_sunpath]</code></h3>
         <p><?php esc_html_e( 'The sun on its arc over the station: sunrise, solar noon and sunset, the part of the day already travelled, and the sun where it stands. Below it the day length, the change since yesterday, and the year’s longest and shortest day. Computed from the station’s coordinates. No script: the sun stands where it stood when the page was built, so a page cache shows it until the cache is refreshed.', 'xtx-integration-for-netatmo' ); ?></p>

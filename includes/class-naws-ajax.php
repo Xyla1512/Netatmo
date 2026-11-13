@@ -51,6 +51,9 @@ class NAWS_Ajax {
         add_action( 'wp_ajax_naws_get_month_review',        [ $this, 'get_month_review' ] );
         add_action( 'wp_ajax_nopriv_naws_get_month_review', [ $this, 'get_month_review' ] );
 
+        // [naws_compare] builder on the Shortcodes page: admins only.
+        add_action( 'wp_ajax_naws_compare_preview',         [ $this, 'compare_preview' ] );
+
         // Admin: trigger daily summary manually
         add_action( 'wp_ajax_naws_run_daily_summary',      [ $this, 'run_daily_summary' ] );
     }
@@ -727,6 +730,26 @@ class NAWS_Ajax {
         ] );
     }
 
+    /**
+     * The live preview of the [naws_compare] builder: the same output the
+     * shortcode gives, without the daily-summary cache so that trying out
+     * combinations leaves no transients behind.
+     */
+    public function compare_preview() {
+        check_ajax_referer( 'naws_admin_nonce', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( [ 'message' => 'Unauthorized.' ], 403 );
+            return;
+        }
+        $atts = [];
+        foreach ( [ 'a', 'b', 'from', 'to', 'months', 'title', 'height' ] as $key ) {
+            $atts[ $key ] = isset( $_POST[ $key ] ) && is_string( $_POST[ $key ] ) ? sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) : '';
+        }
+        if ( $atts['height'] === '' ) {
+            $atts['height'] = '360';
+        }
+        wp_send_json_success( [ 'html' => NAWS_Compare::render( $atts, true ) ] );
+    }
     /**
      * One finished month of [naws_month_review], for the paging arrows.
      *

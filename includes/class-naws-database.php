@@ -1198,6 +1198,27 @@ class NAWS_Database {
         return $wpdb->get_row( "SELECT MIN(recorded_at) AS date_begin, MAX(recorded_at) AS date_end FROM {$r} {$where}", ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table from constant; $where is either empty or wpdb->prepare()'d
     }
 
+    /**
+     * How many days each column of the daily summary carries, per row
+     * (module_id), plus '_days' for the row's total. One grouped query for
+     * the [naws_compare] builder, admin only.
+     *
+     * @return array<string, array<string, int>>
+     */
+    public static function daily_coverage(): array {
+        global $wpdb;
+        $t    = $wpdb->prefix . NAWS_TABLE_DAILY;
+        $cols = [ 'temp_avg', 'temp_min', 'temp_max', 'humidity_avg', 'indoor_temp_avg', 'indoor_humidity_avg', 'co2_avg', 'noise_avg', 'pressure_avg', 'rain_sum', 'wind_avg', 'gust_max' ];
+        $sel  = implode( ', ', array_map( static fn( $c ) => "COUNT({$c}) AS {$c}", $cols ) );
+        $rows = $wpdb->get_results( "SELECT module_id, COUNT(*) AS _days, {$sel} FROM {$t} GROUP BY module_id", ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table from constant; column names from the fixed list above
+        $out  = [];
+        foreach ( (array) $rows as $r ) {
+            $id = (string) $r['module_id'];
+            unset( $r['module_id'] );
+            $out[ $id ] = array_map( 'intval', $r );
+        }
+        return $out;
+    }
     public static function get_daily_data_range( $module_id = null ) {
         global $wpdb;
         $t     = $wpdb->prefix . NAWS_TABLE_DAILY;

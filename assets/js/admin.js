@@ -126,4 +126,128 @@
         setTimeout(() => notice.fadeOut(() => notice.remove()), 5000);
     }
 
+
+    /*
+     * [naws_compare] builder on the Shortcodes page: two module/quantity pickers,
+     * the period, title and height turn into a shortcode to copy, and a preview
+     * drawn by compare-boot.js (window.NAWS_compareInit) from the same HTML the
+     * shortcode gives. Since 2.2.0.
+     */
+    (function () {
+        'use strict';
+        var root = document.querySelector('.naws-cmp-builder');
+        var catEl = document.getElementById('naws-cmp-catalogue');
+        if (!root || !catEl || typeof nawsAdmin === 'undefined') { return; }
+        var cat;
+        try { cat = JSON.parse(catEl.textContent) || []; } catch (e) { return; }
+        if (!cat.length) { return; }
+        var S = nawsAdmin.strings || {};
+        var code = root.querySelector('.naws-cmp-code');
+        var copy = root.querySelector('.naws-cmp-copy');
+        var preview = root.querySelector('.naws-cmp-preview');
+        var bOff = root.querySelector('.naws-cmp-b-off');
+        var timer = null;
+        var seq = 0;
+
+        function rowOf(key) { return root.querySelector('.naws-cmp-row[data-series="' + key + '"]'); }
+        function mod(ref) { for (var i = 0; i < cat.length; i++) { if (cat[i].ref === ref) { return cat[i]; } } return null; }
+
+        function fillQty(key, wanted) {
+            var row = rowOf(key);
+            var m = mod(row.querySelector('.naws-cmp-module').value);
+            var sel = row.querySelector('.naws-cmp-qty');
+            sel.innerHTML = '';
+            if (!m) { return; }
+            var picked = false;
+            m.qtys.forEach(function (q) {
+                var o = document.createElement('option');
+                o.value = q.qty;
+                o.textContent = q.label + (q.state === 'sparse' ? ' (' + (S.cmp_sparse || 'patchy') + ')' : q.state === 'empty' ? ' (' + (S.cmp_empty || 'no data') + ')' : '');
+                o.disabled = q.state === 'empty';
+                if (!picked && !o.disabled && (wanted === undefined || q.qty === wanted)) { o.selected = true; picked = true; }
+                sel.appendChild(o);
+            });
+            if (!picked) {
+                var first = sel.querySelector('option:not([disabled])');
+                if (first) { first.selected = true; }
+            }
+        }
+
+        function fillModules(key, ref, qty) {
+            var sel = rowOf(key).querySelector('.naws-cmp-module');
+            cat.forEach(function (m) {
+                var o = document.createElement('option');
+                o.value = m.ref;
+                o.textContent = m.name;
+                sel.appendChild(o);
+            });
+            if (mod(ref)) { sel.value = ref; }
+            fillQty(key, qty);
+        }
+
+        function spec(key) {
+            var row = rowOf(key);
+            return row.querySelector('.naws-cmp-module').value + ':' + row.querySelector('.naws-cmp-qty').value;
+        }
+
+        function atts() {
+            var period = (root.querySelector('input[name="naws-cmp-period"]:checked') || {}).value || 'all';
+            var a = { a: spec('a'), b: bOff.checked ? '' : spec('b') };
+            var from = root.querySelector('.naws-cmp-from').value;
+            var months = parseInt(root.querySelector('.naws-cmp-months').value, 10);
+            if (period === 'from' && /^\d{4}-\d{2}$/.test(from)) { a.from = from; }
+            if (period === 'months' && months > 0) { a.months = String(Math.min(120, months)); }
+            var title = root.querySelector('.naws-cmp-title-in').value.trim();
+            if (title !== '') { a.title = title; }
+            var height = parseInt(root.querySelector('.naws-cmp-height').value, 10);
+            if (height && height !== 360) { a.height = String(Math.max(200, Math.min(900, height))); }
+            return a;
+        }
+
+        function shortcode(a) {
+            var out = '[naws_compare';
+            Object.keys(a).forEach(function (k) { out += ' ' + k + '="' + String(a[k]).replace(/"/g, '') + '"'; });
+            return out + ']';
+        }
+
+        function refreshPreview(a) {
+            var mine = ++seq;
+            var body = new URLSearchParams({ action: 'naws_compare_preview', nonce: nawsAdmin.nonce });
+            ['a', 'b', 'from', 'to', 'months', 'title', 'height'].forEach(function (k) { body.append(k, a[k] !== undefined ? a[k] : ''); });
+            preview.setAttribute('aria-busy', 'true');
+            fetch(nawsAdmin.ajax_url, { method: 'POST', body: body, credentials: 'same-origin' })
+                .then(function (r) { return r.json(); })
+                .then(function (j) {
+                    if (mine !== seq) { return; }
+                    preview.innerHTML = (j && j.success && j.data) ? j.data.html : '';
+                    var fig = preview.querySelector('figure[data-naws-cmp]');
+                    if (fig && typeof window.NAWS_compareInit === 'function') { window.NAWS_compareInit(fig); }
+                })
+                .catch(function () { if (mine === seq) { preview.textContent = S.request_failed || ''; } })
+                .then(function () { if (mine === seq) { preview.removeAttribute('aria-busy'); } });
+        }
+
+        function update() {
+            rowOf('b').querySelectorAll('select').forEach(function (s) { s.disabled = bOff.checked; });
+            var a = atts();
+            var sc = shortcode(a);
+            code.textContent = sc;
+            copy.dataset.copy = sc;
+            clearTimeout(timer);
+            timer = setTimeout(function () { refreshPreview(a); }, 400);
+        }
+
+        var hasOutdoor = !!mod('outdoor');
+        fillModules('a', 'indoor', 'humidity');
+        fillModules('b', hasOutdoor ? 'outdoor' : cat[0].ref, 'humidity');
+        ['a', 'b'].forEach(function (k) {
+            rowOf(k).querySelector('.naws-cmp-module').addEventListener('change', function () { fillQty(k); update(); });
+        });
+        root.querySelectorAll('.naws-cmp-form input, .naws-cmp-form select').forEach(function (el) {
+            el.addEventListener('input', update);
+            el.addEventListener('change', update);
+        });
+        update();
+    })();
+
 })(jQuery);

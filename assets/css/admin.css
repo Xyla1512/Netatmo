@@ -1214,3 +1214,11 @@
 .naws-pv-sl-ground .naws-sl { --naws-sl-ring:#fff; }
 .naws-pv-sl-row{margin:6px 0;line-height:0;}
 .naws-pv-sl-tip.naws-sl-tip{position:static;transform:none;margin:0;display:inline-block;}
+
+/* [naws_compare] builder on the Shortcodes page (since 2.2.0) */
+.naws-cmp-form { display: grid; gap: 10px; margin: 12px 0; }
+.naws-cmp-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.naws-cmp-row-label { display: inline-block; min-width: 6.5em; font-weight: 600; }
+.naws-cmp-row select { min-width: 12em; }
+.naws-cmp-preview { margin-top: 14px; min-height: 40px; }
+.naws-cmp-preview[aria-busy="true"] { opacity: .55; transition: opacity .2s; }

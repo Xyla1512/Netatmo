@@ -310,15 +310,50 @@ final class NAWS_Compare {
         $group = self::group_of( $ref );
         $entry = $group !== null ? ( self::series_catalogue()[ $group ][ $qty ] ?? null ) : null;
         $label = $entry !== null ? naws_label( $entry['label'] ) : $qty;
-        $m     = self::module_of( $ref );
+        return sprintf( naws_label( 'cmp_series_name' ), $label, self::module_label( $ref ) );
+    }
 
-        if ( $group === 'in' ) {
-            $module = $m !== null ? NAWS_Helpers::display_name( $m ) : $ref;
-        } else {
-            $custom = $m !== null ? (string) ( $m['custom_name'] ?? '' ) : '';
-            $module = $custom !== '' ? $custom : naws_label( 'cmp_mod_' . $group );
+    /** The module part of a series name, the same in the legend and the builder. */
+    public static function module_label( string $ref ): string {
+        $group = self::group_of( $ref );
+        $m     = self::module_of( $ref );
+        if ( $group === 'in' || $group === null ) {
+            return $m !== null ? NAWS_Helpers::display_name( $m ) : $ref;
         }
-        return sprintf( naws_label( 'cmp_series_name' ), $label, $module );
+        $custom = $m !== null ? (string) ( $m['custom_name'] ?? '' ) : '';
+        return $custom !== '' ? $custom : naws_label( 'cmp_mod_' . $group );
+    }
+
+    /**
+     * What the shortcode builder offers: the active modules of the station,
+     * each with its quantities and how well the daily summary covers them.
+     * empty — not a single day; sparse — fewer than half the days of that
+     * row (the base station's indoor temperature, today).
+     *
+     * @return array<int, array{ref: string, name: string, qtys: array}>
+     */
+    public static function catalogue_for_admin(): array {
+        $coverage = NAWS_Database::daily_coverage();
+        $station  = NAWS_Calc::station_row_id( [] );
+        $cat      = self::series_catalogue();
+        $out      = [];
+        foreach ( NAWS_Database::get_modules( true ) as $m ) {
+            $ref   = NAWS_Helpers::module_ref( (string) $m['module_id'] );
+            $group = $ref !== '' ? self::group_of( $ref ) : null;
+            if ( $group === null ) {
+                continue;
+            }
+            $qtys = [];
+            foreach ( $cat[ $group ] as $qty => $entry ) {
+                $row   = $entry['row'] === 'own' ? (string) $m['module_id'] : (string) $station;
+                $days  = (int) ( $coverage[ $row ]['_days'] ?? 0 );
+                $have  = (int) ( $coverage[ $row ][ $entry['col'] ] ?? 0 );
+                $state = $have === 0 ? 'empty' : ( $have * 2 < $days ? 'sparse' : 'ok' );
+                $qtys[] = [ 'qty' => $qty, 'label' => naws_label( $entry['label'] ), 'state' => $state ];
+            }
+            $out[] = [ 'ref' => $ref, 'name' => self::module_label( $ref ), 'qtys' => $qtys ];
+        }
+        return $out;
     }
 
     /**

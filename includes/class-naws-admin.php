@@ -280,6 +280,14 @@ class NAWS_Admin {
             wp_add_inline_style( 'naws-weather-icon', NAWS_Colors::sparkline_css() );
         }
 
+        // The [naws_compare] builder on the Shortcodes page draws its preview
+        // with the same script as the front end. The front-end handles are
+        // registered on wp_enqueue_scripts and do not exist here.
+        if ( strpos( $hook, 'naws-shortcodes' ) !== false ) {
+            wp_register_script( 'naws-chartjs', NAWS_PLUGIN_URL . 'assets/vendor/chart.umd.min.js', [], '4.5.1', true );
+            wp_register_script( 'naws-chartjs-adapter', NAWS_PLUGIN_URL . 'assets/vendor/chartjs-adapter-date-fns.bundle.min.js', [ 'naws-chartjs' ], '3.0.0', true );
+            wp_enqueue_script( 'naws-compare-boot', NAWS_PLUGIN_URL . 'assets/js/compare-boot.js', [ 'naws-chartjs', 'naws-chartjs-adapter' ], self::asset_version( 'assets/js/compare-boot.js' ), true );
+        }
         wp_enqueue_script( 'naws-admin', NAWS_PLUGIN_URL . 'assets/js/admin.js', $js_deps, self::asset_version( 'assets/js/admin.js' ), true );
 
         wp_localize_script( 'naws-admin', 'nawsAdmin', [
@@ -298,6 +306,8 @@ class NAWS_Admin {
                 'name_saved'       => __( 'Saved', 'xtx-integration-for-netatmo' ),
                 'name_error'       => __( 'Could not save the display name.', 'xtx-integration-for-netatmo' ),
                 'request_failed'   => __( 'Request failed.', 'xtx-integration-for-netatmo' ),
+                'cmp_sparse'       => __( 'patchy', 'xtx-integration-for-netatmo' ),
+                'cmp_empty'        => __( 'no data', 'xtx-integration-for-netatmo' ),
                 // The purge button and the secret toggle in admin.js (since 1.9.11;
                 // the sentences used to be German literals in the script).
                 'show'             => __( 'Show', 'xtx-integration-for-netatmo' ),
