@@ -920,8 +920,10 @@ class NAWS_Helpers {
      * @since 2.2.0
      */
     public static function calendar_start( int $days, ?int $now = null ): int {
+        $days  = max( 1, min( 3660, $days ) ); // ten years, as the windrose
         $today = ( new DateTimeImmutable( '@' . ( $now ?? time() ) ) )->setTimezone( naws_timezone() )->setTime( 0, 0 );
-        return $today->modify( '-' . max( 0, $days - 1 ) . ' days' )->getTimestamp();
+        $start = $today->modify( '-' . ( $days - 1 ) . ' days' );
+        return $start ? $start->getTimestamp() : $today->getTimestamp();
     }
 
     /**
@@ -932,7 +934,8 @@ class NAWS_Helpers {
      */
     public static function period_days( string $period ): ?int {
         $period = strtolower( trim( ltrim( trim( $period ), '-' ) ) );
-        if ( ! preg_match( '/^(\d+)\s*([a-z]+)$/', $period, $m ) ) {
+        // At most five digits: a longer number is a typo, not a period.
+        if ( ! preg_match( '/^(\d{1,5})\s*([a-z]+)$/', $period, $m ) ) {
             return null;
         }
         if ( in_array( $m[2], [ 'd', 'day', 'days' ], true ) ) {

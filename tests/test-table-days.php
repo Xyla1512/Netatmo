@@ -36,6 +36,9 @@ check( 'ueber die Zeitumstellung (Ende Oktober)', NAWS_Helpers::calendar_start( 
 check( 'Tage aus "7d"', NAWS_Helpers::period_days( '7d' ), 7 );
 check( 'Tage aus "2w"', NAWS_Helpers::period_days( '2w' ), 14 );
 check( 'kein Tageszeitraum', NAWS_Helpers::period_days( '24h' ), null );
+check( 'riesige Zahl: begrenzt auf 3660 Tage', NAWS_Helpers::calendar_start( PHP_INT_MAX, $now ), NAWS_Helpers::calendar_start( 3660, $now ) );
+check( 'riesiger Zeitraum im Shortcode: keine Tageszahl', NAWS_Helpers::period_days( '99999999999999999999d' ), null );
+check( '0 Tage wie 1 Tag', NAWS_Helpers::calendar_start( 0, $now ), $berlin( '2026-11-13 00:00:00' ) );
 
 echo "\nAbfrage und Shortcode\n" . str_repeat( '-', 74 ) . "\n";
 $db = file_get_contents( dirname( __DIR__ ) . '/includes/class-naws-database.php' );

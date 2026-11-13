@@ -138,7 +138,9 @@ check( 'm/s: Mittel umgerechnet',          str_contains( $h, '<dd>1.1 m/s</dd>' 
 $GLOBALS['naws_test_options']['naws_settings']['wind_unit'] = 'kmh';
 
 echo "\nUmschaltung\n" . str_repeat( '-', 74 ) . "\n";
-$h = render_windrose( atts(), [ '*' => $rose16 ] );
+// "all" differs from "this year" here (more readings, earlier start), so all five buttons stay.
+$naws_rose_all = array_merge( $rose16, [ 'n' => (int) $rose16['n'] + 100, 'first' => (int) $rose16['first'] - 86400 * 400 ] );
+$h = render_windrose( atts(), [ '*' => $rose16, 'wind|all' => $naws_rose_all ] );
 check( 'Umschaltung versteckt, bis das Skript kommt', str_contains( $h, '<div class="naws-wr-switch" hidden>' ), true );
 check( 'fuenf Zeitraum-Knoepfe',           substr_count( $h, ' data-period="' ) - 5, 5 );   // 5 Knoepfe + 5 Panels
 check( 'der aktive Knopf',                 str_contains( $h, 'class="naws-leg-pill naws-wr-btn is-active" data-period="90d" aria-pressed="true">90 days</button>' ), true );
@@ -146,13 +148,16 @@ check( 'ein inaktiver Knopf',              str_contains( $h, 'class="naws-leg-pi
 check( 'fuenf Panels',                     substr_count( $h, 'class="naws-wr-panel"' ), 5 );
 check( 'vier davon versteckt',             preg_match_all( '/class="naws-wr-panel"[^>]*hidden>/', $h ), 4 );
 check( 'nur eine Schaltergruppe',          substr_count( $h, 'role="group"' ), 1 );
+$h = render_windrose( atts(), [ '*' => $rose16 ] );
+check( '"alles" = "dieses Jahr": vier Knoepfe', substr_count( $h, ' data-period="' ) - 4, 4 );
+check( 'kein Knopf "alles"',               str_contains( $h, 'data-period="all" aria-pressed' ), false );
 $h = render_windrose( atts( [ 'period' => '14d' ] ), [ '*' => $rose16 ] );
 check( 'period=14d: sechster Knopf',       str_contains( $h, 'data-period="14d" aria-pressed="true">14 days</button>' ), true );
 $h = render_windrose( atts( [ 'from' => '2026-05-01', 'to' => '2026-08-31' ] ), [ '*' => $rose16 ] );
 check( 'fester Bereich: keine Umschaltung', str_contains( $h, 'naws-wr-switch' ), false );
 check( 'fester Bereich: ein Panel',        substr_count( $h, 'class="naws-wr-panel"' ), 1 );
 check( 'fester Bereich: Zeitraum im Meta', str_contains( $h, 'last 90 days' ) === false && str_contains( $h, '01.05.2026 to 31.08.2026' ), true );
-$h = render_windrose( atts( [ 'measure' => 'both' ] ), [ '*' => $rose16 ] );
+$h = render_windrose( atts( [ 'measure' => 'both' ] ), [ '*' => $rose16, 'wind|all' => $naws_rose_all, 'gust|all' => $naws_rose_all ] );
 check( 'both: zehn Panels',                substr_count( $h, 'class="naws-wr-panel"' ), 10 );
 check( 'both: zwei Schaltergruppen',       substr_count( $h, 'role="group"' ), 2 );
 check( 'both: Wind- und Boeen-Knopf',      str_contains( $h, 'data-measure="wind" aria-pressed="true">Wind</button>' ) && str_contains( $h, 'data-measure="gust" aria-pressed="false">Gusts</button>' ), true );

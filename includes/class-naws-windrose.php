@@ -269,6 +269,33 @@ final class NAWS_Windrose {
         return $keys;
     }
 
+    /**
+     * The switcher without a button that shows nothing new: when "all" and
+     * "this year" hold the same readings for every measure on show (the raw
+     * wind directions start this year), one of them goes — "all", unless it
+     * is the period in use, then "this year".
+     *
+     * @param string[] $keys     Switcher keys in display order.
+     * @param array    $roses    "measure|key" => rose (needs 'n' and 'first').
+     * @param string[] $measures Measures on show.
+     * @param string   $active   The key in use.
+     * @since 2.2.0
+     */
+    public static function without_duplicate_period( array $keys, array $roses, array $measures, string $active ): array {
+        if ( ! in_array( 'all', $keys, true ) || ! in_array( 'year', $keys, true ) ) {
+            return $keys;
+        }
+        foreach ( $measures as $m ) {
+            $a = $roses[ "$m|all" ] ?? null;
+            $y = $roses[ "$m|year" ] ?? null;
+            if ( $a === null || $y === null || (int) $a['n'] !== (int) $y['n'] || (int) $a['first'] !== (int) $y['first'] ) {
+                return $keys;
+            }
+        }
+        $drop = $active === 'all' ? 'year' : 'all';
+        return array_values( array_filter( $keys, static fn( $k ) => $k !== $drop ) );
+    }
+
     // ── Units and labels ────────────────────────────────────────────
 
     /** The site's wind unit label: km/h, m/s, mph or kn. */

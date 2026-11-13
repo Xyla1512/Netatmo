@@ -52,6 +52,8 @@ foreach ( $measures as $m ) {
         $roses[ "$m|$k" ] = $naws_roses[ "$m|$k" ] ?? $naws_roses['*'] ?? NAWS_Windrose::rose( $m, $ranges[ $k ], $sectors );
     }
 }
+// "All" equal to "this year" (raw wind data only from this year on): one button is enough.
+$keys = NAWS_Windrose::without_duplicate_period( $keys, $roses, $measures, $range['key'] );
 
 $unit     = NAWS_Windrose::unit();
 $date_fmt = get_option( 'date_format', 'j. F Y' );
