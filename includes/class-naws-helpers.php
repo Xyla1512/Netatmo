@@ -130,19 +130,13 @@ class NAWS_Helpers {
             $key = $param_to_key[ $parameter ] ?? null;
             if ( $key ) {
                 $icons = NAWS_Icons::get_set();
-                return $icons[ $key ] ?? '📊';
+                return $icons[ $key ] ?? '';
             }
         }
 
-        // Fallback to emojis if NAWS_Icons not loaded
-        $emoji_fallback = [
-            'Temperature' => '🌡️', 'CO2' => '💨', 'Humidity' => '💧',
-            'Noise' => '🔊', 'Pressure' => '⏲️', 'AbsolutePressure' => '⏲️',
-            'Rain' => '🌧️', 'sum_rain_1' => '🌧️', 'sum_rain_24' => '🌧️',
-            'WindStrength' => '🌬️', 'WindAngle' => '🧭',
-            'GustStrength' => '🌪️', 'GustAngle' => '🧭', 'health_idx' => '❤️',
-        ];
-        return $emoji_fallback[ $parameter ] ?? '📊';
+        // Without the icon class (or for a reading it does not know) no symbol:
+        // an emoji here would let WordPress fetch an image from s.w.org.
+        return '';
     }
 
     public static function get_css_class( $parameter ) {
@@ -250,18 +244,17 @@ class NAWS_Helpers {
      */
     public static function history_chart_defs(): array {
         $defs = [
-            [ 'id' => 'temp_minmax', 'label' => __( 'Temperature Min / Max', 'xtx-integration-for-netatmo' ), 'icon' => '🌡️' ],
-            [ 'id' => 'temp_avg',    'label' => __( 'Annual Average Temperature', 'xtx-integration-for-netatmo' ),    'icon' => '🌡️' ],
-            [ 'id' => 'pressure',    'label' => __( 'Pressure (Annual Mean)', 'xtx-integration-for-netatmo' ),    'icon' => '🔵' ],
-            [ 'id' => 'rain',        'label' => __( 'Annual Precipitation', 'xtx-integration-for-netatmo' ),        'icon' => '🌧️' ],
-            [ 'id' => 'humidity',    'label' => __( 'Outdoor Humidity (Annual Mean)', 'xtx-integration-for-netatmo' ),    'icon' => '💧' ],
+            [ 'id' => 'temp_minmax', 'label' => __( 'Temperature Min / Max', 'xtx-integration-for-netatmo' ) ],
+            [ 'id' => 'temp_avg',    'label' => __( 'Annual Average Temperature', 'xtx-integration-for-netatmo' ) ],
+            [ 'id' => 'pressure',    'label' => __( 'Pressure (Annual Mean)', 'xtx-integration-for-netatmo' ) ],
+            [ 'id' => 'rain',        'label' => __( 'Annual Precipitation', 'xtx-integration-for-netatmo' ) ],
+            [ 'id' => 'humidity',    'label' => __( 'Outdoor Humidity (Annual Mean)', 'xtx-integration-for-netatmo' ) ],
         ];
 
         foreach ( self::indoor_chart_defs() as $indoor ) {
             $defs[] = [
                 'id'    => $indoor['id'],
                 'label' => $indoor['label'],
-                'icon'  => $indoor['icon'],
             ];
         }
 
@@ -619,16 +612,16 @@ class NAWS_Helpers {
      * chart somebody switched off stays switched off.
      *
      * @return array<int,array<string,string>> id, module_id, module_name,
-     *         field, param, label, icon, unit.
+     *         field, param, label, unit.
      */
     public static function indoor_chart_defs(): array {
         $defs = [];
 
         foreach ( self::indoor_module_slugs() as $module ) {
             foreach ( [
-                [ 'indoor_temp_',     'indoor_temp_avg',     'Temperature', 'param_temperature', '🌡️' ],
-                [ 'indoor_humidity_', 'indoor_humidity_avg', 'Humidity',    'param_humidity',    '💧' ],
-            ] as [ $prefix, $field, $param, $lang_key, $icon ] ) {
+                [ 'indoor_temp_',     'indoor_temp_avg',     'Temperature', 'param_temperature' ],
+                [ 'indoor_humidity_', 'indoor_humidity_avg', 'Humidity',    'param_humidity' ],
+            ] as [ $prefix, $field, $param, $lang_key ] ) {
                 $defs[] = [
                     'id'          => $prefix . $module['slug'],
                     'module_id'   => $module['module_id'],
@@ -636,7 +629,6 @@ class NAWS_Helpers {
                     'field'       => $field,
                     'param'       => $param,
                     'label'       => $module['name'] . ' – ' . naws_label( $lang_key ),
-                    'icon'        => $icon,
                     'unit'        => self::get_unit( $param ),
                 ];
             }

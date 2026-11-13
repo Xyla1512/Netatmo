@@ -158,8 +158,10 @@ check( 'fuenf feste Charts in ihrer angestammten Reihenfolge',
     [ 'temp_minmax', 'temp_avg', 'pressure', 'rain', 'humidity' ] );
 check( 'jeder Chart bringt seine Beschriftung mit',
     $defs[0]['label'], 'Temperature Min / Max' );
-check( 'und sein Symbol — die Sortierliste zeigt beides',
-    $defs[3]['icon'], '🌧️' );
+// Die Definitionen trugen frueher ein Emoji, das nirgends gezeigt wurde;
+// seit 2.2.0 steht im Frontend-Code kein Emoji mehr (test-no-emoji.php).
+check( 'kein ungenutztes Emoji-Symbol mehr',
+    array_key_exists( 'icon', $defs[3] ), false );
 
 // ── Innenmodule haengen hinten an ────────────────────────────────────────
 modules( [

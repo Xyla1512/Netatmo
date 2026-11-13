@@ -99,6 +99,11 @@ check( 'CSS nimmt naws-picto von den Linienregeln aus', (bool) preg_match( '/svg
 $fc = file_get_contents( dirname( __DIR__ ) . '/templates/forecast.php' );
 check( 'Vorhersage nutzt Piktogramme', substr_count( $fc, 'NAWS_Icons::pictogram(' ), 6 );
 
+echo "\nRueckfall und Doku\n" . str_repeat( '-', 74 ) . "\n";
+check( 'unbekannter Messwert: kein Ersatzsymbol', NAWS_Helpers::get_icon( 'Unbekannt' ), '' );
+$readme = file_get_contents( dirname( __DIR__ ) . '/readme.txt' );
+check( 'readme: kein Fremdinhalt im Browser', str_contains( $readme, 'loads nothing from other servers into the visitor' ), true );
+
 echo "\nWaechter\n" . str_repeat( '-', 74 ) . "\n";
 check( 'kein Emoji im Frontend-Code', naws_emoji_hits(), [] );
 
