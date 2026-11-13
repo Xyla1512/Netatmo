@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 2.1.8
+Stable tag: 2.2.0
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -18,7 +18,7 @@ Connects to the Netatmo API, stores all sensor data locally and displays live da
 
 * **Full Netatmo Integration** – OAuth2 authentication, automatic sync, all module types supported (Base, Outdoor, Wind, Rain, Indoor), with your own display name for each module
 * **Live Dashboard** – Real-time sensor cards with animated counters, 24h trend charts, pressure trend indicator, wind compass, CO2 air quality levels
-* **Astronomy** – Sunrise/sunset, moon phase with illumination, next full moon
+* **Astronomy** – Sunrise/sunset, moon phase with illumination, next full moon and supermoon (computed after Meeus), next lunar eclipse
 * **Derived Weather Data** – Feels-like temperature, heat index, dew point, wind chill
 * **Historical Charts** – Year-over-year comparison for temperature, pressure and rainfall with interactive legend
 * **Weather Forecast** – 5-day forecast based on station coordinates via Open-Meteo or Yr.no
@@ -26,7 +26,8 @@ Connects to the Netatmo API, stores all sensor data locally and displays live da
 * **Encrypted Storage** – All credentials (OAuth tokens, client secret, API keys) are AES-256-GCM encrypted at rest
 * **Configurable Units** – C/F, mm/inch, mbar/inHg/mmHg, km/h/m/s/mph/kn
 * **Multilingual** – Full German, English and Norwegian interface
-* **18 Shortcodes** – Dashboard, current readings, infobar, single value, computed value, sparkline, sparkline tiles, history charts, heatmap, records, this day in earlier years, sun path, wind rose, forecast, rain radar, table, widget, weather icon
+* **20 Shortcodes** – Dashboard, current readings, infobar, single value, computed value, sparkline, sparkline tiles, history charts, heatmap, records, this day in earlier years, month review, module comparison, sun path, wind rose, forecast, rain radar, table, widget, weather icon
+* **Nothing from other servers in the visitor's browser** – charts, symbols, radar images, map tiles and fonts all come from your own site
 * **Export / Import** – Full backup and restore of weather data, modules and settings
 * **E-Mail Notifications** – battery, radio and Wi-Fi, station offline, failed syncs, frost, heat, gusts, rain, rain starting, CO₂; per-rule thresholds, one mail per state change and an all-clear when the state ends, and a master switch
 * **Mobile-First Responsive** – All views optimized for smartphones, tablets and desktops
@@ -125,6 +126,14 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 
 == Changelog ==
 
+= 2.2.0 =
+* Added: `[naws_month_review]` — a month in review: mean, highest and lowest temperature, rain and the strongest gust, each against the same month in earlier years, with a headline for what stands out. Visitors page through the months without reloading.
+* Added: `[naws_compare]` — two daily series from any modules in one chart over months and years, e.g. indoor against outdoor humidity. A builder on the Shortcodes page writes the shortcode and shows a live preview.
+* Changed: the plugin's own pictograms instead of emoji on the site, the same on every device. WordPress no longer fetches emoji images from s.w.org for them, so nothing reaches another server from the visitor's browser.
+* Fix: Yr.no forecast — rain of the first two or three days was about six times too high, the last day repeated the day before, and the precipitation probability showed a fixed 0 % (MET Norway gives one only for the Nordic countries; without it no figure is shown).
+* Fix: moon — the supermoon date was off and lunar eclipses were misclassified; full moons are now computed after Meeus and eclipses come from NASA's canon.
+* Fix: the wind card's compass points are translated, `[naws_table]` grouped by day shows seven calendar days in local time in a stable order, `[naws_current]` shows its values without JavaScript, and SVG symbols keep their viewBox.
+
 = 2.1.8 =
 * Added: display names for modules. Type a name under a module on the Modules page and it replaces the Netatmo name everywhere — the cards, badges and chart titles of `[naws_live]`, `[naws_current]`, `[naws_table]`, the admin pages and the e-mail notifications; `[naws_current]` then shows only that name, without the type badge. An empty field keeps the Netatmo name. The REST API adds `display_name` beside `module_name`.
 * Fix: `GET /naws/v1/modules` failed with HTTP 500 on every call.
@@ -146,23 +155,18 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 * Fix: a sync whose data the database refused reported "Sync OK – 0 readings saved". It now fails with the database's own message, in the cron log, on the "Sync now" button and for the e-mail notification on failed syncs. An account without a weather station gets its own message instead of "Sync OK".
 * Fix: "Sync now" fetched twice and showed the next run on the second of the last one; the next fetch now follows one interval later, and manual syncs appear in the cron log. An overdue next run reads "overdue by …" instead of "in …".
 
-= 2.1.4 =
-* Fix: the PHP example on the REST API page failed in snippet plugins such as Code Snippets or WPCode — it read address and key with `global`, which finds nothing inside the function these plugins run. The tab, now "PHP / Snippet", shows a `[wetter_aktuell]` shortcode with the key in the header, a five-minute cache and a copy button.
-* Fix: the REST API page still offered the key as a query parameter, which has been refused since the key moved to the `X-NAWS-Key` header.
-* Fix: the JavaScript and Chart.js examples now warn that a key used in the browser is readable in the page source.
-
 Older versions: the complete changelog since 1.0.0 is kept in [CHANGELOG.md](https://github.com/Xyla1512/Netatmo/blob/main/CHANGELOG.md) on GitHub.
 
 == Upgrade Notice ==
+
+= 2.2.0 =
+New: month review and module comparison shortcodes. Own symbols instead of emoji, so no emoji images from s.w.org. Fixes the Yr.no rain amounts and the moon dates. Nothing to reconfigure.
 
 = 2.1.8 =
 New: give each module its own display name on the Modules page; it replaces the Netatmo name on the site and in the admin. Fix: the REST endpoint /modules works again. Nothing to reconfigure.
 
 = 2.1.7 =
 Charts and cards build up softly when the visitor scrolls to them, and the rain radar legend matches the DWD map. Nothing to reconfigure.
-
-= 2.1.6 =
-Security: visitors can no longer make the chart endpoints run PHP out of memory (relevant to CVE-2026-109618/109619 — update PHP as well). Fix: the hourly rain chart and grouped rain show the real sum. Nothing to reconfigure.
 
 == Privacy & External Services ==
 

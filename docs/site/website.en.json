@@ -1,17 +1,10 @@
 {
-    "aktualisiert": "2026-11-12",
+    "aktualisiert": "2026-11-13",
     "vorhaben": [
         {
             "id": "webhooks",
             "titel": "Readings by webhook",
             "satz": "Netatmo sends new readings to your own website as soon as they arrive, instead of the plugin asking every ten minutes. That saves requests before Netatmo lowers the limits for regular polling from March 2027.",
-            "ab": null,
-            "bild": null
-        },
-        {
-            "id": "monatsrueckblick",
-            "titel": "Monthly review",
-            "satz": "A paragraph about the past month, written from your own readings: how warm, how wet, how windy it was – and how it compares with the same month in earlier years.",
             "ab": null,
             "bild": null
         },
@@ -30,10 +23,38 @@
             "bild": null
         },
         {
+            "id": "monatsrueckblick",
+            "titel": "Month review",
+            "satz": "A completed month at a glance: a headline, mean, highest and lowest temperature, rain and strongest gust – each next to the same month in earlier years, with a star for records. Visitors page through the months without reloading. Shortcode [naws_month_review].",
+            "ab": "2.2.0",
+            "bild": null
+        },
+        {
             "id": "modulvergleich",
             "titel": "Modules compared over the long run",
-            "satz": "Two modules in one chart over months and years – say indoor and outdoor humidity over two years, day by day from your own daily summary.",
-            "ab": null,
+            "satz": "Two daily series from any modules in one chart over months and years – say indoor and outdoor humidity. A builder on the Shortcodes page writes the shortcode [naws_compare] and shows a preview.",
+            "ab": "2.2.0",
+            "bild": null
+        },
+        {
+            "id": "eigene-symbole",
+            "titel": "Own symbols instead of emoji",
+            "satz": "The cards and the forecast draw their own symbols, the same on every device. WordPress no longer fetches emoji images from s.w.org for them – the plugin loads nothing from other servers into the visitor's browser.",
+            "ab": "2.2.0",
+            "bild": null
+        },
+        {
+            "id": "mond-genau",
+            "titel": "The moon to the minute",
+            "satz": "Full moon, supermoon and lunar eclipses are now astronomically exact: full moons computed after Meeus, eclipses from NASA's catalogue.",
+            "ab": "2.2.0",
+            "bild": null
+        },
+        {
+            "id": "yr-vorhersage",
+            "titel": "Yr.no forecast corrected",
+            "satz": "Rain of the first days was about six times too high, the last day repeated the day before, and the precipitation probability stood at a fixed 0 %. All fixed.",
+            "ab": "2.2.0",
             "bild": null
         },
         {

@@ -2,7 +2,7 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
-## [Unreleased]
+## [2.2.0]
 
 ### Changed
 - **No more emoji on the site — the plugin's own pictograms instead.** WordPress replaces emoji with images from s.w.org in browsers that have no emoji font of their own, and that sends the visitor's IP address to WordPress.org. The "Emoji" icon set of `[naws_live]` and `[naws_current]` (the default) now draws its seven symbols itself, in the same colourful style and the same on every device, and `[naws_forecast]` shows its own symbols for location, precipitation, probability, wind, direction and gusts. CO₂ is a cloud marked CO₂ (was a gust of wind), gusts are strong wind lines (was a tornado), and the precipitation probability is a half-filled drop so it no longer looks like humidity. The other icon sets are unchanged. A new test fails for any emoji that finds its way back into front-end code. The readme now states that the plugin loads nothing from other servers into the visitor's browser.

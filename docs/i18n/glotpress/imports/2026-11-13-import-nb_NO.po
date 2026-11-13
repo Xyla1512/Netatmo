@@ -1,0 +1,275 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo\n"
+"Language: nb_NO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "\"%s\" has no daily values in this period."
+msgstr "«%s» har ingen døgnverdier i denne perioden."
+
+msgid "\"%s\" is not a series. Write module:quantity, for example outdoor:humidity."
+msgstr "«%s» er ikke en serie. Skriv modul:størrelse, for eksempel outdoor:humidity."
+
+msgid "\"%s\": this module does not measure that quantity."
+msgstr "«%s»: Denne modulen måler ikke denne størrelsen."
+
+msgid "\"%s\": this module is deactivated on the Modules page."
+msgstr "«%s»: Denne modulen er deaktivert på siden Moduler."
+
+msgid "\"%s\": this station has no such module. The shortcode builder on the Shortcodes page lists the modules."
+msgstr "«%s»: Denne stasjonen har ingen slik modul. Byggeren på siden Shortcodes viser modulene."
+
+msgid "%1$s brought the coldest %2$s night since records began"
+msgstr "%1$s ga den kaldeste %2$s-natten siden målingene startet"
+
+msgid "%1$s brought the strongest %2$s gust since records began"
+msgstr "%1$s ga det sterkeste %2$s-vindkastet siden målingene startet"
+
+msgid "%1$s brought the warmest %2$s day since records began"
+msgstr "%1$s ga den varmeste %2$s-dagen siden målingene startet"
+
+msgid "%1$s in review"
+msgstr "%1$s i tilbakeblikk"
+
+msgid "%1$s on %2$s was also the coldest night since records began."
+msgstr "%1$s den %2$s var også den kaldeste natten siden målingene startet."
+
+msgid "%1$s on %2$s was also the strongest gust since records began."
+msgstr "%1$s den %2$s var også det sterkeste vindkastet siden målingene startet."
+
+msgid "%1$s on %2$s was also the warmest day since records began."
+msgstr "%1$s den %2$s var også den varmeste dagen siden målingene startet."
+
+msgid "%1$s on %2$s was also the wettest day since records began."
+msgstr "%1$s den %2$s var også den våteste dagen siden målingene startet."
+
+msgid "%1$s · %2$s"
+msgstr "%1$s · %2$s"
+
+msgid "%d frost day"
+msgid_plural "%d frost days"
+msgstr[0] "%d frostdag"
+msgstr[1] "%d frostdager"
+
+msgid "%d rain day"
+msgid_plural "%d rain days"
+msgstr[0] "%d regndag"
+msgstr[1] "%d regndager"
+
+msgid "%d summer day"
+msgid_plural "%d summer days"
+msgstr[0] "%d sommerdag"
+msgstr[1] "%d sommerdager"
+
+msgid "(%1$s: %2$d)"
+msgstr "(%1$s: %2$d)"
+
+msgid "A fixed month as YYYY-MM. A fixed month shows no paging bar."
+msgstr "En fast måned som ÅÅÅÅ-MM. En fast måned har ingen bla-linje."
+
+msgid "A month in review: mean, highest and lowest temperature, rain and the strongest gust, each set against the same month in earlier years, with a headline for what stands out. Visitors page through the months with the arrows, without reloading; the address then carries ?naws_month=YYYY-MM."
+msgstr "En måned i tilbakeblikk: middeltemperatur, høyeste og laveste temperatur, regn og sterkeste vindkast, hver sammenlignet med samme måned i tidligere år, med en overskrift for det som skiller seg ut. Besøkende blar gjennom månedene med pilene uten at siden lastes på nytt; adressen får da ?naws_month=ÅÅÅÅ-MM."
+
+msgid "Chart height in pixels, 200 to 900"
+msgstr "Diagrammets høyde i piksler, 200 til 900"
+
+msgid "Colourful pictograms in emoji style — the same on every device."
+msgstr "Fargerike symboler i emoji-stil – like på alle enheter."
+
+msgid "Enlarge chart"
+msgstr "Forstørr diagrammet"
+
+msgid "Height"
+msgstr "Høyde"
+
+msgid "How many earlier years each tile compares with, 0 to 10. 0 leaves the comparison out."
+msgstr "Hvor mange tidligere år hver flis sammenlignes med, 0 til 10. Ved 0 utelates sammenligningen."
+
+msgid "Instead of from: the last 1 to 120 months"
+msgstr "I stedet for from: de siste 1 til 120 månedene"
+
+msgid "Less than the average of earlier years"
+msgstr "Mindre enn gjennomsnittet for tidligere år"
+
+msgid "More than the average of earlier years"
+msgstr "Mer enn gjennomsnittet for tidligere år"
+
+msgid "Next month: %s"
+msgstr "Neste måned: %s"
+
+msgid "October 2026, fixed"
+msgstr "Oktober 2026, fast"
+
+msgid "Optional heading above the chart"
+msgstr "Valgfri overskrift over diagrammet"
+
+msgid "Optional heading above the review"
+msgstr "Valgfri overskrift over tilbakeblikket"
+
+msgid "Period"
+msgstr "Periode"
+
+msgid "Period as YYYY-MM or YYYY-MM-DD"
+msgstr "Periode som ÅÅÅÅ-MM eller ÅÅÅÅ-MM-DD"
+
+msgid "Previous month: %s"
+msgstr "Forrige måned: %s"
+
+msgid "Quantity"
+msgstr "Størrelse"
+
+msgid "Record since records began"
+msgstr "Rekord siden målingene startet"
+
+msgid "Series A"
+msgstr "Serie A"
+
+msgid "Series B"
+msgstr "Serie B"
+
+msgid "The coldest %1$s since records began"
+msgstr "Den kaldeste %1$s siden målingene startet"
+
+msgid "The driest %1$s since records began"
+msgstr "Den tørreste %1$s siden målingene startet"
+
+msgid "The month review needs at least one completed month of data."
+msgstr "Månedsoppsummeringen trenger minst én fullført måned med data."
+
+msgid "The most rain fell on %1$s: %2$s"
+msgstr "Mest regn falt den %1$s: %2$s"
+
+msgid "The two series as module:quantity. b=\"\" draws one series only."
+msgstr "De to seriene som modul:størrelse. b=\"\" tegner bare én serie."
+
+msgid "The warmest %1$s since records began"
+msgstr "Den varmeste %1$s siden målingene startet"
+
+msgid "The wettest %1$s since records began"
+msgstr "Den våteste %1$s siden målingene startet"
+
+msgid "Title"
+msgstr "Tittel"
+
+msgid "Two daily series from any modules in one chart over months and years — indoor against outdoor humidity, one room against another, temperature against rain. Values come from the daily summary, one point per day; a gap stays a gap. Two units get an axis each. Pick the series below, copy the shortcode, and check the preview."
+msgstr "To døgnserier fra hvilke som helst moduler i ett diagram over måneder og år – luftfuktighet inne mot ute, ett rom mot et annet, temperatur mot nedbør. Verdiene kommer fra døgnoversikten, ett punkt per dag; et hull forblir et hull. To enheter får hver sin akse. Velg seriene nedenfor, kopier shortcoden og sjekk forhåndsvisningen."
+
+msgid "from"
+msgstr "fra"
+
+msgid "incomplete (%1$d of %2$d days)"
+msgstr "ufullstendig (%1$d av %2$d dager)"
+
+msgid "last completed month"
+msgstr "siste fullførte måned"
+
+msgid "months"
+msgstr "måneder"
+
+msgid "no data"
+msgstr "ingen data"
+
+msgid "no second series"
+msgstr "ingen andre serie"
+
+msgid "none"
+msgstr "ingen"
+
+msgid "on %s"
+msgstr "den %s"
+
+msgid "patchy"
+msgstr "mangelfull"
+
+msgid "the last"
+msgstr "de siste"
+
+msgid "the last completed month without the comparison"
+msgstr "siste fullførte måned uten sammenligning"
+
+msgctxt "date format for the month review"
+msgid "F j"
+msgstr "j. F"
+
+msgctxt "module in the comparison legend"
+msgid "Base station"
+msgstr "Basestasjon"
+
+msgctxt "module in the comparison legend"
+msgid "Outdoor"
+msgstr "Ute"
+
+msgctxt "module in the comparison legend"
+msgid "Rain gauge"
+msgstr "Regnmåler"
+
+msgctxt "module in the comparison legend"
+msgid "Wind gauge"
+msgstr "Vindmåler"
+
+msgctxt "month review tile: gust"
+msgid "Strongest gust"
+msgstr "Sterkeste vindkast"
+
+msgctxt "month review tile: highest temperature"
+msgid "Highest"
+msgstr "Høyeste"
+
+msgctxt "month review tile: lowest temperature"
+msgid "Lowest"
+msgstr "Laveste"
+
+msgctxt "month review tile: mean temperature"
+msgid "Mean"
+msgstr "Middel"
+
+msgctxt "month review tile: rainfall"
+msgid "Rain"
+msgstr "Regn"
+
+msgctxt "quantity in the comparison chart"
+msgid "Air pressure"
+msgstr "Lufttrykk"
+
+msgctxt "quantity in the comparison chart"
+msgid "CO₂"
+msgstr "CO₂"
+
+msgctxt "quantity in the comparison chart"
+msgid "Gust"
+msgstr "Vindkast"
+
+msgctxt "quantity in the comparison chart"
+msgid "Highest temperature"
+msgstr "Høyeste temperatur"
+
+msgctxt "quantity in the comparison chart"
+msgid "Humidity"
+msgstr "Luftfuktighet"
+
+msgctxt "quantity in the comparison chart"
+msgid "Lowest temperature"
+msgstr "Laveste temperatur"
+
+msgctxt "quantity in the comparison chart"
+msgid "Noise"
+msgstr "Støy"
+
+msgctxt "quantity in the comparison chart"
+msgid "Rain"
+msgstr "Nedbør"
+
+msgctxt "quantity in the comparison chart"
+msgid "Temperature"
+msgstr "Temperatur"
+
+msgctxt "quantity in the comparison chart"
+msgid "Wind"
+msgstr "Vind"
+
+msgctxt "co2_fair"
+msgid "Fair"
+msgstr "Forhøyet"

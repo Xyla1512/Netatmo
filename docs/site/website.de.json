@@ -1,17 +1,10 @@
 {
-    "aktualisiert": "2026-11-12",
+    "aktualisiert": "2026-11-13",
     "vorhaben": [
         {
             "id": "webhooks",
             "titel": "Messwerte per Webhook",
             "satz": "Netatmo schickt neue Messwerte selbst an die eigene Website, sobald sie da sind, statt dass das Plugin alle zehn Minuten nachfragt. Das spart Abfragen, bevor Netatmo die Grenzen fürs regelmäßige Abfragen ab März 2027 senkt.",
-            "ab": null,
-            "bild": null
-        },
-        {
-            "id": "monatsrueckblick",
-            "titel": "Monatsrückblick",
-            "satz": "Ein Absatz zum vergangenen Monat, aus den eigenen Messungen geschrieben: wie warm, wie nass, wie windig er war – und wie er neben demselben Monat der Vorjahre dasteht.",
             "ab": null,
             "bild": null
         },
@@ -30,10 +23,38 @@
             "bild": null
         },
         {
+            "id": "monatsrueckblick",
+            "titel": "Monatsrückblick",
+            "satz": "Ein abgeschlossener Monat auf einen Blick: Kopfsatz, Mittel, Höchst- und Tiefstwert, Regen und stärkste Böe – jeweils neben demselben Monat der Vorjahre, mit Stern für Rekorde. Besucher blättern ohne Neuladen durch die Monate. Kurzbefehl [naws_month_review].",
+            "ab": "2.2.0",
+            "bild": null
+        },
+        {
             "id": "modulvergleich",
             "titel": "Module im Langzeitvergleich",
-            "satz": "Zwei Module in einem Diagramm über Monate und Jahre – etwa die Luftfeuchte drinnen und draußen über zwei Jahre, Tag für Tag aus der eigenen Tagesübersicht.",
-            "ab": null,
+            "satz": "Zwei Tagesreihen beliebiger Module in einem Diagramm über Monate und Jahre – etwa die Luftfeuchte drinnen und draußen. Ein Baukasten auf der Shortcode-Seite schreibt den Kurzbefehl [naws_compare] und zeigt eine Vorschau.",
+            "ab": "2.2.0",
+            "bild": null
+        },
+        {
+            "id": "eigene-symbole",
+            "titel": "Eigene Symbole statt Emojis",
+            "satz": "Kacheln und Vorhersage zeichnen ihre Symbole selbst, auf allen Geräten gleich. WordPress lädt dafür keine Emoji-Bilder mehr von s.w.org – das Plugin holt nichts von fremden Servern in den Browser der Besucher.",
+            "ab": "2.2.0",
+            "bild": null
+        },
+        {
+            "id": "mond-genau",
+            "titel": "Mond auf die Minute",
+            "satz": "Vollmond, Supermond und Mondfinsternisse sind jetzt astronomisch genau: Vollmonde nach Meeus berechnet, Finsternisse aus dem Katalog der NASA.",
+            "ab": "2.2.0",
+            "bild": null
+        },
+        {
+            "id": "yr-vorhersage",
+            "titel": "Vorhersage mit Yr.no berichtigt",
+            "satz": "Die Regenmengen der ersten Tage waren etwa sechsfach zu hoch, der letzte Tag wiederholte den Vortag, und die Regenwahrscheinlichkeit stand fest auf 0 %. Alles behoben.",
+            "ab": "2.2.0",
             "bild": null
         },
         {
