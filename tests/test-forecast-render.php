@@ -26,6 +26,7 @@ function esc_html( $s ) { return htmlspecialchars( (string) $s, ENT_QUOTES ); }
 function number_format_i18n( $n, $d = 0 ) { return number_format( (float) $n, (int) $d, ',', '.' ); }
 function wp_unique_id( $p = '' ) { return $p . '1'; }
 function wp_date( $fmt, $ts = null ) { return gmdate( $fmt, $ts ?? time() ); }
+function wp_kses( $s, $allowed ) { return $s; } // pictograms are fixed markup; the allowlist is checked in test-no-emoji.php
 require_once __DIR__ . '/i18n-stubs.php';
 
 class NAWS_Forecast {
@@ -42,6 +43,7 @@ class NAWS_Weather_Icons {
 }
 
 require_once $PLUGIN . 'includes/class-naws-helpers.php';
+require_once $PLUGIN . 'includes/class-naws-icons.php';
 
 function render( array $day, array $settings = [] ): string {
     $GLOBALS['opts'] = [ 'naws_settings' => $settings ];
@@ -75,23 +77,23 @@ echo "\ntemplates/forecast.php mit deutschem Zahlenformat\n" . str_repeat( '-', 
 
 $html = render( [] );
 check( 'Temperaturen mit Komma', text_of( $html, 'naws-fc-temps' ), '17,4 / 14,7 °C' );
-check( 'Niederschlag, Wahrscheinlichkeit, Wind mit Komma', text_of( $html, 'naws-fc-meta' ), '🌧️ 2,3 mm 💧 60% 🌬️ 23,5 km/h 🧭 SW' );
-check( 'Boeen mit Komma', text_of( $html, 'naws-fc-gust' ), '🌪️ Gusts: 41,8 km/h' );
+check( 'Niederschlag, Wahrscheinlichkeit, Wind mit Komma', text_of( $html, 'naws-fc-meta' ), '2,3 mm 60% 23,5 km/h SW' );
+check( 'Boeen mit Komma', text_of( $html, 'naws-fc-gust' ), 'Gusts: 41,8 km/h' );
 
 $html = render( [ 'temp_max' => 20.0, 'temp_min' => -3.0, 'precip_sum' => 0.0 ] );
 check( 'ganze Zahlen ohne Nachkommastellen', text_of( $html, 'naws-fc-temps' ), '20 / -3 °C' );
-check( 'kein Niederschlag ist 0 mm', strpos( text_of( $html, 'naws-fc-meta' ), '🌧️ 0 mm' ) === 0, true );
+check( 'kein Niederschlag ist 0 mm', strpos( text_of( $html, 'naws-fc-meta' ), '0 mm' ) === 0, true );
 
 $html = render( [ 'temp_max' => null, 'temp_min' => null, 'precip_sum' => null, 'wind_max' => null, 'gust_max' => null ] );
 check( 'fehlende Temperaturen bleiben --', text_of( $html, 'naws-fc-temps' ), '-- / -- °C' );
-check( 'fehlender Niederschlag ist 0 mm', strpos( text_of( $html, 'naws-fc-meta' ), '🌧️ 0 mm' ) === 0, true );
-check( 'fehlender Wind bleibt --', strpos( text_of( $html, 'naws-fc-meta' ), '🌬️ -- ' ) !== false, true );
+check( 'fehlender Niederschlag ist 0 mm', strpos( text_of( $html, 'naws-fc-meta' ), '0 mm' ) === 0, true );
+check( 'fehlender Wind bleibt --', strpos( text_of( $html, 'naws-fc-meta' ), '60% -- ' ) !== false, true );
 check( 'ohne Boeen keine Boeenzeile', strpos( $html, 'naws-fc-gust' ), false );
 
 $html = render( [ 'temp_max' => 17.4, 'precip_sum' => 12.7 ], [ 'temperature_unit' => 'F', 'rain_unit' => 'in', 'wind_unit' => 'ms' ] );
 check( 'Fahrenheit mit Komma', text_of( $html, 'naws-fc-temps' ), '63,3 / 58,5 °F' );
-check( 'Zoll und m/s mit Komma', strpos( text_of( $html, 'naws-fc-meta' ), '🌧️ 0,5 in' ) === 0 && strpos( text_of( $html, 'naws-fc-meta' ), '6,5 m/s' ) !== false, true );
-check( 'Boeen in m/s mit Komma', text_of( $html, 'naws-fc-gust' ), '🌪️ Gusts: 11,6 m/s' );
+check( 'Zoll und m/s mit Komma', strpos( text_of( $html, 'naws-fc-meta' ), '0,5 in' ) === 0 && strpos( text_of( $html, 'naws-fc-meta' ), '6,5 m/s' ) !== false, true );
+check( 'Boeen in m/s mit Komma', text_of( $html, 'naws-fc-gust' ), 'Gusts: 11,6 m/s' );
 
 // ── Zeile "Updated" bei der letzten guten Vorhersage (2.1.2) ─────────────
 // Im Rueckfall kann der Stand von gestern sein; nur die Uhrzeit taete so,

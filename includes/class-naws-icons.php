@@ -59,7 +59,7 @@ class NAWS_Icons {
         return [
             'emoji'   => [
                 'label' => __( 'Emoji', 'xtx-integration-for-netatmo' ),
-                'desc'  => __( 'Native system emojis — appearance varies by device.', 'xtx-integration-for-netatmo' ),
+                'desc'  => __( 'Colourful pictograms in emoji style — the same on every device.', 'xtx-integration-for-netatmo' ),
                 'icons' => self::set_emoji(),
             ],
             'outline' => [
@@ -102,18 +102,52 @@ class NAWS_Icons {
     // ================================================================
 
     /**
-     * Emoji icon set — the original default icons.
+     * Emoji icon set — colourful pictograms in emoji style.
+     *
+     * Until 2.2.0 these were system emojis. WordPress swaps emojis for
+     * images from s.w.org in browsers without an emoji font, which sends
+     * the visitor's IP address there; our own drawings look the same on
+     * every device and load nothing from elsewhere.
      */
     private static function set_emoji() {
-        return [
-            'temp'  => '🌡️',
-            'humid' => '💧',
-            'press' => '⏱️',
-            'wind'  => '🌬️',
-            'rain'  => '🌧️',
-            'co2'   => '💨',
-            'noise' => '🔊',
+        $set = [];
+        foreach ( self::KEYS as $key ) {
+            $set[ $key ] = self::pictogram( $key );
+        }
+        return $set;
+    }
+
+    /**
+     * One colourful pictogram as inline SVG, '' for an unknown key.
+     *
+     * Shared by the emoji icon set (temp … noise) and [naws_forecast]
+     * (pin, prob, compass, gust and the weather keys). class="naws-picto"
+     * exempts them from the line-icon rules in frontend.css, which would
+     * otherwise paint them in one colour. Every child without its own
+     * outline says stroke="none" for the same reason.
+     *
+     * @since 2.2.0
+     */
+    public static function pictogram( string $key ): string {
+        $o = 'stroke="#3d4b52" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"';
+        $n = 'stroke="none"';
+        $shapes = [
+            'temp'    => '<rect x="12.5" y="3" width="7" height="19" rx="3.5" fill="#f2f4f5" ' . $o . '/><circle cx="16" cy="24.5" r="5.2" fill="#e5484d" ' . $o . '/><rect x="14.6" y="9" width="2.8" height="13" rx="1.4" fill="#e5484d" ' . $n . '/><path d="M20 8h2.5M20 12h2.5M20 16h2.5" fill="none" ' . $o . '/>',
+            'humid'   => '<path d="M16 3.5C16 3.5 7 13.5 7 19.5a9 9 0 0 0 18 0C25 13.5 16 3.5 16 3.5Z" fill="#4aa3df" ' . $o . '/><path d="M11.5 19.5a4.5 4.5 0 0 0 3 4.2" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" opacity=".85"/>',
+            'press'   => '<rect x="14" y="2.5" width="4" height="3.2" rx="1" fill="#c7cdd1" ' . $o . '/><circle cx="16" cy="18" r="11" fill="#f2f4f5" ' . $o . '/><circle cx="16" cy="18" r="8" fill="#ffffff" stroke="#c7cdd1" stroke-width="1"/><path d="M16 18 21 13" fill="none" stroke="#e5484d" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="18" r="1.8" fill="#3d4b52" ' . $n . '/><path d="M10.5 18h1.6M20 18h1.5M16 12.2v1.5" fill="none" stroke="#8a969c" stroke-width="1.3" stroke-linecap="round"/>',
+            'wind'    => '<path d="M4 11h15a4 4 0 1 0-4-4" fill="none" stroke="#7cb7d9" stroke-width="2.6" stroke-linecap="round"/><path d="M4 17h20a4 4 0 1 1-4 4" fill="none" stroke="#5a9cc4" stroke-width="2.6" stroke-linecap="round"/><path d="M4 23h9" fill="none" stroke="#a9d0e6" stroke-width="2.6" stroke-linecap="round"/>',
+            'rain'    => '<path d="M9 19.5a5.5 5.5 0 0 1-.6-11 7.5 7.5 0 0 1 14.4 1.5A4.8 4.8 0 0 1 23 19.5Z" fill="#dfe6ea" ' . $o . '/><path d="M11 23l-1.5 3.5M16.5 23 15 26.5M22 23l-1.5 3.5" fill="none" stroke="#3b8fd1" stroke-width="2.2" stroke-linecap="round"/>',
+            'co2'     => '<path d="M8.5 24a6 6 0 0 1-.7-12 8 8 0 0 1 15.6 1.8A5.2 5.2 0 0 1 23.5 24Z" fill="#e7ebee" ' . $o . '/><text x="16" y="21.2" text-anchor="middle" font-family="Arial, sans-serif" font-size="7.2" font-weight="700" fill="#4b5a61" ' . $n . '>CO₂</text>',
+            'noise'   => '<path d="M5 12.5h5l7-6v19l-7-6H5Z" fill="#9aa6ad" ' . $o . '/><path d="M21 12a5.5 5.5 0 0 1 0 8M24.5 8.8a10 10 0 0 1 0 14.4" fill="none" stroke="#f0a43a" stroke-width="2.2" stroke-linecap="round"/>',
+            'pin'     => '<path d="M16 29s9-9.5 9-16a9 9 0 0 0-18 0c0 6.5 9 16 9 16Z" fill="#e5484d" ' . $o . '/><circle cx="16" cy="13" r="3.4" fill="#ffffff" ' . $n . '/>',
+            'prob'    => '<path d="M16 3.5C16 3.5 7 13.5 7 19.5a9 9 0 0 0 18 0C25 13.5 16 3.5 16 3.5Z" fill="#a9d4f2" ' . $o . '/><path d="M7.4 21h17.2a9 9 0 0 1-17.2 0Z" fill="#4aa3df" ' . $n . '/>',
+            'compass' => '<circle cx="16" cy="16" r="12" fill="#f2f4f5" ' . $o . '/><path d="M16 6.5 19 16h-6Z" fill="#e5484d" ' . $n . '/><path d="M16 25.5 13 16h6Z" fill="#9aa6ad" ' . $n . '/><circle cx="16" cy="16" r="1.6" fill="#3d4b52" ' . $n . '/>',
+            'gust'    => '<path d="M4 9h13a3.5 3.5 0 1 0-3.5-3.5" fill="none" stroke="#5a9cc4" stroke-width="2.4" stroke-linecap="round"/><path d="M4 15h21a4 4 0 1 1-4 4" fill="none" stroke="#3a7fb0" stroke-width="2.6" stroke-linecap="round"/><path d="M4 21h11a3 3 0 1 1-3 3" fill="none" stroke="#7cb7d9" stroke-width="2.4" stroke-linecap="round"/><path d="M24 5.5l2.5 3M27.5 9.5l1.5 1" fill="none" stroke="#f0a43a" stroke-width="2" stroke-linecap="round"/>',
         ];
+        if ( ! isset( $shapes[ $key ] ) ) {
+            return '';
+        }
+        return '<svg class="naws-picto" viewBox="0 0 32 32" aria-hidden="true" focusable="false">' . $shapes[ $key ] . '</svg>';
     }
 
     /**

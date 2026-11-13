@@ -2180,3 +2180,9 @@ h3.naws-mr-month { margin: 0 0 10px; font-size: 1.1rem; font-weight: 600; color:
 .naws-mr-notes li { margin: 0 0 4px; }
 @media (max-width: 900px) { .naws-mr-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 480px) { .naws-mr-tiles { grid-template-columns: minmax(0, 1fr); } }
+
+/* Pictograms (since 2.2.0): colourful, so the line-icon rules must not
+   repaint them — .naws-card-icon svg and the emoji set rule in [naws_live]
+   set fill:none and a stroke on every svg they meet. */
+svg.naws-picto, .naws-card-icon svg.naws-picto, .naws-wx[data-icon-set] .naws-ico svg.naws-picto { fill: initial; stroke: none; }
+.naws-fc svg.naws-picto, .naws-fc-wrap svg.naws-picto { width: 1.05em; height: 1.05em; vertical-align: -0.17em; margin-right: 1px; }
