@@ -268,4 +268,177 @@ final class NAWS_Compare {
         }
         return null;
     }
+
+    // ── WordPress layer ──────────────────────────────────────────────────
+
+    /** Decimals a value of this parameter is shown with, in the site's units. */
+    public static function decimals( string $param ): int {
+        $options = get_option( 'naws_settings', [] );
+        switch ( $param ) {
+            case 'Humidity':
+            case 'CO2':
+            case 'Noise':
+                return 0;
+            case 'Rain':
+                return ( $options['rain_unit'] ?? 'mm' ) === 'in' ? 3 : 1;
+            case 'Pressure':
+                return ( $options['pressure_unit'] ?? 'mbar' ) === 'inHg' ? 2 : 1;
+        }
+        return 1;
+    }
+
+    /** The module row behind a reference, active or not; null when unknown. */
+    private static function module_of( string $ref ): ?array {
+        $id = NAWS_Helpers::resolve_module_ref( $ref );
+        if ( $id === null ) {
+            return null;
+        }
+        foreach ( NAWS_Database::get_modules( false ) as $m ) {
+            if ( ( $m['module_id'] ?? '' ) === $id ) {
+                return $m;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * "Quantity · Module" for the legend. The module part is the display
+     * name set on the modules screen; without one, outdoor/base/wind/rain
+     * read as their type (like the live cards), indoor modules as their name.
+     */
+    public static function series_name( string $ref, string $qty ): string {
+        $group = self::group_of( $ref );
+        $entry = $group !== null ? ( self::series_catalogue()[ $group ][ $qty ] ?? null ) : null;
+        $label = $entry !== null ? naws_label( $entry['label'] ) : $qty;
+        $m     = self::module_of( $ref );
+
+        if ( $group === 'in' ) {
+            $module = $m !== null ? NAWS_Helpers::display_name( $m ) : $ref;
+        } else {
+            $custom = $m !== null ? (string) ( $m['custom_name'] ?? '' ) : '';
+            $module = $custom !== '' ? $custom : naws_label( 'cmp_mod_' . $group );
+        }
+        return sprintf( naws_label( 'cmp_series_name' ), $label, $module );
+    }
+
+    /**
+     * One series' daily values in the site's units, or ['error' => reason].
+     *
+     * @param array $parsed parse_series() result with ok = true.
+     */
+    public static function rows_for( array $parsed, string $from, string $to, bool $no_cache ): array {
+        $group = self::group_of( $parsed['ref'] );
+        $entry = self::series_catalogue()[ $group ][ $parsed['qty'] ];
+        $m     = self::module_of( $parsed['ref'] );
+        if ( $m === null || ( $m['module_type'] ?? '' ) !== $entry['type'] ) {
+            return [ 'error' => 'unknown_module' ];
+        }
+        if ( empty( $m['is_active'] ) ) {
+            return [ 'error' => 'inactive_module' ];
+        }
+
+        $row_id = $entry['row'] === 'own' ? (string) $m['module_id'] : NAWS_Calc::station_row_id( [] );
+        if ( $row_id === null ) {
+            return [ 'error' => 'unknown_module' ];
+        }
+
+        $rows   = NAWS_Database::get_daily_summaries( [
+            'module_id' => $row_id,
+            'date_from' => $from,
+            'date_to'   => $to,
+            'fields'    => [ $entry['col'] ],
+            'group_by'  => 'day',
+            'no_cache'  => $no_cache,
+        ] );
+        $values = [];
+        foreach ( (array) $rows as $row ) {
+            $v = $row[ $entry['col'] ] ?? null;
+            if ( $v !== null && $v !== '' ) {
+                $values[ (string) $row['day_date'] ] = (float) NAWS_Helpers::format_value( $entry['param'], (float) $v );
+            }
+        }
+        if ( $values === [] ) {
+            return [ 'error' => 'no_data' ];
+        }
+        return [
+            'values'   => $values,
+            'chart'    => $entry['chart'],
+            'unit'     => (string) NAWS_Helpers::get_unit( $entry['param'] ),
+            'decimals' => self::decimals( $entry['param'] ),
+            'name'     => self::series_name( $parsed['ref'], $parsed['qty'] ),
+        ];
+    }
+
+    /**
+     * The whole block. Visitors get '' when nothing can be drawn; editors
+     * see why, also next to a chart that lost one of its two series.
+     *
+     * @param array $atts     a, b, from, to, months, title, height (after shortcode_atts).
+     * @param bool  $no_cache True for the admin preview.
+     */
+    public static function render( array $atts, bool $no_cache = false ): string {
+        $today     = wp_date( 'Y-m-d' );
+        $yesterday = gmdate( 'Y-m-d', strtotime( $today . ' 12:00:00 UTC' ) - self::DAY );
+        $range     = NAWS_Database::get_daily_data_range();
+        $first_day = ! empty( $range['date_begin'] ) ? (string) $range['date_begin'] : null;
+        $period    = self::period( $atts, $first_day, $yesterday );
+
+        $notices = '';
+        $series  = [];
+        foreach ( [ 'a', 'b' ] as $key ) {
+            $spec = trim( (string) ( $atts[ $key ] ?? '' ) );
+            if ( $spec === '' ) {
+                continue;
+            }
+            $parsed = self::parse_series( $spec );
+            $data   = ! $parsed['ok']
+                ? [ 'error' => $parsed['error'] ]
+                : ( $period['from'] === null ? [ 'error' => 'no_data' ] : self::rows_for( $parsed, $period['from'], $period['to'], $no_cache ) );
+            if ( isset( $data['error'] ) ) {
+                $notices .= NAWS_Records::notice( 'naws_compare', $data['error'], $spec );
+                continue;
+            }
+            $series[] = $data;
+        }
+        if ( $series === [] ) {
+            return $notices;
+        }
+
+        $built = self::build( $series, (string) $period['from'], $period['to'], $period['auto_from'], $period['auto_to'] );
+        if ( $built['dates'] === [] ) {
+            return $notices;
+        }
+        $axes = self::axes( $series[0]['unit'], isset( $series[1] ) ? $series[1]['unit'] : null );
+
+        $palette = NAWS_Colors::get_history_palette();
+        $out     = [];
+        foreach ( $series as $i => $s ) {
+            $out[] = [
+                'name'     => $s['name'],
+                'unit'     => $s['unit'],
+                'chart'    => $s['chart'],
+                'axis'     => $i === 0 ? $axes['a'] : $axes['b'],
+                'decimals' => $s['decimals'],
+                'values'   => $built['values'][ $i ],
+            ];
+        }
+        $naws_cmp = [
+            'dates'   => $built['dates'],
+            'weekly'  => $built['weekly'],
+            'series'  => $out,
+            'right'   => $axes['right'],
+            'locale'  => str_replace( '_', '-', get_locale() ),
+            'decimal' => substr( number_format_i18n( 1.5, 1 ), 1, 1 ),
+            'colors'  => [ $palette[0] ?? '#427272', $palette[1] ?? '#c08a3e' ],
+            'theme'   => NAWS_Colors::get_chart_theme(),
+            'labels'  => [ 'close' => naws_label( 'cmp_close' ) ],
+        ];
+        $naws_cmp_id     = wp_unique_id( 'naws-cmp-' );
+        $naws_cmp_title  = trim( (string) ( $atts['title'] ?? '' ) );
+        $naws_cmp_height = max( 200, min( 900, (int) ( $atts['height'] ?? 360 ) ?: 360 ) );
+
+        ob_start();
+        include NAWS_PLUGIN_DIR . 'templates/compare.php';
+        return $notices . ob_get_clean();
+    }
 }

@@ -283,6 +283,8 @@ final class NAWS_Records {
             $key = 'otd_notice_no_hits';
         } elseif ( $shortcode === 'naws_month_review' && $reason === 'no_complete_month' ) {
             $key = 'mr_notice_no_complete_month';
+        } elseif ( $shortcode === 'naws_compare' && in_array( $reason, [ 'syntax', 'unknown_module', 'inactive_module', 'unknown_quantity', 'no_data' ], true ) ) {
+            $key = 'cmp_notice_' . $reason;
         }
         if ( $reason === 'db_error' && $detail === '' ) {
             $detail = NAWS_Database::last_error();

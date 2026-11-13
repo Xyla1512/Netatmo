@@ -16,6 +16,7 @@ class NAWS_Shortcodes {
         'naws_records'        => 'sc_records',
         'naws_on_this_day'    => 'sc_on_this_day',
         'naws_month_review'   => 'sc_month_review',
+        'naws_compare'        => 'sc_compare',
         'naws_sunpath'        => 'sc_sunpath',
         'naws_windrose'       => 'sc_windrose',
         'naws_sparkline'      => 'sc_sparkline',
@@ -40,7 +41,7 @@ class NAWS_Shortcodes {
     }
 
     private function __construct() {
-        // One wrapper for all nineteen: decode the attributes before a handler
+        // One wrapper for all twenty: decode the attributes before a handler
         // sees them. Page builders write quotes as &quot;, WordPress passes that
         // through as it is, and sanitize_key() then turns "dewpoint" into
         // quotdewpointquot — the shortcode shows only its fallback.
@@ -123,6 +124,12 @@ class NAWS_Shortcodes {
         wp_register_script( 'naws-month-review',
             NAWS_PLUGIN_URL . 'assets/js/month-review.js',
             [], NAWS_Helpers::asset_version( 'assets/js/month-review.js' ), true );
+
+        // [naws_compare]: two daily series on one time axis. The data come
+        // inline as JSON; this script draws them (also the admin preview).
+        wp_register_script( 'naws-compare-boot',
+            NAWS_PLUGIN_URL . 'assets/js/compare-boot.js',
+            [ 'naws-chartjs', 'naws-chartjs-adapter' ], NAWS_Helpers::asset_version( 'assets/js/compare-boot.js' ), true );
     }
 
     private function enqueue_frontend() {
@@ -396,6 +403,31 @@ class NAWS_Shortcodes {
         return NAWS_Month_Review::render( $atts, $wanted, true );
     }
 
+    // ----------------------------------------------------------------
+    // [naws_compare a="indoor:humidity" b="outdoor:humidity" from="" to="" months="" title="" height="360"]
+    // Two modules on one time axis, since 2.2.0
+    // ----------------------------------------------------------------
+    public function sc_compare( $atts ) {
+        $atts = shortcode_atts( [
+            'a'      => 'indoor:humidity',
+            'b'      => 'outdoor:humidity',
+            'from'   => '',
+            'to'     => '',
+            'months' => '',
+            'title'  => '',
+            'height' => '360',
+        ], $atts, 'naws_compare' );
+        $atts = array_map( static fn( $v ) => sanitize_text_field( (string) $v ), $atts );
+
+        $html = NAWS_Compare::render( $atts );
+        if ( str_contains( $html, 'data-naws-cmp' ) ) {
+            $this->enqueue_frontend();
+            wp_enqueue_script( 'naws-compare-boot' );
+        } elseif ( $html !== '' ) {
+            $this->enqueue_frontend_styles(); // styles the editors' notice
+        }
+        return $html;
+    }
     // ----------------------------------------------------------------
     // [naws_sunpath title=""]
     // The sun on its arc over the station, since 1.9.11
