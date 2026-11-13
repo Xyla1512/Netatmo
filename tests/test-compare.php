@@ -71,6 +71,47 @@ $db = file_get_contents( dirname( __DIR__ ) . '/includes/class-naws-database.php
 check( 'get_daily_summaries kennt indoor_humidity_avg', (bool) preg_match( "/\\\$allowed_fields\\s*=\\s*\\[[^\\]]*'indoor_humidity_avg'/", $db ), true );
 check( 'get_daily_summaries kennt indoor_temp_avg', (bool) preg_match( "/\\\$allowed_fields\\s*=\\s*\\[[^\\]]*'indoor_temp_avg'/", $db ), true );
 
+echo "\nZusammenfuehren, Verdichten, Achsen\n" . str_repeat( '-', 74 ) . "\n";
+
+$a = [ 'values' => [ '2025-01-01' => 50.0, '2025-01-03' => 52.0 ], 'chart' => 'line' ];
+$b = [ 'values' => [ '2025-01-02' => 80.0 ], 'chart' => 'line' ];
+$r = NAWS_Compare::build( [ $a, $b ], '2024-12-30', '2025-01-05', true, true );
+check( 'auto zugeschnitten', $r['dates'], [ '2025-01-01', '2025-01-02', '2025-01-03' ] );
+check( 'Luecke = null (a)', $r['values'][0], [ 50.0, null, 52.0 ] );
+check( 'Luecke = null (b)', $r['values'][1], [ null, 80.0, null ] );
+check( 'taeglich', $r['weekly'], false );
+check( 'fester Zeitraum bleibt', count( NAWS_Compare::build( [ $a ], '2024-12-30', '2025-01-05', false, false )['dates'] ), 7 );
+check( 'nur auto_to schneidet hinten', NAWS_Compare::build( [ $a ], '2024-12-30', '2025-01-05', false, true )['dates'][0], '2024-12-30' );
+check( 'nichts -> leer', NAWS_Compare::build( [ [ 'values' => [], 'chart' => 'line' ] ], '2025-01-01', '2025-01-31', true, true )['dates'], [] );
+check( 'Wert ausserhalb des Zeitraums zaehlt nicht', NAWS_Compare::build( [ [ 'values' => [ '2026-01-01' => 1.0 ], 'chart' => 'line' ] ], '2025-01-01', '2025-01-31', true, true )['dates'], [] );
+
+/** $n days from $from, every day $value. */
+function naws_series_days( string $from, int $n, float $value, string $chart ): array {
+    $v = [];
+    for ( $i = 0; $i < $n; $i++ ) {
+        $v[ gmdate( 'Y-m-d', strtotime( $from . ' +' . $i . ' days' ) ) ] = $value;
+    }
+    return [ 'values' => $v, 'chart' => $chart ];
+}
+$f      = '2015-01-05'; // a Monday
+$t3650  = gmdate( 'Y-m-d', strtotime( $f . ' +3649 days' ) );
+$t3651  = gmdate( 'Y-m-d', strtotime( $f . ' +3650 days' ) );
+check( '3650 Tage taeglich', NAWS_Compare::build( [ naws_series_days( $f, 3650, 10.0, 'line' ) ], $f, $t3650, false, false )['weekly'], false );
+$w = NAWS_Compare::build( [ naws_series_days( $f, 3651, 10.0, 'line' ), naws_series_days( $f, 3651, 1.0, 'bar' ) ], $f, $t3651, false, false );
+check( '3651 Tage -> Wochen', $w['weekly'], true );
+check( 'erste Woche beginnt am Montag', $w['dates'][0], '2015-01-05' );
+check( 'Wochendatum ist Montag', gmdate( 'N', strtotime( $w['dates'][1] ) ), '1' );
+check( 'Woche Linie = Mittel', $w['values'][0][1], 10.0 );
+check( 'Woche Balken = Summe', $w['values'][1][1], 7.0 );
+check( 'gleich lang', count( $w['values'][0] ), count( $w['dates'] ) );
+$gap = naws_series_days( $f, 3651, 10.0, 'line' );
+foreach ( array_slice( array_keys( $gap['values'] ), 7, 7 ) as $d ) { $gap['values'][ $d ] = null; }
+check( 'Woche ohne Werte = null', NAWS_Compare::build( [ $gap ], $f, $t3651, false, false )['values'][0][1], null );
+
+check( 'gleiche Einheit eine Achse', NAWS_Compare::axes( '%', '%' ), [ 'a' => 'y', 'b' => 'y', 'right' => false ] );
+check( 'zwei Einheiten zwei Achsen', NAWS_Compare::axes( '°C', '%' ), [ 'a' => 'y', 'b' => 'y1', 'right' => true ] );
+check( 'eine Reihe', NAWS_Compare::axes( '°C', null ), [ 'a' => 'y', 'b' => null, 'right' => false ] );
+
 echo "\n" . str_repeat( '-', 74 ) . "\n";
 printf( "%d bestanden, %d fehlgeschlagen\n\n", $passed, $failed );
 exit( $failed > 0 ? 1 : 0 );

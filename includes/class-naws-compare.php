@@ -20,6 +20,9 @@ final class NAWS_Compare {
     /** Beyond this many days a series is thinned to ISO weeks. */
     const MAX_DAYS = 3650;
 
+    /** Seconds per day (no WordPress constant in the pure part). */
+    const DAY = 86400;
+
     /** Bounds of the months attribute. */
     const MONTHS_MAX = 120;
 
@@ -153,6 +156,102 @@ final class NAWS_Compare {
         }
 
         return [ 'from' => $from, 'to' => $to, 'auto_from' => $auto_from, 'auto_to' => $auto_to ];
+    }
+
+    /**
+     * The series on one shared day axis.
+     *
+     * Every calendar day from..to is a point; a day without a value is null,
+     * so the chart breaks the line there instead of drawing across a gap.
+     * auto_from/auto_to trim the axis to the first/last day on which any
+     * series has a value. Beyond MAX_DAYS the series are thinned to ISO
+     * weeks (Monday as the date): lines the mean of the week's values,
+     * bars their sum, a week without values null.
+     *
+     * @param array $series List of ['values' => ['Y-m-d' => ?float], 'chart' => 'line'|'bar'].
+     * @return array{dates: string[], values: array, weekly: bool}
+     */
+    public static function build( array $series, string $from, string $to, bool $auto_from, bool $auto_to ): array {
+        $first = null;
+        $last  = null;
+        foreach ( $series as $s ) {
+            foreach ( $s['values'] as $day => $v ) {
+                if ( $v === null || $day < $from || $day > $to ) {
+                    continue;
+                }
+                $first = ( $first === null || $day < $first ) ? $day : $first;
+                $last  = ( $last === null || $day > $last ) ? $day : $last;
+            }
+        }
+        if ( $first === null ) {
+            return [ 'dates' => [], 'values' => array_fill( 0, count( $series ), [] ), 'weekly' => false ];
+        }
+        if ( $auto_from ) {
+            $from = $first;
+        }
+        if ( $auto_to ) {
+            $to = $last;
+        }
+
+        $dates = [];
+        for ( $t = strtotime( $from . ' 12:00:00 UTC' ), $end = strtotime( $to . ' 12:00:00 UTC' ); $t <= $end; $t += self::DAY ) {
+            $dates[] = gmdate( 'Y-m-d', $t );
+        }
+
+        if ( count( $dates ) <= self::MAX_DAYS ) {
+            $values = [];
+            foreach ( $series as $s ) {
+                $row = [];
+                foreach ( $dates as $day ) {
+                    $row[] = isset( $s['values'][ $day ] ) ? (float) $s['values'][ $day ] : null;
+                }
+                $values[] = $row;
+            }
+            return [ 'dates' => $dates, 'values' => $values, 'weekly' => false ];
+        }
+
+        // ISO weeks, keyed by their Monday.
+        $weeks = [];
+        foreach ( $dates as $day ) {
+            $t      = strtotime( $day . ' 12:00:00 UTC' );
+            $monday = gmdate( 'Y-m-d', $t - ( (int) gmdate( 'N', $t ) - 1 ) * self::DAY );
+            $weeks[ $monday ][] = $day;
+        }
+        $values = [];
+        foreach ( $series as $s ) {
+            $row = [];
+            foreach ( $weeks as $days ) {
+                $vals = [];
+                foreach ( $days as $day ) {
+                    if ( isset( $s['values'][ $day ] ) ) {
+                        $vals[] = (float) $s['values'][ $day ];
+                    }
+                }
+                if ( $vals === [] ) {
+                    $row[] = null;
+                } elseif ( ( $s['chart'] ?? 'line' ) === 'bar' ) {
+                    $row[] = round( array_sum( $vals ), 3 );
+                } else {
+                    $row[] = round( array_sum( $vals ) / count( $vals ), 3 );
+                }
+            }
+            $values[] = $row;
+        }
+        return [ 'dates' => array_keys( $weeks ), 'values' => $values, 'weekly' => true ];
+    }
+
+    /**
+     * Which axis each series draws on: one shared axis for one unit, a
+     * second one on the right for a second unit.
+     */
+    public static function axes( string $unit_a, ?string $unit_b ): array {
+        if ( $unit_b === null ) {
+            return [ 'a' => 'y', 'b' => null, 'right' => false ];
+        }
+        if ( $unit_a === $unit_b ) {
+            return [ 'a' => 'y', 'b' => 'y', 'right' => false ];
+        }
+        return [ 'a' => 'y', 'b' => 'y1', 'right' => true ];
     }
 
     /** JJJJ-MM or JJJJ-MM-TT to Y-m-d; a month gives its first or last day. Invalid → null. */
