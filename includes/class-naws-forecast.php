@@ -629,14 +629,22 @@ class NAWS_Forecast {
             // what adds up. Further out the entries are six-hourly and only
             // the 6-hour window exists; those windows do not overlap.
             // (Until 2.2.0 the 6-hour window won and the near days showed
-            // about six times the rain.) The probability follows the same
-            // window; the day keeps its highest value.
+            // about six times the rain.)
             $window = isset( $next1['details']['precipitation_amount'] ) ? $next1 : $next6;
             if ( isset( $window['details']['precipitation_amount'] ) ) {
                 $d['precip'] += (float) $window['details']['precipitation_amount'];
             }
-            if ( isset( $window['details']['probability_of_precipitation'] ) ) {
-                $d['prob'] = max( $d['prob'] ?? 0.0, (float) $window['details']['probability_of_precipitation'] );
+            // Probability on its own window: MET gives it only for the Nordic
+            // area (checked for Leipzig, Nov 2026: none at all, 1 h or 6 h) -
+            // elsewhere it stays null and the forecast shows no figure. The
+            // 6-hour value first keeps near and far days comparable; the day
+            // keeps its highest value.
+            $prob = $next6['details']['probability_of_precipitation']
+                ?? $next1['details']['probability_of_precipitation']
+                ?? $next12['details']['probability_of_precipitation']
+                ?? null;
+            if ( $prob !== null ) {
+                $d['prob'] = max( $d['prob'] ?? 0.0, (float) $prob );
             }
 
             // Symbol: use the midday (12:00) symbol, or the first available

@@ -14,7 +14,8 @@
  * @package NAWS
  */
 define( 'ABSPATH', __DIR__ );
-function naws_timezone() { return new DateTimeZone( 'UTC' ); } // get_readings() buckets days in the site's timezone (since 2.2.0)
+function wp_timezone() { return new DateTimeZone( 'UTC' ); } // get_readings() buckets days in the site's timezone (since 2.2.0)
+require_once dirname( __DIR__ ) . '/includes/class-naws-helpers.php';
 define( 'ARRAY_A', 'ARRAY_A' );
 define( 'MINUTE_IN_SECONDS', 60 );
 define( 'HOUR_IN_SECONDS', 3600 );

@@ -49,6 +49,14 @@ for ( $h = 0; $h < 24; $h++ ) {
 foreach ( [ 0, 6, 12, 18 ] as $h ) {
     $series[] = entry( sprintf( '2026-11-17T%02d:00:00Z', $h ), null, [ 1.0, 30.0 ] );
 }
+// 15.11.: hourly entries without an hourly probability but with 6-hour ones
+// (40 %, one 70 %). Outside the Nordic area MET sends none at all (Leipzig,
+// Nov 2026) - that case is the 18.11. entry below.
+for ( $h = 0; $h < 24; $h++ ) {
+    $e = entry( sprintf( '2026-11-15T%02d:00:00Z', $h ), [ 0.0, 0.0 ], [ 0.0, $h === 9 ? 70.0 : 40.0 ] );
+    unset( $e['data']['next_1_hours']['details']['probability_of_precipitation'] );
+    $series[] = $e;
+}
 // 18.11.: compact-style entry — no probability at all.
 $series[] = [ 'time' => '2026-11-18T00:00:00Z', 'data' => [
     'instant'      => [ 'details' => [ 'air_temperature' => 4.0 ] ],
@@ -68,7 +76,10 @@ check( 'stuendlicher Teil: 24 x 0,1 mm, nicht ueberlappende 6-h-Fenster', $days[
 check( 'sechsstuendlicher Teil: 4 x 1,0 mm', $days['2026-11-17']['precip_sum'], 4.0 );
 
 echo "\nRegenwahrscheinlichkeit\n" . str_repeat( '-', 74 ) . "\n";
-check( 'hoechster Stundenwert des Tages', $days['2026-11-14']['precip_prob'], 80 );
+// Probability from the 6-hour windows (present everywhere), so near and
+// far days are comparable; hourly values only where no 6-hour one exists.
+check( 'aus den 6-h-Fenstern, auch im stuendlichen Teil', $days['2026-11-14']['precip_prob'], 50 );
+check( 'ohne Stundenwahrscheinlichkeit (Leipzig): 6-h-Hoechstwert', $days['2026-11-15']['precip_prob'], 70 );
 check( 'aus den 6-h-Fenstern, wo es keine Stunden gibt', $days['2026-11-17']['precip_prob'], 30 );
 check( 'ohne Angabe: null statt 0', $days['2026-11-18']['precip_prob'], null );
 

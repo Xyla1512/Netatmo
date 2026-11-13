@@ -913,6 +913,61 @@ class NAWS_Helpers {
      * beginning at 0 quietly returns the oldest rows instead of the newest.
      */
     /**
+     * The site timezone's UTC offset in force over a time range, as
+     * [ until, offset ] pairs: the offset applies to times before 'until';
+     * the last pair runs to PHP_INT_MAX. One pair when no DST change falls
+     * inside the range.
+     *
+     * @since 2.2.0
+     * @return array<int, array{0:int,1:int}>
+     */
+    public static function tz_segments( int $from, int $to ): array {
+        $from  = max( 0, $from );
+        $trans = naws_timezone()->getTransitions( $from, max( $from, $to ) );
+        if ( ! is_array( $trans ) || $trans === [] ) {
+            return [ [ PHP_INT_MAX, (int) naws_timezone()->getOffset( new DateTimeImmutable( '@' . $from ) ) ] ];
+        }
+        $seg = [];
+        $n   = count( $trans );
+        for ( $i = 0; $i < $n; $i++ ) {
+            $seg[] = [ $i + 1 < $n ? (int) $trans[ $i + 1 ]['ts'] : PHP_INT_MAX, (int) $trans[ $i ]['offset'] ];
+        }
+        return $seg;
+    }
+
+    /** Local midnight (as a timestamp) of the day $ts falls on, given tz_segments(). @since 2.2.0 */
+    public static function local_day_start( int $ts, array $segments ): int {
+        $off = (int) end( $segments )[1];
+        foreach ( $segments as [ $until, $o ] ) {
+            if ( $ts < $until ) {
+                $off = (int) $o;
+                break;
+            }
+        }
+        return (int) ( floor( ( $ts + $off ) / 86400 ) * 86400 - $off );
+    }
+
+    /**
+     * SQL for local_day_start() on a column: each row gets the offset that
+     * was in force at its own time, so a winter day queried in summer keeps
+     * its date. Integers only — safe to place in a query.
+     *
+     * @since 2.2.0
+     */
+    public static function local_day_bucket_sql( string $column, array $segments ): string {
+        $col = preg_replace( '/[^A-Za-z0-9_.]/', '', $column );
+        if ( count( $segments ) === 1 ) {
+            $off = (string) (int) $segments[0][1];
+        } else {
+            $off  = 'CASE';
+            $last = count( $segments ) - 1;
+            foreach ( $segments as $i => [ $until, $o ] ) {
+                $off .= $i < $last ? ' WHEN ' . $col . ' < ' . (int) $until . ' THEN ' . (int) $o : ' ELSE ' . (int) $o . ' END';
+            }
+        }
+        return 'FLOOR((' . $col . ' + ' . $off . ')/86400)*86400 - ' . $off;
+    }
+    /**
      * Midnight, in the site's timezone, that opens the last $days calendar
      * days including today. Seven days on the 13th start on the 7th 00:00 —
      * "now minus 7 x 24 h" would reach into an eighth day.

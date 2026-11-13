@@ -40,11 +40,28 @@ check( 'riesige Zahl: begrenzt auf 3660 Tage', NAWS_Helpers::calendar_start( PHP
 check( 'riesiger Zeitraum im Shortcode: keine Tageszahl', NAWS_Helpers::period_days( '99999999999999999999d' ), null );
 check( '0 Tage wie 1 Tag', NAWS_Helpers::calendar_start( 0, $now ), $berlin( '2026-11-13 00:00:00' ) );
 
+echo "\nTagesgrenzen ueber die Zeitumstellung\n" . str_repeat( '-', 74 ) . "\n";
+// Jeder Messwert braucht den Versatz, der zu SEINER Zeit galt — nicht den
+// von heute. Sonst landen im Sommer abgefragte Wintertage auf 23:00 des
+// Vortags (Gesamtpruefung des Fehlerbuendels).
+$seg = NAWS_Helpers::tz_segments( $berlin( '2027-03-20 00:00:00' ), $berlin( '2027-04-02 00:00:00' ) );
+check( 'zwei Abschnitte um die Umstellung im Maerz', count( $seg ), 2 );
+check( 'Winterzeit bis 28.03. 01:00 UTC', $seg[0], [ gmmktime( 1, 0, 0, 3, 28, 2027 ), 3600 ] );
+check( 'danach Sommerzeit', $seg[1], [ PHP_INT_MAX, 7200 ] );
+$day = static fn( int $t ) => NAWS_Helpers::local_day_start( $t, $seg );
+check( 'Wintertag behaelt sein Datum', gmdate( 'Y-m-d H:i', $day( $berlin( '2027-03-26 12:00:00' ) ) ), '2027-03-25 23:00' ); // = 26.03. 00:00 MEZ
+check( 'Sommertag behaelt sein Datum', gmdate( 'Y-m-d H:i', $day( $berlin( '2027-03-30 12:00:00' ) ) ), '2027-03-29 22:00' ); // = 30.03. 00:00 MESZ
+check( 'kurz nach Mitternacht Sommerzeit', $day( $berlin( '2027-03-30 00:30:00' ) ), $berlin( '2027-03-30 00:00:00' ) );
+$sql = NAWS_Helpers::local_day_bucket_sql( 'r.recorded_at', $seg );
+check( 'SQL: Versatz je Zeile per CASE', str_contains( $sql, 'CASE WHEN r.recorded_at < ' . gmmktime( 1, 0, 0, 3, 28, 2027 ) . ' THEN 3600 ELSE 7200 END' ), true );
+check( 'SQL: nur Zahlen', (bool) preg_match( '/^[\sA-Za-z_.()<>+\-*\/0-9]+$/', $sql ), true );
+check( 'ohne Umstellung: kein CASE', str_contains( NAWS_Helpers::local_day_bucket_sql( 'r.recorded_at', [ [ PHP_INT_MAX, 3600 ] ] ), 'CASE' ), false );
+
 echo "\nAbfrage und Shortcode\n" . str_repeat( '-', 74 ) . "\n";
 $db = file_get_contents( dirname( __DIR__ ) . '/includes/class-naws-database.php' );
 check( 'gruppiert: Zeit, Modul, Messgroesse', str_contains( $db, 'ORDER BY recorded_at ASC, r.module_id ASC, r.parameter ASC' ), true );
 check( 'ungruppiert: Zeit, Modul, Messgroesse', str_contains( $db, 'ORDER BY r.recorded_at ASC, r.module_id ASC, r.parameter ASC' ), true );
-check( 'Tage nach Ortszeit getrennt', (bool) preg_match( "/'day'\s*=>\s*'FLOOR\(\(r\.recorded_at \+ %d\)\/86400\)\*86400 - %d'/", $db ) || str_contains( $db, "'day'   => \"FLOOR((r.recorded_at + {\$tz_off})/86400)*86400 - {\$tz_off}\"" ), true );
+check( 'Tage nach Ortszeit getrennt, Versatz je Zeile', str_contains( $db, "'day'   => NAWS_Helpers::local_day_bucket_sql( 'r.recorded_at', NAWS_Helpers::tz_segments( " ), true );
 $sc = file_get_contents( dirname( __DIR__ ) . '/includes/class-naws-shortcodes.php' );
 check( '[naws_table] nach Tagen nutzt Kalendertage', str_contains( $sc, 'NAWS_Helpers::calendar_start(' ), true );
 

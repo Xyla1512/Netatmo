@@ -609,13 +609,14 @@ class NAWS_Database {
         $limit_sql = $args['limit'] > 0 ? 'LIMIT ' . intval( $args['limit'] ) : '';
 
         // SELECT + GROUP
-        // Days end at local midnight, not at UTC midnight: the offset of the
-        // site's timezone now is added before flooring and taken off after.
-        // (int) cast, so it is safe in the SQL string.
-        $tz_off  = (int) naws_timezone()->getOffset( new DateTimeImmutable( 'now' ) );
+        // Days end at local midnight, not at UTC midnight, and every row gets
+        // the offset in force at its own time (DST): see local_day_bucket_sql().
+        // Without a lower bound the range starts ten years back.
+        $tz_from = ! empty( $args['date_from'] ) ? (int) $args['date_from'] : time() - 10 * 366 * 86400;
+        $tz_to   = ! empty( $args['date_to'] ) ? (int) $args['date_to'] : time();
         $buckets = [
             'hour'  => 'FLOOR(r.recorded_at/3600)*3600',
-            'day'   => "FLOOR((r.recorded_at + {$tz_off})/86400)*86400 - {$tz_off}",
+            'day'   => NAWS_Helpers::local_day_bucket_sql( 'r.recorded_at', NAWS_Helpers::tz_segments( $tz_from, $tz_to ) ),
             'week'  => 'FLOOR(r.recorded_at/604800)*604800',
             'month' => "UNIX_TIMESTAMP(DATE_FORMAT(FROM_UNIXTIME(r.recorded_at),'%%Y-%%m-01'))",
             'year'  => "UNIX_TIMESTAMP(DATE_FORMAT(FROM_UNIXTIME(r.recorded_at),'%%Y-01-01'))",
