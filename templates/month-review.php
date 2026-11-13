@@ -50,15 +50,6 @@ $naws_mr_tiles = [
     'gust' => [ 'param' => 'GustStrength', 'field' => 'gust_max', 'decimals' => (int) $naws_mr_catalogue['strongest_gust']['decimals'] ],
 ];
 
-/** The number a tile shows: the scalar or an extreme's value. */
-$naws_mr_figure = static function ( array $summary, string $kpi ): ?float {
-    $v = $summary[ $kpi ];
-    if ( is_array( $v ) ) {
-        $v = $v['value'];
-    }
-    return $v === null ? null : (float) $v;
-};
-
 // The headline: one sentence, month name only or with the year.
 $naws_mr_head_key = (string) $headline['key'];
 if ( in_array( $naws_mr_head_key, [ 'mr_head_hottest_day', 'mr_head_coldest_night', 'mr_head_gust' ], true ) ) {
@@ -136,7 +127,7 @@ if ( $nav ) {
 
     <div class="naws-mr-tiles">
       <?php foreach ( $naws_mr_tiles as $naws_mr_kpi => $naws_mr_tile ) :
-          $naws_mr_now = $naws_mr_figure( $naws_mr_cur, $naws_mr_kpi );
+          $naws_mr_now = NAWS_Month_Review::figure( $naws_mr_cur, $naws_mr_kpi );
           if ( $naws_mr_now === null ) {
               continue; // No readings for this column at all: no tile.
           }
@@ -176,7 +167,7 @@ if ( $nav ) {
           <?php endif; ?>
 
           <?php foreach ( $cmp['previous'] as $naws_mr_year => $naws_mr_prev ) :
-              $naws_mr_then = $naws_mr_figure( $naws_mr_prev, $naws_mr_kpi );
+              $naws_mr_then = NAWS_Month_Review::figure( $naws_mr_prev, $naws_mr_kpi );
               if ( $naws_mr_then === null || ! $naws_mr_prev['complete'][ $naws_mr_kpi ] ) {
                   continue;
               }

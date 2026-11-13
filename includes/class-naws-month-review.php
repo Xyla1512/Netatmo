@@ -404,7 +404,7 @@ final class NAWS_Month_Review {
         return (string) ob_get_clean();
     }
     /** The number a tile compares: the scalar or an extreme's value. */
-    private static function figure( array $summary, string $kpi ): ?float {
+    public static function figure( array $summary, string $kpi ): ?float {
         $v = $summary[ $kpi ];
         if ( is_array( $v ) ) {
             $v = $v['value'];
