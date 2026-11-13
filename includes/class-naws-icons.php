@@ -147,7 +147,7 @@ class NAWS_Icons {
         if ( ! isset( $shapes[ $key ] ) ) {
             return '';
         }
-        return '<svg class="naws-picto" viewBox="0 0 32 32" aria-hidden="true" focusable="false">' . $shapes[ $key ] . '</svg>';
+        return '<svg class="naws-picto" viewBox="0 0 32 32" width="1em" height="1em" aria-hidden="true" focusable="false">' . $shapes[ $key ] . '</svg>';
     }
 
     /**

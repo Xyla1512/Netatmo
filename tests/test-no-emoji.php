@@ -67,7 +67,9 @@ function naws_kses_gaps( string $svg ): array {
         }
         preg_match_all( '/([a-zA-Z-]+)="/', $t[2], $attrs );
         foreach ( $attrs[1] as $a ) {
-            if ( empty( $allowed[ $tag ][ $a ] ) && empty( $allowed[ $tag ][ strtolower( $a ) ] ) ) {
+            // wp_kses_attr_check() looks attributes up in lower case only,
+            // so a camelCase key such as 'viewBox' never matches.
+            if ( empty( $allowed[ $tag ][ strtolower( $a ) ] ) ) {
                 $gaps[] = $tag . '@' . $a;
             }
         }
@@ -88,6 +90,8 @@ if ( method_exists( 'NAWS_Icons', 'pictogram' ) ) {
         check( "$k: aria-hidden", str_contains( $svg, 'aria-hidden="true"' ), true );
         check( "$k: uebersteht kses", naws_kses_gaps( $svg ), [] );
     }
+    check( 'viewBox ueberlebt kses (Schluessel klein)', ! empty( naws_svg_kses_args()['svg']['viewbox'] ), true );
+    check( 'Groesse als Rueckfall ohne CSS', str_contains( NAWS_Icons::pictogram( 'temp' ), 'width="1em" height="1em"' ), true );
     check( 'CO2-Symbol mit Text', str_contains( NAWS_Icons::pictogram( 'co2' ), '>CO₂</text>' ), true );
     foreach ( [ 'temp', 'humid', 'press', 'wind', 'rain', 'co2', 'noise' ] as $k ) {
         check( "Satz Emoji $k = Piktogramm", NAWS_Icons::get_set( 'emoji' )[ $k ], NAWS_Icons::pictogram( $k ) );
@@ -103,6 +107,7 @@ echo "\nRueckfall und Doku\n" . str_repeat( '-', 74 ) . "\n";
 check( 'unbekannter Messwert: kein Ersatzsymbol', NAWS_Helpers::get_icon( 'Unbekannt' ), '' );
 $readme = file_get_contents( dirname( __DIR__ ) . '/readme.txt' );
 check( 'readme: kein Fremdinhalt im Browser', str_contains( $readme, 'loads nothing from other servers into the visitor' ), true );
+check( 'readme: keine Rechtsberatung', str_contains( $readme, 'This plugin adds nothing to your privacy notice on the visitor side' ), true );
 
 echo "\nWaechter\n" . str_repeat( '-', 74 ) . "\n";
 check( 'kein Emoji im Frontend-Code', naws_emoji_hits(), [] );

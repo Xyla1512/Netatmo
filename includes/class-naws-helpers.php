@@ -11,7 +11,9 @@ function naws_svg_kses_args(): array {
     static $allowed = null;
     if ( null === $allowed ) {
         $allowed = [
-            'svg'      => [ 'xmlns' => true, 'viewBox' => true, 'width' => true, 'height' => true,
+            // Keys in lower case: wp_kses_attr_check() lowercases attribute names
+            // before the lookup, so 'viewBox' never matched and was stripped.
+            'svg'      => [ 'xmlns' => true, 'viewbox' => true, 'width' => true, 'height' => true,
                             'fill' => true, 'stroke' => true, 'stroke-width' => true,
                             'stroke-linecap' => true, 'stroke-linejoin' => true,
                             'class' => true, 'aria-hidden' => true, 'focusable' => true ],

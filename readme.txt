@@ -165,7 +165,7 @@ Security: visitors can no longer make the chart endpoints run PHP out of memory 
 
 == Privacy & External Services ==
 
-**Nothing for your privacy notice on the visitor side.** Everything your visitors see — charts, symbols, rain radar images, map tiles, fonts and scripts — is served from your own site. The plugin loads nothing from other servers into the visitor's browser: no weather service, map server, font host or CDN learns who looks at your weather pages. The symbols are the plugin's own drawings rather than emoji, so WordPress has no emoji images to fetch for them either.
+**This plugin adds nothing to your privacy notice on the visitor side.** Everything your visitors see — charts, symbols, rain radar images, map tiles, fonts and scripts — is served from your own site. The plugin loads nothing from other servers into the visitor's browser: no weather service, map server, font host or CDN learns who looks at your weather pages. The symbols are the plugin's own drawings rather than emoji, so WordPress has no emoji images to fetch for them either.
 
 Only your server talks to the services below, without any visitor data:
 
