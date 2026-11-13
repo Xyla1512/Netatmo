@@ -163,7 +163,18 @@ Zweig `modulvergleich` (von `main` 59ef81f). Auf dev einspielen, Hilfsseite mit 
 
 Auswahl durch Besucher (Auswahllisten im Frontend) wurde von Frank ausgeschlossen.
 
-## 11. Dem Bauer überlassen
+## 11. Festlegungen nach Prüfung (meine Entscheidungen)
+
+1. **Deaktivierte Module** (Modul-Schalter im Modul-Tab) zählen wie im ganzen Plugin als nicht vorhanden: Im Baukasten erscheinen sie nicht, im Shortcode gibt es für Redakteure den Hinweis „Modul ist deaktiviert“, Besucher sehen die andere Reihe bzw. nichts. `get_daily_summaries()` filtert sie ohnehin (`active_module_ids()`); kein neuer Abfrageweg.
+2. **Immer `group_by = day`.** Die Verdichtung auf Wochenmittel ab 3 651 Tagen macht `NAWS_Compare::build()` in PHP. Neu in `get_daily_summaries()` sind nur die zwei Felder in `$allowed_fields` (der Wochen-/Monatszweig `$agg_map` bleibt unberührt).
+3. **Zwischenspeicher:** Das Frontend nutzt den vorhandenen Transient-Cache von `get_daily_summaries()` (Schlüssel wechselt täglich mit „gestern“, das ist gewollt). Die Admin-Vorschau ruft mit `no_cache => true` ab, damit jede Bearbeitung keinen Eintrag hinterlässt.
+4. **Leerer Zeitraum:** Ohne `from`/`to` wird die Achse auf den ersten bzw. letzten Tag zugeschnitten, an dem **mindestens eine** der beiden Reihen einen Wert hat. Lücken innerhalb bleiben sichtbar.
+5. **Regen-Balken:** Achse einer Balkenreihe beginnt bei 0.
+6. **Admin-Vorschau ohne „Aufbau im Blick“**: sie zeichnet sofort. `compare-boot.js` darf im Frontend die Helfer aus `frontend.js` (Einblenden im Blick) nutzen, muss aber ohne sie laufen (Admin).
+7. **Namen in der Legende:** dieselbe Regel wie in den Kacheln — Anzeigename, wenn gesetzt, sonst die festen, übersetzten Typnamen (`NAWS_Helpers::type_display_name()`, z. B. „Außen“, „Basis“), bei Innenmodulen der Netatmo-Name.
+8. **Datenabdeckung im Baukasten** („keine Daten“ / „lückenhaft“ > 50 %) kommt aus einer neuen, einmaligen Zählabfrage je Spalte und Modul (`COUNT(col)` gruppiert nach `module_id`), nur im Backend.
+
+## 12. Dem Bauer überlassen
 
 - genaue Farben und CSS innerhalb §5
 - ob „Aufbau im Blick“ ohne Umbau übernehmbar ist
