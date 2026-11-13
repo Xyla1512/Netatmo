@@ -52,6 +52,7 @@ naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-astro.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-calc.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-climate.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-records.php' );
+naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-month-review.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-windrose.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-sparkline.php' );
 naws_require( NAWS_PLUGIN_DIR . 'includes/class-naws-radar-geo.php' );
