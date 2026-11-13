@@ -430,17 +430,17 @@ class NAWS_Forecast {
 
     /**
      * Yr.no current conditions from the first timeseries entry at or after
-     * now. The data is already in the compact response — get_forecast()
+     * now. The data is already in the forecast response — get_forecast()
      * simply discards it in favour of the midday symbol.
      *
-     * Yr.no compact carries no snowfall amount, so that stays null and the
+     * Yr.no carries no snowfall amount, so that stays null and the
      * symbol code alone has to carry the phase.
      *
      * @return array|null  Null on any failure (caller falls back).
      */
     private static function fetch_current_yr( array $location ): ?array {
         $url = sprintf(
-            'https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=%.4f&lon=%.4f',
+            'https://api.met.no/weatherapi/locationforecast/2.0/complete?lat=%.4f&lon=%.4f',
             $location['lat'],
             $location['lon']
         );
@@ -478,9 +478,8 @@ class NAWS_Forecast {
                 return null;
             }
 
-            // The compact endpoint carries only the total; the layer split
-            // is a 'complete' feature. Read it anyway — null costs nothing
-            // and NAWS_Weather_State degrades to the total on its own.
+            // Cloud layers come with the complete endpoint (since 2.2.0); a
+            // missing one is null and NAWS_Weather_State falls back to the total.
             $det = $entry['data']['instant']['details'] ?? [];
 
             return [
@@ -566,7 +565,7 @@ class NAWS_Forecast {
 
     private static function fetch_yr_no( array $location ): array {
         $url = sprintf(
-            'https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=%.4f&lon=%.4f',
+            'https://api.met.no/weatherapi/locationforecast/2.0/complete?lat=%.4f&lon=%.4f',
             $location['lat'],
             $location['lon']
         );
@@ -614,6 +613,7 @@ class NAWS_Forecast {
                     'temps'     => [],
                     'wind'      => [],
                     'precip'    => 0,
+                    'prob'      => null,
                     'symbol'    => '',
                     'wind_dirs' => [],
                 ];
@@ -624,11 +624,19 @@ class NAWS_Forecast {
             if ( isset( $instant['wind_speed'] ) )          $d['wind'][]    = $instant['wind_speed'] * 3.6; // m/s → km/h
             if ( isset( $instant['wind_from_direction'] ) ) $d['wind_dirs'][] = $instant['wind_from_direction'];
 
-            // Precipitation: prefer next_6_hours, fallback to next_1_hours
-            if ( isset( $next6['details']['precipitation_amount'] ) ) {
-                $d['precip'] += (float) $next6['details']['precipitation_amount'];
-            } elseif ( isset( $next1['details']['precipitation_amount'] ) ) {
-                $d['precip'] += (float) $next1['details']['precipitation_amount'];
+            // Precipitation: the first ~2.5 days come hourly, each entry with
+            // its own hour AND an overlapping 6-hour window - so the hour is
+            // what adds up. Further out the entries are six-hourly and only
+            // the 6-hour window exists; those windows do not overlap.
+            // (Until 2.2.0 the 6-hour window won and the near days showed
+            // about six times the rain.) The probability follows the same
+            // window; the day keeps its highest value.
+            $window = isset( $next1['details']['precipitation_amount'] ) ? $next1 : $next6;
+            if ( isset( $window['details']['precipitation_amount'] ) ) {
+                $d['precip'] += (float) $window['details']['precipitation_amount'];
+            }
+            if ( isset( $window['details']['probability_of_precipitation'] ) ) {
+                $d['prob'] = max( $d['prob'] ?? 0.0, (float) $window['details']['probability_of_precipitation'] );
             }
 
             // Symbol: use the midday (12:00) symbol, or the first available
@@ -638,6 +646,10 @@ class NAWS_Forecast {
                 $d['symbol'] = $sym;
             }
         }
+
+        // $d still references the last day; without this the loop below
+        // writes every day into it and the last day shows the one before.
+        unset( $d );
 
         $days = [];
         $i    = 0;
@@ -655,9 +667,9 @@ class NAWS_Forecast {
                 'feels_max'    => null, // Yr.no doesn't provide feels-like
                 'feels_min'    => null,
                 'precip_sum'   => round( $d['precip'], 1 ),
-                'precip_prob'  => 0, // Yr.no compact doesn't include probability
+                'precip_prob'  => $d['prob'] !== null ? (int) round( $d['prob'] ) : null,
                 'wind_max'     => ! empty( $winds ) ? round( max( $winds ), 1 ) : null,
-                'gust_max'     => null, // Not in compact format
+                'gust_max'     => null,
                 'wind_dir'     => ! empty( $dirs ) ? (int) round( array_sum( $dirs ) / count( $dirs ) ) : 0,
                 'sunrise'      => '',
                 'sunset'       => '',
@@ -918,7 +930,7 @@ class NAWS_Forecast {
                 'feels_max'    => self::sf( $daily['apparent_temperature_max'][$i]?? null ),
                 'feels_min'    => self::sf( $daily['apparent_temperature_min'][$i]?? null ),
                 'precip_sum'   => self::sf( $daily['precipitation_sum'][ $i ]     ?? null ),
-                'precip_prob'  => (int)($daily['precipitation_probability_max'][$i]?? 0 ),
+                'precip_prob'  => isset( $daily['precipitation_probability_max'][$i] ) ? (int) $daily['precipitation_probability_max'][$i] : null,
                 'wind_max'     => self::sf( $daily['windspeed_10m_max'][ $i ]     ?? null ),
                 'gust_max'     => self::sf( $daily['windgusts_10m_max'][ $i ]     ?? null ),
                 'wind_dir'     => (int)($daily['winddirection_10m_dominant'][$i]  ?? 0 ),

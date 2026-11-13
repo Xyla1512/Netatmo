@@ -106,7 +106,9 @@ $fc_id = 'naws-fc-' . wp_unique_id();
           </div>
           <div class="naws-fc-meta">
             <span title="<?php echo esc_attr( __( 'Precipitation', 'xtx-integration-for-netatmo' ) ); ?>"><?php echo wp_kses( NAWS_Icons::pictogram( 'rain' ), naws_svg_kses_args() ); ?> <?php echo $precip !== null ? esc_html( NAWS_Helpers::display_number( $precip ) . ' ' . $rain_unit ) : '0 ' . esc_html( $rain_unit ); ?></span>
+            <?php if ( isset( $day['precip_prob'] ) ) : // missing at the provider: no figure rather than a false 0 % ?>
             <span title="<?php echo esc_attr( __( 'Precipitation probability', 'xtx-integration-for-netatmo' ) ); ?>"><?php echo wp_kses( NAWS_Icons::pictogram( 'prob' ), naws_svg_kses_args() ); ?> <?php echo esc_html( $day['precip_prob'] . '%' ); ?></span>
+            <?php endif; ?>
             <span title="<?php echo esc_attr( __( 'Max. wind speed', 'xtx-integration-for-netatmo' ) ); ?>"><?php echo wp_kses( NAWS_Icons::pictogram( 'wind' ), naws_svg_kses_args() ); ?> <?php echo $w_max !== null ? esc_html( NAWS_Helpers::display_number( $w_max ) . ' ' . $wind_unit ) : '--'; ?></span>
             <span title="<?php echo esc_attr( __( 'Wind direction', 'xtx-integration-for-netatmo' ) ); ?>"><?php echo wp_kses( NAWS_Icons::pictogram( 'compass' ), naws_svg_kses_args() ); ?> <?php echo esc_html( $compass ); ?></span>
           </div>

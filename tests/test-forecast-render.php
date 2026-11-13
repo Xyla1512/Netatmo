@@ -95,6 +95,12 @@ check( 'Fahrenheit mit Komma', text_of( $html, 'naws-fc-temps' ), '63,3 / 58,5 �
 check( 'Zoll und m/s mit Komma', strpos( text_of( $html, 'naws-fc-meta' ), '0,5 in' ) === 0 && strpos( text_of( $html, 'naws-fc-meta' ), '6,5 m/s' ) !== false, true );
 check( 'Boeen in m/s mit Komma', text_of( $html, 'naws-fc-gust' ), 'Gusts: 11,6 m/s' );
 
+// Regenwahrscheinlichkeit: ohne Wert (Yr.no bis 2.2.0, Open-Meteo-Luecke) keine Angabe statt '0%'.
+$html = render( [ 'precip_prob' => null ] );
+check( 'ohne Wahrscheinlichkeit keine Angabe', str_contains( $html, 'Precipitation probability' ), false );
+$html = render( [ 'precip_prob' => 0 ] );
+check( 'echte 0 % bleibt sichtbar', str_contains( text_of( $html, 'naws-fc-meta' ), '0%' ), true );
+
 // ── Zeile "Updated" bei der letzten guten Vorhersage (2.1.2) ─────────────
 // Im Rueckfall kann der Stand von gestern sein; nur die Uhrzeit taete so,
 // als waere er von heute.
