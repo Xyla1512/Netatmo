@@ -34,7 +34,7 @@ $animate = $atts['animate'] !== 'false';
                 <div class="naws-card-label"><?php echo esc_html($data['label']); ?></div>
                 <div class="naws-card-value">
                     <?php if ($animate) : ?>
-                        <span class="naws-count-up" data-value="<?php echo esc_attr($data['value']); ?>">0</span>
+                        <span class="naws-count-up" data-value="<?php echo esc_attr($data['value']); ?>"><?php echo esc_html($data['display']); /* without JS the value, not 0; frontend.js counts up from 0 to data-value */ ?></span>
                     <?php else : ?>
                         <span><?php echo esc_html($data['display']); ?></span>
                     <?php endif; ?>
