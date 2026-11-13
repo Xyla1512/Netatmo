@@ -213,6 +213,19 @@ $plural_formen = [
         'de_DE' => [ 'Regen in %d Tag', 'Regen in %d Tagen' ],
         'nb_NO' => [ 'Nedbør på %d døgn', 'Nedbør på %d døgn' ],
     ],
+    // Monatsrueckblick: Kennzahlen unter den Kacheln.
+    "%d rain day\0%d rain days" => [
+        'de_DE' => [ '%d Regentag', '%d Regentage' ],
+        'nb_NO' => [ '%d regndag', '%d regndager' ],
+    ],
+    "%d frost day\0%d frost days" => [
+        'de_DE' => [ '%d Frosttag', '%d Frosttage' ],
+        'nb_NO' => [ '%d frostdag', '%d frostdager' ],
+    ],
+    "%d summer day\0%d summer days" => [
+        'de_DE' => [ '%d Sommertag', '%d Sommertage' ],
+        'nb_NO' => [ '%d sommerdag', '%d sommerdager' ],
+    ],
 ];
 
 foreach ( $plural_formen as $plural_original => $je_sprache ) {

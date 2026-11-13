@@ -278,6 +278,22 @@ $value_params = [
     </div>
 
     <div class="naws-sc-card">
+        <h3><code>[naws_month_review]</code></h3>
+        <p><?php esc_html_e( 'A month in review: mean, highest and lowest temperature, rain and the strongest gust, each set against the same month in earlier years, with a headline for what stands out. Visitors page through the months with the arrows, without reloading; the address then carries ?naws_month=YYYY-MM.', 'xtx-integration-for-netatmo' ); ?></p>
+        <div class="naws-copy-wrap"><pre>[naws_month_review]</pre><button class="naws-copy-btn" data-copy='[naws_month_review]'><?php echo esc_html( _x( 'Copy', 'sc_copy', 'xtx-integration-for-netatmo' ) ); ?></button></div>
+        <table class="naws-attr-table" style="margin-top:10px">
+            <tr><th><?php esc_html_e( 'Attribute', 'xtx-integration-for-netatmo' ); ?></th><th><?php esc_html_e( 'Description', 'xtx-integration-for-netatmo' ); ?></th><th><?php esc_html_e( 'Default', 'xtx-integration-for-netatmo' ); ?></th></tr>
+            <tr><td><code>month</code></td><td><?php esc_html_e( 'A fixed month as YYYY-MM. A fixed month shows no paging bar.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php esc_html_e( 'last completed month', 'xtx-integration-for-netatmo' ); ?></span></td></tr>
+            <tr><td><code>years</code></td><td><?php esc_html_e( 'How many earlier years each tile compares with, 0 to 10. 0 leaves the comparison out.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">5</span></td></tr>
+            <tr><td><code>title</code></td><td><?php esc_html_e( 'Optional heading above the review', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php esc_html_e( 'none', 'xtx-integration-for-netatmo' ); ?></span></td></tr>
+        </table>
+        <div class="naws-inline-examples">
+            <div class="naws-inline-ex"><code>[naws_month_review month="2026-10"]</code> &rarr; <?php esc_html_e( 'October 2026, fixed', 'xtx-integration-for-netatmo' ); ?></div>
+            <div class="naws-inline-ex"><code>[naws_month_review years="0"]</code> &rarr; <?php esc_html_e( 'the last completed month without the comparison', 'xtx-integration-for-netatmo' ); ?></div>
+        </div>
+    </div>
+
+    <div class="naws-sc-card">
         <h3><code>[naws_sunpath]</code></h3>
         <p><?php esc_html_e( 'The sun on its arc over the station: sunrise, solar noon and sunset, the part of the day already travelled, and the sun where it stands. Below it the day length, the change since yesterday, and the year’s longest and shortest day. Computed from the station’s coordinates. No script: the sun stands where it stood when the page was built, so a page cache shows it until the cache is refreshed.', 'xtx-integration-for-netatmo' ); ?></p>
         <div class="naws-copy-wrap"><pre>[naws_sunpath]</pre><button class="naws-copy-btn" data-copy='[naws_sunpath]'><?php echo esc_html( _x( 'Copy', 'sc_copy', 'xtx-integration-for-netatmo' ) ); ?></button></div>

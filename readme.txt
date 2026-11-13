@@ -52,6 +52,7 @@ Connects to the Netatmo API, stores all sensor data locally and displays live da
 * `[naws_heatmap]` – One year of outdoor daily average temperature as a calendar grid, one tile per day, with a year selector (`year`, `title`, `legend`)
 * `[naws_records]` – Fifteen records from the daily summary with their dates, as tiles or a table (`year`, `records`, `layout`, `title`)
 * `[naws_on_this_day]` – This calendar day in every earlier year, with the day's records marked (`date`, `title`)
+* `[naws_month_review]` – A month in review: temperature, rain and gust against the same month in earlier years, with a headline for what stands out; visitors page through the months without reloading (`month`, `years`, `title`)
 * `[naws_sunpath]` – The sun on its arc over the station, with sunrise, solar noon, sunset and the day length (`title`)
 * `[naws_windrose]` – Where the wind comes from and how hard, as a rose of 16 or 8 directions stacked by Beaufort class, with a period switcher (`period`, `from`, `to`, `measure`, `sectors`, `show`, `switcher`, `size`, `title`)
 * `[naws_sparkline]` – A curve the size of a word: the raw readings of the last hours or a column of the daily summary, rain as bars, the band between daily low and high, time and value on hover; as a card or a month block too (`param`, `hours`, `days`, `module`, `width`, `height`, `show`, `type`, `band`, `layout`, `title`)

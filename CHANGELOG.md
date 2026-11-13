@@ -2,6 +2,11 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [Unreleased]
+
+### Added
+- **`[naws_month_review]` — a month in review.** Mean, highest and lowest temperature, rain and the strongest gust of a month, each set against the same month in earlier years (▲/▼ against their average, ★ for a record), with a headline for what stands out, rain, frost and summer days, the wettest day and any station record set that month. Without `month` it shows the last completed month, and visitors page back and forward with ‹ › without a page reload; the address carries `?naws_month=YYYY-MM`. `month` fixes a month (no paging bar), `years` sets how many earlier years are compared (default 5, 0 to 10; 0 leaves the comparison out), `title` adds a heading. German and Norwegian Bokmål translations included.
+
 ## [2.1.8]
 
 ### Added
