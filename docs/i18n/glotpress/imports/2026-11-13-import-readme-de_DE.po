@@ -1,0 +1,48 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo - Stable Readme\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "Only your server talks to the services below, without any visitor data:"
+msgstr "Nur dein Server spricht mit den folgenden Diensten, ohne Daten der Besucher:"
+
+msgid "<strong>This plugin adds nothing to your privacy notice on the visitor side.</strong> Everything your visitors see — charts, symbols, rain radar images, map tiles, fonts and scripts — is served from your own site. The plugin loads nothing from other servers into the visitor's browser: no weather service, map server, font host or CDN learns who looks at your weather pages. The symbols are the plugin's own drawings rather than emoji, so WordPress has no emoji images to fetch for them either."
+msgstr "<strong>Dieses Plugin fügt deiner Datenschutzerklärung auf Besucherseite nichts hinzu.</strong> Alles, was deine Besucher sehen – Diagramme, Symbole, Regenradarbilder, Kartenkacheln, Schriften und Skripte –, kommt von deiner eigenen Website. Das Plugin lädt nichts von fremden Servern in den Browser der Besucher: Kein Wetterdienst, Kartenserver, Schriftenanbieter oder CDN erfährt, wer deine Wetterseiten ansieht. Die Symbole sind eigene Zeichnungen des Plugins statt Emojis, also muss WordPress auch dafür keine Emoji-Bilder nachladen."
+
+msgid "<code>[naws_compare]</code> – Two daily series from any modules in one chart over months and years, e.g. indoor against outdoor humidity; a second unit gets its own axis. A builder on the Shortcodes page writes the shortcode (<code>a</code>, <code>b</code>, <code>from</code>, <code>to</code>, <code>months</code>, <code>title</code>, <code>height</code>)"
+msgstr "<code>[naws_compare]</code> – Zwei Tagesreihen beliebiger Module in einem Diagramm über Monate und Jahre, etwa Luftfeuchte innen gegen außen; eine zweite Einheit bekommt ihre eigene Achse. Ein Baukasten auf der Shortcode-Seite schreibt den Kurzbefehl (<code>a</code>, <code>b</code>, <code>from</code>, <code>to</code>, <code>months</code>, <code>title</code>, <code>height</code>)"
+
+msgid "<code>[naws_month_review]</code> – A month in review: temperature, rain and gust against the same month in earlier years, with a headline for what stands out; visitors page through the months without reloading (<code>month</code>, <code>years</code>, <code>title</code>)"
+msgstr "<code>[naws_month_review]</code> – Ein Monatsrückblick: Temperatur, Regen und Böen neben demselben Monat der Vorjahre, mit einem Kopfsatz für das, was auffällt; Besucher blättern ohne Neuladen durch die Monate (<code>month</code>, <code>years</code>, <code>title</code>)"
+
+msgid "<strong>Nothing from other servers in the visitor's browser</strong> – charts, symbols, radar images, map tiles and fonts all come from your own site"
+msgstr "<strong>Nichts von fremden Servern im Browser der Besucher</strong> – Diagramme, Symbole, Radarbilder, Kartenkacheln und Schriften kommen alle von deiner eigenen Website"
+
+msgid "<strong>Astronomy</strong> – Sunrise/sunset, moon phase with illumination, next full moon and supermoon (computed after Meeus), next lunar eclipse"
+msgstr "<strong>Astronomie</strong> – Sonnenauf- und -untergang, Mondphase mit Beleuchtungsgrad, nächster Vollmond und Supermond (berechnet nach Meeus), nächste Mondfinsternis"
+
+msgid "<strong>20 Shortcodes</strong> – Dashboard, current readings, infobar, single value, computed value, sparkline, sparkline tiles, history charts, heatmap, records, this day in earlier years, month review, module comparison, sun path, wind rose, forecast, rain radar, table, widget, weather icon"
+msgstr "<strong>20 Shortcodes</strong> – Dashboard, aktuelle Werte, Infoleiste, Einzelwert, berechneter Wert, Sparkline, Sparkline-Kacheln, Verlaufsdiagramme, Heatmap, Rekorde, dieser Tag in früheren Jahren, Monatsrückblick, Modulvergleich, Sonnenbahn, Windrose, Vorhersage, Regenradar, Tabelle, Widget, Wettersymbol"
+
+msgid "Fix: the wind card's compass points are translated, <code>[naws_table]</code> grouped by day shows seven calendar days in local time in a stable order, <code>[naws_current]</code> shows its values without JavaScript, and SVG symbols keep their viewBox."
+msgstr "Fix: Die Himmelsrichtungen der Windkachel sind übersetzt, <code>[naws_table]</code> zeigt nach Tagen gruppiert sieben Kalendertage in Ortszeit in fester Reihenfolge, <code>[naws_current]</code> zeigt seine Werte auch ohne JavaScript, und SVG-Symbole behalten ihre viewBox."
+
+msgid "Fix: moon — the supermoon date was off and lunar eclipses were misclassified; full moons are now computed after Meeus and eclipses come from NASA's canon."
+msgstr "Fix: Mond – das Datum des Supermonds stimmte nicht und Mondfinsternisse waren falsch eingeordnet; Vollmonde werden jetzt nach Meeus berechnet, Finsternisse stammen aus dem Katalog der NASA."
+
+msgid "Fix: Yr.no forecast — rain of the first two or three days was about six times too high, the last day repeated the day before, and the precipitation probability showed a fixed 0 % (MET Norway gives one only for the Nordic countries; without it no figure is shown)."
+msgstr "Fix: Vorhersage mit Yr.no – die Regenmengen der ersten zwei, drei Tage waren etwa sechsfach zu hoch, der letzte Tag wiederholte den Vortag, und die Regenwahrscheinlichkeit stand fest auf 0 % (MET Norway liefert sie nur für die nordischen Länder; fehlt sie, wird keine Zahl gezeigt)."
+
+msgid "Changed: the plugin's own pictograms instead of emoji on the site, the same on every device. WordPress no longer fetches emoji images from s.w.org for them, so nothing reaches another server from the visitor's browser."
+msgstr "Changed: eigene Symbole des Plugins statt Emojis auf der Website, auf allen Geräten gleich. WordPress lädt dafür keine Emoji-Bilder mehr von s.w.org, sodass vom Browser der Besucher nichts an einen fremden Server geht."
+
+msgid "Added: <code>[naws_compare]</code> — two daily series from any modules in one chart over months and years, e.g. indoor against outdoor humidity. A builder on the Shortcodes page writes the shortcode and shows a live preview."
+msgstr "Added: <code>[naws_compare]</code> – zwei Tagesreihen beliebiger Module in einem Diagramm über Monate und Jahre, etwa Luftfeuchte innen gegen außen. Ein Baukasten auf der Shortcode-Seite schreibt den Kurzbefehl und zeigt eine Live-Vorschau."
+
+msgid "Added: <code>[naws_month_review]</code> — a month in review: mean, highest and lowest temperature, rain and the strongest gust, each against the same month in earlier years, with a headline for what stands out. Visitors page through the months without reloading."
+msgstr "Added: <code>[naws_month_review]</code> – ein Monatsrückblick: Mittel, Höchst- und Tiefstwert, Regen und stärkste Böe, jeweils neben demselben Monat der Vorjahre, mit einem Kopfsatz für das, was auffällt. Besucher blättern ohne Neuladen durch die Monate."
+
