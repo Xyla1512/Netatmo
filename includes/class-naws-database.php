@@ -609,9 +609,13 @@ class NAWS_Database {
         $limit_sql = $args['limit'] > 0 ? 'LIMIT ' . intval( $args['limit'] ) : '';
 
         // SELECT + GROUP
+        // Days end at local midnight, not at UTC midnight: the offset of the
+        // site's timezone now is added before flooring and taken off after.
+        // (int) cast, so it is safe in the SQL string.
+        $tz_off  = (int) naws_timezone()->getOffset( new DateTimeImmutable( 'now' ) );
         $buckets = [
             'hour'  => 'FLOOR(r.recorded_at/3600)*3600',
-            'day'   => 'FLOOR(r.recorded_at/86400)*86400',
+            'day'   => "FLOOR((r.recorded_at + {$tz_off})/86400)*86400 - {$tz_off}",
             'week'  => 'FLOOR(r.recorded_at/604800)*604800',
             'month' => "UNIX_TIMESTAMP(DATE_FORMAT(FROM_UNIXTIME(r.recorded_at),'%%Y-%%m-01'))",
             'year'  => "UNIX_TIMESTAMP(DATE_FORMAT(FROM_UNIXTIME(r.recorded_at),'%%Y-01-01'))",
@@ -634,11 +638,13 @@ class NAWS_Database {
                         MAX(r.value) AS max_value,
                         COUNT(*)     AS data_points";
             $group  = "GROUP BY r.module_id, r.parameter, {$bkt}";
-            $order  = "ORDER BY recorded_at ASC";
+            // Module and parameter as tie-breakers: rows of the same time
+            // otherwise come in whatever order the database likes.
+            $order  = "ORDER BY recorded_at ASC, r.module_id ASC, r.parameter ASC";
         } else {
             $select = "r.module_id, r.parameter, r.recorded_at, r.value";
             $group  = "";
-            $order  = "ORDER BY r.recorded_at ASC";
+            $order  = "ORDER BY r.recorded_at ASC, r.module_id ASC, r.parameter ASC";
         }
 
         $sql     = "SELECT {$select} FROM {$r} r {$where_sql} {$group} {$order} {$limit_sql}";

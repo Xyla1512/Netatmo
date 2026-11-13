@@ -250,6 +250,12 @@ class NAWS_Shortcodes {
         ], $atts, 'naws_table' );
 
         $date_from = NAWS_Helpers::period_start( $atts['period'] );
+        // Grouped by day, "7d" means seven calendar days including today,
+        // from local midnight — not 7 x 24 h, which touches an eighth day.
+        $naws_days = NAWS_Helpers::period_days( $atts['period'] );
+        if ( $atts['group_by'] === 'day' && $naws_days !== null ) {
+            $date_from = NAWS_Helpers::calendar_start( $naws_days );
+        }
         // Without an explicit list, ask only for what the table can present.
         // Netatmo also stores bookkeeping values — max_wind_angle and
         // max_wind_str carry neither a name nor a unit — and those would sit

@@ -912,6 +912,38 @@ class NAWS_Helpers {
      * documented default of 24 hours rather than to the epoch: a range
      * beginning at 0 quietly returns the oldest rows instead of the newest.
      */
+    /**
+     * Midnight, in the site's timezone, that opens the last $days calendar
+     * days including today. Seven days on the 13th start on the 7th 00:00 —
+     * "now minus 7 x 24 h" would reach into an eighth day.
+     *
+     * @since 2.2.0
+     */
+    public static function calendar_start( int $days, ?int $now = null ): int {
+        $today = ( new DateTimeImmutable( '@' . ( $now ?? time() ) ) )->setTimezone( naws_timezone() )->setTime( 0, 0 );
+        return $today->modify( '-' . max( 0, $days - 1 ) . ' days' )->getTimestamp();
+    }
+
+    /**
+     * How many whole days a period string like "7d" or "2w" spans; null for
+     * periods not counted in days ("24h", "3months").
+     *
+     * @since 2.2.0
+     */
+    public static function period_days( string $period ): ?int {
+        $period = strtolower( trim( ltrim( trim( $period ), '-' ) ) );
+        if ( ! preg_match( '/^(\d+)\s*([a-z]+)$/', $period, $m ) ) {
+            return null;
+        }
+        if ( in_array( $m[2], [ 'd', 'day', 'days' ], true ) ) {
+            return (int) $m[1];
+        }
+        if ( in_array( $m[2], [ 'w', 'week', 'weeks' ], true ) ) {
+            return (int) $m[1] * 7;
+        }
+        return null;
+    }
+
     public static function period_start( string $period, ?int $now = null ): int {
         $now    = $now ?? time();
         $period = strtolower( trim( ltrim( trim( $period ), '-' ) ) );
