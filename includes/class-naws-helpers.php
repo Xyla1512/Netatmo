@@ -11,13 +11,22 @@ function naws_svg_kses_args(): array {
     static $allowed = null;
     if ( null === $allowed ) {
         $allowed = [
-            'svg'      => [ 'xmlns' => true, 'viewBox' => true, 'width' => true, 'height' => true,
+            // Keys in lower case: wp_kses_attr_check() lowercases attribute names
+            // before the lookup, so 'viewBox' never matched and was stripped.
+            'svg'      => [ 'xmlns' => true, 'viewbox' => true, 'width' => true, 'height' => true,
+                            'fill' => true, 'stroke' => true, 'stroke-width' => true,
+                            'stroke-linecap' => true, 'stroke-linejoin' => true,
+                            'class' => true, 'aria-hidden' => true, 'focusable' => true ],
+            'rect'     => [ 'x' => true, 'y' => true, 'width' => true, 'height' => true, 'rx' => true,
                             'fill' => true, 'stroke' => true, 'stroke-width' => true,
                             'stroke-linecap' => true, 'stroke-linejoin' => true ],
+            'text'     => [ 'x' => true, 'y' => true, 'text-anchor' => true, 'font-family' => true,
+                            'font-size' => true, 'font-weight' => true, 'fill' => true, 'stroke' => true ],
             'path'     => [ 'd' => true, 'fill' => true, 'stroke' => true, 'stroke-width' => true,
                             'stroke-linecap' => true, 'stroke-linejoin' => true, 'opacity' => true ],
             'circle'   => [ 'cx' => true, 'cy' => true, 'r' => true, 'fill' => true,
-                            'stroke' => true, 'stroke-width' => true, 'opacity' => true ],
+                            'stroke' => true, 'stroke-width' => true, 'opacity' => true,
+                            'stroke-linecap' => true, 'stroke-linejoin' => true ],
             'line'     => [ 'x1' => true, 'y1' => true, 'x2' => true, 'y2' => true,
                             'stroke' => true, 'stroke-width' => true, 'stroke-linecap' => true ],
             'polyline' => [ 'points' => true, 'fill' => true, 'stroke' => true,
@@ -123,19 +132,13 @@ class NAWS_Helpers {
             $key = $param_to_key[ $parameter ] ?? null;
             if ( $key ) {
                 $icons = NAWS_Icons::get_set();
-                return $icons[ $key ] ?? '📊';
+                return $icons[ $key ] ?? '';
             }
         }
 
-        // Fallback to emojis if NAWS_Icons not loaded
-        $emoji_fallback = [
-            'Temperature' => '🌡️', 'CO2' => '💨', 'Humidity' => '💧',
-            'Noise' => '🔊', 'Pressure' => '⏲️', 'AbsolutePressure' => '⏲️',
-            'Rain' => '🌧️', 'sum_rain_1' => '🌧️', 'sum_rain_24' => '🌧️',
-            'WindStrength' => '🌬️', 'WindAngle' => '🧭',
-            'GustStrength' => '🌪️', 'GustAngle' => '🧭', 'health_idx' => '❤️',
-        ];
-        return $emoji_fallback[ $parameter ] ?? '📊';
+        // Without the icon class (or for a reading it does not know) no symbol:
+        // an emoji here would let WordPress fetch an image from s.w.org.
+        return '';
     }
 
     public static function get_css_class( $parameter ) {
@@ -243,18 +246,17 @@ class NAWS_Helpers {
      */
     public static function history_chart_defs(): array {
         $defs = [
-            [ 'id' => 'temp_minmax', 'label' => __( 'Temperature Min / Max', 'xtx-integration-for-netatmo' ), 'icon' => '🌡️' ],
-            [ 'id' => 'temp_avg',    'label' => __( 'Annual Average Temperature', 'xtx-integration-for-netatmo' ),    'icon' => '🌡️' ],
-            [ 'id' => 'pressure',    'label' => __( 'Pressure (Annual Mean)', 'xtx-integration-for-netatmo' ),    'icon' => '🔵' ],
-            [ 'id' => 'rain',        'label' => __( 'Annual Precipitation', 'xtx-integration-for-netatmo' ),        'icon' => '🌧️' ],
-            [ 'id' => 'humidity',    'label' => __( 'Outdoor Humidity (Annual Mean)', 'xtx-integration-for-netatmo' ),    'icon' => '💧' ],
+            [ 'id' => 'temp_minmax', 'label' => __( 'Temperature Min / Max', 'xtx-integration-for-netatmo' ) ],
+            [ 'id' => 'temp_avg',    'label' => __( 'Annual Average Temperature', 'xtx-integration-for-netatmo' ) ],
+            [ 'id' => 'pressure',    'label' => __( 'Pressure (Annual Mean)', 'xtx-integration-for-netatmo' ) ],
+            [ 'id' => 'rain',        'label' => __( 'Annual Precipitation', 'xtx-integration-for-netatmo' ) ],
+            [ 'id' => 'humidity',    'label' => __( 'Outdoor Humidity (Annual Mean)', 'xtx-integration-for-netatmo' ) ],
         ];
 
         foreach ( self::indoor_chart_defs() as $indoor ) {
             $defs[] = [
                 'id'    => $indoor['id'],
                 'label' => $indoor['label'],
-                'icon'  => $indoor['icon'],
             ];
         }
 
@@ -612,16 +614,16 @@ class NAWS_Helpers {
      * chart somebody switched off stays switched off.
      *
      * @return array<int,array<string,string>> id, module_id, module_name,
-     *         field, param, label, icon, unit.
+     *         field, param, label, unit.
      */
     public static function indoor_chart_defs(): array {
         $defs = [];
 
         foreach ( self::indoor_module_slugs() as $module ) {
             foreach ( [
-                [ 'indoor_temp_',     'indoor_temp_avg',     'Temperature', 'param_temperature', '🌡️' ],
-                [ 'indoor_humidity_', 'indoor_humidity_avg', 'Humidity',    'param_humidity',    '💧' ],
-            ] as [ $prefix, $field, $param, $lang_key, $icon ] ) {
+                [ 'indoor_temp_',     'indoor_temp_avg',     'Temperature', 'param_temperature' ],
+                [ 'indoor_humidity_', 'indoor_humidity_avg', 'Humidity',    'param_humidity' ],
+            ] as [ $prefix, $field, $param, $lang_key ] ) {
                 $defs[] = [
                     'id'          => $prefix . $module['slug'],
                     'module_id'   => $module['module_id'],
@@ -629,7 +631,6 @@ class NAWS_Helpers {
                     'field'       => $field,
                     'param'       => $param,
                     'label'       => $module['name'] . ' – ' . naws_label( $lang_key ),
-                    'icon'        => $icon,
                     'unit'        => self::get_unit( $param ),
                 ];
             }

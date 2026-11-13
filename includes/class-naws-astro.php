@@ -301,7 +301,6 @@ class NAWS_Astro {
      *   'phase'      => 0.0–1.0   (0 = new, 0.5 = full)
      *   'phase_pct'  => 0–100
      *   'name'       => string    (translated)
-     *   'emoji'      => string
      *   'next_full'  => string    (formatted date+time)
      *   'next_full_ts' => int
      * ]
@@ -328,13 +327,12 @@ class NAWS_Astro {
         if ( $days_to_full < 0 ) $days_to_full += 1.0;
         $next_full_ts  = intval( $timestamp + $days_to_full * $synodic * 86400 );
 
-        [ $name, $emoji ] = self::_moon_name( $phase );
+        [ $name ] = self::_moon_name( $phase );
 
         return [
             'phase'         => $phase,
             'phase_pct'     => $pct,
             'name'          => $name,
-            'emoji'         => $emoji,
             'next_full'     => self::format_event( $next_full_ts ),
             'next_full_ts'  => $next_full_ts,
         ];
@@ -342,14 +340,14 @@ class NAWS_Astro {
 
     private static function _moon_name( float $phase ): array {
         // phase 0–1
-        if ( $phase < 0.0625 || $phase >= 0.9375 ) return [ __( 'New Moon', 'xtx-integration-for-netatmo' ),            '🌑' ];
-        if ( $phase < 0.1875 )                      return [ __( 'Waxing Crescent', 'xtx-integration-for-netatmo' ), '🌒' ];
-        if ( $phase < 0.3125 )                      return [ __( 'First Quarter', 'xtx-integration-for-netatmo' ),  '🌓' ];
-        if ( $phase < 0.4375 )                      return [ __( 'Waxing Gibbous', 'xtx-integration-for-netatmo' ), '🌔' ];
-        if ( $phase < 0.5625 )                      return [ __( 'Full Moon', 'xtx-integration-for-netatmo' ),            '🌕' ];
-        if ( $phase < 0.6875 )                      return [ __( 'Waning Gibbous', 'xtx-integration-for-netatmo' ), '🌖' ];
-        if ( $phase < 0.8125 )                      return [ __( 'Last Quarter', 'xtx-integration-for-netatmo' ),   '🌗' ];
-        return                                             [ __( 'Waning Crescent', 'xtx-integration-for-netatmo' ), '🌘' ];
+        if ( $phase < 0.0625 || $phase >= 0.9375 ) return [ __( 'New Moon', 'xtx-integration-for-netatmo' ) ];
+        if ( $phase < 0.1875 )                      return [ __( 'Waxing Crescent', 'xtx-integration-for-netatmo' ) ];
+        if ( $phase < 0.3125 )                      return [ __( 'First Quarter', 'xtx-integration-for-netatmo' ) ];
+        if ( $phase < 0.4375 )                      return [ __( 'Waxing Gibbous', 'xtx-integration-for-netatmo' ) ];
+        if ( $phase < 0.5625 )                      return [ __( 'Full Moon', 'xtx-integration-for-netatmo' ) ];
+        if ( $phase < 0.6875 )                      return [ __( 'Waning Gibbous', 'xtx-integration-for-netatmo' ) ];
+        if ( $phase < 0.8125 )                      return [ __( 'Last Quarter', 'xtx-integration-for-netatmo' ) ];
+        return                                             [ __( 'Waning Crescent', 'xtx-integration-for-netatmo' ) ];
     }
 
     // ── Moonrise / Moonset ───────────────────────────────────────────────────

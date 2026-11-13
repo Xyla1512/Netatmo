@@ -2194,3 +2194,8 @@ h3.naws-mr-month { margin: 0 0 10px; font-size: 1.1rem; font-weight: 600; color:
 .naws-cmp-dialog-canvas { position: relative; height: min(70vh, 640px); }
 .naws-cmp-dialog .naws-cmp-close { position: absolute; top: 10px; right: 12px; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 8px; background: transparent; font-size: 1.6rem; line-height: 1; color: var(--naws-text-muted, #7aa0a0); cursor: pointer; }
 .naws-cmp-dialog .naws-cmp-close:hover, .naws-cmp-dialog .naws-cmp-close:focus-visible { color: var(--naws-text-dark, #2d5252); background: var(--naws-tile-bg, rgba(122, 160, 160, .12)); }
+/* Pictograms (since 2.2.0): colourful, so the line-icon rules must not
+   repaint them — .naws-card-icon svg and the emoji set rule in [naws_live]
+   set fill:none and a stroke on every svg they meet. */
+svg.naws-picto, .naws-card-icon svg.naws-picto, .naws-wx[data-icon-set] .naws-ico svg.naws-picto { fill: initial; stroke: none; }
+.naws-fc-wrap svg.naws-picto { width: 1.05em; height: 1.05em; vertical-align: -0.17em; margin-right: 1px; }
