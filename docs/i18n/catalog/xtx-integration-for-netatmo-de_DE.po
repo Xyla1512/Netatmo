@@ -17,7 +17,7 @@ msgstr "%1$d km, %2$s, zuletzt gezeigt %3$s, %4$s"
 #. translators: 1: month and year, e.g. "October 2026"; 2: month name, e.g. "October"
 #: includes/class-naws-labels.php:175
 msgid "%1$s brought the coldest %2$s night since records began"
-msgstr "%1$s brachte die kälteste %2$s-Nacht seit Messbeginn"
+msgstr "%1$s brachte die kälteste %2$snacht seit Messbeginn"
 
 #. translators: 1: month and year, e.g. "October 2026"; 2: month name, e.g. "October"
 #: includes/class-naws-labels.php:178
@@ -27,7 +27,7 @@ msgstr "%1$s brachte die stärkste %2$s-Böe seit Messbeginn"
 #. translators: 1: month and year, e.g. "October 2026"; 2: month name, e.g. "October"
 #: includes/class-naws-labels.php:172
 msgid "%1$s brought the warmest %2$s day since records began"
-msgstr "%1$s brachte den wärmsten %2$s-Tag seit Messbeginn"
+msgstr "%1$s brachte den wärmsten %2$stag seit Messbeginn"
 
 #. translators: 1: unit such as "mm", 2: number of days.
 #: includes/class-naws-sparkline.php:866

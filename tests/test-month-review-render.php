@@ -108,7 +108,7 @@ check( 'Rekord-Stern mit Textalternative', str_contains( $html, 'Record since re
 check( 'Tendenz abwaerts mit Textalternative', str_contains( $html, 'Less than the average of earlier years' ), true );
 check( 'Wurzel mit data-Vertrag', str_contains( $html, '<section class="naws-mr" data-naws-mr data-month="2026-10" data-years="5" data-title="" data-ajax="https://example.test/wp-admin/admin-ajax.php" data-nonce="nonce123">' ), true );
 check( 'Kopfsatz-Ueberschrift fokussierbar', str_contains( $html, '<h3 class="naws-mr-head" tabindex="-1">' ), true );
-check( 'austauschbarer Inhalt mit aria-live', str_contains( $html, '<div class="naws-mr-body" aria-live="polite">' ), true );
+check( 'austauschbarer Inhalt', str_contains( $html, '<div class="naws-mr-body">' ), true );
 check( 'Regenwert mit Einheit',    str_contains( $html, '39.6 <small>mm</small>' ), true );
 check( 'Regentage',                str_contains( $html, '17 rain days' ), true );
 check( 'Hoechstwert mit Datum',    str_contains( $html, 'on October 3' ), true );
@@ -143,6 +143,15 @@ check( 'fester Monat: Monatsname als h3', str_contains( $fest, '<h3 class="naws-
 // years=0: kein Stern, keine Vorjahre, neutraler Kopfsatz.
 $zero = review( naws_test_rows(), null, true, 0 );
 check( 'years=0: neutral, keine Vorjahre, kein Stern', [ str_contains( $zero, 'October 2026 in review' ), str_contains( $zero, 'naws-mr-prev-year' ), str_contains( $zero, 'Record since' ) ], [ true, false, false ] );
+
+check( 'years=0: keine Vergleichssaetze (kein "since records began")', str_contains( $zero, 'since records began' ), false );
+check( 'years=0: Frostsatz ohne Vorjahr', [ str_contains( $zero, '2 frost days' ), str_contains( $zero, '2 frost days (' ) ], [ true, false ] );
+
+// Fehltage, aber noch >= 20 Tage: Vermerk an den Kacheln, Vergleiche bleiben erlaubt.
+$miss      = array_values( array_filter( naws_test_rows(), static fn( $r ) => ! ( $r['day_date'] >= '2026-10-11' && $r['day_date'] <= '2026-10-16' ) ) );
+$miss_html = review( $miss );
+check( 'Fehltage: Vermerk an Mittel/Hoechst/Tiefst', substr_count( $miss_html, 'incomplete (25 of 31 days)' ) >= 3, true );
+check( 'Fehltage: Vergleiche bleiben (Stern oder Pfeil)', str_contains( $miss_html, 'naws-mr-mark--record' ) || str_contains( $miss_html, 'naws-mr-mark--up' ) || str_contains( $miss_html, 'naws-mr-mark--down' ), true );
 
 // Zoll: 39,6 mm = 1,559 in (drei Stellen).
 $GLOBALS['naws_test_options']['naws_settings']['rain_unit'] = 'in';

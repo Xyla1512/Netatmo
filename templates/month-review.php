@@ -122,7 +122,7 @@ if ( $nav ) {
     <h3 class="naws-mr-month"><?php echo esc_html( $naws_mr_name_year ); ?></h3>
   <?php endif; ?>
 
-  <div class="naws-mr-body" aria-live="polite">
+  <div class="naws-mr-body">
     <h3 class="naws-mr-head" tabindex="-1"><?php echo esc_html( $naws_mr_head ); ?></h3>
 
     <div class="naws-mr-tiles">
@@ -154,7 +154,7 @@ if ( $nav ) {
             <?php endif; ?>
           </span>
 
-          <?php if ( ! $naws_mr_cur['complete'][ $naws_mr_kpi ] ) : ?>
+          <?php if ( (int) $naws_mr_cur['days'][ $naws_mr_field ] < (int) $naws_mr_cur['length'] ) : ?>
             <span class="naws-mr-tile-sub naws-mr-incomplete"><?php echo esc_html( sprintf( naws_label( 'mr_incomplete' ), (int) $naws_mr_cur['days'][ $naws_mr_field ], (int) $naws_mr_cur['length'] ) ); ?></span>
           <?php endif; ?>
 

@@ -173,9 +173,9 @@ final class NAWS_Month_Review {
      *
      * Only rows up to the end of $ym count ("since records began" means up
      * to that month). 'previous' lists at most $years earlier years, newest
-     * first, that have rows for the month -- also incomplete ones, which the
-     * template marks. 'record' is high|low when the figure beats every
-     * complete earlier year (all of them, whatever $years is) strictly.
+     * first, that have rows for the month -- also incomplete ones (the template
+     * skips those per figure). 'record' is high|low when the figure beats
+     * every complete earlier year (all of them, whatever $years is) strictly.
      * 'trend' is up|down against the mean of the complete years shown, and
      * only where there is no record. $years = 0 switches all of it off.
      *
@@ -396,7 +396,8 @@ final class NAWS_Month_Review {
         $title      = (string) ( $atts['title'] ?? '' );
         $cmp        = self::compare( $rows, $ym, $years );
         $headline   = self::headline( $cmp );
-        $sentences  = self::sentences( $cmp, self::station_records( $rows, $ym ) );
+        $station    = $years > 0 ? self::station_records( $rows, $ym ) : [];
+        $sentences  = self::sentences( $cmp, $station );
         $neighbours = self::neighbours( $ym, $months );
 
         ob_start();

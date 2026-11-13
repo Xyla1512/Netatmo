@@ -3275,7 +3275,7 @@ msgstr "Månedsoppsummeringen trenger minst én fullført måned med data."
 #. translators: 1: a date, e.g. "October 17"; 2: rainfall that day, e.g. "9.8 mm"
 #: includes/class-naws-labels.php:201
 msgid "The most rain fell on %1$s: %2$s"
-msgstr "Mest regn falt %1$s: %2$s"
+msgstr "Mest regn falt den %1$s: %2$s"
 
 #: includes/class-naws-labels.php:394
 msgid "The outdoor temperature is at or above the threshold."
