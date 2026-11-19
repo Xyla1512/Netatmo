@@ -51,7 +51,8 @@ class WP_Error {
     public function get_error_data() { return $this->data; }
 }
 function wp_remote_get( $url, $args = [] ) {
-    $GLOBALS['calls'][] = $url;
+    $GLOBALS['calls'][]     = $url;
+    $GLOBALS['call_args'][] = $args;
     foreach ( $GLOBALS['http_routes'] as $prefix => $resp ) {
         if ( 0 === strpos( $url, $prefix ) ) { return is_callable( $resp ) ? $resp( $url ) : $resp; }
     }

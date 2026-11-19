@@ -30,5 +30,6 @@ if ( WP_Filesystem() && $wp_filesystem ) {
 delete_option( 'naws_radar_sets' );
 foreach ( [ 'dwd', 'rainviewer', 'osm' ] as $naws_source ) {
     delete_transient( 'naws_radar_backoff_' . $naws_source );
+    delete_transient( 'naws_radar_fails_' . $naws_source );
 }
 wp_unschedule_hook( 'naws_radar_refresh' );

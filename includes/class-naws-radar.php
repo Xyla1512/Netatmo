@@ -20,12 +20,25 @@ class NAWS_Radar {
     const AS_OF        = 1800;    // older than this: "As of HH:MM" under the radar
     const MAX_REQUESTS = 100;     // external requests per background run
     const PAUSE        = 900;     // pause after a run without images or storage
+    const TIMEOUT      = 15;      // seconds per request
+    const DWD_TIMEOUT  = 30;      // maps.dwd.de often needs more than 15 s for one image
+    const RUN_SECONDS  = 90;      // no request starts later than this into a run
+    const MIN_SECONDS  = 5;       // a request needs at least this much of the run left
 
     /** Requests this run may still make. */
     private static $left = 0;
 
-    /** True once this run hit the request budget. */
+    /** microtime() after which this run starts no request. */
+    private static $deadline = 0.0;
+
+    /** For tests: returns the current time in seconds; null = microtime( true ). */
+    public static $clock = null;
+
+    /** True once this run hit the request budget or its time. */
     private static $capped = false;
+
+    /** Sources that delivered an image this run: their failure streak ends. */
+    private static $delivered = [];
 
     /** True once this run could not write to the uploads folder. */
     private static $put_failed = false;
@@ -39,9 +52,17 @@ class NAWS_Radar {
         return 'XTX-Integration-for-Netatmo/' . NAWS_VERSION . ' (+' . home_url( '/' ) . ')';
     }
 
-    /** One request out of the run's budget; null when the budget is spent. */
-    private static function get( string $url ) {
-        if ( self::$left <= 0 ) {
+    private static function seconds(): float {
+        return null === self::$clock ? microtime( true ) : (float) call_user_func( self::$clock );
+    }
+
+    /**
+     * One request out of the run's budget; null when the budget or the
+     * run's time is spent. The wait never reaches past the run's end.
+     */
+    private static function get( string $url, int $timeout = self::TIMEOUT ) {
+        $rest = self::$deadline - self::seconds();
+        if ( self::$left <= 0 || $rest < self::MIN_SECONDS ) {
             self::$capped = true;
             return null;
         }
@@ -49,10 +70,15 @@ class NAWS_Radar {
         return wp_remote_get(
             $url,
             [
-                'timeout'    => 15,
+                'timeout'    => (int) min( $timeout, ceil( $rest ) ),
                 'user-agent' => self::user_agent(),
             ]
         );
+    }
+
+    /** Remember that $source delivered; its failure streak ends with this run. */
+    private static function delivered( string $source ): void {
+        self::$delivered[ $source ] = true;
     }
 
     /** Store a file; a failure means the uploads folder is not writable. */
@@ -115,8 +141,10 @@ class NAWS_Radar {
             @set_time_limit( 120 );
         }
         self::$left       = max( 0, $budget );
+        self::$deadline   = self::seconds() + self::RUN_SECONDS;
         self::$capped     = false;
         self::$put_failed = false;
+        self::$delivered  = [];
         try {
             $old    = NAWS_Radar_Store::manifest( $key );
             $box    = NAWS_Radar_Geo::box( (float) $set['lat'], (float) $set['lon'], (int) $set['km'] );
@@ -146,6 +174,9 @@ class NAWS_Radar {
             ) );
             return true;
         } finally {
+            foreach ( array_keys( self::$delivered ) as $ok ) {
+                NAWS_Radar_Store::end_streak( $ok );
+            }
             if ( self::$put_failed ) {
                 NAWS_Logger::error( 'radar', 'The uploads folder is not writable, so the rain radar cannot store images.' );
                 NAWS_Radar_Store::pause( $source, self::PAUSE, 'could not store images' );
@@ -202,6 +233,7 @@ class NAWS_Radar {
                 continue;
             }
             if ( 'png' === $kind ) {
+                self::delivered( 'osm' );
                 if ( ! self::put( $key, $file, $png ) ) {
                     $ok = false;
                     continue;
@@ -220,7 +252,7 @@ class NAWS_Radar {
         foreach ( $times as $f ) {
             $file = $f['forecast'] ? sprintf( 'frames/f%d-%d.png', $f['t'], $base ) : sprintf( 'frames/%d.png', $f['t'] );
             if ( ! NAWS_Radar_Store::has( $key, $file ) ) {
-                $r              = self::get( NAWS_Radar_Source::dwd_url( $box, $f['t'], $f['forecast'] ) );
+                $r              = self::get( NAWS_Radar_Source::dwd_url( $box, $f['t'], $f['forecast'] ), self::DWD_TIMEOUT );
                 [ $kind, $png ] = self::classify( $r );
                 if ( 'fail' === $kind ) {
                     NAWS_Radar_Store::start_backoff( 'dwd', $r );
@@ -232,6 +264,7 @@ class NAWS_Radar {
                 if ( 'skip' === $kind ) {
                     continue;
                 }
+                self::delivered( 'dwd' );
                 if ( ! self::put( $key, $file, $png ) ) {
                     break;
                 }
@@ -283,6 +316,9 @@ class NAWS_Radar {
                         NAWS_Radar_Store::start_backoff( 'rainviewer', $tr );
                         NAWS_Radar_Store::delete_files( $key, $mine );
                         break 2;
+                    }
+                    if ( 'png' === $kind ) {
+                        self::delivered( 'rainviewer' );
                     }
                     if ( 'png' === $kind && ! self::put( $key, $file, $png ) ) {
                         NAWS_Radar_Store::delete_files( $key, $mine );

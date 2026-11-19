@@ -85,6 +85,36 @@ NAWS_Radar_Store::start_backoff( 'osm', new WP_Error( 'x', 'timeout' ) );
 check( 'kein Netz: 5 min',                  $GLOBALS['transients']['naws_radar_backoff_osm'][1], 300 );
 check( 'ins Protokoll',                     str_contains( implode( "\n", $GLOBALS['logged'] ), 'dwd request failed (429)' ), true );
 
+echo "\nLangsamer Dienst: erst ab dem dritten Fehlschlag in Folge ins Protokoll\n" . str_repeat( '-', 74 ) . "\n";
+$GLOBALS['transients'] = [];
+$GLOBALS['logged']     = [];
+$slow = new WP_Error( 'http_request_failed', 'cURL error 28: Operation timed out after 30001 milliseconds with 0 bytes received' );
+NAWS_Radar_Store::start_backoff( 'dwd', $slow );
+check( '1. Zeitueberschreitung: Pause',     [ NAWS_Radar_Store::in_backoff( 'dwd' ), $GLOBALS['transients']['naws_radar_backoff_dwd'][1] ], [ true, 300 ] );
+check( '1. Zeitueberschreitung: still',     $GLOBALS['logged'], [] );
+NAWS_Radar_Store::start_backoff( 'dwd', $slow );
+check( '2. Zeitueberschreitung: still',     $GLOBALS['logged'], [] );
+NAWS_Radar_Store::start_backoff( 'dwd', $slow );
+check( '3.: Meldung mit Zeitueberschreitung', $GLOBALS['logged'], [ 'dwd request timed out 3 times in a row, next attempt in 5 minute(s)' ] );
+check( 'Zaehler bleibt einen Tag',          $GLOBALS['transients']['naws_radar_fails_dwd'], [ 3, DAY_IN_SECONDS ] );
+NAWS_Radar_Store::end_streak( 'dwd' );
+$GLOBALS['logged'] = [];
+NAWS_Radar_Store::start_backoff( 'dwd', $slow );
+check( 'nach einem Bild: wieder still',     $GLOBALS['logged'], [] );
+NAWS_Radar_Store::start_backoff( 'osm', resp( 503, 'busy' ) );
+NAWS_Radar_Store::start_backoff( 'osm', resp( 502, 'bad' ) );
+check( '5xx zaehlt mit, je Quelle',         [ $GLOBALS['logged'], get_transient( 'naws_radar_fails_osm' ), get_transient( 'naws_radar_fails_dwd' ) ], [ [], 2, 1 ] );
+NAWS_Radar_Store::start_backoff( 'osm', new WP_Error( 'http_request_failed', 'cURL error 6: Could not resolve host: tile.openstreetmap.org' ) );
+check( 'anderer Netzfehler: Text des Transports', $GLOBALS['logged'], [ 'osm request failed (cURL error 6: Could not resolve host: tile.openstreetmap.org) 3 times in a row, next attempt in 5 minute(s)' ] );
+$GLOBALS['logged'] = [];
+NAWS_Radar_Store::start_backoff( 'rainviewer', new WP_Error( 'x', '' ) );
+NAWS_Radar_Store::start_backoff( 'rainviewer', new WP_Error( 'x', '' ) );
+NAWS_Radar_Store::start_backoff( 'rainviewer', new WP_Error( 'x', '' ) );
+check( 'ohne Text: no response',            $GLOBALS['logged'], [ 'rainviewer request failed (no response) 3 times in a row, next attempt in 5 minute(s)' ] );
+$GLOBALS['logged'] = [];
+NAWS_Radar_Store::start_backoff( 'rainviewer', resp( 403, 'nein' ) );
+check( 'Abweisung (403) sofort, ohne Zaehler', [ $GLOBALS['logged'], get_transient( 'naws_radar_fails_rainviewer' ) ], [ [ 'rainviewer request failed (403), next attempt in 5 minute(s)' ], 3 ] );
+
 echo "\nNur ein direktes Dateisystem\n" . str_repeat( '-', 74 ) . "\n";
 // Ein FTP-Dateisystem ohne Zugangsdaten ist nicht verbunden; es zu benutzen
 // endet in einem TypeError (auch im taeglichen Cron-Lauf).
@@ -166,5 +196,6 @@ NAWS_Radar_Store::clear_all();
 check( 'clear_all: Ordner leer',            fs()->exists( '/up/naws-radar' ), false );
 check( 'clear_all: Option weg',             get_option( NAWS_Radar_Store::OPTION, 'weg' ), 'weg' );
 check( 'clear_all: Sperrfristen weg',       NAWS_Radar_Store::in_backoff( 'dwd' ), false );
+check( 'clear_all: Fehlerzaehler weg',      [ get_transient( 'naws_radar_fails_dwd' ), get_transient( 'naws_radar_fails_osm' ), get_transient( 'naws_radar_fails_rainviewer' ) ], [ false, false, false ] );
 
 done();

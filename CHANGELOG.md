@@ -2,6 +2,11 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [2.2.1]
+
+### Fixed
+- **Rain radar: "dwd request failed (no response)" every twenty minutes.** Since mid-November 2026 the Deutscher Wetterdienst often takes 10 to 14 seconds for one radar image, and the plugin gave up after 15. Requests to maps.dwd.de now wait up to 30 seconds; a background run starts no request after 90 seconds and the last one only waits for what is left of them, so a slow service cannot hold a run for minutes — the remaining images follow in the next run. The log names the actual problem ("request timed out", or the message of the connection) instead of "no response", and a slow or briefly unreachable service (no answer, 5xx) is only logged once it failed three runs in a row without delivering an image in between; a refusal (401, 403, 418, 429) is still logged at once. The radar pauses after every failure as before.
+
 ## [2.2.0]
 
 ### Changed

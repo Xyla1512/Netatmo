@@ -18,6 +18,8 @@ class NAWS_Radar_Store {
     const OPTION     = 'naws_radar_sets';
     const LOCK       = 'naws_radar_lock_';
     const BACKOFF    = 'naws_radar_backoff_';
+    const STREAK     = 'naws_radar_fails_';  // failures in a row, per source
+    const WARN_AFTER = 3;                    // log a slow or unreachable service from this many on
     const SOURCES    = [ 'dwd', 'rainviewer', 'osm' ];
     const LOCK_TTL   = 600;      // a run may take up to 100 requests
     const GRACE      = 1800;     // an open player may still show the previous set
@@ -288,6 +290,7 @@ class NAWS_Radar_Store {
         delete_option( self::OPTION );
         foreach ( self::SOURCES as $source ) {
             delete_transient( self::BACKOFF . $source );
+            delete_transient( self::STREAK . $source );
         }
     }
 
@@ -322,16 +325,49 @@ class NAWS_Radar_Store {
         return false !== get_transient( self::BACKOFF . $source );
     }
 
-    /** Same pause rules as the forecast (NAWS_Forecast::backoff_seconds). */
+    /**
+     * Same pause rules as the forecast (NAWS_Forecast::backoff_seconds).
+     *
+     * A slow or briefly unreachable service (no answer, 5xx) pauses quietly
+     * until it fails WARN_AFTER times in a row without delivering an image
+     * in between; a refusal (401, 403, 418, 429) is logged at once.
+     */
     public static function start_backoff( string $source, $response ): void {
         $code    = is_wp_error( $response ) ? 0 : (int) wp_remote_retrieve_response_code( $response );
         $retry   = is_wp_error( $response ) ? '' : (string) wp_remote_retrieve_header( $response, 'retry-after' );
         $seconds = NAWS_Forecast::backoff_seconds( $code, $retry );
-        self::pause( $source, $seconds, sprintf( 'request failed (%s)', $code ? $code : 'no response' ) );
+        if ( 0 !== $code && $code < 500 ) {
+            self::pause( $source, $seconds, sprintf( 'request failed (%d)', $code ) );
+            return;
+        }
+        $streak = (int) get_transient( self::STREAK . $source ) + 1;
+        set_transient( self::STREAK . $source, $streak, DAY_IN_SECONDS );
+        $reason = $code ? sprintf( 'request failed (%d)', $code ) : self::no_answer( $response );
+        if ( $streak >= self::WARN_AFTER ) {
+            $reason .= sprintf( ' %d times in a row', $streak );
+        }
+        self::pause( $source, $seconds, $reason, $streak >= self::WARN_AFTER );
     }
 
-    /** No request to $source for $seconds; the reason goes to the log. */
-    public static function pause( string $source, int $seconds, string $reason ): void {
+    /** What went wrong when no HTTP answer came: a time-out or the transport's own message. */
+    private static function no_answer( $response ): string {
+        $msg = is_wp_error( $response ) ? trim( (string) $response->get_error_message() ) : '';
+        if ( '' === $msg ) {
+            return 'request failed (no response)';
+        }
+        if ( preg_match( '/timed out|cURL error 28\b/i', $msg ) ) {
+            return 'request timed out';
+        }
+        return sprintf( 'request failed (%s)', mb_substr( $msg, 0, 120 ) );
+    }
+
+    /** $source delivered an image: start counting failures from zero. */
+    public static function end_streak( string $source ): void {
+        delete_transient( self::STREAK . $source );
+    }
+
+    /** No request to $source for $seconds; the reason goes to the log unless $log is false. */
+    public static function pause( string $source, int $seconds, string $reason, bool $log = true ): void {
         $seconds = max( 1, $seconds );
         set_transient(
             self::BACKOFF . $source,
@@ -341,6 +377,9 @@ class NAWS_Radar_Store {
             ],
             $seconds
         );
+        if ( ! $log ) {
+            return;
+        }
         NAWS_Logger::warning(
             'radar',
             sprintf( '%s %s, next attempt in %d minute(s)', $source, $reason, (int) ceil( $seconds / 60 ) )
