@@ -304,6 +304,26 @@ reset_http();
 $GLOBALS['call_args'] = [];
 NAWS_Radar::refresh( $kt, $now + 900 );
 check( 'naechster Lauf holt weiter',        count( NAWS_Radar_Store::manifest( $kt )['frames'] ) > 5, true );
+
+// Der gekuerzte letzte Abruf laeuft ab: Schuld ist die Zeitgrenze, nicht der DWD.
+$GLOBALS['fake_t']    = 1000.0;
+$GLOBALS['call_args'] = [];
+$GLOBALS['logged']    = [];
+$kt = fresh_dwd( 50.33 );
+$GLOBALS['http_routes'] = [
+    'https://maps.dwd.de/'            => function () {
+        $GLOBALS['fake_t'] += 20;
+        return $GLOBALS['fake_t'] > 1080 ? new WP_Error( 'http_request_failed', 'cURL error 28: Operation timed out after 10001 milliseconds' ) : png( 'dwd' );
+    },
+    'https://tile.openstreetmap.org/' => png( 'osm' ),
+];
+check( 'gekuerzter Abruf laeuft ab: Lauf klappt', NAWS_Radar::refresh( $kt, $now ), true );
+check( '... 4 Bilder, keine Pause, nicht gezaehlt', [ count( NAWS_Radar_Store::manifest( $kt )['frames'] ), NAWS_Radar_Store::in_backoff( 'dwd' ), get_transient( 'naws_radar_fails_dwd' ), $GLOBALS['logged'] ], [ 4, false, false, [] ] );
+$GLOBALS['fake_t'] = 1000.0;
+$GLOBALS['http_routes']['https://maps.dwd.de/'] = function () { $GLOBALS['fake_t'] += 30; return new WP_Error( 'http_request_failed', 'cURL error 28: Operation timed out after 30001 milliseconds' ); };
+$kt = fresh_dwd( 50.34 );
+NAWS_Radar::refresh( $kt, $now );
+check( 'voller Abruf (30 s) laeuft ab: Pause', [ NAWS_Radar_Store::in_backoff( 'dwd' ), $GLOBALS['transients']['naws_radar_backoff_dwd'][0]['reason'] ?? '' ], [ true, 'request timed out' ] );
 NAWS_Radar::$clock = null;
 
 echo "\nZeitueberschreitung beim DWD: still bis zum dritten Lauf in Folge\n" . str_repeat( '-', 74 ) . "\n";

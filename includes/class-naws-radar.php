@@ -37,6 +37,9 @@ class NAWS_Radar {
     /** True once this run hit the request budget or its time. */
     private static $capped = false;
 
+    /** True while the last request waited less than its source allows (end of the run). */
+    private static $cut_short = false;
+
     /** Sources that delivered an image this run: their failure streak ends. */
     private static $delivered = [];
 
@@ -67,10 +70,12 @@ class NAWS_Radar {
             return null;
         }
         --self::$left;
+        $wait            = (int) min( $timeout, ceil( $rest ) );
+        self::$cut_short = $wait < $timeout;
         return wp_remote_get(
             $url,
             [
-                'timeout'    => (int) min( $timeout, ceil( $rest ) ),
+                'timeout'    => $wait,
                 'user-agent' => self::user_agent(),
             ]
         );
@@ -102,6 +107,12 @@ class NAWS_Radar {
             return [ 'cap', '' ];
         }
         if ( is_wp_error( $response ) ) {
+            // A request shortened to the end of the run that runs out is
+            // the run's limit, not the service's fault: stop, no pause.
+            if ( self::$cut_short ) {
+                self::$capped = true;
+                return [ 'cap', '' ];
+            }
             return [ 'fail', '' ];
         }
         $code = (int) wp_remote_retrieve_response_code( $response );
@@ -143,6 +154,7 @@ class NAWS_Radar {
         self::$left       = max( 0, $budget );
         self::$deadline   = self::seconds() + self::RUN_SECONDS;
         self::$capped     = false;
+        self::$cut_short  = false;
         self::$put_failed = false;
         self::$delivered  = [];
         try {
