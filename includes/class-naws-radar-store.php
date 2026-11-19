@@ -355,10 +355,16 @@ class NAWS_Radar_Store {
         if ( '' === $msg ) {
             return 'request failed (no response)';
         }
-        if ( preg_match( '/timed out|cURL error 28\b/i', $msg ) ) {
+        if ( self::timed_out( $response ) ) {
             return 'request timed out';
         }
         return sprintf( 'request failed (%s)', mb_substr( $msg, 0, 120 ) );
+    }
+
+    /** True when $response is a WP_Error for a request that ran out of time. */
+    public static function timed_out( $response ): bool {
+        return is_wp_error( $response )
+            && 1 === preg_match( '/timed out|cURL error 28\b/i', (string) $response->get_error_message() );
     }
 
     /** $source delivered an image: start counting failures from zero. */

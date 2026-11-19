@@ -107,9 +107,10 @@ class NAWS_Radar {
             return [ 'cap', '' ];
         }
         if ( is_wp_error( $response ) ) {
-            // A request shortened to the end of the run that runs out is
-            // the run's limit, not the service's fault: stop, no pause.
-            if ( self::$cut_short ) {
+            // A request shortened to the end of the run that runs out of
+            // time hit the run's limit, not the service's: stop, no pause.
+            // Any other error (DNS, refused, TLS) still counts as a failure.
+            if ( self::$cut_short && NAWS_Radar_Store::timed_out( $response ) ) {
                 self::$capped = true;
                 return [ 'cap', '' ];
             }

@@ -320,6 +320,14 @@ $GLOBALS['http_routes'] = [
 check( 'gekuerzter Abruf laeuft ab: Lauf klappt', NAWS_Radar::refresh( $kt, $now ), true );
 check( '... 4 Bilder, keine Pause, nicht gezaehlt', [ count( NAWS_Radar_Store::manifest( $kt )['frames'] ), NAWS_Radar_Store::in_backoff( 'dwd' ), get_transient( 'naws_radar_fails_dwd' ), $GLOBALS['logged'] ], [ 4, false, false, [] ] );
 $GLOBALS['fake_t'] = 1000.0;
+$GLOBALS['http_routes']['https://maps.dwd.de/'] = function () {
+    $GLOBALS['fake_t'] += 20;
+    return $GLOBALS['fake_t'] > 1080 ? new WP_Error( 'http_request_failed', 'cURL error 6: Could not resolve host: maps.dwd.de' ) : png( 'dwd' );
+};
+$kt = fresh_dwd( 50.35 );
+NAWS_Radar::refresh( $kt, $now );
+check( 'gekuerzter Abruf, aber DNS-Fehler: Pause', NAWS_Radar_Store::in_backoff( 'dwd' ), true );
+$GLOBALS['fake_t'] = 1000.0;
 $GLOBALS['http_routes']['https://maps.dwd.de/'] = function () { $GLOBALS['fake_t'] += 30; return new WP_Error( 'http_request_failed', 'cURL error 28: Operation timed out after 30001 milliseconds' ); };
 $kt = fresh_dwd( 50.34 );
 NAWS_Radar::refresh( $kt, $now );
