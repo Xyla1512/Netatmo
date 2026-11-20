@@ -4,6 +4,9 @@ All notable changes to the XTX Netatmo plugin are documented here.
 
 ## [2.2.1]
 
+### Added
+- **`[naws_heatmap type="rain"]` — daily precipitation as a heatmap.** The same calendar grid as the temperature heatmap (months down, days across, year pills, tooltip, the wave that builds the grid once it scrolls into view), with the day's rain total in each tile. A dry day (0 mm) has a colour of its own, distinct from the grey of a day without a reading; wet days run from light sky blue at 0.1 mm to deep violet at 30 mm and more, on stops that are close together at the bottom (0.1 · 1 · 2 · 5 · 10 · 20 · 30 mm), because most rainy days bring less than two millimetres. The scale is fixed, so years stay comparable, and stays in millimetres when the site shows inches; the tooltip follows the unit setting. The current day stays empty until it is complete. All eight colours are on a new Appearance tab, "Heatmap Scale: precipitation". Without `type`, or with `type="temp"`, the heatmap is unchanged. German and Norwegian Bokmål translations included.
+
 ### Fixed
 - **Rain radar: "dwd request failed (no response)" every twenty minutes.** Since mid-November 2026 the Deutscher Wetterdienst often takes 10 to 14 seconds for one radar image, and the plugin gave up after 15. Requests to maps.dwd.de now wait up to 30 seconds; a background run starts no request after 90 seconds and the last one only waits for what is left of them, so a slow service cannot hold a run for minutes — the remaining images follow in the next run. The log names the actual problem ("request timed out", or the message of the connection) instead of "no response", and a slow or briefly unreachable service (no answer, 5xx) is only logged once it failed three runs in a row without delivering an image in between; a refusal (401, 403, 418, 429) is still logged at once. The radar pauses after every failure as before.
 

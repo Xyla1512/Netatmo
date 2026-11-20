@@ -232,15 +232,17 @@ $value_params = [
 
     <div class="naws-sc-card">
         <h3><code>[naws_heatmap]</code></h3>
-        <p><?php esc_html_e( 'One year of outdoor daily average temperature as a calendar grid: months down, days across, one coloured tile per day.', 'xtx-integration-for-netatmo' ); ?></p>
+        <p><?php esc_html_e( 'One year of outdoor daily average temperature as a calendar grid: months down, days across, one coloured tile per day.', 'xtx-integration-for-netatmo' ); ?> <?php esc_html_e( 'With type="rain" the same grid shows the daily precipitation, with its own colour scale and a colour of its own for dry days.', 'xtx-integration-for-netatmo' ); ?></p>
         <div class="naws-copy-wrap"><pre>[naws_heatmap]</pre><button class="naws-copy-btn" data-copy='[naws_heatmap]'><?php echo esc_html( _x( 'Copy', 'sc_copy', 'xtx-integration-for-netatmo' ) ); ?></button></div>
         <table class="naws-attr-table" style="margin-top:10px">
             <tr><th><?php esc_html_e( 'Attribute', 'xtx-integration-for-netatmo' ); ?></th><th><?php esc_html_e( 'Description', 'xtx-integration-for-netatmo' ); ?></th><th><?php esc_html_e( 'Default', 'xtx-integration-for-netatmo' ); ?></th></tr>
+            <tr><td><code>type</code></td><td><?php esc_html_e( 'What the tiles show: temp (daily average temperature) or rain (daily precipitation)', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">temp</span></td></tr>
             <tr><td><code>year</code></td><td><?php esc_html_e( 'Year to open with. A year with no readings falls back to the current one.', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php esc_html_e( 'current year', 'xtx-integration-for-netatmo' ); ?></span></td></tr>
-            <tr><td><code>title</code></td><td><?php esc_html_e( 'Title above the grid', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php esc_html_e( 'Daily Average Temperature', 'xtx-integration-for-netatmo' ); ?></span></td></tr>
+            <tr><td><code>title</code></td><td><?php esc_html_e( 'Title above the grid', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default"><?php esc_html_e( 'Daily Average Temperature', 'xtx-integration-for-netatmo' ); ?> / <?php esc_html_e( 'Daily Precipitation', 'xtx-integration-for-netatmo' ); ?></span></td></tr>
             <tr><td><code>legend</code></td><td><?php esc_html_e( 'Show the colour scale below the grid (yes/no)', 'xtx-integration-for-netatmo' ); ?></td><td><span class="naws-tag-default">yes</span></td></tr>
         </table>
         <div class="naws-inline-examples">
+            <div class="naws-inline-ex"><code>[naws_heatmap type="rain"]</code> &rarr; Niederschlag pro Tag</div>
             <div class="naws-inline-ex"><code>[naws_heatmap year="2025"]</code> &rarr; startet mit 2025</div>
             <div class="naws-inline-ex"><code>[naws_heatmap legend="no"]</code> &rarr; ohne Farbskala</div>
         </div>

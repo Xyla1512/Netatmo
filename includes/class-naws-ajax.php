@@ -708,7 +708,12 @@ class NAWS_Ajax {
             return;
         }
 
-        $data   = NAWS_Database::get_heatmap_year( $year );
+        // Nur "rain" ist ein anderer Typ; alles andere ist die Temperatur,
+        // wie bei einer Karte, die vor 2.2.1 gerendert wurde und keinen
+        // Typ mitschickt.
+        $is_rain = isset( $_POST['type'] ) && 'rain' === sanitize_key( wp_unslash( $_POST['type'] ) );
+
+        $data   = $is_rain ? NAWS_Database::get_rain_heatmap_year( $year ) : NAWS_Database::get_heatmap_year( $year );
         $colors = [];
         $labels = [];
 
@@ -716,8 +721,13 @@ class NAWS_Ajax {
             $colors[ $mi ] = [];
             $labels[ $mi ] = [];
             foreach ( $days as $di => $v ) {
-                $colors[ $mi ][ $di ] = NAWS_Colors::heatmap_color( $v );
-                $labels[ $mi ][ $di ] = NAWS_Helpers::heatmap_label( $v, $data['sources'][ $mi ][ $di ] ?? null );
+                if ( $is_rain ) {
+                    $colors[ $mi ][ $di ] = NAWS_Colors::rain_heatmap_color( $v );
+                    $labels[ $mi ][ $di ] = NAWS_Helpers::rain_heatmap_label( $v );
+                } else {
+                    $colors[ $mi ][ $di ] = NAWS_Colors::heatmap_color( $v );
+                    $labels[ $mi ][ $di ] = NAWS_Helpers::heatmap_label( $v, $data['sources'][ $mi ][ $di ] ?? null );
+                }
             }
         }
 

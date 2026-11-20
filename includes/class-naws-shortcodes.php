@@ -313,18 +313,26 @@ class NAWS_Shortcodes {
     }
 
     // ----------------------------------------------------------------
-    // [naws_heatmap year="" title="" legend="yes"]
+    // [naws_heatmap type="temp|rain" year="" title="" legend="yes"]
     // ----------------------------------------------------------------
 
     public function sc_heatmap( $atts ) {
         $this->enqueue_frontend();
         wp_enqueue_script( 'naws-heatmap-boot' );
 
+        // Der Typ zuerst: der Vorgabetitel haengt an ihm. Alles ausser
+        // "rain" ist die Temperaturkarte, wie vor 2.2.1.
+        $type = ( is_array( $atts ) && strtolower( trim( (string) ( $atts['type'] ?? '' ) ) ) === 'rain' ) ? 'rain' : 'temp';
+
         $atts = shortcode_atts( [
+            'type'   => $type,
             'year'   => '',
-            'title'  => __( 'Daily Average Temperature', 'xtx-integration-for-netatmo' ),
+            'title'  => $type === 'rain'
+                ? __( 'Daily Precipitation', 'xtx-integration-for-netatmo' )
+                : __( 'Daily Average Temperature', 'xtx-integration-for-netatmo' ),
             'legend' => 'yes',
         ], $atts, 'naws_heatmap' );
+        $atts['type'] = $type;
 
         ob_start();
         include NAWS_PLUGIN_DIR . 'templates/heatmap.php';

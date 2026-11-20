@@ -2,7 +2,11 @@
 // phpcs:disable PluginCheck.CodeAnalysis.VariableAnalysis.NonPrefixedVariableFound
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 /**
- * Template: [naws_heatmap year="" title="" legend="yes"]
+ * Template: [naws_heatmap type="temp|rain" year="" title="" legend="yes"]
+ *
+ * type="rain" (seit 2.2.1) zeigt die Tagessumme des Niederschlags statt
+ * des Tagesmittels — dasselbe Raster, dieselbe Welle, dieselben Pillen,
+ * nur Daten, Farbskala, Beschriftung und Legende sind andere.
  *
  * Ein Jahr Aussen-Tagesdurchschnitt als Kalenderraster. Zeilen sind
  * Monate, Spalten Tage. Eine <table> und keine Grafik: die klebende
@@ -34,7 +38,10 @@ $now    = (int) gmdate( 'Y' );
 $year   = in_array( $wanted, $years, true ) ? $wanted
         : ( in_array( $now, $years, true ) ? $now : $y_last );
 
-$data   = NAWS_Database::get_heatmap_year( $year );
+$type    = ( $atts['type'] ?? 'temp' ) === 'rain' ? 'rain' : 'temp';
+$is_rain = $type === 'rain';
+
+$data   = $is_rain ? NAWS_Database::get_rain_heatmap_year( $year ) : NAWS_Database::get_heatmap_year( $year );
 $values = $data['values'];
 $srcs   = $data['sources'];
 $grey   = NAWS_Colors::heatmap_color( null );
@@ -45,6 +52,7 @@ foreach ( $values as $month ) {
 }
 ?>
 <div id="<?php echo esc_attr( $widget_id ); ?>" class="naws-hm"
+     data-type="<?php echo esc_attr( $type ); ?>"
      data-nonce="<?php echo esc_attr( $nonce ); ?>"
      data-ajax="<?php echo esc_attr( $ajax_url ); ?>"
      data-year="<?php echo esc_attr( (string) $year ); ?>">
@@ -94,8 +102,13 @@ foreach ( $values as $month ) {
 
               $v     = $values[ $m - 1 ][ $d - 1 ] ?? null;
               $src   = $srcs[ $m - 1 ][ $d - 1 ] ?? null;
-              $color = $v === null ? $grey : NAWS_Colors::heatmap_color( $v );
-              $label = NAWS_Helpers::heatmap_label( $v, $src );
+              if ( $is_rain ) {
+                  $color = NAWS_Colors::rain_heatmap_color( $v );
+                  $label = NAWS_Helpers::rain_heatmap_label( $v );
+              } else {
+                  $color = $v === null ? $grey : NAWS_Colors::heatmap_color( $v );
+                  $label = NAWS_Helpers::heatmap_label( $v, $src );
+              }
               $date  = sprintf( '%04d-%02d-%02d', $year, $m, $d );
           ?>
             <td class="naws-hm-c"
@@ -115,17 +128,25 @@ foreach ( $values as $month ) {
   </div>
 
   <?php if ( ( $atts['legend'] ?? 'yes' ) !== 'no' ) :
-      $scale = NAWS_Colors::heatmap_scale();
+      // Die Stuetzpunkte stehen im Verlauf in gleichen Abstaenden, nicht
+      // massstabsgetreu — bei der Regenskala (0,1 … 30 mm) laege sonst
+      // alles Interessante im ersten Dreissigstel des Balkens.
+      $scale = $is_rain ? NAWS_Colors::rain_heatmap_scale() : NAWS_Colors::heatmap_scale();
       $last  = count( $scale ) - 1;
       $stops = [];
       foreach ( $scale as $i => $s ) {
           $stops[] = $s[1] . ' ' . round( $i / $last * 100 ) . '%';
       }
+      $lab_min = $is_rain ? NAWS_Helpers::rain_heatmap_label( $scale[0][0] ) : NAWS_Helpers::heatmap_label( $scale[0][0], 'avg' );
+      $lab_max = $is_rain ? NAWS_Helpers::rain_heatmap_label( $scale[ $last ][0] ) : NAWS_Helpers::heatmap_label( $scale[ $last ][0], 'avg' );
   ?>
   <div class="naws-hm-legend">
-    <span class="naws-hm-legend-min"><?php echo esc_html( NAWS_Helpers::heatmap_label( $scale[0][0], 'avg' ) ); ?></span>
+    <?php if ( $is_rain ) : ?>
+    <span class="naws-hm-legend-dry"><span class="naws-hm-legend-swatch" style="background:<?php echo esc_attr( NAWS_Colors::rain_heatmap_color( 0 ) ); ?>"></span><?php echo esc_html( NAWS_Helpers::rain_heatmap_label( 0 ) ); ?></span>
+    <?php endif; ?>
+    <span class="naws-hm-legend-min"><?php echo esc_html( $lab_min ); ?></span>
     <span class="naws-hm-legend-bar" style="background:linear-gradient(90deg,<?php echo esc_attr( implode( ',', $stops ) ); ?>)"></span>
-    <span class="naws-hm-legend-max"><?php echo esc_html( NAWS_Helpers::heatmap_label( $scale[ $last ][0], 'avg' ) ); ?></span>
+    <span class="naws-hm-legend-max"><?php echo esc_html( $lab_max ); ?></span>
   </div>
   <?php endif; ?>
 </div>

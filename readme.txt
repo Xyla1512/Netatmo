@@ -50,7 +50,7 @@ Connects to the Netatmo API, stores all sensor data locally and displays live da
 * `[naws_value]` – Single inline sensor value
 * `[naws_calc]` – Single computed value (dew point, felt temperature, sunrise, moon phase, …); full list on the Shortcodes page in the backend
 * `[naws_history]` – Year-over-year comparison charts (supports `year` parameter)
-* `[naws_heatmap]` – One year of outdoor daily average temperature as a calendar grid, one tile per day, with a year selector (`year`, `title`, `legend`)
+* `[naws_heatmap]` – One year of outdoor daily average temperature, or with `type="rain"` daily precipitation, as a calendar grid, one tile per day, with a year selector (`type`, `year`, `title`, `legend`)
 * `[naws_records]` – Fifteen records from the daily summary with their dates, as tiles or a table (`year`, `records`, `layout`, `title`)
 * `[naws_on_this_day]` – This calendar day in every earlier year, with the day's records marked (`date`, `title`)
 * `[naws_month_review]` – A month in review: temperature, rain and gust against the same month in earlier years, with a headline for what stands out; visitors page through the months without reloading (`month`, `years`, `title`)

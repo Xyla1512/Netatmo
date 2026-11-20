@@ -803,6 +803,26 @@ class NAWS_Helpers {
         return $text;
     }
 
+    /**
+     * Was im Tooltip einer Kachel der Regenkarte steht (seit 2.2.1).
+     *
+     * Die Farbe kommt aus dem gespeicherten Millimeterwert, die
+     * Beschriftung aus der eingestellten Einheit. Ein trockener Tag sagt
+     * "Trocken" statt "0 mm" — das ist die Antwort auf die Frage, die man
+     * der Kachel stellt, und unterscheidet ihn hoerbar von "Kein Messwert".
+     *
+     * @param float|null $mm  Tagessumme in Millimetern, oder null.
+     */
+    public static function rain_heatmap_label( $mm ) {
+        if ( $mm === null || $mm === '' ) {
+            return __( 'No reading', 'xtx-integration-for-netatmo' );
+        }
+        if ( (float) $mm <= 0 ) {
+            return _x( 'Dry', 'a day without precipitation', 'xtx-integration-for-netatmo' );
+        }
+        return self::display_value( 'Rain', $mm ) . ' ' . self::get_unit( 'Rain' );
+    }
+
     public static function get_co2_level( $ppm ) {
         if ( $ppm < 800 )  return [ 'level' => 'excellent', 'color' => '#10b981', 'label' => __( 'Excellent', 'xtx-integration-for-netatmo' ) ];
         if ( $ppm < 1000 ) return [ 'level' => 'good',      'color' => '#84cc16', 'label' => __( 'Good', 'xtx-integration-for-netatmo' ) ];

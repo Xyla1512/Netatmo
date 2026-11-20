@@ -61,6 +61,15 @@ $color_labels = [
     'heatmap_t_30'    => __( '30 °C', 'xtx-integration-for-netatmo' ),
     'heatmap_t_35'    => __( '35 °C and above', 'xtx-integration-for-netatmo' ),
     'heatmap_no_data' => __( 'Day without a reading', 'xtx-integration-for-netatmo' ),
+    // Heatmap: precipitation (since 2.2.1)
+    'heatmap_r_dry'   => __( 'Dry day (0 mm)', 'xtx-integration-for-netatmo' ),
+    'heatmap_r_0_1'   => __( '0.1 mm', 'xtx-integration-for-netatmo' ),
+    'heatmap_r_1'     => __( '1 mm', 'xtx-integration-for-netatmo' ),
+    'heatmap_r_2'     => __( '2 mm', 'xtx-integration-for-netatmo' ),
+    'heatmap_r_5'     => __( '5 mm', 'xtx-integration-for-netatmo' ),
+    'heatmap_r_10'    => __( '10 mm', 'xtx-integration-for-netatmo' ),
+    'heatmap_r_20'    => __( '20 mm', 'xtx-integration-for-netatmo' ),
+    'heatmap_r_30'    => __( '30 mm and above', 'xtx-integration-for-netatmo' ),
     // Wind rose
     'windrose_b1'   => __( 'Beaufort 1 · light air', 'xtx-integration-for-netatmo' ),
     'windrose_b2'   => __( 'Beaufort 2 · light breeze', 'xtx-integration-for-netatmo' ),
@@ -654,6 +663,48 @@ $icon_color_keys = [
                             <span class="naws-pv-heatmap-swatch"
                                   style="display:block;width:100%;height:26px;border-radius:4px;background:<?php echo esc_attr( $colors[ $key ] ); ?>"></span>
                             <span class="naws-pv-heatmap-deg"><?php echo esc_html( NAWS_Colors::HEATMAP_STOPS[ $i ] . ' °C' ); ?></span>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+             Tab 6b: Heatmap-Skala Niederschlag (seit 2.2.1)
+             ============================================================ -->
+        <div class="naws-appearance-pane<?php echo esc_attr( $naws_pane_class( 'heatmap_rain' ) ); ?>" data-pane="heatmap_rain">
+            <p class="description"><?php esc_html_e( 'Colour scale for [naws_heatmap type="rain"]. A dry day (0 mm) has its own colour; the stops are millimetres per day and values in between are interpolated. They stay in millimetres even when the display unit is inches. Days without a reading use the grey from the temperature scale.', 'xtx-integration-for-netatmo' ); ?></p>
+            <div class="naws-appearance-row">
+                <div class="naws-appearance-controls">
+                    <table class="form-table naws-color-table">
+                        <tbody>
+                        <?php foreach ( $groups['heatmap_rain']['keys'] as $key ) : ?>
+                            <tr>
+                                <th><label for="naws-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $color_labels[ $key ] ?? $key ); ?></label></th>
+                                <td>
+                                    <input type="text"
+                                           id="naws-<?php echo esc_attr( $key ); ?>"
+                                           name="naws_appearance[<?php echo esc_attr( $key ); ?>]"
+                                           value="<?php echo esc_attr( $colors[ $key ] ); ?>"
+                                           class="naws-color-picker"
+                                           data-preview="heatmap"
+                                           data-key="<?php echo esc_attr( $key ); ?>"
+                                           data-default-color="<?php echo esc_attr( $defaults[ $key ] ); ?>">
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="naws-appearance-preview naws-preview-sticky">
+                    <div class="naws-preview-label"><?php esc_html_e( 'Live preview — precipitation scale', 'xtx-integration-for-netatmo' ); ?></div>
+                    <div class="naws-pv-heatmap">
+                        <?php foreach ( $groups['heatmap_rain']['keys'] as $key ) : ?>
+                        <div class="naws-pv-heatmap-stop" data-key="<?php echo esc_attr( $key ); ?>">
+                            <span class="naws-pv-heatmap-swatch"
+                                  style="display:block;width:100%;height:26px;border-radius:4px;background:<?php echo esc_attr( $colors[ $key ] ); ?>"></span>
+                            <span class="naws-pv-heatmap-deg"><?php echo esc_html( $color_labels[ $key ] ?? $key ); ?></span>
                         </div>
                         <?php endforeach; ?>
                     </div>

@@ -195,6 +195,23 @@ class NAWS_Colors {
         'heatmap_t_35'    => '#7f1d1d',
         'heatmap_no_data' => '#eef2f2',
 
+        // [naws_heatmap type="rain"] (seit 2.2.1): ein trockener Tag und
+        // sieben Stuetzpunkte in Millimetern. Unten eng, oben weit, weil
+        // die meisten Regentage unter zwei Millimetern liegen — eine
+        // gleichmaessige Skala bis 30 mm waere fast ueberall blass. Trocken
+        // ist ein Sandton und nicht das Grau von heatmap_no_data: 0 mm ist
+        // ein Messwert, kein fehlender. Wie die Temperaturskala haengen
+        // die Stuetzpunkte an der gespeicherten Einheit (mm), nicht an der
+        // angezeigten.
+        'heatmap_r_dry'   => '#f4ecd8',
+        'heatmap_r_0_1'   => '#d4ebf7',
+        'heatmap_r_1'     => '#9dcfee',
+        'heatmap_r_2'     => '#5eafe2',
+        'heatmap_r_5'     => '#2b83c8',
+        'heatmap_r_10'    => '#1c58a6',
+        'heatmap_r_20'    => '#2a3a8c',
+        'heatmap_r_30'    => '#4b1f78',
+
         // [naws_windrose]: five Beaufort classes of one hue from light to
         // dark (validated for step contrast), the rings behind the rays,
         // the hub that carries the calm share, and the active button of
@@ -623,6 +640,15 @@ class NAWS_Colors {
         'heatmap_t_15', 'heatmap_t_20', 'heatmap_t_25', 'heatmap_t_30', 'heatmap_t_35',
     ];
 
+    /** Die Stuetzpunkte der Regenskala in Millimetern, aufsteigend (seit 2.2.1). */
+    const RAIN_HEATMAP_STOPS = [ 0.1, 1, 2, 5, 10, 20, 30 ];
+
+    /** Die Einstellungsschluessel zu RAIN_HEATMAP_STOPS; trocken steht extra. */
+    const RAIN_HEATMAP_KEYS = [
+        'heatmap_r_0_1', 'heatmap_r_1', 'heatmap_r_2', 'heatmap_r_5',
+        'heatmap_r_10', 'heatmap_r_20', 'heatmap_r_30',
+    ];
+
     /** The [naws_windrose] keys, in the order the Appearance page shows them. */
     const WINDROSE_KEYS = [
         'windrose_b1', 'windrose_b2', 'windrose_b3', 'windrose_b4', 'windrose_b5',
@@ -717,6 +743,62 @@ class NAWS_Colors {
         return $c[ self::HEATMAP_KEYS[ $last ] ];
     }
 
+    /**
+     * Die Regenskala als Paare aus Millimetern und Farbe, fuer die Legende.
+     * Der trockene Tag gehoert nicht dazu; er hat sein eigenes Feld.
+     *
+     * @return array<int,array{0:int|float,1:string}>
+     */
+    public static function rain_heatmap_scale() {
+        $c   = self::get_all();
+        $out = [];
+        foreach ( self::RAIN_HEATMAP_STOPS as $i => $mm ) {
+            $out[] = [ $mm, $c[ self::RAIN_HEATMAP_KEYS[ $i ] ] ];
+        }
+        return $out;
+    }
+
+    /**
+     * Die Farbe einer Kachel zu einer Tagessumme in Millimetern.
+     *
+     * Kein Wert ist grau, 0 mm ist trocken, alles darueber liegt auf der
+     * Skala: unter dem ersten Stuetzpunkt (0,1 mm) gekappt, damit auch ein
+     * einzelner Kipp sichtbar nass ist, ueber dem letzten ebenso.
+     *
+     * @param float|int|string|null $mm
+     * @return string  #rrggbb
+     */
+    public static function rain_heatmap_color( $mm ) {
+        $c = self::get_all();
+
+        if ( $mm === null || $mm === '' || ! is_numeric( $mm ) ) {
+            return $c['heatmap_no_data'];
+        }
+
+        $v = (float) $mm;
+        if ( $v <= 0 ) {
+            return $c['heatmap_r_dry'];
+        }
+
+        $stops = self::RAIN_HEATMAP_STOPS;
+        $keys  = self::RAIN_HEATMAP_KEYS;
+        $last  = count( $stops ) - 1;
+
+        if ( $v <= $stops[0] ) {
+            return $c[ $keys[0] ];
+        }
+        if ( $v >= $stops[ $last ] ) {
+            return $c[ $keys[ $last ] ];
+        }
+        for ( $i = 0; $i < $last; $i++ ) {
+            if ( $v <= $stops[ $i + 1 ] ) {
+                $t = ( $v - $stops[ $i ] ) / ( $stops[ $i + 1 ] - $stops[ $i ] );
+                return self::mix_hex( $c[ $keys[ $i ] ], $c[ $keys[ $i + 1 ] ], $t );
+            }
+        }
+        return $c[ $keys[ $last ] ];
+    }
+
     /** Mischt zwei Hexfarben, $t von 0 (ganz $a) bis 1 (ganz $b). */
     private static function mix_hex( $a, $b, $t ) {
         $ca = self::hex_to_rgb( $a );
@@ -768,6 +850,7 @@ class NAWS_Colors {
             'charttheme' => __( 'Chart Theming', 'xtx-integration-for-netatmo' ),
             'history'    => __( 'Year Comparison Palette', 'xtx-integration-for-netatmo' ),
             'heatmap'    => __( 'Heatmap Scale', 'xtx-integration-for-netatmo' ),
+            'heatmap_rain' => __( 'Heatmap Scale: precipitation', 'xtx-integration-for-netatmo' ),
             'windrose'   => __( 'Wind Rose', 'xtx-integration-for-netatmo' ),
             'sparkline'  => __( 'Sparkline', 'xtx-integration-for-netatmo' ),
             'forecast'   => __( 'Forecast', 'xtx-integration-for-netatmo' ),
@@ -835,6 +918,10 @@ class NAWS_Colors {
             'heatmap' => [
                 'label' => 'appearance_group_heatmap',
                 'keys'  => array_merge( self::HEATMAP_KEYS, [ 'heatmap_no_data' ] ),
+            ],
+            'heatmap_rain' => [
+                'label' => 'appearance_group_heatmap_rain',
+                'keys'  => array_merge( [ 'heatmap_r_dry' ], self::RAIN_HEATMAP_KEYS ),
             ],
             'windrose' => [
                 'label' => 'appearance_group_windrose',

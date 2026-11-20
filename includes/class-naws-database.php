@@ -1325,6 +1325,75 @@ class NAWS_Database {
         return self::shape_heatmap_year( is_array( $rows ) ? $rows : [], $year, wp_date( 'Y-m-d' ) );
     }
 
+    /**
+     * Ein Jahr Tagesniederschlag als Raster fuer [naws_heatmap type="rain"].
+     *
+     * Dieselbe Form wie shape_heatmap_year(): zwoelf Arrays, jedes so lang
+     * wie sein Monat. Der Unterschied, auf den es ankommt: 0 ist ein
+     * Messwert (trockener Tag) und bleibt 0, null heisst "nichts gemessen".
+     * Die Innenmodule fuehren je Tag eine eigene Zeile ohne rain_sum; die
+     * wird uebersprungen, damit sie die Summe der Stationszeile nicht
+     * ueberschreibt, egal in welcher Reihenfolge die Zeilen kommen.
+     *
+     * Wie bei der Temperatur bleibt der laufende Tag leer: seine Summe
+     * waechst noch und saehe trotzdem aus wie ein fertiger Tag.
+     *
+     * @param array       $rows   Zeilen mit day_date und rain_sum (mm).
+     * @param int         $year
+     * @param string|null $today  Y-m-d des laufenden Tages, oder null.
+     * @return array{values:array,sources:array}
+     */
+    public static function shape_rain_year( array $rows, $year, $today = null ) {
+        $year    = (int) $year;
+        $values  = [];
+        $sources = [];
+
+        for ( $m = 1; $m <= 12; $m++ ) {
+            $days = (int) gmdate( 't', gmmktime( 0, 0, 0, $m, 1, $year ) );
+            $values[ $m - 1 ]  = array_fill( 0, $days, null );
+            $sources[ $m - 1 ] = array_fill( 0, $days, null );
+        }
+
+        foreach ( $rows as $row ) {
+            $date = substr( (string) ( $row['day_date'] ?? '' ), 0, 10 );
+            if ( ! preg_match( '/^(\d{4})-(\d{2})-(\d{2})$/', $date, $p ) ) continue;
+            if ( $today !== null && $date >= $today ) continue;
+            if ( (int) $p[1] !== $year ) continue;
+            $mi = (int) $p[2] - 1;
+            $di = (int) $p[3] - 1;
+            if ( ! isset( $values[ $mi ] ) || ! array_key_exists( $di, $values[ $mi ] ) ) continue;
+
+            $mm = $row['rain_sum'] ?? null;
+            if ( $mm === null || $mm === '' || ! is_numeric( $mm ) || (float) $mm < 0 ) continue;
+
+            // Kommen fuer einen Tag doch zwei Summen, gilt die groessere:
+            // eine Zeile, die nur einen Teil des Tages kennt, ist kleiner.
+            $mm = round( (float) $mm, 2 );
+            if ( $values[ $mi ][ $di ] === null || $mm > $values[ $mi ][ $di ] ) {
+                $values[ $mi ][ $di ]  = $mm;
+                $sources[ $mi ][ $di ] = 'sum';
+            }
+        }
+
+        return [ 'values' => $values, 'sources' => $sources ];
+    }
+
+    /**
+     * Holt ein Jahr Tagesniederschlag aus der Tagestabelle.
+     *
+     * Ohne Modulfilter, aus demselben Grund wie get_heatmap_year(): die
+     * Summe des Regenmessers steht auf der Zeile der Basisstation.
+     */
+    public static function get_rain_heatmap_year( $year ) {
+        global $wpdb;
+        $year = (int) $year;
+        $t    = $wpdb->prefix . NAWS_TABLE_DAILY;
+
+        $rows = $wpdb->get_results( $wpdb->prepare( "SELECT day_date, rain_sum FROM {$t} WHERE YEAR(day_date) = %d AND rain_sum IS NOT NULL ORDER BY day_date ASC", $year ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name is prefix + constant
+
+        return self::shape_rain_year( is_array( $rows ) ? $rows : [], $year, wp_date( 'Y-m-d' ) );
+    }
+
     public static function count_readings() {
         global $wpdb;
         return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}" . NAWS_TABLE_READINGS ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- table name is a constant

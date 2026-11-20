@@ -199,6 +199,7 @@
                 body.append('action', 'naws_get_heatmap_data');
                 body.append('nonce', root.getAttribute('data-nonce') || '');
                 body.append('year', year);
+                body.append('type', root.getAttribute('data-type') || 'temp');
 
                 var empty = root.querySelector('.naws-hm-empty');
                 if (empty) { empty.textContent = ''; }
