@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Plugins - XTX Integration for Netatmo - Stable Readme (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-11-13 15:14:42+0000\n"
+"PO-Revision-Date: 2026-11-22 10:10:07+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,6 +20,10 @@ msgstr "Verbindet sich mit der Netatmo-API, speichert alle Sensordaten lokal und
 #, gp-priority: high
 msgid "XTX Integration for Netatmo"
 msgstr "XTX Integration for Netatmo"
+
+#. Found in description list item.
+msgid "<code>[naws_heatmap]</code> – One year of outdoor daily average temperature, or with <code>type=\"rain\"</code> daily precipitation, as a calendar grid, one tile per day, with a year selector (<code>type</code>, <code>year</code>, <code>title</code>, <code>legend</code>)"
+msgstr "<code>[naws_heatmap]</code> – Ein Jahr Außen-Tagesdurchschnittstemperatur oder mit <code>type=\"rain\"</code> der tägliche Niederschlag als Kalenderraster, eine Kachel pro Tag, mit Jahreswahl (<code>type</code>, <code>year</code>, <code>title</code>, <code>legend</code>)"
 
 #. Found in description paragraph.
 msgid "Only your server talks to the services below, without any visitor data:"
@@ -152,10 +156,6 @@ msgstr "<code>[naws_records]</code> – Fünfzehn Rekorde aus der Tagesübersich
 #. Found in description list item.
 msgid "<strong>20 Shortcodes</strong> – Dashboard, current readings, infobar, single value, computed value, sparkline, sparkline tiles, history charts, heatmap, records, this day in earlier years, month review, module comparison, sun path, wind rose, forecast, rain radar, table, widget, weather icon"
 msgstr "<strong>20 Shortcodes</strong> – Dashboard, aktuelle Werte, Infoleiste, Einzelwert, berechneter Wert, Sparkline, Sparkline-Kacheln, Verlaufsdiagramme, Heatmap, Rekorde, dieser Tag in früheren Jahren, Monatsrückblick, Modulvergleich, Sonnenbahn, Windrose, Vorhersage, Regenradar, Tabelle, Widget, Wettersymbol"
-
-#. Found in description list item.
-msgid "<code>[naws_heatmap]</code> – One year of outdoor daily average temperature as a calendar grid, one tile per day, with a year selector (<code>year</code>, <code>title</code>, <code>legend</code>)"
-msgstr "<code>[naws_heatmap]</code> – Ein Jahr Außen-Tagesdurchschnittstemperatur als Kalenderraster, eine Kachel pro Tag, mit Jahreswahl (<code>year</code>, <code>title</code>, <code>legend</code>)"
 
 #. Found in description list item.
 msgid "<code>[naws_table]</code> – Readings as a table over a period, grouped by hour, day, week, month or year (<code>module_id</code>, <code>parameters</code>, <code>period</code>, <code>limit</code>, <code>group_by</code>, <code>title</code>)"
@@ -555,6 +555,16 @@ msgstr "Live-Dashboard mit Sensorkacheln und 24-Stunden-Verläufen"
 
 #. Found in changelog list item.
 #, gp-priority: low
+msgid "Fix: rain radar — \"dwd request failed (no response)\" every twenty minutes. The German weather service often needs more than 15 seconds for one image; requests to maps.dwd.de now wait up to 30 seconds within a time budget per run, the log names the actual problem, and a slow service is only logged after three failed runs in a row."
+msgstr "Fix: Regenradar – „dwd request failed (no response)“ alle zwanzig Minuten. Der Deutsche Wetterdienst braucht für ein Bild oft mehr als 15 Sekunden; Abrufe bei maps.dwd.de warten jetzt bis zu 30 Sekunden innerhalb eines Zeitbudgets pro Lauf, das Protokoll nennt den tatsächlichen Grund, und ein langsamer Dienst wird erst nach drei fehlgeschlagenen Läufen in Folge gemeldet."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Added: <code>[naws_heatmap type=\"rain\"]</code> — daily precipitation as a heatmap, in the same calendar grid as the temperature heatmap. Dry days have a colour of their own, wet days run from light blue at 0.1 mm to deep violet at 30 mm and more. The colours are on a new Appearance tab."
+msgstr "Added: <code>[naws_heatmap type=\"rain\"]</code> – der tägliche Niederschlag als Heatmap, im selben Kalenderraster wie die Temperatur-Heatmap. Trockene Tage haben eine eigene Farbe, nasse Tage laufen von Hellblau bei 0,1 mm bis Tiefviolett ab 30 mm. Die Farben stehen in einem neuen Reiter unter Erscheinungsbild."
+
+#. Found in changelog list item.
+#, gp-priority: low
 msgid "Fix: the wind card's compass points are translated, <code>[naws_table]</code> grouped by day shows seven calendar days in local time in a stable order, <code>[naws_current]</code> shows its values without JavaScript, and SVG symbols keep their viewBox."
 msgstr "Fix: Die Himmelsrichtungen der Windkachel sind übersetzt, <code>[naws_table]</code> zeigt nach Tagen gruppiert sieben Kalendertage in Ortszeit in fester Reihenfolge, <code>[naws_current]</code> zeigt seine Werte auch ohne JavaScript, und SVG-Symbole behalten ihre viewBox."
 
@@ -627,26 +637,6 @@ msgstr "Fix: Das stündliche Regendiagramm zeigte den Regen eine halbe Stunde zu
 #, gp-priority: low
 msgid "Security: the public chart endpoints took repeated fields — a single visitor request could build hundreds of megabytes and run PHP out of memory, the starting point of CVE-2026-109618/109619 (\"PHP2Shell\"). Repeats are dropped and unknown fields refused; the daily-data endpoint is for logged-in users only and no longer stores a cache entry for every date pair it is sent. The fix in PHP itself comes from your host: PHP 8.2.35, 8.3.36, 8.4.27, 8.5.12 or a build with the backport."
 msgstr "Security: Die öffentlichen Diagramm-Endpunkte nahmen wiederholte Felder an — eine einzige Besucheranfrage konnte Hunderte Megabyte aufbauen und PHP den Speicher ausgehen lassen, der Ausgangspunkt von CVE-2026-109618/109619 („PHP2Shell“). Wiederholungen werden aussortiert und unbekannte Felder abgelehnt; der Endpunkt für Tagesdaten antwortet nur noch angemeldeten Nutzern und legt nicht mehr für jedes Datumspaar einen eigenen Cache-Eintrag an. Den Fix in PHP selbst liefert dein Hoster: PHP 8.2.35, 8.3.36, 8.4.27, 8.5.12 oder ein Build mit dem Backport."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Fix: \"Sync now\" fetched twice and showed the next run on the second of the last one; the next fetch now follows one interval later, and manual syncs appear in the cron log. An overdue next run reads \"overdue by …\" instead of \"in …\"."
-msgstr "Fix: „Jetzt synchronisieren“ rief zweimal ab und zeigte die nächste Ausführung auf der Sekunde der letzten; der nächste Abruf folgt jetzt ein Intervall später, und Handabrufe stehen im Cron-Log. Eine überfällige Ausführung heißt „überfällig seit …“ statt „in …“."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Fix: a sync whose data the database refused reported \"Sync OK – 0 readings saved\". It now fails with the database's own message, in the cron log, on the \"Sync now\" button and for the e-mail notification on failed syncs. An account without a weather station gets its own message instead of \"Sync OK\"."
-msgstr "Fix: Ein Abruf, dessen Daten die Datenbank nicht annahm, meldete „Sync OK – 0 readings saved“. Jetzt scheitert er mit der Meldung der Datenbank: im Cron-Log, beim Knopf „Jetzt synchronisieren“ und für die E-Mail-Benachrichtigung bei fehlgeschlagenen Abrufen. Ein Konto ohne Wetterstation bekommt eine eigene Meldung statt „Sync OK“."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Added: Cron Log › Support Report — plugin, WordPress, PHP and database versions, whether the plugin tables exist, the cron state and the newest log entries, with a \"Copy report\" button for support requests. It contains no passwords, tokens or API keys."
-msgstr "Added: Cron-Log › Support-Bericht — Versionen von Plugin, WordPress, PHP und Datenbank, ob die Tabellen des Plugins vorhanden sind, der Cron-Zustand und die neuesten Protokolleinträge, mit einem Knopf „Bericht kopieren“ für Support-Anfragen. Er enthält keine Passwörter, Tokens oder API-Schlüssel."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Added: Cron Log › Error Log — the errors and warnings the plugin has always collected (database, Netatmo connection, weather services), which no page showed; the dashboard only counted them. A button clears the log, and the error count on the dashboard links to it."
-msgstr "Added: Cron-Log › Fehlerprotokoll — die Fehler und Warnungen, die das Plugin schon immer sammelt (Datenbank, Netatmo-Verbindung, Wetterdienste), die aber keine Seite zeigte; das Dashboard zählte sie nur. Ein Knopf leert das Protokoll, und die Fehlerzahl auf dem Dashboard verlinkt darauf."
 
 #. Found in changelog paragraph.
 #, gp-priority: low

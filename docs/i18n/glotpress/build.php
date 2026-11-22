@@ -49,7 +49,7 @@ $anker = [
     64  => '/wp-content/plugins/',
     77  => 'MET Norway',
     95  => 'Authenticate via OAuth2',
-    9   => 'Full Netatmo Integration',
+    10  => 'Full Netatmo Integration',
     128 => 'Key Features',
     135 => 'Live dashboard with sensor cards',
 ];

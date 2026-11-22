@@ -13,7 +13,7 @@
  * Die Beispieladresse bleibt "yoursite.com": GlotPress prueft, ob die Links
  * in Original und Uebersetzung uebereinstimmen, und warnt sonst.
  *
- * Stand: 2026-11-13 — 135 Eintraege, alle uebersetzt.
+ * Stand: 2026-11-22 — 135 Eintraege, alle uebersetzt.
  */
 return [
 
@@ -23,42 +23,34 @@ return [
 // ── Plugin name ───────────────────────────────────────────────────────────
 2 => 'XTX Integration for Netatmo',
 
-// ── Found in description paragraph ────────────────────────────────────────
-3 => 'Nur dein Server spricht mit den folgenden Diensten, ohne Daten der Besucher:',
-4 => '<strong>Dieses Plugin fügt deiner Datenschutzerklärung auf Besucherseite nichts hinzu.</strong> Alles, was deine Besucher sehen – Diagramme, Symbole, Regenradarbilder, Kartenkacheln, Schriften und Skripte –, kommt von deiner eigenen Website. Das Plugin lädt nichts von fremden Servern in den Browser der Besucher: Kein Wetterdienst, Kartenserver, Schriftenanbieter oder CDN erfährt, wer deine Wetterseiten ansieht. Die Symbole sind eigene Zeichnungen des Plugins statt Emojis, also muss WordPress auch dafür keine Emoji-Bilder nachladen.',
-65 => 'Weiterer Fremdcode ist nicht enthalten. Keine Bibliothek wird von einem CDN geladen; alles kommt von deiner eigenen Installation. Bibliotheken, die WordPress selbst mitbringt, werden von WordPress bezogen und nicht mitgeliefert.',
-66 => 'Diesem Plugin liegen zwei JavaScript-Bibliotheken bei, beide unter der MIT-Lizenz, die GPL-kompatibel ist. Sie werden als minifizierte Distributions-Builds ausgeliefert; der unminifizierte Quellcode und die Build-Werkzeuge sind jeweils über die Links unten erreichbar.',
-67 => 'Dieses Plugin erhebt und übermittelt keine personenbezogenen Daten (Namen, E-Mail-Adressen, IP-Adressen). Alle Sensordaten liegen ausschließlich in deiner lokalen WordPress-Datenbank.',
-68 => '<strong>XTX Integration for Netatmo</strong> verbindet deine Netatmo-Hardware mit WordPress. Es liest alle Sensordaten über die offizielle Netatmo-API, speichert die Messwerte in deiner lokalen Datenbank und zeigt sie in ansehnlichen Live-Dashboards, animierten Diagrammen und Wettervorhersagen.',
-
 // ── Found in description list item ────────────────────────────────────────
-5 => '<code>[naws_compare]</code> – Zwei Tagesreihen beliebiger Module in einem Diagramm über Monate und Jahre, etwa Luftfeuchte innen gegen außen; eine zweite Einheit bekommt ihre eigene Achse. Ein Baukasten auf der Shortcode-Seite schreibt den Kurzbefehl (<code>a</code>, <code>b</code>, <code>from</code>, <code>to</code>, <code>months</code>, <code>title</code>, <code>height</code>)',
-6 => '<code>[naws_month_review]</code> – Ein Monatsrückblick: Temperatur, Regen und Böen neben demselben Monat der Vorjahre, mit einem Kopfsatz für das, was auffällt; Besucher blättern ohne Neuladen durch die Monate (<code>month</code>, <code>years</code>, <code>title</code>)',
-7 => '<strong>Nichts von fremden Servern im Browser der Besucher</strong> – Diagramme, Symbole, Radarbilder, Kartenkacheln und Schriften kommen alle von deiner eigenen Website',
-8 => '<strong>Astronomie</strong> – Sonnenauf- und -untergang, Mondphase mit Beleuchtungsgrad, nächster Vollmond und Supermond (berechnet nach Meeus), nächste Mondfinsternis',
-9 => '<strong>Vollständige Netatmo-Integration</strong> – OAuth2-Anmeldung, automatischer Abgleich, alle Modultypen unterstützt (Basis, Außen, Wind, Regen, Innen), mit eigenem Anzeigenamen für jedes Modul',
-10 => '<strong>Bedingungen und Datenschutz:</strong> <a href="https://operations.osmfoundation.org/policies/tiles/">https://operations.osmfoundation.org/policies/tiles/</a>, <a href="https://osmfoundation.org/wiki/Privacy_Policy">https://osmfoundation.org/wiki/Privacy_Policy</a>',
-11 => '<strong>Wann:</strong> Nur wenn „Regenradar erlauben“ eingeschaltet ist, beim ersten Mal, wenn eine Seite ein Radar mit diesem Kartenausschnitt zeigt',
-12 => '<strong>Übermittelte Daten:</strong> Die Kachelnummern des Kartenausschnitts um deine Station. Einmal je Kartenausschnitt abgerufen und auf deinem Server aufbewahrt.',
-13 => '<strong>Zweck:</strong> Die Hintergrundkarte des Regenradars <code>[naws_radar]</code>',
-14 => '<strong>Bedingungen und Datenschutz:</strong> <a href="https://www.rainviewer.com/terms.html">https://www.rainviewer.com/terms.html</a>, <a href="https://www.rainviewer.com/privacy.html">https://www.rainviewer.com/privacy.html</a>',
-15 => '<strong>Übermittelte Daten:</strong> Die Kachelnummern des Kartenausschnitts um deine Station und die Uhrzeit jedes Bildes. Keine Besucherdaten: Die Bilder holt dein Server, ausgeliefert werden sie von deiner Website.',
-16 => '<strong>Zweck:</strong> Radarbilder für das Regenradar <code>[naws_radar]</code> außerhalb Deutschlands',
-17 => '<strong>Bedingungen und Datenschutz:</strong> <a href="https://www.dwd.de/EN/service/copyright/copyright_node.html">https://www.dwd.de/EN/service/copyright/copyright_node.html</a>, <a href="https://www.dwd.de/EN/service/dataprotection/dataprotection_node.html">https://www.dwd.de/EN/service/dataprotection/dataprotection_node.html</a>',
-18 => '<strong>Wann:</strong> Nur wenn „Regenradar erlauben“ eingeschaltet ist, nachdem eine Seite das Radar gezeigt hat, höchstens alle 15 Minuten',
-19 => '<strong>Übermittelte Daten:</strong> Der Kartenausschnitt um deine Station (als Begrenzungsrechteck) und die Uhrzeit jedes Bildes. Keine Besucherdaten: Die Bilder holt dein Server, ausgeliefert werden sie von deiner Website.',
-20 => '<strong>Zweck:</strong> Radarbilder (gemessen und zwei Stunden Vorschau) für das Regenradar <code>[naws_radar]</code>, wenn die Station in Deutschland steht',
-21 => '<code>[naws_radar]</code> – Animiertes Regenradar um die Station: in Deutschland vom Deutschen Wetterdienst (die letzte Stunde und zwei Stunden Vorschau), anderswo von RainViewer, auf einer grauen OpenStreetMap-Karte. Die Bilder holt dein Server, ausgeliefert werden sie von deiner Website (<code>width</code>, <code>height</code>, <code>km</code>, <code>source</code>). Muss unter Einstellungen → Regenradar eingeschaltet werden.',
-25 => '<code>[naws_sparkline_tiles]</code> – Die Sparkline-Karten nebeneinander in einem Raster, das von selbst umbricht: ab Werk Temperatur, Luftfeuchte, Luftdruck, Wind, Regen und CO2 (<code>params</code>, <code>hours</code>)',
-26 => '<code>[naws_sparkline]</code> – Eine Kurve so groß wie ein Wort: die Rohmessungen der letzten Stunden oder eine Spalte der Tagesübersicht, Regen als Balken, das Band zwischen Tagestief und Tageshoch, Uhrzeit und Wert beim Überfahren; auch als Karte oder Monatsblock (<code>param</code>, <code>hours</code>, <code>days</code>, <code>module</code>, <code>width</code>, <code>height</code>, <code>show</code>, <code>type</code>, <code>band</code>, <code>layout</code>, <code>title</code>)',
-29 => '<strong>E-Mail-Benachrichtigungen</strong> – Batterie, Funk und WLAN, Station offline, gescheiterte Abrufe, Frost, Hitze, Böen, Regen, Regenbeginn, CO₂; Schwellen je Regel, eine Mail je Zustandswechsel und eine Entwarnung, wenn der Zustand endet, dazu ein Generalschalter',
-30 => '<code>[naws_windrose]</code> – Woher der Wind kommt und wie kräftig, als Rose mit 16 oder 8 Richtungen, nach Beaufort-Klassen gestapelt, mit Zeitraum-Umschaltung (<code>period</code>, <code>from</code>, <code>to</code>, <code>measure</code>, <code>sectors</code>, <code>show</code>, <code>switcher</code>, <code>size</code>, <code>title</code>)',
-31 => '<code>[naws_weather_widget]</code> – Kompaktes Vorhersage-Widget für eine Seitenleiste (<code>days</code> 3 oder 5, <code>width</code> 250–500, <code>scheme</code> light, dark oder transparent, <code>sparklines</code> 0 oder 1)',
-32 => '<code>[naws_sunpath]</code> – Die Sonne auf ihrem Bogen über der Station, mit Aufgang, Kulmination, Untergang und Tageslänge (<code>title</code>)',
-33 => '<code>[naws_on_this_day]</code> – Dieser Kalendertag in jedem früheren Jahr, die Tagesrekorde markiert (<code>date</code>, <code>title</code>)',
-34 => '<code>[naws_records]</code> – Fünfzehn Rekorde aus der Tagesübersicht mit ihren Daten, als Kacheln oder Tabelle (<code>year</code>, <code>records</code>, <code>layout</code>, <code>title</code>)',
-35 => '<strong>20 Shortcodes</strong> – Dashboard, aktuelle Werte, Infoleiste, Einzelwert, berechneter Wert, Sparkline, Sparkline-Kacheln, Verlaufsdiagramme, Heatmap, Rekorde, dieser Tag in früheren Jahren, Monatsrückblick, Modulvergleich, Sonnenbahn, Windrose, Vorhersage, Regenradar, Tabelle, Widget, Wettersymbol',
-36 => '<code>[naws_heatmap]</code> – Ein Jahr Außen-Tagesdurchschnittstemperatur als Kalenderraster, eine Kachel pro Tag, mit Jahreswahl (<code>year</code>, <code>title</code>, <code>legend</code>)',
+3 => '<code>[naws_heatmap]</code> – Ein Jahr Außen-Tagesdurchschnittstemperatur oder mit <code>type="rain"</code> der tägliche Niederschlag als Kalenderraster, eine Kachel pro Tag, mit Jahreswahl (<code>type</code>, <code>year</code>, <code>title</code>, <code>legend</code>)',
+6 => '<code>[naws_compare]</code> – Zwei Tagesreihen beliebiger Module in einem Diagramm über Monate und Jahre, etwa Luftfeuchte innen gegen außen; eine zweite Einheit bekommt ihre eigene Achse. Ein Baukasten auf der Shortcode-Seite schreibt den Kurzbefehl (<code>a</code>, <code>b</code>, <code>from</code>, <code>to</code>, <code>months</code>, <code>title</code>, <code>height</code>)',
+7 => '<code>[naws_month_review]</code> – Ein Monatsrückblick: Temperatur, Regen und Böen neben demselben Monat der Vorjahre, mit einem Kopfsatz für das, was auffällt; Besucher blättern ohne Neuladen durch die Monate (<code>month</code>, <code>years</code>, <code>title</code>)',
+8 => '<strong>Nichts von fremden Servern im Browser der Besucher</strong> – Diagramme, Symbole, Radarbilder, Kartenkacheln und Schriften kommen alle von deiner eigenen Website',
+9 => '<strong>Astronomie</strong> – Sonnenauf- und -untergang, Mondphase mit Beleuchtungsgrad, nächster Vollmond und Supermond (berechnet nach Meeus), nächste Mondfinsternis',
+10 => '<strong>Vollständige Netatmo-Integration</strong> – OAuth2-Anmeldung, automatischer Abgleich, alle Modultypen unterstützt (Basis, Außen, Wind, Regen, Innen), mit eigenem Anzeigenamen für jedes Modul',
+11 => '<strong>Bedingungen und Datenschutz:</strong> <a href="https://operations.osmfoundation.org/policies/tiles/">https://operations.osmfoundation.org/policies/tiles/</a>, <a href="https://osmfoundation.org/wiki/Privacy_Policy">https://osmfoundation.org/wiki/Privacy_Policy</a>',
+12 => '<strong>Wann:</strong> Nur wenn „Regenradar erlauben“ eingeschaltet ist, beim ersten Mal, wenn eine Seite ein Radar mit diesem Kartenausschnitt zeigt',
+13 => '<strong>Übermittelte Daten:</strong> Die Kachelnummern des Kartenausschnitts um deine Station. Einmal je Kartenausschnitt abgerufen und auf deinem Server aufbewahrt.',
+14 => '<strong>Zweck:</strong> Die Hintergrundkarte des Regenradars <code>[naws_radar]</code>',
+15 => '<strong>Bedingungen und Datenschutz:</strong> <a href="https://www.rainviewer.com/terms.html">https://www.rainviewer.com/terms.html</a>, <a href="https://www.rainviewer.com/privacy.html">https://www.rainviewer.com/privacy.html</a>',
+16 => '<strong>Übermittelte Daten:</strong> Die Kachelnummern des Kartenausschnitts um deine Station und die Uhrzeit jedes Bildes. Keine Besucherdaten: Die Bilder holt dein Server, ausgeliefert werden sie von deiner Website.',
+17 => '<strong>Zweck:</strong> Radarbilder für das Regenradar <code>[naws_radar]</code> außerhalb Deutschlands',
+18 => '<strong>Bedingungen und Datenschutz:</strong> <a href="https://www.dwd.de/EN/service/copyright/copyright_node.html">https://www.dwd.de/EN/service/copyright/copyright_node.html</a>, <a href="https://www.dwd.de/EN/service/dataprotection/dataprotection_node.html">https://www.dwd.de/EN/service/dataprotection/dataprotection_node.html</a>',
+19 => '<strong>Wann:</strong> Nur wenn „Regenradar erlauben“ eingeschaltet ist, nachdem eine Seite das Radar gezeigt hat, höchstens alle 15 Minuten',
+20 => '<strong>Übermittelte Daten:</strong> Der Kartenausschnitt um deine Station (als Begrenzungsrechteck) und die Uhrzeit jedes Bildes. Keine Besucherdaten: Die Bilder holt dein Server, ausgeliefert werden sie von deiner Website.',
+21 => '<strong>Zweck:</strong> Radarbilder (gemessen und zwei Stunden Vorschau) für das Regenradar <code>[naws_radar]</code>, wenn die Station in Deutschland steht',
+22 => '<code>[naws_radar]</code> – Animiertes Regenradar um die Station: in Deutschland vom Deutschen Wetterdienst (die letzte Stunde und zwei Stunden Vorschau), anderswo von RainViewer, auf einer grauen OpenStreetMap-Karte. Die Bilder holt dein Server, ausgeliefert werden sie von deiner Website (<code>width</code>, <code>height</code>, <code>km</code>, <code>source</code>). Muss unter Einstellungen → Regenradar eingeschaltet werden.',
+26 => '<code>[naws_sparkline_tiles]</code> – Die Sparkline-Karten nebeneinander in einem Raster, das von selbst umbricht: ab Werk Temperatur, Luftfeuchte, Luftdruck, Wind, Regen und CO2 (<code>params</code>, <code>hours</code>)',
+27 => '<code>[naws_sparkline]</code> – Eine Kurve so groß wie ein Wort: die Rohmessungen der letzten Stunden oder eine Spalte der Tagesübersicht, Regen als Balken, das Band zwischen Tagestief und Tageshoch, Uhrzeit und Wert beim Überfahren; auch als Karte oder Monatsblock (<code>param</code>, <code>hours</code>, <code>days</code>, <code>module</code>, <code>width</code>, <code>height</code>, <code>show</code>, <code>type</code>, <code>band</code>, <code>layout</code>, <code>title</code>)',
+30 => '<strong>E-Mail-Benachrichtigungen</strong> – Batterie, Funk und WLAN, Station offline, gescheiterte Abrufe, Frost, Hitze, Böen, Regen, Regenbeginn, CO₂; Schwellen je Regel, eine Mail je Zustandswechsel und eine Entwarnung, wenn der Zustand endet, dazu ein Generalschalter',
+31 => '<code>[naws_windrose]</code> – Woher der Wind kommt und wie kräftig, als Rose mit 16 oder 8 Richtungen, nach Beaufort-Klassen gestapelt, mit Zeitraum-Umschaltung (<code>period</code>, <code>from</code>, <code>to</code>, <code>measure</code>, <code>sectors</code>, <code>show</code>, <code>switcher</code>, <code>size</code>, <code>title</code>)',
+32 => '<code>[naws_weather_widget]</code> – Kompaktes Vorhersage-Widget für eine Seitenleiste (<code>days</code> 3 oder 5, <code>width</code> 250–500, <code>scheme</code> light, dark oder transparent, <code>sparklines</code> 0 oder 1)',
+33 => '<code>[naws_sunpath]</code> – Die Sonne auf ihrem Bogen über der Station, mit Aufgang, Kulmination, Untergang und Tageslänge (<code>title</code>)',
+34 => '<code>[naws_on_this_day]</code> – Dieser Kalendertag in jedem früheren Jahr, die Tagesrekorde markiert (<code>date</code>, <code>title</code>)',
+35 => '<code>[naws_records]</code> – Fünfzehn Rekorde aus der Tagesübersicht mit ihren Daten, als Kacheln oder Tabelle (<code>year</code>, <code>records</code>, <code>layout</code>, <code>title</code>)',
+36 => '<strong>20 Shortcodes</strong> – Dashboard, aktuelle Werte, Infoleiste, Einzelwert, berechneter Wert, Sparkline, Sparkline-Kacheln, Verlaufsdiagramme, Heatmap, Rekorde, dieser Tag in früheren Jahren, Monatsrückblick, Modulvergleich, Sonnenbahn, Windrose, Vorhersage, Regenradar, Tabelle, Widget, Wettersymbol',
 37 => '<code>[naws_table]</code> – Messwerte als Tabelle über einen Zeitraum, gruppiert nach Stunde, Tag, Woche, Monat oder Jahr (<code>module_id</code>, <code>parameters</code>, <code>period</code>, <code>limit</code>, <code>group_by</code>, <code>title</code>)',
 39 => '<code>[naws_weather_icon]</code> – Nur das animierte Symbol für den aktuellen Wetterzustand (<code>size</code>); gibt nichts aus, wenn der Zustand unbekannt ist',
 40 => '<code>[naws_calc]</code> – Einzelner berechneter Wert (Taupunkt, gefühlte Temperatur, Sonnenaufgang, Mondphase, …); vollständige Liste auf der Shortcode-Seite im Backend',
@@ -113,10 +105,18 @@ return [
 116 => '<strong>Abgeleitete Wetterdaten</strong> – Gefühlte Temperatur, Hitzeindex, Taupunkt, Windchill',
 117 => '<strong>Live-Dashboard</strong> – Sensorkacheln in Echtzeit mit animierten Zählern, 24-Stunden-Verläufen, Luftdrucktendenz, Windkompass und CO2-Luftqualitätsstufen',
 
+// ── Found in description paragraph ────────────────────────────────────────
+4 => 'Nur dein Server spricht mit den folgenden Diensten, ohne Daten der Besucher:',
+5 => '<strong>Dieses Plugin fügt deiner Datenschutzerklärung auf Besucherseite nichts hinzu.</strong> Alles, was deine Besucher sehen – Diagramme, Symbole, Regenradarbilder, Kartenkacheln, Schriften und Skripte –, kommt von deiner eigenen Website. Das Plugin lädt nichts von fremden Servern in den Browser der Besucher: Kein Wetterdienst, Kartenserver, Schriftenanbieter oder CDN erfährt, wer deine Wetterseiten ansieht. Die Symbole sind eigene Zeichnungen des Plugins statt Emojis, also muss WordPress auch dafür keine Emoji-Bilder nachladen.',
+65 => 'Weiterer Fremdcode ist nicht enthalten. Keine Bibliothek wird von einem CDN geladen; alles kommt von deiner eigenen Installation. Bibliotheken, die WordPress selbst mitbringt, werden von WordPress bezogen und nicht mitgeliefert.',
+66 => 'Diesem Plugin liegen zwei JavaScript-Bibliotheken bei, beide unter der MIT-Lizenz, die GPL-kompatibel ist. Sie werden als minifizierte Distributions-Builds ausgeliefert; der unminifizierte Quellcode und die Build-Werkzeuge sind jeweils über die Links unten erreichbar.',
+67 => 'Dieses Plugin erhebt und übermittelt keine personenbezogenen Daten (Namen, E-Mail-Adressen, IP-Adressen). Alle Sensordaten liegen ausschließlich in deiner lokalen WordPress-Datenbank.',
+68 => '<strong>XTX Integration for Netatmo</strong> verbindet deine Netatmo-Hardware mit WordPress. Es liest alle Sensordaten über die offizielle Netatmo-API, speichert die Messwerte in deiner lokalen Datenbank und zeigt sie in ansehnlichen Live-Dashboards, animierten Diagrammen und Wettervorhersagen.',
+
 // ── Found in description header ───────────────────────────────────────────
-22 => 'OpenStreetMap-Kacheln (tile.openstreetmap.org)',
-23 => 'RainViewer (api.rainviewer.com, tilecache.rainviewer.com)',
-24 => 'Deutscher Wetterdienst (maps.dwd.de)',
+23 => 'OpenStreetMap-Kacheln (tile.openstreetmap.org)',
+24 => 'RainViewer (api.rainviewer.com, tilecache.rainviewer.com)',
+25 => 'Deutscher Wetterdienst (maps.dwd.de)',
 118 => 'chartjs-adapter-date-fns 3.0.0',
 119 => 'Chart.js 4.5.1',
 120 => 'Bibliotheken von Drittanbietern',
@@ -130,7 +130,7 @@ return [
 128 => 'Wichtigste Funktionen',
 
 // ── Found in faq paragraph ────────────────────────────────────────────────
-27 => 'Öffne XTX Netatmo → Benachrichtigungen und drücke „Testmail senden". Meldet die Seite, dass die Mail nicht gesendet werden konnte, verschickt dein Server gar keine Mails: ein SMTP-Plugin oder dein Hoster behebt das, nicht das Plugin. Kommt die Testmail an, aber keine Benachrichtigung, prüfe, ob Generalschalter und Regel eingeschaltet sind, und sieh ins Protokoll auf derselben Seite. Benachrichtigungen gehen nur bei einem Zustandswechsel raus; eine Batterie, die schon vor dem Einschalten der Regel schwach war, wird beim nächsten Abruf gemeldet, danach nicht mehr.',
+28 => 'Öffne XTX Netatmo → Benachrichtigungen und drücke „Testmail senden". Meldet die Seite, dass die Mail nicht gesendet werden konnte, verschickt dein Server gar keine Mails: ein SMTP-Plugin oder dein Hoster behebt das, nicht das Plugin. Kommt die Testmail an, aber keine Benachrichtigung, prüfe, ob Generalschalter und Regel eingeschaltet sind, und sieh ins Protokoll auf derselben Seite. Benachrichtigungen gehen nur bei einem Zustandswechsel raus; eine Batterie, die schon vor dem Einschalten der Regel schwach war, wird beim nächsten Abruf gemeldet, danach nicht mehr.',
 38 => 'Ja. Jeder Endpunkt ist nur lesend, ratenbegrenzt und verlangt einen API-Schlüssel, den du im Backend erzeugst. Der Schlüssel wird ausschließlich im Header X-NAWS-Key angenommen — nie als Query-Parameter, damit er nicht in Zugriffsprotokollen, im Referer-Header, im Browserverlauf oder in einem Proxy dazwischen landet.',
 42 => 'Open-Meteo (weltweit, Standard) und Yr.no / MET Norway (auf Nordeuropa optimiert). Beide sind kostenlos und brauchen keinen API-Schlüssel.',
 43 => 'Ja. Über Export/Import lädst du Wetterdaten, Modulkonfiguration und alle Einstellungen als JSON herunter. Ideal für den Umzug auf eine neue WordPress-Installation.',
@@ -141,7 +141,7 @@ return [
 48 => 'Öffne <a href="https://dev.netatmo.com">dev.netatmo.com</a>, melde dich mit deinem Netatmo-Konto an, erstelle eine neue Anwendung und kopiere Client-ID und Client-Secret.',
 
 // ── Found in faq header ───────────────────────────────────────────────────
-28 => 'Ich bekomme keine Benachrichtigungs-Mails',
+29 => 'Ich bekomme keine Benachrichtigungs-Mails',
 49 => 'Welche Vorhersage-Anbieter werden unterstützt?',
 50 => 'Kann ich meine Wetterdaten sichern?',
 51 => 'Kann ich das Aussehen anpassen?',
