@@ -631,9 +631,9 @@ class NAWS_Admin {
     public function page_cron_log() {
         $log            = get_option( 'naws_cron_log', [] );
         $next_run       = NAWS_Cron::get_next_run();
-        // Errors and warnings only: every sync logs an info line ("All NAWS
-        // caches flushed."), and those buried the errors on the page and in
-        // the report.
+        // Errors and warnings only: info lines (up to 2.2.1 one per sync,
+        // "All NAWS caches flushed.") would bury the errors on the page and
+        // in the report.
         $error_log      = array_values( array_filter(
             NAWS_Logger::get_log( null, NAWS_Logger::MAX_ENTRIES ),
             function ( $entry ) { return in_array( $entry['level'] ?? '', [ NAWS_Logger::LEVEL_ERROR, NAWS_Logger::LEVEL_WARNING ], true ); }

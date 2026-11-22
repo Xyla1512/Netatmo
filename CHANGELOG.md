@@ -2,6 +2,11 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
+## [Unreleased]
+
+### Fixed
+- **The error log held nothing but "All NAWS caches flushed."** Every sync wrote that line, so the 200 places of the log were full after a day and a half and older errors and warnings were gone before anyone looked (the Cron Log page and the support report already hid info lines, but they still took the places). The line is no longer written, and the ones already stored are dropped the next time the plugin logs something.
+
 ## [2.2.1]
 
 ### Added

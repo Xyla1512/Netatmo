@@ -84,6 +84,10 @@ class NAWS_Logger {
 			$log = [];
 		}
 
+		// Up to 2.2.1 every sync logged "All NAWS caches flushed."; drop
+		// those lines so they no longer take places from real entries.
+		$log = array_values( array_filter( $log, [ __CLASS__, 'is_kept' ] ) );
+
 		array_unshift( $log, $entry );
 		$log = array_slice( $log, 0, self::MAX_ENTRIES );
 
@@ -99,6 +103,19 @@ class NAWS_Logger {
 				! empty( $safe_data ) ? ' | ' . wp_json_encode( $safe_data ) : ''
 			) );
 		}
+	}
+
+	/**
+	 * Whether a stored entry stays in the log: everything except the
+	 * per-sync cache line that versions up to 2.2.1 wrote.
+	 *
+	 * @param mixed $entry  A stored log entry.
+	 * @return bool
+	 */
+	public static function is_kept( $entry ) {
+		return ! ( is_array( $entry )
+			&& ( $entry['context'] ?? '' ) === 'cache'
+			&& ( $entry['message'] ?? '' ) === 'All NAWS caches flushed.' );
 	}
 
 	/**

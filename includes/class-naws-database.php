@@ -1452,7 +1452,9 @@ class NAWS_Database {
         // Also clear the WordPress object cache group
         wp_cache_flush_group( 'naws' );
 
-        NAWS_Logger::info( 'cache', 'All NAWS caches flushed.' );
+        // No log line: this runs after every sync, and one entry per sync
+        // filled the 200 places of the error log within a day and a half,
+        // pushing out the errors it is kept for.
     }
 
     /**
