@@ -1,0 +1,18 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo - Stable Readme\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "<code>[naws_heatmap]</code> – One year of outdoor daily average temperature, or with <code>type=\"rain\"</code> daily precipitation, as a calendar grid, one tile per day, with a year selector (<code>type</code>, <code>year</code>, <code>title</code>, <code>legend</code>)"
+msgstr "<code>[naws_heatmap]</code> – Ein Jahr Außen-Tagesdurchschnittstemperatur oder mit <code>type=\"rain\"</code> der tägliche Niederschlag als Kalenderraster, eine Kachel pro Tag, mit Jahreswahl (<code>type</code>, <code>year</code>, <code>title</code>, <code>legend</code>)"
+
+msgid "Fix: rain radar — \"dwd request failed (no response)\" every twenty minutes. The German weather service often needs more than 15 seconds for one image; requests to maps.dwd.de now wait up to 30 seconds within a time budget per run, the log names the actual problem, and a slow service is only logged after three failed runs in a row."
+msgstr "Fix: Regenradar – „dwd request failed (no response)“ alle zwanzig Minuten. Der Deutsche Wetterdienst braucht für ein Bild oft mehr als 15 Sekunden; Abrufe bei maps.dwd.de warten jetzt bis zu 30 Sekunden innerhalb eines Zeitbudgets pro Lauf, das Protokoll nennt den tatsächlichen Grund, und ein langsamer Dienst wird erst nach drei fehlgeschlagenen Läufen in Folge gemeldet."
+
+msgid "Added: <code>[naws_heatmap type=\"rain\"]</code> — daily precipitation as a heatmap, in the same calendar grid as the temperature heatmap. Dry days have a colour of their own, wet days run from light blue at 0.1 mm to deep violet at 30 mm and more. The colours are on a new Appearance tab."
+msgstr "Added: <code>[naws_heatmap type=\"rain\"]</code> – der tägliche Niederschlag als Heatmap, im selben Kalenderraster wie die Temperatur-Heatmap. Trockene Tage haben eine eigene Farbe, nasse Tage laufen von Hellblau bei 0,1 mm bis Tiefviolett ab 30 mm. Die Farben stehen in einem neuen Reiter unter Erscheinungsbild."
+
