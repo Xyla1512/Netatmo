@@ -1,0 +1,54 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "0.1 mm"
+msgstr "0,1 mm"
+
+msgid "1 mm"
+msgstr "1 mm"
+
+msgid "10 mm"
+msgstr "10 mm"
+
+msgid "2 mm"
+msgstr "2 mm"
+
+msgid "20 mm"
+msgstr "20 mm"
+
+msgid "30 mm and above"
+msgstr "30 mm und darüber"
+
+msgid "5 mm"
+msgstr "5 mm"
+
+msgid "Colour scale for [naws_heatmap type=\"rain\"]. A dry day (0 mm) has its own colour; the stops are millimetres per day and values in between are interpolated. They stay in millimetres even when the display unit is inches. Days without a reading use the grey from the temperature scale."
+msgstr "Farbskala für [naws_heatmap type=\"rain\"]. Ein trockener Tag (0 mm) hat eine eigene Farbe; die Stützpunkte sind Millimeter pro Tag, Werte dazwischen werden interpoliert. Sie bleiben auch dann in Millimetern, wenn die Anzeigeeinheit Zoll ist. Tage ohne Messwert nehmen das Grau aus der Temperaturskala."
+
+msgid "Daily Precipitation"
+msgstr "Niederschlag pro Tag"
+
+msgid "Dry day (0 mm)"
+msgstr "Trockener Tag (0 mm)"
+
+msgid "Heatmap Scale: precipitation"
+msgstr "Heatmap-Skala: Niederschlag"
+
+msgid "Live preview — precipitation scale"
+msgstr "Live-Vorschau — Niederschlagsskala"
+
+msgid "What the tiles show: temp (daily average temperature) or rain (daily precipitation)"
+msgstr "Was die Kacheln zeigen: temp (Tagesdurchschnittstemperatur) oder rain (Niederschlag pro Tag)"
+
+msgid "With type=\"rain\" the same grid shows the daily precipitation, with its own colour scale and a colour of its own for dry days."
+msgstr "Mit type=\"rain\" zeigt dasselbe Raster den Niederschlag pro Tag, mit eigener Farbskala und eigener Farbe für trockene Tage."
+
+msgctxt "a day without precipitation"
+msgid "Dry"
+msgstr "Trocken"

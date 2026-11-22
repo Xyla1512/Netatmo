@@ -1,5 +1,5 @@
 {
-    "aktualisiert": "2026-11-13",
+    "aktualisiert": "2026-11-22",
     "vorhaben": [
         {
             "id": "webhooks",
@@ -20,6 +20,20 @@
             "titel": "Elementor widgets",
             "satz": "The same for Elementor: the building blocks as widgets of their own, set up in the Elementor panel and previewed in the editor.",
             "ab": null,
+            "bild": null
+        },
+        {
+            "id": "regen-heatmap",
+            "titel": "Heatmap of precipitation",
+            "satz": "The same calendar grid as for temperature, with each day's rain instead: dry days in a colour of their own, wet days from light blue at 0.1 mm to deep violet at 30 mm and more. The fixed scale keeps years comparable. Shortcode [naws_heatmap type=\"rain\"].",
+            "ab": "2.2.1",
+            "bild": null
+        },
+        {
+            "id": "dwd-zeitlimit",
+            "titel": "Rain radar waits longer for the DWD",
+            "satz": "The German weather service often takes more than ten seconds for one radar image. The plugin now waits up to 30 seconds, fetches missing images in the next run and only reports a slow service once it has delivered nothing three times in a row.",
+            "ab": "2.2.1",
             "bild": null
         },
         {

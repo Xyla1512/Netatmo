@@ -1,5 +1,5 @@
 {
-    "aktualisiert": "2026-11-13",
+    "aktualisiert": "2026-11-22",
     "vorhaben": [
         {
             "id": "webhooks",
@@ -20,6 +20,20 @@
             "titel": "Elementor-Widgets",
             "satz": "Dasselbe für Elementor: die Bausteine als eigene Widgets, eingestellt im Elementor-Panel und mit Vorschau im Editor.",
             "ab": null,
+            "bild": null
+        },
+        {
+            "id": "regen-heatmap",
+            "titel": "Heatmap für den Niederschlag",
+            "satz": "Dasselbe Kalenderraster wie bei der Temperatur, nur mit der Regenmenge jedes Tages: trockene Tage in eigener Farbe, nasse von Hellblau bei 0,1 mm bis Tiefviolett ab 30 mm. Die feste Skala macht Jahre vergleichbar. Kurzbefehl [naws_heatmap type=\"rain\"].",
+            "ab": "2.2.1",
+            "bild": null
+        },
+        {
+            "id": "dwd-zeitlimit",
+            "titel": "Regenradar wartet geduldiger auf den DWD",
+            "satz": "Der Deutsche Wetterdienst braucht für ein Radarbild oft über zehn Sekunden. Das Plugin wartet jetzt bis zu 30 Sekunden, holt fehlende Bilder im nächsten Lauf nach und meldet einen langsamen Dienst erst, wenn er dreimal in Folge nichts geliefert hat.",
+            "ab": "2.2.1",
             "bild": null
         },
         {

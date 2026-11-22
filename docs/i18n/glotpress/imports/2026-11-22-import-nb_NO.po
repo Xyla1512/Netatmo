@@ -1,0 +1,54 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XTX Integration for Netatmo\n"
+"Language: nb_NO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "0.1 mm"
+msgstr "0,1 mm"
+
+msgid "1 mm"
+msgstr "1 mm"
+
+msgid "10 mm"
+msgstr "10 mm"
+
+msgid "2 mm"
+msgstr "2 mm"
+
+msgid "20 mm"
+msgstr "20 mm"
+
+msgid "30 mm and above"
+msgstr "30 mm og over"
+
+msgid "5 mm"
+msgstr "5 mm"
+
+msgid "Colour scale for [naws_heatmap type=\"rain\"]. A dry day (0 mm) has its own colour; the stops are millimetres per day and values in between are interpolated. They stay in millimetres even when the display unit is inches. Days without a reading use the grey from the temperature scale."
+msgstr "Fargeskala for [naws_heatmap type=\"rain\"]. En tørr dag (0 mm) har sin egen farge; stoppunktene er millimeter per døgn, verdier imellom interpoleres. De forblir i millimeter selv når visningsenheten er tommer. Dager uten måling bruker den grå fargen fra temperaturskalaen."
+
+msgid "Daily Precipitation"
+msgstr "Nedbør per døgn"
+
+msgid "Dry day (0 mm)"
+msgstr "Tørr dag (0 mm)"
+
+msgid "Heatmap Scale: precipitation"
+msgstr "Heatmap-skala: nedbør"
+
+msgid "Live preview — precipitation scale"
+msgstr "Forhåndsvisning — nedbørsskala"
+
+msgid "What the tiles show: temp (daily average temperature) or rain (daily precipitation)"
+msgstr "Hva flisene viser: temp (døgnmiddeltemperatur) eller rain (nedbør per døgn)"
+
+msgid "With type=\"rain\" the same grid shows the daily precipitation, with its own colour scale and a colour of its own for dry days."
+msgstr "Med type=\"rain\" viser det samme rutenettet nedbøren per døgn, med egen fargeskala og egen farge for tørre dager."
+
+msgctxt "a day without precipitation"
+msgid "Dry"
+msgstr "Tørt"

@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 2.2.0
+Stable tag: 2.2.1
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -126,6 +126,10 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 
 == Changelog ==
 
+= 2.2.1 =
+* Added: `[naws_heatmap type="rain"]` — daily precipitation as a heatmap, in the same calendar grid as the temperature heatmap. Dry days have a colour of their own, wet days run from light blue at 0.1 mm to deep violet at 30 mm and more. The colours are on a new Appearance tab.
+* Fix: rain radar — "dwd request failed (no response)" every twenty minutes. The German weather service often needs more than 15 seconds for one image; requests to maps.dwd.de now wait up to 30 seconds within a time budget per run, the log names the actual problem, and a slow service is only logged after three failed runs in a row.
+
 = 2.2.0 =
 * Added: `[naws_month_review]` — a month in review: mean, highest and lowest temperature, rain and the strongest gust, each against the same month in earlier years, with a headline for what stands out. Visitors page through the months without reloading.
 * Added: `[naws_compare]` — two daily series from any modules in one chart over months and years, e.g. indoor against outdoor humidity. A builder on the Shortcodes page writes the shortcode and shows a live preview.
@@ -149,24 +153,18 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 * Fix: grouped rain in `[naws_table]` and the REST API was a twelfth of what fell — it is a sum now, not an average.
 * Fix: the y-axis of the rain chart repeated its labels (0, 0.1, 0.1, 0.2); the steps are at least 0.1 mm now.
 
-= 2.1.5 =
-* Added: Cron Log › Error Log — the errors and warnings the plugin has always collected (database, Netatmo connection, weather services), which no page showed; the dashboard only counted them. A button clears the log, and the error count on the dashboard links to it.
-* Added: Cron Log › Support Report — plugin, WordPress, PHP and database versions, whether the plugin tables exist, the cron state and the newest log entries, with a "Copy report" button for support requests. It contains no passwords, tokens or API keys.
-* Fix: a sync whose data the database refused reported "Sync OK – 0 readings saved". It now fails with the database's own message, in the cron log, on the "Sync now" button and for the e-mail notification on failed syncs. An account without a weather station gets its own message instead of "Sync OK".
-* Fix: "Sync now" fetched twice and showed the next run on the second of the last one; the next fetch now follows one interval later, and manual syncs appear in the cron log. An overdue next run reads "overdue by …" instead of "in …".
-
 Older versions: the complete changelog since 1.0.0 is kept in [CHANGELOG.md](https://github.com/Xyla1512/Netatmo/blob/main/CHANGELOG.md) on GitHub.
 
 == Upgrade Notice ==
+
+= 2.2.1 =
+New: a heatmap of daily precipitation with [naws_heatmap type="rain"]. Fix: the rain radar no longer reports "no response" when the German weather service is slow. Nothing to reconfigure.
 
 = 2.2.0 =
 New: month review and module comparison shortcodes. Own symbols instead of emoji, so no emoji images from s.w.org. Fixes the Yr.no rain amounts and the moon dates. Nothing to reconfigure.
 
 = 2.1.8 =
 New: give each module its own display name on the Modules page; it replaces the Netatmo name on the site and in the admin. Fix: the REST endpoint /modules works again. Nothing to reconfigure.
-
-= 2.1.7 =
-Charts and cards build up softly when the visitor scrolls to them, and the rain radar legend matches the DWD map. Nothing to reconfigure.
 
 == Privacy & External Services ==
 
