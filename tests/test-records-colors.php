@@ -62,8 +62,8 @@ check( 'Reiter records', array_key_exists( 'records', NAWS_Colors::appearance_ta
 echo "\nRekorde: Inline-CSS\n" . str_repeat( '-', 74 ) . "\n";
 saved( [ 'theme_surface' => '#101010', 'theme_surface_alt' => '#202020', 'theme_border' => '#303030', 'theme_text' => '#404040' ] );
 $css  = NAWS_Colors::get_inline_css();
-$base = rule( $css, '.naws-rec, .naws-otd, .naws-sun' );
-check( 'Grundthema erreicht Rekorde/Tag/Sonne', $base !== '', true );
+$base = rule( $css, '.naws-rec, .naws-otd, .naws-sun, .naws-mr' );
+check( 'Grundthema erreicht Rekorde/Tag/Sonne/Monatsrueckblick', $base !== '', true );
 foreach ( [ '--naws-surface: #101010', '--naws-surface-2: #202020', '--naws-border: #303030', '--naws-text: #404040' ] as $want ) {
     check( "… $want", str_contains( $base, $want . ';' ), true );
 }
@@ -71,7 +71,7 @@ check( 'leere Rekordfarben schreiben nichts', str_contains( $css, '--naws-rec-' 
 $set = []; $i = 0;
 foreach ( $REC as $k => $_ ) { $set[ $k ] = sprintf( '#%06x', 0x111111 * ( ++$i ) ); }
 saved( $set );
-$own = rule( NAWS_Colors::get_inline_css(), '.naws-rec, .naws-otd' );
+$own = rule( NAWS_Colors::get_inline_css(), '.naws-rec, .naws-otd, .naws-mr' );
 foreach ( $REC as $k => $var ) {
     check( "$var traegt den Wert", str_contains( $own, "$var: {$set[ $k ]};" ), true );
 }
@@ -100,6 +100,12 @@ check( 'Kachel liest --naws-rec-tile-bg',        (bool) preg_match( '/\.naws-rec
 check( 'Wert liest --naws-rec-value',            (bool) preg_match( '/\.naws-rec-value \{[^}]*color: var\(--naws-rec-value,/', $fcss ), true );
 check( 'Beschriftung liest --naws-rec-label',    (bool) preg_match( '/\.naws-rec-label \{[^}]*color: var\(--naws-rec-label,/', $fcss ), true );
 check( 'Rekordzelle Tag liest Kachel + Wert',    (bool) preg_match( '/\.naws-otd-record \{[^}]*var\(--naws-rec-value,[^}]*var\(--naws-rec-tile-bg,/', $fcss ), true );
+// Monatsrueckblick (Frank 23.11.2026): seine Kacheln folgen dem Reiter "Rekorde".
+check( 'Monatskachel liest --naws-rec-tile-bg',  (bool) preg_match( '/\.naws-mr-tile \{[^}]*background: var\(--naws-rec-tile-bg, var\(--naws-surface-2/', $fcss ), true );
+check( 'Monatswert liest --naws-rec-value',      (bool) preg_match( '/\.naws-mr-tile-val \{[^}]*color: var\(--naws-rec-value,/', $fcss ), true );
+foreach ( [ '.naws-mr-tile-name', '.naws-mr-tile-val small', '.naws-mr-mark', '.naws-mr-tile-sub' ] as $sel ) {
+    check( "$sel liest --naws-rec-label",       (bool) preg_match( '/' . preg_quote( $sel, '/' ) . ' \{[^}]*color: var\(--naws-rec-label,/', $fcss ), true );
+}
 foreach ( [ '.naws-wx .naws-chart-expand', '.naws-hist .naws-hc-expand' ] as $btn ) {
     check( "$btn liest --naws-expand",          (bool) preg_match( '/' . preg_quote( $btn, '/' ) . ' ?\{[^}]*color: ?var\(--naws-expand,/', $fcss ), true );
     check( "$btn hover und focus",      str_contains( $fcss, "$btn:hover, $btn:focus" ), true );

@@ -2179,12 +2179,13 @@ h3.naws-mr-month { margin: 0 0 10px; font-size: 1.1rem; font-weight: 600; color:
 .naws-mr .naws-mr-head { margin: 0 0 12px; font-size: 1.25rem; line-height: 1.25; color: var(--naws-text-dark, #2d5252); }
 .naws-mr .naws-mr-head:focus { outline: none; }
 .naws-mr-tiles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
-.naws-mr-tile { display: flex; flex-direction: column; gap: 2px; padding: 12px 14px 10px; background: var(--naws-surface-2, #f8fafc); border: 1px solid var(--naws-border, #e0eeee); border-radius: var(--naws-radius-sm, 10px); }
-.naws-mr-tile-name { font-size: .78rem; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; color: var(--naws-text-muted, #7aa0a0); }
-.naws-mr-tile-val { margin-top: 2px; font-size: 1.55rem; font-weight: 500; line-height: 1.15; font-variant-numeric: tabular-nums; color: var(--naws-text-dark, #2d5252); }
-.naws-mr-tile-val small { margin-left: .15em; font-size: .85rem; font-weight: 400; color: var(--naws-text-muted, #7aa0a0); }
-.naws-mr-mark { margin-left: .2em; font-size: .8rem; color: var(--naws-text-muted, #7aa0a0); }
-.naws-mr-tile-sub { font-size: .8rem; font-variant-numeric: tabular-nums; color: var(--naws-text-muted, #7aa0a0); }
+/* Tiles take the colours of the "Records" tab; empty = base theme (2.2.2). */
+.naws-mr-tile { display: flex; flex-direction: column; gap: 2px; padding: 12px 14px 10px; background: var(--naws-rec-tile-bg, var(--naws-surface-2, #f8fafc)); border: 1px solid var(--naws-border, #e0eeee); border-radius: var(--naws-radius-sm, 10px); }
+.naws-mr-tile-name { font-size: .78rem; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; color: var(--naws-rec-label, var(--naws-text-muted, #7aa0a0)); }
+.naws-mr-tile-val { margin-top: 2px; font-size: 1.55rem; font-weight: 500; line-height: 1.15; font-variant-numeric: tabular-nums; color: var(--naws-rec-value, var(--naws-text-dark, #2d5252)); }
+.naws-mr-tile-val small { margin-left: .15em; font-size: .85rem; font-weight: 400; color: var(--naws-rec-label, var(--naws-text-muted, #7aa0a0)); }
+.naws-mr-mark { margin-left: .2em; font-size: .8rem; color: var(--naws-rec-label, var(--naws-text-muted, #7aa0a0)); }
+.naws-mr-tile-sub { font-size: .8rem; font-variant-numeric: tabular-nums; color: var(--naws-rec-label, var(--naws-text-muted, #7aa0a0)); }
 .naws-mr-incomplete { font-style: italic; }
 .naws-mr-prev-year { font-size: .8rem; font-variant-numeric: tabular-nums; color: var(--naws-text, #427272); }
 .naws-mr-tile-sub + .naws-mr-prev-year, .naws-mr-tile-val + .naws-mr-prev-year { margin-top: 6px; }

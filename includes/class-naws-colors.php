@@ -505,7 +505,8 @@ class NAWS_Colors {
         // [naws_records], [naws_on_this_day] and [naws_sunpath] stand on
         // their own like the forecast and never saw the base theme: their
         // background stayed the fallback #fff whatever was set (2.1.3).
-        $css .= ".naws-rec, .naws-otd, .naws-sun {\n";
+        // [naws_month_review] had the same gap (2.2.2).
+        $css .= ".naws-rec, .naws-otd, .naws-sun, .naws-mr {\n";
         foreach ( [ 'surface' => 'theme_surface', 'surface-2' => 'theme_surface_alt', 'border' => 'theme_border', 'text' => 'theme_text', 'text-dark' => 'theme_text_dark', 'text-darkest' => 'theme_text_darkest', 'text-muted' => 'theme_text_muted', 'text-light' => 'theme_text_light' ] as $var => $key ) {
             $css .= "  --naws-{$var}: {$c[ $key ]};\n";
         }
@@ -519,8 +520,9 @@ class NAWS_Colors {
                 $rec .= '  --naws-rec-' . str_replace( '_', '-', substr( $key, 8 ) ) . ": {$c[ $key ]};\n";
             }
         }
+        // The month review tiles follow the records tab too (2.2.2).
         if ( '' !== $rec ) {
-            $css .= ".naws-rec, .naws-otd {\n{$rec}}\n";
+            $css .= ".naws-rec, .naws-otd, .naws-mr {\n{$rec}}\n";
         }
 
         // The expand button of the live and the history cards (2.1.3):
