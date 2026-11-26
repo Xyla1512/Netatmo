@@ -1,5 +1,5 @@
 {
-    "aktualisiert": "2026-11-22",
+    "aktualisiert": "2026-11-26",
     "vorhaben": [
         {
             "id": "webhooks",
@@ -20,6 +20,20 @@
             "titel": "Elementor-Widgets",
             "satz": "Dasselbe für Elementor: die Bausteine als eigene Widgets, eingestellt im Elementor-Panel und mit Vorschau im Editor.",
             "ab": null,
+            "bild": null
+        },
+        {
+            "id": "monat-farben",
+            "titel": "Monatsrückblick in Ihren Farben",
+            "satz": "Die Kacheln des Monatsrückblicks folgen jetzt dem Grundthema und den Farben des Reiters „Rekorde“ unter Darstellung, statt fest bei den Standardfarben zu bleiben.",
+            "ab": "2.2.2",
+            "bild": null
+        },
+        {
+            "id": "fehlerprotokoll-sauber",
+            "titel": "Fehlerprotokoll behält die echten Fehler",
+            "satz": "Jeder Abruf schrieb „All NAWS caches flushed.“ ins Fehlerprotokoll und verdrängte nach anderthalb Tagen die echten Meldungen. Die Zeile entfällt, alte Einträge werden entfernt.",
+            "ab": "2.2.2",
             "bild": null
         },
         {

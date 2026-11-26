@@ -2,9 +2,10 @@
 
 All notable changes to the XTX Netatmo plugin are documented here.
 
-## [Unreleased]
+## [2.2.2]
 
 ### Fixed
+- **The colours of `[naws_month_review]` could not be changed.** Its tiles kept the fallback colours whatever was set on the Appearance page: the block got neither the base theme nor the colours of the "Records" tab (the same gap the records had until 2.1.3). The month review now takes the base theme, and its tiles follow the background, value and label colours of the "Records" tab.
 - **The error log held nothing but "All NAWS caches flushed."** Every sync wrote that line, so the 200 places of the log were full after a day and a half and older errors and warnings were gone before anyone looked (the Cron Log page and the support report already hid info lines, but they still took the places). The line is no longer written, and the ones already stored are dropped the next time the plugin logs something.
 
 ## [2.2.1]

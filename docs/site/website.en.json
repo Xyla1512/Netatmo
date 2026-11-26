@@ -1,5 +1,5 @@
 {
-    "aktualisiert": "2026-11-22",
+    "aktualisiert": "2026-11-26",
     "vorhaben": [
         {
             "id": "webhooks",
@@ -20,6 +20,20 @@
             "titel": "Elementor widgets",
             "satz": "The same for Elementor: the building blocks as widgets of their own, set up in the Elementor panel and previewed in the editor.",
             "ab": null,
+            "bild": null
+        },
+        {
+            "id": "monat-farben",
+            "titel": "Month review in your colours",
+            "satz": "The tiles of the month review now follow the base theme and the colours of the \"Records\" tab under Appearance, instead of keeping the default colours.",
+            "ab": "2.2.2",
+            "bild": null
+        },
+        {
+            "id": "fehlerprotokoll-sauber",
+            "titel": "The error log keeps the real errors",
+            "satz": "Every sync wrote \"All NAWS caches flushed.\" to the error log, and after a day and a half the real messages were gone. The line is no longer written, and stored ones are removed.",
+            "ab": "2.2.2",
             "bild": null
         },
         {

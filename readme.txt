@@ -3,7 +3,7 @@ Contributors: xylaender
 Tags: netatmo, weather, weather station, temperature, chart
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 2.2.1
+Stable tag: 2.2.2
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -126,6 +126,10 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 
 == Changelog ==
 
+= 2.2.2 =
+* Fix: the tiles of `[naws_month_review]` ignored the colour settings. The month review now follows the base theme and the colours of the "Records" tab on the Appearance page.
+* Fix: the error log filled up with "All NAWS caches flushed." after every sync and pushed out real errors within a day and a half. The line is no longer written; stored ones are removed.
+
 = 2.2.1 =
 * Added: `[naws_heatmap type="rain"]` — daily precipitation as a heatmap, in the same calendar grid as the temperature heatmap. Dry days have a colour of their own, wet days run from light blue at 0.1 mm to deep violet at 30 mm and more. The colours are on a new Appearance tab.
 * Fix: rain radar — "dwd request failed (no response)" every twenty minutes. The German weather service often needs more than 15 seconds for one image; requests to maps.dwd.de now wait up to 30 seconds within a time budget per run, the log names the actual problem, and a slow service is only logged after three failed runs in a row.
@@ -147,24 +151,18 @@ Open XTX Netatmo → Notifications and press "Send test mail". If the page repor
 * Changed: the charts of `[naws_live]` and `[naws_history]` and the cards of `[naws_current]` and `[naws_live]` build up when the visitor scrolls to them, not while the page loads out of sight. The curve rises from the floor as a soft wave and the chart fades in; the cards ease in. With reduced motion switched on in the system, everything is there at once.
 * Fix: the legend of `[naws_radar]` showed RainViewer's colours on the DWD map. With DWD as the source it now runs from cyan through green, yellow and orange to red, like the map.
 
-= 2.1.6 =
-* Security: the public chart endpoints took repeated fields — a single visitor request could build hundreds of megabytes and run PHP out of memory, the starting point of CVE-2026-109618/109619 ("PHP2Shell"). Repeats are dropped and unknown fields refused; the daily-data endpoint is for logged-in users only and no longer stores a cache entry for every date pair it is sent. The fix in PHP itself comes from your host: PHP 8.2.35, 8.3.36, 8.4.27, 8.5.12 or a build with the backport.
-* Fix: the hourly rain chart showed rain half an hour late. Each bar is now the sum of the rain gauge's reports in that hour; the bars of a day add up to the 24-hour total.
-* Fix: grouped rain in `[naws_table]` and the REST API was a twelfth of what fell — it is a sum now, not an average.
-* Fix: the y-axis of the rain chart repeated its labels (0, 0.1, 0.1, 0.2); the steps are at least 0.1 mm now.
-
 Older versions: the complete changelog since 1.0.0 is kept in [CHANGELOG.md](https://github.com/Xyla1512/Netatmo/blob/main/CHANGELOG.md) on GitHub.
 
 == Upgrade Notice ==
+
+= 2.2.2 =
+Fix: the month review follows your colour settings, and the error log keeps real errors instead of a line after every sync. Nothing to reconfigure.
 
 = 2.2.1 =
 New: a heatmap of daily precipitation with [naws_heatmap type="rain"]. Fix: the rain radar no longer reports "no response" when the German weather service is slow. Nothing to reconfigure.
 
 = 2.2.0 =
 New: month review and module comparison shortcodes. Own symbols instead of emoji, so no emoji images from s.w.org. Fixes the Yr.no rain amounts and the moon dates. Nothing to reconfigure.
-
-= 2.1.8 =
-New: give each module its own display name on the Modules page; it replaces the Netatmo name on the site and in the admin. Fix: the REST endpoint /modules works again. Nothing to reconfigure.
 
 == Privacy & External Services ==
 
