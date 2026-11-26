@@ -13,7 +13,7 @@
  * Die Beispieladresse bleibt "yoursite.com": GlotPress prueft, ob die Links
  * in Original und Uebersetzung uebereinstimmen, und warnt sonst.
  *
- * Stand: 2026-11-22 — 135 Eintraege, alle uebersetzt.
+ * Stand: 2026-11-26 — 135 Eintraege, alle uebersetzt.
  */
 return [
 

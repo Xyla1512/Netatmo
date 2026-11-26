@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Plugins - XTX Integration for Netatmo - Stable Readme (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-11-22 10:10:07+0000\n"
+"PO-Revision-Date: 2026-11-26 16:03:31+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -555,6 +555,16 @@ msgstr "Live-Dashboard mit Sensorkacheln und 24-Stunden-Verläufen"
 
 #. Found in changelog list item.
 #, gp-priority: low
+msgid "Fix: the error log filled up with \"All NAWS caches flushed.\" after every sync and pushed out real errors within a day and a half. The line is no longer written; stored ones are removed."
+msgstr "Fix: Das Fehlerprotokoll füllte sich nach jedem Abruf mit „All NAWS caches flushed.“ und verdrängte binnen anderthalb Tagen die echten Fehler. Die Zeile wird nicht mehr geschrieben; gespeicherte werden entfernt."
+
+#. Found in changelog list item.
+#, gp-priority: low
+msgid "Fix: the tiles of <code>[naws_month_review]</code> ignored the colour settings. The month review now follows the base theme and the colours of the \"Records\" tab on the Appearance page."
+msgstr "Fix: Die Kacheln von <code>[naws_month_review]</code> ignorierten die Farbeinstellungen. Der Monatsrückblick folgt jetzt dem Grundthema und den Farben des Reiters „Rekorde“ auf der Seite Darstellung."
+
+#. Found in changelog list item.
+#, gp-priority: low
 msgid "Fix: rain radar — \"dwd request failed (no response)\" every twenty minutes. The German weather service often needs more than 15 seconds for one image; requests to maps.dwd.de now wait up to 30 seconds within a time budget per run, the log names the actual problem, and a slow service is only logged after three failed runs in a row."
 msgstr "Fix: Regenradar – „dwd request failed (no response)“ alle zwanzig Minuten. Der Deutsche Wetterdienst braucht für ein Bild oft mehr als 15 Sekunden; Abrufe bei maps.dwd.de warten jetzt bis zu 30 Sekunden innerhalb eines Zeitbudgets pro Lauf, das Protokoll nennt den tatsächlichen Grund, und ein langsamer Dienst wird erst nach drei fehlgeschlagenen Läufen in Folge gemeldet."
 
@@ -617,26 +627,6 @@ msgstr "Fix: Die Legende von <code>[naws_radar]</code> zeigte auf der DWD-Karte 
 #, gp-priority: low
 msgid "Changed: the charts of <code>[naws_live]</code> and <code>[naws_history]</code> and the cards of <code>[naws_current]</code> and <code>[naws_live]</code> build up when the visitor scrolls to them, not while the page loads out of sight. The curve rises from the floor as a soft wave and the chart fades in; the cards ease in. With reduced motion switched on in the system, everything is there at once."
 msgstr "Changed: Die Diagramme von <code>[naws_live]</code> und <code>[naws_history]</code> und die Kacheln von <code>[naws_current]</code> und <code>[naws_live]</code> bauen sich auf, wenn der Besucher zu ihnen scrollt, nicht schon außer Sicht beim Laden der Seite. Die Kurve steigt als weiche Welle vom Boden auf, und das Diagramm blendet ein; die Kacheln gleiten herein. Ist im System „Bewegung reduzieren“ eingeschaltet, steht alles sofort da."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Fix: the y-axis of the rain chart repeated its labels (0, 0.1, 0.1, 0.2); the steps are at least 0.1 mm now."
-msgstr "Fix: Die y-Achse des Regendiagramms wiederholte ihre Beschriftung (0, 0,1, 0,1, 0,2); die Schritte sind jetzt mindestens 0,1 mm."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Fix: grouped rain in <code>[naws_table]</code> and the REST API was a twelfth of what fell — it is a sum now, not an average."
-msgstr "Fix: Gruppierter Regen in <code>[naws_table]</code> und der REST-API war ein Zwölftel dessen, was fiel — jetzt ist er eine Summe, kein Mittelwert."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Fix: the hourly rain chart showed rain half an hour late. Each bar is now the sum of the rain gauge's reports in that hour; the bars of a day add up to the 24-hour total."
-msgstr "Fix: Das stündliche Regendiagramm zeigte den Regen eine halbe Stunde zu spät. Jeder Balken ist jetzt die Summe der Meldungen des Regenmessers in dieser Stunde; die Balken eines Tages ergeben die 24-Stunden-Summe."
-
-#. Found in changelog list item.
-#, gp-priority: low
-msgid "Security: the public chart endpoints took repeated fields — a single visitor request could build hundreds of megabytes and run PHP out of memory, the starting point of CVE-2026-109618/109619 (\"PHP2Shell\"). Repeats are dropped and unknown fields refused; the daily-data endpoint is for logged-in users only and no longer stores a cache entry for every date pair it is sent. The fix in PHP itself comes from your host: PHP 8.2.35, 8.3.36, 8.4.27, 8.5.12 or a build with the backport."
-msgstr "Security: Die öffentlichen Diagramm-Endpunkte nahmen wiederholte Felder an — eine einzige Besucheranfrage konnte Hunderte Megabyte aufbauen und PHP den Speicher ausgehen lassen, der Ausgangspunkt von CVE-2026-109618/109619 („PHP2Shell“). Wiederholungen werden aussortiert und unbekannte Felder abgelehnt; der Endpunkt für Tagesdaten antwortet nur noch angemeldeten Nutzern und legt nicht mehr für jedes Datumspaar einen eigenen Cache-Eintrag an. Den Fix in PHP selbst liefert dein Hoster: PHP 8.2.35, 8.3.36, 8.4.27, 8.5.12 oder ein Build mit dem Backport."
 
 #. Found in changelog paragraph.
 #, gp-priority: low
